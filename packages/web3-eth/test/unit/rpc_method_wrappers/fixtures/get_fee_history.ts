@@ -20,6 +20,7 @@ export const mockRpcResponse: FeeHistoryResultAPI = {
 	oldestBlock: '0xa30950',
 	baseFeePerGas: '0x9',
 	reward: [],
+	gasUsedRatio: ['0'],
 };
 
 /**
@@ -63,6 +64,14 @@ export const testData: TestData[] = [
 	[
 		'blockCount = "0x4b7", newestBlock = BlockTags.PENDING, rewardPercentiles = ["0x0"]',
 		['0x4b7', BlockTags.PENDING, ['0x0']],
+	],
+	[
+		'blockCount = "0x4b7", newestBlock = BlockTags.SAFE, rewardPercentiles = ["0x0"]',
+		['0x4b7', BlockTags.SAFE, ['0x0']],
+	],
+	[
+		'blockCount = "0x4b7", newestBlock = BlockTags.FINALIZED, rewardPercentiles = ["0x0"]',
+		['0x4b7', BlockTags.FINALIZED, ['0x0']],
 	],
 	// blockNumber = Numbers
 	[

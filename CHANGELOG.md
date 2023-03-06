@@ -1137,4 +1137,123 @@ should use 4.0.1-alpha.0 for testing.
 
 ## [Unreleased]
 
+### Added
+
+#### web3
+
+-   `registeredSubscriptions` was added by default in web3 constructor (#5792)
+-   Add named exports for all objects which are the default-exported-object in their packages (#5771)
+-   Export all packages' objects organized by namespaces (#5771)
+-   Add Additional flat exports for all types and constants from `web3-types`, `web3-errors` and `web3`. (#5771)
+-   Fix few issues with `new Web3().eth.contract` (#5824)
+
+#### web3-core
+
 -   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
+-   Added support of `safe` and `finalized` block tags (#5823)
+
+#### web3-errors
+
+-   Added error class `InvalidMethodParamsError` and error code `ERR_INVALID_METHOD_PARAMS = 207` (#5824)
+
+#### web3-eth
+
+-   Added `createAccessList` functionality ( #5780 )
+-   Added support of `safe` and `finalized` block tags (#5823)
+
+#### web3-eth-abi
+
+-   `decodeErrorData` from `web3-eth-contract` is now exported from this package and was renamed to `decodeContractErrorData` (#5844)
+
+#### web3-eth-contract
+
+-   Added functionality of `createAccessList` for contracts ( #5780 )
+-   An instance of `Contract` will `subscribeToContextEvents` upon instantiation if `syncWithContext` is set to `true` and the constructor is passed an instance of `Web3Context` (#5833)
+-   Added support of `safe` and `finalized` block tags (#5823)
+
+#### web3-providers-http
+
+-   Added named export for `HttpProvider` (#5771)
+
+#### web3-providers-ipc
+
+-   Added named export for `IpcProvider` (#5771)
+
+#### web3-providers-ws
+
+-   Added named export for `WebSocketProvider` (#5771)
+
+#### web3-rpc-methods
+
+-   Added `createAccessList` functionality ( #5780 )
+-   Added support of `safe` and `finalized` block tags (#5823)
+
+#### web3-types
+
+-   Added types from `web3-eth-abi` and `TypedArray` from (#5771)
+-   Added `TypedArray` from `web3-utils` and `web3-validator` (it was defined twice) (#5771)
+-   Added `safe` and `finalized` block tags in `BlockTags` and `BlockTag` types (#5823)
+
+#### web3-utils
+
+-   Added support of `safe` and `finalized` block tags (#5823)
+
+#### web3-validator
+
+-   Added support of `safe` and `finalized` block tags in `isBlockTag` method (#5823)
+
+### Changed
+
+#### web3
+
+-   `require('web3')` will now return all web3 exported-objects organized in namespaces . (#5771)
+
+#### web3-errors
+
+-   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
+
+#### web3-eth
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+#### web3-eth-contract
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+#### web3-utils
+
+-   `compareBlockNumbers` function now only supports comparison of both blocktags params ( except `earliest` vs number) or both block number params (#5842)
+-   `SocketProvider` abstract class now resolves JSON RPC response errors instead of rejecting them (#5844)
+
+### Removed
+
+#### web3
+
+-   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)
+
+#### web3-eth
+
+-   `getRevertReason` is no longer exported (#5844)
+
+#### web3-eth-abi
+
+-   Moved all types and interfaces to `web3-types` (#5771)
+
+#### web3-eth-contract
+
+-   `decodeErrorData` is no longer exported (method was moved to `web3-eth-abi` and renamed `decodeContractErrorData`) (#5844)
+
+#### web3-utils
+
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-validator`) (#5771)
+-   Removed support of `genesis` tag in `compareBlockNumbers` function (#5823)
+
+#### web3-validator
+
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-utils`) (#5771)
+
+### Fixed
+
+#### web3-eth-contract
+
+-   Fix contract defaults (#5756)

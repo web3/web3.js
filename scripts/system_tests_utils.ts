@@ -53,6 +53,7 @@ import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
+import HttpProvider from 'web3-providers-http';
 import accountsString from './accounts.json';
 
 /**
@@ -80,6 +81,7 @@ export const isChrome: boolean = getSystemTestEngine() === 'chrome';
 export const isFirefox: boolean = getSystemTestEngine() === 'firefox';
 export const isElectron: boolean = getSystemTestEngine() === 'electron';
 export const isNode: boolean = getSystemTestEngine() === 'isNode';
+export const isSyncTest: boolean = getEnvVar('TEST_OPTION') === 'sync';
 export const isSocket: boolean = isWs || isIpc;
 export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEngine());
 
@@ -125,7 +127,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isSocket) {
+	if (!isSocket || web3Context?.provider instanceof HttpProvider) {
 		return;
 	}
 

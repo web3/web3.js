@@ -28,9 +28,9 @@ import {
 	ERR_CONN_PENDING_REQUESTS,
 	ERR_REQ_ALREADY_SENT,
 } from '../error_codes';
-import { Web3Error } from '../web3_error_base';
+import { BaseWeb3Error } from '../web3_error_base';
 
-export class ConnectionError extends Web3Error {
+export class ConnectionError extends BaseWeb3Error {
 	public code = ERR_CONN;
 	public errorCode?: number;
 	public errorReason?: string;

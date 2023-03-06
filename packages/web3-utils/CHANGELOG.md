@@ -73,3 +73,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   web3.js dependencies (#5757)
 
 ## [Unreleased]
+
+### Removed
+
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-validator`) (#5771)
+-   Removed support of `genesis` tag in `compareBlockNumbers` function (#5823)
+
+### Added
+
+-   Added support of `safe` and `finalized` block tags (#5823)
+
+### Changed
+
+-   `compareBlockNumbers` function now only supports comparison of both blocktags params ( except `earliest` vs number) or both block number params (#5842)
+-   `SocketProvider` abstract class now resolves JSON RPC response errors instead of rejecting them (#5844)

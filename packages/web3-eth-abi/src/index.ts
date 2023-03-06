@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './types';
 export * from './api/errors_api';
 export * from './api/events_api';
 export * from './api/functions_api';
 export * from './api/logs_api';
 export * from './api/parameters_api';
 export * from './utils';
+export * from './decode_contract_error_data';

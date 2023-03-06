@@ -22,11 +22,12 @@
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
-		"test:coverage": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
+		"test:coverage:unit": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
+		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --coverage=true --coverage-reporters=text",
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js ",
+		"test:integration": "jest --config=./test/integration/jest.config.js",
 		"ens:download:registry": "curl -L -o test/fixtures/ens/registry.json 'https://api.etherscan.io/api?module=contract&action=getabi&address=0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'",
 		"ens:download:reverse_registrar": "curl -L -o test/fixtures/ens/reverse_registrar.json 'https://api.etherscan.io/api?module=contract&action=getabi&address=0x084b1c3c81545d370f3634392de611caabff8148'"
 	},
@@ -45,7 +46,7 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"idna-uts46-hx": "^3.5.0",
+		"@adraffy/ens-normalize": "^1.8.8",
 		"web3-core": "^4.0.1-alpha.5",
 		"web3-errors": "^0.1.1-alpha.4",
 		"web3-eth": "^4.0.1-alpha.5",

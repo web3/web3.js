@@ -18,7 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiError } from 'web3-errors';
 import { AbiCoder, ParamType } from '@ethersproject/abi';
 import { isNullish, leftPad, rightPad, toHex } from 'web3-utils';
-import ethersAbiCoder from './ethers_abi_coder';
 import {
 	AbiInput,
 	AbiCoderStruct,
@@ -28,7 +27,8 @@ import {
 	AbiEventFragment,
 	AbiFunctionFragment,
 	AbiConstructorFragment,
-} from './types';
+} from 'web3-types';
+import ethersAbiCoder from './ethers_abi_coder';
 
 export const isAbiFragment = (item: unknown): item is AbiFragment =>
 	!isNullish(item) &&
@@ -64,7 +64,7 @@ export const isAbiConstructorFragment = (item: unknown): item is AbiConstructorF
  * Check if type is simplified struct format
  */
 export const isSimplifiedStructFormat = (
-	type: string | Partial<AbiParameter>,
+	type: string | Partial<AbiParameter> | Partial<AbiInput>,
 ): type is Omit<AbiParameter, 'components' | 'name'> =>
 	typeof type === 'object' &&
 	typeof (type as { components: unknown }).components === 'undefined' &&

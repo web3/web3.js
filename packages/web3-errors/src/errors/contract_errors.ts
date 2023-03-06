@@ -31,9 +31,9 @@ import {
 	ERR_CONTRACT_RESERVED_EVENT,
 	ERR_CONTRACT_RESOLVER_MISSING,
 } from '../error_codes';
-import { Web3Error } from '../web3_error_base';
+import { BaseWeb3Error } from '../web3_error_base';
 
-export class Web3ContractError extends Web3Error {
+export class Web3ContractError extends BaseWeb3Error {
 	public code = ERR_CONTRACT;
 	public receipt?: TransactionReceipt;
 
@@ -43,7 +43,7 @@ export class Web3ContractError extends Web3Error {
 		this.receipt = receipt;
 	}
 }
-export class ResolverMethodMissingError extends Web3Error {
+export class ResolverMethodMissingError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_RESOLVER_MISSING;
 
 	public constructor(public address: string, public name: string) {
@@ -55,7 +55,7 @@ export class ResolverMethodMissingError extends Web3Error {
 	}
 }
 
-export class ContractMissingABIError extends Web3Error {
+export class ContractMissingABIError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_ABI_MISSING;
 
 	public constructor() {
@@ -65,7 +65,7 @@ export class ContractMissingABIError extends Web3Error {
 	}
 }
 
-export class ContractOnceRequiresCallbackError extends Web3Error {
+export class ContractOnceRequiresCallbackError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_REQUIRED_CALLBACK;
 
 	public constructor() {
@@ -73,7 +73,7 @@ export class ContractOnceRequiresCallbackError extends Web3Error {
 	}
 }
 
-export class ContractEventDoesNotExistError extends Web3Error {
+export class ContractEventDoesNotExistError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_EVENT_NOT_EXISTS;
 
 	public constructor(public eventName: string) {
@@ -85,7 +85,7 @@ export class ContractEventDoesNotExistError extends Web3Error {
 	}
 }
 
-export class ContractReservedEventError extends Web3Error {
+export class ContractReservedEventError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_RESERVED_EVENT;
 
 	public constructor(public type: string) {
@@ -97,7 +97,7 @@ export class ContractReservedEventError extends Web3Error {
 	}
 }
 
-export class ContractMissingDeployDataError extends Web3Error {
+export class ContractMissingDeployDataError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_MISSING_DEPLOY_DATA;
 
 	public constructor() {
@@ -105,7 +105,7 @@ export class ContractMissingDeployDataError extends Web3Error {
 	}
 }
 
-export class ContractNoAddressDefinedError extends Web3Error {
+export class ContractNoAddressDefinedError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_MISSING_ADDRESS;
 
 	public constructor() {
@@ -113,7 +113,7 @@ export class ContractNoAddressDefinedError extends Web3Error {
 	}
 }
 
-export class ContractNoFromAddressDefinedError extends Web3Error {
+export class ContractNoFromAddressDefinedError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_MISSING_FROM_ADDRESS;
 
 	public constructor() {
@@ -121,7 +121,7 @@ export class ContractNoFromAddressDefinedError extends Web3Error {
 	}
 }
 
-export class ContractInstantiationError extends Web3Error {
+export class ContractInstantiationError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_INSTANTIATION;
 }
 

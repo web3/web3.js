@@ -15,10 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { TypedArray } from 'web3-types';
 import { isNullish } from 'web3-validator';
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-export const TypedArray = Object.getPrototypeOf(Uint8Array);
 
 const isIterable = (item: unknown): item is Record<string, unknown> =>
 	typeof item === 'object' &&
@@ -29,6 +27,12 @@ const isIterable = (item: unknown): item is Record<string, unknown> =>
 
 // The following code is a derivative work of the code from the "LiskHQ/lisk-sdk" project,
 // which is licensed under Apache version 2.
+/**
+ * Deep merge two objects.
+ * @param destination - The destination object.
+ * @param sources - An array of source objects.
+ * @returns - The merged object.
+ */
 export const mergeDeep = (
 	destination: Record<string, unknown>,
 	...sources: Record<string, unknown>[]

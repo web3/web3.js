@@ -70,7 +70,17 @@ export const ethUnitMap = {
 };
 
 export type EtherUnits = keyof typeof ethUnitMap;
-
+/**
+ * Convert a value from bytes to Buffer
+ * @param data - Data to be converted
+ * @returns - The Buffer representation of the input data
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.bytesToBuffer(new Uint8Array([72, 12])));
+ * > <Buffer 48 0c>
+ * ```
+ */
 export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	validator.validate(['bytes'], [data]);
 
@@ -103,16 +113,42 @@ const bufferToHexString = (data: Buffer) => `0x${data.toString('hex')}`;
 
 /**
  * Convert a byte array to a hex string
+ * @param bytes - Byte array to be converted
+ * @returns - The hex string representation of the input byte array
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.bytesToHex(new Uint8Array([72, 12])));
+ * > "0x480c"
+ *
+ * console.log(web3.utils.bytesToHex(Buffer.from("0c12", "hex")));
+ * > "0x0c12"
  */
 export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesToBuffer(bytes));
 
 /**
  * Convert a hex string to a byte array
+ * @param hex - Hex string to be converted
+ * @returns - The byte array representation of the input hex string
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.hexToBytes('0x74657374'));
+ * > <Buffer 74 65 73 74>
+ * ```
  */
 export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
 
 /**
  * Converts value to it's number representation
+ * @param value - Hex string to be converted
+ * @returns - The number representation of the input value
+ *
+ * @example
+ * ```ts
+ * conoslle.log(web3.utils.hexToNumber('0xa'));
+ * > 10
+ * ```
  */
 export const hexToNumber = (value: HexString): bigint | number => {
 	validator.validate(['hex'], [value]);
@@ -129,6 +165,14 @@ export const toDecimal = hexToNumber;
 
 /**
  * Converts value to it's hex representation
+ * @param value - Value to be converted
+ * @returns - The hex representation of the input value
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.numberToHex(10));
+ * > "0xa"
+ * ```
  */
 export const numberToHex = (value: Numbers): HexString => {
 	validator.validate(['int'], [value]);
@@ -139,16 +183,33 @@ export const numberToHex = (value: Numbers): HexString => {
 };
 /**
  * Converts value to it's hex representation @alias `numberToHex`
+ *
  */
 export const fromDecimal = numberToHex;
 
 /**
  * Converts value to it's decimal representation in string
+ * @param value - Hex string to be converted
+ * @returns - The decimal representation of the input value
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.hexToNumberString('0xa'));
+ * > "10"
+ * ```
  */
 export const hexToNumberString = (data: HexString): string => hexToNumber(data).toString();
 
 /**
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
+ * @param str - Utf8 string to be converted
+ * @returns - The hex representation of the input string
+ *
+ * @example
+ * ```ts
+ * console.log(utf8ToHex('web3.js'));
+ * > "0x776562332e6a73"
+ *
  */
 export const utf8ToHex = (str: string): HexString => {
 	validator.validate(['string'], [str]);
@@ -174,6 +235,14 @@ export const stringToHex = utf8ToHex;
 
 /**
  * Should be called to get utf8 from it's hex representation
+ * @param str - Hex string to be converted
+ * @returns - Utf8 string
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.hexToUtf8('0x48656c6c6f20576f726c64'));
+ * > Hello World
+ * ```
  */
 export const hexToUtf8 = (str: HexString): string => bytesToBuffer(str).toString('utf8');
 
@@ -189,6 +258,14 @@ export const hexToString = hexToUtf8;
 
 /**
  * Should be called to get hex representation (prefixed by 0x) of ascii string
+ * @param str - String to be converted to hex
+ * @returns - Hex string
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.asciiToHex('Hello World'));
+ * > 0x48656c6c6f20576f726c64
+ * ```
  */
 export const asciiToHex = (str: string): HexString => {
 	validator.validate(['string'], [str]);
@@ -203,6 +280,14 @@ export const fromAscii = asciiToHex;
 
 /**
  * Should be called to get ascii from it's hex representation
+ * @param str - Hex string to be converted to ascii
+ * @returns - Ascii string
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.hexToAscii('0x48656c6c6f20576f726c64'));
+ * > Hello World
+ * ```
  */
 export const hexToAscii = (str: HexString): string => bytesToBuffer(str).toString('ascii');
 
@@ -213,6 +298,17 @@ export const toAscii = hexToAscii;
 
 /**
  * Auto converts any given value into it's hex representation.
+ * @param value - Value to be converted to hex
+ * @param returnType - If true, it will return the type of the value
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.toHex(10));
+ * > 0xa
+ *
+ * console.log(web3.utils.toHex('0x123', true));
+ * > bytes
+ *```
  */
 export const toHex = (
 	value: Numbers | Bytes | Address | boolean | object,
@@ -258,8 +354,24 @@ export const toHex = (
 };
 
 /**
- * Auto converts any given value into it's hex representation,
- * then converts hex to number.
+ * Converts any given value into it's number representation, if possible, else into it's bigint representation.
+ * @param value - The value to convert
+ * @returns - Returns the value in number or bigint representation
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.toNumber(1));
+ * > 1
+ * console.log(web3.utils.toNumber(Number.MAX_SAFE_INTEGER));
+ * > 9007199254740991
+ *
+ * console.log(web3.utils.toNumber(BigInt(Number.MAX_SAFE_INTEGER)));
+ * > 9007199254740991
+ *
+ * console.log(web3.utils.toNumber(BigInt(Number.MAX_SAFE_INTEGER) + BigInt(1)));
+ * > 9007199254740992n
+ *
+ * ```
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
@@ -285,6 +397,15 @@ export const toNumber = (value: Numbers): number | bigint => {
 
 /**
  * Auto converts any given value into it's bigint representation
+ *
+ * @param value - The value to convert
+ * @returns - Returns the value in bigint representation
+
+ * @example
+ * ```ts
+ * console.log(web3.utils.toBigInt(1));
+ * > 1n
+ * ```
  */
 export const toBigInt = (value: unknown): bigint => {
 	if (typeof value === 'number') {
@@ -305,6 +426,18 @@ export const toBigInt = (value: unknown): bigint => {
 
 /**
  * Takes a number of wei and converts it to any other ether unit.
+ * @param number - The value in wei
+ * @param unit - The unit to convert to
+ * @returns - Returns the converted value in the given unit
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.fromWei("1", "ether"));
+ * > 0.000000000000000001
+ *
+ * console.log(web3.utils.fromWei("1", "shannon"));
+ * > 0.000000001
+ * ```
  */
 export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 	const denomination = ethUnitMap[unit];
@@ -352,7 +485,18 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 
 /**
  * Takes a number of a unit and converts it to wei.
+ *
+ * @param number - The number to convert.
+ * @param unit - {@link EtherUnits} The unit of the number passed.
+ * @returns The number converted to wei.
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.toWei("0.001", "ether"));
+ * > 1000000000000000 //(wei)
+ * ```
  */
+// todo in 1.x unit defaults to 'ether'
 export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	validator.validate(['number'], [number]);
 
@@ -393,6 +537,16 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	return updatedValue.toString().padStart(decimals, '0').slice(0, -decimals);
 };
 
+/**
+ * Will convert an upper or lowercase Ethereum address to a checksum address.
+ * @param address - An address string
+ * @returns	The checksum address
+ * @example
+ * ```ts
+ * web3.utils.toChecksumAddress('0xc1912fee45d61c87cc5ea59dae31190fffff232d');
+ * > "0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
+ * ```
+ */
 export const toChecksumAddress = (address: Address): string => {
 	if (!isAddress(address, false)) {
 		throw new InvalidAddressError(address);

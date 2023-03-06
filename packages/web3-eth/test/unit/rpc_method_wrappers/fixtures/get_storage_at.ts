@@ -48,6 +48,11 @@ export const testData: TestData[] = [
 		'storageSlot = "0x4b7", blockNumber = BlockTags.PENDING',
 		[address, '0x4b7', BlockTags.PENDING],
 	],
+	['storageSlot = "0x4b7", blockNumber = BlockTags.SAFE', [address, '0x4b7', BlockTags.SAFE]],
+	[
+		'storageSlot = "0x4b7", blockNumber = BlockTags.FINALIZED',
+		[address, '0x4b7', BlockTags.FINALIZED],
+	],
 	['storageSlot = "0x4b7", blockNumber = "0x4b7"', [address, '0x4b7', '0x4b7']],
 	['storageSlot = "0x4b7", blockNumber = 1207', [address, '0x4b7', 1207]],
 	['storageSlot = "0x4b7", blockNumber = "1207"', [address, '0x4b7', '1207']],

@@ -562,3 +562,16 @@ export async function getNodeInfo(requestManager: Web3RequestManager<Web3EthExec
 		params: [],
 	});
 }
+
+export async function createAccessList(
+	requestManager: Web3RequestManager,
+	transaction: TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>,
+	blockNumber: BlockNumberOrTag,
+) {
+	validator.validate(['blockNumberOrTag'], [blockNumber]);
+
+	return requestManager.send({
+		method: 'eth_createAccessList',
+		params: [transaction, blockNumber],
+	});
+}

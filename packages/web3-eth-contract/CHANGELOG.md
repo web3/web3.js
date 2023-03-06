@@ -215,3 +215,22 @@ const transactionHash = receipt.transactionHash;
 -   web3.js dependencies (#5757)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fix contract defaults (#5756)
+-   Fixed getPastEventsError (#5819)
+
+### Changed
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+### Added
+
+-   Added functionality of `createAccessList` for contracts ( #5780 )
+-   An instance of `Contract` will `subscribeToContextEvents` upon instantiation if `syncWithContext` is set to `true` and the constructor is passed an instance of `Web3Context` (#5833)
+-   Added support of `safe` and `finalized` block tags (#5823)
+
+### Removed
+
+-   `decodeErrorData` is no longer exported (method was moved to `web3-eth-abi` and renamed `decodeContractErrorData`) (#5844)

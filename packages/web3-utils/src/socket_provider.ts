@@ -39,7 +39,6 @@ import {
 	InvalidClientError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
-	ResponseError,
 	Web3WSProviderError,
 } from 'web3-errors';
 import { Eip1193Provider } from './web3_eip1193_provider';
@@ -55,6 +54,8 @@ type ReconnectOptions = {
 };
 
 type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
+
+const NORMAL_CLOSE_CODE = 1000; // https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close
 
 export abstract class SocketProvider<
 	MessageEvent,
@@ -79,6 +80,12 @@ export abstract class SocketProvider<
 	protected readonly _onCloseHandler: (event: CloseEvent) => void;
 	protected readonly _onErrorHandler: (event: ErrorEvent) => void;
 
+	/**
+	 * This is an abstract class for implementing a socket provider (e.g. WebSocket, IPC). It extends the EIP-1193 provider {@link EIP1193Provider}.
+	 * @param socketPath - The path to the socket (e.g. /ipc/path or ws://localhost:8546)
+	 * @param options - The options for the socket connection
+	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
+	 */
 	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
 		super();
 		this._connectionStatus = 'connecting';
@@ -118,6 +125,9 @@ export abstract class SocketProvider<
 		this._reconnectAttempts = 0;
 	}
 
+	/**
+	 * Try to establish a connection to the socket
+	 */
 	public connect(): void {
 		try {
 			this._openSocketConnection();
@@ -161,19 +171,38 @@ export abstract class SocketProvider<
 		return !!path;
 	}
 
+	/**
+	 *
+	 * @returns `true` if the socket supports subscriptions
+	 */
 	// eslint-disable-next-line class-methods-use-this
 	public supportsSubscriptions(): boolean {
 		return true;
 	}
 
+	/**
+	 * Registers a listener for the specified event type.
+	 * @param type - The event type to listen for
+	 * @param callback - The callback to be invoked when the event is emitted
+	 */
 	public on<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
 		this._eventEmitter.on(type, callback);
 	}
 
+	/**
+	 * Registers a listener for the specified event type that will be invoked at most once.
+	 * @param type  - The event type to listen for
+	 * @param callback - The callback to be invoked when the event is emitted
+	 */
 	public once<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
 		this._eventEmitter.once(type, callback);
 	}
 
+	/**
+	 *  Removes a listener for the specified event type.
+	 * @param type - The event type to remove the listener for
+	 * @param callback - The callback to be executed
+	 */
 	public removeListener(type: EventType, callback: Web3ProviderEventCallback): void {
 		this._eventEmitter.removeListener(type, callback);
 	}
@@ -183,14 +212,24 @@ export abstract class SocketProvider<
 		super._onDisconnect(code, data);
 	}
 
+	/**
+	 * Disconnects the socket
+	 * @param code - The code to be sent to the server
+	 * @param data - The data to be sent to the server
+	 */
 	public disconnect(code?: number, data?: string): void {
+		const disconnectCode = code ?? NORMAL_CLOSE_CODE;
 		this._removeSocketListeners();
 		if (this.getStatus() !== 'disconnected') {
-			this._closeSocketConnection(code, data);
+			this._closeSocketConnection(disconnectCode, data);
 		}
-		this._onDisconnect(code, data);
+		this._onDisconnect(disconnectCode, data);
 	}
 
+	/**
+	 * Removes all listeners for the specified event type.
+	 * @param type - The event type to remove the listeners for
+	 */
 	public removeAllListeners(type: string): void {
 		this._eventEmitter.removeAllListeners(type);
 	}
@@ -204,6 +243,9 @@ export abstract class SocketProvider<
 		}
 	}
 
+	/**
+	 * Resets the socket, removing all listeners and pending requests
+	 */
 	public reset(): void {
 		this._sentRequestsQueue.clear();
 		this._pendingRequestsQueue.clear();
@@ -245,6 +287,9 @@ export abstract class SocketProvider<
 		}
 	}
 
+	/**
+	 *  Creates a request object to be sent to the server
+	 */
 	public async request<
 		Method extends Web3APIMethod<API>,
 		ResultType = Web3APIReturnType<API, Method>,
@@ -333,12 +378,13 @@ export abstract class SocketProvider<
 				return;
 			}
 
-			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
+			if (
+				jsonRpc.isBatchResponse(response) ||
+				jsonRpc.isResponseWithResult(response) ||
+				jsonRpc.isResponseWithError(response)
+			) {
 				this._eventEmitter.emit('message', undefined, response);
 				requestItem.deferredPromise.resolve(response);
-			} else {
-				this._eventEmitter.emit('message', response, undefined);
-				requestItem?.deferredPromise.reject(new ResponseError(response));
 			}
 
 			this._sentRequestsQueue.delete(requestId);

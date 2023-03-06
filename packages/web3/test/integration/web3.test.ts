@@ -19,7 +19,7 @@ import { JsonRpcOptionalRequest, Web3BaseProvider, SupportedProviders } from 'we
 import Contract from 'web3-eth-contract';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
-import WebsocketProvider from 'web3-providers-ws';
+import WebSocketProvider from 'web3-providers-ws';
 import Web3 from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
@@ -32,7 +32,12 @@ import {
 	isIpc,
 	isWs,
 	waitForOpenConnection,
+	itIf,
+	isSocket,
 } from '../shared_fixtures/system_tests_utils';
+import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
+
+/* eslint-disable jest/no-standalone-expect */
 
 describe('Web3 instance', () => {
 	let clientUrl: string;
@@ -72,6 +77,44 @@ describe('Web3 instance', () => {
 
 	it('should be able to create web3 object without provider', () => {
 		expect(() => new Web3()).not.toThrow();
+	});
+
+	it('check disconnect function', async () => {
+		const web3Instance = new Web3(clientUrl);
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
+		if (isSocket) {
+			web3Instance.currentProvider?.disconnect();
+		}
+	});
+	itIf(isWs)('check disconnect function for WebSocket provider', async () => {
+		const web3Instance = new Web3(new WebSocketProvider(clientUrl));
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
+		web3Instance.currentProvider?.disconnect();
+	});
+	itIf(isIpc)('check disconnect function for ipc provider', async () => {
+		const web3Instance = new Web3(new IpcProvider(clientUrl));
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
+		web3Instance.currentProvider?.disconnect();
+	});
+	itIf(isHttp)('check disconnect function for http provider', async () => {
+		const web3Instance = new Web3(new HttpProvider(clientUrl));
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
 	});
 
 	it('should be able use "utils" without provider', () => {
@@ -178,7 +221,7 @@ describe('Web3 instance', () => {
 			const res = Web3.providers;
 
 			expect(Web3.providers.HttpProvider).toBe(HttpProvider);
-			expect(res.WebsocketProvider).toBe(WebsocketProvider);
+			expect(res.WebsocketProvider).toBe(WebSocketProvider);
 			expect(res.IpcProvider).toBe(IpcProvider);
 		});
 
@@ -253,6 +296,56 @@ describe('Web3 instance', () => {
 					}),
 				]),
 			);
+		});
+	});
+
+	describe('defaults', () => {
+		let contract: Contract<typeof GreeterAbi>;
+		let deployOptions: Record<string, unknown>;
+		let sendOptions: Record<string, unknown>;
+		let acc: { address: string; privateKey: string };
+
+		beforeAll(() => {
+			web3 = new Web3(clientUrl);
+		});
+
+		beforeEach(async () => {
+			acc = await createTempAccount();
+
+			// todo import GreeterBytecode
+			deployOptions = {
+				data: GreeterBytecode,
+				arguments: ['My Greeting'],
+			};
+
+			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+
+		it('should update defaults on contract instance', () => {
+			const hardfork = 'berlin';
+
+			contract = new web3.eth.Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+				syncWithContext: true,
+			});
+
+			web3.defaultHardfork = hardfork;
+
+			expect(contract.defaultHardfork).toBe(hardfork);
+		});
+
+		it('should update defaults on deployed contract instance', async () => {
+			const hardfork = 'berlin';
+
+			contract = new web3.eth.Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+				syncWithContext: true,
+			});
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			web3.defaultHardfork = hardfork;
+
+			expect(contract.defaultHardfork).toBe(hardfork);
 		});
 	});
 });

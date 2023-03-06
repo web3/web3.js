@@ -17,11 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3ContextInitOptions, Web3PromiEvent } from 'web3-core';
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
-import { AbiFragment, ContractAbi } from 'web3-eth-abi';
 import {
+	AccessListResult,
+	AbiFragment,
 	Address,
 	BlockNumberOrTag,
 	Bytes,
+	ContractAbi,
 	EthExecutionAPI,
 	HexString,
 	HexString32Bytes,
@@ -59,7 +61,7 @@ export interface ContractEventOptions {
 	 */
 	filter?: Record<string, unknown>;
 	/**
-	 * The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as `earliest`, `latest` and `pending` can also be used. For specific range use {@link Contract.getPastEvents}.
+	 * The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized` can also be used. For specific range use {@link Contract.getPastEvents}.
 	 */
 	fromBlock?: BlockNumberOrTag;
 	/**
@@ -150,6 +152,10 @@ export interface ContractInitOptions {
 	readonly data?: Bytes;
 	readonly gasLimit?: Uint;
 	readonly provider?: SupportedProviders<EthExecutionAPI> | string;
+	/**
+	 * If `true`, the defaults of the contract instance will be updated automatically based on the changes of the context used to instantiate the contract.
+	 */
+	readonly syncWithContext?: boolean;
 }
 
 export interface NonPayableCallOptions {
@@ -230,7 +236,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * ```
 	 *
 	 * @param tx - The options used for calling.
-	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
 
@@ -344,6 +350,35 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @returns - The encoded ABI byte code to send via a transaction or call.
 	 */
 	encodeABI(): string;
+
+	/**
+	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
+	 *
+	 * @param options - The options used for createAccessList.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
+	 *
+	 *  ```ts
+	 *  const result = await MyContract.methods.myFunction().createAccessList();
+	 *  console.log(result);
+	 *
+	 * > {
+	 *  "accessList": [
+	 *     {
+	 *       "address": "0x15859bdf5aff2080a9968f6a410361e9598df62f",
+	 *       "storageKeys": [
+	 *         "0x0000000000000000000000000000000000000000000000000000000000000000"
+	 *       ]
+	 *     }
+	 *   ],
+	 *   "gasUsed": "0x7671"
+	 * }
+	 *  ```
+	 */
+	createAccessList(
+		tx?: NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<AccessListResult>;
 }
 
 export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
@@ -391,7 +426,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * ```
 	 *
 	 * @param tx - The options used for calling.
-	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
 	call<SpecialOutput = Outputs>(
@@ -504,6 +539,35 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The encoded ABI byte code to send via a transaction or call.
 	 */
 	encodeABI(): HexString;
+
+	/**
+	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
+	 *
+	 * @param options - The options used for createAccessList.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
+	 *
+	 *  ```ts
+	 *  const result = await MyContract.methods.myFunction().createAccessList();
+	 *  console.log(result);
+	 *
+	 * > {
+	 *  "accessList": [
+	 *     {
+	 *       "address": "0x15859bdf5aff2080a9968f6a410361e9598df62f",
+	 *       "storageKeys": [
+	 *         "0x0000000000000000000000000000000000000000000000000000000000000000"
+	 *       ]
+	 *     }
+	 *   ],
+	 *   "gasUsed": "0x7671"
+	 * }
+	 *  ```
+	 */
+	createAccessList(
+		tx?: NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<AccessListResult>;
 }
 
 export type Web3ContractContext = Partial<

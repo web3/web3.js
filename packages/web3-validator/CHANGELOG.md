@@ -70,3 +70,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `build` entry from `package.json` (#5755)
 
 ## [Unreleased]
+
+### Removed
+
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-utils`) (#5771)
+
+### Added
+
+-   Added support of `safe` and `finalized` block tags in `isBlockTag` method (#5823)
