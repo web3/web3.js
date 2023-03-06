@@ -89,6 +89,8 @@ export abstract class SocketProvider<
 	public constructor(socketPath: string, socketOptions?: object, reconnectOptions?: object) {
 		super();
 		this._connectionStatus = 'connecting';
+
+		// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
 		this._onCloseHandler = this._onCloseEvent.bind(this);
