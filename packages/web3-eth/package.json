@@ -48,8 +48,8 @@
 		"web3-providers-http": "^4.0.1-alpha.5"
 	},
 	"dependencies": {
-		"@ethereumjs/common": "^3.0.2",
-		"@ethereumjs/tx": "^4.0.2",
+		"@ethereumjs/common": "^3.1.1",
+		"@ethereumjs/tx": "^4.1.1",
 		"setimmediate": "^1.0.5",
 		"web3-core": "^4.0.1-alpha.5",
 		"web3-errors": "^0.1.1-alpha.4",
