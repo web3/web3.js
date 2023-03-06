@@ -74,6 +74,9 @@ export abstract class SocketProvider<
 	protected readonly _socketOptions?: object;
 	protected readonly _reconnectOptions: ReconnectOptions;
 	protected _socketConnection?: unknown;
+	public get SocketConnection() {
+		return this._socketConnection;
+	}
 	protected _connectionStatus: Web3ProviderStatus;
 	protected readonly _onMessageHandler: (event: MessageEvent) => void;
 	protected readonly _onOpenHandler: () => void;
