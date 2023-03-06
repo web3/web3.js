@@ -17,6 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // https://docs.ens.domains/contract-developer-guide/writing-a-resolver
 // resolver interface Ids
+/**
+ * An object holding the interface Ids of the ENS resolver contracts.
+ */
 export const interfaceIds: { [T: string]: string } = {
 	addr: '0x3b3b57de',
 	name: '0x691f3431',
@@ -27,6 +30,9 @@ export const interfaceIds: { [T: string]: string } = {
 };
 
 // functions list supported in resolver interfaces
+/**
+ * An object holding the functions of the ENS resolver contracts.
+ */
 export const methodsInInterface: { [T: string]: string } = {
 	setAddr: 'addr',
 	addr: 'addr',
@@ -36,6 +42,9 @@ export const methodsInInterface: { [T: string]: string } = {
 	contenthash: 'contenthash',
 };
 
+/**
+ * An object holding the addressed of the ENS registries on the different networks (mainnet, ropsten, rinkeby, goerli).
+ */
 export const registryAddresses: { [T: string]: string } = {
 	main: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
 	ropsten: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',

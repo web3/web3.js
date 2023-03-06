@@ -39,6 +39,9 @@ import { registryAddresses } from './config';
 import { Resolver } from './resolver';
 
 export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
+	/**
+	 * The registryAddress property can be used to define a custom registry address when you are connected to an unknown chain. It defaults to the main registry address.
+	 */
 	public registryAddress: string;
 	private readonly _registry: Registry;
 	private readonly _resolver: Resolver;
@@ -60,6 +63,15 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the Resolver by the given address
+	 * @param name - The name of the ENS domain
+	 * @returns An contract instance of the resolver
+	 *
+	 * @example
+	 * ```ts
+	 * const resolver = await ens.getResolver('resolver');
+	 *
+	 * console.log(resolver.options.address);
+	 * > '0x1234567890123456789012345678901234567890'
 	 */
 	public async getResolver(name: string): Promise<Contract<typeof PublicResolverAbi>> {
 		return this._registry.getResolver(name);
@@ -67,6 +79,15 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * set the resolver of the given name
+	 * @param name - The name of the ENS domain
+	 * @param address - The address of the resolver
+	 * @param txConfig - The transaction config
+	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
+	 * @returns The transaction receipt
+	 *
+	 * ```ts
+	 * const receipt = await ens.setResolver('resolver', '0x1234567890123456789012345678901234567890', {from: '0x1234567890123456789012345678901234567890'});
+	 * ```
 	 */
 	public async setResolver(
 		name: string,
@@ -82,6 +103,18 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
+	 * @param name - The ENS name
+	 * @param label - The name of the sub-domain or sha3 hash of it
+	 * @param owner - The owner of the name record
+	 * @param resolver - The resolver address of the name record
+	 * @param ttl - Time to live value
+	 * @param txConfig - (Optional) The transaction config
+	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
+	 * @returns
+	 *
+	 * ```ts
+	 * const receipt = await web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x...', '0x...', 1000000, {...});
+	 * ```
 	 */
 	public async setSubnodeRecord(
 		name: string,
@@ -105,6 +138,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Sets or clears an approval by the given operator.
+	 * @param operator - The operator address
+	 * @param approved
+	 * @param txConfig - (Optional) The transaction config
+	 * @returns
 	 */
 	public async setApprovalForAll(
 		operator: Address,
@@ -116,6 +153,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns true if the operator is approved
+	 * @param owner - The owner address
+	 * @param operator - The operator address
+	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
+	 * @returns
 	 */
 	public async isApprovedForAll(
 		owner: Address,
@@ -127,13 +168,25 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns true if the record exists
+	 * @param name - The ENS name
+	 * @returns - Returns `true` if node exists in this ENS registry. This will return `false` for records that are in the legacy ENS registry but have not yet been migrated to the new one.
+	 *
+	 * ```ts
+	 * const exists = await web3.eth.ens.recordExists('ethereum.eth');
+	 * ```
 	 */
 	public async recordExists(name: string): Promise<unknown> {
 		return this._registry.recordExists(name);
 	}
 
 	/**
-	 * Returns the address of the owner of an ENS name.
+	 * Creates a new subdomain of the given node, assigning ownership of it to the specified owner.
+	 * @param node - The ENS name
+	 * @param label - The name of the sub-domain or the sha3 hash of it
+	 * @param address - The registrar of this sub-domain
+	 * @param txConfig - (Optional) The transaction config
+	 * @param returnFormat
+	 * @returns
 	 */
 	public async setSubnodeOwner(
 		node: string,
@@ -147,6 +200,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 * @param name - The ENS name
+	 * @returns Returns the caching TTL (time-to-live) of a name.
 	 */
 	public async getTTL(name: string): Promise<unknown> {
 		return this._registry.getTTL(name);
