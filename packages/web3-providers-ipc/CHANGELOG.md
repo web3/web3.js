@@ -71,3 +71,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added named export for `IpcProvider` (#5771)
+-   Pass `_socketOptions` from `IpcProvider` constructor to the underlying `Socket` (#5891)
+-   The getter of `SocketConnection` in `IpcProvider` (inherited from `SocketProvider`) returns `net.Socket` (#5891)
