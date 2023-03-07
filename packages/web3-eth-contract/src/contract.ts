@@ -1050,7 +1050,10 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: modifiedContractOptions,
 		});
-		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+			// TODO Should make this configurable by the user
+			checkRevertBeforeSending: false,
+		});
 
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
@@ -1094,6 +1097,8 @@ export class Contract<Abi extends ContractAbi>
 				newContract.options.address = receipt.contractAddress;
 				return newContract;
 			},
+			// TODO Should make this configurable by the user
+			checkRevertBeforeSending: false,
 		});
 	}
 
