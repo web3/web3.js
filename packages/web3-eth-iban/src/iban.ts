@@ -20,9 +20,6 @@ import { toChecksumAddress, isAddress, leftPad, hexToNumber } from 'web3-utils';
 import { InvalidAddressError } from 'web3-errors';
 import { IbanOptions } from './types';
 
-/**
- * Converts Ethereum addresses to IBAN or BBAN addresses and vice versa.
- */
 export class Iban {
 	private readonly _iban: string;
 
@@ -36,8 +33,6 @@ export class Iban {
 
 	/**
 	 * Construct a direct or indirect IBAN
-	 * If the provided string was not of either the length of a direct IBAN (34 or 35),
-	 * or the length of an indirect IBAN (20), an Error will be thrown ('Invalid IBAN was provided').
 	 */
 	public constructor(iban: string) {
 		if (Iban.isIndirect(iban) || Iban.isDirect(iban)) {
