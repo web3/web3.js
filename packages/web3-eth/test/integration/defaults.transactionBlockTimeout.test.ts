@@ -74,7 +74,7 @@ describe('defaults', () => {
 			> = web3.eth.sendTransaction({
 				from: account1.address,
 				to: account2.address,
-				gas: '0x5218',
+				gas: '0x300000',
 				value: '0x1',
 				// Give a high nonce so the transaction stuck forever.
 				// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
@@ -88,7 +88,7 @@ describe('defaults', () => {
 				web3Eth: web3.eth as unknown as Web3Eth,
 				from: account1.address,
 				to: account3.address,
-				gas: '0x5218',
+				gas: '0x300000',
 				times: 2,
 				value: '0x1',
 			});
@@ -127,7 +127,7 @@ describe('defaults', () => {
 				> = web3.eth.sendTransaction({
 					from: account1.address,
 					to: account2.address,
-					gas: '0x5218',
+					gas: '0x300000',
 					value: '0x1',
 					type: '0x1',
 					// Give a high nonce so the transaction stuck forever.
@@ -142,7 +142,7 @@ describe('defaults', () => {
 					web3Eth: web3.eth as unknown as Web3Eth,
 					from: account2.address,
 					to: account3.address,
-					gas: '0x5218',
+					gas: '0x300000',
 					times: 2,
 					value: '0x1',
 				});

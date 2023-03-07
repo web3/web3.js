@@ -61,7 +61,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from: account1.address,
 				to: account2.address,
 				value: '0x1',
-				gas: '0x5218',
+				gas: '0x300000',
 			});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
@@ -91,7 +91,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from: account1.address,
 				to: account2.address,
 				value: '0x1',
-				gas: '0x5218',
+				gas: '0x300000',
 				times: waitConfirmations,
 			});
 			await confirmationPromise;
