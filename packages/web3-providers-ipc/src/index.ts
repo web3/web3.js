@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Socket } from 'net';
+import { Socket, SocketConstructorOpts } from 'net';
 import { ConnectionNotOpenError, InvalidClientError } from 'web3-errors';
 import { SocketProvider } from 'web3-utils';
 import {
@@ -27,16 +27,14 @@ import {
 } from 'web3-types';
 import { existsSync } from 'fs';
 
-// todo had to ignore, introduce error in doc generation,see why/better solution
-/** @ignore */
-
 export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> extends SocketProvider<
 	Buffer | string,
 	CloseEvent,
 	Error,
 	API
 > {
-	// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
+	protected readonly _socketOptions?: SocketConstructorOpts;
+
 	protected _socketConnection?: Socket;
 
 	public getStatus(): Web3ProviderStatus {
@@ -45,12 +43,13 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		}
 		return this._connectionStatus;
 	}
+
 	protected _openSocketConnection() {
 		if (!existsSync(this._socketPath)) {
 			throw new InvalidClientError(this._socketPath);
 		}
 		if (!this._socketConnection || this.getStatus() === 'disconnected') {
-			this._socketConnection = new Socket();
+			this._socketConnection = new Socket(this._socketOptions);
 		}
 
 		this._socketConnection.connect({ path: this._socketPath });
@@ -103,6 +102,7 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._socketConnection?.removeAllListeners('end');
 		this._socketConnection?.removeAllListeners('close');
 		this._socketConnection?.removeAllListeners('data');
+		// note: we intentionally keep the error event listener to be able to emit it in case an error happens when closing the connection
 	}
 
 	protected _onCloseEvent(event: CloseEvent): void {
