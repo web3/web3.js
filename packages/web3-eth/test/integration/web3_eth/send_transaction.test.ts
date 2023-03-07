@@ -410,42 +410,16 @@ describe('Web3Eth.sendTransaction', () => {
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
 			};
 
-			const expectedThrownError =
-				getSystemTestBackend() === 'geth'
-					? {
-							name: 'TransactionRevertInstructionError',
-							code: 402,
-							reason: expect.stringContaining(
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				code: 402,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? expect.stringContaining(
 								'err: insufficient funds for gas * price + value: address',
-							),
-					  }
-					: {
-							name: 'InvalidResponseError',
-							innerError: {
-								message: 'insufficient funds for gas * price + value',
-								stack:
-									'Error: insufficient funds for gas * price + value\n' +
-									'    at TransactionPool.prepareTransaction (/app/dist/node/1.js:2:167260)',
-								code: -32003,
-							},
-							code: 101,
-							data: undefined,
-							request: {
-								jsonrpc: '2.0',
-								id: expect.any(String),
-								method: 'eth_sendTransaction',
-								params: [
-									{
-										from: tempAcc.address,
-										to: '0x0000000000000000000000000000000000000000',
-										value: '0x28c87cb5c89a2571ebfdcb54864ada8349ffffffffffffff',
-										gasPrice: '0x77359400',
-										maxPriorityFeePerGas: undefined,
-										maxFeePerGas: undefined,
-									},
-								],
-							},
-					  };
+						  )
+						: 'VM Exception while processing transaction: insufficient balance',
+			};
 
 			await expect(
 				web3Eth
