@@ -124,9 +124,11 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			// @ts-expect-error run protected method
 			web3Provider._addSocketListeners();
 			const errorEvent = new Promise(resolve => {
-				web3Provider.on('error', message => {
-					if (typeof message === 'string') {
-						resolve(message);
+				web3Provider.on('error', error => {
+					if (
+						error?.message?.startsWith('Maximum number of reconnect attempts reached')
+					) {
+						resolve(error);
 					}
 				});
 			});
