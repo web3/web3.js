@@ -26,6 +26,7 @@ type SendFewTxParams = {
 	value: string;
 	times?: number;
 	waitReceipt?: boolean;
+	gas?: string;
 };
 export type Resolve = (value?: TransactionReceipt) => void;
 export const sendFewTxes = async ({
@@ -34,6 +35,7 @@ export const sendFewTxes = async ({
 	value,
 	from,
 	times = 3,
+	gas,
 }: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
@@ -42,6 +44,7 @@ export const sendFewTxes = async ({
 			to,
 			value,
 			from,
+			gas,
 		});
 		res.push(tx);
 	}

@@ -28,7 +28,7 @@ import {
 
 const checkTxCount = 2;
 
-describeIf(isSocket && !isIpc)('subscription', () => {
+describeIf(isSocket && !isIpc)('subscription - %s', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction`, async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
@@ -40,7 +40,6 @@ describeIf(isSocket && !isIpc)('subscription', () => {
 			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(
 				'pendingTransactions',
 			);
-
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
 			const value = `0x1`;
@@ -48,6 +47,7 @@ describeIf(isSocket && !isIpc)('subscription', () => {
 			let times = 0;
 			const txHashes: string[] = [];
 			let receipts: string[] = [];
+
 			const pr = new Promise((resolve: (s?: string) => void) => {
 				(async () => {
 					let waitList: string[] = [];
