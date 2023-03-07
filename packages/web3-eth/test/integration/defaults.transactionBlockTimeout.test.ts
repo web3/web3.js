@@ -62,6 +62,7 @@ describe('defaults', () => {
 	});
 
 	afterEach(async () => {
+		web3.eth.transactionBlockTimeout = 50;
 		await closeOpenConnection(web3.eth);
 	});
 
@@ -120,9 +121,6 @@ describe('defaults', () => {
 				// using subscription to get the new blocks and fire `TransactionBlockTimeoutError` is currently supported only
 				//	with `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout` equal true.
 				web3.eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;
-
-				// Make the test run faster by casing the polling to start after 2 blocks
-				web3.eth.transactionBlockTimeout = 2;
 
 				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
 				const sentTx: Web3PromiEvent<
