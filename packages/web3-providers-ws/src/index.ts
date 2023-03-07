@@ -42,6 +42,9 @@ export default class WebSocketProvider<
 	protected _validateProviderPath(providerUrl: string): boolean {
 		return typeof providerUrl === 'string' ? /^ws(s)?:\/\//i.test(providerUrl) : false;
 	}
+	public disconnect(code?: number, data?: string) {
+		super.disconnect(code, data);
+	}
 
 	public getStatus(): Web3ProviderStatus {
 		if (this._socketConnection && !isNullish(this._socketConnection)) {
