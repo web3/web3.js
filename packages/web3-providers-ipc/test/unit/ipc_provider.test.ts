@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Socket } from 'net';
 import * as fs from 'fs';
 import { ConnectionError, InvalidClientError } from 'web3-errors';
 import IpcProvider from '../../src/index';
@@ -34,6 +35,7 @@ describe('IpcProvider', () => {
 		it('should construct the instance of the provider', () => {
 			const provider = new IpcProvider(socketPath);
 			expect(provider).toBeInstanceOf(IpcProvider);
+			expect(provider.SocketConnection).toBeInstanceOf(Socket);
 		});
 
 		it('should try to connect', () => {
