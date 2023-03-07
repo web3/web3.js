@@ -188,6 +188,51 @@ const reconnectOptions: ReconnectOptions = {
 };
 ```
 
+#### IpcProvider
+
+The IPC provider is used in node.js dapps when running a local node. And it provide the most secure connection.
+
+The `socketOptions` parameter is of type `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
+
+```ts
+// for more check: https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html
+interface SocketConstructorOpts {
+	fd?: number | undefined;
+	allowHalfOpen?: boolean | undefined;
+	readable?: boolean | undefined;
+	writable?: boolean | undefined;
+}
+```
+
+And, the `reconnectOptions` parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here its type:
+
+```ts
+// this is the same options interface used for both WebSocketProvider and IpcProvider
+export type ReconnectOptions = {
+	autoReconnect: boolean;
+	delay: number;
+	maxAttempts: number;
+};
+```
+
+##### Options examples
+
+Below is an example for the passed options for each version:
+
+```ts
+let clientOptions: SocketConstructorOpts = {
+	allowHalfOpen: false;
+	readable: true;
+	writable: true;
+};
+
+const reconnectOptions: ReconnectOptions = {
+	autoReconnect: true,
+	delay: 5000,
+	maxAttempts: 5,
+};
+```
+
 #### Error message for reconnect attempts
 
 :::note

@@ -105,11 +105,12 @@ interface ReconnectOptions {
 }
 ```
 
-In 4.x, the options object is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
+In 4.x, the `socketOptions` parameter is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
 
-In 4.x a second option parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here is its type:
+In 4.x the `reconnectOptions` parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here is its type:
 
 ```ts
+// this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
 	autoReconnect: boolean; // default: `true`
 	delay: number; // default: `5000`
@@ -156,6 +157,82 @@ let clientOptions: ClientOptions = {
 		authorization: 'Basic username:password',
 	},
 	maxPayload: 100000000,
+};
+
+const reconnectOptions: ReconnectOptions = {
+	autoReconnect: true,
+	delay: 5000,
+	maxAttempts: 5,
+};
+```
+
+#### IpcProvider
+
+The IPC provider is used in node.js dapps when running a local node. And it provide the most secure connection.
+
+In 1.x, options passed in the constructor should be of type [`WebsocketProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L192). The `WebsocketProviderOptions` interface consists of:
+
+```ts
+export interface WebsocketProviderOptions {
+	host?: string;
+	timeout?: number;
+	reconnectDelay?: number;
+	headers?: any;
+	protocol?: string;
+	clientConfig?: object;
+	requestOptions?: any;
+	origin?: string;
+	reconnect?: ReconnectOptions;
+}
+
+export interface ReconnectOptions {
+	auto?: boolean;
+	delay?: number;
+	maxAttempts?: number;
+	onTimeout?: boolean;
+}
+```
+
+In 4.x, the `socketOptions` parameter is of type `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
+
+```ts
+interface SocketConstructorOpts {
+	fd?: number | undefined;
+	allowHalfOpen?: boolean | undefined;
+	readable?: boolean | undefined;
+	writable?: boolean | undefined;
+	signal?: AbortSignal;
+}
+```
+
+In 4.x the `reconnectOptions` parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here its type:
+
+```ts
+// this is the same options interface used for both WebSocketProvider and IpcProvider
+export type ReconnectOptions = {
+	autoReconnect: boolean;
+	delay: number;
+	maxAttempts: number;
+};
+```
+
+##### Options examples
+
+Below is an example for the passed options for each version:
+
+```ts
+// in 1.x
+var net = require('net');
+
+new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+// on windows the path is: "\\\\.\\pipe\\geth.ipc"
+// on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+
+// in 4.x
+let clientOptions: SocketConstructorOpts = {
+	allowHalfOpen: false;
+	readable: true;
+	writable: true;
 };
 
 const reconnectOptions: ReconnectOptions = {
