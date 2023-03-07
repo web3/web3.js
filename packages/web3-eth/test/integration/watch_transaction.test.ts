@@ -35,7 +35,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 
 const waitConfirmations = 2;
-
+const gas = '0x900000';
 type Resolve = (value?: unknown) => void;
 
 describeIf(isSocket)('watch subscription transaction', () => {
@@ -61,7 +61,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from: account1.address,
 				to: account2.address,
 				value: '0x1',
-				gas: '0x300000',
+				gas,
 			});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
@@ -91,7 +91,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from: account1.address,
 				to: account2.address,
 				value: '0x1',
-				gas: '0x300000',
+				gas,
 				times: waitConfirmations,
 			});
 			await confirmationPromise;

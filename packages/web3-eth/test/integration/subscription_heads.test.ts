@@ -33,6 +33,7 @@ import {
 
 const checkTxCount = 2;
 
+const gas = '0x900000';
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
 	let web3: Web3;
@@ -40,13 +41,13 @@ describeIf(isSocket)('subscription', () => {
 	let account2: Web3Account;
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		web3 = new Web3(clientUrl);
-		account1 = await createLocalAccount(web3);
-		account2 = createAccount();
-		await waitForOpenConnection(web3.eth);
 	});
 	describe('heads', () => {
 		it(`wait for ${checkTxCount} newHeads`, async () => {
+			web3 = new Web3(clientUrl);
+			account1 = await createLocalAccount(web3);
+			account2 = createAccount();
+			await waitForOpenConnection(web3.eth);
 			const sub = await web3.eth.subscribe('newHeads');
 			const value = `0x1`;
 			await waitForOpenConnection(web3.eth);
@@ -71,11 +72,14 @@ describeIf(isSocket)('subscription', () => {
 				from: account1.address,
 				to: account2.address,
 				value,
-				gas: '0x300000',
+				gas,
 				times: checkTxCount,
 			});
 
 			await pr;
+			sub.off('data', () => {
+				// do nothing
+			});
 			await web3.eth.subscriptionManager?.removeSubscription(sub);
 			await closeOpenConnection(web3.eth);
 		});

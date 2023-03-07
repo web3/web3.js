@@ -37,6 +37,7 @@ import {
 import { sendFewTxes } from './helper';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
+const gas = '0x900000';
 /* eslint-disable jest/no-standalone-expect */
 describe('defaults', () => {
 	let web3: Web3;
@@ -57,8 +58,6 @@ describe('defaults', () => {
 		web3.eth.blockHeaderTimeout = MAX_32_SIGNED_INTEGER / 1000;
 
 		account3 = createAccount();
-		account1 = await createLocalAccount(web3);
-		account2 = await createLocalAccount(web3);
 	});
 
 	afterEach(async () => {
@@ -67,6 +66,8 @@ describe('defaults', () => {
 
 	describe('defaults', () => {
 		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
+			account1 = await createLocalAccount(web3);
+			account2 = await createLocalAccount(web3);
 			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
@@ -74,7 +75,7 @@ describe('defaults', () => {
 			> = web3.eth.sendTransaction({
 				from: account1.address,
 				to: account2.address,
-				gas: '0x300000',
+				gas,
 				value: '0x1',
 				// Give a high nonce so the transaction stuck forever.
 				// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
@@ -88,7 +89,7 @@ describe('defaults', () => {
 				web3Eth: web3.eth as unknown as Web3Eth,
 				from: account1.address,
 				to: account3.address,
-				gas: '0x300000',
+				gas,
 				times: 2,
 				value: '0x1',
 			});
@@ -112,6 +113,8 @@ describe('defaults', () => {
 		itIf(isSocket)(
 			'should fail if transaction was not mined within `transactionBlockTimeout` blocks - when subscription is used',
 			async () => {
+				account1 = await createLocalAccount(web3);
+				account2 = await createLocalAccount(web3);
 				await waitForOpenConnection(web3.eth);
 				// using subscription to get the new blocks and fire `TransactionBlockTimeoutError` is currently supported only
 				//	with `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout` equal true.
@@ -127,7 +130,7 @@ describe('defaults', () => {
 				> = web3.eth.sendTransaction({
 					from: account1.address,
 					to: account2.address,
-					gas: '0x300000',
+					gas,
 					value: '0x1',
 					type: '0x1',
 					// Give a high nonce so the transaction stuck forever.
@@ -142,7 +145,7 @@ describe('defaults', () => {
 					web3Eth: web3.eth as unknown as Web3Eth,
 					from: account2.address,
 					to: account3.address,
-					gas: '0x300000',
+					gas,
 					times: 2,
 					value: '0x1',
 				});
