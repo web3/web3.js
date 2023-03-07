@@ -72,6 +72,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 *
 	 * console.log(resolver.options.address);
 	 * > '0x1234567890123456789012345678901234567890'
+	 * ```
 	 */
 	public async getResolver(name: string): Promise<Contract<typeof PublicResolverAbi>> {
 		return this._registry.getResolver(name);
@@ -113,7 +114,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @returns
 	 *
 	 * ```ts
-	 * const receipt = await web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x...', '0x...', 1000000, {...});
+	 * const receipt = await web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x1234567890123456789012345678901234567890','0xAA9133EeC3ae5f9440C1a1E61E2D2Cc571675527', 1000000);
 	 * ```
 	 */
 	public async setSubnodeRecord(
@@ -209,6 +210,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 * @param name - THe ENS name
+	 * @param ttl - The TTL value
+	 * @param txConfig - (Optional) The transaction config
+	 * @returns
 	 */
 	public async setTTL(
 		name: string,
@@ -220,13 +225,23 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the owner by the given name and current configured or detected Registry
+	 * @param name - The ENS name
+	 * @returns - Returns the address of the owner of the name.
 	 */
 	public async getOwner(name: string): Promise<unknown> {
 		return this._registry.getOwner(name);
 	}
 
 	/**
-	 * Returns the address of the owner of an ENS name.
+	 * Sets the address of the owner of an ENS name.
+	 * @param name - The ENS name
+	 * @param address - The address of the new owner
+	 * @param txConfig - (Optional) The transaction config
+	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
+	 * @returns
+	 * ```ts
+	 * const receipt = await ens.setOwner('ethereum.eth', , sendOptions);
+	 * ```
 	 */
 	public async setOwner(
 		name: string,
@@ -239,6 +254,15 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 * @param name - The ENS name
+	 * @param owner  - The owner of the name record.
+	 * @param resolver  - The resolver of the name record.
+	 * @param ttl  - Time to live value
+	 * @param txConfig  - (Optional) The transaction config
+	 * @returns
+	 * ```ts
+	 * const receipt = await ens.setRecord( 'web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e', '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', 1000);
+	 * ```
 	 */
 	public async setRecord(
 		name: string,
@@ -250,8 +274,16 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		return this._registry.setRecord(name, owner, resolver, ttl, txConfig);
 	}
 
-	/*
+	/**
 	 * Sets the address of an ENS name in his resolver.
+	 * @param name - The ENS name
+	 * @param address - The address to set
+	 * @param txConfig - (Optional) The transaction config
+	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
+	 * @returns
+	 * ```ts
+	 * const receipt = await ens.setAddress('web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e');
+	 *```
 	 */
 	public async setAddress(
 		name: string,
@@ -262,8 +294,20 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		return this._resolver.setAddress(name, address, txConfig, returnFormat);
 	}
 
-	/*
-	 * Sets the SECP256k1 public key associated with an ENS node.
+	/**
+	 * Sets the SECP256k1 public key associated with an ENS node. (Emits a `PublicKeyChanged` event)
+	 * @param name - The ENS name
+	 * @param x - The X coordinate of the public key
+	 * @param y - The Y coordinate of the public key
+	 * @param txConfig - (Optional) The transaction config
+	 * @returns
+	 * ```ts
+	 * web3.eth.ens.setPubkey(
+	 * 'ethereum.eth',
+	 * '0x0000000000000000000000000000000000000000000000000000000000000000',
+	 * '0x0000000000000000000000000000000000000000000000000000000000000000',
+	 * { from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c' });
+	 * ```
 	 */
 	public async setPubkey(
 		name: string,
@@ -274,8 +318,13 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		return this._resolver.setPubkey(name, x, y, txConfig);
 	}
 
-	/*
-	 * Sets the content hash associated with an ENS node.
+	// todo do we support ipfs, onion, ...
+	/**
+	 * Sets the content hash associated with an ENS node. Emits a `ContenthashChanged` event.
+	 * @param name - The ENS name
+	 * @param hash - The content hash to set
+	 * @param txConfig - (Optional) The transaction config
+	 * @returns
 	 */
 	public async setContenthash(
 		name: string,
@@ -285,24 +334,51 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		return this._resolver.setContenthash(name, hash, txConfig);
 	}
 
-	/*
+	/**
 	 * Resolves an ENS name to an Ethereum address.
+	 * @param ENSName - The ENS name to resolve
+	 * @param coinType - (Optional) The coin type, defaults to 60 (ETH)
+	 * @returns - The Ethereum address of the given name
+	 * ```ts
+	 * const address = await web3.eth.ens.getAddress('ethereum.eth');
+	 * console.log(address);
+	 * > '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359'
+	 * ```
 	 */
-
-	// eslint-disable-next-line @typescript-eslint/no-inferrable-types
-	public async getAddress(ENSName: string, coinType: number = 60) {
+	public async getAddress(ENSName: string, coinType = 60) {
 		return this._resolver.getAddress(ENSName, coinType);
 	}
 
-	/*
+	/**
 	 * Returns the X and Y coordinates of the curve point for the public key.
+	 * @param ENSName - The ENS name
+	 * @returns - The X and Y coordinates of the curve point for the public key
+	 * @example
+	 * ```ts
+	 * const key = await web3.eth.ens.getPubkey('ethereum.eth');
+	 * console.log(key);
+	 * > {
+	 * "0": "0x0000000000000000000000000000000000000000000000000000000000000000",
+	 * "1": "0x0000000000000000000000000000000000000000000000000000000000000000",
+	 * "x": "0x0000000000000000000000000000000000000000000000000000000000000000",
+	 * "y": "0x0000000000000000000000000000000000000000000000000000000000000000"
+	 * }
+	 * ```
 	 */
 	public async getPubkey(ENSName: string) {
 		return this._resolver.getPubkey(ENSName);
 	}
 
-	/*
+	/**
 	 * Returns the content hash object associated with an ENS node.
+	 * @param ENSName - The ENS name
+	 * @returns - The content hash object associated with an ENS node
+	 * @example
+	 * ```ts
+	 * const hash = await web3.eth.ens.getContenthash('ethereum.eth');
+	 * console.log(hash);
+	 * > 'QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL'
+	 * ```
 	 */
 	public async getContenthash(ENSName: string) {
 		return this._resolver.getContenthash(ENSName);
@@ -311,6 +387,12 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * Checks if the current used network is synced and looks for ENS support there.
 	 * Throws an error if not.
+	 * @returns - The address of the ENS registry if the network has been detected successfully
+	 * @example
+	 * ```ts
+	 * console.log(await web3.eth.ens.checkNetwork());
+	 * > '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+	 * ```
 	 */
 	public async checkNetwork() {
 		const now = Date.now() / 1000;
@@ -342,13 +424,25 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		return this._detectedAddress;
 	}
 
-	/*
+	/**
 	 * Returns true if the related Resolver does support the given signature or interfaceId.
+	 * @param ENSName - The ENS name
+	 * @param interfaceId - The signature of the function or the interfaceId as described in the ENS documentation
+	 * @returns - `true` if the related Resolver does support the given signature or interfaceId.
+	 * @example
+	 * ```ts
+	 * const supports = await web3.eth.ens.supportsInterface('ethereum.eth', 'addr(bytes32');
+	 * console.log(supports);
+	 * > true
+	 * ```
 	 */
 	public async supportsInterface(ENSName: string, interfaceId: string) {
 		return this._resolver.supportsInterface(ENSName, interfaceId);
 	}
 
+	/**
+	 * @returns - Returns all events that can be emitted by the ENS registry.
+	 */
 	public get events() {
 		return this._registry.events;
 	}
