@@ -15,42 +15,41 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockHeaderOutput } from 'web3-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Web3 } from 'web3';
+import { Web3Account } from 'web3-eth-accounts';
 import { Web3Eth, NewHeadsSubscription } from '../../src';
 import { Resolve, sendFewTxes } from './helper';
 import {
 	closeOpenConnection,
-	createNewAccount,
-	createTempAccount,
+	createAccount,
+	createLocalAccount,
 	describeIf,
 	getSystemTestProvider,
 	isSocket,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
+// eslint-disable-next-line import/no-extraneous-dependencies
 
 const checkTxCount = 2;
 
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
-	let tempAcc2: { address: string; privateKey: string };
-
-	beforeEach(async () => {
-		tempAcc2 = await createTempAccount();
-	});
-	beforeAll(() => {
+	let web3: Web3;
+	let account1: Web3Account;
+	let account2: Web3Account;
+	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
+		web3 = new Web3(clientUrl);
+		account1 = await createLocalAccount(web3);
+		account2 = createAccount();
+		await waitForOpenConnection(web3.eth);
 	});
 	describe('heads', () => {
 		it(`wait for ${checkTxCount} newHeads`, async () => {
-			const web3Eth = new Web3Eth(clientUrl);
-			const sub: NewHeadsSubscription = await web3Eth.subscribe('newHeads');
-			const tempAccForEachTest = await createNewAccount({
-				unlock: true,
-				refill: true,
-			});
-			const from = tempAccForEachTest.address;
-			const to = tempAcc2.address;
+			const sub = await web3.eth.subscribe('newHeads');
 			const value = `0x1`;
-			await waitForOpenConnection(web3Eth);
+			await waitForOpenConnection(web3.eth);
 			let times = 0;
 			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: BlockHeaderOutput) => {
@@ -68,16 +67,17 @@ describeIf(isSocket)('subscription', () => {
 			});
 			// eslint-disable-next-line no-void
 			void sendFewTxes({
-				web3Eth,
-				from,
-				to,
+				web3Eth: web3.eth as unknown as Web3Eth,
+				from: account1.address,
+				to: account2.address,
 				value,
+				gas: '0x300000',
 				times: checkTxCount,
 			});
 
 			await pr;
-			await web3Eth.subscriptionManager?.removeSubscription(sub);
-			await closeOpenConnection(web3Eth);
+			await web3.eth.subscriptionManager?.removeSubscription(sub);
+			await closeOpenConnection(web3.eth);
 		});
 		it(`clear`, async () => {
 			const web3Eth = new Web3Eth(clientUrl);
