@@ -343,7 +343,9 @@ export const signTxAndSendEIP1559 = async (
 		gas: tx.gas ?? '1000000',
 		from: acc.address,
 	});
-	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+	return web3.eth.sendSignedTransaction(signedTx.rawTransaction, undefined, {
+		checkRevertBeforeSending: false,
+	});
 };
 
 export const signTxAndSendEIP2930 = async (
@@ -359,7 +361,9 @@ export const signTxAndSendEIP2930 = async (
 		gas: tx.gas ?? '1000000',
 		from: acc.address,
 	});
-	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+	return web3.eth.sendSignedTransaction(signedTx.rawTransaction, undefined, {
+		checkRevertBeforeSending: false,
+	});
 };
 
 export const signAndSendContractMethodEIP1559 = async (
