@@ -640,7 +640,7 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  `npm audit fix` for libraries update (#5726)
 
-## [Unreleased]
+## [1.9.0]
 
 ### Fixed
 
@@ -660,3 +660,5 @@ Released with 1.0.0-beta.37 code base.
   
 ### Security
   - Updated dependencies (#5885)
+
+## [Unreleased]
