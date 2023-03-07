@@ -71,9 +71,12 @@ export abstract class SocketProvider<
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	protected readonly _sentRequestsQueue: Map<JsonRpcId, SocketRequestItem<any, any, any>>;
 	protected _reconnectAttempts!: number;
-	protected readonly _providerOptions?: object;
+	protected readonly _socketOptions?: object;
 	protected readonly _reconnectOptions: ReconnectOptions;
 	protected _socketConnection?: unknown;
+	public get SocketConnection() {
+		return this._socketConnection;
+	}
 	protected _connectionStatus: Web3ProviderStatus;
 	protected readonly _onMessageHandler: (event: MessageEvent) => void;
 	protected readonly _onOpenHandler: () => void;
@@ -83,20 +86,23 @@ export abstract class SocketProvider<
 	/**
 	 * This is an abstract class for implementing a socket provider (e.g. WebSocket, IPC). It extends the EIP-1193 provider {@link EIP1193Provider}.
 	 * @param socketPath - The path to the socket (e.g. /ipc/path or ws://localhost:8546)
-	 * @param options - The options for the socket connection
+	 * @param socketOptions - The options for the socket connection
 	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
 	 */
-	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
+	public constructor(socketPath: string, socketOptions?: object, reconnectOptions?: object) {
 		super();
 		this._connectionStatus = 'connecting';
+
+		// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
 		this._onCloseHandler = this._onCloseEvent.bind(this);
 		this._onErrorHandler = this._onError.bind(this);
+
 		if (!this._validateProviderPath(socketPath)) throw new InvalidClientError(socketPath);
 
 		this._socketPath = socketPath;
-		this._providerOptions = options;
+		this._socketOptions = socketOptions;
 
 		const DEFAULT_PROVIDER_RECONNECTION_OPTIONS = {
 			autoReconnect: true,
