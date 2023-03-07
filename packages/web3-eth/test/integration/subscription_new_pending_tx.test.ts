@@ -28,9 +28,9 @@ import {
 
 const checkTxCount = 2;
 
-describeIf(isSocket && !isIpc)('subscription - %s', () => {
+describeIf(isSocket && !isIpc)('subscription', () => {
 	describe('new pending transaction', () => {
-		it(`wait ${checkTxCount} transaction`, async () => {
+		it(`wait ${checkTxCount} transaction - %s`, async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
 			const [tempAcc, tempAcc2] = await Promise.all([
 				createTempAccount(),
