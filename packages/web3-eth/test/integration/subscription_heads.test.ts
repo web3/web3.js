@@ -33,7 +33,7 @@ import {
 
 const checkTxCount = 2;
 
-const gas = '0x900000';
+const gas = '0x300000';
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
 	let web3: Web3;

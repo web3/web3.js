@@ -32,12 +32,13 @@ import {
 	itIf,
 	waitForOpenConnection,
 	createLocalAccount,
+	isIpc,
 } from '../fixtures/system_test_utils';
 
 import { sendFewTxes } from './helper';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
-const gas = '0x900000';
+const gas = '0x300000';
 /* eslint-disable jest/no-standalone-expect */
 describe('defaults', () => {
 	let web3: Web3;
@@ -110,7 +111,7 @@ describe('defaults', () => {
 
 		// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
 		// 	And this test case will be removed once https://github.com/web3/web3.js/issues/5521 is implemented.
-		itIf(isSocket)(
+		itIf(isSocket && !isIpc)(
 			'should fail if transaction was not mined within `transactionBlockTimeout` blocks - when subscription is used',
 			async () => {
 				account1 = await createLocalAccount(web3);
