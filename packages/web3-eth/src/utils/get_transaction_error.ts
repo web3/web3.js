@@ -65,7 +65,7 @@ export async function getTransactionError<ReturnFormat extends DataFormat>(
 		(_reason as RevertReasonWithCustomError).customErrorArguments !== undefined
 	) {
 		const reasonWithCustomError: RevertReasonWithCustomError =
-			knownReason as RevertReasonWithCustomError;
+			_reason as RevertReasonWithCustomError;
 		error = new TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>(
 			reasonWithCustomError.reason,
 			reasonWithCustomError.customErrorName,
