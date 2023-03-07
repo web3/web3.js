@@ -85,7 +85,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param txConfig - The transaction config
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
 	 * @returns The transaction receipt
-	 *
+	 * @example
 	 * ```ts
 	 * const receipt = await ens.setResolver('resolver', '0x1234567890123456789012345678901234567890', {from: '0x1234567890123456789012345678901234567890'});
 	 * ```
@@ -112,7 +112,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param txConfig - (Optional) The transaction config
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
 	 * @returns
-	 *
+	 * @example
 	 * ```ts
 	 * const receipt = await web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x1234567890123456789012345678901234567890','0xAA9133EeC3ae5f9440C1a1E61E2D2Cc571675527', 1000000);
 	 * ```
@@ -140,9 +140,13 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * Sets or clears an approval by the given operator.
 	 * @param operator - The operator address
-	 * @param approved
+	 * @param approved - `true` to set the approval, `false` to clear it
 	 * @param txConfig - (Optional) The transaction config
 	 * @returns
+	 * @example
+	 * ```ts
+	 * const receipt = web3.eth.ens.setApprovalForAll('0x1234567890123456789012345678901234567890', true )
+	 * ```
 	 */
 	public async setApprovalForAll(
 		operator: Address,
@@ -153,11 +157,15 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	}
 
 	/**
-	 * Returns true if the operator is approved
+	 * Returns true if the operator is approved to make ENS registry operations on behalf of the owner.
 	 * @param owner - The owner address
 	 * @param operator - The operator address
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns
+	 * @returns - `true` if the operator is approved, `false` otherwise
+	 * @example
+	 * ```ts
+	 * const approved = await web3.eth.ens.isApprovedForAll('0x1234567890123456789012345678901234567890', '0x690B9A9E9aa1C9dB991C7721a92d351Db4FaC990');
+	 * ```
 	 */
 	public async isApprovedForAll(
 		owner: Address,
@@ -171,7 +179,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * Returns true if the record exists
 	 * @param name - The ENS name
 	 * @returns - Returns `true` if node exists in this ENS registry. This will return `false` for records that are in the legacy ENS registry but have not yet been migrated to the new one.
-	 *
+	 * @example
 	 * ```ts
 	 * const exists = await web3.eth.ens.recordExists('ethereum.eth');
 	 * ```
@@ -186,8 +194,12 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param label - The name of the sub-domain or the sha3 hash of it
 	 * @param address - The registrar of this sub-domain
 	 * @param txConfig - (Optional) The transaction config
-	 * @param returnFormat
-	 * @returns
+	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
+	 * @returns The transaction receipt
+	 * @example
+	 * ```ts
+	 * const receipt = await ens.setSubnodeOwner('ethereum.eth', 'web3', '0x1234567890123456789012345678901234567890', {from: '0x1234567890123456789012345678901234567890'});
+	 * ```
 	 */
 	public async setSubnodeOwner(
 		node: string,
@@ -203,17 +215,25 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * Returns the address of the owner of an ENS name.
 	 * @param name - The ENS name
 	 * @returns Returns the caching TTL (time-to-live) of a name.
+	 * @example
+	 * ```ts
+	 * const owner = await web3.eth.ens.getOwner('ethereum.eth');
+	 * ```
 	 */
 	public async getTTL(name: string): Promise<unknown> {
 		return this._registry.getTTL(name);
 	}
 
 	/**
-	 * Returns the address of the owner of an ENS name.
+	 * Sets the TTL of a name. Emits a NewTTL event.
 	 * @param name - THe ENS name
 	 * @param ttl - The TTL value
 	 * @param txConfig - (Optional) The transaction config
 	 * @returns
+	 * @example
+	 * ```ts
+	 * const receipt = await web3.eth.ens.setTTL('ethereum.eth', 1000);
+	 * ```
 	 */
 	public async setTTL(
 		name: string,
@@ -227,6 +247,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * Returns the owner by the given name and current configured or detected Registry
 	 * @param name - The ENS name
 	 * @returns - Returns the address of the owner of the name.
+	 * @example
+	 * ```ts
+	 * const owner = await web3.eth.ens.getOwner('ethereum.eth');
+	 * ```
 	 */
 	public async getOwner(name: string): Promise<unknown> {
 		return this._registry.getOwner(name);
@@ -239,6 +263,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param txConfig - (Optional) The transaction config
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
 	 * @returns
+	 * @example
 	 * ```ts
 	 * const receipt = await ens.setOwner('ethereum.eth', , sendOptions);
 	 * ```
@@ -260,6 +285,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param ttl  - Time to live value
 	 * @param txConfig  - (Optional) The transaction config
 	 * @returns
+	 * @example
 	 * ```ts
 	 * const receipt = await ens.setRecord( 'web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e', '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', 1000);
 	 * ```
