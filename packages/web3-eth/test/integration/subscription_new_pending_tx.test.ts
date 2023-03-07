@@ -21,13 +21,14 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
+	isIpc,
 	isSocket,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
 
-describeIf(isSocket)('subscription', () => {
+describeIf(isSocket && !isIpc)('subscription', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction`, async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
