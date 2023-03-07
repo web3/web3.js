@@ -91,7 +91,7 @@ describe('defaults', () => {
 				from: account1.address,
 				to: account3.address,
 				gas,
-				times: 2,
+				times: 4,
 				value: '0x1',
 			});
 
@@ -110,7 +110,7 @@ describe('defaults', () => {
 		});
 
 		// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
-		// 	And this test case will be removed once https://github.com/web3/web3.js/issues/5521 is implemented.
+		// TODO: And this test case will be removed once https://github.com/web3/web3.js/issues/5521 is implemented.
 		itIf(isSocket && !isIpc)(
 			'should fail if transaction was not mined within `transactionBlockTimeout` blocks - when subscription is used',
 			async () => {

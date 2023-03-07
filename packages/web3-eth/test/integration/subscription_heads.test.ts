@@ -73,7 +73,7 @@ describeIf(isSocket)('subscription', () => {
 				to: account2.address,
 				value,
 				gas,
-				times: checkTxCount,
+				times: checkTxCount * 2,
 			});
 
 			await pr;
