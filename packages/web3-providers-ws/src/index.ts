@@ -28,14 +28,14 @@ import { isNullish, SocketProvider } from 'web3-utils';
 import { ConnectionNotOpenError } from 'web3-errors';
 
 export { ClientRequestArgs } from 'http';
-// todo had to ignore, introduce error in doc generation,see why/better solution
-/** @ignore */
+
 export { ClientOptions } from 'isomorphic-ws';
 
 export default class WebSocketProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends SocketProvider<WebSocket.MessageEvent, WebSocket.CloseEvent, WebSocket.ErrorEvent, API> {
 	protected readonly _providerOptions?: ClientOptions | ClientRequestArgs;
+
 	protected _socketConnection?: WebSocket;
 
 	// eslint-disable-next-line class-methods-use-this
@@ -59,6 +59,7 @@ export default class WebSocketProvider<
 		}
 		return 'disconnected';
 	}
+
 	protected _openSocketConnection() {
 		this._socketConnection = new WebSocket(
 			this._socketPath,
