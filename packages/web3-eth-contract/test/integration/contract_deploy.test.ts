@@ -36,14 +36,14 @@ describe('contract', () => {
 		let acc: { address: string; privateKey: string };
 		let pkAccount: { address: string; privateKey: string };
 		beforeAll(async () => {
-			pkAccount = await createNewAccount({ refill: true });
-			acc = await createTempAccount();
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
 		});
-		beforeEach(() => {
+		beforeEach(async () => {
+			pkAccount = await createNewAccount({ refill: true });
+			acc = await createTempAccount();
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
