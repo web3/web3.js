@@ -34,7 +34,7 @@ export { ClientOptions } from 'isomorphic-ws';
 export default class WebSocketProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends SocketProvider<WebSocket.MessageEvent, WebSocket.CloseEvent, WebSocket.ErrorEvent, API> {
-	protected readonly _providerOptions?: ClientOptions | ClientRequestArgs;
+	protected readonly _socketOptions?: ClientOptions | ClientRequestArgs;
 
 	protected _socketConnection?: WebSocket;
 
@@ -64,9 +64,9 @@ export default class WebSocketProvider<
 		this._socketConnection = new WebSocket(
 			this._socketPath,
 			undefined,
-			this._providerOptions && Object.keys(this._providerOptions).length === 0
+			this._socketOptions && Object.keys(this._socketOptions).length === 0
 				? undefined
-				: this._providerOptions,
+				: this._socketOptions,
 		);
 	}
 
