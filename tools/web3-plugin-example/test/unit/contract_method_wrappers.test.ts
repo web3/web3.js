@@ -84,6 +84,8 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 			requestManagerSendSpy.mockResolvedValueOnce(expectedGasPrice);
 			// Mocking block number for trySendTransaction call
 			requestManagerSendSpy.mockResolvedValueOnce('0x1');
+			// Mocking getRevertReason response
+			requestManagerSendSpy.mockResolvedValueOnce(undefined);
 			requestManagerSendSpy.mockResolvedValueOnce(expectedTransactionHash);
 			// Mocking response for getTransactionReceipt for waitForTransactionReceipt
 			requestManagerSendSpy.mockResolvedValueOnce({});
