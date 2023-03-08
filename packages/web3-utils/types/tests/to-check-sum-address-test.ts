@@ -30,6 +30,13 @@ toChecksumAddress('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf
 // $ExpectType string
 toChecksumAddress('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', undefined);
 
+// $ExpectType string
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51');
+// $ExpectType string
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', 31);
+// $ExpectType string
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', undefined);
+
 // $ExpectError
 toChecksumAddress([4]);
 // $ExpectError
@@ -58,3 +65,16 @@ toChecksumAddress('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf
 toChecksumAddress('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', true);
 // $ExpectError
 toChecksumAddress('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', null);
+
+// $ExpectError
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', [4]);
+// $ExpectError
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', ['string']);
+// $ExpectError
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', new BN(3));
+// $ExpectError
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', {});
+// $ExpectError
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', true);
+// $ExpectError
+toChecksumAddress('xdc8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51', null);
