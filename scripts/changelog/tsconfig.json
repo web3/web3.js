@@ -1,0 +1,10 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"module": "commonjs",
+		"declaration": false,
+		"declarationMap": false
+	},
+	"include": ["src/**/*"]
+}
