@@ -49,6 +49,10 @@ if [[ $MODE == "ipc" ]]; then
         BACKEND=geth-binary
 fi
 
+if [[ $BACKEND == "geth" ]]; then
+        BACKEND=geth-binary
+fi
+
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 	if [[ $TEST_OPTION == "coverage" ]]; then
 		TEST_COMMAND="test:coverage:integration"
