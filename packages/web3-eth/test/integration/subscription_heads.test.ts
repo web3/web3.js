@@ -32,8 +32,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 
 const checkTxCount = 2;
-
-const gas = 21000;
+const gas = 30000;
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
 	let web3: Web3;
@@ -47,7 +46,6 @@ describeIf(isSocket)('subscription', () => {
 			web3 = new Web3(clientUrl);
 			account1 = await createLocalAccount(web3);
 			account2 = createAccount();
-			await waitForOpenConnection(web3.eth);
 			const sub = await web3.eth.subscribe('newHeads');
 			const value = `0x1`;
 			await waitForOpenConnection(web3.eth);
@@ -73,7 +71,7 @@ describeIf(isSocket)('subscription', () => {
 				to: account2.address,
 				value,
 				gas,
-				times: checkTxCount * 2,
+				times: checkTxCount,
 			});
 
 			await pr;
