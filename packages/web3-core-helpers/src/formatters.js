@@ -494,7 +494,7 @@ var inputAddressFormatter = function (address) {
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
     } else if (utils.isAddress(address)) {
-        return '0x' + address.toLowerCase().replace('0x', '');
+        return '0x' + address.toLowerCase().replace('0x', '').toLowerCase().replace('xdc', '');
     }
     throw new Error(`Provided address ${address} is invalid, the capitalization checksum test failed, or it's an indirect IBAN address which can't be converted.`);
 };

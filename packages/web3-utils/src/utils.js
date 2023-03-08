@@ -84,10 +84,10 @@ var toTwosComplement = function (number) {
  */
 var isAddress = function (address) {
     // check if it has the basic requirements of an address
-    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+    if (!/^(0x|xdc)?[0-9a-f]{40}$/i.test(address)) {
         return false;
         // If it's ALL lowercase or ALL upppercase
-    } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
+    } else if (/^(0x|0X|xdc|XDC)?[0-9a-f]{40}$/.test(address) || /^(0x|0X|xdc|XDC)?[0-9A-F]{40}$/.test(address)) {
         return true;
         // Otherwise check each case
     } else {
@@ -106,7 +106,7 @@ var isAddress = function (address) {
  */
 var checkAddressChecksum = function (address) {
     // Check each case
-    address = address.replace(/^0x/i,'');
+    address = address.replace(/^0x/i,'').replace(/^xdc/i,'');
     var addressHash = sha3(address.toLowerCase()).replace(/^0x/i,'');
 
     for (var i = 0; i < 40; i++ ) {
@@ -550,7 +550,7 @@ var BNwrapped = function (value) {
     }
     else {
         return new BN(value);
-    } 
+    }
 };
 Object.setPrototypeOf(BNwrapped, BN);
 Object.setPrototypeOf(BNwrapped.prototype, BN.prototype);

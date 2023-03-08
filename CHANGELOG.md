@@ -656,6 +656,7 @@ Released with 1.0.0-beta.37 code base.
   - `utils.toNumber` and `utils.hexToNumber` can now return the large unsafe numbers as `BigInt`, if `true` was passed to a new optional parameter called `bigIntOnOverflow` (#5845)
   - Updated @types/bn.js dependency to 5.1.1 in web3, web3-core and web3-eth-contract as reason mentioned in #5640 (#5885)
   - Add description to error for failed connection on websocket (#5884)
+  - Support xdc prefix address for [xinfin blockchain](https://www.xinfin.org/)
 
   
 ### Security
