@@ -2,7 +2,15 @@
 	"name": "web3-rpc-methods",
 	"version": "0.1.0-alpha.4",
 	"description": "Ethereum RPC methods for Web3 4.x.x",
-	"main": "lib/index.js",
+	"main": "./lib/commonjs/index.js",
+	"module": "./lib/esm/index.js",
+	"exports": {
+		".": {
+			"import": "./lib/esm/index.js",
+			"require": "./lib/commonjs/index.js",
+			"types": "./lib/types/index.d.ts"
+		}
+	},
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
@@ -16,7 +24,10 @@
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
 		"prebuild": "yarn clean",
-		"build": "tsc --build",
+		"build": "yarn build:cjs && yarn build:esm && yarn build:types",
+		"build:cjs": "tsc --build tsconfig.cjs.json",
+		"build:esm": "tsc --build tsconfig.esm.json",
+		"build:types": "tsc --build tsconfig.types.json",
 		"build:check": "node -e \"require('./lib')\"",
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
