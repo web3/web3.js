@@ -181,7 +181,7 @@ Object {
   "errorCode": undefined,
   "errorReason": undefined,
   "innerError": undefined,
-  "message": "Maximum number of reconnect attempts reached! (5)",
+  "message": "Maximum number of reconnect attempts reached!",
   "name": "MaxAttemptsReachedOnReconnectingError",
 }
 `;
