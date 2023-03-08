@@ -30,7 +30,7 @@ import {
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
-const gas = 21000;
+const gas = 30000;
 describeIf(isSocket && !isIpc)('subscription', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction`, async () => {
