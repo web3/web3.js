@@ -46,4 +46,5 @@ module.exports = {
 	 */
 	resetModules: true,
 	coverageDirectory: '.coverage/integration',
+	testSequencer: '<rootDir>/test/integration/testSequencer.js',
 };

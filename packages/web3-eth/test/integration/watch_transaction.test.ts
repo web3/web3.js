@@ -35,7 +35,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 
 const waitConfirmations = 2;
-const gas = '0x300000';
+const gas = '0x5208';
 type Resolve = (value?: unknown) => void;
 
 describeIf(isSocket)('watch subscription transaction', () => {

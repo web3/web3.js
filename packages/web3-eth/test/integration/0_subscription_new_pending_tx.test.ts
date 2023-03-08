@@ -14,32 +14,31 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Web3 } from 'web3';
 import { Web3Eth, NewPendingTransactionsSubscription } from '../../src';
 import { sendFewTxes } from './helper';
 import {
 	closeOpenConnection,
-	createTempAccount,
+	createAccount,
+	createLocalAccount,
 	describeIf,
 	getSystemTestProvider,
-	isIpc,
 	isSocket,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
-
-describeIf(isSocket && !isIpc)('subscription', () => {
+const gas = '0x5208';
+describeIf(isSocket)('subscription', () => {
 	describe('new pending transaction', () => {
-		it(`wait ${checkTxCount} transaction - %s`, async () => {
-			const web3Eth = new Web3Eth(getSystemTestProvider());
-			const [tempAcc, tempAcc2] = await Promise.all([
-				createTempAccount(),
-				createTempAccount(),
-			]);
+		it(`wait ${checkTxCount} transaction`, async () => {
+			const web3 = new Web3(getSystemTestProvider());
+			const tempAcc = await createLocalAccount(web3);
+			const tempAcc2 = createAccount();
+			const web3Eth = web3.eth;
 			await waitForOpenConnection(web3Eth);
-			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(
-				'pendingTransactions',
-			);
+			const sub = await web3Eth.subscribe('pendingTransactions');
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
 			const value = `0x1`;
@@ -47,8 +46,8 @@ describeIf(isSocket && !isIpc)('subscription', () => {
 			let times = 0;
 			const txHashes: string[] = [];
 			let receipts: string[] = [];
-
 			const pr = new Promise((resolve: (s?: string) => void) => {
+				// eslint-disable-next-line @typescript-eslint/no-floating-promises
 				(async () => {
 					let waitList: string[] = [];
 					sub.on('data', (data: string) => {
@@ -74,9 +73,10 @@ describeIf(isSocket && !isIpc)('subscription', () => {
 					});
 					receipts = (
 						await sendFewTxes({
-							web3Eth,
+							web3Eth: web3Eth as unknown as Web3Eth,
 							from,
 							to,
+							gas,
 							value,
 							times: checkTxCount,
 						})
@@ -96,7 +96,7 @@ describeIf(isSocket && !isIpc)('subscription', () => {
 						});
 						resolve();
 					}
-				})().catch(console.error);
+				})();
 			});
 			await pr;
 			for (const hash of txHashes) {
