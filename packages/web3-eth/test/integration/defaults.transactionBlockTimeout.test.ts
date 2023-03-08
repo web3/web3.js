@@ -38,7 +38,7 @@ import {
 import { sendFewTxes } from './helper';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
-const gas = '0x5208';
+const gas = 21000;
 /* eslint-disable jest/no-standalone-expect */
 describe('defaults', () => {
 	let web3: Web3;

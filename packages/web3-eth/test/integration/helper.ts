@@ -26,7 +26,7 @@ type SendFewTxParams = {
 	value: string;
 	times?: number;
 	waitReceipt?: boolean;
-	gas?: string;
+	gas?: string | number;
 };
 export type Resolve = (value?: TransactionReceipt) => void;
 export const sendFewTxes = async ({

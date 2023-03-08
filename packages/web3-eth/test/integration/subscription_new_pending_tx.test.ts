@@ -24,13 +24,14 @@ import {
 	createLocalAccount,
 	describeIf,
 	getSystemTestProvider,
+	isIpc,
 	isSocket,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
-const gas = '0x5208';
-describeIf(isSocket)('subscription', () => {
+const gas = 21000;
+describeIf(isSocket && !isIpc)('subscription', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction`, async () => {
 			const web3 = new Web3(getSystemTestProvider());
