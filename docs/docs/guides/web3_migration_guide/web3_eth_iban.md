@@ -23,7 +23,7 @@ If the provided string was not of either the length of a direct IBAN (34 or 35),
 
 ##### In version 1.x
 
-It used to behave diffidently, if it was called on an instance of IBAN, from if it was called as a static method. However, this used to happen only if the provided address was not a Direct IBAN. More specifically, if the instance method `new Iban(address).toAddress()` was called, it will return an empty string (`''`) for that non Direct IBAN. And if the static method `Iban.toAddress(address)` was called, it used to throw an Error with the message `'IBAN is indirect and can\'t be converted'`, for that non Direct IBAN.
+It used to behave differently, if it was called on an instance of IBAN, from if it was called as a static method. However, this used to happen only if the provided address was not a Direct IBAN. More specifically, if the instance method `new Iban(address).toAddress()` was called, it will return an empty string (`''`) for that non Direct IBAN. And if the static method `Iban.toAddress(address)` was called, it used to throw an Error with the message `'IBAN is indirect and can\'t be converted'`, for that non Direct IBAN.
 
 ##### In version 4.x
 
