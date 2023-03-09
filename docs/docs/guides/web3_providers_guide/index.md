@@ -159,8 +159,8 @@ Here is how to catch the error if max attempts reached when the auto reconnectin
 
 ```ts
 provider.on('error', errorMessage => {
-	if (errorMessage.startsWith('Max connection attempts exceeded')) {
-		// the `errorMessage` will be `Max connection attempts exceeded (${maxAttempts})`
+	if (errorMessage.startsWith('Maximum number of reconnect attempts reached!')) {
+		// the `errorMessage` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
 		// the `maxAttempts` is equal to the provided value by the user or the default `5`.
 	}
 });
@@ -188,7 +188,7 @@ const reconnectOptions: ReconnectOptions = {
 };
 ```
 
-#### IpcProvider
+### IpcProvider
 
 The IPC provider is used in node.js dapps when running a local node. And it provide the most secure connection.
 
@@ -239,17 +239,17 @@ const reconnectOptions: ReconnectOptions = {
 This section applies for both `IpcProvider` and `WebSocketProvider`.
 :::
 
-The error message (not wrapped in an Error object) for the max reconnect attempts, will contain the value of the variable `maxAttempts` as follows:
+The error message, for the max reconnect attempts, will contain the value of the variable `maxAttempts` as follows:
 
-`` `Max connection attempts exceeded (${maxAttempts})` ``
+`` `Maximum number of reconnect attempts reached! (${maxAttempts})` ``
 
 And here is how to catch the error, if max attempts reached when there is auto reconnecting:
 
 ```ts
-provider.on('error', errorMessage => {
-	if (errorMessage.startsWith('Max connection attempts exceeded')) {
-		// the `errorMessage` will be `Max connection attempts exceeded (${maxAttempts})`
-		// the `maxAttempts` is equal to the provided value by the user or the default `5`.
+provider.on('error', error => {
+	if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
+		// the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
+		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
 	}
 });
 ```
