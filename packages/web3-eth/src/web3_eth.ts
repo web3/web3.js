@@ -1028,8 +1028,9 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public sendSignedTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Bytes,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		options?: SendTransactionOptions,
 	) {
-		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat);
+		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat, options);
 	}
 
 	/**

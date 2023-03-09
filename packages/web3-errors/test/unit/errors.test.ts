@@ -53,7 +53,7 @@ describe('errors', () => {
 			// To disable error for the abstract class
 
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			const err = new ErrorClass({} as never, {} as never, {} as never);
+			const err = new ErrorClass({} as never, {} as never, {} as never, {} as never);
 			errorCodes.push(err.code);
 		}
 
@@ -162,12 +162,30 @@ describe('errors', () => {
 		});
 	});
 
-	describe('TransactionRevertError', () => {
+	describe('TransactionRevertInstructionError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new transactionErrors.TransactionRevertError('message', 'signature', {
+				new transactionErrors.TransactionRevertInstructionError('message', 'signature', {
 					attr1: 'attr1',
 				} as any).toJSON(),
+			).toMatchSnapshot();
+		});
+	});
+
+	describe('TransactionRevertWithCustomError', () => {
+		it('should have valid json structure', () => {
+			expect(
+				new transactionErrors.TransactionRevertWithCustomError(
+					'reason',
+					'customErrorName',
+					'customErrorDecodedSignature',
+					{ customErrorArgument: 'customErrorArgument' },
+					'signature',
+					{
+						attr1: 'attr1',
+					} as any,
+					'data',
+				).toJSON(),
 			).toMatchSnapshot();
 		});
 	});

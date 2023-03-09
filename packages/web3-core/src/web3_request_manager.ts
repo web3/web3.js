@@ -369,7 +369,7 @@ export class Web3RequestManager<
 					throw new RpcError(rpcErrorResponse);
 				}
 			} else if (!Web3RequestManager._isReverted(response)) {
-				throw new InvalidResponseError<ErrorType>(response);
+				throw new InvalidResponseError<ErrorType, RequestType>(response, payload);
 			}
 		}
 
