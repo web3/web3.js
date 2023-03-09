@@ -43,7 +43,7 @@ export class Registry {
 
 			return result;
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -60,7 +60,7 @@ export class Registry {
 
 			return receipt;
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -68,7 +68,7 @@ export class Registry {
 		try {
 			return this.contract.methods.ttl(namehash(name)).call();
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -82,7 +82,7 @@ export class Registry {
 
 			return promiEvent;
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -104,7 +104,7 @@ export class Registry {
 				.send(txConfig);
 			return receipt;
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -165,7 +165,7 @@ export class Registry {
 
 			return result;
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -175,7 +175,7 @@ export class Registry {
 
 			return promise;
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -194,7 +194,7 @@ export class Registry {
 					throw new Error();
 				});
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -209,7 +209,7 @@ export class Registry {
 				.setResolver(namehash(name), format({ eth: 'address' }, address, returnFormat))
 				.send(txConfig);
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
@@ -231,7 +231,7 @@ export class Registry {
 				)
 				.send(txConfig);
 		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
 		}
 	}
 	public get events() {

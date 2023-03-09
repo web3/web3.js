@@ -15,11 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// TODO Seems to be an issue with linter falsely reporting this
+// error for Transaction Error Scenarios tests
+/* eslint-disable jest/no-conditional-expect */
+
 import {
 	Transaction,
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
 	TransactionWithFromAndToLocalWalletIndex,
+	Address,
 } from 'web3-types';
 import { Wallet } from 'web3-eth-accounts';
 import { isHexStrict } from 'web3-validator';
@@ -29,8 +34,10 @@ import {
 	closeOpenConnection,
 	createAccountProvider,
 	createTempAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
+import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
 describe('Web3Eth.sendTransaction', () => {
 	let web3Eth: Web3Eth;
@@ -353,6 +360,192 @@ describe('Web3Eth.sendTransaction', () => {
 
 			// TODO: Debug why the assertions are not being called
 			// expect.assertions(1);
+		});
+	});
+
+	describe('Transaction Error Scenarios', () => {
+		let simpleRevertContractAddress: Address;
+
+		beforeAll(async () => {
+			const simpleRevertDeployTransaction: Transaction = {
+				from: tempAcc.address,
+				data: SimpleRevertDeploymentData,
+			};
+			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
+				simpleRevertDeployTransaction,
+			);
+			simpleRevertContractAddress = (
+				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
+			).contractAddress as Address;
+		});
+
+		it('Should throw TransactionRevertInstructionError because gas too low', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				gas: 1,
+			};
+
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				code: 402,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'err: intrinsic gas too low: have 1, want 21000 (supplied gas 1)'
+						: 'VM Exception while processing transaction: out of gas',
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
+		it('Should throw TransactionRevertInstructionError because insufficient funds', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
+			};
+
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				message: 'Transaction has been reverted by the EVM',
+				code: 402,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? expect.stringContaining(
+								'err: insufficient funds for gas * price + value: address',
+						  )
+						: 'VM Exception while processing transaction: insufficient balance',
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
+		it('Should throw TransactionRevertInstructionError because of contract revert and return revert reason', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: simpleRevertContractAddress,
+				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
+			};
+
+			web3Eth.handleRevert = true;
+
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				code: 402,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted: This is a send revert'
+						: 'VM Exception while processing transaction: revert This is a send revert',
+				signature: '0x08c379a0',
+				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+				receipt: undefined,
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
+		it('Should throw TransactionRevertWithCustomError because of contract revert and return custom error ErrorWithNoParams', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: simpleRevertContractAddress,
+				data: '0x3ebf4d9c',
+			};
+
+			web3Eth.handleRevert = true;
+
+			const expectedThrownError = {
+				name: 'TransactionRevertWithCustomError',
+				code: 438,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted'
+						: 'VM Exception while processing transaction: revert',
+				signature: '0x72090e4d',
+				customErrorName: 'ErrorWithNoParams',
+				customErrorDecodedSignature: 'ErrorWithNoParams()',
+				customErrorArguments: {},
+				receipt: undefined,
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction, undefined, { contractAbi: SimpleRevertAbi })
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
+		it('Should throw TransactionRevertWithCustomError because of contract revert and return custom error ErrorWithParams', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: simpleRevertContractAddress,
+				data: '0x819f48fe',
+			};
+
+			web3Eth.handleRevert = true;
+
+			const expectedThrownError = {
+				name: 'TransactionRevertWithCustomError',
+				code: 438,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted'
+						: 'VM Exception while processing transaction: revert',
+				signature: '0xc85bda60',
+				data: '000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
+				customErrorName: 'ErrorWithParams',
+				customErrorDecodedSignature: 'ErrorWithParams(uint256,string)',
+				customErrorArguments: {
+					code: BigInt(42),
+					message: 'This is an error with params',
+				},
+				receipt: undefined,
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction, undefined, { contractAbi: SimpleRevertAbi })
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
+		it('Should throw TransactionRevertInstructionError because of contract revert', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: simpleRevertContractAddress,
+				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
+			};
+
+			web3Eth.handleRevert = false;
+
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				code: 402,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted: This is a send revert'
+						: 'VM Exception while processing transaction: revert This is a send revert',
+				signature: '0x08c379a0',
+				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
 		});
 	});
 });
