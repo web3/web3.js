@@ -465,5 +465,6 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 			}),
 		);
 	}
+	await closeOpenConnection(web3);
 	return res;
 };
