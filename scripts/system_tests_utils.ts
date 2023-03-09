@@ -448,3 +448,22 @@ export const waitForEvent = async (
 			resolve(data || error);
 		});
 	});
+
+export const sendFewSampleTxs = async (cnt = 1) => {
+	const web3 = new Web3(getSystemTestProvider());
+	const fromAcc = await createLocalAccount(web3);
+	const toAcc = createAccount();
+	const res = [];
+	for (let i = 0; i < cnt; i += 1) {
+		res.push(
+			// eslint-disable-next-line no-await-in-loop
+			await web3.eth.sendTransaction({
+				to: toAcc.address,
+				value: '0x1',
+				from: fromAcc.address,
+				gas: '300000',
+			}),
+		);
+	}
+	return res;
+};

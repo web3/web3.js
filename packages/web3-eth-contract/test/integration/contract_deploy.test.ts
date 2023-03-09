@@ -26,6 +26,8 @@ import {
 	createNewAccount,
 	signTxAndSendEIP2930,
 	signTxAndSendEIP1559,
+	sendFewSampleTxs,
+	isIpc,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -160,6 +162,11 @@ describe('contract', () => {
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
 			await contract.deploy(deployOptions).send(sendOptions);
+
+			if (isIpc) {
+				// we need this for confirm transaction for IPC provider
+				await sendFewSampleTxs(2);
+			}
 
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
