@@ -32,6 +32,7 @@ import {
 	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
+	isIpc,
 } from '../fixtures/system_test_utils';
 
 import {
@@ -364,7 +365,7 @@ describe('defaults', () => {
 				from,
 				to,
 				value,
-				times: waitConfirmations,
+				times: isIpc ? 2 * waitConfirmations : waitConfirmations,
 			});
 			await confirmationPromise;
 			await closeOpenConnection(eth);
