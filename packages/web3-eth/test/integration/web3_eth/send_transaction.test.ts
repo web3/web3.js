@@ -410,46 +410,22 @@ describe('Web3Eth.sendTransaction', () => {
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
 			};
 
-			const expectedThrownError =
-				getSystemTestBackend() === 'geth'
-					? {
-							name: 'TransactionRevertInstructionError',
-							code: 402,
-							reason: expect.stringContaining(
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				message: 'Transaction has been reverted by the EVM',
+				code: 402,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? expect.stringContaining(
 								'err: insufficient funds for gas * price + value: address',
-							),
-					  }
-					: {
-							name: 'InvalidResponseError',
-							code: 101,
-							innerError: {
-								message: 'insufficient funds for gas * price + value',
-								stack: expect.stringContaining(
-									'Error: insufficient funds for gas * price + value',
-								),
-								code: -32003,
-							},
-							data: undefined,
-							request: {
-								jsonrpc: '2.0',
-								id: expect.any(String),
-								method: 'eth_sendTransaction',
-								params: [
-									{
-										from: tempAcc.address,
-										to: '0x0000000000000000000000000000000000000000',
-										value: '0x28c87cb5c89a2571ebfdcb54864ada8349ffffffffffffff',
-										gasPrice: expect.stringContaining('0x'),
-										maxPriorityFeePerGas: undefined,
-										maxFeePerGas: undefined,
-									},
-								],
-							},
-					  };
+						  )
+						: 'VM Exception while processing transaction: insufficient balance',
+			};
 
 			await expect(
-				web3Eth.sendTransaction(transaction),
-				// .on('error', error => expect(error).toMatchObject(expectedThrownError)),
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
 			).rejects.toMatchObject(expectedThrownError);
 		});
 

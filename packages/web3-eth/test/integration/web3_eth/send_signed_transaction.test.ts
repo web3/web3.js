@@ -366,31 +366,21 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				bytes: FMT_BYTES.BUFFER,
 			});
 
-			const expectedThrownError =
-				getSystemTestBackend() === 'geth'
-					? {
-							name: 'TransactionRevertInstructionError',
-							innerError: undefined,
-							reason: expect.stringContaining(
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				message: 'Transaction has been reverted by the EVM',
+				innerError: undefined,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? expect.stringContaining(
 								'err: insufficient funds for gas * price + value: address 0x',
-							),
-							signature: undefined,
-							receipt: undefined,
-							data: undefined,
-							code: 402,
-					  }
-					: {
-							name: 'InvalidResponseError',
-							code: 101,
-							innerError: expect.any(Object),
-							data: undefined,
-							request: {
-								jsonrpc: '2.0',
-								id: expect.any(String),
-								method: 'eth_sendRawTransaction',
-								params: [expect.any(String)],
-							},
-					  };
+						  )
+						: 'VM Exception while processing transaction: insufficient balance',
+				signature: undefined,
+				receipt: undefined,
+				data: undefined,
+				code: 402,
+			};
 
 			await expect(
 				web3Eth
