@@ -30,6 +30,7 @@ import {
 	isSocket,
 	waitForOpenConnection,
 	createLocalAccount,
+	isIpc,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -92,7 +93,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				to: account2.address,
 				value: '0x1',
 				gas,
-				times: waitConfirmations,
+				times: isIpc ? 2 * waitConfirmations : waitConfirmations,
 			});
 			await confirmationPromise;
 			await closeOpenConnection(web3.eth);
