@@ -76,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
+-   Using `MaxAttemptsReachedOnReconnectingError` with the same message for 1.x but also adding the `maxAttempts` (#5894)
 
 ### Added
 

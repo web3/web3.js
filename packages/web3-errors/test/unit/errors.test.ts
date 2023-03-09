@@ -127,7 +127,7 @@ describe('errors', () => {
 	describe('MaxAttemptsReachedOnReconnectingError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new connectionErrors.MaxAttemptsReachedOnReconnectingError().toJSON(),
+				new connectionErrors.MaxAttemptsReachedOnReconnectingError(5).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
