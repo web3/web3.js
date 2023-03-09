@@ -97,8 +97,8 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			web3Provider._socketConnection?.end();
 			const errorEvent = waitForEvent(web3Provider, 'error');
 
-			const errorMessage = await errorEvent;
-			expect(errorMessage).toBe(`Max connection attempts exceeded (${3})`);
+			const error = (await errorEvent) as Error;
+			expect(error.message).toBe(`Maximum number of reconnect attempts reached! (${3})`);
 		});
 	});
 });

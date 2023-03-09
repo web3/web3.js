@@ -37,6 +37,7 @@ import {
 	ConnectionError,
 	ConnectionNotOpenError,
 	InvalidClientError,
+	MaxAttemptsReachedOnReconnectingError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
 	Web3WSProviderError,
@@ -288,8 +289,10 @@ export abstract class SocketProvider<
 			this.isReconnecting = false;
 			this._clearQueues();
 			this._removeSocketListeners();
-			const errorMsg = `Max connection attempts exceeded (${this._reconnectOptions.maxAttempts})`;
-			this._eventEmitter.emit('error', errorMsg);
+			this._eventEmitter.emit(
+				'error',
+				new MaxAttemptsReachedOnReconnectingError(this._reconnectOptions.maxAttempts),
+			);
 		}
 	}
 
