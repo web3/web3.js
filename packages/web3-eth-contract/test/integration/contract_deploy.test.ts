@@ -165,7 +165,7 @@ describe('contract', () => {
 
 			if (isIpc) {
 				// we need this for confirm transaction for IPC provider
-				await sendFewSampleTxs(2);
+				await sendFewSampleTxs(20);
 			}
 
 			// Wait for some fraction of time to trigger the handler
