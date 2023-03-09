@@ -57,6 +57,7 @@ describe('WebSocketProvider', () => {
 			expect(wsProvider.connect).toBeDefined();
 			expect(wsProvider.disconnect).toBeDefined();
 			expect(wsProvider.reset).toBeDefined();
+			expect(wsProvider.SocketConnection).toBeInstanceOf(WebSocket);
 		});
 
 		it('should allow for providerOptions to be passed upon instantiation', () => {
