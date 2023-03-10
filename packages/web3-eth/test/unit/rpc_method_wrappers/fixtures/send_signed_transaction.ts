@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Bytes, TransactionReceipt } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 
 export const expectedTransactionHash =
 	'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547';
@@ -23,8 +24,8 @@ export const expectedTransactionReceipt: TransactionReceipt = {
 	transactionIndex: '0x41',
 	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',
 	blockNumber: '0x5daf3b',
-	from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
-	to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
+	from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401',
+	to: '0x0000000000000000000000000000000000000000',
 	cumulativeGasUsed: '0x33bc', // 13244
 	effectiveGasPrice: '0x13a21bc946', // 84324108614
 	gasUsed: '0x4dc', // 1244
@@ -41,24 +42,10 @@ export const expectedTransactionReceipt: TransactionReceipt = {
  * - Input parameters:
  *     - signedTransaction
  */
+const signedTransaction =
+	'0xf8650f8415aa14088252089400000000000000000000000000000000000000000180820a95a0e6d6bc9c7af306733eb44b2a8a4a4efed5db2fbff947e21521fe81dfb144a00aa01a8a87c872f59564abbbe60e9d4e54dee5e1f1647477ab170ecd7e2704d3c94d';
 export const testData: [string, Bytes][] = [
-	[
-		'signedTransaction = HexString',
-		'0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
-	],
-	[
-		'signedTransaction = Buffer',
-		Buffer.from(
-			'0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
-		),
-	],
-	[
-		'signedTransaction = Uint8Array',
-		new Uint8Array([
-			30, 78, 64, 34, 36, 65, 38, 64, 64, 36, 37, 63, 35, 64, 33, 32, 62, 65, 38, 64, 34, 36,
-			65, 38, 64, 64, 36, 37, 63, 35, 64, 33, 32, 62, 65, 38, 30, 35, 38, 62, 62, 38, 65, 62,
-			39, 37, 30, 38, 37, 30, 66, 30, 37, 32, 34, 34, 35, 36, 37, 35, 30, 35, 38, 62, 62, 38,
-			65, 62, 39, 37, 30, 38, 37, 30, 66, 30, 37, 32, 34, 34, 35, 36, 37, 35,
-		]),
-	],
+	['signedTransaction = HexString', signedTransaction],
+	['signedTransaction = Buffer', hexToBytes(signedTransaction)],
+	['signedTransaction = Uint8Array', new Uint8Array(hexToBytes(signedTransaction))],
 ];
