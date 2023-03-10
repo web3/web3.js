@@ -27,6 +27,38 @@ import {
 } from 'web3-types';
 import { existsSync } from 'fs';
 
+/**
+ * The IPC Provider could be used in node.js dapps when running a local node. And it provide the most secure connection.
+ *
+ * @example
+ * ```ts
+ * const provider = new IpcProvider(
+ * 		`path.ipc`,
+ * 		{
+ * 			writable: false,
+ * 		},
+ * 		{
+ * 			delay: 500,
+ * 			autoReconnect: true,
+ * 			maxAttempts: 10,
+ * 		},
+ * 	);
+ * ```
+ *
+ * The second and the third parameters are both optional. And you can for example, the second parameter could be an empty object or undefined.
+ *  * @example
+ * ```ts
+ * const provider = new IpcProvider(
+ * 		`path.ipc`,
+ * 		{},
+ * 		{
+ * 			delay: 500,
+ * 			autoReconnect: true,
+ * 			maxAttempts: 10,
+ * 		},
+ * 	);
+ * ```
+ */
 export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> extends SocketProvider<
 	Buffer | string,
 	CloseEvent,

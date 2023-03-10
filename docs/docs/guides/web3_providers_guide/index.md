@@ -142,6 +142,8 @@ const httpOptions = {
 
 #### WebSocketProvider
 
+Use WebSocketProvider to connect to a Node using a WebSocket connection, i.e. over the `ws` or `wss` protocol.
+
 The options object is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
 
 The second option parameter can be given regarding reconnecting. And here is its type:
@@ -164,6 +166,39 @@ provider.on('error', errorMessage => {
 		// the `maxAttempts` is equal to the provided value by the user or the default `5`.
 	}
 });
+```
+
+And here is a sample instantiation for the `WebSocketProvider`:
+
+```ts
+const provider = new WebSocketProvider(
+	`ws://localhost:8545`,
+	{
+		headers: {
+			// to provide the API key if the Node requires the key to be inside the `headers` for example:
+			'x-api-key': '<Api key>',
+		},
+	},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
+```
+
+The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined, like in the following example:
+
+```ts
+const provider = new WebSocketProvider(
+	`ws://localhost:8545`,
+	{},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
 ```
 
 :::
@@ -190,9 +225,9 @@ const reconnectOptions: ReconnectOptions = {
 
 ### IpcProvider
 
-The IPC provider is used in node.js dapps when running a local node. And it provide the most secure connection.
+The IPC Provider could be used in node.js dapps when running a local node. And it provide the most secure connection.
 
-The `socketOptions` parameter is of type `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
+It accepts a second parameter called `socketOptions`. And, its type is `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
 
 ```ts
 // for more check: https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html
@@ -204,7 +239,7 @@ interface SocketConstructorOpts {
 }
 ```
 
-And, the `reconnectOptions` parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here its type:
+And, the third parameter is called `reconnectOptions` that is of the type `ReconnectOptions`. It can be given to control: auto-reconnecting, delay and max tries attempts. And here its type:
 
 ```ts
 // this is the same options interface used for both WebSocketProvider and IpcProvider
@@ -231,6 +266,36 @@ const reconnectOptions: ReconnectOptions = {
 	delay: 5000,
 	maxAttempts: 5,
 };
+```
+
+And here is a sample instantiation for the `IpcProvider`:
+
+```ts
+const provider = new IpcProvider(
+	`path.ipc`,
+	{
+		writable: false,
+	},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
+```
+
+The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined.
+
+```ts
+const provider = new IpcProvider(
+	`path.ipc`,
+	{},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
 ```
 
 #### Error message for reconnect attempts
