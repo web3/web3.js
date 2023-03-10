@@ -149,7 +149,7 @@ export class Iban {
 	 * Note: this is also available as a method at an Iban instance.
 	 *
 	 * @param iban - a string to be checked if it is in IBAN
-	 * @return {Boolean} true if it is valid IBAN
+	 * @returns - true if it is valid IBAN
 	 *
 	 * @example
 	 * ```ts
