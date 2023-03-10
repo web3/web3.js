@@ -1155,11 +1155,15 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-errors
 
 -   Added error class `InvalidMethodParamsError` and error code `ERR_INVALID_METHOD_PARAMS = 207` (#5824)
+-   `request` property to `ResponseError` (#5854)
+-   `data` property to `TransactionRevertInstructionError` (#5854)
+-   `TransactionRevertWithCustomError` was added to handle custom solidity errors (#5854)
 
 #### web3-eth
 
 -   Added `createAccessList` functionality ( #5780 )
 -   Added support of `safe` and `finalized` block tags (#5823)
+-   `contractAbi` option to `SendTransactionOptions` and `SendSignedTransactionOptions` to added the ability to parse custom solidity errors (#5854)
 
 #### web3-eth-abi
 
@@ -1211,10 +1215,12 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-errors
 
 -   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
+-   Renamed `TransactionRevertError` to `TransactionRevertInstructionError` to remain consistent with `1.x` (#5854)
 
 #### web3-eth
 
 -   Update imports statements for objects that was moved between web3 packages (#5771)
+-   `sendTransaction` and `sendSignedTransaction` now errors with (and `error` event emits) the following possible errors: `TransactionRevertedWithoutReasonError`, `TransactionRevertInstructionError`, `TransactionRevertWithCustomError`, `InvalidResponseError`, or `ContractExecutionError` (#5854)
 
 #### web3-eth-contract
 
@@ -1257,3 +1263,4 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   Fix contract defaults (#5756)
+-   Fixed getPastEventsError (#5819)

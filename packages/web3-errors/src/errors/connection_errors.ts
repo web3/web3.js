@@ -91,8 +91,8 @@ export class ConnectionCloseError extends ConnectionError {
 }
 
 export class MaxAttemptsReachedOnReconnectingError extends ConnectionError {
-	public constructor() {
-		super('Maximum number of reconnect attempts reached!');
+	public constructor(numberOfAttempts: number) {
+		super(`Maximum number of reconnect attempts reached! (${numberOfAttempts})`);
 		this.code = ERR_CONN_MAX_ATTEMPTS;
 	}
 }

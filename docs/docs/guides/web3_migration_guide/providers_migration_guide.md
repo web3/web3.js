@@ -165,21 +165,25 @@ const reconnectOptions: ReconnectOptions = {
 };
 ```
 
-##### Error message for reconnect attempts
+#### Error message for reconnect attempts
+
+:::note
+This section applies for both `IpcProvider` and `WebSocketProvider`.
+:::
 
 The error in, version 1.x, was an Error object that contains the message:
 `'Maximum number of reconnect attempts reached!'`
 
-However, the error, in version 4.x, is just an error message (not wrapped in an Error object). And the error message will contain the value of the variable `maxAttempts` as follows:
+And, the error in version 4.x, is the same, but will also contain the value of the variable `maxAttempts` as follows:
 
-`` `Max connection attempts exceeded (${maxAttempts})` ``
+`` `Maximum number of reconnect attempts reached! (${maxAttempts})` ``
 
 And here is how to catch the error, in version 4.x, if max attempts reached when there is auto reconnecting:
 
 ```ts
-provider.on('error', errorMessage => {
-	if (errorMessage.startsWith('Max connection attempts exceeded')) {
-		// the `errorMessage` will be `Max connection attempts exceeded (${maxAttempts})`
+provider.on('error', error => {
+	if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
+		// the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
 		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
 	}
 });

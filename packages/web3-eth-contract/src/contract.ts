@@ -1050,10 +1050,13 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: modifiedContractOptions,
 		});
-		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+			// TODO Should make this configurable by the user
+			checkRevertBeforeSending: false,
+		});
 
 		// eslint-disable-next-line no-void
-		void transactionToSend.on('contractExecutionError', (error: unknown) => {
+		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
 				decodeContractErrorData(errorsAbi, error.innerError);
@@ -1094,6 +1097,8 @@ export class Contract<Abi extends ContractAbi>
 				newContract.options.address = receipt.contractAddress;
 				return newContract;
 			},
+			// TODO Should make this configurable by the user
+			checkRevertBeforeSending: false,
 		});
 	}
 

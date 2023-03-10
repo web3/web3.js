@@ -16,7 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
-import { JsonRpcError, JsonRpcResponse, JsonRpcResponseWithError } from 'web3-types';
+import {
+	JsonRpcError,
+	JsonRpcPayload,
+	JsonRpcResponse,
+	JsonRpcResponseWithError,
+} from 'web3-types';
 import { BaseWeb3Error } from '../web3_error_base';
 import { ERR_INVALID_RESPONSE, ERR_RESPONSE } from '../error_codes';
 
@@ -36,11 +41,16 @@ const isResponseWithError = <Error = unknown, Result = unknown>(
 const buildErrorMessage = (response: JsonRpcResponse<unknown, unknown>): string =>
 	isResponseWithError(response) ? response.error.message : '';
 
-export class ResponseError<ErrorType = unknown> extends BaseWeb3Error {
+export class ResponseError<ErrorType = unknown, RequestType = unknown> extends BaseWeb3Error {
 	public code = ERR_RESPONSE;
 	public data?: ErrorType | ErrorType[];
+	public request?: JsonRpcPayload<RequestType>;
 
-	public constructor(response: JsonRpcResponse<unknown, ErrorType>, message?: string) {
+	public constructor(
+		response: JsonRpcResponse<unknown, ErrorType>,
+		message?: string,
+		request?: JsonRpcPayload<RequestType>,
+	) {
 		super(
 			message ??
 				`Returned error: ${
@@ -55,16 +65,24 @@ export class ResponseError<ErrorType = unknown> extends BaseWeb3Error {
 				? response.map(r => r.error?.data as ErrorType)
 				: response?.error?.data;
 		}
+
+		this.request = request;
 	}
 
 	public toJSON() {
-		return { ...super.toJSON(), data: this.data };
+		return { ...super.toJSON(), data: this.data, request: this.request };
 	}
 }
 
-export class InvalidResponseError<ErrorType = unknown> extends ResponseError<ErrorType> {
-	public constructor(result: JsonRpcResponse<unknown, ErrorType>) {
-		super(result);
+export class InvalidResponseError<ErrorType = unknown, RequestType = unknown> extends ResponseError<
+	ErrorType,
+	RequestType
+> {
+	public constructor(
+		result: JsonRpcResponse<unknown, ErrorType>,
+		request?: JsonRpcPayload<RequestType>,
+	) {
+		super(result, undefined, request);
 		this.code = ERR_INVALID_RESPONSE;
 
 		let errorOrErrors: JsonRpcError | JsonRpcError[] | undefined;
