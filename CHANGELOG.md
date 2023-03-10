@@ -1135,7 +1135,7 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Add `TransactionWithFromLocalWalletIndex`, `TransactionWithToLocalWalletIndex` and `TransactionWithFromAndToLocalWalletIndex` types (#5731)
 
-## [Unreleased]
+## [4.0.1-rc.0]
 
 ### Added
 
@@ -1182,10 +1182,13 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-providers-ipc
 
 -   Added named export for `IpcProvider` (#5771)
+-   Pass `_socketOptions` from `IpcProvider` constructor to the underlying `Socket` (#5891)
+-   The getter of `SocketConnection` in `IpcProvider` (inherited from `SocketProvider`) returns `net.Socket` (#5891)
 
 #### web3-providers-ws
 
 -   Added named export for `WebSocketProvider` (#5771)
+-   The getter of `SocketConnection` in `WebSocketProvider` (inherited from `SocketProvider`) returns isomorphic `WebSocket` (#5891)
 
 #### web3-rpc-methods
 
@@ -1215,21 +1218,43 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-errors
 
 -   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
--   Renamed `TransactionRevertError` to `TransactionRevertInstructionError` to remain consistent with `1.x` (#5854)
+-   Renamed TransactionRevertError to TransactionRevertInstructionError to remain consistent with 1.x
+-   Using `MaxAttemptsReachedOnReconnectingError` with the same message for 1.x but also adding the `maxAttempts` (#5894)
 
 #### web3-eth
 
 -   Update imports statements for objects that was moved between web3 packages (#5771)
 -   `sendTransaction` and `sendSignedTransaction` now errors with (and `error` event emits) the following possible errors: `TransactionRevertedWithoutReasonError`, `TransactionRevertInstructionError`, `TransactionRevertWithCustomError`, `InvalidResponseError`, or `ContractExecutionError` (#5854)
 
+#### web3-eth-accounts
+
+-   Updated dependencies (#5912)
+
 #### web3-eth-contract
 
 -   Update imports statements for objects that was moved between web3 packages (#5771)
+
+#### web3-eth-ens
+
+-   Updated dependencies (#5912)
+
+#### web3-eth-iban
+
+-   Updated dependencies (#5912)
+
+#### web3-eth-personal
+
+-   Updated dependencies (#5912)
+
+#### web3-net
+
+-   Updated dependencies (#5912)
 
 #### web3-utils
 
 -   `compareBlockNumbers` function now only supports comparison of both blocktags params ( except `earliest` vs number) or both block number params (#5842)
 -   `SocketProvider` abstract class now resolves JSON RPC response errors instead of rejecting them (#5844)
+-   Exposes the getter of `SocketConnection` in `SocketProvider` (#5891)
 
 ### Removed
 
@@ -1264,3 +1289,5 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Fix contract defaults (#5756)
 -   Fixed getPastEventsError (#5819)
+
+## [Unreleased]

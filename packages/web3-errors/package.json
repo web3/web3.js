@@ -1,6 +1,6 @@
 {
 	"name": "web3-errors",
-	"version": "0.1.1-alpha.4",
+	"version": "1.0.0-rc.0",
 	"description": "This package has web3 error classes",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -29,7 +29,7 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"web3-types": "^0.1.1-alpha.4"
+		"web3-types": "^1.0.0-rc.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
