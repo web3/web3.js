@@ -20,9 +20,7 @@ import { Web3PromiEvent } from 'web3-core';
 import { Web3Account } from 'web3-eth-accounts';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
-import { Web3Eth, SendTransactionEvents } from '../../src';
-import { sendFewTxes } from './helper';
-
+import { SendTransactionEvents } from '../../src';
 import {
 	getSystemTestProvider,
 	describeIf,
@@ -31,6 +29,8 @@ import {
 	waitForOpenConnection,
 	createLocalAccount,
 	isIpc,
+	sendFewSampleTxs,
+	createAccount,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -48,7 +48,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 		clientUrl = getSystemTestProvider();
 		web3 = new Web3(clientUrl);
 		account1 = await createLocalAccount(web3);
-		account2 = await createLocalAccount(web3);
+		account2 = createAccount();
 		await waitForOpenConnection(web3.eth);
 	});
 	describe('wait for confirmation subscription', () => {
@@ -87,14 +87,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				});
 			});
 			await receiptPromise;
-			await sendFewTxes({
-				web3Eth: web3.eth as unknown as Web3Eth,
-				from: account1.address,
-				to: account2.address,
-				value: '0x1',
-				gas,
-				times: isIpc ? 2 * waitConfirmations : waitConfirmations,
-			});
+			await sendFewSampleTxs(isIpc ? 2 * waitConfirmations : waitConfirmations);
 			await confirmationPromise;
 			await closeOpenConnection(web3.eth);
 		});

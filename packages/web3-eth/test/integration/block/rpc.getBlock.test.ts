@@ -72,14 +72,11 @@ describe('rpc with block', () => {
 	});
 	beforeAll(async () => {
 		tempAcc = await createTempAccount();
-		tempAcc2 = await createTempAccount();
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
 		await contract.deploy(deployOptions).send(sendOptions);
 		const [receipt]: TransactionReceipt[] = await sendFewTxes({
-			web3Eth,
 			from: tempAcc.address,
-			to: tempAcc2.address,
 			value: '0x1',
 			times: 1,
 		});

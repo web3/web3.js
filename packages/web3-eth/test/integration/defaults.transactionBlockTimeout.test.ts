@@ -22,20 +22,17 @@ import { TransactionBlockTimeoutError } from 'web3-errors';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
 import { Web3Account } from 'web3-eth-accounts';
-import { SendTransactionEvents, Web3Eth } from '../../src';
+import { SendTransactionEvents } from '../../src';
 
 import {
 	closeOpenConnection,
-	createAccount,
 	getSystemTestProvider,
 	isSocket,
 	itIf,
 	waitForOpenConnection,
 	createLocalAccount,
-	isIpc,
+	sendFewSampleTxs,
 } from '../fixtures/system_test_utils';
-
-import { sendFewTxes } from './helper';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
 const gas = 21000;
@@ -45,7 +42,6 @@ describe('defaults', () => {
 	let clientUrl: string;
 	let account1: Web3Account;
 	let account2: Web3Account;
-	let account3: Web3Account;
 
 	beforeEach(async () => {
 		clientUrl = getSystemTestProvider();
@@ -57,8 +53,6 @@ describe('defaults', () => {
 		web3.eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
 		web3.eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
 		web3.eth.blockHeaderTimeout = MAX_32_SIGNED_INTEGER / 1000;
-
-		account3 = createAccount();
 	});
 
 	afterEach(async () => {
@@ -87,14 +81,7 @@ describe('defaults', () => {
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
 			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 			// eslint-disable-next-line no-void
-			void sendFewTxes({
-				web3Eth: web3.eth as unknown as Web3Eth,
-				from: account1.address,
-				to: account3.address,
-				gas,
-				times: 4,
-				value: '0x1',
-			});
+			await sendFewSampleTxs(2);
 
 			try {
 				await sentTx;
@@ -112,7 +99,7 @@ describe('defaults', () => {
 
 		// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
 		// TODO: And this test case will be removed once https://github.com/web3/web3.js/issues/5521 is implemented.
-		itIf(isSocket && !isIpc)(
+		itIf(isSocket)(
 			'should fail if transaction was not mined within `transactionBlockTimeout` blocks - when subscription is used',
 			async () => {
 				account1 = await createLocalAccount(web3);
@@ -140,14 +127,7 @@ describe('defaults', () => {
 				// Some providers (mostly used for development) will make blocks only when there are new transactions
 				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 				// eslint-disable-next-line no-void
-				void sendFewTxes({
-					web3Eth: web3.eth as unknown as Web3Eth,
-					from: account2.address,
-					to: account3.address,
-					gas,
-					times: 2,
-					value: '0x1',
-				});
+				void sendFewSampleTxs(2);
 
 				try {
 					await sentTx;

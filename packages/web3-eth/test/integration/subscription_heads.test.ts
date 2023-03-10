@@ -17,37 +17,29 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { BlockHeaderOutput } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
-import { Web3Account } from 'web3-eth-accounts';
 import { Web3Eth, NewHeadsSubscription } from '../../src';
-import { Resolve, sendFewTxes } from './helper';
+import { Resolve } from './helper';
 import {
 	closeOpenConnection,
-	createAccount,
-	createLocalAccount,
 	describeIf,
 	getSystemTestProvider,
 	isSocket,
+	sendFewSampleTxs,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 
 const checkTxCount = 2;
-const gas = 30000;
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
 	let web3: Web3;
-	let account1: Web3Account;
-	let account2: Web3Account;
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 	});
 	describe('heads', () => {
 		it(`wait for ${checkTxCount} newHeads`, async () => {
 			web3 = new Web3(clientUrl);
-			account1 = await createLocalAccount(web3);
-			account2 = createAccount();
 			const sub = await web3.eth.subscribe('newHeads');
-			const value = `0x1`;
 			await waitForOpenConnection(web3.eth);
 			let times = 0;
 			const pr = new Promise((resolve: Resolve, reject) => {
@@ -65,14 +57,7 @@ describeIf(isSocket)('subscription', () => {
 				});
 			});
 			// eslint-disable-next-line no-void
-			void sendFewTxes({
-				web3Eth: web3.eth as unknown as Web3Eth,
-				from: account1.address,
-				to: account2.address,
-				value,
-				gas,
-				times: checkTxCount,
-			});
+			void sendFewSampleTxs(checkTxCount);
 
 			await pr;
 			sub.off('data', () => {

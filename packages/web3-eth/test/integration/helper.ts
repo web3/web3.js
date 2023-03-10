@@ -16,12 +16,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiEventFragment, Block, TransactionInfo, TransactionReceipt } from 'web3-types';
 import { FMT_NUMBER } from 'web3-utils';
-import { Web3Eth } from '../../src';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Web3 from 'web3';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
+import {
+	closeOpenConnection,
+	createAccount,
+	getSystemTestProvider,
+} from '../fixtures/system_test_utils';
 
 type SendFewTxParams = {
-	web3Eth: Web3Eth;
-	to: string;
+	to?: string;
 	from: string;
 	value: string;
 	times?: number;
@@ -30,7 +35,6 @@ type SendFewTxParams = {
 };
 export type Resolve = (value?: TransactionReceipt) => void;
 export const sendFewTxes = async ({
-	web3Eth,
 	to,
 	value,
 	from,
@@ -38,16 +42,20 @@ export const sendFewTxes = async ({
 	gas,
 }: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
+	const toAddress = to ?? createAccount().address;
+	const web3 = new Web3(getSystemTestProvider());
 	for (let i = 0; i < times; i += 1) {
-		// eslint-disable-next-line no-await-in-loop
-		const tx: TransactionReceipt = await web3Eth.sendTransaction({
-			to,
-			value,
-			from,
-			gas,
-		});
-		res.push(tx);
+		res.push(
+			// eslint-disable-next-line no-await-in-loop
+			await web3.eth.sendTransaction({
+				to: toAddress,
+				value,
+				from,
+				gas: gas ?? '300000',
+			}),
+		);
 	}
+	await closeOpenConnection(web3);
 
 	return res;
 };

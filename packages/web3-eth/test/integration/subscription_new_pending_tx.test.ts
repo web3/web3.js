@@ -17,32 +17,24 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
 import { Web3Eth, NewPendingTransactionsSubscription } from '../../src';
-import { sendFewTxes } from './helper';
 import {
 	closeOpenConnection,
-	createAccount,
-	createLocalAccount,
 	describeIf,
 	getSystemTestProvider,
 	isIpc,
 	isSocket,
+	sendFewSampleTxs,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
-const gas = 30000;
 describeIf(isSocket && !isIpc)('subscription', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction`, async () => {
 			const web3 = new Web3(getSystemTestProvider());
-			const tempAcc = await createLocalAccount(web3);
-			const tempAcc2 = createAccount();
 			const web3Eth = web3.eth;
 			await waitForOpenConnection(web3Eth);
 			const sub = await web3Eth.subscribe('pendingTransactions');
-			const from = tempAcc.address;
-			const to = tempAcc2.address;
-			const value = `0x1`;
 
 			let times = 0;
 			const txHashes: string[] = [];
@@ -72,16 +64,9 @@ describeIf(isSocket && !isIpc)('subscription', () => {
 							resolve();
 						}
 					});
-					receipts = (
-						await sendFewTxes({
-							web3Eth: web3Eth as unknown as Web3Eth,
-							from,
-							to,
-							gas,
-							value,
-							times: checkTxCount,
-						})
-					).map(r => String(r?.transactionHash));
+					receipts = (await sendFewSampleTxs(checkTxCount)).map(r =>
+						String(r?.transactionHash),
+					);
 					if (receipts.length > 0 && waitList.length > 0) {
 						for (const hash of waitList) {
 							if (receipts.includes(hash)) {
