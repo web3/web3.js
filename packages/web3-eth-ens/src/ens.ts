@@ -83,7 +83,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * Returns the Resolver by the given address
 	 * @param name - The name of the ENS domain
-	 * @returns An contract instance of the resolver
+	 * @returns - An contract instance of the resolver
 	 *
 	 * @example
 	 * ```ts
@@ -130,7 +130,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param ttl - Time to live value
 	 * @param txConfig - (Optional) The transaction config
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns
+	 * @returns - The transaction receipt
 	 * @example
 	 * ```ts
 	 * const receipt = await web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x1234567890123456789012345678901234567890','0xAA9133EeC3ae5f9440C1a1E61E2D2Cc571675527', 1000000);
@@ -161,7 +161,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param operator - The operator address
 	 * @param approved - `true` to set the approval, `false` to clear it
 	 * @param txConfig - (Optional) The transaction config
-	 * @returns
+	 * @returns - The transaction receipt
 	 * @example
 	 * ```ts
 	 * const receipt = web3.eth.ens.setApprovalForAll('0x1234567890123456789012345678901234567890', true )
@@ -214,7 +214,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param address - The registrar of this sub-domain
 	 * @param txConfig - (Optional) The transaction config
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns The transaction receipt
+	 * @returns - The transaction receipt
 	 * @example
 	 * ```ts
 	 * const receipt = await ens.setSubnodeOwner('ethereum.eth', 'web3', '0x1234567890123456789012345678901234567890', {from: '0x1234567890123456789012345678901234567890'});
@@ -233,7 +233,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * Returns the address of the owner of an ENS name.
 	 * @param name - The ENS name
-	 * @returns Returns the caching TTL (time-to-live) of a name.
+	 * @returns - Returns the caching TTL (time-to-live) of a name.
 	 * @example
 	 * ```ts
 	 * const owner = await web3.eth.ens.getOwner('ethereum.eth');
@@ -248,7 +248,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param name - THe ENS name
 	 * @param ttl - The TTL value
 	 * @param txConfig - (Optional) The transaction config
-	 * @returns
+	 * @returns - The transaction receipt
 	 * @example
 	 * ```ts
 	 * const receipt = await web3.eth.ens.setTTL('ethereum.eth', 1000);
@@ -281,7 +281,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param address - The address of the new owner
 	 * @param txConfig - (Optional) The transaction config
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns
+	 * @returns - The transaction receipt
 	 * @example
 	 * ```ts
 	 * const receipt = await ens.setOwner('ethereum.eth', , sendOptions);
@@ -303,7 +303,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param resolver  - The resolver of the name record.
 	 * @param ttl  - Time to live value
 	 * @param txConfig  - (Optional) The transaction config
-	 * @returns
+	 * @returns - The transaction receipt
 	 * @example
 	 * ```ts
 	 * const receipt = await ens.setRecord( 'web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e', '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', 1000);
@@ -325,7 +325,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param address - The address to set
 	 * @param txConfig - (Optional) The transaction config
 	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns
+	 * @returns - The transaction receipt
 	 * ```ts
 	 * const receipt = await ens.setAddress('web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e');
 	 *```
@@ -345,9 +345,9 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param x - The X coordinate of the public key
 	 * @param y - The Y coordinate of the public key
 	 * @param txConfig - (Optional) The transaction config
-	 * @returns
+	 * @returns - The transaction receipt
 	 * ```ts
-	 * web3.eth.ens.setPubkey(
+	 * const receipt = await web3.eth.ens.setPubkey(
 	 * 'ethereum.eth',
 	 * '0x0000000000000000000000000000000000000000000000000000000000000000',
 	 * '0x0000000000000000000000000000000000000000000000000000000000000000',
@@ -369,7 +369,14 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param name - The ENS name
 	 * @param hash - The content hash to set
 	 * @param txConfig - (Optional) The transaction config
-	 * @returns
+	 * @returns - The transaction receipt
+	 * @example
+	 * ```ts
+	 * const receipt = web3.eth.ens.setContenthash(
+	 * 	'ethereum.eth',
+	 * 	'ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL',
+	 * )
+	 * ```
 	 */
 	public async setContenthash(
 		name: string,
