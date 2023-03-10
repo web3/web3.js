@@ -76,9 +76,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   web3.js dependencies (#5757)
 
-## [Unreleased]
+## [4.0.1-rc.0]
 
 ### Added
 
 -   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
 -   Added support of `safe` and `finalized` block tags (#5823)
+
+## [Unreleased]

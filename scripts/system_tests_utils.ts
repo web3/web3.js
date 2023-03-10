@@ -37,7 +37,6 @@ import {
 	Bytes,
 	Web3BaseProvider,
 	Transaction,
-	Receipt,
 	KeyStore,
 	ProviderConnectInfo,
 	Web3ProviderEventCallback,
@@ -335,7 +334,7 @@ export const signTxAndSendEIP1559 = async (
 	provider: unknown,
 	tx: Record<string, unknown>,
 	privateKey: string,
-): Promise<Receipt> => {
+) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
 	const signedTx = await acc.signTransaction({
@@ -344,14 +343,16 @@ export const signTxAndSendEIP1559 = async (
 		gas: tx.gas ?? '1000000',
 		from: acc.address,
 	});
-	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+	return web3.eth.sendSignedTransaction(signedTx.rawTransaction, undefined, {
+		checkRevertBeforeSending: false,
+	});
 };
 
 export const signTxAndSendEIP2930 = async (
 	provider: unknown,
 	tx: Record<string, unknown>,
 	privateKey: string,
-): Promise<Receipt> => {
+) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
 	const signedTx = await acc.signTransaction({
@@ -360,7 +361,9 @@ export const signTxAndSendEIP2930 = async (
 		gas: tx.gas ?? '1000000',
 		from: acc.address,
 	});
-	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+	return web3.eth.sendSignedTransaction(signedTx.rawTransaction, undefined, {
+		checkRevertBeforeSending: false,
+	});
 };
 
 export const signAndSendContractMethodEIP1559 = async (
