@@ -89,7 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Enable transaction with local wallet index in the `to` field (#5731)
 
-## [Unreleased]
+## [4.0.1-rc.0]
 
 ### Changed
 
@@ -105,3 +105,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   `getRevertReason` is no longer exported (#5844)
+
+## [Unreleased]

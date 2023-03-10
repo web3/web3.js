@@ -65,7 +65,7 @@ web3.currentProvider.disconnect();
 
 -   `build` entry from `package.json` (#5755)
 
-## [Unreleased]
+## [4.0.1-rc.0]
 
 ### Added
 
@@ -82,3 +82,5 @@ web3.currentProvider.disconnect();
 ### Removed
 
 -   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)
+
+## [Unreleased]
