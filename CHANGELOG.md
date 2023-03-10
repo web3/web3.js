@@ -1135,7 +1135,7 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Add `TransactionWithFromLocalWalletIndex`, `TransactionWithToLocalWalletIndex` and `TransactionWithFromAndToLocalWalletIndex` types (#5731)
 
-## [Unreleased]
+## [4.0.1-rc.0]
 
 ### Added
 
@@ -1289,3 +1289,5 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Fix contract defaults (#5756)
 -   Fixed getPastEventsError (#5819)
+
+## [Unreleased]
