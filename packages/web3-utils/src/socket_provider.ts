@@ -300,6 +300,7 @@ export abstract class SocketProvider<
 		Method extends Web3APIMethod<API>,
 		ResultType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>> {
+		// need to figure out how connect can trigger request
 		if (isNullish(this._socketConnection)) {
 			throw new Error('Connection is undefined');
 		}

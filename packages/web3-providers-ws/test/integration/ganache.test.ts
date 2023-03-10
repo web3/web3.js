@@ -17,29 +17,35 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ganache from 'ganache';
+import { InvalidResponseError } from 'web3-errors';
 // import { ConnectionNotOpenError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 
 // create helper functions to open server
 describe('ganache tests', () => {
-
 	describe('WebSocketProvider - ganache', () => {
-
-
-		// it('"error" when there is no connection', async () => {
-		// 	const websocketProvider = new WebSocketProvider('ws://localhost:7547'); // _openSocketConnection hangs
-
-		// 	const mockFunction = jest.fn();
-		// 	const errorPromise = new Promise((resolve) => {
-		// 		websocketProvider.on("error", () => {
-		// 			mockFunction();
-		// 			resolve(true);
-		// 		})
-		// 	});
-		// 		await errorPromise;
-		// 	websocketProvider.disconnect();
-		// 	expect(mockFunction).toHaveBeenCalled();
-		// });
+		it('"error" when there is no connection', async () => {
+			const reconnectionOptions = {
+				delay: 100,
+				autoReconnect: false,
+				maxAttempts: 1,
+			};
+			const websocketProvider = new WebSocketProvider(
+				'ws://localhost:7547',
+				{},
+				reconnectionOptions,
+			); // _openSocketConnection hangs
+			const mockFunction = jest.fn();
+			const errorPromise = new Promise(resolve => {
+				websocketProvider.on('error', () => {
+					mockFunction();
+					resolve(true);
+				});
+			});
+			await errorPromise;
+			websocketProvider.disconnect();
+			expect(mockFunction).toHaveBeenCalled();
+		});
 
 		it('"error" handler fires if the client closes unilaterally', async () => {
 			const port = 7547;
@@ -74,14 +80,14 @@ describe('ganache tests', () => {
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectOptions = {
-				autoReconnect: false
-	   }
+				autoReconnect: false,
+			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectOptions);
 			const connectPromise = new Promise(resolve => {
-				webSocketProvider.on("connect", () => {
+				webSocketProvider.on('connect', () => {
 					resolve(true);
-				})
-			})
+				});
+			});
 			await connectPromise;
 			const mockReject = jest.fn();
 			webSocketProvider.once('error', () => {
@@ -98,181 +104,171 @@ describe('ganache tests', () => {
 
 			await server.close();
 		});
-		it('can connect after being disconnected', async () => {
 
+		it('can connect after being disconnected', async () => {
 			const port = 7547;
 			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 
-			const mockConnectCallBack = jest.fn();
-
-			const webSocketProvider = new WebSocketProvider(host);
-			const connectPromise = new Promise((resolve) => {
-				webSocketProvider.once('connect', () => {
-					mockConnectCallBack();
+			const wsProvider = new WebSocketProvider(host);
+			const mockCallback = jest.fn();
+			const connectPromise = new Promise(resolve => {
+				wsProvider.once('connect', () => {
+					mockCallback();
 					resolve(true);
-				})
-			})
+				});
+			});
 			await connectPromise;
-
-			const prom = new Promise((resolve) =>{
-				webSocketProvider.on("disconnect", () => {
+			//
+			wsProvider.disconnect();
+			const disconnectPromise = new Promise(resolve => {
+				wsProvider.once('disconnect', () => {
 					resolve(true);
-				})
-			})
-			console.log("disconnect")
-			webSocketProvider.disconnect();
-			await prom;
-			console.log("after disconnect")
-			
-			webSocketProvider.connect();
+				});
+			});
+			await disconnectPromise;
 
-			const connectPromise2 = new Promise ((resolve) => {
-				webSocketProvider.once('connect', () => {
-				mockConnectCallBack();
-				resolve(true);
-			})
-		})
-			console.log("connect again")
-			// })
+			wsProvider.connect();
+			const connectPromise2 = new Promise(resolve => {
+				wsProvider.once('connect', () => {
+					mockCallback();
+					resolve(true);
+				});
+			});
 			await connectPromise2;
-			console.log("after")
-			expect(mockConnectCallBack).toHaveBeenCalledTimes(2);
+			wsProvider.disconnect();
+			expect(mockCallback).toHaveBeenCalledTimes(2);
 			await server.close();
-
 		});
 
-		// it('"end" handler fires with close event object if Web3 disconnects', async () => {
+		it('wsprovider supports subscriptions', async () => {
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const webSocketProvider = new WebSocketProvider(host);
 
-		// 	const port = 7547;
-		// 	const host = `ws://localhost:${port}`;
-		// 	const server = ganache.server();
-		// 	await server.listen(port);
-		// 	const webSocketProvider = new WebSocketProvider(host);
+			const connectPromise = new Promise(resolve => {
+				webSocketProvider.on('connect', () => {
+					resolve(true);
+				});
+			});
+			await connectPromise;
 
-		// 	const connectPromise = new Promise(resolve => {
-		// 		webSocketProvider.on('connect', () => {
-		// 			resolve(true);
-		// 		});
-		// 	});
+			expect(webSocketProvider.supportsSubscriptions()).toBe(true);
 
-		// 	await connectPromise;
-		// 	const pr = new Promise((resolve) => {
-		// 		webSocketProvider.once('disconnect', () => {
-		// 			resolve(true);
-		// 		})
-		// 	})
-		// 	webSocketProvider.disconnect();
-		// 	const result = await pr;
-		// 	expect(result).toBe(true);
+			// const web3 = new Web3(webSocketProvider);
+			// expect(web3.eth.currentProvider.supportsSubscriptions()).toBe(true); // Unsafe call of an `any` typed value.
+			webSocketProvider.disconnect();
+			await server.close();
+		});
 
-		// 	await server.close();
+		it('times out when server is closed', async () => {
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const reconnectionOptions = {
+				delay: 100,
+				autoReconnect: false,
+				maxAttempts: 1,
+			};
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
-		// });
+			const errorPromise = new Promise(resolve => {
+				webSocketProvider.on('error', (err: any) => {
+					expect(err).toBeDefined();
+					resolve(true);
+				});
+			});
+			await server.close();
+			await errorPromise;
+		});
 
-		// it('errors after client has disconnected', async () => {
+		it('with reconnect on, will try to connect until server is open and close properly', async () => {
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const reconnectionOptions = {
+				delay: 10,
+				autoReconnect: true,
+				maxAttempts: 100,
+			};
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
-		// 	const port = 7547;
-		// 	const host = `ws://localhost:${port}`;
-		// 	const server = ganache.server();
-		// 	await server.listen(port);
-		// 	const webSocketProvider = new WebSocketProvider(host);
+			const mockCallback = jest.fn();
+			const connectPromise1 = new Promise(resolve => {
+				webSocketProvider.on('connect', () => {
+					mockCallback();
+					resolve(true);
+				});
+			});
 
-		// 	// verify connection
-		// 	const connectPromise = new Promise(resolve => {
-		// 		webSocketProvider.on('connect', () => {
-		// 			resolve(true);
-		// 		});
-		// 	});
-		// 	const web3 = new Web3(webSocketProvider);
-		// 	await connectPromise;
+			const server = ganache.server();
+			await server.listen(port);
+			await connectPromise1;
+			webSocketProvider.disconnect();
+			await server.close();
+			expect(mockCallback).toHaveBeenCalledTimes(1);
+		});
 
-			
-		// 	const pr = new Promise((resolve) => {
-		// 		webSocketProvider.once('disconnect', () => {
-		// 			resolve(true);
-		// 		})
-		// 	})
-		// 	webSocketProvider.disconnect(1000);
-		// 	await pr;
-		// 	// try {
-		// 	// 	await web3.eth.getBlockNumber();
-		// 	// } catch (error) {
-		// 	// 	console.log("error")
-		// 	// 	console.log(error)
-		// 	// 	expect(error).toThrow(new ConnectionNotOpenError());
-		// 	// }
-		// 	await expect(web3.eth.getBlockNumber()).rejects.toThrow(new ConnectionNotOpenError());
+		it('allows disconnection on lost connection, when reconnect is enabled', async () => {
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const reconnectionOptions = {
+				delay: 10,
+				autoReconnect: true,
+				maxAttempts: 100,
+			};
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
-		// 	await server.close();
+			const mockCallback = jest.fn();
+			const connectPromise1 = new Promise(resolve => {
+				webSocketProvider.on('connect', () => {
+					mockCallback();
+					resolve(true);
+				});
+			});
 
-		// });
+			const server = ganache.server();
+			await server.listen(port);
+			await connectPromise1;
+			webSocketProvider.disconnect();
+			await server.close();
+			expect(mockCallback).toHaveBeenCalledTimes(1);
+		});
 
-		// it('wsprovider supports subscriptions', async () => {
-		// 	const port = 7548;
-		// 	const host = `ws://localhost:${port}`;
-		// 	const server = ganache.server();
-		// 	await server.listen(port);
-		// 	const webSocketProvider = new WebSocketProvider(host);
+		it('errors when failing to reconect after data is lost mid-chunk', async () => {
+			jest.setTimeout(17000); // chunk parser error will only timeout after 15000
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const reconnectionOptions = {
+				delay: 1000,
+				autoReconnect: true,
+				maxAttempts: 1,
+			};
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
-		// 	expect(webSocketProvider.supportsSubscriptions()).toBe(true);
-
-		// 	// const web3 = new Web3(webSocketProvider);
-		// 	// expect(web3.eth.currentProvider.supportsSubscriptions()).toBe(true); // Unsafe call of an `any` typed value.
-		// 	await server.close();
-		// });
-
-		// it('times out when server is closed', async () => {
-		// 	const port = 7547;
-		// 	const host = `ws://localhost:${port}`;
-		// 	const server = ganache.server();
-		// 	await server.listen(port);
-		// 	const webSocketProvider = new WebSocketProvider(host, {timeout: 10});
-			
-		// 	const errorPromise = new Promise(resolve => {
-		// 		webSocketProvider.on('error', (err:any) => {
-		// 			expect(err).toBeDefined();
-		// 			resolve(true);
-		// 		});
-		// 	});
-
-		// 	// eslint-disable-next-line
-		// 	// const event: WebSocket.MessageEvent = {data: 'abc|--|ded', type: 'websocket', target: webSocketProvider._socketConnection}
-		// 	// eslint-disable-next-line
-		// 	// await errorPromise;
-		// 	await server.close();
-		// 	await errorPromise;
-		// });
-
-		// it('manually reconnect', async () => {
-		// 	const port = 7547;
-		// 	const host = `ws://localhost:${port}`;
-		// 	const server = ganache.server();
-		// 	await server.listen(port);
-		// 	const webSocketProvider = new WebSocketProvider(host);
-			
-		// 	const mockCallback = jest.fn();
-		// 	const connectPromise1 = new Promise(() => {webSocketProvider.once('connect', () => {
-		// 		mockCallback();
-		// 		})
-		// 	})
-		// 	await connectPromise1;
-			
-		// 	const connectPromise2 = new Promise(() => {webSocketProvider.once('connect', () => {
-		// 			mockCallback();
-		// 		})
-		// 	})
-
-		// 	await connectPromise2;
-
-		// 	// eslint-disable-next-line
-		// 	// const event: WebSocket.MessageEvent = {data: 'abc|--|ded', type: 'websocket', target: webSocketProvider._socketConnection}
-		// 	// eslint-disable-next-line
-		// 	// await errorPromise;
-		// 	await server.close();
-		// 	expect(mockCallback).toHaveBeenCalledTimes(2);
-		// });
+			const connectPromise = new Promise(resolve => {
+				webSocketProvider.on('connect', () => {
+					resolve(true);
+				});
+			});
+			await connectPromise;
+			await server.close();
+			try {
+				// @ts-expect-error run protected method
+				webSocketProvider._parseResponses({ data: 'abc|--|dedf' });
+			} catch (error) {
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(error).toThrow(InvalidResponseError);
+			}
+			// @ts-expect-error run protected method
+			webSocketProvider._clearQueues();
+			webSocketProvider.disconnect();
+		});
 
 		// it('times out in mid chunk', async () => {
 		// 	const port = 7547;
@@ -280,7 +276,7 @@ describe('ganache tests', () => {
 		// 	const server = ganache.server();
 		// 	await server.listen(port);
 		// 	const webSocketProvider = new WebSocketProvider(host, {timeout: 10});
-			
+
 		// 	const errorPromise = new Promise(resolve => {
 		// 		webSocketProvider.on('error', (err:any) => {
 		// 			console.log(err);
@@ -295,7 +291,6 @@ describe('ganache tests', () => {
 		// 	// await errorPromise;
 		// 	await server.close();
 		// 	await errorPromise;
-
 
 		// });
 		// it('errors when requests continue after socket closed', async () => {
@@ -314,7 +309,7 @@ describe('ganache tests', () => {
 		// 	});
 
 		// 	await connectPromise;
-			
+
 		// 	const web3 = new Web3(webSocketProvider);
 
 		// 	const pr = new Promise((resolve) => {
@@ -354,9 +349,7 @@ describe('ganache tests', () => {
 		// 		}, 500);
 		// 	});
 		// 	await expect(web3.eth.getBlockNumber()).rejects.toThrow();
-			
 
 		// });
-
 	});
 });
