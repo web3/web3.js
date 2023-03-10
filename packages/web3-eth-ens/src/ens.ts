@@ -38,6 +38,10 @@ import { Registry } from './registry';
 import { registryAddresses } from './config';
 import { Resolver } from './resolver';
 
+/**
+ * This class is designed to interact with the ENS system on the Ethereum blockchain.
+ *
+ */
 export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * The registryAddress property can be used to define a custom registry address when you are connected to an unknown chain. It defaults to the main registry address.
@@ -48,6 +52,21 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	private _detectedAddress?: string;
 	private _lastSyncCheck?: number;
 
+	/**
+	 * Use to create an instance of ENS
+	 * @param registryAddr - (Optional) The address of the ENS registry (default: mainnet registry address)
+	 * @param provider - (Optional) The provider to use for the ENS instance
+	 * @example
+	 * ```ts
+	 * const ens = new ENS(
+	 * 	"0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+	 * 	"http://localhost:8545"
+	 * );
+	 *
+	 * console.log( ens.defaultChain);
+	 * > mainnet
+	 * ```
+	 */
 	public constructor(
 		registryAddr?: string,
 		provider?:
