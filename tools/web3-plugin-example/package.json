@@ -52,10 +52,10 @@
 		"web3-utils": "^4.0.1-rc.0"
 	},
 	"peerDependencies": {
-		"web3-core": ">= 4.0.1-alpha.0 < 5",
-		"web3-eth-abi": ">= 4.0.1-alpha.0 < 5",
-		"web3-eth-contract": ">= 4.0.1-alpha.0 < 5",
-		"web3-types": ">= 0.1.1-alpha.0 < 5",
-		"web3-utils": ">= ^4.0.1-alpha.0 < 5"
+		"web3-core": ">= 4.0.1-rc.0 < 5",
+		"web3-eth-abi": ">= 4.0.1-rc.0 < 5",
+		"web3-eth-contract": ">= 4.0.1-rc.0 < 5",
+		"web3-types": ">= 1.0.0-rc.0 < 5",
+		"web3-utils": ">= ^4.0.1-rc.0 < 5"
 	}
 }
