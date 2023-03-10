@@ -41,7 +41,7 @@ export const methodsInInterface: { [T: string]: string } = {
 };
 
 /**
- * An object holding the addressed of the ENS registries on the different networks (mainnet, ropsten, rinkeby, goerli).
+ * An object holding the addressed of the ENS registries on the different networks (mainnet, goerli).
  */
 export const registryAddresses: { [T: string]: string } = {
 	main: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
