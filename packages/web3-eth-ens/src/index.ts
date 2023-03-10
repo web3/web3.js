@@ -25,6 +25,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * -   Functions that accepted an optional `TransactionConfig` as the last argument, now accept an optional `NonPayableCallOptions`. See `web3-eth-contract` package for more details.
  *
  */
+/**
+ * This comment _supports3_ [Markdown](https://marked.js.org/)
+ */
 import { registryAddresses } from './config';
 
 export * from './ens';
