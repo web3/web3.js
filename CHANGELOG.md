@@ -1228,7 +1228,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-accounts
 
--   Updated dependencies
+-   Updated dependencies (#5912)
 
 #### web3-eth-contract
 
@@ -1236,19 +1236,19 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-ens
 
--   Updated dependencies
+-   Updated dependencies (#5912)
 
 #### web3-eth-iban
 
--   Updated dependencies
+-   Updated dependencies (#5912)
 
 #### web3-eth-personal
 
--   Updated dependencies
+-   Updated dependencies (#5912)
 
 #### web3-net
 
--   Updated dependencies
+-   Updated dependencies (#5912)
 
 #### web3-utils
 
