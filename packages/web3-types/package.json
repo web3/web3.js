@@ -1,6 +1,6 @@
 {
 	"name": "web3-types",
-	"version": "0.1.1-alpha.4",
+	"version": "1.0.0-rc.0",
 	"description": "Provide the common data structures and interfaces for web3 modules.",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",

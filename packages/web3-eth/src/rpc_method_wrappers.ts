@@ -46,10 +46,27 @@ import {
 	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
+import {
+	ETH_DATA_FORMAT,
+	FormatType,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	format,
+	hexToBytes,
+	bytesToBuffer,
+} from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import { SignatureError, TransactionError, ContractExecutionError } from 'web3-errors';
+import {
+	ContractExecutionError,
+	InvalidResponseError,
+	SignatureError,
+	TransactionRevertedWithoutReasonError,
+	TransactionRevertInstructionError,
+	TransactionRevertWithCustomError,
+} from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
+import { TransactionFactory } from '@ethereumjs/tx';
+
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -77,6 +94,8 @@ import { trySendTransaction } from './utils/try_send_transaction';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { NUMBER_DATA_FORMAT } from './constants';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionError } from './utils/get_transaction_error';
 // eslint-disable-next-line import/no-cycle
 import { getRevertReason } from './utils/get_revert_reason';
 
@@ -1062,46 +1081,63 @@ export function sendTransaction<
 		| TransactionWithToLocalWalletIndex
 		| TransactionWithFromAndToLocalWalletIndex,
 	returnFormat: ReturnFormat,
-	options?: SendTransactionOptions<ResolveType>,
+	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
 			setImmediate(() => {
 				(async () => {
-					try {
-						let transactionFormatted = formatTransaction(
-							{
-								...transaction,
-								from: getTransactionFromOrToAttr('from', web3Context, transaction),
-								to: getTransactionFromOrToAttr('to', web3Context, transaction),
-							},
-							ETH_DATA_FORMAT,
-						);
+					let transactionFormatted = formatTransaction(
+						{
+							...transaction,
+							from: getTransactionFromOrToAttr('from', web3Context, transaction),
+							to: getTransactionFromOrToAttr('to', web3Context, transaction),
+						},
+						ETH_DATA_FORMAT,
+					);
 
-						if (web3Context.handleRevert) {
-							// eslint-disable-next-line no-use-before-define
-							await getRevertReason(
+					if (
+						!options?.ignoreGasPricing &&
+						isNullish(transactionFormatted.gasPrice) &&
+						(isNullish(transaction.maxPriorityFeePerGas) ||
+							isNullish(transaction.maxFeePerGas))
+					) {
+						transactionFormatted = {
+							...transactionFormatted,
+							// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
+							// should not be included if undefined, but currently are
+							...(await getTransactionGasPricing(
+								transactionFormatted,
+								web3Context,
+								ETH_DATA_FORMAT,
+							)),
+						};
+					}
+
+					try {
+						if (options.checkRevertBeforeSending !== false) {
+							const reason = await getRevertReason(
 								web3Context,
 								transactionFormatted as TransactionCall,
+								options.contractAbi,
 							);
-						}
-
-						if (
-							!options?.ignoreGasPricing &&
-							isNullish(transactionFormatted.gasPrice) &&
-							(isNullish(transaction.maxPriorityFeePerGas) ||
-								isNullish(transaction.maxFeePerGas))
-						) {
-							transactionFormatted = {
-								...transactionFormatted,
-								// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
-								// should not be included if undefined, but currently are
-								...(await getTransactionGasPricing(
-									transactionFormatted,
+							if (reason !== undefined) {
+								const error = await getTransactionError<ReturnFormat>(
 									web3Context,
-									ETH_DATA_FORMAT,
-								)),
-							};
+									transactionFormatted as TransactionCall,
+									undefined,
+									undefined,
+									options.contractAbi,
+									reason,
+								);
+
+								if (promiEvent.listenerCount('error') > 0) {
+									promiEvent.emit('error', error);
+								}
+
+								reject(error);
+								return;
+							}
 						}
 
 						if (promiEvent.listenerCount('sending') > 0) {
@@ -1177,17 +1213,19 @@ export function sendTransaction<
 								) as unknown as ResolveType,
 							);
 						} else if (transactionReceipt.status === BigInt(0)) {
+							const error = await getTransactionError<ReturnFormat>(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								transactionReceiptFormatted,
+								undefined,
+								options?.contractAbi,
+							);
+
 							if (promiEvent.listenerCount('error') > 0) {
-								promiEvent.emit(
-									'error',
-									new TransactionError(
-										'Transaction failed',
-										transactionReceiptFormatted,
-									),
-								);
+								promiEvent.emit('error', error);
 							}
-							reject(transactionReceiptFormatted as unknown as ResolveType);
-							return;
+
+							reject(error);
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}
@@ -1206,17 +1244,30 @@ export function sendTransaction<
 							);
 						}
 					} catch (error) {
-						if (error instanceof ContractExecutionError) {
-							promiEvent.emit('contractExecutionError', error);
-						}
-						if (promiEvent.listenerCount('error') > 0) {
-							promiEvent.emit(
-								'error',
-								new TransactionError((error as Error).message),
+						let _error = error;
+
+						if (_error instanceof ContractExecutionError && web3Context.handleRevert) {
+							_error = await getTransactionError(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								undefined,
+								undefined,
+								options?.contractAbi,
 							);
 						}
 
-						reject(error);
+						if (
+							(_error instanceof InvalidResponseError ||
+								_error instanceof ContractExecutionError ||
+								_error instanceof TransactionRevertWithCustomError ||
+								_error instanceof TransactionRevertedWithoutReasonError ||
+								_error instanceof TransactionRevertInstructionError) &&
+							promiEvent.listenerCount('error') > 0
+						) {
+							promiEvent.emit('error', _error);
+						}
+
+						reject(_error);
 					}
 				})() as unknown;
 			});
@@ -1317,7 +1368,7 @@ export function sendSignedTransaction<
 	web3Context: Web3Context<EthExecutionAPI>,
 	signedTransaction: Bytes,
 	returnFormat: ReturnFormat,
-	options?: SendSignedTransactionOptions<ResolveType>,
+	options: SendSignedTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
 ): Web3PromiEvent<ResolveType, SendSignedTransactionEvents<ReturnFormat>> {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -1325,22 +1376,54 @@ export function sendSignedTransaction<
 		(resolve, reject) => {
 			setImmediate(() => {
 				(async () => {
+					// Formatting signedTransaction to be send to RPC endpoint
+					const signedTransactionFormattedHex = format(
+						{ eth: 'bytes' },
+						signedTransaction,
+						ETH_DATA_FORMAT,
+					);
+					const unSerializedTransaction = TransactionFactory.fromSerializedData(
+						bytesToBuffer(hexToBytes(signedTransactionFormattedHex)),
+					);
+					const unSerializedTransactionWithFrom = {
+						...unSerializedTransaction.toJSON(),
+						// Some providers will default `from` to address(0) causing the error
+						// reported from `eth_call` to not be the reason the user's tx failed
+						// e.g. `eth_call` will return an Out of Gas error for a failed
+						// smart contract execution contract, because the sender, address(0),
+						// has no balance to pay for the gas of the transaction execution
+						from: unSerializedTransaction.getSenderAddress().toString(),
+					};
+
 					try {
-						// Formatting signedTransaction to be send to RPC endpoint
-						const signedTransactionFormattedHex = format(
-							{ eth: 'bytes' },
-							signedTransaction,
-							ETH_DATA_FORMAT,
-						);
+						if (options.checkRevertBeforeSending !== false) {
+							const reason = await getRevertReason(
+								web3Context,
+								unSerializedTransactionWithFrom as TransactionCall,
+								options.contractAbi,
+							);
+							if (reason !== undefined) {
+								const error = await getTransactionError<ReturnFormat>(
+									web3Context,
+									unSerializedTransactionWithFrom as TransactionCall,
+									undefined,
+									undefined,
+									options.contractAbi,
+									reason,
+								);
+
+								if (promiEvent.listenerCount('error') > 0) {
+									promiEvent.emit('error', error);
+								}
+
+								reject(error);
+								return;
+							}
+						}
 
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', signedTransactionFormattedHex);
 						}
-						// todo enable handleRevert for sendSignedTransaction when we have a function to decode transactions
-						// importing a package for this would increase the size of the library
-						// if (web3Context.handleRevert) {
-						// 	await getRevertReason(web3Context, transaction, returnFormat);
-						// }
 
 						const transactionHash = await trySendTransaction(
 							web3Context,
@@ -1388,17 +1471,19 @@ export function sendSignedTransaction<
 								) as unknown as ResolveType,
 							);
 						} else if (transactionReceipt.status === BigInt(0)) {
+							const error = await getTransactionError<ReturnFormat>(
+								web3Context,
+								unSerializedTransactionWithFrom as TransactionCall,
+								transactionReceiptFormatted,
+								undefined,
+								options?.contractAbi,
+							);
+
 							if (promiEvent.listenerCount('error') > 0) {
-								promiEvent.emit(
-									'error',
-									new TransactionError(
-										'Transaction failed',
-										transactionReceiptFormatted,
-									),
-								);
+								promiEvent.emit('error', error);
 							}
-							reject(transactionReceiptFormatted as unknown as ResolveType);
-							return;
+
+							reject(error);
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}
@@ -1417,13 +1502,30 @@ export function sendSignedTransaction<
 							);
 						}
 					} catch (error) {
-						if (promiEvent.listenerCount('error') > 0) {
-							promiEvent.emit(
-								'error',
-								new TransactionError((error as Error).message),
+						let _error = error;
+
+						if (_error instanceof ContractExecutionError && web3Context.handleRevert) {
+							_error = await getTransactionError(
+								web3Context,
+								unSerializedTransactionWithFrom as TransactionCall,
+								undefined,
+								undefined,
+								options?.contractAbi,
 							);
 						}
-						reject(error);
+
+						if (
+							(_error instanceof InvalidResponseError ||
+								_error instanceof ContractExecutionError ||
+								_error instanceof TransactionRevertWithCustomError ||
+								_error instanceof TransactionRevertedWithoutReasonError ||
+								_error instanceof TransactionRevertInstructionError) &&
+							promiEvent.listenerCount('error') > 0
+						) {
+							promiEvent.emit('error', _error);
+						}
+
+						reject(_error);
 					}
 				})() as unknown;
 			});

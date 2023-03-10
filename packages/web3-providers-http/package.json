@@ -1,6 +1,6 @@
 {
 	"name": "web3-providers-http",
-	"version": "4.0.1-alpha.5",
+	"version": "4.0.1-rc.0",
 	"description": "HTTP provider for Web3 4.x.x",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -49,8 +49,8 @@
 	},
 	"dependencies": {
 		"cross-fetch": "^3.1.5",
-		"web3-errors": "^0.1.1-alpha.4",
-		"web3-types": "^0.1.1-alpha.4",
-		"web3-utils": "^4.0.1-alpha.5"
+		"web3-errors": "^1.0.0-rc.0",
+		"web3-types": "^1.0.0-rc.0",
+		"web3-utils": "^4.0.1-rc.0"
 	}
 }
