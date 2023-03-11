@@ -92,22 +92,6 @@ export default class WebSocketProvider<
 				}
 			}
 		}
-
-		//  const provider = new WebSocketProvider(
-		// 		`ws://localhost`,
-		// 		{
-		// 			headers: {
-		// 				// to provide the API key if the Node requires the key to be inside the `headers`
-		// 				'x-api-key': '<Api key>',
-		// 			},
-		// 		},
-		// 		{
-		// 			delay: 500,
-		// 			autoReconnect: true,
-		// 			maxAttempts: 10,
-		// 		},
-		//  );
-
 		return 'disconnected';
 	}
 
