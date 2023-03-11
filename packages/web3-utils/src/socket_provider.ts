@@ -90,7 +90,11 @@ export abstract class SocketProvider<
 	 * @param socketOptions - The options for the socket connection
 	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
 	 */
-	public constructor(socketPath: string, socketOptions?: object, reconnectOptions?: object) {
+	public constructor(
+		socketPath: string,
+		socketOptions?: object,
+		reconnectOptions?: ReconnectOptions,
+	) {
 		super();
 		this._connectionStatus = 'connecting';
 
