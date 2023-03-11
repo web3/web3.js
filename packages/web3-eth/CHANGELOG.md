@@ -107,3 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `getRevertReason` is no longer exported (#5844)
 
 ## [Unreleased]
+
+### Changed
+
+-   `signTransaction` will now return `gas` instead of `gasLimit` for returned transaction object regardless of what property name the provider uses (#5915)

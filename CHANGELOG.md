@@ -1291,3 +1291,9 @@ should use 4.0.1-alpha.0 for testing.
 -   Fixed getPastEventsError (#5819)
 
 ## [Unreleased]
+
+### Changed
+
+#### web3-eth
+
+-   `signTransaction` will now return `gas` instead of `gasLimit` for returned transaction object regardless of what property name the provider uses (#5915)
