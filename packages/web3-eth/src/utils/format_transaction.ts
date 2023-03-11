@@ -54,5 +54,10 @@ export function formatTransaction<
 		delete formattedTransaction.input;
 	}
 
+	if (!isNullish(formattedTransaction.gasLimit)) {
+		formattedTransaction.gas = formattedTransaction.gasLimit;
+		delete formattedTransaction.gasLimit;
+	}
+
 	return formattedTransaction as FormatType<TransactionType, ReturnFormat>;
 }

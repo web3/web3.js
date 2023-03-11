@@ -15,13 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { TransactionFactory } from '@ethereumjs/tx';
-import {
-	HexStringBytes,
-	SignedTransactionInfoAPI,
-	Transaction,
-	TransactionSignedAPI,
-} from 'web3-types';
-import { bytesToHex, DataFormat, format, hexToBytes, isNullish, keccak256 } from 'web3-utils';
+import { HexStringBytes, SignedTransactionInfoAPI, TransactionSignedAPI } from 'web3-types';
+import { bytesToHex, DataFormat, format, hexToBytes, keccak256 } from 'web3-utils';
 import { detectRawTransactionType } from './detect_transaction_type';
 import { formatTransaction } from './format_transaction';
 
@@ -36,19 +31,13 @@ export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 	encodedSignedTransaction: HexStringBytes,
 	returnFormat: ReturnFormat,
 ): SignedTransactionInfoAPI {
-	const unSerializedTransaction: Transaction = TransactionFactory.fromSerializedData(
-		hexToBytes(encodedSignedTransaction),
-	).toJSON();
-	if (!isNullish(unSerializedTransaction.gasLimit)) {
-		unSerializedTransaction.gas = unSerializedTransaction.gasLimit;
-		delete unSerializedTransaction.gasLimit;
-	}
-
 	return {
 		raw: format({ eth: 'bytes' }, encodedSignedTransaction, returnFormat),
 		tx: formatTransaction(
 			{
-				...unSerializedTransaction,
+				...TransactionFactory.fromSerializedData(
+					hexToBytes(encodedSignedTransaction),
+				).toJSON(),
 				hash: bytesToHex(keccak256(hexToBytes(encodedSignedTransaction))),
 				type: detectRawTransactionType(hexToBytes(encodedSignedTransaction)),
 			} as TransactionSignedAPI,
