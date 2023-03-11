@@ -46,7 +46,21 @@ describe('Web3Eth.signTransaction', () => {
 			gasPrice: '0x3b9aca01',
 		};
 		const response = await web3Eth.signTransaction(transaction);
-		expect(response).toMatchObject({ raw: expect.any(String), tx: expect.any(Object) });
+		expect(response).toMatchObject({
+			raw: expect.stringContaining('0x'),
+			tx: {
+				type: BigInt(0),
+				nonce: BigInt(0),
+				gasPrice: BigInt(1000000001),
+				gas: BigInt(21000),
+				value: BigInt(1),
+				to: transaction.to,
+				data: '0x',
+				v: expect.any(BigInt),
+				r: expect.any(String),
+				s: expect.any(String),
+			},
+		});
 	});
 
 	it('should sign a contract deployment', async () => {
@@ -61,6 +75,18 @@ describe('Web3Eth.signTransaction', () => {
 		};
 		const response = await web3Eth.signTransaction(transaction);
 		// eslint-disable-next-line jest/no-standalone-expect
-		expect(response).toMatchObject({ raw: expect.any(String), tx: expect.any(Object) });
+		expect(response).toMatchObject({
+			raw: expect.stringContaining('0x'),
+			tx: {
+				type: BigInt(0),
+				nonce: expect.any(BigInt),
+				gasPrice: BigInt(1000000001),
+				gas: BigInt(475320),
+				data: greeterContractDeploymentData,
+				v: expect.any(BigInt),
+				r: expect.any(String),
+				s: expect.any(String),
+			},
+		});
 	});
 });
