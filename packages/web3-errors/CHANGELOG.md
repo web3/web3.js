@@ -53,25 +53,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Corrected the error code for `JSONRPC_ERR_UNAUTHORIZED` to be `4100` (#5462)
 -   Moved `SignerError` from `web3-errors/src/errors/signature_errors.ts` to `web3-errors/src/errors/transaction_errors.ts`, and renamed it to `TransactionSigningError` (#5462)
 
-## [4.0.1-alpha.2]
+## [0.1.1-alpha.2]
 
 ### Changed
 
 -   Updated Web3.js dependencies (#5664)
 
-## [4.0.1-alpha.3]
+## [0.1.1-alpha.3]
 
 ### Changed
 
 -   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
 
-## [4.0.1-alpha.5]
+## [0.1.1-alpha.4]
 
 ### Changed
 
 -   web3.js dependencies (#5757)
 
-## [Unreleased]
+## [1.0.0-rc.0]
 
 ### Changed
 
@@ -85,3 +85,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `request` property to `ResponseError` (#5854)
 -   `data` property to `TransactionRevertInstructionError` (#5854)
 -   `TransactionRevertWithCustomError` was added to handle custom solidity errors (#5854)
+
+## [Unreleased]
