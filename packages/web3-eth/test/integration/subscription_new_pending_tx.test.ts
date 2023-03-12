@@ -21,14 +21,13 @@ import {
 	closeOpenConnection,
 	describeIf,
 	getSystemTestProvider,
-	isIpc,
 	isSocket,
 	sendFewSampleTxs,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
-describeIf(isSocket && !isIpc)('subscription', () => {
+describeIf(isSocket)('subscription', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction`, async () => {
 			const web3 = new Web3(getSystemTestProvider());

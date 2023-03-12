@@ -27,7 +27,6 @@ import {
 	signTxAndSendEIP2930,
 	signTxAndSendEIP1559,
 	sendFewSampleTxs,
-	isIpc,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
