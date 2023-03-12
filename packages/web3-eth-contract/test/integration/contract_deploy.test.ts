@@ -150,7 +150,7 @@ describe('contract', () => {
 
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
-
+			contract.setConfig({ transactionConfirmationBlocks: 2 });
 			await contract
 				.deploy(deployOptions)
 				.send(sendOptions)
@@ -163,10 +163,7 @@ describe('contract', () => {
 			// We can send any other transaction as well
 			await contract.deploy(deployOptions).send(sendOptions);
 
-			if (isIpc) {
-				// we need this for confirm transaction for IPC provider
-				await sendFewSampleTxs(10);
-			}
+			await sendFewSampleTxs(3);
 
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
