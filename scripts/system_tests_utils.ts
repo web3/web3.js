@@ -453,7 +453,7 @@ export const waitForEvent = async (
 	});
 
 export const sendFewSampleTxs = async (cnt = 1) => {
-	const web3 = new Web3(getSystemTestProvider());
+	const web3 = new Web3(DEFAULT_SYSTEM_PROVIDER);
 	const fromAcc = await createLocalAccount(web3);
 	const toAcc = createAccount();
 	const res = [];
