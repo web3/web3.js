@@ -27,7 +27,6 @@ import {
 	sendFewSampleTxs,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
-// eslint-disable-next-line import/no-extraneous-dependencies
 
 const checkTxCount = 2;
 describeIf(isSocket)('subscription', () => {
