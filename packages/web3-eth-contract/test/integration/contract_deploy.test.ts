@@ -149,7 +149,7 @@ describe('contract', () => {
 
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
-			contract.setConfig({ transactionConfirmationBlocks: 2 });
+			contract.setConfig({ transactionConfirmationBlocks: 1 });
 			await contract
 				.deploy(deployOptions)
 				.send(sendOptions)

@@ -25,7 +25,6 @@ import {
 	createNewAccount,
 	createTempAccount,
 	closeOpenConnection,
-	sendFewSampleTxs,
 } from '../fixtures/system_test_utils';
 
 describe('personal integration tests', () => {
@@ -107,8 +106,6 @@ describe('personal integration tests', () => {
 		const accountList = await ethPersonal.getAccounts();
 		// create a new account
 		const account = await ethPersonal.newAccount('cde');
-		// we need this for confirm transaction
-		await sendFewSampleTxs(2);
 		const updatedAccountList = await ethPersonal.getAccounts();
 		accountList.push(account);
 		expect(updatedAccountList.length).toBeGreaterThan(account.length);
