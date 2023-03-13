@@ -214,7 +214,7 @@ const transactionHash = receipt.transactionHash;
 
 -   web3.js dependencies (#5757)
 
-## [Unreleased]
+## [4.0.1-rc.0]
 
 ### Fixed
 
@@ -234,3 +234,5 @@ const transactionHash = receipt.transactionHash;
 ### Removed
 
 -   `decodeErrorData` is no longer exported (method was moved to `web3-eth-abi` and renamed `decodeContractErrorData`) (#5844)
+
+## [Unreleased]
