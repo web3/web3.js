@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Socket, SocketConstructorOpts } from 'net';
 import { ConnectionNotOpenError, InvalidClientError } from 'web3-errors';
-import { SocketProvider } from 'web3-utils';
+import { ReconnectOptions, SocketProvider } from 'web3-utils';
 import {
 	EthExecutionAPI,
 	Web3APIMethod,
@@ -27,6 +27,38 @@ import {
 } from 'web3-types';
 import { existsSync } from 'fs';
 
+/**
+ * The IPC Provider could be used in node.js dapps when running a local node. And it provide the most secure connection.
+ *
+ * @example
+ * ```ts
+ * const provider = new IpcProvider(
+ * 		`path.ipc`,
+ * 		{
+ * 			writable: false,
+ * 		},
+ * 		{
+ * 			delay: 500,
+ * 			autoReconnect: true,
+ * 			maxAttempts: 10,
+ * 		},
+ * 	);
+ * ```
+ *
+ * The second and the third parameters are both optional. And you can for example, the second parameter could be an empty object or undefined.
+ *  * @example
+ * ```ts
+ * const provider = new IpcProvider(
+ * 		`path.ipc`,
+ * 		{},
+ * 		{
+ * 			delay: 500,
+ * 			autoReconnect: true,
+ * 			maxAttempts: 10,
+ * 		},
+ * 	);
+ * ```
+ */
 export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> extends SocketProvider<
 	Buffer | string,
 	CloseEvent,
@@ -36,6 +68,22 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 	protected readonly _socketOptions?: SocketConstructorOpts;
 
 	protected _socketConnection?: Socket;
+
+	/**
+	 * This is a class used for IPC connections. It extends the abstract class SocketProvider {@link SocketProvider} that extends the EIP-1193 provider {@link EIP1193Provider}.
+	 * @param socketPath - The path to the IPC socket.
+	 * @param socketOptions - The options for the IPC socket connection.
+	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
+	 */
+	// this constructor is to specify the type for `socketOptions` for a better intellisense.
+	// eslint-disable-next-line no-useless-constructor
+	public constructor(
+		socketPath: string,
+		socketOptions?: SocketConstructorOpts,
+		reconnectOptions?: Partial<ReconnectOptions>,
+	) {
+		super(socketPath, socketOptions, reconnectOptions);
+	}
 
 	public getStatus(): Web3ProviderStatus {
 		if (this._socketConnection?.connecting) {

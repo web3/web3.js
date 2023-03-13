@@ -46,7 +46,7 @@ web3.provider.on('chainChanged',()=>{
 })
 
 // it is possible to catch errors that could happen in the underlying connection Socket with the `error` event
-// and it is also used to catch the error when max connection attempts exceeded
+// and it is also used to catch the error when max reconnection attempts exceeded
 //  as in section: /docs/guides/web3_providers_guide/#error-message
 web3.provider.on('error',()=>{
   // ...
