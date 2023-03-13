@@ -72,6 +72,16 @@ export type FormatType<T, F extends DataFormat> = number extends Extract<T, Numb
 	  }
 	: T;
 
+/**
+ * Finds the schema that corresponds to a specific data path within a larger JSON schema.
+ * It works by iterating over the dataPath array and traversing the JSON schema one step at a time until it reaches the end of the path.
+ *
+ * @param schema - represents a JSON schema, which is an object that describes the structure of JSON data
+ * @param dataPath - represents an array of strings that specifies the path to the data within the JSON schema
+ * @param oneOfPath - epresents an optional array of two-element tuples that specifies the "oneOf" option to choose, if the schema has oneOf and the data path can match multiple subschemas
+ * @returns the JSON schema that matches the data path
+ *
+ */
 const findSchemaByDataPath = (
 	schema: JsonSchema,
 	dataPath: string[],
@@ -116,7 +126,13 @@ const findSchemaByDataPath = (
 
 	return result;
 };
-
+/**
+ * Converts a value depending on the format
+ * @param value - value to convert
+ * @param ethType - The type of the value to be parsed
+ * @param format - The format to be converted to
+ * @returns - The value converted to the specified format
+ */
 export const convertScalarValue = (value: unknown, ethType: string, format: DataFormat) => {
 	try {
 		const { baseType } = parseBaseType(ethType);
@@ -156,7 +172,15 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 
 	return value;
 };
-
+/**
+ * Converts the data to the specified format
+ * @param data - data to convert
+ * @param schema - The JSON schema that describes the structure of the data
+ * @param dataPath - A string array that specifies the path to the data within the JSON schema
+ * @param format  - The format to be converted to
+ * @param oneOfPath - An optional array of two-element tuples that specifies the "oneOf" option to choose, if the schema has oneOf and the data path can match multiple subschemas
+ * @returns - The data converted to the specified format
+ */
 export const convert = (
 	data: Record<string, unknown> | unknown[] | unknown,
 	schema: JsonSchema,

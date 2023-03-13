@@ -48,14 +48,22 @@ export const createProxy = async (
 		});
 		closeFunc = async () => {
 			await new Promise(resolve => {
+				const timeOut = setTimeout(() => {
+					resolve(true);
+				}, 2000);
 				ws.on('close', () => {
 					ws.removeAllListeners();
+					clearTimeout(timeOut);
 					resolve(true);
 				});
 				ws.terminate();
 			});
 			await new Promise(resolve => {
+				const timeOut = setTimeout(() => {
+					resolve(true);
+				}, 2000);
 				originWs.on('close', () => {
+					clearTimeout(timeOut);
 					originWs.removeAllListeners();
 					resolve(true);
 				});

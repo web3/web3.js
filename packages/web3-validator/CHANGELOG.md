@@ -69,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   `build` entry from `package.json` (#5755)
 
-## [Unreleased]
+## [1.0.0-rc.0]
 
 ### Removed
 
@@ -78,3 +78,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added support of `safe` and `finalized` block tags in `isBlockTag` method (#5823)
+
+## [Unreleased]

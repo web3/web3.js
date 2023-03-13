@@ -49,6 +49,17 @@ const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfa
 
 /**
  * computes the Keccak-256 hash of the input and returns a hexstring
+ * @param data - the input to hash
+ * @returns - the Keccak-256 hash of the input
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.sha3('web3.js'));
+ * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
+ *
+ * console.log(web3.utils.sha3(''));
+ * > undefined
+ * ```
  */
 export const sha3 = (data: Bytes): string | undefined => {
 	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
@@ -60,7 +71,18 @@ export const sha3 = (data: Bytes): string | undefined => {
 };
 
 /**
- *Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
+ * Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
+ * @param data - the input to hash
+ * @returns - the Keccak-256 hash of the input
+ *
+ * @example
+ * ```ts
+ * conosle.log(web3.utils.sha3Raw('web3.js'));
+ * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
+ *
+ * console.log(web3.utils.sha3Raw(''));
+ * > 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
+ * ```
  */
 export const sha3Raw = (data: Bytes): string => {
 	const hash = sha3(data);
@@ -73,6 +95,20 @@ export const sha3Raw = (data: Bytes): string => {
 
 /**
  * A wrapper for ethereum-cryptography/keccak256 to allow hashing a `string` and a `bigint` in addition to `UInt8Array`
+ * @param data - the input to hash
+ * @returns - the Keccak-256 hash of the input
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.keccak256Wrapper('web3.js'));
+ * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
+ *
+ * console.log(web3.utils.keccak256Wrapper(1));
+ * > 0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6
+ *
+ * console.log(web3.utils.keccak256Wrapper(0xaf12fd));
+ * > 0x358640fd4719fa923525d74ab5ae80a594301aba5543e3492b052bf4598b794c
+ * ```
  */
 export const keccak256Wrapper = (
 	data: Bytes | Numbers | string | ReadonlyArray<number>,
@@ -93,6 +129,8 @@ export { keccak256Wrapper as keccak256 };
 
 /**
  * returns type and value
+ * @param arg - the input to return the type and value
+ * @returns - the type and value of the input
  */
 const getType = (arg: Sha3Input): [string, EncodingTypes] => {
 	if (Array.isArray(arg)) {
@@ -132,6 +170,8 @@ const getType = (arg: Sha3Input): [string, EncodingTypes] => {
 
 /**
  * returns the type with size if uint or int
+ * @param name - the input to return the type with size
+ * @returns - the type with size of the input
  */
 const elementaryName = (name: string): string => {
 	if (name.startsWith('int[')) {
@@ -159,6 +199,8 @@ const parseTypeN = (value: string, typeLength: number): number => {
 
 /**
  * returns the bit length of the value
+ * @param value - the input to return the bit length
+ * @returns - the bit length of the input
  */
 const bitLength = (value: bigint | number): number => {
 	const updatedVal = value.toString(2);
@@ -168,6 +210,8 @@ const bitLength = (value: bigint | number): number => {
 /**
  * Pads the value based on size and type
  * returns a string of the padded value
+ * @param type - the input to pad
+ * @returns = the padded value
  */
 const solidityPack = (type: string, val: EncodingTypes): string => {
 	const value = val.toString();
@@ -245,6 +289,8 @@ const solidityPack = (type: string, val: EncodingTypes): string => {
 
 /**
  * returns a string of the tightly packed value given based on the type
+ * @param arg - the input to return the tightly packed value
+ * @returns - the tightly packed value
  */
 export const processSolidityEncodePackedArgs = (arg: Sha3Input): string => {
 	const [type, val] = getType(arg);
@@ -272,6 +318,15 @@ export const encodePacked = (...values: Sha3Input[]): string => {
 /**
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, or null if input is empty
+ * @param values - the input to return the tightly packed values
+ * @returns - the keccack246 of the tightly packed values
+ *
+ * @example
+ * ```ts
+ *  console.log([{ type: 'string', value: '31323334' }]);
+ * console.log(web3.utils.soliditySha3({ type: "string", value: "31323334" }));
+ * > 0xf15f8da2ad27e486d632dc37d24912f634398918d6f9913a0a0ff84e388be62b
+ * ```
  */
 export const soliditySha3 = (...values: Sha3Input[]): string | undefined =>
 	sha3(encodePacked(...values));
@@ -279,6 +334,14 @@ export const soliditySha3 = (...values: Sha3Input[]): string | undefined =>
 /**
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, if input is empty will return `0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470`
+ * @param values - the input to return the tightly packed values
+ * @returns - the keccack246 of the tightly packed values
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.soliditySha3Raw({ type: "string", value: "helloworld" }))
+ * > 0xfa26db7ca85ead399216e7c6316bc50ed24393c3122b582735e7f3b0f91b93f0
+ * ```
  */
 export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviated[]): string =>
 	sha3Raw(encodePacked(...values));
@@ -286,6 +349,8 @@ export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviate
 /**
  * Get slot number for storage long string in contract. Basically for getStorage method
  * returns slotNumber where will data placed
+ * @param mainSlotNumber - the slot number where will be stored hash of long string
+ * @returns - the slot number where will be stored long string
  */
 export const getStorageSlotNumForLongString = (mainSlotNumber: number | string) =>
 	sha3(

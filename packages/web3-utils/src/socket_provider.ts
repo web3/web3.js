@@ -37,6 +37,7 @@ import {
 	ConnectionError,
 	ConnectionNotOpenError,
 	InvalidClientError,
+	MaxAttemptsReachedOnReconnectingError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
 	Web3WSProviderError,
@@ -47,13 +48,21 @@ import { isNullish } from './validation';
 import { Web3DeferredPromise } from './web3_deferred_promise';
 import * as jsonRpc from './json_rpc';
 
-type ReconnectOptions = {
+export type ReconnectOptions = {
 	autoReconnect: boolean;
 	delay: number;
 	maxAttempts: number;
 };
 
+const DEFAULT_RECONNECTION_OPTIONS = {
+	autoReconnect: true,
+	delay: 5000,
+	maxAttempts: 5,
+};
+
 type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
+
+const NORMAL_CLOSE_CODE = 1000; // https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close
 
 export abstract class SocketProvider<
 	MessageEvent,
@@ -69,35 +78,45 @@ export abstract class SocketProvider<
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	protected readonly _sentRequestsQueue: Map<JsonRpcId, SocketRequestItem<any, any, any>>;
 	protected _reconnectAttempts!: number;
-	protected readonly _providerOptions?: object;
+	protected readonly _socketOptions?: unknown;
 	protected readonly _reconnectOptions: ReconnectOptions;
 	protected _socketConnection?: unknown;
+	public get SocketConnection() {
+		return this._socketConnection;
+	}
 	protected _connectionStatus: Web3ProviderStatus;
 	protected readonly _onMessageHandler: (event: MessageEvent) => void;
 	protected readonly _onOpenHandler: () => void;
 	protected readonly _onCloseHandler: (event: CloseEvent) => void;
 	protected readonly _onErrorHandler: (event: ErrorEvent) => void;
 
-	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
+	/**
+	 * This is an abstract class for implementing a socket provider (e.g. WebSocket, IPC). It extends the EIP-1193 provider {@link EIP1193Provider}.
+	 * @param socketPath - The path to the socket (e.g. /ipc/path or ws://localhost:8546)
+	 * @param socketOptions - The options for the socket connection. Its type is supposed to be specified in the inherited classes.
+	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
+	 */
+	public constructor(
+		socketPath: string,
+		socketOptions?: unknown,
+		reconnectOptions?: Partial<ReconnectOptions>,
+	) {
 		super();
 		this._connectionStatus = 'connecting';
+
+		// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
 		this._onCloseHandler = this._onCloseEvent.bind(this);
 		this._onErrorHandler = this._onError.bind(this);
+
 		if (!this._validateProviderPath(socketPath)) throw new InvalidClientError(socketPath);
 
 		this._socketPath = socketPath;
-		this._providerOptions = options;
-
-		const DEFAULT_PROVIDER_RECONNECTION_OPTIONS = {
-			autoReconnect: true,
-			delay: 5000,
-			maxAttempts: 5,
-		};
+		this._socketOptions = socketOptions;
 
 		this._reconnectOptions = {
-			...DEFAULT_PROVIDER_RECONNECTION_OPTIONS,
+			...DEFAULT_RECONNECTION_OPTIONS,
 			...(reconnectOptions ?? {}),
 		};
 
@@ -117,6 +136,9 @@ export abstract class SocketProvider<
 		this._reconnectAttempts = 0;
 	}
 
+	/**
+	 * Try to establish a connection to the socket
+	 */
 	public connect(): void {
 		try {
 			this._openSocketConnection();
@@ -160,19 +182,38 @@ export abstract class SocketProvider<
 		return !!path;
 	}
 
+	/**
+	 *
+	 * @returns `true` if the socket supports subscriptions
+	 */
 	// eslint-disable-next-line class-methods-use-this
 	public supportsSubscriptions(): boolean {
 		return true;
 	}
 
+	/**
+	 * Registers a listener for the specified event type.
+	 * @param type - The event type to listen for
+	 * @param callback - The callback to be invoked when the event is emitted
+	 */
 	public on<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
 		this._eventEmitter.on(type, callback);
 	}
 
+	/**
+	 * Registers a listener for the specified event type that will be invoked at most once.
+	 * @param type  - The event type to listen for
+	 * @param callback - The callback to be invoked when the event is emitted
+	 */
 	public once<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
 		this._eventEmitter.once(type, callback);
 	}
 
+	/**
+	 *  Removes a listener for the specified event type.
+	 * @param type - The event type to remove the listener for
+	 * @param callback - The callback to be executed
+	 */
 	public removeListener(type: EventType, callback: Web3ProviderEventCallback): void {
 		this._eventEmitter.removeListener(type, callback);
 	}
@@ -182,14 +223,24 @@ export abstract class SocketProvider<
 		super._onDisconnect(code, data);
 	}
 
+	/**
+	 * Disconnects the socket
+	 * @param code - The code to be sent to the server
+	 * @param data - The data to be sent to the server
+	 */
 	public disconnect(code?: number, data?: string): void {
+		const disconnectCode = code ?? NORMAL_CLOSE_CODE;
 		this._removeSocketListeners();
 		if (this.getStatus() !== 'disconnected') {
-			this._closeSocketConnection(code, data);
+			this._closeSocketConnection(disconnectCode, data);
 		}
-		this._onDisconnect(code, data);
+		this._onDisconnect(disconnectCode, data);
 	}
 
+	/**
+	 * Removes all listeners for the specified event type.
+	 * @param type - The event type to remove the listeners for
+	 */
 	public removeAllListeners(type: string): void {
 		this._eventEmitter.removeAllListeners(type);
 	}
@@ -203,6 +254,9 @@ export abstract class SocketProvider<
 		}
 	}
 
+	/**
+	 * Resets the socket, removing all listeners and pending requests
+	 */
 	public reset(): void {
 		this._sentRequestsQueue.clear();
 		this._pendingRequestsQueue.clear();
@@ -239,11 +293,16 @@ export abstract class SocketProvider<
 			this.isReconnecting = false;
 			this._clearQueues();
 			this._removeSocketListeners();
-			const errorMsg = `Max connection attempts exceeded (${this._reconnectOptions.maxAttempts})`;
-			this._eventEmitter.emit('error', errorMsg);
+			this._eventEmitter.emit(
+				'error',
+				new MaxAttemptsReachedOnReconnectingError(this._reconnectOptions.maxAttempts),
+			);
 		}
 	}
 
+	/**
+	 *  Creates a request object to be sent to the server
+	 */
 	public async request<
 		Method extends Web3APIMethod<API>,
 		ResultType = Web3APIReturnType<API, Method>,

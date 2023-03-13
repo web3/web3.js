@@ -27,6 +27,12 @@ const isIterable = (item: unknown): item is Record<string, unknown> =>
 
 // The following code is a derivative work of the code from the "LiskHQ/lisk-sdk" project,
 // which is licensed under Apache version 2.
+/**
+ * Deep merge two objects.
+ * @param destination - The destination object.
+ * @param sources - An array of source objects.
+ * @returns - The merged object.
+ */
 export const mergeDeep = (
 	destination: Record<string, unknown>,
 	...sources: Record<string, unknown>[]

@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-abi",
-	"version": "4.0.1-alpha.5",
+	"version": "4.0.1-rc.0",
 	"description": "Web3 module encode and decode EVM in/output.",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ethereum/web3.js/tree/4.x/packages/web3-eth-abi",
@@ -31,9 +31,9 @@
 	},
 	"dependencies": {
 		"@ethersproject/abi": "^5.6.4",
-		"web3-errors": "^0.1.1-alpha.4",
-		"web3-types": "^0.1.1-alpha.4",
-		"web3-utils": "^4.0.1-alpha.5"
+		"web3-errors": "^1.0.0-rc.0",
+		"web3-types": "^1.0.0-rc.0",
+		"web3-utils": "^4.0.1-rc.0"
 	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",

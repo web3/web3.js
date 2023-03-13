@@ -186,6 +186,7 @@ describe('contract defaults (extra)', () => {
 				}),
 				expect.any(Object),
 				expect.any(Object),
+				expect.any(Object),
 			);
 		});
 
