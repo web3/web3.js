@@ -48,10 +48,16 @@ import { isNullish } from './validation';
 import { Web3DeferredPromise } from './web3_deferred_promise';
 import * as jsonRpc from './json_rpc';
 
-type ReconnectOptions = {
+export type ReconnectOptions = {
 	autoReconnect: boolean;
 	delay: number;
 	maxAttempts: number;
+};
+
+const DEFAULT_RECONNECTION_OPTIONS = {
+	autoReconnect: true,
+	delay: 5000,
+	maxAttempts: 5,
 };
 
 type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
@@ -72,7 +78,7 @@ export abstract class SocketProvider<
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	protected readonly _sentRequestsQueue: Map<JsonRpcId, SocketRequestItem<any, any, any>>;
 	protected _reconnectAttempts!: number;
-	protected readonly _socketOptions?: object;
+	protected readonly _socketOptions?: unknown;
 	protected readonly _reconnectOptions: ReconnectOptions;
 	protected _socketConnection?: unknown;
 	public get SocketConnection() {
@@ -87,10 +93,14 @@ export abstract class SocketProvider<
 	/**
 	 * This is an abstract class for implementing a socket provider (e.g. WebSocket, IPC). It extends the EIP-1193 provider {@link EIP1193Provider}.
 	 * @param socketPath - The path to the socket (e.g. /ipc/path or ws://localhost:8546)
-	 * @param socketOptions - The options for the socket connection
+	 * @param socketOptions - The options for the socket connection. Its type is supposed to be specified in the inherited classes.
 	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
 	 */
-	public constructor(socketPath: string, socketOptions?: object, reconnectOptions?: object) {
+	public constructor(
+		socketPath: string,
+		socketOptions?: unknown,
+		reconnectOptions?: Partial<ReconnectOptions>,
+	) {
 		super();
 		this._connectionStatus = 'connecting';
 
@@ -105,14 +115,8 @@ export abstract class SocketProvider<
 		this._socketPath = socketPath;
 		this._socketOptions = socketOptions;
 
-		const DEFAULT_PROVIDER_RECONNECTION_OPTIONS = {
-			autoReconnect: true,
-			delay: 5000,
-			maxAttempts: 5,
-		};
-
 		this._reconnectOptions = {
-			...DEFAULT_PROVIDER_RECONNECTION_OPTIONS,
+			...DEFAULT_RECONNECTION_OPTIONS,
 			...(reconnectOptions ?? {}),
 		};
 
