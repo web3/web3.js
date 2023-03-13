@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 sidebar_label: web3.eth.personal
 ---
 
