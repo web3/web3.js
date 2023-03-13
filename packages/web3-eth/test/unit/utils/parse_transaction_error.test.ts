@@ -84,6 +84,6 @@ describe('parseTransactionError', () => {
 			},
 		]);
 
-		expect(() => parseTransactionError(error)).toThrowError(error);
+		expect(() => parseTransactionError(error)).toThrow(error);
 	});
 });

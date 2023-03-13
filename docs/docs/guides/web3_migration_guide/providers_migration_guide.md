@@ -105,11 +105,12 @@ interface ReconnectOptions {
 }
 ```
 
-In 4.x, the options object is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
+In 4.x, the `socketOptions` parameter is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
 
-In 4.x a second option parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here is its type:
+In 4.x the `reconnectOptions` parameter can be given to control: auto-reconnecting, delay and max tries attempts. And here is its type:
 
 ```ts
+// this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
 	autoReconnect: boolean; // default: `true`
 	delay: number; // default: `5000`
@@ -163,6 +164,130 @@ const reconnectOptions: ReconnectOptions = {
 	delay: 5000,
 	maxAttempts: 5,
 };
+```
+
+And here is a sample instantiation for the `WebSocketProvider`:
+
+```ts
+const provider = new WebSocketProvider(
+	`ws://localhost:8545`,
+	{
+		headers: {
+			// to provide the API key if the Node requires the key to be inside the `headers` for example:
+			'x-api-key': '<Api key>',
+		},
+	},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
+```
+
+The second and the third parameters are both optional. And you can for example, the second parameter could be an empty object or undefined, like in the following example:
+
+```ts
+const provider = new WebSocketProvider(
+	`ws://localhost:8545`,
+	{},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
+```
+
+#### IpcProvider
+
+The IPC provider is used in node.js dapps when running a local node. And it provide the most secure connection.
+
+In 1.x, it used to accept the path and an instance of net.Server as in the following example:
+
+```ts
+import * as net from 'net';
+
+const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
+```
+
+In 4.x, it accepts a second parameter called `socketOptions`. And, its type is `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
+
+```ts
+interface SocketConstructorOpts {
+	fd?: number | undefined;
+	allowHalfOpen?: boolean | undefined;
+	readable?: boolean | undefined;
+	writable?: boolean | undefined;
+	signal?: AbortSignal;
+}
+```
+
+In 4.x the third parameter is called `reconnectOptions` that is of the type `ReconnectOptions`. It can be given to control: auto-reconnecting, delay and max tries attempts. And here its type:
+
+```ts
+// this is the same options interface used for both WebSocketProvider and IpcProvider
+type ReconnectOptions = {
+	autoReconnect: boolean; // default: `true`
+	delay: number; // default: `5000`
+	maxAttempts: number; // default: `5`
+};
+```
+
+##### Options examples
+
+Below is an example for the passed options for each version:
+
+```ts
+// in 1.x
+var net = require('net');
+
+new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+// on windows the path is: "\\\\.\\pipe\\geth.ipc"
+// on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+
+// in 4.x
+let clientOptions: SocketConstructorOpts = {
+	allowHalfOpen: false;
+	readable: true;
+	writable: true;
+};
+
+const reconnectOptions: ReconnectOptions = {
+	autoReconnect: true,
+	delay: 5000,
+	maxAttempts: 5,
+};
+```
+
+And here is a sample instantiation for the `IpcProvider`:
+
+```ts
+const provider = new IpcProvider(
+	`path.ipc`,
+	{
+		writable: false,
+	},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
+```
+
+The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined.
+
+```ts
+const provider = new IpcProvider(
+	`path.ipc`,
+	{},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
+);
 ```
 
 #### Error message for reconnect attempts
