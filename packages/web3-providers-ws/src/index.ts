@@ -24,7 +24,7 @@ import {
 	Web3APISpec,
 	Web3ProviderStatus,
 } from 'web3-types';
-import { isNullish, SocketProvider } from 'web3-utils';
+import { isNullish, ReconnectOptions, SocketProvider } from 'web3-utils';
 import { ConnectionNotOpenError } from 'web3-errors';
 
 export { ClientRequestArgs } from 'http';
@@ -76,6 +76,22 @@ export default class WebSocketProvider<
 	// eslint-disable-next-line class-methods-use-this
 	protected _validateProviderPath(providerUrl: string): boolean {
 		return typeof providerUrl === 'string' ? /^ws(s)?:\/\//i.test(providerUrl) : false;
+	}
+
+	/**
+	 * This is a class used for Web Socket connections. It extends the abstract class SocketProvider {@link SocketProvider} that extends the EIP-1193 provider {@link EIP1193Provider}.
+	 * @param socketPath - The path to the Web Socket.
+	 * @param socketOptions - The options for the Web Socket client.
+	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
+	 */
+	// this constructor is to specify the type for `socketOptions` for a better intellisense.
+	// eslint-disable-next-line no-useless-constructor
+	public constructor(
+		socketPath: string,
+		socketOptions?: ClientOptions | ClientRequestArgs,
+		reconnectOptions?: Partial<ReconnectOptions>,
+	) {
+		super(socketPath, socketOptions, reconnectOptions);
 	}
 
 	public getStatus(): Web3ProviderStatus {
