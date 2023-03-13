@@ -92,7 +92,7 @@ The implementation of the validator is extension of [JSON-Schema-Draft07](https:
 | test:integration | Uses `jest` to run tests under `/test/integration` |
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
-[docs]: http://web3js.readthedocs.io/en/4.0/
+[docs]: https://docs.web3js.org/
 [repo]: https://github.com/ChainSafe/web3.js/tree/4.x/packages/web3-validator
 [npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
 [npm-url]: https://npmjs.com/package/web3-validator

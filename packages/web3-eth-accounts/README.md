@@ -53,7 +53,7 @@ yarn add web3-eth-accounts
 | test:integration | Uses `jest` to run tests under `/test/integration` |
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
-[docs]: http://web3js.readthedocs.io/en/4.0/
+[docs]: https://docs.web3js.org/
 [repo]: https://github.com/ChainSafe/web3.js/tree/4.x/packages/web3-eth-accounts
 [npm-image]: https://img.shields.io/npm/v/web3-eth-accounts-method.svg
 [npm-url]: https://npmjs.com/package/web3-eth-accounts
