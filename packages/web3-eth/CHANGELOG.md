@@ -89,17 +89,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Enable transaction with local wallet index in the `to` field (#5731)
 
-## [Unreleased]
+## [4.0.1-rc.0]
 
 ### Changed
 
 -   Update imports statements for objects that was moved between web3 packages (#5771)
+-   `sendTransaction` and `sendSignedTransaction` now errors with (and `error` event emits) the following possible errors: `TransactionRevertedWithoutReasonError`, `TransactionRevertInstructionError`, `TransactionRevertWithCustomError`, `InvalidResponseError`, or `ContractExecutionError` (#5854)
 
 ### Added
 
 -   Added `createAccessList` functionality ( #5780 )
 -   Added support of `safe` and `finalized` block tags (#5823)
+-   `contractAbi` option to `SendTransactionOptions` and `SendSignedTransactionOptions` to added the ability to parse custom solidity errors (#5854)
 
 ### Removed
 
 -   `getRevertReason` is no longer exported (#5844)
+
+## [Unreleased]

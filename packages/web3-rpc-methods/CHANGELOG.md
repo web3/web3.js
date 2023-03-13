@@ -59,9 +59,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   web3.js dependencies (#5757)
 
-## [Unreleased]
+## [1.0.0-rc.0]
 
 ### Added
 
 -   Added `createAccessList` functionality ( #5780 )
 -   Added support of `safe` and `finalized` block tags (#5823)
+
+## [Unreleased]

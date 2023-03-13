@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { Contract } from 'web3-eth-contract';
-import { TransactionRevertError } from 'web3-errors';
+import { TransactionRevertInstructionError } from 'web3-errors';
 import Web3 from '../../src/index';
 import {
 	closeOpenConnection,
@@ -89,7 +89,7 @@ describe.skip('eth', () => {
 		it('should get revert reason', async () => {
 			contract.handleRevert = true;
 			await expect(contract.methods.reverts().send({ from: accounts[0] })).rejects.toThrow(
-				new TransactionRevertError(
+				new TransactionRevertInstructionError(
 					'Returned error: execution reverted: REVERTED WITH REVERT',
 				),
 			);
@@ -112,7 +112,7 @@ describe.skip('eth', () => {
 					s: '0x39f77e0b68d5524826e4385ad4e1f01e748f32c177840184ae65d9592fdfe5c',
 				}),
 			).rejects.toThrow(
-				new TransactionRevertError(
+				new TransactionRevertInstructionError(
 					'Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes',
 				),
 			);
