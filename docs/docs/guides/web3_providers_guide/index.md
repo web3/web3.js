@@ -149,23 +149,12 @@ The options object is of type `ClientRequestArgs` or of `ClientOptions`. See [he
 The second option parameter can be given regarding reconnecting. And here is its type:
 
 ```ts
+// this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
-	autoReconnect: boolean;
-	delay: number;
-	maxAttempts: number;
+	autoReconnect: boolean; // default: `true`
+	delay: number; // default: `5000`
+	maxAttempts: number; // default: `5`
 };
-```
-
-:::info
-Here is how to catch the error if max attempts reached when the auto reconnecting:
-
-```ts
-provider.on('error', errorMessage => {
-	if (errorMessage.startsWith('Maximum number of reconnect attempts reached!')) {
-		// the `errorMessage` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
-		// the `maxAttempts` is equal to the provided value by the user or the default `5`.
-	}
-});
 ```
 
 And here is a sample instantiation for the `WebSocketProvider`:
@@ -200,8 +189,6 @@ const provider = new WebSocketProvider(
 	},
 );
 ```
-
-:::
 
 ##### Options example
 
@@ -243,10 +230,10 @@ And, the third parameter is called `reconnectOptions` that is of the type `Recon
 
 ```ts
 // this is the same options interface used for both WebSocketProvider and IpcProvider
-export type ReconnectOptions = {
-	autoReconnect: boolean;
-	delay: number;
-	maxAttempts: number;
+type ReconnectOptions = {
+	autoReconnect: boolean; // default: `true`
+	delay: number; // default: `5000`
+	maxAttempts: number; // default: `5`
 };
 ```
 
@@ -300,7 +287,7 @@ const provider = new IpcProvider(
 
 #### Error message for reconnect attempts
 
-:::note
+:::info
 This section applies for both `IpcProvider` and `WebSocketProvider`.
 :::
 

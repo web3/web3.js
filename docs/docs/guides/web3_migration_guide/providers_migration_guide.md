@@ -227,10 +227,10 @@ In 4.x the third parameter is called `reconnectOptions` that is of the type `Rec
 
 ```ts
 // this is the same options interface used for both WebSocketProvider and IpcProvider
-export type ReconnectOptions = {
-	autoReconnect: boolean;
-	delay: number;
-	maxAttempts: number;
+type ReconnectOptions = {
+	autoReconnect: boolean; // default: `true`
+	delay: number; // default: `5000`
+	maxAttempts: number; // default: `5`
 };
 ```
 
