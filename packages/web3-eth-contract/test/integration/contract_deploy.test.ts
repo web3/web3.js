@@ -43,7 +43,6 @@ describe('contract', () => {
 			};
 		});
 		beforeEach(async () => {
-			pkAccount = await createNewAccount({ refill: true });
 			acc = await createTempAccount();
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
@@ -54,6 +53,8 @@ describe('contract', () => {
 			it.each([signTxAndSendEIP1559, signTxAndSendEIP2930])(
 				'should deploy the contract %p',
 				async signTxAndSend => {
+					pkAccount = await createNewAccount({ refill: true });
+
 					const deployData = contract.deploy(deployOptions);
 
 					const res = await signTxAndSend(
