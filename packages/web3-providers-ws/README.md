@@ -54,7 +54,7 @@ yarn add web3-providers-ws
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: https://docs.web3js.org/
-[repo]: https://github.com/ChainSafe/web3.js/tree/4.x/packages/web3-providers-ws
+[repo]: https://github.com/web3/web3.js/tree/4.x/packages/web3-providers-ws
 [npm-image]: https://img.shields.io/npm/v/web3-providers-ws-method.svg
 [npm-url]: https://npmjs.com/package/web3-providers-ws
 [deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-providers-ws

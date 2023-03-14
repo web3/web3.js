@@ -54,7 +54,7 @@ yarn add web3-eth-iban
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: https://docs.web3js.org/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/web3/web3.js/tree/4.x/packages/web3-eth-iban
 [npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
 [npm-url]: https://npmjs.org/packages/web3-eth-iban
 [deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-eth-iban
