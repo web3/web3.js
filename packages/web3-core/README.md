@@ -55,7 +55,7 @@ yarn add web3-core
 
 [docs]: https://docs.web3js.org/
 [repo]: https://github.com/ChainSafe/web3.js/tree/4.x/packages/web3-core
-[npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
+[npm-image]: https://img.shields.io/npm/v/web3-core.svg
 [npm-url]: https://npmjs.com/package/web3-core
 [deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-core
 [deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-core
