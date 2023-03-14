@@ -55,7 +55,7 @@ yarn add web3-errors
 
 [docs]: https://docs.web3js.org/
 [repo]: https://github.com/ethereum/web3.js
-[npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
+[npm-image]: https://img.shields.io/npm/v/web3-errors.svg
 [npm-url]: https://npmjs.org/packages/web3-errors
 [deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-errors
 [deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-errors
