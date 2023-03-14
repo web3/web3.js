@@ -14,18 +14,16 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { TypedArray } from 'web3-types';
-
-// Explicitly check for the
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const isNullish = (item: unknown): item is undefined | null =>
-	// Using "null" value intentionally for validation
-	// eslint-disable-next-line no-null/no-null
-	item === undefined || item === null;
-
-export const isObject = (item: unknown): item is Record<string, unknown> =>
-	typeof item === 'object' &&
-	!isNullish(item) &&
-	!Array.isArray(item) &&
-	!(item instanceof TypedArray);
+export function uint8ArrayConcat(...parts: Uint8Array[]): Uint8Array {
+	const length = parts.reduce((prev, part) => {
+		const agg = prev + part.length;
+		return agg;
+	}, 0);
+	const result = new Uint8Array(length);
+	let offset = 0;
+	for (const part of parts) {
+		result.set(part, offset);
+		offset += part.length;
+	}
+	return result;
+}
