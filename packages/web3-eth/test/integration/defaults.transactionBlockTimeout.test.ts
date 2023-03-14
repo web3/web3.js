@@ -14,10 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Web3PromiEvent } from 'web3-core';
 import { TransactionReceipt } from 'web3-types';
+import { TransactionBlockTimeoutError } from 'web3-errors';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
 import { Web3Account } from 'web3-eth-accounts';
@@ -82,7 +82,17 @@ describe('defaults', () => {
 			// eslint-disable-next-line no-void
 			await sendFewSampleTxs(2);
 
-			await expect(sentTx).rejects.toThrowError(/was not mined within [0-9]+ blocks/);
+			try {
+				await sentTx;
+				throw new Error(
+					'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
+				);
+			} catch (error) {
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
+			}
 			await closeOpenConnection(web3.eth);
 		});
 
@@ -118,7 +128,17 @@ describe('defaults', () => {
 				// eslint-disable-next-line no-void
 				void sendFewSampleTxs(2);
 
-				await expect(sentTx).rejects.toThrowError(/was not mined within [0-9]+ blocks/);
+				try {
+					await sentTx;
+					throw new Error(
+						'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
+					);
+				} catch (error) {
+					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
+					expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
+					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
+					expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
+				}
 				await closeOpenConnection(web3.eth);
 			},
 		);

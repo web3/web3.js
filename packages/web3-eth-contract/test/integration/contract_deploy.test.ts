@@ -156,7 +156,7 @@ describe('contract', () => {
 				.send(sendOptions)
 				.on('confirmation', confirmationHandler);
 
-			// Wait for sometime to allow the transaction to be processed
+			// Wait for some time to allow the transaction to be processed
 			await sleep(500);
 
 			// Deploy once again to trigger block mining to trigger confirmation
