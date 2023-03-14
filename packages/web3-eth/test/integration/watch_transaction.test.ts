@@ -31,9 +31,7 @@ import {
 	isIpc,
 	sendFewSampleTxs,
 	createAccount,
-	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
-// eslint-disable-next-line import/no-extraneous-dependencies
 
 const waitConfirmations = 2;
 const gas = 30000;

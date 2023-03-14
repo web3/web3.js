@@ -32,7 +32,7 @@ const checkTxCount = 2;
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
 	let web3: Web3;
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 	});
 	describe('heads', () => {

@@ -18,7 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Web3PromiEvent } from 'web3-core';
 import { TransactionReceipt } from 'web3-types';
-import { TransactionBlockTimeoutError } from 'web3-errors';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
 import { Web3Account } from 'web3-eth-accounts';
@@ -43,7 +42,7 @@ describe('defaults', () => {
 	let account1: Web3Account;
 	let account2: Web3Account;
 
-	beforeEach(async () => {
+	beforeEach(() => {
 		clientUrl = getSystemTestProvider();
 		web3 = new Web3(clientUrl);
 		// Make the test run faster by casing the polling to start after 2 blocks
@@ -75,7 +74,7 @@ describe('defaults', () => {
 				value: '0x1',
 				// Give a high nonce so the transaction stuck forever.
 				// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-				nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
+				nonce: Number.MAX_SAFE_INTEGER,
 			});
 
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
@@ -83,17 +82,7 @@ describe('defaults', () => {
 			// eslint-disable-next-line no-void
 			await sendFewSampleTxs(2);
 
-			try {
-				await sentTx;
-				throw new Error(
-					'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
-				);
-			} catch (error) {
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-			}
+			await expect(sentTx).rejects.toThrowError(/was not mined within [0-9]+ blocks/);
 			await closeOpenConnection(web3.eth);
 		});
 
@@ -121,7 +110,7 @@ describe('defaults', () => {
 					type: '0x1',
 					// Give a high nonce so the transaction stuck forever.
 					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
+					nonce: Number.MAX_SAFE_INTEGER,
 				});
 
 				// Some providers (mostly used for development) will make blocks only when there are new transactions
@@ -129,17 +118,7 @@ describe('defaults', () => {
 				// eslint-disable-next-line no-void
 				void sendFewSampleTxs(2);
 
-				try {
-					await sentTx;
-					throw new Error(
-						'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
-					);
-				} catch (error) {
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-				}
+				await expect(sentTx).rejects.toThrowError(/was not mined within [0-9]+ blocks/);
 				await closeOpenConnection(web3.eth);
 			},
 		);

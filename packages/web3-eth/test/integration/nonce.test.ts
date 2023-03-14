@@ -26,7 +26,6 @@ import {
 	createLocalAccount,
 	getSystemTestProvider,
 } from '../fixtures/system_test_utils';
-// eslint-disable-next-line import/no-extraneous-dependencies
 
 const gas = 30000;
 
@@ -64,7 +63,7 @@ describe('defaults', () => {
 					gas,
 					// Give a high nonce so the transaction stuck forever.
 					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
+					nonce: Number.MAX_SAFE_INTEGER,
 				});
 				expect(true).toBe(false); // the test should fail if there is no exception
 			} catch (error) {
