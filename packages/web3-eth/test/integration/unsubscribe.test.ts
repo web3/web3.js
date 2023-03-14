@@ -26,6 +26,7 @@ import {
 	isWs,
 	isSocket,
 	closeOpenConnection,
+	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describeIf(isSocket)('unsubscribe', () => {
@@ -47,6 +48,7 @@ describeIf(isSocket)('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
+			await waitForOpenConnection(web3Eth);
 			await web3Eth.clearSubscriptions();
 			expect(web3Eth?.subscriptionManager?.subscriptions?.size).toBe(0);
 		});
@@ -61,6 +63,9 @@ describeIf(isSocket)('unsubscribe', () => {
 				topics: ['0xd78a0cb8bb633d06981248b816e7bd33c2a35a6089241d099fa519e361cab902'],
 			});
 			expect(web3Eth?.subscriptionManager?.subscriptions.size).toBe(4);
+
+			await waitForOpenConnection(web3Eth);
+
 			await web3Eth.clearSubscriptions(true);
 
 			const subs = web3Eth?.subscriptionManager?.subscriptions;

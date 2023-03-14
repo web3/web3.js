@@ -15,95 +15,47 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiEventFragment, Block, TransactionInfo, TransactionReceipt } from 'web3-types';
-import { DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
-import { Web3PromiEvent } from 'web3-core';
-import { SendTransactionEvents, Web3Eth } from '../../src';
+import { FMT_NUMBER } from 'web3-utils';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Web3 from 'web3';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
+import {
+	closeOpenConnection,
+	createAccount,
+	getSystemTestProvider,
+} from '../fixtures/system_test_utils';
 
 type SendFewTxParams = {
-	web3Eth: Web3Eth;
-	to: string;
+	to?: string;
 	from: string;
 	value: string;
 	times?: number;
 	waitReceipt?: boolean;
+	gas?: string | number;
 };
 export type Resolve = (value?: TransactionReceipt) => void;
 export const sendFewTxes = async ({
-	web3Eth,
 	to,
 	value,
 	from,
 	times = 3,
+	gas,
 }: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
+	const toAddress = to ?? createAccount().address;
+	const web3 = new Web3(getSystemTestProvider());
 	for (let i = 0; i < times; i += 1) {
-		// @TODO: Investigate why we need timeout here #5730
-		// eslint-disable-next-line no-await-in-loop
-		await new Promise<void>(resolve => {
-			setTimeout(resolve, 500);
-		});
-
-		const tx: Web3PromiEvent<
-			TransactionReceipt,
-			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-		> = web3Eth.sendTransaction(
-			{
-				to,
-				value,
-				from,
-			},
-			DEFAULT_RETURN_FORMAT,
-			{ checkRevertBeforeSending: false },
-		);
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
-			(await new Promise((resolve: Resolve, reject) => {
-				// tx promise is handled separately
-				// eslint-disable-next-line no-void
-				void tx.on('receipt', (params: TransactionReceipt) => {
-					expect(params.status).toBe(BigInt(1));
-					resolve(params);
-				});
-				// eslint-disable-next-line no-void
-				void tx.on('error', error => {
-					reject(error);
-				});
-			})) as TransactionReceipt,
-		);
-	}
-
-	return res;
-};
-
-export const sendFewTxesWithoutReceipt = async ({
-	web3Eth,
-	to,
-	value,
-	from,
-	times = 3,
-}: SendFewTxParams): Promise<
-	Web3PromiEvent<TransactionReceipt, SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>>[]
-> => {
-	const res: Web3PromiEvent<
-		TransactionReceipt,
-		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-	>[] = [];
-	for (let i = 0; i < times; i += 1) {
-		// @TODO: Investigate why we need timeout here #5730
-		// eslint-disable-next-line no-await-in-loop
-		await new Promise<void>(resolve => {
-			setTimeout(resolve, 500);
-		});
-
-		res.push(
-			web3Eth.sendTransaction({
-				to,
+			await web3.eth.sendTransaction({
+				to: toAddress,
 				value,
 				from,
+				gas: gas ?? '300000',
 			}),
 		);
 	}
+	await closeOpenConnection(web3);
 
 	return res;
 };

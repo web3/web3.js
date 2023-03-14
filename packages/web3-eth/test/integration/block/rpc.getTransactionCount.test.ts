@@ -47,7 +47,6 @@ describe('rpc with block', () => {
 		transactionIndex: number | bigint;
 	};
 	let tempAcc: { address: string; privateKey: string };
-	let tempAcc2: { address: string; privateKey: string };
 
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
@@ -69,14 +68,11 @@ describe('rpc with block', () => {
 	});
 	beforeAll(async () => {
 		tempAcc = await createTempAccount();
-		tempAcc2 = await createTempAccount();
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
 		await contract.deploy(deployOptions).send(sendOptions);
 		const [receipt]: TransactionReceipt[] = await sendFewTxes({
-			web3Eth,
 			from: tempAcc.address,
-			to: tempAcc2.address,
 			value: '0x1',
 			times: 1,
 		});
@@ -107,9 +103,7 @@ describe('rpc with block', () => {
 		)('getTransactionCount', async ({ block, format }) => {
 			const acc = await createNewAccount({ unlock: true, refill: true });
 			const [receipt] = await sendFewTxes({
-				web3Eth,
 				from: acc.address,
-				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});
@@ -128,9 +122,7 @@ describe('rpc with block', () => {
 			});
 			const count = 2;
 			const res = await sendFewTxes({
-				web3Eth,
 				from: acc.address,
-				to: tempAcc2.address,
 				value: '0x1',
 				times: count,
 			});
