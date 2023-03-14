@@ -332,13 +332,44 @@ export const bytesToUint8ArrayValidData: [Bytes, Uint8Array][] = [
 
 export const toBigIntValidData: [any, bigint][] = [
 	[BigInt(1), BigInt(1)],
+	[-BigInt(1), -BigInt(1)],
 	[24, BigInt(24)],
+	[-24, -BigInt(24)],
 	['123', BigInt(123)],
+	['-123', -BigInt(123)],
 	['0x04', BigInt(4)],
+	['-0x04', -BigInt(4)],
 ];
 
 export const toBigIntInvalidData: [any, string][] = [
 	[new Uint8Array([]), 'can not parse as number data'],
 	['wwwww', ' Error: can not parse as number data'],
 	['zzzzee0xiiuu', ' Error: can not parse as number data'],
+];
+
+
+export const toBoolValidData: [any, boolean][] = [
+	[BigInt(1), true],
+	[BigInt(0), false],
+	[1, true],
+	[0, false],
+	["1", true],
+	["0", false],
+	["0x1", true],
+	["0x0", false],
+	[true, true],
+	[false, false],
+];
+
+export const toBoolInvalidData: [any][] = [
+	[Buffer.from('')],
+	['wwwww'],
+	['zzzzee0xiiuu'],
+	[-1],
+	[10],
+	[-BigInt(1)],
+	[BigInt(10)],
+	["-0x"],
+	["0x00001"],
+	["0x00000"],
 ];

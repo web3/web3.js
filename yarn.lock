@@ -11708,6 +11708,13 @@ wcwidth@^1.0.0, wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
+web3-errors@^0.1.0-alpha.0:
+  version "0.1.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/web3-errors/-/web3-errors-0.1.0-alpha.0.tgz#076f7aed757970d2c3bee78f03f2ade28167b32d"
+  integrity sha512-4uPmqdF3AqTzUDhlaOpxA/K8npDBAOTTcsrM7mD/nZZyqN9G/B8kI0B9KZ38Vdq3G3kKxhRMXndXnENyDaQbdQ==
+  dependencies:
+    web3-types "^0.1.0-alpha.0"
+
 web3-provider-engine@16.0.3:
   version "16.0.3"
   resolved "https://registry.yarnpkg.com/web3-provider-engine/-/web3-provider-engine-16.0.3.tgz#8ff93edf3a8da2f70d7f85c5116028c06a0d9f07"
@@ -11735,6 +11742,21 @@ web3-provider-engine@16.0.3:
     ws "^5.1.1"
     xhr "^2.2.0"
     xtend "^4.0.1"
+
+web3-types@^0.1.0-alpha.0:
+  version "0.1.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/web3-types/-/web3-types-0.1.0-alpha.0.tgz#58c6fab693804ed9e4afa4663d52c38681163057"
+  integrity sha512-tJhcPOiJGk/D9tXmgI/a3SmAroyBXllRmZneJH0cNNuGlxG4vylyLKdxP0/XX2eFSHTTCkXr7VOhvZrwTZwj+g==
+
+web3-validator@^0.1.0-alpha.0:
+  version "0.1.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/web3-validator/-/web3-validator-0.1.0-alpha.0.tgz#882e1d3b41b2be12dace8f8f45f2fba5c20d351b"
+  integrity sha512-Is5/oSPBvhvM4XZL4ILlxPk7DYL7KRhqOWXlkm1v6GWGfEiBK81giyEl0Ynfou+LPjA1FS7Hxs6jil4WjUMwKw==
+  dependencies:
+    ajv "^8.11.0"
+    ethereum-cryptography "^1.1.2"
+    web3-errors "^0.1.0-alpha.0"
+    web3-types "^0.1.0-alpha.0"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

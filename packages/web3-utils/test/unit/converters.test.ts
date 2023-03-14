@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { InvalidBooleanError } from 'web3-errors';
 import {
 	asciiToHex,
 	bytesToHex,
@@ -40,6 +41,7 @@ import {
 	toChecksumAddress,
 	bytesToUint8Array,
 	toBigInt,
+	toBool,
 } from '../../src/converters';
 
 import {
@@ -71,6 +73,8 @@ import {
 	toBigIntInvalidData,
 	toCheckSumInvalidData,
 	numberToHexstrictValidData,
+	toBoolValidData,
+	toBoolInvalidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -400,6 +404,19 @@ describe('converters', () => {
 		describe('invalid cases', () => {
 			it.each(toBigIntInvalidData)('%s', (input, output) => {
 				expect(() => toBigInt(input)).toThrow(output);
+			});
+		});
+	});
+	describe('toBool', () => {
+		describe('valid cases', () => {
+			it.each(toBoolValidData)('%s to equal %s', (input, output) => {
+				expect(toBool(input)).toEqual(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(toBoolInvalidData)('%s', (input) => {
+				expect(() => toBool(input)).toThrow(InvalidBooleanError);
 			});
 		});
 	});

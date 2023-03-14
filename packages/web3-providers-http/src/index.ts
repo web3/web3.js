@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import fetch from 'cross-fetch';
+import fetch, {Request} from 'cross-fetch';
 import {
 	EthExecutionAPI,
 	JsonRpcResponseWithResult,
@@ -63,7 +63,7 @@ export default class HttpProvider<
 		ResultType = Web3APIReturnType<API, Method>,
 	>(
 		payload: Web3APIPayload<API, Method>,
-		requestOptions?: RequestInit,
+		requestOptions?: Request,
 	): Promise<JsonRpcResponseWithResult<ResultType>> {
 		const providerOptionsCombined = {
 			...this.httpProviderOptions?.providerOptions,

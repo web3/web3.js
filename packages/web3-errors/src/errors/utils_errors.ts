@@ -38,16 +38,16 @@ import { InvalidValueError } from '../web3_error_base.js';
 export class InvalidBytesError extends InvalidValueError {
 	public code = ERR_INVALID_BYTES;
 
-	public constructor(value: unknown) {
-		super(value, 'can not parse as byte data');
+	public constructor(value: unknown, msg?: string) {
+		super(value, msg ?? 'can not parse as byte data');
 	}
 }
 
 export class InvalidNumberError extends InvalidValueError {
 	public code = ERR_INVALID_NUMBER;
 
-	public constructor(value: unknown) {
-		super(value, 'can not parse as number data');
+	public constructor(value: unknown, msg?: string) {
+		super(value, msg ?? 'can not parse as number data');
 	}
 }
 

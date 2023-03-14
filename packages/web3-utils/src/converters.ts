@@ -34,6 +34,7 @@ import {
 	InvalidBytesError,
 	InvalidNumberError,
 	InvalidUnitError,
+	InvalidBooleanError,
 } from 'web3-errors';
 
 const base = BigInt(10);
@@ -161,7 +162,6 @@ export const hexToNumber = (value: HexString): bigint | number => {
  * Converts value to it's number representation @alias `hexToNumber`
  */
 export const toDecimal = hexToNumber;
-
 /**
  * Converts value to it's hex representation
  * @param value - Value to be converted
@@ -236,6 +236,12 @@ export const utf8ToHex = (str: string): HexString => {
  */
 
 export const fromUtf8 = utf8ToHex;
+
+export const utf8ToBytes = (str: string): Uint8Array => {
+	const encoder = new TextEncoder();
+	return encoder.encode(str);
+}
+
 /**
  * @alias utf8ToHex
  */
@@ -443,6 +449,10 @@ export const toBigInt = (value: unknown): bigint => {
 
 	// isHex passes for dec, too
 	if (typeof value === 'string' && isHex(value)) {
+		const negative = value.startsWith("-");
+		if(negative) {
+			return -BigInt(value.substring(1))
+		} 
 		return BigInt(value);
 	}
 
@@ -601,3 +611,33 @@ export const toChecksumAddress = (address: Address): string => {
 	}
 	return checksumAddress;
 };
+
+export const toBool = (value: boolean | string | number | unknown): boolean => {
+	if (typeof value === 'boolean') {
+		return value;
+	}
+
+	if (typeof value === 'number' && (value === 0 || value === 1)) {
+		return Boolean(value)
+	}
+
+	if (typeof value === 'bigint' && (value === BigInt(0) || value === BigInt(1))) {
+		return Boolean(value)
+	}
+
+	if (typeof value === 'string' && !isHexStrict(value) && (value === '1' || value === '0' || value === "false" || value === "true")) {
+		if(value === "true") {
+			return true
+		}
+		if(value === "false") {
+			return false
+		}
+		return Boolean(Number(value))
+	}
+
+	if (typeof value === 'string' && isHexStrict(value)&& (value === '0x1' || value === '0x0')) {
+		return Boolean(toNumber(value))
+	}
+
+	throw new InvalidBooleanError(value)
+}
