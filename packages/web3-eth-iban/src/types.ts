@@ -15,6 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * An object that could hold the components for an Indirect IBAN (BBAN)
+ */
 export type IbanOptions = {
 	institution: string;
 	identifier: string;
