@@ -93,7 +93,7 @@ export abstract class SocketProvider<
 	public constructor(socketPath: string, socketOptions?: object, reconnectOptions?: object) {
 		super();
 		this._connectionStatus = 'connecting';
-
+		
 		// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
@@ -121,8 +121,9 @@ export abstract class SocketProvider<
 
 		this._init();
 		this.connect();
-		this.chunkResponseParser = new ChunkResponseParser();
+		this.chunkResponseParser = new ChunkResponseParser(this._eventEmitter, this._reconnectOptions.autoReconnect);
 		this.chunkResponseParser.onError(() => {
+			// this._eventEmitter.emit('error', err);
 			this._clearQueues();
 		});
 		this.isReconnecting = false;
@@ -266,7 +267,6 @@ export abstract class SocketProvider<
 		if (this.isReconnecting) {
 			return;
 		}
-
 		this.isReconnecting = true;
 
 		if (this._sentRequestsQueue.size > 0) {
@@ -325,7 +325,7 @@ export abstract class SocketProvider<
 		}
 
 		const deferredPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-
+		deferredPromise.catch(error => {console.error(error)}) // if Promise rejects with an error, emit the error
 		const reqItem: SocketRequestItem<API, Method, JsonRpcResponseWithResult<ResultType>> = {
 			payload: request,
 			deferredPromise,
@@ -343,7 +343,8 @@ export abstract class SocketProvider<
 			this._sendToSocket(reqItem.payload);
 		} catch (error) {
 			this._sentRequestsQueue.delete(requestId);
-			throw error;
+			
+			this._eventEmitter.emit('error', error);
 		}
 
 		return deferredPromise;
@@ -366,7 +367,11 @@ export abstract class SocketProvider<
 
 	protected _onMessage(event: MessageEvent): void {
 		const responses = this._parseResponses(event);
-		if (!responses) {
+		if (responses.length === 0) {
+			// no responses, this means lost connection, reconnect if is on
+			if (this._reconnectOptions.autoReconnect) {
+				this._reconnect();
+			}
 			return;
 		}
 		for (const response of responses) {
@@ -405,8 +410,12 @@ export abstract class SocketProvider<
 		if (this._pendingRequestsQueue.size > 0) {
 			this._pendingRequestsQueue.forEach(
 				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
-					request.deferredPromise.reject(new ConnectionNotOpenError(event));
-					this._pendingRequestsQueue.delete(key);
+					try {
+						this._pendingRequestsQueue.delete(key);
+						request.deferredPromise.reject(new ConnectionNotOpenError(event));
+					} catch (error) {
+						console.error(error);
+					}
 				},
 			);
 		}

@@ -42,9 +42,6 @@ export default class WebSocketProvider<
 	protected _validateProviderPath(providerUrl: string): boolean {
 		return typeof providerUrl === 'string' ? /^ws(s)?:\/\//i.test(providerUrl) : false;
 	}
-	public disconnect(code?: number, data?: string) {
-		super.disconnect(code, data);
-	}
 
 	public getStatus(): Web3ProviderStatus {
 		if (this._socketConnection && !isNullish(this._socketConnection)) {
@@ -90,6 +87,7 @@ export default class WebSocketProvider<
 		this._socketConnection?.addEventListener('message', this._onMessageHandler);
 		this._socketConnection?.addEventListener('close', e => this._onCloseHandler(e));
 		this._socketConnection?.addEventListener('error', this._onErrorHandler);
+		// make a reconnect handler?
 	}
 
 	protected _removeSocketListeners(): void {
@@ -107,10 +105,10 @@ export default class WebSocketProvider<
 			this._reconnect();
 			return;
 		}
-
 		this._clearQueues(event);
 		this._removeSocketListeners();
 		this._onDisconnect(event.code, event.reason);
+		// disconnect was successful and can safely remove error listener
 		this._socketConnection?.removeEventListener('error', this._onErrorHandler);
 	}
 }

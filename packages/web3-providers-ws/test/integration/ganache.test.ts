@@ -17,13 +17,40 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ganache from 'ganache';
-import { InvalidResponseError } from 'web3-errors';
-// import { ConnectionNotOpenError } from 'web3-errors';
+import {
+	EthExecutionAPI,
+	Web3APIPayload,
+	SocketRequestItem,
+	JsonRpcResponse,
+} from 'web3-types';
+import { Web3DeferredPromise } from 'web3-utils';
 import WebSocketProvider from '../../src/index';
 
 // create helper functions to open server
 describe('ganache tests', () => {
 	describe('WebSocketProvider - ganache', () => {
+
+		const jsonRpcPayload = {
+			jsonrpc: '2.0',
+			id: 43,
+			method: 'eth_mining',
+		} as Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
+
+		const onClose = async (webSocketProvider: WebSocketProvider) =>
+			new Promise<void>(resolve => {
+				// @ts-expect-error replace close handler
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				webSocketProvider._onCloseHandler = (_: CloseEvent) => {
+					// @ts-expect-error replace close event
+					webSocketProvider._onCloseEvent({ code: 1003 });
+				};
+				// @ts-expect-error run protected method
+				webSocketProvider._removeSocketListeners();
+				// @ts-expect-error run protected method
+				webSocketProvider._addSocketListeners();
+				resolve();
+			});
+		jest.setTimeout(17000);
 		it('"error" when there is no connection', async () => {
 			const reconnectionOptions = {
 				delay: 100,
@@ -238,16 +265,53 @@ describe('ganache tests', () => {
 			expect(mockCallback).toHaveBeenCalledTimes(1);
 		});
 
-		it('errors when failing to reconect after data is lost mid-chunk', async () => {
-			jest.setTimeout(17000); // chunk parser error will only timeout after 15000
+		it('errors when failing to reconnect after data is lost mid-chunk', async () => {
 			const port = 7547;
 			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectionOptions = {
-				delay: 1000,
+				delay: 100,
 				autoReconnect: true,
 				maxAttempts: 1,
+			};
+			const mockCallBack = jest.fn();
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
+
+			const connectPromise = new Promise(resolve => {
+				webSocketProvider.on('connect', () => {
+					resolve(true);
+				});
+			});
+			await connectPromise;
+			await server.close();
+			
+			const errorPromise = new Promise(resolve => {
+				webSocketProvider.on('error', (err: any) => {
+					if (err.message === `Maximum number of reconnect attempts reached! (${1})`) 
+					{
+						mockCallBack();
+						resolve(true)
+					}
+				});
+			});
+			// @ts-expect-error run protected method
+			const event: WebSocket.MessageEvent = {data: 'abc|--|ded', type: 'websocket', target: webSocketProvider._socketConnection}
+			// @ts-expect-error run protected method
+			webSocketProvider._onMessage(event);
+			await errorPromise;
+			expect(mockCallBack).toHaveBeenCalled();
+		});
+
+		it('times out when connection is lost mid-chunk', async () => {
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const reconnectionOptions = {
+				delay: 0,
+				autoReconnect: false,
+				maxAttempts: 0,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
@@ -258,41 +322,113 @@ describe('ganache tests', () => {
 			});
 			await connectPromise;
 			await server.close();
-			try {
-				// @ts-expect-error run protected method
-				webSocketProvider._parseResponses({ data: 'abc|--|dedf' });
-			} catch (error) {
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(error).toThrow(InvalidResponseError);
-			}
+			
+			const errorPromise = new Promise(resolve => {
+				webSocketProvider.on('error', (err: any) => {
+					console.log(err)
+					resolve(true)
+				});
+			});
 			// @ts-expect-error run protected method
-			webSocketProvider._clearQueues();
-			webSocketProvider.disconnect();
+			const event: WebSocket.MessageEvent = {data: 'abc|--|ded', type: 'websocket', target: webSocketProvider._socketConnection}
+			// @ts-expect-error run protected method
+			webSocketProvider._parseResponses(event) // simulate chunks
+			await errorPromise;
+			expect(true).toBe(true);
 		});
 
-		// it('times out in mid chunk', async () => {
-		// 	const port = 7547;
-		// 	const host = `ws://localhost:${port}`;
-		// 	const server = ganache.server();
-		// 	await server.listen(port);
-		// 	const webSocketProvider = new WebSocketProvider(host, {timeout: 10});
+		it('clears pending requests on maxAttempts failed reconnection', async () => {
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const reconnectionOptions = {
+				delay: 1000,
+				autoReconnect: true,
+				maxAttempts: 1,
+			};
+			const mockCallBack = jest.fn();
 
-		// 	const errorPromise = new Promise(resolve => {
-		// 		webSocketProvider.on('error', (err:any) => {
-		// 			console.log(err);
-		// 			expect(err).toBeDefined();
-		// 			resolve(true);
-		// 		});
-		// 	});
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
+			const defPromise = new Web3DeferredPromise<JsonRpcResponse<ResponseType>>();
+			defPromise.catch(() => { 
+				// 
+			})
+			const reqItem: SocketRequestItem<any, any, any> = {
+				payload: jsonRpcPayload,
+				deferredPromise: defPromise,
+			};
+			const connectPromise = new Promise((resolve) => {webSocketProvider.on('connect', () => {
+					resolve(true);
+				});
+			})
+			await connectPromise;
 
-		// 	// eslint-disable-next-line
-		// 	// const event: WebSocket.MessageEvent = {data: 'abc|--|ded', type: 'websocket', target: webSocketProvider._socketConnection}
-		// 	// eslint-disable-next-line
-		// 	// await errorPromise;
-		// 	await server.close();
-		// 	await errorPromise;
+			// add a request without executing promise
+			// @ts-expect-error run protected method
+			webSocketProvider._pendingRequestsQueue.set(jsonRpcPayload.id, reqItem);
 
-		// });
+			// simulate abrupt disconnection, ganache server always closes with code 1000 so we need to simulate closing with different error code
+
+			await onClose(webSocketProvider);
+			const errorPromise = new Promise ((resolve)=> {
+				webSocketProvider.on('error', (error) => {
+					if (
+						error?.message === `Maximum number of reconnect attempts reached! (${1})`
+					) {
+						mockCallBack();
+					}
+					resolve(true);
+				})
+			})
+			
+			await server.close();
+			await errorPromise;
+			// @ts-expect-error run protected method
+			expect(webSocketProvider._pendingRequestsQueue.size).toBe(0)
+			expect(mockCallBack).toHaveBeenCalled();
+		});
+	
+		it('queues requests made while connection is lost / executes on reconnect', async () => {
+			const port = 7547;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const reconnectionOptions = {
+				delay: 1000,
+				autoReconnect: true,
+				maxAttempts: 3,
+			};
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
+			const connectPromise = new Promise((resolve) => {webSocketProvider.once('connect', () => {
+					resolve(true);
+				});
+			})
+			await connectPromise;
+			await onClose(webSocketProvider);
+			const errorPromise = new Promise(resolve => {
+				webSocketProvider.on('error', () => {
+					resolve(true);
+				});
+			});
+			await server.close();
+
+			await errorPromise;
+			const requestPromise = webSocketProvider.request(jsonRpcPayload);
+
+			const server2 = ganache.server();
+			await server2.listen(port);
+			const connectPromise2 = new Promise((resolve) => {webSocketProvider.once('connect', () => {
+				resolve(true);
+				});
+			})
+			await connectPromise2;
+			// try to send a request
+			const result = await requestPromise;
+			expect(result.id).toEqual(jsonRpcPayload.id)
+			webSocketProvider.disconnect();
+			await server2.close()
+		});
 		// it('errors when requests continue after socket closed', async () => {
 		// 	const port = 7547;
 		// 	const host = `ws://localhost:${port}`;
