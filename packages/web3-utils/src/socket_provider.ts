@@ -371,10 +371,7 @@ export abstract class SocketProvider<
 
 	protected _onMessage(event: MessageEvent): void {
 		const responses = this._parseResponses(event);
-		if (
-			(typeof responses === 'object' && responses.length === 0) ||
-			(typeof responses === 'string' && !responses)
-		) {
+		if (responses.length === 0) {
 			// no responses means lost connection, autoreconnect if possible
 			if (this._reconnectOptions.autoReconnect) {
 				this._reconnect();
