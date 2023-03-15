@@ -50,6 +50,12 @@ describe('formatTransaction', () => {
 		for (const sourceType of Object.keys(transactionsDataForNumberTypes)) {
 			for (const destinationType of Object.keys(transactionsDataForNumberTypes)) {
 				it(`should convert "${sourceType}" properties to "${destinationType}"`, () => {
+					// formatTransaction replaces gasLimit with gas property to follow ETH spec
+					// https://github.com/ethereum/execution-apis/issues/283
+					const expectedFormattedTransaction =
+						transactionsDataForNumberTypes[destinationType as FMT_NUMBER];
+					delete expectedFormattedTransaction.gasLimit;
+
 					expect(
 						formatTransaction(
 							transactionsDataForNumberTypes[sourceType as FMT_NUMBER],
@@ -58,7 +64,7 @@ describe('formatTransaction', () => {
 								number: destinationType as FMT_NUMBER,
 							},
 						),
-					).toStrictEqual(transactionsDataForNumberTypes[destinationType as FMT_NUMBER]);
+					).toStrictEqual(expectedFormattedTransaction);
 				});
 			}
 		}
@@ -68,12 +74,18 @@ describe('formatTransaction', () => {
 		for (const sourceType of Object.keys(transactionsDataForByteTypes)) {
 			for (const destinationType of Object.keys(transactionsDataForByteTypes)) {
 				it(`should convert "${sourceType}" properties to "${destinationType}"`, () => {
+					// formatTransaction replaces gasLimit with gas property to follow ETH spec
+					// https://github.com/ethereum/execution-apis/issues/283
+					const expectedFormattedTransaction =
+						transactionsDataForByteTypes[destinationType as FMT_BYTES];
+					delete expectedFormattedTransaction.gasLimit;
+
 					expect(
 						formatTransaction(transactionsDataForByteTypes[sourceType as FMT_BYTES], {
 							...DEFAULT_RETURN_FORMAT,
 							bytes: destinationType as FMT_BYTES,
 						}),
-					).toStrictEqual(transactionsDataForByteTypes[destinationType as FMT_BYTES]);
+					).toStrictEqual(expectedFormattedTransaction);
 				});
 			}
 		}

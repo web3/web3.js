@@ -24,7 +24,7 @@ import {
 	FormatType,
 } from 'web3-utils';
 import { Transaction } from 'web3-types';
-import { isNullish } from 'web3-validator';
+import { isNullish, ValidationSchemaInput } from 'web3-validator';
 import { TransactionDataAndInputError } from 'web3-errors';
 import { transactionSchema } from '../schemas';
 
@@ -34,6 +34,9 @@ export function formatTransaction<
 >(
 	transaction: TransactionType,
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	options: { transactionSchema: ValidationSchemaInput | typeof transactionSchema } = {
+		transactionSchema,
+	},
 ): FormatType<TransactionType, ReturnFormat> {
 	let formattedTransaction = mergeDeep({}, transaction as Record<string, unknown>) as Transaction;
 	if (!isNullish(transaction?.common)) {
@@ -42,7 +45,7 @@ export function formatTransaction<
 			formattedTransaction.common.customChain = { ...transaction.common.customChain };
 	}
 
-	formattedTransaction = format(transactionSchema, formattedTransaction, returnFormat);
+	formattedTransaction = format(options.transactionSchema, formattedTransaction, returnFormat);
 
 	if (!isNullish(formattedTransaction.data) && !isNullish(formattedTransaction.input))
 		throw new TransactionDataAndInputError({
