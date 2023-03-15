@@ -180,8 +180,6 @@ describe('ganache tests', () => {
 
 			expect(webSocketProvider.supportsSubscriptions()).toBe(true);
 
-			// const web3 = new Web3(webSocketProvider);
-			// expect(web3.eth.currentProvider.supportsSubscriptions()).toBe(true); // Unsafe call of an `any` typed value.
 			webSocketProvider.disconnect();
 			await server.close();
 		});
@@ -289,10 +287,10 @@ describe('ganache tests', () => {
 					}
 				});
 			});
-			// @ts-expect-error run protected method
-			const event: WebSocket.MessageEvent = {
+			const event = {
 				data: 'abc|--|ded',
 				type: 'websocket',
+				// @ts-expect-error run protected method
 				target: webSocketProvider._socketConnection,
 			};
 			// @ts-expect-error run protected method
@@ -326,10 +324,10 @@ describe('ganache tests', () => {
 					if (err.innerError.message === 'Chunk timeout') resolve(true);
 				});
 			});
-			// @ts-expect-error run protected method
-			const event: WebSocket.MessageEvent = {
+			const event = {
 				data: 'abc|--|ded',
 				type: 'websocket',
+				// @ts-expect-error run protected method
 				target: webSocketProvider._socketConnection,
 			};
 			// @ts-expect-error run protected method
