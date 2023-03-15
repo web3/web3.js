@@ -7,8 +7,7 @@
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
 [![NPM Package][npm-image]][npm-url]
-[![Dependency Status][deps-image]][deps-url]
-[![Dev Dependency Status][deps-dev-image]][deps-dev-url]
+[![Downloads][downloads-image]][npm-url]
 
 This is a sub-package of [web3.js][repo].
 
@@ -94,9 +93,6 @@ The implementation of the validator is extension of [JSON-Schema-Draft07](https:
 
 [docs]: https://docs.web3js.org/
 [repo]: https://github.com/web3/web3.js/tree/4.x/packages/web3-validator
-[npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
-[npm-url]: https://npmjs.com/package/web3-validator
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-validator
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-validator
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-validator
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-validator
+[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=packages%2Fweb3-validator%2Fpackage.json
+[npm-url]: https://npmjs.org/package/web3-validator
+[downloads-image]: https://img.shields.io/npm/dm/web3-validator?label=npm%20downloads
