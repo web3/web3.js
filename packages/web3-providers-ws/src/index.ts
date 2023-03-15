@@ -113,8 +113,13 @@ export default class WebSocketProvider<
 	}
 
 	protected _openSocketConnection() {
-		const socket = new WebSocket(this._socketPath, undefined, this._socketOptions);
-		this._socketConnection = socket;
+		this._socketConnection = new WebSocket(
+			this._socketPath,
+			undefined,
+			this._socketOptions && Object.keys(this._socketOptions).length === 0
+				? undefined
+				: this._socketOptions,
+		);
 	}
 
 	protected _closeSocketConnection(code?: number, data?: string) {
