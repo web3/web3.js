@@ -53,8 +53,8 @@ yarn add web3-net
 | test:integration | Uses `jest` to run tests under `/test/integration` |
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
-[docs]: http://web3js.readthedocs.io/en/4.0/
-[repo]: https://github.com/ChainSafe/web3.js/tree/4.x/packages/web3-net
+[docs]: https://docs.web3js.org/
+[repo]: https://github.com/web3/web3.js/tree/4.x/packages/web3-net
 [npm-image]: https://img.shields.io/npm/v/web3-net-method.svg
 [npm-url]: https://npmjs.com/package/web3-net
 [deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-net

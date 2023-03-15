@@ -15,8 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionError, ContractExecutionError, ResponseError } from 'web3-errors';
-import { Bytes, HexString, Numbers, Transaction, TransactionReceipt } from 'web3-types';
+import {
+	ContractExecutionError,
+	TransactionRevertedWithoutReasonError,
+	TransactionRevertInstructionError,
+	TransactionRevertWithCustomError,
+	InvalidResponseError,
+} from 'web3-errors';
+import {
+	Bytes,
+	ContractAbi,
+	HexString,
+	Numbers,
+	Transaction,
+	TransactionReceipt,
+} from 'web3-types';
 import { DataFormat, ETH_DATA_FORMAT, FormatType } from 'web3-utils';
 
 export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
@@ -31,8 +44,12 @@ export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
 		receipt: FormatType<TransactionReceipt, ReturnFormat>;
 		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
-	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
-	contractExecutionError: ContractExecutionError | ResponseError<any>;
+	error:
+		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
+		| InvalidResponseError
+		| ContractExecutionError;
 };
 
 export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
@@ -45,17 +62,25 @@ export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
 		receipt: FormatType<TransactionReceipt, ReturnFormat>;
 		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
-	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
-	contractExecutionError: ContractExecutionError | ResponseError<any>;
+	error:
+		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
+		| InvalidResponseError
+		| ContractExecutionError;
 };
 
 export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 	ignoreGasPricing?: boolean;
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
+	contractAbi?: ContractAbi;
+	checkRevertBeforeSending?: boolean;
 }
 
 export interface SendSignedTransactionOptions<ResolveType = TransactionReceipt> {
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
+	contractAbi?: ContractAbi;
+	checkRevertBeforeSending?: boolean;
 }
 
 export interface RevertReason {

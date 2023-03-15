@@ -26,6 +26,7 @@ import {
 	createNewAccount,
 	signTxAndSendEIP2930,
 	signTxAndSendEIP1559,
+	sendFewSampleTxs,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -36,14 +37,13 @@ describe('contract', () => {
 		let acc: { address: string; privateKey: string };
 		let pkAccount: { address: string; privateKey: string };
 		beforeAll(async () => {
-			pkAccount = await createNewAccount({ refill: true });
-			acc = await createTempAccount();
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
 		});
-		beforeEach(() => {
+		beforeEach(async () => {
+			acc = await createTempAccount();
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -53,6 +53,8 @@ describe('contract', () => {
 			it.each([signTxAndSendEIP1559, signTxAndSendEIP2930])(
 				'should deploy the contract %p',
 				async signTxAndSend => {
+					pkAccount = await createNewAccount({ refill: true });
+
 					const deployData = contract.deploy(deployOptions);
 
 					const res = await signTxAndSend(
@@ -148,18 +150,20 @@ describe('contract', () => {
 
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
-
+			contract.setConfig({ transactionConfirmationBlocks: 1 });
 			await contract
 				.deploy(deployOptions)
 				.send(sendOptions)
 				.on('confirmation', confirmationHandler);
 
-			// Wait for sometime to allow the transaction to be processed
+			// Wait for some time to allow the transaction to be processed
 			await sleep(500);
 
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
 			await contract.deploy(deployOptions).send(sendOptions);
+
+			await sendFewSampleTxs(3);
 
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
