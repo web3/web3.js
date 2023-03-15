@@ -52,9 +52,9 @@ export function formatTransaction<
 			data: bytesToBuffer(formattedTransaction.data).toString('hex'),
 			input: bytesToBuffer(formattedTransaction.input).toString('hex'),
 		});
-	else if (!isNullish(formattedTransaction.input)) {
-		formattedTransaction.data = formattedTransaction.input;
-		delete formattedTransaction.input;
+	else if (!isNullish(formattedTransaction.data)) {
+		formattedTransaction.input = formattedTransaction.data;
+		delete formattedTransaction.data;
 	}
 
 	if (!isNullish(formattedTransaction.gasLimit)) {

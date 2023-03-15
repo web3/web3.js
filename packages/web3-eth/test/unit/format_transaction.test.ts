@@ -55,6 +55,8 @@ describe('formatTransaction', () => {
 					const expectedFormattedTransaction =
 						transactionsDataForNumberTypes[destinationType as FMT_NUMBER];
 					delete expectedFormattedTransaction.gasLimit;
+					// formatTransaction replaces data with input to follow ETH spec
+					delete expectedFormattedTransaction.data;
 
 					expect(
 						formatTransaction(
@@ -79,6 +81,8 @@ describe('formatTransaction', () => {
 					const expectedFormattedTransaction =
 						transactionsDataForByteTypes[destinationType as FMT_BYTES];
 					delete expectedFormattedTransaction.gasLimit;
+					// formatTransaction replaces data with input to follow ETH spec
+					delete expectedFormattedTransaction.data;
 
 					expect(
 						formatTransaction(transactionsDataForByteTypes[sourceType as FMT_BYTES], {
