@@ -22,8 +22,6 @@ import {
 	isSocket,
 } from '../fixtures/system_test_utils';
 import { LogsSubscription } from '../../src/web3_subscriptions';
-// eslint-disable-next-line import/no-extraneous-dependencies
-// eslint-disable-next-line import/no-extraneous-dependencies
 
 describeIf(isSocket)('subscription', () => {
 	let web3Eth: Web3Eth;
