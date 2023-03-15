@@ -110,3 +110,74 @@ const transactionHash = await myContract.method.MyMethod().send();
 const receipt = await myContract.method.MyMethod().send();
 const transactionHash = receipt.transactionHash;
 ```
+
+### `BigInt` is used when decoding functions' and events' parameters
+
+In 1.x, decoded functions' and events' parameters were of type `string`. In 4.x, the `BigInt` type is used instead.
+
+```ts
+// Events
+// 1.x
+instance.events.BasicEvent().on('data', function (event) {
+	console.log(event);
+});
+
+await instance.methods.firesEvent(acc, 1).send();
+/**
+{	address: '0x607A075cB7710AA8544c4E0F929e344Bf91AB631',
+ 	blockHash: ..,
+	blockNumber: 9, logIndex: 0, removed: false, transactionHash: ..., transactionIndex: 0,
+	returnValues: {0: '0xd0731FAE14781104c42B8914b4cc6634b6038daC', 1: '1', addr: '0xd0731FAE14781104c42B8914b4cc6634b6038daC', val: '1'} // Note the value of val
+	,event: 'BasicEvent', signature: ..., raw: ...}
+*/
+
+//4.x
+instance.events
+	.MultiValueIndexedEvent({
+		filter: { val: 100 },
+	})
+	.on('data', console.log);
+await instance.methods.firesMultiValueIndexedEvent('value', 100, true).send(sendOptions);
+/**
+ * {
+        address: '0x0c1b54fb6fdf63dee15e65cadba8f2e028e26bd0',
+        topics: [
+          '0x553c4a49a36d26504ba0880f2f9bfe9ac7db4b81a893bde296546cd96ae0b33c',
+          '0x0000000000000000000000000000000000000000000000000000000000000064',
+          '0x0000000000000000000000000000000000000000000000000000000000000001'
+        ],
+        data: '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000576616c7565000000000000000000000000000000000000000000000000000000',
+        blockNumber: 23n,
+        transactionHash: '0xf7e56f38b0f75c0926862ef4195df779003a0e960162a65b214c40232ba17925',
+        transactionIndex: 0n,
+        blockHash: '0x15a77129afdcec739924c58fb3aba456428d8c3f5d181af559d50458d468eb33',
+        logIndex: 0n,
+        removed: false,
+        returnValues: {
+          '0': 'value',
+          '1': 100n,
+          '2': true,
+          __length__: 3,
+          str: 'value',
+          val: 100n, //Note that a BigInt is returned
+          flag: true
+        },
+        event: 'MultiValueIndexedEvent',
+        signature: '0x553c4a49a36d26504ba0880f2f9bfe9ac7db4b81a893bde296546cd96ae0b33c',
+        raw: ...
+	      }
+*/
+
+// Functions
+//1.x
+await instance.methods.setValue(1).send();
+var value = await instance.methods.getValue().call();
+console.log(value);
+// > '1'
+
+//4.x
+await instance.methods.setValue(10).send();
+var value = await instance.methods.getValue().call();
+console.log(value);
+// 10n // Note that a BigInt is returned
+```

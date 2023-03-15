@@ -17,43 +17,50 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionReceipt } from 'web3-types';
 import { Web3PromiEvent } from 'web3-core';
-import { Web3Eth, SendTransactionEvents } from '../../src';
-import { sendFewTxesWithoutReceipt } from './helper';
-
+import { Web3Account } from 'web3-eth-accounts';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Web3 } from 'web3';
+import { SendTransactionEvents } from '../../src';
 import {
 	getSystemTestProvider,
 	describeIf,
-	createTempAccount,
 	closeOpenConnection,
 	isSocket,
 	waitForOpenConnection,
-	// eslint-disable-next-line import/no-relative-packages
+	createLocalAccount,
+	isIpc,
+	sendFewSampleTxs,
+	createAccount,
 } from '../fixtures/system_test_utils';
 
 const waitConfirmations = 2;
-
+const gas = 30000;
 type Resolve = (value?: unknown) => void;
 
 describeIf(isSocket)('watch subscription transaction', () => {
+	let web3: Web3;
+	let clientUrl: string;
+	let account1: Web3Account;
+	let account2: Web3Account;
+	beforeEach(async () => {
+		clientUrl = getSystemTestProvider();
+		web3 = new Web3(clientUrl);
+		account1 = await createLocalAccount(web3);
+		account2 = createAccount();
+		await waitForOpenConnection(web3.eth);
+	});
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
-			const web3Eth = new Web3Eth(getSystemTestProvider());
-			await waitForOpenConnection(web3Eth);
-			const tempAccount = await createTempAccount();
-			const tempAccount2 = await createTempAccount();
+			web3.eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
-			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
-
-			const from = tempAccount.address;
-			const to = tempAccount2.address;
-			const value = `0x1`;
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> = web3Eth.sendTransaction({
-				to,
-				value,
-				from,
+			> = web3.eth.sendTransaction({
+				from: account1.address,
+				to: account2.address,
+				value: '0x1',
+				gas,
 			});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
@@ -64,6 +71,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 					resolve();
 				});
 			});
+
 			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
@@ -77,15 +85,9 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				});
 			});
 			await receiptPromise;
-			await sendFewTxesWithoutReceipt({
-				web3Eth,
-				from,
-				to,
-				value,
-				times: waitConfirmations,
-			});
+			await sendFewSampleTxs(isIpc ? 2 * waitConfirmations : waitConfirmations);
 			await confirmationPromise;
-			await closeOpenConnection(web3Eth);
+			await closeOpenConnection(web3.eth);
 		});
 	});
 });
