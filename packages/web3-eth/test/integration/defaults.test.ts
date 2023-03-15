@@ -32,6 +32,8 @@ import {
 	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
+	isIpc,
+	sendFewSampleTxs,
 } from '../fixtures/system_test_utils';
 
 import {
@@ -42,7 +44,7 @@ import {
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSender';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
-import { Resolve, sendFewTxes, sendFewTxesWithoutReceipt } from './helper';
+import { Resolve, sendFewTxes } from './helper';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -173,7 +175,6 @@ describe('defaults', () => {
 			expect(eth2.handleRevert).toBe(true);
 		});
 		it('defaultBlock', async () => {
-			const tempAcc2 = await createTempAccount();
 			const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			// default
 			expect(web3Eth.defaultBlock).toBe('latest');
@@ -207,9 +208,7 @@ describe('defaults', () => {
 			const acc = await createNewAccount({ refill: true, unlock: true });
 
 			await sendFewTxes({
-				web3Eth: eth2,
 				from: acc.address,
-				to: tempAcc2.address,
 				times: 1,
 				value: '0x1',
 			});
@@ -359,13 +358,7 @@ describe('defaults', () => {
 			});
 			await sentTx;
 			await receiptPromise;
-			await sendFewTxesWithoutReceipt({
-				web3Eth: eth,
-				from,
-				to,
-				value,
-				times: waitConfirmations,
-			});
+			await sendFewSampleTxs(isIpc ? 2 * waitConfirmations : waitConfirmations);
 			await confirmationPromise;
 			await closeOpenConnection(eth);
 		});
