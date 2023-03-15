@@ -102,7 +102,7 @@ describe('defaults', () => {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
 			}
-			await closeOpenConnection(eth);
+			// await closeOpenConnection(eth); // todo to see if this is needed
 		});
 
 		// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
@@ -155,18 +155,19 @@ describe('defaults', () => {
 					value: '0x1',
 				});
 
-				try {
+				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
+				await expect(async () => {
 					await sentTx;
-					throw new Error(
-						'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
-					);
-				} catch (error) {
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-				}
-				await closeOpenConnection(eth);
+				}).rejects.toThrow(/was not mined within [0-9]+ blocks/);
+
+				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
+				await expect(async () => {
+					await sentTx;
+				}).rejects.toThrow(TransactionBlockTimeoutError);
+				// toBeInstanceOf(TransactionBlockTimeoutError);
+				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
+				// expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
+				// await closeOpenConnection(eth); // todo to see if this is needed
 			},
 		);
 	});
