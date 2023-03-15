@@ -34,7 +34,7 @@ export class formatters {
 
     static inputBlockNumberFormatter(blockNumber: string | number): string | number;
 
-    static outputBlockFormatter(block: any): any; // TODO: Create Block interface
+    static outputBlockFormatter(block: any, hexFormat?: boolean): any; // TODO: Create Block interface
 
     static txInputFormatter(txObject: any): any;
 

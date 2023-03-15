@@ -612,7 +612,7 @@ Released with 1.0.0-beta.37 code base.
 
 - Updated dependencies (#5529)
 
-## [Unreleased]
+## [1.8.2]
 
 ### Changed
 
@@ -636,3 +636,27 @@ Released with 1.0.0-beta.37 code base.
 
 - `https-browserify`, `process`, `stream-browserify`, `stream-http`, `crypto-browserify` added to dev-dependencies for polyfilling (#5629)
 - Add `readable-stream` to dev-dependancies for webpack (#5629) 
+
+### Security
+-  `npm audit fix` for libraries update (#5726)
+
+## [Unreleased]
+
+### Fixed
+
+  - Fixed skipped ws-ganache tests (#5759)
+  - Fixed "provider started to reconnect error" in web3-provider-ws (#5820)
+  - Fixed Error: Number can only safely store up to 53 bits (#5845)
+  - Fixed types for packages which have default exports but not declared default export in .d.ts (#5866)
+  - Fixed Transaction type by adding missing properties (#5856)
+
+### Changed
+
+  - Add optional `hexFormat` param to `getTransaction` and `getBlock` that accepts the value `'hex'` (#5845)
+  - `utils.toNumber` and `utils.hexToNumber` can now return the large unsafe numbers as `BigInt`, if `true` was passed to a new optional parameter called `bigIntOnOverflow` (#5845)
+  - Updated @types/bn.js dependency to 5.1.1 in web3, web3-core and web3-eth-contract as reason mentioned in #5640 (#5885)
+  - Add description to error for failed connection on websocket (#5884)
+
+  
+### Security
+  - Updated dependencies (#5885)

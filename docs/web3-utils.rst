@@ -772,12 +772,13 @@ hexToNumber
 
 .. code-block:: javascript
 
-    web3.utils.hexToNumber(hex)
+    web3.utils.hexToNumber(hex) // if it is larger than 53 bit, it will throw an error
+    web3.utils.hexToNumber(hex, true) // if it is larger than 53 bit, it will return the value as BigInt
     web3.utils.toDecimal(hex) // ALIAS, deprecated
 
-Returns the number representation of a given HEX value.
+Returns the number representation of a given HEX value. And only if the second parameter is passed as `true` and the number is very big (unsafe number), it will return the value as a `BigInt`.
 
-.. note:: This is not useful for big numbers, rather use :ref:`utils.toBN <utils-tobn>` instead.
+.. note:: To handle for big numbers, either use :ref:`utils.toBN <utils-tobn>` to return as `BN`. Or, pass `true` to the second parameter to return the value as `BigInt`, in case of an overflow.
 
 ----------
 Parameters

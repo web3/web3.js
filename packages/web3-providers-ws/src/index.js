@@ -63,7 +63,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.responseQueue = new Map();
     this.reconnectAttempts = 0;
     this.reconnecting = false;
-
+    this.connectFailedDescription = null;
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
     // pass through with any additional headers supplied in constructor
@@ -160,6 +160,47 @@ WebsocketProvider.prototype._onConnect = function () {
     }
 };
 
+WebsocketProvider.prototype._onConnectFailed = function (event) {
+    this.connectFailedDescription = event.toString().split('\n')[0];
+    var _this = this;
+    if (this.connectFailedDescription) {
+        event.description = this.connectFailedDescription;
+        this.connectFailedDescription = null; // clean the message, so it won't be used in the next connection
+    }
+
+    event.code = 1006;
+    event.reason = 'connection failed';
+
+    if (this.reconnectOptions.auto && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
+        this.reconnect();
+
+        return;
+    }
+
+    this.emit(this.ERROR, event);
+    if (this.requestQueue.size > 0) {
+        this.requestQueue.forEach(function (request, key) {
+            request.callback(errors.ConnectionNotOpenError(event));
+            _this.requestQueue.delete(key);
+        });
+    }
+
+    if (this.responseQueue.size > 0) {
+        this.responseQueue.forEach(function (request, key) {
+            request.callback(errors.InvalidConnection('on WS', event));
+            _this.responseQueue.delete(key);
+        });
+    }
+
+    //clean connection on our own
+    if(this.connection._connection){
+        this.connection._connection.removeAllListeners();
+    }
+    this.connection._client.removeAllListeners();
+    this.connection._readyState = 3; // set readyState to CLOSED
+
+    this.emit(this.CLOSE, event);
+}
 /**
  * Listener for the `close` event of the underlying WebSocket object
  *
@@ -176,8 +217,7 @@ WebsocketProvider.prototype._onClose = function (event) {
         return;
     }
 
-    this.emit(this.CLOSE, event);
-
+        this.emit(this.CLOSE, event);
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
             request.callback(errors.ConnectionNotOpenError(event));
@@ -207,7 +247,11 @@ WebsocketProvider.prototype._addSocketListeners = function () {
     this.connection.addEventListener('message', this._onMessage.bind(this));
     this.connection.addEventListener('open', this._onConnect.bind(this));
     this.connection.addEventListener('close', this._onClose.bind(this));
-};
+    if(this.connection._client){
+        this.connection._client.removeAllListeners('connectFailed'); //Override the internal listeners, so they don't trigger a `close` event. We want to trigger `_onClose` manually with a description.
+        this.connection._client.on('connectFailed',this._onConnectFailed.bind(this));
+    }
+}
 
 /**
  * Will remove all socket listeners
@@ -220,6 +264,8 @@ WebsocketProvider.prototype._removeSocketListeners = function () {
     this.connection.removeEventListener('message', this._onMessage);
     this.connection.removeEventListener('open', this._onConnect);
     this.connection.removeEventListener('close', this._onClose);
+    if(this.connection._connection)
+        this.connection._client.removeListener('connectFailed',this._onConnectFailed);
 };
 
 /**
@@ -392,8 +438,12 @@ WebsocketProvider.prototype.reconnect = function () {
 
     if (this.responseQueue.size > 0) {
         this.responseQueue.forEach(function (request, key) {
-            request.callback(errors.PendingRequestsOnReconnectingError());
-            _this.responseQueue.delete(key);
+            try{
+                _this.responseQueue.delete(key);
+                request.callback(errors.PendingRequestsOnReconnectingError())
+            }catch (e) {
+                console.error("Error encountered in reconnect: ", e)
+            }
         });
     }
 
