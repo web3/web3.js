@@ -129,14 +129,10 @@ describe('defaults', () => {
 				void sendFewSampleTxs(2);
 
 				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-				await expect(async () => {
-					await sentTx;
-				}).rejects.toThrow(/was not mined within [0-9]+ blocks/);
+				await expect(sentTx).rejects.toThrow(/was not mined within [0-9]+ blocks/);
 
 				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-				await expect(async () => {
-					await sentTx;
-				}).rejects.toThrow(TransactionBlockTimeoutError);
+				await expect(sentTx).rejects.toThrow(TransactionBlockTimeoutError);
 				// toBeInstanceOf(TransactionBlockTimeoutError);
 				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
 				// expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
