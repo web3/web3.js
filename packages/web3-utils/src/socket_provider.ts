@@ -103,7 +103,7 @@ export abstract class SocketProvider<
 	) {
 		super();
 		this._connectionStatus = 'connecting';
-		
+
 		// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
@@ -125,9 +125,11 @@ export abstract class SocketProvider<
 
 		this._init();
 		this.connect();
-		this.chunkResponseParser = new ChunkResponseParser(this._eventEmitter, this._reconnectOptions.autoReconnect);
+		this.chunkResponseParser = new ChunkResponseParser(
+			this._eventEmitter,
+			this._reconnectOptions.autoReconnect,
+		);
 		this.chunkResponseParser.onError(() => {
-			// this._eventEmitter.emit('error', err);
 			this._clearQueues();
 		});
 		this.isReconnecting = false;
@@ -307,7 +309,6 @@ export abstract class SocketProvider<
 		Method extends Web3APIMethod<API>,
 		ResultType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>> {
-		// need to figure out how connect can trigger request
 		if (isNullish(this._socketConnection)) {
 			throw new Error('Connection is undefined');
 		}
@@ -329,7 +330,6 @@ export abstract class SocketProvider<
 		}
 
 		const deferredPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-		deferredPromise.catch(error => {console.error(error)}) // if Promise rejects with an error, emit the error
 		const reqItem: SocketRequestItem<API, Method, JsonRpcResponseWithResult<ResultType>> = {
 			payload: request,
 			deferredPromise,
@@ -347,7 +347,7 @@ export abstract class SocketProvider<
 			this._sendToSocket(reqItem.payload);
 		} catch (error) {
 			this._sentRequestsQueue.delete(requestId);
-			
+
 			this._eventEmitter.emit('error', error);
 		}
 
@@ -414,12 +414,8 @@ export abstract class SocketProvider<
 		if (this._pendingRequestsQueue.size > 0) {
 			this._pendingRequestsQueue.forEach(
 				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
-					try {
-						this._pendingRequestsQueue.delete(key);
-						request.deferredPromise.reject(new ConnectionNotOpenError(event));
-					} catch (error) {
-						console.error(error);
-					}
+					this._pendingRequestsQueue.delete(key);
+					request.deferredPromise.reject(new ConnectionNotOpenError(event));
 				},
 			);
 		}

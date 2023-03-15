@@ -91,6 +91,7 @@ export default class WebSocketProvider<
 		socketOptions?: ClientOptions | ClientRequestArgs,
 		reconnectOptions?: Partial<ReconnectOptions>,
 	) {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		super(socketPath, socketOptions, reconnectOptions);
 	}
 
@@ -138,7 +139,6 @@ export default class WebSocketProvider<
 		this._socketConnection?.addEventListener('message', this._onMessageHandler);
 		this._socketConnection?.addEventListener('close', e => this._onCloseHandler(e));
 		this._socketConnection?.addEventListener('error', this._onErrorHandler);
-		// make a reconnect handler?
 	}
 
 	protected _removeSocketListeners(): void {
