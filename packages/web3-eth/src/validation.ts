@@ -259,7 +259,6 @@ export const validateGas = (transaction: InternalTransaction) => {
 	if (!legacyGasPresent && !feeMarketGasPresent)
 		throw new MissingGasError({
 			gas: transaction.gas,
-			gasLimit: transaction.gasLimit,
 			gasPrice: transaction.gasPrice,
 			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
 			maxFeePerGas: transaction.maxFeePerGas,
@@ -268,7 +267,6 @@ export const validateGas = (transaction: InternalTransaction) => {
 	if (legacyGasPresent && feeMarketGasPresent)
 		throw new TransactionGasMismatchError({
 			gas: transaction.gas,
-			gasLimit: transaction.gasLimit,
 			gasPrice: transaction.gasPrice,
 			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
 			maxFeePerGas: transaction.maxFeePerGas,
