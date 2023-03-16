@@ -52,14 +52,14 @@ jobs:
                 name: web3-16.js.tar.gz
                 path: /tmp
         -   run: tar -xf /tmp/web3-16.js.tar.gz -C ./
-        -   run: yarn build:web:analyze
-            env:
-              STATS_FILE: ${{ github.ref_name }}.json
-        -   name: Cache default branch stats
-            uses: actions/cache@v3
+        -   name: Restore default branch stats
+            uses: actions/cache/restore@v3
             with:
               path: packages/web3/dist/4.x.json
               key: web3-bundle-stats-default
+        -   run: yarn build:web:analyze
+            env:
+              STATS_FILE: ${{ github.ref_name }}.json
         -   name: Compare bundle stats
             uses: github/webpack-bundlesize-compare-action@v1
             if: github.event_name != 'push'
@@ -68,6 +68,12 @@ jobs:
               github-token: ${{ secrets.GITHUB_TOKEN }}
               current-stats-json-path: "packages/web3/dist/${{ github.ref_name }}.json"
               base-stats-json-path: "packages/web3/dist/4.x.json"
+        -   name: Cache default branch stats
+            uses: actions/cache/save@v3
+            if: github.event_name == 'push'
+            with:
+              path: packages/web3/dist/4.x.json
+              key: web3-bundle-stats-default
 
   unit:
     name: Unit Tests

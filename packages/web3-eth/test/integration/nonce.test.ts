@@ -14,56 +14,56 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from 'web3-errors';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Web3 } from 'web3';
+import { Web3Account } from 'web3-eth-accounts';
 import { Web3Eth } from '../../src';
 
 import {
 	closeOpenConnection,
-	createTempAccount,
+	createAccount,
+	createLocalAccount,
 	getSystemTestProvider,
 } from '../fixtures/system_test_utils';
 
+const gas = 30000;
+
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
-	let eth2: Web3Eth;
 	let clientUrl: string;
-	let tempAcc: { address: string; privateKey: string };
-
-	beforeEach(() => {
+	let tempAcc: Web3Account;
+	beforeEach(async () => {
 		clientUrl = getSystemTestProvider();
-		web3Eth = new Web3Eth(clientUrl);
+		const web3 = new Web3(clientUrl);
+		tempAcc = await createLocalAccount(web3);
+		web3Eth = web3.eth as unknown as Web3Eth;
 	});
 
 	afterEach(async () => {
 		await closeOpenConnection(web3Eth);
-		await closeOpenConnection(eth2);
-	});
-	beforeEach(async () => {
-		tempAcc = await createTempAccount();
 	});
 
 	describe('defaults', () => {
 		it('should fail if Ethereum Node did not respond because of a high nonce', async () => {
-			const eth = new Web3Eth(clientUrl);
-
 			// Make the test run faster by causing the timeout to happen after 0.2 second
-			eth.transactionSendTimeout = 200;
-			eth.transactionPollingTimeout = 200;
+			web3Eth.transactionSendTimeout = 200;
+			web3Eth.transactionPollingTimeout = 200;
 
 			const from = tempAcc.address;
-			const to = (await createTempAccount()).address;
+			const to = createAccount().address;
 			const value = `0x1`;
 
 			try {
 				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-				await eth.sendTransaction({
+				await web3Eth.sendTransaction({
 					to,
 					value,
 					from,
+					gas,
 					// Give a high nonce so the transaction stuck forever.
 					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
+					nonce: Number.MAX_SAFE_INTEGER,
 				});
 				expect(true).toBe(false); // the test should fail if there is no exception
 			} catch (error) {
@@ -72,7 +72,7 @@ describe('defaults', () => {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(error.message).toContain(
 						`connected Ethereum Node did not respond within ${
-							eth.transactionSendTimeout / 1000
+							web3Eth.transactionSendTimeout / 1000
 						} seconds`,
 					);
 				}
@@ -81,14 +81,13 @@ describe('defaults', () => {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(error.message).toContain(
 						`Transaction was not mined within ${
-							eth.transactionPollingTimeout / 1000
+							web3Eth.transactionPollingTimeout / 1000
 						} seconds`,
 					);
 				} else {
 					throw error;
 				}
 			}
-			await closeOpenConnection(eth);
 		});
 	});
 });
