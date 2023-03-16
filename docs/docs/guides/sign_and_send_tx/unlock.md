@@ -14,21 +14,21 @@ if node have unlocked account you can send transaction without signing
 import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
-// Second step: add account to ethereum node and unlock it
+// Second step: add an account to the Ethereum node and unlock it
 const account = {
 	privateKey: '0xb45b02f408a0dd0996aab2b55a54f4ed7735f82b133c0786a9ff372ffaaf11bd',
 	address: '0xe4beef667408b99053dc147ed19592ada0d77f59',
 };
 
-// if you use ganache backend use private key with 0x
+// if you use ganache backend, use a private key with 0x
 await web3.eth.personal.importRawKey(account.privateKey);
-// if you use geth backend use private key without 0x
+// if you use geth backend, use a private key without 0x
 await web3.eth.personal.importRawKey(account.privateKey.slice(2));
 
 // unlock account
 await web3Personal.unlockAccount(account.address, 'anyPassword', 100000000);
 
-// Third step: sign and send transaction
+// Third step: sign and send the transaction
 try {
 	const receipt = await web3.eth.sendTransaction({
 		from: account.address,
@@ -56,21 +56,21 @@ List of functions:
 import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
-// Second step: add account to ethereum node and unlock it
+// Second step: add an account to the Ethereum node and unlock it
 const account = {
 	privateKey: '0xb45b02f408a0dd0996aab2b55a54f4ed7735f82b133c0786a9ff372ffaaf11bd',
 	address: '0xe4beef667408b99053dc147ed19592ada0d77f59',
 };
 
-// if you use ganache backend use private key with 0x
+// if you use ganache backend, use a private key with 0x
 await web3.eth.personal.importRawKey(account.privateKey);
-// if you use geth backend use private key without 0x
+// if you use geth backend, use a private key without 0x
 await web3.eth.personal.importRawKey(account.privateKey.slice(2));
 
 // unlock account
 await web3.eth.personal.unlockAccount(account.address, 'anyPassword', 100000000);
 
-// Third step: sign and send transaction
+// Third step: sign and send the transaction
 try {
 	// deploy
 	const contract = new web3.eth.Contract(ContractAbi);

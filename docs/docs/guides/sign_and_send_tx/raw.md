@@ -15,7 +15,7 @@ const web3 = new Web3(/* PROVIDER*/);
 // Second step: convert private key to account
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 
-// Third step: sign and send transaction
+// Third step: sign and send the transaction
 try {
 	const signedTx = await account.signTransaction({
 		from: account.address,
@@ -47,6 +47,8 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: convert private key to account
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+
+// Third step: sign and send the transaction
 try {
 	// deploy
 	const contract = new web3.eth.Contract(ERC20Token.abi);

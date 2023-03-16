@@ -5,7 +5,7 @@ sidebar_label: 'Local wallet'
 
 # Using Local Wallet
 
-Simplest way to sign and send transaction is use local wallet:
+The simplest way to sign and send transactions is using a local wallet:
 
 ## Eth Transaction
 
@@ -14,14 +14,14 @@ Simplest way to sign and send transaction is use local wallet:
 import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
-// Second step: add account to wallet
+// Second step: add an account to wallet
 const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
 const account = web3.eth.accounts.wallet.add(privateKeyString);
 
-// Make sure account have enough eth on balance to send transaction
+// Make sure the account have enough eth on balance to send the transaction
 
-// Third step: sign and send transaction
-// Magic happens behind sendTransaction. If transaction sent from account which exists in a wallet it will be automatically signed.
+// Third step: sign and send the transaction
+// Magic happens behind sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed.
 try {
 	const receipt = await web3.eth.sendTransaction({
 		from: account.address,
@@ -48,14 +48,14 @@ List of functions:
 import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
-// Second step: add account to wallet
+// Second step: add an account to wallet
 const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
 const account = web3.eth.accounts.wallet.add(privateKeyString);
 
-// Make sure account have enough eth on balance to send transaction
+// Make sure the account have enough eth on balance to send the transaction
 
-// Third step: sign and send transaction
-// In any function where you can pass from address set address of account which exists in a wallet, and it will be automatically signed.
+// Third step: sign and send the transaction
+// In any function where you can pass from the address set address of the account that exists in a wallet, it will be automatically signed.
 
 try {
 	// deploy
