@@ -20,16 +20,14 @@ import ganache from 'ganache';
 import { performBasicRpcCalls } from './helper';
 import { getSystemTestMnemonic } from '../../shared_fixtures/system_tests_utils';
 
-describe('ganache tests', () => {
-	describe('compatibility with `ganache` provider', () => {
-		it('should initialize Web3, get accounts & block number and send a transaction', async () => {
-			const { provider } = ganache.server({
-				wallet: {
-					mnemonic: getSystemTestMnemonic(),
-				},
-			});
-
-			await performBasicRpcCalls(provider);
+describe('compatibility with `ganache` provider', () => {
+	it('should initialize Web3, get accounts & block number and send a transaction', async () => {
+		const { provider } = ganache.server({
+			wallet: {
+				mnemonic: getSystemTestMnemonic(),
+			},
 		});
+
+		await performBasicRpcCalls(provider);
 	});
 });

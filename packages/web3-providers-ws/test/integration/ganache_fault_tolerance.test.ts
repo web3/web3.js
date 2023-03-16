@@ -361,63 +361,28 @@ describe('ganache tests', () => {
 			webSocketProvider.disconnect();
 			await server2.close();
 		});
-		// it('errors when requests continue after socket closed', async () => {
-		// 	const port = 7547;
-		// 	const host = `ws://localhost:${port}`;
-		// 	const server = ganache.server();
-		// 	await server.listen(port);
-		// 	const reconnectOptions = {
-		// 		 	autoReconnect: false
-		// 	}
-		// 	const webSocketProvider = new WebSocketProvider(host, {}, reconnectOptions);
-		// 	const connectPromise = new Promise(resolve => {
-		// 		webSocketProvider.on('connect', () => {
-		// 			resolve(true);
-		// 		});
-		// 	});
+		it('errors when requests continue after socket closed', async () => {
+			const server = ganache.server();
+			await server.listen(port);
+			const reconnectOptions = {
+				autoReconnect: false,
+			};
+			const webSocketProvider = new WebSocketProvider(host, {}, reconnectOptions);
+			await waitForOpenSocketConnection(webSocketProvider);
 
-		// 	await connectPromise;
+			const disconnectPromise = waitForEvent(webSocketProvider, 'disconnect');
+			await server.close();
 
-		// 	const web3 = new Web3(webSocketProvider);
-
-		// 	const pr = new Promise((resolve) => {
-		// 		webSocketProvider.once('disonnect', () => {
-		// 			// try to send a request now that socket is closed
-		// 			console.log("disconnect")
-		// 			resolve(true);
-		// 		})
-		// 		webSocketProvider.once('error', () => {
-		// 			// try to send a request now that socket is closed
-		// 			console.log("error")
-		// 			resolve(true);
-		// 		})
-		// 		webSocketProvider.once('close', () => {
-		// 			// try to send a request now that socket is closed
-		// 			console.log("close")
-		// 			resolve(true);
-		// 		})
-		// 		webSocketProvider.once('message', () => {
-		// 			// try to send a request now that socket is closed
-		// 			console.log("message")
-		// 			resolve(true);
-		// 		})
-		// 		webSocketProvider.once('wsClientError', () => {
-		// 			// try to send a request now that socket is closed
-		// 			console.log("message")
-		// 			resolve(true);
-		// 		})
-		// 	})
-
-		// 	await server.close();
-		// 	console.log("2")
-		// 	await new Promise(resolve => {
-		// 		const id = setTimeout(() => {
-		// 			clearTimeout(id);
-		// 			resolve(true);
-		// 		}, 500);
-		// 	});
-		// 	await expect(web3.eth.getBlockNumber()).rejects.toThrow();
-
-		// });
+			await disconnectPromise;
+			const errorPromise = new Promise(resolve => {
+				webSocketProvider.on('error', () => {
+					resolve(true);
+				});
+			});
+			await expect(webSocketProvider.request(jsonRpcPayload)).rejects.toThrow(
+				'Connection not open',
+			);
+			await errorPromise;
+		});
 	});
 });
