@@ -45,9 +45,9 @@ try {
 
 List of functions:
 
--   [importRawKey](https://docs.web3js.org/api/web3-eth-personal/class/Personal#importRawKey)
--   [unlockAccount](https://docs.web3js.org/api/web3-eth-personal/class/Personal#unlockAccount)
 -   [eth.sendTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendTransaction)
+-   [eth.personal.importRawKey](https://docs.web3js.org/api/web3-eth-personal/class/Personal#importRawKey)
+-   [eth.personal.unlockAccount](https://docs.web3js.org/api/web3-eth-personal/class/Personal#unlockAccount)
 
 ## Contract Transaction
 
@@ -68,7 +68,7 @@ await web3.eth.personal.importRawKey(account.privateKey);
 await web3.eth.personal.importRawKey(account.privateKey.slice(2));
 
 // unlock account
-await web3Personal.unlockAccount(account.address, 'anyPassword', 100000000);
+await web3.eth.personal.unlockAccount(account.address, 'anyPassword', 100000000);
 
 // Third step: sign and send transaction
 try {
@@ -76,7 +76,7 @@ try {
 	const contract = new web3.eth.Contract(ContractAbi);
 	const contractDeployed = await contract
 		.deploy({
-			data: ContractBytecode,
+			input: ContractBytecode,
 			arguments: ['Constructor param1', 'Constructor param2'],
 		})
 		.send({
@@ -101,8 +101,8 @@ try {
 
 List of functions:
 
--   [importRawKey](https://docs.web3js.org/api/web3-eth-personal/class/Personal#importRawKey)
--   [unlockAccount](https://docs.web3js.org/api/web3-eth-personal/class/Personal#unlockAccount)
 -   [eth.Contract](https://docs.web3js.org/api/web3-eth-contract/class/Contract)
+-   [eth.personal.importRawKey](https://docs.web3js.org/api/web3-eth-personal/class/Personal#importRawKey)
+-   [eth.personal.unlockAccount](https://docs.web3js.org/api/web3-eth-personal/class/Personal#unlockAccount)
 -   [contract.deploy](https://docs.web3js.org/api/web3-eth-contract/class/Contract#deploy)
 -   [contract.methods](https://docs.web3js.org/api/web3-eth-contract/class/Contract#methods)

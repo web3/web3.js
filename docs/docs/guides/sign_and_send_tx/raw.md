@@ -24,8 +24,7 @@ try {
 		gas: '100000',
 		// other transaction's params
 	});
-	const res = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-	console.log('res', res);
+	await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 } catch (error) {
 	// catch transaction error
 	console.error(error);
@@ -34,10 +33,10 @@ try {
 
 List of functions:
 
--   [eth.accounts.privateKeyToAccount](https://docs.web3js.org/api/web3-eth-accounts/function/privateKeyToAccount)
--   [eth.sendTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendTransaction)
 -   [account.signTransaction](https://docs.web3js.org/api/web3-eth-accounts/function/signTransaction)
+-   [eth.accounts.privateKeyToAccount](https://docs.web3js.org/api/web3-eth-accounts/function/privateKeyToAccount)
 -   [eth.sendSignedTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendSignedTransaction)
+-   [eth.sendTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendTransaction)
 
 ## Contract Transaction
 
@@ -51,35 +50,32 @@ const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 try {
 	// deploy
 	const contract = new web3.eth.Contract(ERC20Token.abi);
-
 	const contractTx = contract.deploy({
-		data: ERC20TokenBytecode,
+		input: ERC20TokenBytecode,
 		arguments: ['1000000000000000000'],
 	});
-
 	const signedTxData = await account.signTransaction({
-		data: contractTx.encodeABI(),
+		input: contractTx.encodeABI(),
 		from: account.address,
 		gas: '10000000',
-		// other transaction's params
 	});
-
 	const deployResult = await web3.eth.sendSignedTransaction(signedTxData.rawTransaction);
 
 	// call method
-	const contractMethodTx = contractDeployed.methods.transfer(
-		'0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
-		'0x1',
-	);
+	const toAddress = '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401';
+	const contractDeployed = new web3.eth.Contract(ERC20Token.abi, deployResult.logs[0].address);
+
+	const balance = await contractDeployed.methods.balanceOf(account.address).call();
+	const contractMethodTx = contractDeployed.methods.transfer(toAddress, '0x10');
+
 	const signedMethodData = await account.signTransaction({
-		...contractMethodTx,
+		input: contractMethodTx.encodeABI(),
+		to: contractDeployed.options.address,
 		from: account.address,
+		gas: '4700000',
 		// other transaction's params
 	});
-
-	await web3.eth.sendSignedTransaction({
-		data: signedMethodData.encodeABI(),
-	});
+	await web3.eth.sendSignedTransaction(signedMethodData.rawTransaction);
 } catch (error) {
 	// catch transaction error
 	console.error(error);
@@ -88,9 +84,9 @@ try {
 
 List of functions:
 
--   [eth.accounts.privateKeyToAccount](https://docs.web3js.org/api/web3-eth-accounts/function/privateKeyToAccount)
--   [eth.Contract](https://docs.web3js.org/api/web3-eth-contract/class/Contract)
 -   [account.signTransaction](https://docs.web3js.org/api/web3-eth-accounts/function/signTransaction)
 -   [contract.deploy](https://docs.web3js.org/api/web3-eth-contract/class/Contract#deploy)
 -   [contract.methods](https://docs.web3js.org/api/web3-eth-contract/class/Contract#methods)
+-   [eth.accounts.privateKeyToAccount](https://docs.web3js.org/api/web3-eth-accounts/function/privateKeyToAccount)
+-   [eth.Contract](https://docs.web3js.org/api/web3-eth-contract/class/Contract)
 -   [eth.sendSignedTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendSignedTransaction)
