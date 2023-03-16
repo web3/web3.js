@@ -147,3 +147,7 @@ jobs:
               if: steps.cache-deps.outputs.cache-hit != 'true'
 
             - run: bash ./scripts/ci.sh
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - run: 'echo "No build required"'
