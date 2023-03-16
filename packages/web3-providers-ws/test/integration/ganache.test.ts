@@ -19,11 +19,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import ganache from 'ganache';
 import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
+import { waitForOpenSocketConnection, waitForEvent } from '../fixtures/system_test_utils';
 import WebSocketProvider from '../../src/index';
 
 // create helper functions to open server
 describe('ganache tests', () => {
 	describe('WebSocketProvider - ganache', () => {
+		jest.setTimeout(17000);
+		const port = 7547;
+		const host = `ws://localhost:${port}`;
 		const jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 43,
@@ -31,7 +35,7 @@ describe('ganache tests', () => {
 		} as Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
 
 		// simulate abrupt disconnection, ganache server always closes with code 1000 so we need to simulate closing with different error code
-		const onClose = async (webSocketProvider: WebSocketProvider) =>
+		const changeCloseCode = async (webSocketProvider: WebSocketProvider) =>
 			new Promise<void>(resolve => {
 				// @ts-expect-error replace close handler
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-param-reassign
@@ -45,7 +49,7 @@ describe('ganache tests', () => {
 				webSocketProvider._addSocketListeners();
 				resolve();
 			});
-		jest.setTimeout(17000);
+
 		it('"error" when there is no connection', async () => {
 			const reconnectionOptions = {
 				delay: 100,
@@ -56,69 +60,48 @@ describe('ganache tests', () => {
 				'ws://localhost:7547',
 				{},
 				reconnectionOptions,
-			); // _openSocketConnection hangs
-			const mockFunction = jest.fn();
-			const errorPromise = new Promise(resolve => {
-				websocketProvider.on('error', () => {
-					mockFunction();
-					resolve(true);
-				});
-			});
-			await errorPromise;
+			);
+
+			expect(!!(await waitForEvent(websocketProvider, 'error'))).toBe(true);
 			websocketProvider.disconnect();
-			expect(mockFunction).toHaveBeenCalled();
 		});
 
 		it('"error" handler fires if the client closes unilaterally', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const webSocketProvider = new WebSocketProvider(host);
 
-			const connectPromise = new Promise(resolve => {
-				webSocketProvider.on('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise;
+			await waitForOpenSocketConnection(webSocketProvider);
 
 			const mockCallback = jest.fn();
-			const prom = new Promise(resolve => {
+			const disconnectPromise = new Promise(resolve => {
 				webSocketProvider.on('disconnect', () => {
 					mockCallback();
 					resolve(true);
 				});
 			});
 			webSocketProvider.disconnect();
-			await prom;
+			await disconnectPromise;
 			expect(mockCallback).toHaveBeenCalled();
 			await server.close();
 		});
 
 		it('"error" handler *DOES NOT* fire if disconnection is clean', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectOptions = {
 				autoReconnect: false,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectOptions);
-			const connectPromise = new Promise(resolve => {
-				webSocketProvider.on('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise;
+			await waitForOpenSocketConnection(webSocketProvider);
+
 			const mockReject = jest.fn();
 			webSocketProvider.once('error', () => {
 				mockReject();
 			});
 			webSocketProvider.disconnect();
 			await new Promise(resolve => {
-				const id = setTimeout(() => {
-					clearTimeout(id);
+				setTimeout(() => {
 					resolve(true);
 				}, 100);
 			});
@@ -128,56 +111,41 @@ describe('ganache tests', () => {
 		});
 
 		it('can connect after being disconnected', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 
-			const wsProvider = new WebSocketProvider(host);
+			const webSocketProvider = new WebSocketProvider(host);
 			const mockCallback = jest.fn();
 			const connectPromise = new Promise(resolve => {
-				wsProvider.once('connect', () => {
+				webSocketProvider.once('connect', () => {
 					mockCallback();
 					resolve(true);
 				});
 			});
 			await connectPromise;
 			//
-			wsProvider.disconnect();
-			const disconnectPromise = new Promise(resolve => {
-				wsProvider.once('disconnect', () => {
-					resolve(true);
-				});
-			});
-			await disconnectPromise;
+			webSocketProvider.disconnect();
+			await waitForEvent(webSocketProvider, 'disconnect');
 
-			wsProvider.connect();
+			webSocketProvider.connect();
 			const connectPromise2 = new Promise(resolve => {
-				wsProvider.once('connect', () => {
+				webSocketProvider.once('connect', () => {
 					mockCallback();
 					resolve(true);
 				});
 			});
 			await connectPromise2;
-			wsProvider.disconnect();
+			webSocketProvider.disconnect();
 			expect(mockCallback).toHaveBeenCalledTimes(2);
 			await server.close();
 		});
 
-		it('wsprovider supports subscriptions', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
+		it('webSocketProvider supports subscriptions', async () => {
 			const server = ganache.server();
 			await server.listen(port);
 			const webSocketProvider = new WebSocketProvider(host);
 
-			const connectPromise = new Promise(resolve => {
-				webSocketProvider.on('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise;
-
+			await waitForOpenSocketConnection(webSocketProvider);
 			expect(webSocketProvider.supportsSubscriptions()).toBe(true);
 
 			webSocketProvider.disconnect();
@@ -185,8 +153,6 @@ describe('ganache tests', () => {
 		});
 
 		it('times out when server is closed', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectionOptions = {
@@ -198,7 +164,7 @@ describe('ganache tests', () => {
 
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', (err: any) => {
-					expect(err).toBeDefined();
+					expect(err.message).toBe('connect ECONNREFUSED 127.0.0.1:7547');
 					resolve(true);
 				});
 			});
@@ -206,9 +172,7 @@ describe('ganache tests', () => {
 			await errorPromise;
 		});
 
-		it('with reconnect on, will try to connect until server is open and close properly', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
+		it('with reconnect on, will try to connect until server is open then close', async () => {
 			const reconnectionOptions = {
 				delay: 10,
 				autoReconnect: true,
@@ -217,7 +181,7 @@ describe('ganache tests', () => {
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
 			const mockCallback = jest.fn();
-			const connectPromise1 = new Promise(resolve => {
+			const connectPromise = new Promise(resolve => {
 				webSocketProvider.on('connect', () => {
 					mockCallback();
 					resolve(true);
@@ -226,15 +190,13 @@ describe('ganache tests', () => {
 
 			const server = ganache.server();
 			await server.listen(port);
-			await connectPromise1;
+			await connectPromise;
 			webSocketProvider.disconnect();
 			await server.close();
 			expect(mockCallback).toHaveBeenCalledTimes(1);
 		});
 
 		it('allows disconnection on lost connection, when reconnect is enabled', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const reconnectionOptions = {
 				delay: 10,
 				autoReconnect: true,
@@ -242,25 +204,17 @@ describe('ganache tests', () => {
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
-			const mockCallback = jest.fn();
-			const connectPromise1 = new Promise(resolve => {
-				webSocketProvider.on('connect', () => {
-					mockCallback();
-					resolve(true);
-				});
-			});
+			const connectPromise = waitForOpenSocketConnection(webSocketProvider);
 
 			const server = ganache.server();
 			await server.listen(port);
-			await connectPromise1;
+			await connectPromise;
 			webSocketProvider.disconnect();
+			expect(!!(await waitForEvent(webSocketProvider, 'disconnect'))).toBe(true);
 			await server.close();
-			expect(mockCallback).toHaveBeenCalledTimes(1);
 		});
 
 		it('errors when failing to reconnect after data is lost mid-chunk', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectionOptions = {
@@ -270,13 +224,8 @@ describe('ganache tests', () => {
 			};
 			const mockCallBack = jest.fn();
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
+			await waitForOpenSocketConnection(webSocketProvider);
 
-			const connectPromise = new Promise(resolve => {
-				webSocketProvider.on('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise;
 			await server.close();
 
 			const errorPromise = new Promise(resolve => {
@@ -287,6 +236,7 @@ describe('ganache tests', () => {
 					}
 				});
 			});
+			// send an event to be parsed and fail
 			const event = {
 				data: 'abc|--|ded',
 				type: 'websocket',
@@ -300,8 +250,6 @@ describe('ganache tests', () => {
 		});
 
 		it('times out when connection is lost mid-chunk', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectionOptions = {
@@ -310,13 +258,8 @@ describe('ganache tests', () => {
 				maxAttempts: 0,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
+			await waitForOpenSocketConnection(webSocketProvider);
 
-			const connectPromise = new Promise(resolve => {
-				webSocketProvider.on('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise;
 			await server.close();
 
 			const errorPromise = new Promise(resolve => {
@@ -324,6 +267,7 @@ describe('ganache tests', () => {
 					if (err.innerError.message === 'Chunk timeout') resolve(true);
 				});
 			});
+			// send an event to be parsed and fail
 			const event = {
 				data: 'abc|--|ded',
 				type: 'websocket',
@@ -337,8 +281,6 @@ describe('ganache tests', () => {
 		});
 
 		it('clears pending requests on maxAttempts failed reconnection', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectionOptions = {
@@ -357,18 +299,14 @@ describe('ganache tests', () => {
 				payload: jsonRpcPayload,
 				deferredPromise: defPromise,
 			};
-			const connectPromise = new Promise(resolve => {
-				webSocketProvider.on('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise;
+			await waitForOpenSocketConnection(webSocketProvider);
 
 			// add a request without executing promise
 			// @ts-expect-error run protected method
 			webSocketProvider._pendingRequestsQueue.set(jsonRpcPayload.id, reqItem);
 
-			await onClose(webSocketProvider);
+			// simulate abrupt server close
+			await changeCloseCode(webSocketProvider);
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', error => {
 					if (error?.message === `Maximum number of reconnect attempts reached! (${1})`) {
@@ -386,8 +324,6 @@ describe('ganache tests', () => {
 		});
 
 		it('queues requests made while connection is lost / executes on reconnect', async () => {
-			const port = 7547;
-			const host = `ws://localhost:${port}`;
 			const server = ganache.server();
 			await server.listen(port);
 			const reconnectionOptions = {
@@ -396,13 +332,10 @@ describe('ganache tests', () => {
 				maxAttempts: 3,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
-			const connectPromise = new Promise(resolve => {
-				webSocketProvider.once('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise;
-			await onClose(webSocketProvider);
+			await waitForOpenSocketConnection(webSocketProvider);
+
+			// simulate abrupt close code
+			await changeCloseCode(webSocketProvider);
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', () => {
 					resolve(true);
@@ -411,16 +344,14 @@ describe('ganache tests', () => {
 			await server.close();
 
 			await errorPromise;
+			// queue a request
 			const requestPromise = webSocketProvider.request(jsonRpcPayload);
 
 			const server2 = ganache.server();
 			await server2.listen(port);
-			const connectPromise2 = new Promise(resolve => {
-				webSocketProvider.once('connect', () => {
-					resolve(true);
-				});
-			});
-			await connectPromise2;
+
+			await waitForOpenSocketConnection(webSocketProvider);
+
 			// try to send a request
 			const result = await requestPromise;
 			expect(result.id).toEqual(jsonRpcPayload.id);
