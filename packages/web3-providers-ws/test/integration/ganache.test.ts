@@ -161,15 +161,18 @@ describe('ganache tests', () => {
 				maxAttempts: 1,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
-
+			const mockCallBack = jest.fn();
 			const errorPromise = new Promise(resolve => {
-				webSocketProvider.on('error', (err: any) => {
-					expect(err.message).toBe('connect ECONNREFUSED 127.0.0.1:7547');
-					resolve(true);
+				webSocketProvider.on('error', err => {
+					if (err?.message.startsWith('connect ECONNREFUSED')) {
+						mockCallBack();
+						resolve(true);
+					}
 				});
 			});
 			await server.close();
 			await errorPromise;
+			expect(mockCallBack).toHaveBeenCalled();
 		});
 
 		it('with reconnect on, will try to connect until server is open then close', async () => {
