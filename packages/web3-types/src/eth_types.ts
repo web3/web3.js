@@ -372,7 +372,7 @@ export interface PopulatedUnsignedBaseTransaction {
 	gas?: Numbers;
 	gasPrice: Numbers;
 	type: Numbers;
-	data: Bytes;
+	input: Bytes;
 	nonce: Numbers;
 	networkId: Numbers;
 	chain: ValidChains;
