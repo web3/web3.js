@@ -91,7 +91,6 @@ export default class WebSocketProvider<
 		socketOptions?: ClientOptions | ClientRequestArgs,
 		reconnectOptions?: Partial<ReconnectOptions>,
 	) {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		super(socketPath, socketOptions, reconnectOptions);
 	}
 
