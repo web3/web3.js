@@ -37,9 +37,10 @@ describe('Web3Eth.signTransaction', () => {
 	});
 
 	it('should sign a simple value transfer', async () => {
+		const nonce = await web3Eth.getTransactionCount(tempAcc.address);
 		const transaction: Transaction = {
 			from: tempAcc.address,
-			nonce: await web3Eth.getTransactionCount(tempAcc.address),
+			nonce,
 			to: '0x0000000000000000000000000000000000000000',
 			value: '0x1',
 			gas: '0x5208',
@@ -50,7 +51,7 @@ describe('Web3Eth.signTransaction', () => {
 			raw: expect.stringContaining('0x'),
 			tx: {
 				type: BigInt(0),
-				nonce: BigInt(0),
+				nonce: BigInt(nonce),
 				gasPrice: BigInt(1000000001),
 				gas: BigInt(21000),
 				value: BigInt(1),
