@@ -289,6 +289,35 @@ export const invalidEventsSignatures: { input: any; output: string }[] = [
 	{ input: undefined, output: 'Invalid parameter value in encodeEventSignature' },
 ];
 
+export const validErrorsSignatures: { input: any; output: string }[] = [
+	{
+		input: 'Unauthorized()',
+		output: '0x82b4290015f7ec7256ca2a6247d3c2a89c4865c0e791456df195f40ad0a81367',
+	},
+	{
+		input: {
+			inputs: [{ internalType: 'string', name: '', type: 'string' }],
+			name: 'CustomError',
+			type: 'error',
+		},
+		output: '0x8d6ea8bed4afafaebcad40e72174583b8bf4969c5d3bc84536051f3939bf9d81',
+	},
+	{
+		input: 'Error(string)',
+		output: '0x08c379a0afcc32b1a39302f7cb8073359698411ab5fd6e3edb2c02c0b5fba8aa',
+	},
+];
+
+export const invalidErrorSignatures: { input: any; output: string }[] = [
+	{ input: 345, output: 'Invalid parameter value in encodeErrorSignature' },
+	{ input: {}, output: 'Invalid parameter value in encodeErrorSignature' },
+	{ input: ['mystring'], output: 'Invalid parameter value in encodeErrorSignature' },
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	{ input: null, output: 'Invalid parameter value in encodeErrorSignature' },
+	{ input: undefined, output: 'Invalid parameter value in encodeErrorSignature' },
+];
+
 export const validDecodeLogsData: {
 	input: { abi: any; data: any; topics: any };
 	output: Record<string, unknown>;
