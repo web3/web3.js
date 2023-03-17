@@ -34,7 +34,7 @@ type CommonSubscriptionEvents = {
 	connected: number;
 };
 /**
- * ##subscribe(“logs”)
+ * ## subscribe(“logs”)
  * Subscribes to incoming logs, filtered by the given options. If a valid numerical fromBlock options property is set, web3.js will retrieve logs beginning from this point, backfilling the response as necessary.
  *
  * You can subscribe to logs matching a given filter object, which can take the following parameters:
@@ -68,7 +68,7 @@ export class LogsSubscription extends Web3Subscription<
 }
 
 /**
- * ##subscribe(“pendingTransactions”)
+ * ## subscribe(“pendingTransactions”)
  * Subscribes to incoming pending transactions.
  *
  * You can subscribe to pending transactions by calling web3.eth.subscribe(“pendingTransactions”).
@@ -97,7 +97,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 }
 
 /**
- * ##subscribe(“newHeads”)
+ * ## subscribe(“newHeads”)
  *
  * Subscribes to incoming block headers. This can be used as timer to check for changes on the blockchain.
  *
