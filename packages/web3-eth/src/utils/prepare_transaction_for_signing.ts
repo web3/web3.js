@@ -41,7 +41,7 @@ const getEthereumjsTxDataFromTransaction = (
 	gasLimit: transaction.gasLimit ?? transaction.gas,
 	to: transaction.to,
 	value: transaction.value,
-	data: transaction.data,
+	data: transaction.input,
 	type: transaction.type,
 	chainId: transaction.chainId,
 	accessList: (
