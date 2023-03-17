@@ -64,6 +64,9 @@ describe('ganache tests', () => {
 
 			expect(!!(await waitForEvent(websocketProvider, 'error'))).toBe(true);
 			websocketProvider.disconnect();
+			await expect(websocketProvider.request(jsonRpcPayload)).rejects.toThrow(
+				'Connection not open',
+			);
 		});
 
 		it('"error" handler fires if the client closes unilaterally', async () => {
@@ -73,17 +76,10 @@ describe('ganache tests', () => {
 
 			await waitForOpenSocketConnection(webSocketProvider);
 
-			const mockCallback = jest.fn();
-			const disconnectPromise = new Promise(resolve => {
-				webSocketProvider.on('disconnect', () => {
-					mockCallback();
-					resolve(true);
-				});
-			});
-			webSocketProvider.disconnect();
-			await disconnectPromise;
-			expect(mockCallback).toHaveBeenCalled();
+			const disconnectPromise = waitForEvent(webSocketProvider, 'disconnect');
 			await server.close();
+			expect(!!(await disconnectPromise)).toBe(true);
+			webSocketProvider.disconnect();
 		});
 
 		it('"error" handler *DOES NOT* fire if disconnection is clean', async () => {

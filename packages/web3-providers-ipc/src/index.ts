@@ -82,7 +82,6 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		socketOptions?: SocketConstructorOpts,
 		reconnectOptions?: Partial<ReconnectOptions>,
 	) {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		super(socketPath, socketOptions, reconnectOptions);
 	}
 
