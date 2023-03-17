@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Eip838ExecutionError } from 'web3-errors';
 import { decodeContractErrorData } from '../../src/decode_contract_error_data';
 
-import { validDecodeContractErrorData } from '../fixtures/data';
+import { validDecodeContractErrorData, invalidDecodeContractErrorData } from '../fixtures/data';
 
 describe('decodeContractErrorData', () => {
 	describe('valid data', () => {
@@ -37,6 +37,23 @@ describe('decodeContractErrorData', () => {
 				expect(err.errorSignature).toEqual(output.errorSignature);
 				expect(err.errorArgs?.message).toEqual(output.errorArgs?.message);
 				expect(Number(err.errorArgs?.code)).toEqual(output.errorArgs?.code);
+			},
+		);
+	});
+
+	describe('invalid data', () => {
+		it.each(invalidDecodeContractErrorData)(
+			'%#: should throw for invalid values: %j',
+			({ input: [abi, errorData] }) => {
+				// mock console.error
+				const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => 'error');
+				const err = new Eip838ExecutionError(
+					errorData.code,
+					errorData.message,
+					errorData.data,
+				);
+				decodeContractErrorData(abi, err);
+				expect(consoleSpy).toHaveBeenCalled();
 			},
 		);
 	});
