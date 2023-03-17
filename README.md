@@ -320,5 +320,3 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 ## Semantic versioning
 
 This project follows [semver](https://semver.org/) as closely as possible **from version 1.3.0 onwards**. Earlier minor version bumps [might](https://github.com/ethereum/web3.js/issues/3758) have included breaking behavior changes.
-
-test
