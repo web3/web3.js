@@ -88,6 +88,7 @@ export interface ContractOptions {
 	 * The byte code of the contract. Used when the contract gets {@link Contract.deploy | deployed}
 	 */
 	readonly data?: Bytes;
+	readonly input?: Bytes;
 	/**
 	 * The {@doclink glossary/json_interface | json interface} object derived from the [ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) of this contract.
 	 *
@@ -150,6 +151,7 @@ export interface ContractInitOptions {
 	 * The byte code of the contract. Used when the contract gets {@link Contract.deploy | deployed}
 	 */
 	readonly data?: Bytes;
+	readonly input?: Bytes;
 	readonly gasLimit?: Uint;
 	readonly provider?: SupportedProviders<EthExecutionAPI> | string;
 	/**
@@ -168,6 +170,7 @@ export interface NonPayableCallOptions {
 	from?: Address;
 	to?: Address;
 	data?: HexString;
+	input?: HexString;
 	/**
 	 * The maximum gas provided for this call “transaction” (gas limit)
 	 */

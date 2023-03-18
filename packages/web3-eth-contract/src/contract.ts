@@ -360,7 +360,7 @@ export class Contract<Abi extends ContractAbi>
 			gasPrice: options?.gasPrice,
 			gasLimit: options?.gasLimit,
 			from: options?.from,
-			data: options?.data,
+			input: options?.data ?? options?.input,
 		};
 
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
@@ -467,7 +467,7 @@ export class Contract<Abi extends ContractAbi>
 					gasPrice: this.options.gasPrice,
 					gasLimit: this.options.gasLimit,
 					from: this.options.from,
-					data: this.options.data,
+					input: this.options.input,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
@@ -481,7 +481,7 @@ export class Contract<Abi extends ContractAbi>
 					gasPrice: this.options.gasPrice,
 					gasLimit: this.options.gasLimit,
 					from: this.options.from,
-					data: this.options.data,
+					input: this.options.input,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
@@ -559,6 +559,7 @@ export class Contract<Abi extends ContractAbi>
 		 * The byte code of the contract.
 		 */
 		data?: HexString;
+		input?: HexString;
 		/**
 		 * The arguments which get passed to the constructor on deployment.
 		 */
@@ -576,7 +577,7 @@ export class Contract<Abi extends ContractAbi>
 
 		const data = format(
 			{ eth: 'bytes' },
-			deployOptions?.data ?? this.options.data,
+			deployOptions?.data ?? deployOptions?.input ?? this.options.input,
 			DEFAULT_RETURN_FORMAT,
 		);
 
@@ -1041,6 +1042,7 @@ export class Contract<Abi extends ContractAbi>
 		modifiedContractOptions = {
 			...modifiedContractOptions,
 			data: undefined,
+			input: undefined,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
 
