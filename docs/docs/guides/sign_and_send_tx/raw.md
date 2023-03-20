@@ -34,10 +34,10 @@ try {
 
 List of functions:
 
--   [account.signTransaction](https://docs.web3js.org/api/web3-eth-accounts/function/signTransaction)
--   [eth.accounts.privateKeyToAccount](https://docs.web3js.org/api/web3-eth-accounts/function/privateKeyToAccount)
--   [eth.sendSignedTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendSignedTransaction)
--   [eth.sendTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendTransaction)
+-   [account.signTransaction](/api/web3-eth-accounts/function/signTransaction)
+-   [eth.accounts.privateKeyToAccount](/api/web3-eth-accounts/function/privateKeyToAccount)
+-   [eth.sendSignedTransaction](/api/web3-eth/class/Web3Eth#sendSignedTransaction)
+-   [eth.sendTransaction](/api/web3-eth/class/Web3Eth#sendTransaction)
 
 ## Contract Transaction
 
@@ -88,9 +88,9 @@ try {
 
 List of functions:
 
--   [account.signTransaction](https://docs.web3js.org/api/web3-eth-accounts/function/signTransaction)
--   [contract.deploy](https://docs.web3js.org/api/web3-eth-contract/class/Contract#deploy)
--   [contract.methods](https://docs.web3js.org/api/web3-eth-contract/class/Contract#methods)
--   [eth.accounts.privateKeyToAccount](https://docs.web3js.org/api/web3-eth-accounts/function/privateKeyToAccount)
--   [eth.Contract](https://docs.web3js.org/api/web3-eth-contract/class/Contract)
--   [eth.sendSignedTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendSignedTransaction)
+-   [account.signTransaction](/api/web3-eth-accounts/function/signTransaction)
+-   [contract.deploy](/api/web3-eth-contract/class/Contract#deploy)
+-   [contract.methods](/api/web3-eth-contract/class/Contract#methods)
+-   [eth.accounts.privateKeyToAccount](/api/web3-eth-accounts/function/privateKeyToAccount)
+-   [eth.Contract](/api/web3-eth-contract/class/Contract)
+-   [eth.sendSignedTransaction](/api/web3-eth/class/Web3Eth#sendSignedTransaction)

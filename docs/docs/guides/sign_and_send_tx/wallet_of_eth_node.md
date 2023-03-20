@@ -46,9 +46,9 @@ try {
 
 List of functions:
 
--   [eth.sendTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendTransaction)
--   [eth.personal.importRawKey](https://docs.web3js.org/api/web3-eth-personal/class/Personal#importRawKey)
--   [eth.personal.unlockAccount](https://docs.web3js.org/api/web3-eth-personal/class/Personal#unlockAccount)
+-   [eth.sendTransaction](/api/web3-eth/class/Web3Eth#sendTransaction)
+-   [eth.personal.importRawKey](/api/web3-eth-personal/class/Personal#importRawKey)
+-   [eth.personal.unlockAccount](/api/web3-eth-personal/class/Personal#unlockAccount)
 
 ## Contract Transaction
 
@@ -103,8 +103,8 @@ try {
 
 List of functions:
 
--   [eth.Contract](https://docs.web3js.org/api/web3-eth-contract/class/Contract)
--   [eth.personal.importRawKey](https://docs.web3js.org/api/web3-eth-personal/class/Personal#importRawKey)
--   [eth.personal.unlockAccount](https://docs.web3js.org/api/web3-eth-personal/class/Personal#unlockAccount)
--   [contract.deploy](https://docs.web3js.org/api/web3-eth-contract/class/Contract#deploy)
--   [contract.methods](https://docs.web3js.org/api/web3-eth-contract/class/Contract#methods)
+-   [eth.Contract](/api/web3-eth-contract/class/Contract)
+-   [eth.personal.importRawKey](/api/web3-eth-personal/class/Personal#importRawKey)
+-   [eth.personal.unlockAccount](/api/web3-eth-personal/class/Personal#unlockAccount)
+-   [contract.deploy](/api/web3-eth-contract/class/Contract#deploy)
+-   [contract.methods](/api/web3-eth-contract/class/Contract#methods)

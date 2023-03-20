@@ -38,8 +38,8 @@ try {
 
 List of functions:
 
--   [eth.accounts.wallet.add](https://docs.web3js.org/api/web3-eth-accounts/class/Wallet#add)
--   [eth.sendTransaction](https://docs.web3js.org/api/web3-eth/class/Web3Eth#sendTransaction)
+-   [eth.accounts.wallet.add](/api/web3-eth-accounts/class/Wallet#add)
+-   [eth.sendTransaction](/api/web3-eth/class/Web3Eth#sendTransaction)
 
 ## Contract Transaction
 
@@ -87,7 +87,7 @@ try {
 
 List of functions:
 
--   [eth.accounts.wallet.add](https://docs.web3js.org/api/web3-eth-accounts/class/Wallet#add)
--   [eth.Contract](https://docs.web3js.org/api/web3-eth-contract/class/Contract)
--   [contract.deploy](https://docs.web3js.org/api/web3-eth-contract/class/Contract#deploy)
--   [contract.methods](https://docs.web3js.org/api/web3-eth-contract/class/Contract#methods)
+-   [eth.accounts.wallet.add](/api/web3-eth-accounts/class/Wallet#add)
+-   [eth.Contract](/api/web3-eth-contract/class/Contract)
+-   [contract.deploy](/api/web3-eth-contract/class/Contract#deploy)
+-   [contract.methods](/api/web3-eth-contract/class/Contract#methods)

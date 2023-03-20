@@ -89,4 +89,4 @@ web3.eth.sendTransaction({...})
 
 List of functions:
 
--   [Web3PromiEvent](https://docs.web3js.org/api/web3-core/class/Web3PromiEvent)
+-   [Web3PromiEvent](/api/web3-core/class/Web3PromiEvent)
