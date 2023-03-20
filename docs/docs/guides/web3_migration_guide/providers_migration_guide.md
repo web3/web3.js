@@ -201,7 +201,7 @@ const provider = new WebSocketProvider(
 
 #### Legacy Event `close` has been deprecated
 
-Following EIP-1193, the `connect` event has been deprecated and is superceded by `disconnect`.
+Following EIP-1193, the `close` event has been deprecated and is superceded by `disconnect`.
 In 1.x, we listen for a `close` event:
 
 ```ts
@@ -345,7 +345,7 @@ provider.on('error', error => {
 
 #### Legacy Event `close` has been deprecated
 
-Following EIP-1193, the `connect` event has been deprecated and is superceded by `disconnect`.
+Following EIP-1193, the `close` event has been deprecated and is superceded by `disconnect`.
 In 1.x, we listen for a `close` event:
 
 ```ts
