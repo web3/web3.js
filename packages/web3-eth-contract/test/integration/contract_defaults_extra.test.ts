@@ -229,14 +229,9 @@ describe('contract defaults (extra)', () => {
 				})() as unknown;
 			}, 100);
 
-			try {
-				await sentTx;
-			} catch (error) {
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-			}
+			await expect(sentTx).rejects.toThrow(/was not mined within [0-9]+ blocks/);
+
+			await expect(sentTx).rejects.toThrow(TransactionBlockTimeoutError);
 		});
 	});
 
