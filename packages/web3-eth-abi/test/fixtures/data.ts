@@ -995,3 +995,18 @@ export const invalidDecodeContractErrorData: {
 		],
 	},
 ];
+
+export const validIsAbiConstructorFragment: {
+	input: any;
+}[] = [
+	{
+		input: { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
+	},
+];
+export const invalidIsAbiConstructorFragment: {
+	input: any;
+}[] = [
+	{
+		input: { inputs: [], stateMutability: 'nonpayable', type: 'function' },
+	},
+];
