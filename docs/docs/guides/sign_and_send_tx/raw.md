@@ -14,6 +14,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: convert private key to account
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+// Make sure the account has enough eth on balance to send the transaction
 
 // Third step: sign and send the transaction
 try {
@@ -47,6 +48,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: convert private key to account
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+// Make sure the account has enough eth on balance to send the transaction
 
 // Third step: sign and send the transaction
 try {

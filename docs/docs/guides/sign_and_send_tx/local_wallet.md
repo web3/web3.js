@@ -18,7 +18,7 @@ const web3 = new Web3(/* PROVIDER*/);
 const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
 const account = web3.eth.accounts.wallet.add(privateKeyString);
 
-// Make sure the account have enough eth on balance to send the transaction
+// Make sure the account has enough eth on balance to send the transaction
 
 // Third step: sign and send the transaction
 // Magic happens behind sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed.
@@ -52,7 +52,7 @@ const web3 = new Web3(/* PROVIDER*/);
 const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
 const account = web3.eth.accounts.wallet.add(privateKeyString);
 
-// Make sure the account have enough eth on balance to send the transaction
+// Make sure the account has enough eth on balance to send the transaction
 
 // Third step: sign and send the transaction
 // In any function where you can pass from the address set address of the account that exists in a wallet, it will be automatically signed.

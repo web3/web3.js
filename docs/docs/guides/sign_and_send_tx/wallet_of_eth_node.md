@@ -1,11 +1,11 @@
 ---
 sidebar_position: 2
-sidebar_label: 'Unlocked account'
+sidebar_label: 'Wallet of Eth Node'
 ---
 
-# Using Unlocked Account
+# Using Wallet of Eth Node
 
-if node have unlocked account you can send transaction without signing
+If Eth node have unlocked account in its wallet you can send transaction without need of signing locally in web3.js
 
 ## Eth Transaction
 
@@ -27,6 +27,7 @@ await web3.eth.personal.importRawKey(account.privateKey.slice(2));
 
 // unlock account
 await web3Personal.unlockAccount(account.address, 'anyPassword', 100000000);
+// Make sure the account has enough eth on balance to send the transaction
 
 // Third step: sign and send the transaction
 try {
@@ -69,6 +70,7 @@ await web3.eth.personal.importRawKey(account.privateKey.slice(2));
 
 // unlock account
 await web3.eth.personal.unlockAccount(account.address, 'anyPassword', 100000000);
+// Make sure the account has enough eth on balance to send the transaction
 
 // Third step: sign and send the transaction
 try {
