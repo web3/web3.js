@@ -125,20 +125,13 @@ describe('defaults', () => {
 
 				// Some providers (mostly used for development) will make blocks only when there are new transactions
 				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
-				// eslint-disable-next-line no-void
+				// eslint-disable-next-line no-void, @typescript-eslint/no-unsafe-call
 				void sendFewSampleTxs(2);
 
-				try {
-					await sentTx;
-					throw new Error(
-						'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
-					);
-				} catch (error) {
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-				}
+				await expect(sentTx).rejects.toThrow(/was not mined within [0-9]+ blocks/);
+
+				await expect(sentTx).rejects.toThrow(TransactionBlockTimeoutError);
+
 				await closeOpenConnection(web3.eth);
 			},
 		);
