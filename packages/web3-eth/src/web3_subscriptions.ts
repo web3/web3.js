@@ -144,6 +144,11 @@ export class NewHeadsSubscription extends Web3Subscription<
 	}
 }
 
+/**
+ * ## subscribe(“syncing”)
+ *
+ * Subscribe to syncing events. This will return an object when the node is syncing and when it’s finished syncing will return `false`
+ */
 export class SyncingSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: SyncOutput;
