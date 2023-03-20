@@ -97,14 +97,14 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 }
 
 /**
- * ## subscribe(“newHeads”)
+ * ## subscribe(“newHeads”) ( same as subscribe("newBlockHeaders"))
  *
  * Subscribes to incoming block headers. This can be used as timer to check for changes on the blockchain.
  *
  * The structure of a returned block header is {@link BlockHeaderOutput}:
  * @example
  * ```ts
- * (await web3.eth.subscribe("newBlockHeaders")).on(
+ * (await web3.eth.subscribe("newHeads")).on( // "newBlockHeaders" would work as well
  *  "data",
  * console.log
  * );
