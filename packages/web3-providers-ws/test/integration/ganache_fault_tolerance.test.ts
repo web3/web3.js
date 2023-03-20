@@ -19,11 +19,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import ganache from 'ganache';
 import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
-import { waitForOpenSocketConnection, waitForEvent } from '../fixtures/system_test_utils';
+import {
+	waitForOpenSocketConnection,
+	waitForEvent,
+	describeIf,
+	getSystemTestBackend,
+} from '../fixtures/system_test_utils';
 import WebSocketProvider from '../../src/index';
 
 // create helper functions to open server
-describe('ganache tests', () => {
+describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 	describe('WebSocketProvider - ganache', () => {
 		jest.setTimeout(17000);
 		const port = 7547;
