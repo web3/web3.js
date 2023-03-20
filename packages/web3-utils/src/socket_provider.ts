@@ -414,8 +414,8 @@ export abstract class SocketProvider<
 		if (this._pendingRequestsQueue.size > 0) {
 			this._pendingRequestsQueue.forEach(
 				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
-					this._pendingRequestsQueue.delete(key);
 					request.deferredPromise.reject(new ConnectionNotOpenError(event));
+					this._pendingRequestsQueue.delete(key);
 				},
 			);
 		}
