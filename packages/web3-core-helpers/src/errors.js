@@ -73,6 +73,9 @@ module.exports = {
         if (event) {
             error.code = event.code;
             error.reason = event.reason;
+            if(event.description) {
+                error.description = event.description;
+            }
         }
 
         return error;
