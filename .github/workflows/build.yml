@@ -107,29 +107,29 @@ jobs:
                     default:
                         target: 80%    # the required coverage value
                         threshold: 1%
-#
-#  integration:
-#    name: Integration
-#    needs: build
-#    runs-on: ubuntu-latest
-#    env:
-#      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-#      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        node: [14, 16]
-#        backend: ['geth', 'ganache']
-#        mode: ['http', 'ws']
-#    steps:
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: web3-${{ matrix.node }}.js.tar.gz
-#          path: /tmp
-#      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#      - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-#        shell: bash
-#
+
+  integration:
+    name: Integration
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [14, 16]
+        backend: ['geth', 'ganache']
+        mode: ['http', 'ws']
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: web3-${{ matrix.node }}.js.tar.gz
+          path: /tmp
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+        shell: bash
+
 #  e2e-ipc:
 #    name: Integration IPC
 #    needs: build
@@ -151,26 +151,26 @@ jobs:
 #      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
 #      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
 #          shell: bash
-#
-#  e2e-sync:
-#      name: Integration Sync Test
-#      needs: build
-#      runs-on: ubuntu-latest
-#      strategy:
-#          fail-fast: false
-#          matrix:
-#              node: [ 16 ]
-#              backend: [ 'geth' ]
-#              mode: [ 'ws','ipc' ]
-#      steps:
-#          -   uses: actions/download-artifact@v3
-#              with:
-#                  name: web3-${{ matrix.node }}.js.tar.gz
-#                  path: /tmp
-#          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#          -   run: yarn test:sync:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-#              shell: bash
-#
+
+  e2e-sync:
+      name: Integration Sync Test
+      needs: build
+      runs-on: ubuntu-latest
+      strategy:
+          fail-fast: false
+          matrix:
+              node: [ 16 ]
+              backend: [ 'geth' ]
+              mode: [ 'ws','ipc' ]
+      steps:
+          -   uses: actions/download-artifact@v3
+              with:
+                  name: web3-${{ matrix.node }}.js.tar.gz
+                  path: /tmp
+          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          -   run: yarn test:sync:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+              shell: bash
+
 #  e2e:
 #    name: End-to-End ganache:ws
 #    needs: build
@@ -195,18 +195,18 @@ jobs:
 #            install: false
 #            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
 #            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
-#
-#  build-docs:
-#    name: Build Docs
-#    needs: build
-#    runs-on: ubuntu-latest
-#    strategy:
-#        matrix:
-#            node: [ 16 ]
-#    steps:
-#        -   uses: actions/download-artifact@v3
-#            with:
-#                name: web3-${{ matrix.node }}.js.tar.gz
-#                path: /tmp
-#        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#        -   run: yarn build:docs
+
+  build-docs:
+    name: Build Docs
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            node: [ 16 ]
+    steps:
+        -   uses: actions/download-artifact@v3
+            with:
+                name: web3-${{ matrix.node }}.js.tar.gz
+                path: /tmp
+        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        -   run: yarn build:docs
