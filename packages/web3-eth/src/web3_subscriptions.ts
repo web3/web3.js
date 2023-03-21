@@ -147,7 +147,21 @@ export class NewHeadsSubscription extends Web3Subscription<
 /**
  * ## subscribe(“syncing”)
  *
- * Subscribe to syncing events. This will return an object when the node is syncing and when it’s finished syncing will return `false`
+ * Subscribe to syncing events. This will return `true` when the node is syncing and when it’s finished syncing will return `false`, for the `changed` event.
+ * @example
+ * ```ts
+ * (await web3.eth.subscribe("syncing")).on("changed", console.log);
+ * > `true` // when syncing
+ *
+ * (await web3.eth.subscribe("syncing")).on("data", console.log);
+ * > {
+ *      startingBlock: 0,
+ *      currentBlock: 0,
+ *      highestBlock: 0,
+ *      pulledStates: 0,
+ *      knownStates: 0
+ *   }
+ * ```
  */
 export class SyncingSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
