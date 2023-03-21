@@ -111,3 +111,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   `signTransaction` will now return `gas` instead of `gasLimit` for returned transaction object regardless of what property name the provider uses (#5915)
+-   `formatTransaction` will now replace `data` transaction property with `input` (#5915)
+-   `isTransactionCall` will now check if `value.input` `isHexStrict` if provided (#5915)
