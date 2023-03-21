@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: web3-16.js.tar.gz
+          name: web3-14.js.tar.gz
           path: /tmp
       - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
       - run: yarn lint
@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [16]
+        node: [14, 16]
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -93,20 +93,21 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           flags: UnitTests
+          comment:
+              layout: "reach, diff, flags, files"
+              behavior: default
+              require_changes: false
+              require_base: no
+              require_head: yes
+          coverage:
+              status:
+                  project:
+                      default:
+                          target: 80%    # the required coverage value
+                          threshold: 1%
           token: ${{ secrets.CODECOV_TOKEN }}
         if: ${{ matrix.node == 16 }}
-        comment:
-            layout: "reach, diff, flags, files"
-            behavior: default
-            require_changes: false
-            require_base: no
-            require_head: yes
-        coverage:
-            status:
-                project:
-                    default:
-                        target: 80%    # the required coverage value
-                        threshold: 1%
+
 
   integration:
     name: Integration
