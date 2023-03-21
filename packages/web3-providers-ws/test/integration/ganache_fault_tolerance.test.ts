@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import ganache from 'ganache';
 import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
@@ -124,7 +123,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				});
 			});
 			await connectPromise;
-			//
+
 			webSocketProvider.disconnect();
 			await waitForEvent(webSocketProvider, 'disconnect');
 
@@ -213,9 +212,10 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			const server = ganache.server();
 			await server.listen(port);
 			await connectPromise;
-			webSocketProvider.disconnect();
-			expect(!!(await waitForEvent(webSocketProvider, 'disconnect'))).toBe(true);
 			await server.close();
+			const disconnectEvent = waitForEvent(webSocketProvider, 'disconnect');
+			webSocketProvider.disconnect();
+			expect(!!(await disconnectEvent)).toBe(true);
 		});
 
 		it('errors when failing to reconnect after data is lost mid-chunk', async () => {
