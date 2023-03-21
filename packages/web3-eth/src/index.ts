@@ -43,7 +43,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * > 1000000000000n
  *```
  *
- * With `web3-eth` you can also subscribe (if supported by provider) to events in the Ethereum Blockchain, using the `subscribe` function. See more at the {@link subscribe} function.
+ * With `web3-eth` you can also subscribe (if supported by provider) to events in the Ethereum Blockchain, using the `subscribe` function. See more at the {@link Web3Eth.subscribe} function.
  */
 /**
  *

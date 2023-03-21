@@ -1517,8 +1517,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	/**
 	 * Lets you subscribe to specific events in the blockchain.
 	 *
-	 * @param name The subscription you want to subscribe to.
-	 * @param args Optional additional parameters, depending on the subscription type.
+	 * @param name - The subscription you want to subscribe to.
+	 * @param args - Optional additional parameters, depending on the subscription type.
 	 * @returns A subscription object of type {@link RegisteredSubscription}. The object contains:
 	 *  - subscription.id: The subscription id, used to identify and unsubscribing the subscription.
 	 *  - subscription.subscribe(): Can be used to re-subscribe with the same parameters.
