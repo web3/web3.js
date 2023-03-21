@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import ganache from 'ganache';
 import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse } from 'web3-types';
+import { InvalidResponseError } from 'web3-errors';
 import { Web3DeferredPromise } from 'web3-utils';
 import {
 	waitForOpenSocketConnection,
@@ -268,7 +269,10 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', (err: any) => {
-					if (err.innerError.message === 'Chunk timeout') resolve(true);
+					expect(err).toBeInstanceOf(InvalidResponseError);
+					if (err.innerError.message === 'Chunk timeout') {
+						resolve(true);
+					}
 				});
 			});
 			// send an event to be parsed and fail
@@ -296,9 +300,8 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 			const defPromise = new Web3DeferredPromise<JsonRpcResponse<ResponseType>>();
-			defPromise.catch(() => {
-				//
-			});
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			defPromise.catch(() => {});
 			const reqItem: SocketRequestItem<any, any, any> = {
 				payload: jsonRpcPayload,
 				deferredPromise: defPromise,
