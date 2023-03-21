@@ -221,6 +221,18 @@ describe('defaultTransactionBuilder', () => {
 			});
 			expect(result.input).toBe('0x');
 		});
+
+		it('should prefix with 0x', async () => {
+			const input = { ...transaction };
+			delete input.data;
+			input.input = '123';
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.input).toBe('0x123');
+		});
 	});
 
 	describe('should populate chain', () => {
