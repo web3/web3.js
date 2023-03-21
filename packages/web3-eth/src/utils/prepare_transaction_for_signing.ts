@@ -16,7 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Common from '@ethereumjs/common';
-import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
+import defaultImport, * as fullImport from '@ethereumjs/tx';
+import { TxOptions } from '@ethereumjs/tx';
 import {
 	EthExecutionAPI,
 	HexString,
@@ -32,6 +33,8 @@ import { isNullish } from 'web3-validator';
 import { validateTransactionForSigning } from '../validation';
 import { formatTransaction } from './format_transaction';
 import { transactionBuilder } from './transaction_builder';
+
+const { TransactionFactory } = defaultImport || fullImport;
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
