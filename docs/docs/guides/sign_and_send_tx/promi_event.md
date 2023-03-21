@@ -87,6 +87,6 @@ web3.eth.sendTransaction({...})
 
 ```
 
-List of functions:
+List of references:
 
 -   [Web3PromiEvent](/api/web3-core/class/Web3PromiEvent)

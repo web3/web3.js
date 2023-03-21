@@ -32,7 +32,7 @@ try {
 }
 ```
 
-List of functions:
+List of references:
 
 -   [account.signTransaction](/api/web3-eth-accounts/function/signTransaction)
 -   [eth.accounts.privateKeyToAccount](/api/web3-eth-accounts/function/privateKeyToAccount)
@@ -86,7 +86,7 @@ try {
 }
 ```
 
-List of functions:
+List of references:
 
 -   [account.signTransaction](/api/web3-eth-accounts/function/signTransaction)
 -   [contract.deploy](/api/web3-eth-contract/class/Contract#deploy)

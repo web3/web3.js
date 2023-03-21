@@ -44,7 +44,7 @@ try {
 }
 ```
 
-List of functions:
+List of references:
 
 -   [eth.sendTransaction](/api/web3-eth/class/Web3Eth#sendTransaction)
 -   [eth.personal.importRawKey](/api/web3-eth-personal/class/Personal#importRawKey)
@@ -101,7 +101,7 @@ try {
 }
 ```
 
-List of functions:
+List of references:
 
 -   [eth.Contract](/api/web3-eth-contract/class/Contract)
 -   [eth.personal.importRawKey](/api/web3-eth-personal/class/Personal#importRawKey)

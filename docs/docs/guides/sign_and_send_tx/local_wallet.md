@@ -36,7 +36,7 @@ try {
 }
 ```
 
-List of functions:
+List of references:
 
 -   [eth.accounts.wallet.add](/api/web3-eth-accounts/class/Wallet#add)
 -   [eth.sendTransaction](/api/web3-eth/class/Web3Eth#sendTransaction)
@@ -85,7 +85,7 @@ try {
 }
 ```
 
-List of functions:
+List of references:
 
 -   [eth.accounts.wallet.add](/api/web3-eth-accounts/class/Wallet#add)
 -   [eth.Contract](/api/web3-eth-contract/class/Contract)
