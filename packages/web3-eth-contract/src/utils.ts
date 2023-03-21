@@ -144,6 +144,7 @@ export const isContractInitOptions = (options: unknown): options is ContractInit
 	typeof options === 'object' &&
 	!isNullish(options) &&
 	[
+		'input',
 		'data',
 		'from',
 		'gas',
