@@ -15,8 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { jsonInterfaceMethodToString } from '../../src/utils';
-import { jsonInterfaceInvalidData, jsonInterfaceValidData } from '../fixtures/data';
+import { jsonInterfaceMethodToString, isAbiConstructorFragment } from '../../src/utils';
+import {
+	jsonInterfaceInvalidData,
+	jsonInterfaceValidData,
+	validIsAbiConstructorFragment,
+	invalidIsAbiConstructorFragment,
+} from '../fixtures/data';
 
 describe('utils', () => {
 	describe('jsonInterfaceMethodToString', () => {
@@ -39,6 +44,19 @@ describe('utils', () => {
 		describe('invalid cases', () => {
 			it.each(jsonInterfaceInvalidData)('%s', (input, output) => {
 				expect(() => jsonInterfaceMethodToString(input)).toThrow(output);
+			});
+		});
+	});
+	describe('isAbiConstructorFragment', () => {
+		describe('valid cases', () => {
+			it.each(validIsAbiConstructorFragment)('%s', ({ input }) => {
+				expect(isAbiConstructorFragment(input)).toBeTruthy();
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(invalidIsAbiConstructorFragment)('%s', ({ input }) => {
+				expect(isAbiConstructorFragment(input)).toBeFalsy();
 			});
 		});
 	});

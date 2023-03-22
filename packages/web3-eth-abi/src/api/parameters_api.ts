@@ -22,33 +22,6 @@ import ethersAbiCoder from '../ethers_abi_coder';
 import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils';
 
 /**
- * Helper function to format the decoded object
- */
-const formatDecodedObject = (
-	abi: { [key: string]: unknown },
-	input: { [key: string]: unknown },
-): { [key: string]: unknown } => {
-	let index = 0;
-	const res: { [key: string]: unknown } = {};
-	for (const j of Object.keys(abi)) {
-		if (typeof abi[j] === 'string') {
-			res[j] = input[j];
-			res[index] = input[j];
-		}
-		if (typeof abi[j] === 'object') {
-			res[j] = formatDecodedObject(
-				abi[j] as { [key: string]: unknown },
-				input[j] as { [key: string]: unknown },
-			);
-			res[index] = res[j];
-		}
-		index += 1;
-	}
-
-	return res;
-};
-
-/**
  * Encodes a parameter based on its type to its ABI representation.
  * @param abi - An array of {@link AbiInput}. See [Solidity's documentation](https://solidity.readthedocs.io/en/v0.5.3/abi-spec.html#json) for more details.
  * @param params - The actual parameters to encode.
