@@ -8,15 +8,15 @@ sidebar_label: 'Providers'
 Connecting to a chain happens through a provider. You can pass the provider to the constructor as in the following example:
 
 ```ts
-import { Web3 } from `web3`
+import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
 
 // calling any method that interact with the network would involve using the early passed provider.
 await web3.eth.sendTransaction({
-    from,
-    to,
-    value,
+	from,
+	to,
+	value,
 });
 ```
 
