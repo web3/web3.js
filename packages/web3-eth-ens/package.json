@@ -6,9 +6,9 @@
 	"module": "./lib/esm/index.js",
 	"exports": {
 		".": {
+			"types": "./lib/types/index.d.ts",
 			"import": "./lib/esm/index.js",
-			"require": "./lib/commonjs/index.js",
-			"types": "./lib/types/index.d.ts"
+			"require": "./lib/commonjs/index.js"
 		}
 	},
 	"repository": "https://github.com/ChainSafe/web3.js",
