@@ -87,3 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `TransactionRevertWithCustomError` was added to handle custom solidity errors (#5854)
 
 ## [Unreleased]
+
+### Added
+
+-   Added hybrid build (ESM and CJS) of library (#5904)

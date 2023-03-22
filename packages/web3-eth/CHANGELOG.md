@@ -107,3 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `getRevertReason` is no longer exported (#5844)
 
 ## [Unreleased]
+
+### Added
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
