@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,24 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { encodeEventSignature } from '../../../src/api/events_api';
-import { invalidEventsSignatures, validEventsSignatures } from '../../fixtures/data';
+import { encodeErrorSignature } from '../../../src/api/errors_api';
+import { validErrorsSignatures, invalidErrorSignatures } from '../../fixtures/data';
 
-describe('events_api', () => {
-	describe('encodeEventSignature', () => {
+describe('errors_api', () => {
+	describe('encodeErrorSignature', () => {
 		describe('valid data', () => {
-			it.each(validEventsSignatures)(
+			it.each(validErrorsSignatures)(
 				'should pass for valid values: %s',
 				({ input, output }) => {
-					expect(encodeEventSignature(input)).toEqual(output);
+					expect(encodeErrorSignature(input)).toEqual(output);
 				},
 			);
 		});
+
 		describe('invalid data', () => {
-			it.each(invalidEventsSignatures)(
-				'should fail for invalid values: %s',
+			it.each(invalidErrorSignatures)(
+				'should pass for valid values: %s',
 				({ input, output }) => {
-					expect(() => encodeEventSignature(input)).toThrow(output);
+					expect(() => encodeErrorSignature(input)).toThrow(output);
 				},
 			);
 		});
