@@ -289,6 +289,35 @@ export const invalidEventsSignatures: { input: any; output: string }[] = [
 	{ input: undefined, output: 'Invalid parameter value in encodeEventSignature' },
 ];
 
+export const validErrorsSignatures: { input: any; output: string }[] = [
+	{
+		input: 'Unauthorized()',
+		output: '0x82b4290015f7ec7256ca2a6247d3c2a89c4865c0e791456df195f40ad0a81367',
+	},
+	{
+		input: {
+			inputs: [{ internalType: 'string', name: '', type: 'string' }],
+			name: 'CustomError',
+			type: 'error',
+		},
+		output: '0x8d6ea8bed4afafaebcad40e72174583b8bf4969c5d3bc84536051f3939bf9d81',
+	},
+	{
+		input: 'Error(string)',
+		output: '0x08c379a0afcc32b1a39302f7cb8073359698411ab5fd6e3edb2c02c0b5fba8aa',
+	},
+];
+
+export const invalidErrorSignatures: { input: any; output: string }[] = [
+	{ input: 345, output: 'Invalid parameter value in encodeErrorSignature' },
+	{ input: {}, output: 'Invalid parameter value in encodeErrorSignature' },
+	{ input: ['mystring'], output: 'Invalid parameter value in encodeErrorSignature' },
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	{ input: null, output: 'Invalid parameter value in encodeErrorSignature' },
+	{ input: undefined, output: 'Invalid parameter value in encodeErrorSignature' },
+];
+
 export const validDecodeLogsData: {
 	input: { abi: any; data: any; topics: any };
 	output: Record<string, unknown>;
@@ -677,6 +706,13 @@ export const validEncodeParametersData: {
 		],
 		output: '0x00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002200000000000000000000000000000000000000000000000000000000000000ff',
 	},
+	{
+		input: [
+			['uint', 'tuple(uint256, string)'],
+			[1234, [5678, 'Hello World']],
+		],
+		output: '0x00000000000000000000000000000000000000000000000000000000000004d20000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000162e0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000b48656c6c6f20576f726c64000000000000000000000000000000000000000000',
+	},
 ];
 
 export const inValidEncodeParametersData: {
@@ -898,5 +934,79 @@ export const inValidDecodeParametersData: {
 		// eslint-disable-next-line no-null/no-null
 		input: [null, '0x000000000010'],
 		output: 'Parameter decoding error',
+	},
+];
+
+export const validDecodeContractErrorData: {
+	input: any[];
+	output: any;
+}[] = [
+	{
+		input: [
+			[
+				{ inputs: [], name: 'ErrorWithNoParams', type: 'error' },
+				{
+					inputs: [
+						{ name: 'code', type: 'uint256' },
+						{ name: 'message', type: 'string' },
+					],
+					name: 'ErrorWithParams',
+					type: 'error',
+				},
+			],
+			{
+				code: 12,
+				message: 'message',
+				data: '0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
+			},
+		],
+		output: {
+			errorName: 'ErrorWithParams',
+			errorSignature: 'ErrorWithParams(uint256,string)',
+			errorArgs: {
+				code: 42,
+				message: 'This is an error with params',
+			},
+		},
+	},
+];
+
+export const invalidDecodeContractErrorData: {
+	input: any[];
+}[] = [
+	{
+		input: [
+			[
+				{ inputs: [], name: 'ErrorWithNoParams', type: 'error' },
+				{
+					inputs: [
+						{ name: 'code', type: 'uint256' },
+						{ name: 'message', type: 'string' },
+					],
+					name: 'ErrorWithParams',
+					type: 'error',
+				},
+			],
+			{
+				code: 12,
+				message: 'message',
+				data: '0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000123450000000000000000000000000000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
+			},
+		],
+	},
+];
+
+export const validIsAbiConstructorFragment: {
+	input: any;
+}[] = [
+	{
+		input: { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
+	},
+];
+export const invalidIsAbiConstructorFragment: {
+	input: any;
+}[] = [
+	{
+		input: { inputs: [], stateMutability: 'nonpayable', type: 'function' },
 	},
 ];
