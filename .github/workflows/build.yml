@@ -92,7 +92,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          flags: UnitTests,web3,web3-core,web3-errors,web3-eth,web3-eth-abi,web3-eth-accounts,web3-eth-contract,web3-eth-ens,web3-eth-iban,web3-eth-personal,web3-net,web3-providers-http,web3-providers-ipc,web3-providers-ws,web3-rpc-methods,web3-utils,web3-validator
+          flags: UnitTests
           token: ${{ secrets.CODECOV_TOKEN }}
         if: ${{ matrix.node == 16 }}
 
