@@ -330,6 +330,9 @@ export abstract class SocketProvider<
 		}
 
 		const deferredPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
+		deferredPromise.catch(error => {
+			this._eventEmitter.emit('error', error);
+		});
 		const reqItem: SocketRequestItem<API, Method, JsonRpcResponseWithResult<ResultType>> = {
 			payload: request,
 			deferredPromise,

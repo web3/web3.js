@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import ganache from 'ganache';
 import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse } from 'web3-types';
-import { InvalidResponseError } from 'web3-errors';
+import { InvalidResponseError, ConnectionNotOpenError } from 'web3-errors';
 import { Web3DeferredPromise } from 'web3-utils';
 import {
 	waitForOpenSocketConnection,
@@ -387,6 +387,29 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				'Connection not open',
 			);
 			await errorPromise;
+		});
+		it('deferredPromise emits an error when request fails', async () => {
+			const server = ganache.server();
+			await server.listen(port);
+			const webSocketProvider = new WebSocketProvider(host);
+			await waitForOpenSocketConnection(webSocketProvider);
+
+			// @ts-expect-error replace sendtoSocket so we don't execute request
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			webSocketProvider._sendToSocket = () => {};
+			webSocketProvider.on('error', err => {
+				expect(err).toBeInstanceOf(ConnectionNotOpenError);
+			});
+
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const request = webSocketProvider.request(jsonRpcPayload).catch(() => {});
+
+			// @ts-expect-error create a deferred promise error
+			webSocketProvider._clearQueues();
+
+			await request;
+			webSocketProvider.disconnect();
+			await server.close();
 		});
 	});
 });
