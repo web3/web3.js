@@ -1300,7 +1300,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-errors
 
--   `gasLimit` is no longer accepted as a parameter for `MissingGasError` and `TransactionGasMismatchError`, and is also no longer included in error message (#5915)
+-   `gasLimit` is no longer accepted as a parameter for `MissingGasError` and `TransactionGasMismatchError, and is also no longer included in error message (#5915)
 
 #### web3-eth
 
@@ -1311,6 +1311,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   `getSendTxParams` will now return `input` instead of `data` in returned transaction parameters object (#5915)
+-   `Contract` constructor will now thrown new `ContractTransactionDataAndInputError` if both `data` and `input` are passed in `ContractInitOptions` for `Contract` constructor (#5915)
 
 #### web3-types
 
@@ -1321,4 +1322,13 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the
-    `Contract` class) (#5915)
+
+### Removed
+
+#### web3-eth-abi
+
+-   Removed `formatDecodedObject` function (#5934)
+
+#### web3-eth-contract
+
+-   `data` was removed as a property of `ContractOptions` type (#5915)

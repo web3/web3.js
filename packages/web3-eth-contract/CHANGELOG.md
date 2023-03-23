@@ -245,3 +245,8 @@ const transactionHash = receipt.transactionHash;
 ### Changed
 
 -   `getSendTxParams` will now return `input` instead of `data` in returned transaction parameters object (#5915)
+-   `Contract` constructor will now thrown new `ContractTransactionDataAndInputError` if both `data` and `input` are passed in `ContractInitOptions` for `Contract` constructor (#5915)
+
+### Removed
+
+-   `data` was removed as a property of `ContractOptions` type (#5915)
