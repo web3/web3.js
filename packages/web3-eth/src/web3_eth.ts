@@ -138,10 +138,6 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getCoinbase() {
-		if (this.provider) {
-			// eslint-disable-next-line no-console
-			console.log('provider set');
-		}
 		return ethRpcMethods.getCoinbase(this.requestManager);
 	}
 
