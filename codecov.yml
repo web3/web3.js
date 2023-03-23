@@ -4,6 +4,17 @@ coverage:
       default:
         target: 80%
         threshold: 1%
+      web3:
+          target: 81%
+          threshold: 1%
+          flags:
+              - web3
+      web3-eth:
+          target: 82%
+          threshold: 1%
+          flags:
+              - web3-eth
+
     patch:
       default:
         target: auto
