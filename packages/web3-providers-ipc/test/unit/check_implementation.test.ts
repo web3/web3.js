@@ -172,7 +172,8 @@ describe('IPCProvider', () => {
 			ipc.isReconnecting = true;
 			// @ts-expect-error mock method
 			ipc._reconnect = jest.fn();
-
+			// @ts-expect-error mock method
+			ipc._clearQueues = jest.fn();
 			// @ts-expect-error mock method
 			ipc._addSocketListeners();
 			// @ts-expect-error mock method
