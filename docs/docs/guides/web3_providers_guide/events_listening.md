@@ -21,7 +21,7 @@ Actually, the events can be categorized as follows ([according to EIP 1193](http
 Below a sample code for listening and remove listening to EIP 1193 events:
 
 ```ts
-import { Web3 } from `web3`
+import { Web3 } from 'web3'
 
 const web3 = new Web3(/* PROVIDER*/);
 
@@ -46,7 +46,7 @@ web3.provider.on('chainChanged',()=>{
 })
 
 // it is possible to catch errors that could happen in the underlying connection Socket with the `error` event
-// and it is also used to catch the error when max connection attempts exceeded
+// and it is also used to catch the error when max reconnection attempts exceeded
 //  as in section: /docs/guides/web3_providers_guide/#error-message
 web3.provider.on('error',()=>{
   // ...

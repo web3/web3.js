@@ -15,38 +15,31 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockHeaderOutput } from 'web3-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Web3 } from 'web3';
 import { Web3Eth, NewHeadsSubscription } from '../../src';
-import { Resolve, sendFewTxesWithoutReceipt } from './helper';
+import { Resolve } from './helper';
 import {
 	closeOpenConnection,
-	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
 	isSocket,
+	sendFewSampleTxs,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-const checkTxCount = 3;
-
+const checkTxCount = 2;
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
-	let tempAcc2: { address: string; privateKey: string };
-
-	beforeEach(async () => {
-		tempAcc2 = await createTempAccount();
-	});
+	let web3: Web3;
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 	});
 	describe('heads', () => {
 		it(`wait for ${checkTxCount} newHeads`, async () => {
-			const web3Eth = new Web3Eth(clientUrl);
-			const sub: NewHeadsSubscription = await web3Eth.subscribe('newHeads');
-			const tempAccForEachTest = await createTempAccount();
-			const from = tempAccForEachTest.address;
-			const to = tempAcc2.address;
-			const value = `0x1`;
-			await waitForOpenConnection(web3Eth);
+			web3 = new Web3(clientUrl);
+			const sub = await web3.eth.subscribe('newHeads');
+			await waitForOpenConnection(web3.eth);
 			let times = 0;
 			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: BlockHeaderOutput) => {
@@ -55,9 +48,6 @@ describeIf(isSocket)('subscription', () => {
 					}
 					expect(times).toBeGreaterThanOrEqual(times);
 					if (times >= checkTxCount) {
-						// sub.off('data', () => {
-						// 	no need to do anything
-						// });
 						resolve();
 					}
 				});
@@ -65,17 +55,15 @@ describeIf(isSocket)('subscription', () => {
 					reject(error);
 				});
 			});
-			await sendFewTxesWithoutReceipt({
-				web3Eth,
-				from,
-				to,
-				value,
-				times: checkTxCount,
-			});
+			// eslint-disable-next-line no-void
+			void sendFewSampleTxs(checkTxCount);
 
 			await pr;
-			await web3Eth.subscriptionManager?.removeSubscription(sub);
-			await closeOpenConnection(web3Eth);
+			sub.off('data', () => {
+				// do nothing
+			});
+			await web3.eth.subscriptionManager?.removeSubscription(sub);
+			await closeOpenConnection(web3.eth);
 		});
 		it(`clear`, async () => {
 			const web3Eth = new Web3Eth(clientUrl);

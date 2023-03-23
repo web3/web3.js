@@ -37,6 +37,7 @@ import {
 	ConnectionError,
 	ConnectionNotOpenError,
 	InvalidClientError,
+	MaxAttemptsReachedOnReconnectingError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
 	Web3WSProviderError,
@@ -47,10 +48,16 @@ import { isNullish } from './validation';
 import { Web3DeferredPromise } from './web3_deferred_promise';
 import * as jsonRpc from './json_rpc';
 
-type ReconnectOptions = {
+export type ReconnectOptions = {
 	autoReconnect: boolean;
 	delay: number;
 	maxAttempts: number;
+};
+
+const DEFAULT_RECONNECTION_OPTIONS = {
+	autoReconnect: true,
+	delay: 5000,
+	maxAttempts: 5,
 };
 
 type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
@@ -71,9 +78,12 @@ export abstract class SocketProvider<
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	protected readonly _sentRequestsQueue: Map<JsonRpcId, SocketRequestItem<any, any, any>>;
 	protected _reconnectAttempts!: number;
-	protected readonly _providerOptions?: object;
+	protected readonly _socketOptions?: unknown;
 	protected readonly _reconnectOptions: ReconnectOptions;
 	protected _socketConnection?: unknown;
+	public get SocketConnection() {
+		return this._socketConnection;
+	}
 	protected _connectionStatus: Web3ProviderStatus;
 	protected readonly _onMessageHandler: (event: MessageEvent) => void;
 	protected readonly _onOpenHandler: () => void;
@@ -83,29 +93,30 @@ export abstract class SocketProvider<
 	/**
 	 * This is an abstract class for implementing a socket provider (e.g. WebSocket, IPC). It extends the EIP-1193 provider {@link EIP1193Provider}.
 	 * @param socketPath - The path to the socket (e.g. /ipc/path or ws://localhost:8546)
-	 * @param options - The options for the socket connection
+	 * @param socketOptions - The options for the socket connection. Its type is supposed to be specified in the inherited classes.
 	 * @param reconnectOptions - The options for the socket reconnection {@link ReconnectOptions}
 	 */
-	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
+	public constructor(
+		socketPath: string,
+		socketOptions?: unknown,
+		reconnectOptions?: Partial<ReconnectOptions>,
+	) {
 		super();
 		this._connectionStatus = 'connecting';
+
+		// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
 		this._onCloseHandler = this._onCloseEvent.bind(this);
 		this._onErrorHandler = this._onError.bind(this);
+
 		if (!this._validateProviderPath(socketPath)) throw new InvalidClientError(socketPath);
 
 		this._socketPath = socketPath;
-		this._providerOptions = options;
-
-		const DEFAULT_PROVIDER_RECONNECTION_OPTIONS = {
-			autoReconnect: true,
-			delay: 5000,
-			maxAttempts: 5,
-		};
+		this._socketOptions = socketOptions;
 
 		this._reconnectOptions = {
-			...DEFAULT_PROVIDER_RECONNECTION_OPTIONS,
+			...DEFAULT_RECONNECTION_OPTIONS,
 			...(reconnectOptions ?? {}),
 		};
 
@@ -282,8 +293,10 @@ export abstract class SocketProvider<
 			this.isReconnecting = false;
 			this._clearQueues();
 			this._removeSocketListeners();
-			const errorMsg = `Max connection attempts exceeded (${this._reconnectOptions.maxAttempts})`;
-			this._eventEmitter.emit('error', errorMsg);
+			this._eventEmitter.emit(
+				'error',
+				new MaxAttemptsReachedOnReconnectingError(this._reconnectOptions.maxAttempts),
+			);
 		}
 	}
 

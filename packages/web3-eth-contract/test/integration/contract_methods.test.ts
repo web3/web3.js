@@ -146,27 +146,24 @@ describe('contract', () => {
 				expect(await deployedTempContract.methods.getStringValue().call()).toBe('TEST');
 			});
 
-			// TODO: Get and match the revert error message
 			it('should returns errors on reverts', async () => {
-				try {
-					await contractDeployed.methods.reverts().send(sendOptions);
-				} catch (receipt: any) {
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(receipt).toEqual(
-						// eslint-disable-next-line jest/no-conditional-expect
-						expect.objectContaining({
-							// eslint-disable-next-line jest/no-conditional-expect
-							transactionHash: expect.any(String),
-						}),
-					);
-
-					// To avoid issue with the `objectContaining` and `cypress` had to add
-					// these expectations explicitly on each attribute
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(receipt.status).toEqual(BigInt(0));
-				}
-
-				expect.assertions(2);
+				await expect(
+					contractDeployed.methods.reverts().send(sendOptions),
+				).rejects.toMatchObject({
+					name: 'TransactionRevertedWithoutReasonError',
+					receipt: {
+						cumulativeGasUsed: BigInt(21543),
+						from: acc.address,
+						gasUsed: BigInt(21543),
+						logs: [],
+						logsBloom:
+							'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+						status: BigInt(0),
+						to: contractDeployed.options.address?.toLowerCase(),
+						transactionIndex: BigInt(0),
+						type: BigInt(0),
+					},
+				});
 			});
 		});
 	});

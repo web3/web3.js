@@ -66,7 +66,6 @@ describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'gana
 				deployedContract = await new web3.eth.Contract(ERC20TokenAbi)
 					.deploy({
 						data: ERC20TokenBytecode,
-						// @ts-expect-error Type 'string' is not assignable to type 'undefined'.
 						arguments: ['420'],
 					})
 					.send({ from: account.address, gas: '10000000' });

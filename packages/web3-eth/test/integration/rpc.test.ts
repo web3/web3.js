@@ -239,9 +239,7 @@ describe('rpc', () => {
 
 		it('getTransaction', async () => {
 			const [receipt] = await sendFewTxes({
-				web3Eth,
 				from: tempAcc.address,
-				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});
@@ -273,9 +271,7 @@ describe('rpc', () => {
 
 		it('getTransactionReceipt', async () => {
 			const [receipt] = await sendFewTxes({
-				web3Eth,
 				from: tempAcc.address,
-				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});

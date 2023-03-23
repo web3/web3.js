@@ -30,7 +30,7 @@ describe('events_api', () => {
 		});
 		describe('invalid data', () => {
 			it.each(invalidEventsSignatures)(
-				'should pass for valid values: %s',
+				'should fail for invalid values: %s',
 				({ input, output }) => {
 					expect(() => encodeEventSignature(input)).toThrow(output);
 				},
