@@ -87,3 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `TransactionRevertWithCustomError` was added to handle custom solidity errors (#5854)
 
 ## [Unreleased]
+
+### Changed
+
+-   `gasLimit` is no longer accepted as a parameter for `MissingGasError` and `TransactionGasMismatchError, and is also no longer included in error message (#5915)

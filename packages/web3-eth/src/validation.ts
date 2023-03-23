@@ -131,6 +131,7 @@ export function isTransactionCall(value: TransactionCall): boolean {
 	if (!isNullish(value.gasPrice) && !isHexStrict(value.gasPrice)) return false;
 	if (!isNullish(value.value) && !isHexStrict(value.value)) return false;
 	if (!isNullish(value.data) && !isHexStrict(value.data)) return false;
+	if (!isNullish(value.input) && !isHexStrict(value.input)) return false;
 	if (!isNullish(value.type)) return false;
 	if (isTransaction1559Unsigned(value as Transaction1559UnsignedAPI)) return false;
 	if (isTransaction2930Unsigned(value as Transaction2930UnsignedAPI)) return false;
@@ -259,7 +260,6 @@ export const validateGas = (transaction: InternalTransaction) => {
 	if (!legacyGasPresent && !feeMarketGasPresent)
 		throw new MissingGasError({
 			gas: transaction.gas,
-			gasLimit: transaction.gasLimit,
 			gasPrice: transaction.gasPrice,
 			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
 			maxFeePerGas: transaction.maxFeePerGas,
@@ -268,7 +268,6 @@ export const validateGas = (transaction: InternalTransaction) => {
 	if (legacyGasPresent && feeMarketGasPresent)
 		throw new TransactionGasMismatchError({
 			gas: transaction.gas,
-			gasLimit: transaction.gasLimit,
 			gasPrice: transaction.gasPrice,
 			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
 			maxFeePerGas: transaction.maxFeePerGas,
