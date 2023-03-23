@@ -44,8 +44,7 @@ export const getSendTxParams = ({
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	const deploymentCall =
-		options?.data ?? options?.input ?? contractOptions.data ?? contractOptions.input;
+	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input;
 
 	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
@@ -61,7 +60,7 @@ export const getSendTxParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			input: contractOptions.data ?? contractOptions.input,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
@@ -97,7 +96,7 @@ export const getEthTxCallParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			input: contractOptions.data ?? contractOptions.input,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
@@ -127,7 +126,7 @@ export const getEstimateGasParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			input: contractOptions.data ?? contractOptions.input,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
@@ -183,7 +182,7 @@ export const getCreateAccessListParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			input: contractOptions.data ?? contractOptions.input,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
