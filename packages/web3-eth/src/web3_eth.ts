@@ -1482,8 +1482,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) - Specifies what block to use as the current state of the blockchain while processing the transaction.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the createAccessList should be formatted.
 	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
-	 *
-	 *  ```ts
+	 * @example
+	 * ```ts
 	 * web3.eth.createAccessList({
 	 * from: '0xDe95305a63302C3aa4d3A9B42654659AeA72b694',
 	 * data: '0x9a67c8b100000000000000000000000000000000000000000000000000000000000004d0',
@@ -1504,7 +1504,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *   ],
 	 *   "gasUsed": "0x7671"
 	 * }
-	 *  ```
+	 * ```
 	 */
 	public async createAccessList<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: TransactionForAccessList,
@@ -1517,10 +1517,23 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	/**
 	 * Lets you subscribe to specific events in the blockchain.
 	 *
-	 * @param name The subscription you want to subscribe to.
-	 * @param args Optional additional parameters, depending on the subscription type.
-	 * @returns One of {@link RegisteredSubscription}
+	 * @param name - The subscription you want to subscribe to.
+	 * @param args - Optional additional parameters, depending on the subscription type.
+	 * @returns A subscription object of type {@link RegisteredSubscription}. The object contains:
+	 *  - subscription.id: The subscription id, used to identify and unsubscribing the subscription.
+	 *  - subscription.subscribe(): Can be used to re-subscribe with the same parameters.
+	 *  - subscription.unsubscribe(): Unsubscribes the subscription and returns TRUE in the callback if successful.
+	 *  - subscription.args: The subscription arguments, used when re-subscribing.
 	 *
+	 *
+	 * You can use the subscription object to listen on:
+	 *
+	 * - on("data") - Fires on each incoming log with the log object as argument.
+	 * - on("changed") - Fires on each log which was removed from the blockchain. The log will have the additional property "removed: true".
+	 * - on("error") - Fires when an error in the subscription occurs.
+	 * - on("connected") - Fires once after the subscription successfully connected. Returns the subscription id.
+	 *
+	 * @example
 	 * ```ts
 	 * const subscription = web3.eth.subscribe('logs', {
 	 *     address: '0x1234567890123456789012345678901234567890',
