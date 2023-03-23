@@ -4,13 +4,12 @@ coverage:
       default:
         target: 80%
         threshold: 1%
-
     patch:
       default:
         target: auto
         threshold: 5%
 
-flag_management:
+component_management:
   default_rules:  # default rules that will be inherited by all components
     statuses:
       - type: project
@@ -18,59 +17,58 @@ flag_management:
       - type: patch
         target: 80%
 
-  individual_flags:
-    - name: "web3"
+  individual_components:
+    - component_id: "web3"
       paths:
           - /packages/web3/src/
-    - name: "web3-core"
+    - component_id: "web3-core"
       paths:
           - /packages/web3-core/src/
-    - name: "web3-errors"
+    - component_id: "web3-errors"
       paths:
           - /packages/web3-errors/src/
-    - name: "web3-eth"
+    - component_id: "web3-eth"
       paths:
           - /packages/web3-eth/src/
-    - name: "web3-eth-abi"
+    - component_id: "web3-eth-abi"
       paths:
           - /packages/web3-eth-abi/src/
-    - name: "web3-eth-accounts"
+    - component_id: "web3-eth-accounts"
       paths:
           - /packages/web3-eth-accounts/src/
-    - name: "web3-eth-contract"
+    - component_id: "web3-eth-contract"
       paths:
           - /packages/web3-eth-contract/src/
-    - name: "web3-eth-ens"
+    - component_id: "web3-eth-ens"
       paths:
           - /packages/web3-eth-ens/src/
-    - name: "web3-eth-iban"
+    - component_id: "web3-eth-iban"
       paths:
           - /packages/web3-eth-iban/src/
-    - name: "web3-eth-personal"
+    - component_id: "web3-eth-personal"
       paths:
           - /packages/web3-eth-personal/src/
-    - name: "web3-net"
+    - component_id: "web3-net"
       paths:
           - /packages/web3-net/src/
-    - name: "web3-providers-http"
+    - component_id: "web3-providers-http"
       paths:
           - /packages/web3-providers-http/src/
-    - name: "web3-providers-ipc"
+    - component_id: "web3-providers-ipc"
       paths:
           - /packages/web3-providers-ipc/src/
-    - name: "web3-providers-ws"
+    - component_id: "web3-providers-ws"
       paths:
           - /packages/web3-providers-ws/src/
-    - name: "web3-rpc-methods"
+    - component_id: "web3-rpc-methods"
       paths:
           - /packages/web3-rpc-methods/src/
-    - name: "web3-utils"
+    - component_id: "web3-utils"
       paths:
           - /packages/web3-utils/src/
-    - name: "web3-validator"
+    - component_id: "web3-validator"
       paths:
           - /packages/web3-validator/src/
-
 
 comment:
   layout: 'header, diff, flags, components'
@@ -78,4 +76,3 @@ comment:
   require_changes: false
   require_base: no
   require_head: no
-
