@@ -994,7 +994,7 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: {
 				...this.options,
-				from: this.options.from ?? this.getConfig().defaultAccount,
+				from: this.options.from ?? this.config.defaultAccount,
 			},
 		});
 		try {
@@ -1024,7 +1024,7 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: {
 				...this.options,
-				from: this.options.from ?? this.getConfig().defaultAccount,
+				from: this.options.from ?? this.config.defaultAccount,
 			},
 		});
 
