@@ -16,7 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3EventEmitter, Web3PromiEvent, Web3ConfigEvent } from 'web3-core';
-import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
+import {
+	ContractExecutionError,
+	ContractTransactionDataAndInputError,
+	SubscriptionError,
+	Web3ContractError,
+} from 'web3-errors';
 import {
 	createAccessList,
 	call,
@@ -293,6 +298,19 @@ export class Contract<Abi extends ContractAbi>
 		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	) {
+		// eslint-disable-next-line no-nested-ternary
+		const options = isContractInitOptions(addressOrOptionsOrContext)
+			? addressOrOptionsOrContext
+			: isContractInitOptions(optionsOrContextOrReturnFormat)
+			? optionsOrContextOrReturnFormat
+			: undefined;
+
+		if (!isNullish(options) && !isNullish(options.data) && !isNullish(options.input))
+			throw new ContractTransactionDataAndInputError({
+				data: options.data as HexString,
+				input: options.input as HexString,
+			});
+
 		let contractContext;
 		if (isWeb3ContractContext(addressOrOptionsOrContext)) {
 			contractContext = addressOrOptionsOrContext;
@@ -340,13 +358,6 @@ export class Contract<Abi extends ContractAbi>
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
 
-		// eslint-disable-next-line no-nested-ternary
-		const options = isContractInitOptions(addressOrOptionsOrContext)
-			? addressOrOptionsOrContext
-			: isContractInitOptions(optionsOrContextOrReturnFormat)
-			? optionsOrContextOrReturnFormat
-			: undefined;
-
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
 		if (!isNullish(address)) {
@@ -358,9 +369,8 @@ export class Contract<Abi extends ContractAbi>
 			jsonInterface: this._jsonInterface,
 			gas: options?.gas ?? options?.gasLimit,
 			gasPrice: options?.gasPrice,
-			gasLimit: options?.gasLimit,
 			from: options?.from,
-			data: options?.data,
+			input: options?.input ?? options?.data,
 		};
 
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
@@ -465,9 +475,8 @@ export class Contract<Abi extends ContractAbi>
 				{
 					gas: this.options.gas,
 					gasPrice: this.options.gasPrice,
-					gasLimit: this.options.gasLimit,
 					from: this.options.from,
-					data: this.options.data,
+					input: this.options.input,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
@@ -479,9 +488,8 @@ export class Contract<Abi extends ContractAbi>
 				{
 					gas: this.options.gas,
 					gasPrice: this.options.gasPrice,
-					gasLimit: this.options.gasLimit,
 					from: this.options.from,
-					data: this.options.data,
+					input: this.options.input,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
@@ -498,7 +506,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * ```ts
 	 * myContract.deploy({
-	 *   data: '0x12345...',
+	 *   input: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .send({
@@ -535,7 +543,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * // Simply encoding
 	 * myContract.deploy({
-	 *   data: '0x12345...',
+	 *   input: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .encodeABI();
@@ -544,7 +552,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * // Gas estimation
 	 * myContract.deploy({
-	 *   data: '0x12345...',
+	 *   input: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .estimateGas(function(err, gas){
@@ -559,6 +567,7 @@ export class Contract<Abi extends ContractAbi>
 		 * The byte code of the contract.
 		 */
 		data?: HexString;
+		input?: HexString;
 		/**
 		 * The arguments which get passed to the constructor on deployment.
 		 */
@@ -574,19 +583,19 @@ export class Contract<Abi extends ContractAbi>
 			} as AbiConstructorFragment;
 		}
 
-		const data = format(
+		const _input = format(
 			{ eth: 'bytes' },
-			deployOptions?.data ?? this.options.data,
+			deployOptions?.input ?? deployOptions?.data ?? this.options.input,
 			DEFAULT_RETURN_FORMAT,
 		);
 
-		if (!data || data.trim() === '0x') {
+		if (!_input || _input.trim() === '0x') {
 			throw new Web3ContractError('contract creation without any data provided.');
 		}
 
 		const args = deployOptions?.arguments ?? [];
 
-		const contractOptions = { ...this.options, data };
+		const contractOptions: ContractOptions = { ...this.options, input: _input };
 
 		return {
 			arguments: args,
@@ -631,7 +640,7 @@ export class Contract<Abi extends ContractAbi>
 				encodeMethodABI(
 					abi as AbiFunctionFragment,
 					args as unknown[],
-					format({ eth: 'bytes' }, data as Bytes, DEFAULT_RETURN_FORMAT),
+					format({ eth: 'bytes' }, _input as Bytes, DEFAULT_RETURN_FORMAT),
 				),
 		};
 	}
@@ -1040,7 +1049,7 @@ export class Contract<Abi extends ContractAbi>
 		let modifiedContractOptions = contractOptions ?? this.options;
 		modifiedContractOptions = {
 			...modifiedContractOptions,
-			data: undefined,
+			input: undefined,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
 

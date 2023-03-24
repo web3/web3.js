@@ -30,8 +30,9 @@ import {
 	ERR_CONTRACT_REQUIRED_CALLBACK,
 	ERR_CONTRACT_RESERVED_EVENT,
 	ERR_CONTRACT_RESOLVER_MISSING,
+	ERR_CONTRACT_TX_DATA_AND_INPUT,
 } from '../error_codes';
-import { BaseWeb3Error } from '../web3_error_base';
+import { BaseWeb3Error, InvalidValueError } from '../web3_error_base';
 
 export class Web3ContractError extends BaseWeb3Error {
 	public code = ERR_CONTRACT;
@@ -169,6 +170,17 @@ export class ContractExecutionError extends Web3ContractError {
 			rpcError.code,
 			rpcError.message,
 			rpcError.data as string,
+		);
+	}
+}
+
+export class ContractTransactionDataAndInputError extends InvalidValueError {
+	public code = ERR_CONTRACT_TX_DATA_AND_INPUT;
+
+	public constructor(value: { data: HexString | undefined; input: HexString | undefined }) {
+		super(
+			`data: ${value.data ?? 'undefined'}, input: ${value.input ?? 'undefined'}`,
+			'You can\'t have "data" and "input" as properties of a contract at the same time, please use either "data" or "input" instead.',
 		);
 	}
 }

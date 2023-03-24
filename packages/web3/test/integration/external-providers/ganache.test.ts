@@ -17,9 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ganache from 'ganache';
-
 import { performBasicRpcCalls } from './helper';
-
 import { getSystemTestMnemonic } from '../../shared_fixtures/system_tests_utils';
 
 describe('compatibility with `ganache` provider', () => {

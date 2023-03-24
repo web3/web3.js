@@ -134,7 +134,7 @@ describe('contract', () => {
 			it('should run send method of the contract if data is provided at initiation', async () => {
 				const tempContract = new Contract(BasicAbi, {
 					provider: getSystemTestProvider(),
-					data: BasicBytecode,
+					input: BasicBytecode,
 					from: acc.address,
 					gas: '1000000',
 				});
