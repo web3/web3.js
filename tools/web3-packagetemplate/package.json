@@ -16,7 +16,7 @@
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
 		"prebuild": "yarn clean",
-		"build": "yarn build:cjs && yarn build:esm && yarn build:types",
+		"build": "yarn build:cjs & yarn build:esm & yarn build:types",
 		"build:cjs": "tsc --build tsconfig.cjs.json",
 		"build:esm": "tsc --build tsconfig.esm.json",
 		"build:types": "tsc --build tsconfig.types.json",
