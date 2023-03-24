@@ -71,7 +71,6 @@ export abstract class Eip1193Provider<
 				})
 				.catch(err => {
 					// todo: add error handler
-					// eslint-disable-next-line no-console
 					console.error(err);
 				}),
 

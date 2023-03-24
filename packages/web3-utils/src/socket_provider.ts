@@ -125,7 +125,10 @@ export abstract class SocketProvider<
 
 		this._init();
 		this.connect();
-		this.chunkResponseParser = new ChunkResponseParser();
+		this.chunkResponseParser = new ChunkResponseParser(
+			this._eventEmitter,
+			this._reconnectOptions.autoReconnect,
+		);
 		this.chunkResponseParser.onError(() => {
 			this._clearQueues();
 		});
@@ -270,7 +273,6 @@ export abstract class SocketProvider<
 		if (this.isReconnecting) {
 			return;
 		}
-
 		this.isReconnecting = true;
 
 		if (this._sentRequestsQueue.size > 0) {
@@ -328,7 +330,9 @@ export abstract class SocketProvider<
 		}
 
 		const deferredPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-
+		deferredPromise.catch(error => {
+			this._eventEmitter.emit('error', error);
+		});
 		const reqItem: SocketRequestItem<API, Method, JsonRpcResponseWithResult<ResultType>> = {
 			payload: request,
 			deferredPromise,
@@ -346,7 +350,8 @@ export abstract class SocketProvider<
 			this._sendToSocket(reqItem.payload);
 		} catch (error) {
 			this._sentRequestsQueue.delete(requestId);
-			throw error;
+
+			this._eventEmitter.emit('error', error);
 		}
 
 		return deferredPromise;
@@ -369,7 +374,11 @@ export abstract class SocketProvider<
 
 	protected _onMessage(event: MessageEvent): void {
 		const responses = this._parseResponses(event);
-		if (!responses) {
+		if (responses.length === 0) {
+			// no responses means lost connection, autoreconnect if possible
+			if (this._reconnectOptions.autoReconnect) {
+				this._reconnect();
+			}
 			return;
 		}
 		for (const response of responses) {
