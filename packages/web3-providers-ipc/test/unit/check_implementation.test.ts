@@ -150,7 +150,9 @@ describe('IPCProvider', () => {
 		it('listeners', () => {
 			const ipc = new IpcProvider(socketPath, undefined, { autoReconnect: false });
 			// @ts-expect-error mock method
-			ipc.chunkResponseParser.parseResponse = jest.fn();
+			ipc.chunkResponseParser.parseResponse = jest.fn(() => {
+				return [];
+			});
 			// @ts-expect-error mock method
 			ipc._socketConnection.listeners = () => {
 				throw new Error('error');
@@ -170,7 +172,8 @@ describe('IPCProvider', () => {
 			ipc.isReconnecting = true;
 			// @ts-expect-error mock method
 			ipc._reconnect = jest.fn();
-
+			// @ts-expect-error mock method
+			ipc._clearQueues = jest.fn();
 			// @ts-expect-error mock method
 			ipc._addSocketListeners();
 			// @ts-expect-error mock method

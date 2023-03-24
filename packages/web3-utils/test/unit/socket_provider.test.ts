@@ -33,13 +33,17 @@ class TestProvider extends SocketProvider<any, any, any> {
 	// eslint-disable-next-line
 	protected _removeSocketListeners(): void {}
 	// eslint-disable-next-line
-	protected _onCloseEvent(_event: unknown): void {}
+	protected _onCloseEvent(_event: any): void {}
 	// eslint-disable-next-line
 	protected _sendToSocket(_payload: Web3APIPayload<EthExecutionAPI, any>): void {}
 	// eslint-disable-next-line
 	protected _parseResponses(_event: any): JsonRpcResponse[] {
 		return [] as JsonRpcResponse[];
 	}
+	public message(_event: any): void {
+		this._onMessage(_event);
+	}
+
 	// eslint-disable-next-line
 	protected _closeSocketConnection(
 		_code?: number | undefined,
@@ -61,6 +65,26 @@ describe('SocketProvider', () => {
 			const provider = new TestProvider(socketPath, socketOption);
 			expect(provider).toBeInstanceOf(SocketProvider);
 			expect(provider.SocketConnection).toEqual(dummySocketConnection);
+		});
+	});
+	describe('socket_provider unit tests', () => {
+		it('should not call method reconnect', () => {
+			const reconnectOptions = { autoReconnect: false };
+			const provider = new TestProvider(socketPath, socketOption, reconnectOptions);
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_reconnect').mockReturnValue('');
+			provider.message('');
+			// @ts-expect-error run protected method
+			expect(provider._reconnect).not.toHaveBeenCalled();
+		});
+		it('should call method reconnect', () => {
+			const reconnectOptions = { autoReconnect: true };
+			const provider = new TestProvider(socketPath, socketOption, reconnectOptions);
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_reconnect').mockReturnValue('');
+			provider.message('');
+			// @ts-expect-error run protected method
+			expect(provider._reconnect).toHaveBeenCalled();
 		});
 	});
 });

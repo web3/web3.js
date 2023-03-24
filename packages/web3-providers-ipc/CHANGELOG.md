@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
 -   Refactor to use common SocketProvider class (#5683)
+-   Legacy Event `close` has been deprecated, superseded by `disconnect` (#5683)
 
 ## [4.0.1-alpha.5]
 

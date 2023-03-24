@@ -79,3 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added `safe` and `finalized` block tags in `BlockTags` and `BlockTag` types (#5823)
 
 ## [Unreleased]
+
+### Changed
+
+-   `data` property in `TransactionOutput` was renamed to `input` (#5915)
