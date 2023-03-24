@@ -372,7 +372,6 @@ export const validateGasData: [
 		},
 		new MissingGasError({
 			gas: undefined,
-			gasLimit: undefined,
 			gasPrice: undefined,
 			maxPriorityFeePerGas: undefined,
 			maxFeePerGas: undefined,
@@ -397,7 +396,6 @@ export const validateGasData: [
 		},
 		new MissingGasError({
 			gas: '0x5208',
-			gasLimit: '0x5208',
 			gasPrice: undefined,
 			maxFeePerGas: undefined,
 			maxPriorityFeePerGas: undefined,
@@ -420,8 +418,7 @@ export const validateGasData: [
 			s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 		},
 		new MissingGasError({
-			gas: undefined,
-			gasLimit: '0x5208',
+			gas: '0x5208',
 			gasPrice: undefined,
 			maxFeePerGas: undefined,
 			maxPriorityFeePerGas: undefined,
@@ -440,7 +437,6 @@ export const validateGasData: [
 			chain: 'mainnet',
 			hardfork: 'berlin',
 			chainId: '0x1',
-			gasLimit: '0x5208',
 			v: '0x25',
 			r: '0x4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d',
 			s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
@@ -485,8 +481,7 @@ export const validateGasData: [
 			s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 		},
 		new MissingGasError({
-			gas: undefined,
-			gasLimit: '0x5208',
+			gas: '0x5208',
 			gasPrice: undefined,
 			maxPriorityFeePerGas: undefined,
 			maxFeePerGas: '0x1229298c00',
@@ -510,8 +505,7 @@ export const validateGasData: [
 			s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 		},
 		new MissingGasError({
-			gas: undefined,
-			gasLimit: '0x5208',
+			gas: '0x5208',
 			gasPrice: undefined,
 			maxPriorityFeePerGas: '0x49504f80',
 			maxFeePerGas: undefined,
@@ -539,7 +533,6 @@ export const validateGasData: [
 		},
 		new TransactionGasMismatchError({
 			gas: '0x5208',
-			gasLimit: '0x5208',
 			gasPrice: '0x4a817c800',
 			maxFeePerGas: '0x1229298c00',
 			maxPriorityFeePerGas: '0x49504f80',
@@ -567,7 +560,6 @@ export const validateGasData: [
 		},
 		new TransactionGasMismatchError({
 			gas: '0x5208',
-			gasLimit: '0x5208',
 			gasPrice: '0x4a817c800',
 			maxFeePerGas: '0x1229298c00',
 			maxPriorityFeePerGas: '0x49504f80',

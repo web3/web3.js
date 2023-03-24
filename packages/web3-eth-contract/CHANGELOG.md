@@ -236,3 +236,17 @@ const transactionHash = receipt.transactionHash;
 -   `decodeErrorData` is no longer exported (method was moved to `web3-eth-abi` and renamed `decodeContractErrorData`) (#5844)
 
 ## [Unreleased]
+
+### Added
+
+-   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the
+    `Contract` class) (#5915)
+
+### Changed
+
+-   `getSendTxParams` will now return `input` instead of `data` in returned transaction parameters object (#5915)
+-   `Contract` constructor will now thrown new `ContractTransactionDataAndInputError` if both `data` and `input` are passed in `ContractInitOptions` for `Contract` constructor (#5915)
+
+### Removed
+
+-   `data` was removed as a property of `ContractOptions` type (#5915)

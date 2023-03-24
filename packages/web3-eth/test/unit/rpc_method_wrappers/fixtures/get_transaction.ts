@@ -14,26 +14,28 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Bytes, Transaction } from 'web3-types';
+import { Bytes, TransactionInfo } from 'web3-types';
 
-export const mockRpcResponse: Transaction = {
-	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-	to: '0x3535353535353535353535353535353535353535',
-	value: '0x174876e800',
-	gas: '0x5208',
-	gasPrice: '0x4a817c800',
-	type: '0x0',
-	maxFeePerGas: '0x1229298c00',
-	maxPriorityFeePerGas: '0x49504f80',
-	data: '0x',
-	nonce: '0x4',
-	chain: 'mainnet',
-	hardfork: 'berlin',
+export const mockRpcResponse: TransactionInfo = {
+	accessList: [],
+	blockHash: '0xc9e87d2d1aa23d241fe281b8db7856c497320aa4f1f582a7fcd4fab7d2addf74',
+	blockNumber: '0xc66332',
 	chainId: '0x1',
-	gasLimit: '0x5208',
-	v: '0x25',
-	r: '0x4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d',
-	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
+	from: '0xcfb162c6de7ee2b49048b270cb5e297da5b6e6c3',
+	gas: '0x31d00',
+	gasPrice: '0xa83613262',
+	hash: '0x5f67b495f9c53b942cb1bfacaf175ad887372d7227454a971f15f5e6a7639ad1',
+	input: '0x38ed17390000000000000000000000000000000000000000000000147ebc6d689cc81c8c0000000000000000000000000000000000000000000000005b7471df733ea75c00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000cfb162c6de7ee2b49048b270cb5e297da5b6e6c30000000000000000000000000000000000000000000000000000000061134c8f0000000000000000000000000000000000000000000000000000000000000003000000000000000000000000d084b83c305dafd76ae3e1b4e1f1fe2ecccb3988000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000d2877702675e6ceb975b4a1dff9fb7baf4c91ea9',
+	maxFeePerGas: '0xf2cec3661',
+	maxPriorityFeePerGas: '0xb2d05e00',
+	nonce: '0xb8',
+	r: '0x9d201db7621ee0e204841ea374cca3397c7f1a880c5f83207d8cd7e5b4b9e984',
+	s: '0x391b00b10782665d8c5138aef912ea77a59024bf7962f4d1faedcc45bf91d568',
+	to: '0x7a250d5630b4cf539739df2c5dacb4c659f2488d',
+	transactionIndex: '0xc8',
+	type: '0x2',
+	v: '0x0',
+	value: '0x0',
 };
 
 /**

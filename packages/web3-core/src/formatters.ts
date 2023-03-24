@@ -153,17 +153,17 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 		);
 	}
 
-	if (!options.data && options.input) {
-		modifiedOptions.data = options.input;
-		delete modifiedOptions.input;
+	if (!options.input && options.data) {
+		modifiedOptions.input = options.data;
+		delete modifiedOptions.data;
 	}
 
-	if (options.data && !options.data.startsWith('0x')) {
-		modifiedOptions.data = `0x${options.data}`;
+	if (options.input && !options.input.startsWith('0x')) {
+		modifiedOptions.input = `0x${options.input}`;
 	}
 
-	if (modifiedOptions.data && !isHexStrict(modifiedOptions.data)) {
-		throw new FormatterError('The data field must be HEX encoded data.');
+	if (modifiedOptions.input && !isHexStrict(modifiedOptions.input)) {
+		throw new FormatterError('The input field must be HEX encoded data.');
 	}
 
 	// allow both
