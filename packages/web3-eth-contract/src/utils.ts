@@ -44,7 +44,7 @@ export const getSendTxParams = ({
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	const deploymentCall = options?.data ?? contractOptions.data;
+	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input;
 
 	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
@@ -60,15 +60,15 @@ export const getSendTxParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			data: contractOptions.data,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	if (!txParams.data || abi.type === 'constructor') {
+	if (!txParams.input || abi.type === 'constructor') {
 		txParams = {
 			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
+			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
 	}
 
@@ -96,14 +96,14 @@ export const getEthTxCallParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			data: contractOptions.data,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
 	txParams = {
 		...txParams,
-		data: encodeMethodABI(abi, params, txParams.data ? toHex(txParams.data) : undefined),
+		input: encodeMethodABI(abi, params, txParams.input ? toHex(txParams.input) : undefined),
 	};
 
 	return txParams;
@@ -126,14 +126,14 @@ export const getEstimateGasParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			data: contractOptions.data,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
 	txParams = {
 		...txParams,
-		data: encodeMethodABI(abi, params, txParams.data ? toHex(txParams.data) : undefined),
+		input: encodeMethodABI(abi, params, txParams.input ? toHex(txParams.input) : undefined),
 	};
 
 	return txParams as TransactionWithSenderAPI;
@@ -143,6 +143,7 @@ export const isContractInitOptions = (options: unknown): options is ContractInit
 	typeof options === 'object' &&
 	!isNullish(options) &&
 	[
+		'input',
 		'data',
 		'from',
 		'gas',
@@ -181,15 +182,15 @@ export const getCreateAccessListParams = ({
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
-			data: contractOptions.data,
+			input: contractOptions.input,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
 
-	if (!txParams.data || abi.type === 'constructor') {
+	if (!txParams.input || abi.type === 'constructor') {
 		txParams = {
 			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
+			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
 	}
 

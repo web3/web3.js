@@ -62,7 +62,7 @@ describe('defaultTransactionBuilder', () => {
 		type: '0x0',
 		maxFeePerGas: expectedMaxFeePerGas,
 		maxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
-		data: '0x0',
+		data: '0x',
 		nonce: expectedNonce,
 		chain: 'mainnet',
 		hardfork: 'berlin',
@@ -210,16 +210,28 @@ describe('defaultTransactionBuilder', () => {
 		});
 	});
 
-	describe('should populate data', () => {
+	describe('should populate input', () => {
 		it('should populate with 0x', async () => {
 			const input = { ...transaction };
-			delete input.data;
+			delete input.input;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
 			});
-			expect(result.data).toBe('0x');
+			expect(result.input).toBe('0x');
+		});
+
+		it('should prefix with 0x', async () => {
+			const input = { ...transaction };
+			delete input.data;
+			input.input = '123';
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.input).toBe('0x123');
 		});
 	});
 

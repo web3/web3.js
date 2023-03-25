@@ -81,7 +81,7 @@ export type TransactionOutput = {
 	readonly [key: string]: unknown;
 	readonly to?: HexString; // If its a contract creation tx then no address wil be specified.
 	readonly from?: HexString;
-	readonly data: string;
+	readonly input: string;
 	readonly gas?: Numbers;
 	readonly gasLimit?: string;
 	readonly nonce: Numbers;
@@ -372,7 +372,7 @@ export interface PopulatedUnsignedBaseTransaction {
 	gas?: Numbers;
 	gasPrice: Numbers;
 	type: Numbers;
-	data: Bytes;
+	input: Bytes;
 	nonce: Numbers;
 	networkId: Numbers;
 	chain: ValidChains;

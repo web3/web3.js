@@ -189,24 +189,24 @@ describe('formatters', () => {
 			);
 		});
 
-		it('should replace "data" with "input" if "input" is given and "data" is not', () => {
-			const result = txInputOptionsFormatter({ ...txInput, input: '0xff0011' });
+		it('should replace "input" with "data" if "data" is given and "input" is not', () => {
+			const result = txInputOptionsFormatter({ ...txInput, data: '0xff0011' });
 
-			expect(result).toEqual(expect.objectContaining({ data: '0xff0011' }));
-			expect(Object.keys(result)).not.toContain('input');
+			expect(result).toEqual(expect.objectContaining({ input: '0xff0011' }));
+			expect(Object.keys(result)).not.toContain('data');
 		});
 
-		it('should prefix "data" with "0x" if not already', () => {
-			expect(txInputOptionsFormatter({ ...txInput, data: 'ff0011' })).toEqual(
-				expect.objectContaining({ data: '0xff0011' }),
+		it('should prefix "input" with "0x" if not already', () => {
+			expect(txInputOptionsFormatter({ ...txInput, input: 'ff0011' })).toEqual(
+				expect.objectContaining({ input: '0xff0011' }),
 			);
 		});
 
-		it('should throw error if "data" is not a valid hex string', () => {
+		it('should throw error if "input" is not a valid hex string', () => {
 			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
 
-			expect(() => txInputOptionsFormatter({ ...txInput, data: 'ff0011' })).toThrow(
-				'The data field must be HEX encoded data.',
+			expect(() => txInputOptionsFormatter({ ...txInput, input: 'ff0011' })).toThrow(
+				'The input field must be HEX encoded data.',
 			);
 			expect(utils.isHexStrict).toHaveBeenCalledWith('0xff0011');
 		});

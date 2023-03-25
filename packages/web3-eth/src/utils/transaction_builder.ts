@@ -166,15 +166,15 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 			data: populatedTransaction.data,
 			input: populatedTransaction.input,
 		});
-	} else if (!isNullish(populatedTransaction.input)) {
-		populatedTransaction.data = populatedTransaction.input;
-		delete populatedTransaction.input;
+	} else if (!isNullish(populatedTransaction.data)) {
+		populatedTransaction.input = populatedTransaction.data;
+		delete populatedTransaction.data;
 	}
 
-	if (isNullish(populatedTransaction.data) || populatedTransaction.data === '') {
-		populatedTransaction.data = '0x';
-	} else if (!populatedTransaction.data.startsWith('0x')) {
-		populatedTransaction.data = `0x${populatedTransaction.data}`;
+	if (isNullish(populatedTransaction.input) || populatedTransaction.input === '') {
+		populatedTransaction.input = '0x';
+	} else if (!populatedTransaction.input.startsWith('0x')) {
+		populatedTransaction.input = `0x${populatedTransaction.input}`;
 	}
 
 	if (isNullish(populatedTransaction.common)) {
