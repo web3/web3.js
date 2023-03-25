@@ -48,7 +48,7 @@ describe('watchTransactionForConfirmations', () => {
 		let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 		beforeAll(() => {
-			web3Context = new Web3Context('ws://127.0.0.1:8545');
+			web3Context = new Web3Context('http://127.0.0.1:8545');
 		});
 
 		afterEach(() => jest.resetAllMocks());
