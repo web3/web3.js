@@ -655,7 +655,9 @@ Method.prototype.buildCall = function () {
                 } else if (err && err.data){
                     // workaround embedded error details got from some providers like MetaMask
                     if (typeof err.data === 'object') {
-                        reasonData = err.data.data.substring(10);
+                        // Ganache has no `originalError` sub-object unlike others
+                        var originalError = err.data.originalError ?? err.data;
+                        reasonData = originalError.data.substring(10);
                     }
                     else {
                         reasonData = err.data.substring(10);
