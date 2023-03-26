@@ -653,7 +653,13 @@ Method.prototype.buildCall = function () {
                 if (!err && method.isRevertReasonString(result)){
                     reasonData = result.substring(10);
                 } else if (err && err.data){
-                    reasonData = err.data.substring(10);
+                    // workaround embedded error details got from some providers like MetaMask
+                    if (typeof err.data === 'object') {
+                        reasonData = err.data.data.substring(10);
+                    }
+                    else {
+                        reasonData = err.data.substring(10);
+                    }
                 }
 
                 if (reasonData){
