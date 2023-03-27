@@ -199,6 +199,35 @@ const provider = new WebSocketProvider(
 );
 ```
 
+#### Legacy Event `close` has been deprecated
+
+Following EIP-1193, the `close` event has been deprecated and is superceded by `disconnect`.
+In 1.x, we listen for a `close` event:
+
+```ts
+const provider = new WebSocketProvider(host + port);
+// we would use close to listen to the disconnect function
+provider.on('close', function (err) {
+	console.log('closed');
+	resolve();
+});
+provider.disconnect(1012);
+// would eventually log closed
+```
+
+In 4.x, we listen for a `disconnect` event:
+
+```ts
+const provider = new WebSocketProvider(host + port);
+// we would use disconnect to listen to the disconnect function
+provider.on('disconnect', function (err) {
+	console.log('closed');
+	resolve();
+});
+provider.disconnect(1012);
+// would eventually log 'closed'
+```
+
 #### IpcProvider
 
 The IPC provider is used in node.js dapps when running a local node. And it provide the most secure connection.
@@ -312,4 +341,33 @@ provider.on('error', error => {
 		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
 	}
 });
+```
+
+#### Legacy Event `close` has been deprecated
+
+Following EIP-1193, the `close` event has been deprecated and is superceded by `disconnect`.
+In 1.x, we listen for a `close` event:
+
+```ts
+const provider = new IpcProvider(host + port);
+// we would use close to listen to the disconnect function
+provider.on('close', function (err) {
+	console.log('closed');
+	resolve();
+});
+provider.disconnect(1012);
+// would eventually log closed
+```
+
+In 4.x, we listen for a `disconnect` event:
+
+```ts
+const provider = new IpcProvider(host + port);
+// we would use disconnect to listen to the disconnect function
+provider.on('disconnect', function (err) {
+	console.log('closed');
+	resolve();
+});
+provider.disconnect(1012);
+// would eventually log 'closed'
 ```
