@@ -662,3 +662,7 @@ Released with 1.0.0-beta.37 code base.
   - Updated dependencies (#5885)
 
 ## [Unreleased]
+
+### Fixed
+
+  - Fixed "Uncaught TypeError" calling a contract function that revert using MetaMask (#4454)
