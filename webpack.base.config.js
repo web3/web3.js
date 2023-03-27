@@ -26,7 +26,7 @@ function getWebPackConfig(packagePath, filename, library, entry) {
 		mode: 'production',
 		entry: path.resolve(packagePath, entry),
 		output: {
-			path: path.resolve(packagePath, 'dist'),
+			path: path.resolve(packagePath, 'lib'),
 			filename: filename,
 			library: library,
 			libraryExport: 'default',
