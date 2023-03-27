@@ -213,14 +213,14 @@ export class InvalidTransactionWithSender extends InvalidValueError {
 	public code = ERR_TX_INVALID_SENDER;
 
 	public constructor(value: unknown) {
-		super(value, 'invalid transaction with sender');
+		super(value, 'invalid transaction with invalid sender');
 	}
 }
 export class InvalidTransactionWithReceiver extends InvalidValueError {
 	public code = ERR_TX_INVALID_RECEIVER;
 
 	public constructor(value: unknown) {
-		super(value, 'invalid transaction with receiver');
+		super(value, 'invalid transaction with invalid receiver');
 	}
 }
 export class InvalidTransactionCall extends InvalidValueError {
