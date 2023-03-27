@@ -7,8 +7,7 @@
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
 [![NPM Package][npm-image]][npm-url]
-[![Dependency Status][deps-image]][deps-url]
-[![Dev Dependency Status][deps-dev-image]][deps-dev-url]
+[![Downloads][downloads-image]][npm-url]
 
 This is a sub-package of [web3.js][repo].
 
@@ -54,10 +53,7 @@ yarn add web3-packagetemplate
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: https://docs.web3js.org/
-[repo]: https://github.com/web3/web3.js/tree/4.x/packages/
-[npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
-[npm-url]: https://npmjs.org/packages/web3-package-tempalte
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-package-tempalte
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-package-tempalte
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-package-tempalte
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-package-tempalte
+[repo]: https://github.com/web3/web3.js/tree/4.x/tools/web3-packagetemplate
+[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=tools%2Fweb3-packagetemplate%2Fpackage.json
+[npm-url]: https://npmjs.org/package/web3-packagetemplate
+[downloads-image]: https://img.shields.io/npm/dm/web3-packagetemplate?label=npm%20downloads
