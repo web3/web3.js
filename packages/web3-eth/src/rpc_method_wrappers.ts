@@ -19,7 +19,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable default-param-last */
 import {
 	EthExecutionAPI,
-	TransactionInfo,
 	TransactionWithSenderAPI,
 	SignedTransactionInfoAPI,
 	Web3BaseWalletAccount,
@@ -679,7 +678,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
+		: formatTransaction(response, returnFormat, { transactionSchema: transactionInfoSchema });
 }
 
 /**
@@ -856,7 +855,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
+		: formatTransaction(response, returnFormat, { transactionSchema: transactionInfoSchema });
 }
 
 /**

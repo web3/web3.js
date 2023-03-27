@@ -1292,76 +1292,43 @@ should use 4.0.1-alpha.0 for testing.
 
 ## [Unreleased]
 
-### Added
-
-#### web3
-
--   Added hybrid build (ESM and CJS) of library (#5904)
+### Changed
 
 #### web3-core
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   If a transaction object with a `data` property is passed to `txInputOptionsFormatter`, it will now be replaced with `input` (#5915)
 
 #### web3-errors
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   `gasLimit` is no longer accepted as a parameter for `MissingGasError` and `TransactionGasMismatchError, and is also no longer included in error message (#5915)
 
 #### web3-eth
 
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-eth-abi
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-eth-accounts
-
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   `signTransaction` will now return `gas` instead of `gasLimit` for returned transaction object regardless of what property name the provider uses (#5915)
+-   `formatTransaction` will now replace `data` transaction property with `input` (#5915)
+-   `isTransactionCall` will now check if `value.input` `isHexStrict` if provided (#5915)
 
 #### web3-eth-contract
 
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-eth-ens
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-eth-iban
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-eth-personal
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-net
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-providers-http
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-providers-ipc
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-providers-ws
-
--   Added hybrid build (ESM and CJS) of library (#5904)
-
-#### web3-rpc-methods
-
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   `getSendTxParams` will now return `input` instead of `data` in returned transaction parameters object (#5915)
+-   `Contract` constructor will now thrown new `ContractTransactionDataAndInputError` if both `data` and `input` are passed in `ContractInitOptions` for `Contract` constructor (#5915)
 
 #### web3-types
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   `data` property in `TransactionOutput` was renamed to `input` (#5915)
 
-#### web3-utils
+### Added
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+#### web3-eth-contract
 
-#### web3-validator
+-   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+### Removed
+
+#### web3-eth-abi
+
+-   Removed `formatDecodedObject` function (#5934)
+
+#### web3-eth-contract
+
+-   `data` was removed as a property of `ContractOptions` type (#5915)

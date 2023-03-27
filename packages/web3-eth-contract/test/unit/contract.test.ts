@@ -100,7 +100,7 @@ describe('Contract', () => {
 		});
 
 		it('should deploy contract', async () => {
-			const data = `${GreeterBytecode}0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b4d79204772656574696e67000000000000000000000000000000000000000000`;
+			const input = `${GreeterBytecode}0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b4d79204772656574696e67000000000000000000000000000000000000000000`;
 			const contract = new Contract(GreeterAbi);
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -111,7 +111,7 @@ describe('Contract', () => {
 					expect(tx.gas).toStrictEqual(sendOptions.gas);
 					expect(tx.gasPrice).toBeUndefined();
 					expect(tx.from).toStrictEqual(sendOptions.from);
-					expect(tx.data).toStrictEqual(data); // padded data
+					expect(tx.input).toStrictEqual(input); // padded data
 
 					const newContract = contract.clone();
 					newContract.options.address = deployedAddr;
@@ -171,7 +171,7 @@ describe('Contract', () => {
 					// } as unknown as Web3PromiEvent<any, any>);
 
 					if (
-						_tx.data ===
+						_tx.input ===
 						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
 					) {
 						// eslint-disable-next-line
@@ -196,7 +196,7 @@ describe('Contract', () => {
 			// });
 			const deployedContract = await contract
 				.deploy({
-					data: GreeterBytecode,
+					input: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
@@ -223,14 +223,14 @@ describe('Contract', () => {
 
 			const spyEthCall = jest.spyOn(eth, 'call').mockImplementation((_objInstance, _tx) => {
 				expect(_tx.to).toStrictEqual(deployedAddr);
-				expect(_tx.data).toBe('0xcfae3217');
+				expect(_tx.input).toBe('0xcfae3217');
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return Promise.resolve(encodedArg) as any; // contract class should decode encodedArg
 			});
 
 			const deployedContract = await contract
 				.deploy({
-					data: GreeterBytecode,
+					input: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
@@ -523,7 +523,7 @@ describe('Contract', () => {
 					expect(_block).toBe('latest');
 					expect(_tx.to).toStrictEqual(deployedAddr);
 					expect(_tx.from).toStrictEqual(sendOptions.from);
-					expect(_tx.data).toBe(
+					expect(_tx.input).toBe(
 						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
 					);
 
@@ -589,7 +589,7 @@ describe('Contract', () => {
 				.spyOn(eth, 'createAccessList')
 				.mockImplementation((_objInstance, _tx) => {
 					expect(_tx.to).toStrictEqual(deployedAddr);
-					expect(_tx.data).toBe('0xcfae3217');
+					expect(_tx.input).toBe('0xcfae3217');
 					expect(_tx.from).toBe(fromAddr);
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 					return Promise.resolve(result) as any; // contract class should decode encodedArg

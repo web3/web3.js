@@ -79,7 +79,6 @@ export interface ContractOptions {
 	 * The gas price in wei to use for transactions.
 	 */
 	readonly gasPrice?: Uint;
-	readonly gasLimit?: Uint;
 	/**
 	 * The address transactions should be made from.
 	 */
@@ -87,7 +86,7 @@ export interface ContractOptions {
 	/**
 	 * The byte code of the contract. Used when the contract gets {@link Contract.deploy | deployed}
 	 */
-	readonly data?: Bytes;
+	readonly input?: Bytes;
 	/**
 	 * The {@doclink glossary/json_interface | json interface} object derived from the [ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) of this contract.
 	 *
@@ -138,6 +137,7 @@ export interface ContractInitOptions {
 	 * The maximum gas provided for a transaction (gas limit).
 	 */
 	readonly gas?: Uint;
+	readonly gasLimit?: Uint;
 	/**
 	 * The gas price in wei to use for transactions.
 	 */
@@ -150,7 +150,8 @@ export interface ContractInitOptions {
 	 * The byte code of the contract. Used when the contract gets {@link Contract.deploy | deployed}
 	 */
 	readonly data?: Bytes;
-	readonly gasLimit?: Uint;
+	readonly input?: Bytes;
+
 	readonly provider?: SupportedProviders<EthExecutionAPI> | string;
 	/**
 	 * If `true`, the defaults of the contract instance will be updated automatically based on the changes of the context used to instantiate the contract.
@@ -168,6 +169,7 @@ export interface NonPayableCallOptions {
 	from?: Address;
 	to?: Address;
 	data?: HexString;
+	input?: HexString;
 	/**
 	 * The maximum gas provided for this call “transaction” (gas limit)
 	 */

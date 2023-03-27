@@ -41,6 +41,7 @@ export const ERR_CONTRACT_MISSING_ADDRESS = 307;
 export const ERR_CONTRACT_MISSING_FROM_ADDRESS = 308;
 export const ERR_CONTRACT_INSTANTIATION = 309;
 export const ERR_CONTRACT_EXECUTION_REVERTED = 310;
+export const ERR_CONTRACT_TX_DATA_AND_INPUT = 311;
 
 // Transaction error codes
 export const ERR_TX = 400;

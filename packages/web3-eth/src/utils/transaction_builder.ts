@@ -40,7 +40,7 @@ import {
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId } from 'web3-net';
-import { isNullish, isNumber } from 'web3-validator';
+import { isNullish, isNumber, isHexStrict } from 'web3-validator';
 import {
 	InvalidTransactionWithSender,
 	InvalidTransactionWithReceiver,
@@ -71,7 +71,7 @@ export const getTransactionFromOrToAttr = (
 		if (typeof transaction[attr] === 'string' && isAddress(transaction[attr] as string)) {
 			return transaction[attr] as Address;
 		}
-		if (isNumber(transaction[attr] as Numbers)) {
+		if (!isHexStrict(transaction[attr] as string) && isNumber(transaction[attr] as Numbers)) {
 			if (web3Context.wallet) {
 				const account = web3Context.wallet.get(
 					format({ eth: 'uint' }, transaction[attr] as Numbers, NUMBER_DATA_FORMAT),
@@ -166,15 +166,15 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 			data: populatedTransaction.data,
 			input: populatedTransaction.input,
 		});
-	} else if (!isNullish(populatedTransaction.input)) {
-		populatedTransaction.data = populatedTransaction.input;
-		delete populatedTransaction.input;
+	} else if (!isNullish(populatedTransaction.data)) {
+		populatedTransaction.input = populatedTransaction.data;
+		delete populatedTransaction.data;
 	}
 
-	if (isNullish(populatedTransaction.data) || populatedTransaction.data === '') {
-		populatedTransaction.data = '0x';
-	} else if (!populatedTransaction.data.startsWith('0x')) {
-		populatedTransaction.data = `0x${populatedTransaction.data}`;
+	if (isNullish(populatedTransaction.input) || populatedTransaction.input === '') {
+		populatedTransaction.input = '0x';
+	} else if (!populatedTransaction.input.startsWith('0x')) {
+		populatedTransaction.input = `0x${populatedTransaction.input}`;
 	}
 
 	if (isNullish(populatedTransaction.common)) {

@@ -129,20 +129,7 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._socketConnection?.on('connect', this._onOpenHandler);
 		this._socketConnection?.on('close', this._onClose.bind(this));
 		this._socketConnection?.on('end', this._onCloseHandler);
-		let errorListeners: unknown[] | undefined;
-		try {
-			errorListeners = (this._socketConnection as Socket)?.listeners('error');
-		} catch (error) {
-			// At some cases (at GitHub pipeline) there is an error raised when trying to access the listeners
-			//	However, no need to do take any specific action in this case beside try adding the event listener for `error`
-			this._socketConnection?.on('error', this._onErrorHandler);
-			return;
-		}
-		// The error event listener may be already there because we do not remove it like the others
-		// 	So we add it only if it was not already added
-		if (!errorListeners || errorListeners.length === 0) {
-			this._socketConnection?.on('error', this._onErrorHandler);
-		}
+		this._socketConnection?.on('error', this._onErrorHandler);
 	}
 
 	protected _removeSocketListeners(): void {
@@ -163,6 +150,8 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._clearQueues(event);
 		this._removeSocketListeners();
 		this._onDisconnect(event?.code, event?.reason);
+		// disconnect was successful and can safely remove error listener
+		this._socketConnection?.removeAllListeners('error');
 	}
 
 	protected _onClose(event: CloseEvent): void {
