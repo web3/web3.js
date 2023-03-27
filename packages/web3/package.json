@@ -4,6 +4,7 @@
 	"description": "Ethereum JavaScript API",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
+	"browser": "lib/web3.min.js",
 	"engines": {
 		"node": ">=14.0.0",
 		"npm": ">=6.12.0"
