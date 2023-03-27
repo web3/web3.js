@@ -48,7 +48,14 @@ describe('watchTransactionForConfirmations', () => {
 		let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 		beforeAll(() => {
-			web3Context = new Web3Context('http://127.0.0.1:8545');
+			web3Context = new Web3Context(
+				// dummy provider that does not supports subscription
+				{
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					request: () => {},
+					supportsSubscriptions: () => false,
+				},
+			);
 		});
 
 		afterEach(() => jest.resetAllMocks());
@@ -97,7 +104,14 @@ describe('watchTransactionForConfirmations', () => {
 		let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 		beforeAll(() => {
-			web3Context = new Web3Context('ws://127.0.0.1:8545');
+			web3Context = new Web3Context(
+				// dummy provider that supports subscription
+				{
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					request: () => {},
+					supportsSubscriptions: () => true,
+				},
+			);
 		});
 
 		afterEach(() => jest.resetAllMocks());
@@ -156,7 +170,14 @@ describe('watchTransactionForConfirmations', () => {
 		let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 		beforeAll(() => {
-			web3Context = new Web3Context('http://127.0.0.1:8545');
+			web3Context = new Web3Context(
+				// dummy provider that does not supports subscription
+				{
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					request: () => {},
+					supportsSubscriptions: () => false,
+				},
+			);
 		});
 
 		afterEach(() => jest.resetAllMocks());
