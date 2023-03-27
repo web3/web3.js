@@ -825,7 +825,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	/**
-	 * @param transaction The {@link Transaction}, {@link TransactionWithFromLocalWalletIndex}, {@link TransactionWithToLocalWalletIndex} or {@link TransactionWithFromAndToLocalWalletIndex} to send.
+	 * @param transaction The {@link Transaction}, {@link TransactionWithFromLocalWalletIndex}, {@link TransactionWithToLocalWalletIndex} or {@link TransactionWithFromAndToLocalWalletIndex} to send. __Note:__ In the `to` and `from` fields when hex strings are used, it is assumed they are addresses, for any other form (number, string number, etc.) it is assumed they are wallet indexes.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
 	 * @param options A configuration object used to change the behavior of the `sendTransaction` method.
 	 * @returns If `await`ed or `.then`d (i.e. the promise resolves), the transaction hash is returned.

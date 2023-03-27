@@ -245,3 +245,93 @@ export const numbersAsBigIntTransaction: FormatType<
 	r: '0x4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d',
 	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 };
+
+const dummyTransaction: Transaction = {
+	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+	to: '0x3535353535353535353535353535353535353535',
+	value: '0x174876e800',
+	gas: '0x5208',
+	gasPrice: '0x4a817c800',
+	type: '0x0',
+	data: '0x0',
+	nonce: '0x4',
+	chainId: '0x1',
+	gasLimit: '0x5208',
+};
+export const validGetTransactionFromOrToAttrData: { input: any; output: any }[] = [
+	{
+		input: {
+			role: 'from',
+			transaction: {
+				...dummyTransaction,
+				from: '0x58422b64d0e95ab4e93a9d95b755d9b53545c9ef',
+			},
+		},
+		output: '0x58422b64d0e95ab4e93a9d95b755d9b53545c9ef',
+	},
+];
+export const invalidGetTransactionFromOrToAttrData: { input: any; output: any }[] = [
+	{
+		input: {
+			role: 'from',
+			transaction: {
+				...dummyTransaction,
+				from: '0x58422b64d0e95ab4e93a9d95b755d9b53545c9eff',
+			},
+		},
+		output: 'Invalid value given "0x58422b64d0e95ab4e93a9d95b755d9b53545c9eff". Error: invalid transaction with invalid sender',
+	},
+	{
+		input: {
+			role: 'to',
+			transaction: {
+				...dummyTransaction,
+				to: '0x58422b64d0e95ab4e93a9d95b755d9b53545c9eff',
+			},
+		},
+		output: 'Invalid value given "0x58422b64d0e95ab4e93a9d95b755d9b53545c9eff". Error: invalid transaction with invalid receiver',
+	},
+	{
+		input: {
+			role: 'from',
+			transaction: {
+				...dummyTransaction,
+				from: '0x1',
+			},
+		},
+		output: 'Invalid value given "0x1". Error: invalid transaction with invalid sender',
+	},
+	{
+		input: {
+			role: 'from',
+			transaction: {
+				...dummyTransaction,
+				from: 1,
+			},
+		},
+		output: 'Invalid value given "LocalWalletNotAvailableError". Error: Attempted to index account in local wallet, but no wallet is available.',
+	},
+];
+
+export const invalidGetTransactionFromOrToAttrDataForWallet: { input: any; output: any }[] = [
+	{
+		input: {
+			role: 'from',
+			transaction: {
+				...dummyTransaction,
+				from: 1,
+			},
+		},
+		output: 'Invalid value given "LocalWalletNotAvailableError". Error: Attempted to index account in local wallet, but no wallet is available.',
+	},
+	{
+		input: {
+			role: 'from',
+			transaction: {
+				...dummyTransaction,
+				from: 10,
+			},
+		},
+		output: 'Invalid value given "LocalWalletNotAvailableError". Error: Attempted to index account in local wallet, but no wallet is available.',
+	},
+];
