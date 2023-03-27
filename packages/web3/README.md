@@ -9,7 +9,7 @@
 [![NPM Package][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 
-This is the main package of [web3.js](https://github.com/ChainSafe/web3.js).
+This is the main package of [web3.js](repo).
 
 `web3` contains the ideal setup for a Web3.js package.
 
