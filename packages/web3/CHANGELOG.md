@@ -87,4 +87,5 @@ web3.currentProvider.disconnect();
 
 ### Added
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)

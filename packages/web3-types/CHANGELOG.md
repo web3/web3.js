@@ -87,3 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   `data` property in `TransactionOutput` was renamed to `input` (#5915)
+
+### Added
+
+-   Added source files (#5956)

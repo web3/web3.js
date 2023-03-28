@@ -20,7 +20,7 @@
 	},
 	"files": [
 		"lib/**/*",
-		"dist/**/*"
+		"src/**/*"
 	],
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
