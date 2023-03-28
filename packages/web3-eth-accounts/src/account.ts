@@ -15,7 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionFactory, TypedTransaction } from '@ethereumjs/tx';
+import { TypedTransaction } from '@ethereumjs/tx';
+import defaultImport, * as fullImport from '@ethereumjs/tx';
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
@@ -57,6 +58,8 @@ import {
 import { isBuffer, isNullish, isString, validator } from 'web3-validator';
 import { keyStoreSchema } from './schemas';
 import { SignatureObject, SignResult, SignTransactionResult, Web3Account } from './types';
+
+const { TransactionFactory } = defaultImport || fullImport;
 
 /**
  * Get the private key buffer after the validation
