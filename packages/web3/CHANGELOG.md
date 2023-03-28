@@ -84,3 +84,7 @@ web3.currentProvider.disconnect();
 -   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)
 
 ## [Unreleased]
+
+### Added
+
+-   Added source files (#5956)
