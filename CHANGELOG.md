@@ -1325,6 +1325,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Removed
 
+#### web3-core
+
+-   `getConfig` method from `Web3Config` class, `config` is now public and accessible using `Web3Config.config` (#5950)
+
 #### web3-eth-abi
 
 -   Removed `formatDecodedObject` function (#5934)
