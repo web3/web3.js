@@ -51,8 +51,7 @@ describe('watchTransactionForConfirmations', () => {
 			web3Context = new Web3Context(
 				// dummy provider that does not supports subscription
 				{
-					// eslint-disable-next-line @typescript-eslint/no-empty-function
-					request: () => {},
+					request: jest.fn(),
 					supportsSubscriptions: () => false,
 				},
 			);
@@ -107,8 +106,7 @@ describe('watchTransactionForConfirmations', () => {
 			web3Context = new Web3Context(
 				// dummy provider that supports subscription
 				{
-					// eslint-disable-next-line @typescript-eslint/no-empty-function
-					request: () => {},
+					request: jest.fn(),
 					supportsSubscriptions: () => true,
 				},
 			);
@@ -173,8 +171,7 @@ describe('watchTransactionForConfirmations', () => {
 			web3Context = new Web3Context(
 				// dummy provider that does not supports subscription
 				{
-					// eslint-disable-next-line @typescript-eslint/no-empty-function
-					request: () => {},
+					request: jest.fn(),
 					supportsSubscriptions: () => false,
 				},
 			);
