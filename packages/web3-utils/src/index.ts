@@ -30,3 +30,27 @@ export * from './chunk_response_parser';
 export * from './uuid';
 export * from './web3_eip1193_provider';
 export * from './socket_provider';
+export * from './common/common';
+export * from './tx/transactionFactory';
+export * from './tx/types';
+export * from './tx/baseTransaction';
+export * from './constants';
+export * from './units';
+export * from './account';
+export * from './address';
+export * from './withdrawal';
+export * from './signature';
+export * from './bytes';
+export * as ssz from './ssz';
+export * from './types';
+export * from './asyncEventEmitter';
+export {
+	arrayContainsArray,
+	getBinarySize,
+	getKeys,
+	isHexPrefixed,
+	isHexString,
+	padToEven,
+	stripHexPrefix,
+} from './internal';
+export * from './lock';

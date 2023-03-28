@@ -53,6 +53,7 @@ import {
 	format,
 	hexToBytes,
 	bytesToBuffer,
+	TransactionFactory,
 } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
@@ -64,7 +65,6 @@ import {
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
-import { TransactionFactory } from '@ethereumjs/tx';
 
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {

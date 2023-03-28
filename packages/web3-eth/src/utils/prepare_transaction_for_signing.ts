@@ -15,8 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Common } from '@ethereumjs/common';
-import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
 import {
 	EthExecutionAPI,
 	HexString,
@@ -27,7 +25,14 @@ import {
 	ValidChains,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
-import { FormatType, ETH_DATA_FORMAT, toNumber } from 'web3-utils';
+import {
+	FormatType,
+	ETH_DATA_FORMAT,
+	toNumber,
+	TransactionFactory,
+	TxOptions,
+	Common,
+} from 'web3-utils';
 import { isNullish } from 'web3-validator';
 import { validateTransactionForSigning } from '../validation';
 import { formatTransaction } from './format_transaction';

@@ -1,0 +1,128 @@
+{
+	"name": "sepolia",
+	"chainId": 11155111,
+	"networkId": 11155111,
+	"defaultHardfork": "merge",
+	"consensus": {
+		"type": "pow",
+		"algorithm": "ethash",
+		"ethash": {}
+	},
+	"comment": "PoW test network to replace Ropsten",
+	"url": "https://github.com/ethereum/go-ethereum/pull/23730",
+	"genesis": {
+		"timestamp": "0x6159af19",
+		"gasLimit": 30000000,
+		"difficulty": 131072,
+		"nonce": "0x0000000000000000",
+		"extraData": "0x5365706f6c69612c20417468656e732c204174746963612c2047726565636521"
+	},
+	"hardforks": [
+		{
+			"name": "chainstart",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "homestead",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "tangerineWhistle",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "spuriousDragon",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "byzantium",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "constantinople",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "petersburg",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "istanbul",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "muirGlacier",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "berlin",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "london",
+			"block": 0,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"//_comment": "The forkHash will remain same as mergeForkIdTransition is post merge, terminal block: https://sepolia.etherscan.io/block/1450408",
+			"name": "merge",
+			"ttd": "17000000000000000",
+			"block": 1450409,
+			"forkHash": "0xfe3366e7"
+		},
+		{
+			"name": "mergeForkIdTransition",
+			"block": 1735371,
+			"forkHash": "0xb96cbd13"
+		},
+		{
+			"name": "shanghai",
+			"block": null,
+			"timestamp": "1677557088",
+			"forkHash": "0xf7f9bc08"
+		}
+	],
+	"bootstrapNodes": [
+		{
+			"ip": "18.168.182.86",
+			"port": 30303,
+			"id": "9246d00bc8fd1742e5ad2428b80fc4dc45d786283e05ef6edbd9002cbc335d40998444732fbe921cb88e1d2c73d1b1de53bae6a2237996e9bfe14f871baf7066",
+			"location": "",
+			"comment": "geth"
+		},
+		{
+			"ip": "52.14.151.177",
+			"port": 30303,
+			"id": "ec66ddcf1a974950bd4c782789a7e04f8aa7110a72569b6e65fcd51e937e74eed303b1ea734e4d19cfaec9fbff9b6ee65bf31dcb50ba79acce9dd63a6aca61c7",
+			"location": "",
+			"comment": "besu"
+		},
+		{
+			"ip": "165.22.196.173",
+			"port": 30303,
+			"id": "ce970ad2e9daa9e14593de84a8b49da3d54ccfdf83cbc4fe519cb8b36b5918ed4eab087dedd4a62479b8d50756b492d5f762367c8d20329a7854ec01547568a6",
+			"location": "",
+			"comment": "EF"
+		},
+		{
+			"ip": "65.108.95.67",
+			"port": 30303,
+			"id": "075503b13ed736244896efcde2a992ec0b451357d46cb7a8132c0384721742597fc8f0d91bbb40bb52e7d6e66728d36a1fda09176294e4a30cfac55dcce26bc6",
+			"location": "",
+			"comment": "lodestar"
+		}
+	],
+	"dnsNetworks": [
+		"enrtree://AKA3AM6LPBYEUDMVNU3BSVQJ5AD45Y7YPOHJLEF6W26QOE4VTUDPE@all.sepolia.ethdisco.net"
+	]
+}
