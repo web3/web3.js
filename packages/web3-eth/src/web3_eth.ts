@@ -38,7 +38,7 @@ import {
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
-import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT, isNullish } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
@@ -1568,7 +1568,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			subscription instanceof LogsSubscription &&
 			name === 'logs' &&
 			typeof args === 'object' &&
-			args.fromBlock &&
+			!isNullish(args.fromBlock) &&
 			Number.isFinite(Number(args.fromBlock))
 		) {
 			setImmediate(() => {

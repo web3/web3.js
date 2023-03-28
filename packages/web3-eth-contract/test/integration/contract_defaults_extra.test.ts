@@ -83,7 +83,7 @@ describe('contract defaults (extra)', () => {
 
 		expect(callSpy).toHaveBeenLastCalledWith(
 			expect.objectContaining({
-				_config: expect.objectContaining({ defaultHardfork: hardfork }),
+				config: expect.objectContaining({ defaultHardfork: hardfork }),
 			}),
 			expect.any(Object),
 			undefined,
@@ -114,7 +114,7 @@ describe('contract defaults (extra)', () => {
 
 			expect(callSpy).toHaveBeenCalledWith(
 				expect.objectContaining({
-					_config: expect.objectContaining({ defaultChain }),
+					config: expect.objectContaining({ defaultChain }),
 				}),
 				expect.any(Object),
 				undefined,
@@ -155,7 +155,7 @@ describe('contract defaults (extra)', () => {
 
 			expect(callSpy).toHaveBeenCalledWith(
 				expect.objectContaining({
-					_config: expect.objectContaining({ defaultCommon: common }),
+					config: expect.objectContaining({ defaultCommon: common }),
 				}),
 				expect.any(Object),
 				undefined,
@@ -182,7 +182,7 @@ describe('contract defaults (extra)', () => {
 
 			expect(sendTransactionSpy).toHaveBeenLastCalledWith(
 				expect.objectContaining({
-					_config: expect.objectContaining({ transactionBlockTimeout: 32 }),
+					config: expect.objectContaining({ transactionBlockTimeout: 32 }),
 				}),
 				expect.any(Object),
 				expect.any(Object),

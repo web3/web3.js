@@ -53,7 +53,7 @@ describe('Web3Config', () => {
 	it('should init default config values', () => {
 		const obj = new MyConfigObject();
 
-		expect(obj.getConfig()).toEqual(defaultConfig);
+		expect(obj.config).toEqual(defaultConfig);
 	});
 
 	it.each(Object.keys(defaultConfig))('should expose a public getter for "%s"', key => {

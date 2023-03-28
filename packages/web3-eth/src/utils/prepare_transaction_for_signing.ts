@@ -32,6 +32,8 @@ import { validateTransactionForSigning } from '../validation';
 import { formatTransaction } from './format_transaction';
 import { transactionBuilder } from './transaction_builder';
 
+const { TransactionFactory } = defaultImport || fullImport;
+
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
 ) => ({

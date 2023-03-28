@@ -64,6 +64,8 @@ import type {
 	TypedTransaction,
 } from './types';
 
+const { TransactionFactory } = defaultImport || fullImport;
+
 /**
  * Get the private key buffer after the validation
  */

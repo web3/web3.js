@@ -65,7 +65,6 @@ import {
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
-
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -97,6 +96,8 @@ import { NUMBER_DATA_FORMAT } from './constants';
 import { getTransactionError } from './utils/get_transaction_error';
 // eslint-disable-next-line import/no-cycle
 import { getRevertReason } from './utils/get_revert_reason';
+
+const { TransactionFactory } = defaultImport || fullImport;
 
 /**
  *

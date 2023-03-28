@@ -20,6 +20,8 @@ import { TransactionFactory } from 'web3-eth-accounts';
 import { detectRawTransactionType } from './detect_transaction_type';
 import { formatTransaction } from './format_transaction';
 
+const { TransactionFactory } = defaultImport || fullImport;
+
 /**
  * Decodes an [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded transaction.
  *
