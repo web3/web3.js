@@ -191,7 +191,7 @@ export class Web3Context<
 
 	public getContextObject(): Web3ContextObject<API, RegisteredSubs> {
 		return {
-			config: this.getConfig(),
+			config: this.config,
 			provider: this.provider,
 			requestManager: this.requestManager,
 			subscriptionManager: this.subscriptionManager,
@@ -228,7 +228,7 @@ export class Web3Context<
 	 * Link current context to another context.
 	 */
 	public link<T extends Web3Context>(parentContext: T) {
-		this.setConfig(parentContext.getConfig());
+		this.setConfig(parentContext.config);
 		this._requestManager = parentContext.requestManager;
 		this.provider = parentContext.provider;
 		this._subscriptionManager = parentContext.subscriptionManager;
