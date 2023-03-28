@@ -40,7 +40,7 @@ import {
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId } from 'web3-net';
-import { isNullish, isNumber } from 'web3-validator';
+import { isNullish, isNumber, isHexStrict } from 'web3-validator';
 import {
 	InvalidTransactionWithSender,
 	InvalidTransactionWithReceiver,
@@ -71,7 +71,7 @@ export const getTransactionFromOrToAttr = (
 		if (typeof transaction[attr] === 'string' && isAddress(transaction[attr] as string)) {
 			return transaction[attr] as Address;
 		}
-		if (isNumber(transaction[attr] as Numbers)) {
+		if (!isHexStrict(transaction[attr] as string) && isNumber(transaction[attr] as Numbers)) {
 			if (web3Context.wallet) {
 				const account = web3Context.wallet.get(
 					format({ eth: 'uint' }, transaction[attr] as Numbers, NUMBER_DATA_FORMAT),
