@@ -46,8 +46,6 @@ import {
 import { TransactionFactory } from '../../src/tx/transactionFactory';
 import { TxData } from '../../src/tx/types';
 
-const { TransactionFactory } = defaultImport || fullImport;
-
 describe('accounts', () => {
 	describe('create', () => {
 		describe('valid cases', () => {

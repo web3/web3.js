@@ -45,8 +45,6 @@ import {
 	validPrivateKeyToAddressData,
 } from '../fixtures/account';
 
-const { TransactionFactory } = defaultImport || fullImport;
-
 describe('accounts', () => {
 	describe('create', () => {
 		describe('valid cases', () => {
