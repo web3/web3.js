@@ -1,6 +1,7 @@
 {
 	"name": "web3-utils",
 	"sideEffects": false,
+	"module": "ES2020",
 	"version": "4.0.1-rc.0",
 	"description": "Collection of utility functions used in web3.js.",
 	"main": "lib/index.js",
@@ -54,5 +55,7 @@
 		"web3-errors": "^1.0.0-rc.0",
 		"web3-types": "^1.0.0-rc.0",
 		"web3-validator": "^1.0.0-rc.0"
-	}
+	},
+	"sideEffects": false,
+	"module": "ES2020"
 }

@@ -1,8 +1,14 @@
 {
 	"compilerOptions": {
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"esModuleInterop": false,
+		"allowSyntheticDefaultImports": true,
+		"downlevelIteration": true,
+		"target": "es2020",
+		"lib": ["ES2020", "DOM"],
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
-		"target": "es2016",
 		"module": "commonjs",
 		"declaration": true,
 		"moduleResolution": "node",
@@ -16,7 +22,6 @@
 		"sourceMap": true,
 		"declarationMap": true,
 		"strict": true,
-		"strictNullChecks": true,
-		"esModuleInterop": true
+		"strictNullChecks": true
 	}
 }
