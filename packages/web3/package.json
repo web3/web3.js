@@ -2,7 +2,15 @@
 	"name": "web3",
 	"version": "4.0.1-rc.0",
 	"description": "Ethereum JavaScript API",
-	"main": "lib/index.js",
+	"main": "./lib/commonjs/index.js",
+	"module": "./lib/esm/index.js",
+	"exports": {
+		".": {
+			"types": "./lib/types/index.d.ts",
+			"import": "./lib/esm/index.js",
+			"require": "./lib/commonjs/index.js"
+		}
+	},
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"engines": {
 		"node": ">=14.0.0",
@@ -22,8 +30,11 @@
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
 		"prebuild": "yarn clean",
-		"build": "yarn version:output && tsc --build",
 		"version:output": "[ -z $npm_package_version ] && rm ./src/version.ts || echo \"/* eslint-disable header/header */ export const Web3PkgInfo = { version: '$npm_package_version' };\" > ./src/version.ts",
+		"build": "yarn version:output && yarn build:cjs & yarn build:esm & yarn build:types",
+		"build:cjs": "tsc --build tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > ./lib/commonjs/package.json",
+		"build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./lib/esm/package.json",
+		"build:types": "tsc --build tsconfig.types.json",
 		"build:web": "npx webpack",
 		"build:web:analyze": "npx webpack --config ./webpack.analyze.js",
 		"build:check": "node -e \"require('./lib')\"",

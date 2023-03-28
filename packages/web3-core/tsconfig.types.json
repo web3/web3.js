@@ -1,0 +1,10 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"declarationDir": "./lib/types",
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": true
+	},
+	"include": ["src/**/*"]
+}
