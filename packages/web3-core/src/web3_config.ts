@@ -65,7 +65,7 @@ export abstract class Web3Config
 	extends Web3EventEmitter<{ [Web3ConfigEvent.CONFIG_CHANGE]: ConfigEvent<Web3ConfigOptions> }>
 	implements Web3ConfigOptions
 {
-	private _config: Web3ConfigOptions = {
+	public config: Web3ConfigOptions = {
 		handleRevert: false,
 		defaultAccount: undefined,
 		defaultBlock: 'latest',
@@ -99,13 +99,9 @@ export abstract class Web3Config
 		this.setConfig(options ?? {});
 	}
 
-	public getConfig() {
-		return this._config;
-	}
-
 	public setConfig(options: Partial<Web3ConfigOptions>) {
 		// TODO: Improve and add key check
-		Object.assign(this._config, options);
+		Object.assign(this.config, options);
 	}
 
 	/**
@@ -119,7 +115,7 @@ export abstract class Web3Config
 	 * `Note`: At the moment `handleRevert` is only supported for `sendTransaction` and not for `sendSignedTransaction`
 	 */
 	public get handleRevert() {
-		return this._config.handleRevert;
+		return this.config.handleRevert;
 	}
 
 	/**
@@ -128,10 +124,10 @@ export abstract class Web3Config
 	public set handleRevert(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'handleRevert',
-			oldValue: this._config.handleRevert,
+			oldValue: this.config.handleRevert,
 			newValue: val,
 		});
-		this._config.handleRevert = val;
+		this.config.handleRevert = val;
 	}
 
 	/**
@@ -142,7 +138,7 @@ export abstract class Web3Config
 	 * - myContract.methods.myMethod().send()
 	 */
 	public get defaultAccount() {
-		return this._config.defaultAccount;
+		return this.config.defaultAccount;
 	}
 	/**
 	 * Will set the default account.
@@ -150,10 +146,10 @@ export abstract class Web3Config
 	public set defaultAccount(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultAccount',
-			oldValue: this._config.defaultAccount,
+			oldValue: this.config.defaultAccount,
 			newValue: val,
 		});
-		this._config.defaultAccount = val;
+		this.config.defaultAccount = val;
 	}
 
 	/**
@@ -166,7 +162,7 @@ export abstract class Web3Config
 	 * - myContract.methods.myMethod().call()
 	 */
 	public get defaultBlock() {
-		return this._config.defaultBlock;
+		return this.config.defaultBlock;
 	}
 
 	/**
@@ -182,10 +178,10 @@ export abstract class Web3Config
 	public set defaultBlock(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultBlock',
-			oldValue: this._config.defaultBlock,
+			oldValue: this.config.defaultBlock,
 			newValue: val,
 		});
-		this._config.defaultBlock = val;
+		this.config.defaultBlock = val;
 	}
 
 	/**
@@ -194,7 +190,7 @@ export abstract class Web3Config
 	 * Default is `750` seconds (12.5 minutes).
 	 */
 	public get transactionSendTimeout() {
-		return this._config.transactionSendTimeout;
+		return this.config.transactionSendTimeout;
 	}
 
 	/**
@@ -203,10 +199,10 @@ export abstract class Web3Config
 	public set transactionSendTimeout(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionSendTimeout',
-			oldValue: this._config.transactionSendTimeout,
+			oldValue: this.config.transactionSendTimeout,
 			newValue: val,
 		});
-		this._config.transactionSendTimeout = val;
+		this.config.transactionSendTimeout = val;
 	}
 
 	/**
@@ -214,7 +210,7 @@ export abstract class Web3Config
 	 * Default is `50`.
 	 */
 	public get transactionBlockTimeout() {
-		return this._config.transactionBlockTimeout;
+		return this.config.transactionBlockTimeout;
 	}
 
 	/**
@@ -223,10 +219,10 @@ export abstract class Web3Config
 	public set transactionBlockTimeout(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionBlockTimeout',
-			oldValue: this._config.transactionBlockTimeout,
+			oldValue: this.config.transactionBlockTimeout,
 			newValue: val,
 		});
-		this._config.transactionBlockTimeout = val;
+		this.config.transactionBlockTimeout = val;
 	}
 
 	/**
@@ -234,7 +230,7 @@ export abstract class Web3Config
 	 * Default is `24`.
 	 */
 	public get transactionConfirmationBlocks() {
-		return this._config.transactionConfirmationBlocks;
+		return this.config.transactionConfirmationBlocks;
 	}
 
 	/**
@@ -243,11 +239,11 @@ export abstract class Web3Config
 	public set transactionConfirmationBlocks(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionConfirmationBlocks',
-			oldValue: this._config.transactionConfirmationBlocks,
+			oldValue: this.config.transactionConfirmationBlocks,
 			newValue: val,
 		});
 
-		this._config.transactionConfirmationBlocks = val;
+		this.config.transactionConfirmationBlocks = val;
 	}
 
 	/**
@@ -255,7 +251,7 @@ export abstract class Web3Config
 	 * Default is `1000` ms.
 	 */
 	public get transactionPollingInterval() {
-		return this._config.transactionPollingInterval;
+		return this.config.transactionPollingInterval;
 	}
 
 	/**
@@ -264,11 +260,11 @@ export abstract class Web3Config
 	public set transactionPollingInterval(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionPollingInterval',
-			oldValue: this._config.transactionPollingInterval,
+			oldValue: this.config.transactionPollingInterval,
 			newValue: val,
 		});
 
-		this._config.transactionPollingInterval = val;
+		this.config.transactionPollingInterval = val;
 
 		this.transactionReceiptPollingInterval = val;
 		this.transactionConfirmationPollingInterval = val;
@@ -278,7 +274,7 @@ export abstract class Web3Config
 	 * Default is `750` seconds (12.5 minutes).
 	 */
 	public get transactionPollingTimeout() {
-		return this._config.transactionPollingTimeout;
+		return this.config.transactionPollingTimeout;
 	}
 
 	/**
@@ -287,7 +283,7 @@ export abstract class Web3Config
 	public set transactionPollingTimeout(val) {
 		this._triggerConfigChange('transactionPollingTimeout', val);
 
-		this._config.transactionPollingTimeout = val;
+		this.config.transactionPollingTimeout = val;
 	}
 
 	/**
@@ -295,7 +291,7 @@ export abstract class Web3Config
 	 * Default is `undefined`
 	 */
 	public get transactionReceiptPollingInterval() {
-		return this._config.transactionReceiptPollingInterval;
+		return this.config.transactionReceiptPollingInterval;
 	}
 
 	/**
@@ -304,25 +300,25 @@ export abstract class Web3Config
 	public set transactionReceiptPollingInterval(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionReceiptPollingInterval',
-			oldValue: this._config.transactionReceiptPollingInterval,
+			oldValue: this.config.transactionReceiptPollingInterval,
 			newValue: val,
 		});
 
-		this._config.transactionReceiptPollingInterval = val;
+		this.config.transactionReceiptPollingInterval = val;
 	}
 
 	public get transactionConfirmationPollingInterval() {
-		return this._config.transactionConfirmationPollingInterval;
+		return this.config.transactionConfirmationPollingInterval;
 	}
 
 	public set transactionConfirmationPollingInterval(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionConfirmationPollingInterval',
-			oldValue: this._config.transactionConfirmationPollingInterval,
+			oldValue: this.config.transactionConfirmationPollingInterval,
 			newValue: val,
 		});
 
-		this._config.transactionConfirmationPollingInterval = val;
+		this.config.transactionConfirmationPollingInterval = val;
 	}
 
 	/**
@@ -330,7 +326,7 @@ export abstract class Web3Config
 	 * Default is `10` seconds.
 	 */
 	public get blockHeaderTimeout() {
-		return this._config.blockHeaderTimeout;
+		return this.config.blockHeaderTimeout;
 	}
 
 	/**
@@ -339,7 +335,7 @@ export abstract class Web3Config
 	public set blockHeaderTimeout(val) {
 		this._triggerConfigChange('blockHeaderTimeout', val);
 
-		this._config.blockHeaderTimeout = val;
+		this.config.blockHeaderTimeout = val;
 	}
 
 	/**
@@ -347,7 +343,7 @@ export abstract class Web3Config
 	 * Default is `false` for every feature.
 	 */
 	public get enableExperimentalFeatures() {
-		return this._config.enableExperimentalFeatures;
+		return this.config.enableExperimentalFeatures;
 	}
 
 	/**
@@ -356,44 +352,44 @@ export abstract class Web3Config
 	public set enableExperimentalFeatures(val) {
 		this._triggerConfigChange('enableExperimentalFeatures', val);
 
-		this._config.enableExperimentalFeatures = val;
+		this.config.enableExperimentalFeatures = val;
 	}
 
 	public get maxListenersWarningThreshold() {
-		return this._config.maxListenersWarningThreshold;
+		return this.config.maxListenersWarningThreshold;
 	}
 
 	public set maxListenersWarningThreshold(val) {
 		this._triggerConfigChange('maxListenersWarningThreshold', val);
 		this.setMaxListenerWarningThreshold(val);
-		this._config.maxListenersWarningThreshold = val;
+		this.config.maxListenersWarningThreshold = val;
 	}
 
 	public get defaultNetworkId() {
-		return this._config.defaultNetworkId;
+		return this.config.defaultNetworkId;
 	}
 
 	public set defaultNetworkId(val) {
 		this._triggerConfigChange('defaultNetworkId', val);
 
-		this._config.defaultNetworkId = val;
+		this.config.defaultNetworkId = val;
 	}
 
 	public get defaultChain() {
-		return this._config.defaultChain;
+		return this.config.defaultChain;
 	}
 
 	public set defaultChain(val) {
 		if (
-			!isNullish(this._config.defaultCommon) &&
-			!isNullish(this._config.defaultCommon.baseChain) &&
-			val !== this._config.defaultCommon.baseChain
+			!isNullish(this.config.defaultCommon) &&
+			!isNullish(this.config.defaultCommon.baseChain) &&
+			val !== this.config.defaultCommon.baseChain
 		)
-			throw new ConfigChainMismatchError(this._config.defaultChain, val);
+			throw new ConfigChainMismatchError(this.config.defaultChain, val);
 
 		this._triggerConfigChange('defaultChain', val);
 
-		this._config.defaultChain = val;
+		this.config.defaultChain = val;
 	}
 
 	/**
@@ -416,7 +412,7 @@ export abstract class Web3Config
 	 *
 	 */
 	public get defaultHardfork() {
-		return this._config.defaultHardfork;
+		return this.config.defaultHardfork;
 	}
 
 	/**
@@ -425,14 +421,14 @@ export abstract class Web3Config
 	 */
 	public set defaultHardfork(val) {
 		if (
-			!isNullish(this._config.defaultCommon) &&
-			!isNullish(this._config.defaultCommon.hardfork) &&
-			val !== this._config.defaultCommon.hardfork
+			!isNullish(this.config.defaultCommon) &&
+			!isNullish(this.config.defaultCommon.hardfork) &&
+			val !== this.config.defaultCommon.hardfork
 		)
-			throw new ConfigHardforkMismatchError(this._config.defaultCommon.hardfork, val);
+			throw new ConfigHardforkMismatchError(this.config.defaultCommon.hardfork, val);
 		this._triggerConfigChange('defaultHardfork', val);
 
-		this._config.defaultHardfork = val;
+		this.config.defaultHardfork = val;
 	}
 
 	/**
@@ -449,7 +445,7 @@ export abstract class Web3Config
 	 *
 	 */
 	public get defaultCommon() {
-		return this._config.defaultCommon;
+		return this.config.defaultCommon;
 	}
 
 	/**
@@ -459,59 +455,59 @@ export abstract class Web3Config
 	public set defaultCommon(val: Common | undefined) {
 		// validation check if default hardfork is set and matches defaultCommon hardfork
 		if (
-			!isNullish(this._config.defaultHardfork) &&
+			!isNullish(this.config.defaultHardfork) &&
 			!isNullish(val) &&
 			!isNullish(val.hardfork) &&
-			this._config.defaultHardfork !== val.hardfork
+			this.config.defaultHardfork !== val.hardfork
 		)
-			throw new ConfigHardforkMismatchError(this._config.defaultHardfork, val.hardfork);
+			throw new ConfigHardforkMismatchError(this.config.defaultHardfork, val.hardfork);
 		if (
-			!isNullish(this._config.defaultChain) &&
+			!isNullish(this.config.defaultChain) &&
 			!isNullish(val) &&
 			!isNullish(val.baseChain) &&
-			this._config.defaultChain !== val.baseChain
+			this.config.defaultChain !== val.baseChain
 		)
-			throw new ConfigChainMismatchError(this._config.defaultChain, val.baseChain);
+			throw new ConfigChainMismatchError(this.config.defaultChain, val.baseChain);
 		this._triggerConfigChange('defaultCommon', val);
 
-		this._config.defaultCommon = val;
+		this.config.defaultCommon = val;
 	}
 
 	public get defaultTransactionType() {
-		return this._config.defaultTransactionType;
+		return this.config.defaultTransactionType;
 	}
 
 	public set defaultTransactionType(val) {
 		this._triggerConfigChange('defaultTransactionType', val);
 
-		this._config.defaultTransactionType = val;
+		this.config.defaultTransactionType = val;
 	}
 
 	public get defaultMaxPriorityFeePerGas() {
-		return this._config.defaultMaxPriorityFeePerGas;
+		return this.config.defaultMaxPriorityFeePerGas;
 	}
 
 	public set defaultMaxPriorityFeePerGas(val) {
 		this._triggerConfigChange('defaultMaxPriorityFeePerGas', val);
-		this._config.defaultMaxPriorityFeePerGas = val;
+		this.config.defaultMaxPriorityFeePerGas = val;
 	}
 
 	public get transactionBuilder() {
-		return this._config.transactionBuilder;
+		return this.config.transactionBuilder;
 	}
 
 	public set transactionBuilder(val) {
 		this._triggerConfigChange('transactionBuilder', val);
-		this._config.transactionBuilder = val;
+		this.config.transactionBuilder = val;
 	}
 
 	public get transactionTypeParser() {
-		return this._config.transactionTypeParser;
+		return this.config.transactionTypeParser;
 	}
 
 	public set transactionTypeParser(val) {
 		this._triggerConfigChange('transactionTypeParser', val);
-		this._config.transactionTypeParser = val;
+		this.config.transactionTypeParser = val;
 	}
 
 	private _triggerConfigChange<K extends keyof Web3ConfigOptions>(
@@ -520,7 +516,7 @@ export abstract class Web3Config
 	) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: config,
-			oldValue: this._config[config],
+			oldValue: this.config[config],
 			newValue,
 		} as ConfigEvent<Web3ConfigOptions>);
 	}
