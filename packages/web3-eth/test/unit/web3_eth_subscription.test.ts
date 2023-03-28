@@ -24,7 +24,7 @@ import { sleep } from '../shared_fixtures/utils';
 
 jest.mock('../../src/rpc_method_wrappers');
 
-describe('Web3Eth.subscribe', () => {
+describe('Web3Eth subscribe and clear subscriptions', () => {
 	let web3Eth: Web3Eth;
 
 	it('should return the subscription data provided by the Subscription Manager', async () => {
@@ -73,5 +73,41 @@ describe('Web3Eth.subscribe', () => {
 
 		expect(logs).toStrictEqual(dummyLogs);
 		expect(dummyLogs._processSubscriptionResult).toHaveBeenCalled();
+	});
+
+	it('should be able to clear subscriptions', async () => {
+		const requestManager = { send: jest.fn(), on: jest.fn(), provider: jest.fn() };
+		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
+
+		jest.spyOn(subManager, 'unsubscribe');
+
+		web3Eth = new Web3Eth({
+			provider: {
+				on: jest.fn(),
+			} as unknown as Web3BaseProvider,
+			subscriptionManager: subManager,
+		});
+
+		await web3Eth.clearSubscriptions();
+
+		expect(subManager.unsubscribe).toHaveBeenCalledWith(undefined);
+	});
+
+	it('should be able to clear subscriptions and pass `shouldClearSubscription` when passing `notClearSyncing`', async () => {
+		const requestManager = { send: jest.fn(), on: jest.fn(), provider: jest.fn() };
+		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
+
+		jest.spyOn(subManager, 'unsubscribe');
+
+		web3Eth = new Web3Eth({
+			provider: {
+				on: jest.fn(),
+			} as unknown as Web3BaseProvider,
+			subscriptionManager: subManager,
+		});
+
+		await web3Eth.clearSubscriptions(true);
+
+		expect(subManager.unsubscribe).toHaveBeenCalledWith(Web3Eth['shouldClearSubscription']);
 	});
 });
