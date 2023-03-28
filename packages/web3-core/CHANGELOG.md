@@ -88,3 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   If a transaction object with a `data` property is passed to `txInputOptionsFormatter`, it will now be replaced with `input` (#5915)
+
+### Removed
+
+-   `getConfig` method from `Web3Config` class, `config` is now public and accessible using `Web3Config.config` (#5950)
