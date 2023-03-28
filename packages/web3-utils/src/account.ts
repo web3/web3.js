@@ -213,8 +213,7 @@ export const generateAddress2 = function (from: Buffer, salt: Buffer, initCode: 
 		Buffer.concat([Buffer.from('ff', 'hex'), from, salt, keccak256(initCode)]),
 	);
 
-	// eslint-disable-next-line deprecation/deprecation
-	return toBuffer(address).slice(-20);
+	return toBuffer(address).subarray(-20);
 };
 
 /**

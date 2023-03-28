@@ -133,20 +133,15 @@ export const fromRpcSig = function (sig: string): ECDSASignature {
 	let s: Buffer;
 	let v: bigint;
 	if (buf.length >= 65) {
-		// eslint-disable-next-line deprecation/deprecation
-		r = buf.slice(0, 32);
-		// eslint-disable-next-line deprecation/deprecation
-		s = buf.slice(32, 64);
-		// eslint-disable-next-line deprecation/deprecation
-		v = bufferToBigInt(buf.slice(64));
+		r = buf.subarray(0, 32);
+		s = buf.subarray(32, 64);
+		v = bufferToBigInt(buf.subarray(64));
 	} else if (buf.length === 64) {
 		// Compact Signature Representation (https://eips.ethereum.org/EIPS/eip-2098)
-		// eslint-disable-next-line deprecation/deprecation
-		r = buf.slice(0, 32);
-		// eslint-disable-next-line deprecation/deprecation
-		s = buf.slice(32, 64);
-		// eslint-disable-next-line no-bitwise, deprecation/deprecation
-		v = BigInt(bufferToInt(buf.slice(32, 33)) >> 7);
+		r = buf.subarray(0, 32);
+		s = buf.subarray(32, 64);
+		// eslint-disable-next-line no-bitwise
+		v = BigInt(bufferToInt(buf.subarray(32, 33)) >> 7);
 		// eslint-disable-next-line no-bitwise
 		s[0] &= 0x7f;
 	} else {

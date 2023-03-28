@@ -233,8 +233,7 @@ export class BlobEIP4844Transaction extends BaseTransaction<BlobEIP4844Transacti
 			throw new Error('common instance required to validate versioned hashes');
 		}
 		// Validate network wrapper
-		// eslint-disable-next-line deprecation/deprecation
-		const wrapper = BlobNetworkTransactionWrapper.deserialize(serialized.slice(1));
+		const wrapper = BlobNetworkTransactionWrapper.deserialize(serialized.subarray(1));
 		const decodedTx = wrapper.tx.message;
 		const version = Number(
 			opts.common.paramByEIP('sharding', 'blobCommitmentVersionKzg', 4844),
@@ -291,8 +290,7 @@ export class BlobEIP4844Transaction extends BaseTransaction<BlobEIP4844Transacti
 	 * @returns a BlobEIP4844Transaction
 	 */
 	public static fromSerializedTx(serialized: Buffer, opts?: TxOptions) {
-		// eslint-disable-next-line deprecation/deprecation
-		const decoded = SignedBlobTransactionType.deserialize(serialized.slice(1));
+		const decoded = SignedBlobTransactionType.deserialize(serialized.subarray(1));
 		const tx = decoded.message;
 		const accessList: AccessListBuffer = [];
 		for (const listItem of tx.accessList) {
