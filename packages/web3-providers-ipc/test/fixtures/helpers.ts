@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { exec } from 'child_process';
-import path from 'path';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs';
 
 const IPC_DIR_PATH = path.join(__dirname, '..', '..', '..', '..', 'tmp');
 const IPC_PATH = path.join(IPC_DIR_PATH, 'some.ipc');

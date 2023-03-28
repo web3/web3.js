@@ -35,7 +35,7 @@ export class TransactionFactory {
 	 * @param txOptions - Options to pass on to the constructor of the transaction
 	 */
 	public static fromTxData(
-		txData: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
+		txData: TxData | TypedTransaction,
 		txOptions: TxOptions = {},
 	): TypedTransaction {
 		if (!('type' in txData) || txData.type === undefined) {
