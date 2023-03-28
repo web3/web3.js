@@ -76,3 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   The getter of `SocketConnection` in `IpcProvider` (inherited from `SocketProvider`) returns `net.Socket` (#5891)
 
 ## [Unreleased]
+
+### Added
+
+-   Added hybrid build (ESM and CJS) of library (#5904)

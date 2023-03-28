@@ -19,7 +19,7 @@ import { AbiEventFragment, TransactionReceipt, TransactionInfo } from 'web3-type
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { hexToNumber, hexToString, numberToHex, FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { getStorageSlotNumForLongString } from 'web3-utils/src';
+import { getStorageSlotNumForLongString } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Eth } from '../../src';
 

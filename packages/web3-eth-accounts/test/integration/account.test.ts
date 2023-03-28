@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionFactory } from '@ethereumjs/tx';
+import defaultImport, * as fullImport from '@ethereumjs/tx';
 import { Address } from 'web3-types';
 import { isHexStrict } from 'web3-utils';
 import { Web3ValidatorError } from 'web3-validator';
@@ -45,6 +45,8 @@ import {
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
 } from '../fixtures/account';
+
+const { TransactionFactory } = defaultImport || fullImport;
 
 describe('accounts', () => {
 	describe('create', () => {

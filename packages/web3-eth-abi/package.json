@@ -2,7 +2,15 @@
 	"name": "web3-eth-abi",
 	"version": "4.0.1-rc.0",
 	"description": "Web3 module encode and decode EVM in/output.",
-	"main": "lib/index.js",
+	"main": "./lib/commonjs/index.js",
+	"module": "./lib/esm/index.js",
+	"exports": {
+		".": {
+			"types": "./lib/types/index.d.ts",
+			"import": "./lib/esm/index.js",
+			"require": "./lib/commonjs/index.js"
+		}
+	},
 	"repository": "https://github.com/ethereum/web3.js/tree/4.x/packages/web3-eth-abi",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
@@ -16,7 +24,10 @@
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
 		"prebuild": "yarn clean",
-		"build": "tsc --build",
+		"build": "yarn build:cjs & yarn build:esm & yarn build:types",
+		"build:cjs": "tsc --build tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > ./lib/commonjs/package.json",
+		"build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./lib/esm/package.json",
+		"build:types": "tsc --build tsconfig.types.json",
 		"build:check": "node -e \"require('./lib')\"",
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",

@@ -88,6 +88,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
 ### Changed
 
 -   `gasLimit` is no longer accepted as a parameter for `MissingGasError` and `TransactionGasMismatchError, and is also no longer included in error message (#5915)
