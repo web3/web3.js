@@ -67,7 +67,7 @@ export interface ChainConfig {
 	url?: string;
 	genesis: GenesisBlockConfig;
 	hardforks: HardforkConfig[];
-	bootstrapNodes: BootstrapNodeConfig[];
+	bootstrapNodes?: BootstrapNodeConfig[];
 	dnsNetworks?: string[];
 	consensus: {
 		type: ConsensusType | string;

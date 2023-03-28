@@ -25,6 +25,9 @@ import {
 	UnionType,
 } from '@chainsafe/ssz';
 
+import type { HexString, Numbers } from 'web3-types';
+import type { BufferLike, PrefixedHexString } from 'web3-utils';
+import { Buffer } from 'buffer';
 import {
 	BYTES_PER_FIELD_ELEMENT,
 	FIELD_ELEMENTS_PER_BLOB,
@@ -35,12 +38,8 @@ import {
 	MAX_VERSIONED_HASHES_LIST_SIZE,
 } from './constants';
 
-import type { FeeMarketEIP1559Transaction } from './eip1559Transaction';
-import type { AccessListEIP2930Transaction } from './eip2930Transaction';
-import type { BlobEIP4844Transaction } from './eip4844Transaction';
-import type { Transaction } from './legacyTransaction';
-import type { Common } from '../common';
-import type { AddressLike, BigIntLike, BufferLike, PrefixedHexString } from '../types';
+import type { Common } from '../common/common';
+import { Address } from './address';
 
 const Bytes20 = new ByteVectorType(20);
 const Bytes32 = new ByteVectorType(32);
@@ -141,17 +140,11 @@ export function isAccessList(input: AccessListBuffer | AccessList): input is Acc
 	return !isAccessListBuffer(input); // This is exactly the same method, except the output is negated.
 }
 
-/**
- * Encompassing type for all transaction types.
- *
- * Note that this also includes legacy txs which are
- * referenced as {@link Transaction} for compatibility reasons.
- */
-export type TypedTransaction =
-	| Transaction
-	| AccessListEIP2930Transaction
-	| FeeMarketEIP1559Transaction
-	| BlobEIP4844Transaction;
+export interface ECDSASignature {
+	v: bigint;
+	r: Buffer;
+	s: Buffer;
+}
 
 /**
  * Legacy {@link Transaction} Data
@@ -160,28 +153,28 @@ export type TxData = {
 	/**
 	 * The transaction's nonce.
 	 */
-	nonce?: BigIntLike;
+	nonce?: Numbers | Buffer;
 
 	/**
 	 * The transaction's gas price.
 	 */
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	gasPrice?: BigIntLike | null;
+	gasPrice?: Numbers | Buffer | null;
 
 	/**
 	 * The transaction's gas limit.
 	 */
-	gasLimit?: BigIntLike;
+	gasLimit?: Numbers | Buffer;
 
 	/**
 	 * The transaction's the address is sent to.
 	 */
-	to?: AddressLike;
+	to?: Address | Buffer | HexString;
 
 	/**
 	 * The amount of Ether sent.
 	 */
-	value?: BigIntLike;
+	value?: Numbers | Buffer;
 
 	/**
 	 * This will contain the data of the message or the init of a contract.
@@ -191,23 +184,23 @@ export type TxData = {
 	/**
 	 * EC recovery ID.
 	 */
-	v?: BigIntLike;
+	v?: Numbers | Buffer;
 
 	/**
 	 * EC signature parameter.
 	 */
-	r?: BigIntLike;
+	r?: Numbers | Buffer;
 
 	/**
 	 * EC signature parameter.
 	 */
-	s?: BigIntLike;
+	s?: Numbers | Buffer;
 
 	/**
 	 * The transaction type
 	 */
 
-	type?: BigIntLike;
+	type?: Numbers;
 };
 
 /**
@@ -217,7 +210,7 @@ export interface AccessListEIP2930TxData extends TxData {
 	/**
 	 * The transaction's chain ID
 	 */
-	chainId?: BigIntLike;
+	chainId?: Numbers;
 
 	/**
 	 * The access list which contains the addresses/storage slots which the transaction wishes to access
@@ -239,37 +232,11 @@ export interface FeeMarketEIP1559TxData extends AccessListEIP2930TxData {
 	/**
 	 * The maximum inclusion fee per gas (this fee is given to the miner)
 	 */
-	maxPriorityFeePerGas?: BigIntLike;
+	maxPriorityFeePerGas?: Numbers | Buffer;
 	/**
 	 * The maximum total fee
 	 */
-	maxFeePerGas?: BigIntLike;
-}
-
-/**
- * {@link BlobEIP4844Transaction} data.
- */
-export interface BlobEIP4844TxData extends FeeMarketEIP1559TxData {
-	/**
-	 * The versioned hashes used to validate the blobs attached to a transaction
-	 */
-	versionedHashes?: BufferLike[];
-	/**
-	 * The maximum fee per data gas paid for the transaction
-	 */
-	maxFeePerDataGas?: BigIntLike;
-	/**
-	 * The blobs associated with a transaction
-	 */
-	blobs?: BufferLike[];
-	/**
-	 * The KZG commitments corresponding to the versioned hashes for each blob
-	 */
-	kzgCommitments?: BufferLike[];
-	/**
-	 * The aggregate KZG proof associated with the transaction
-	 */
-	kzgProof?: BufferLike;
+	maxFeePerGas?: Numbers | Buffer;
 }
 
 /**

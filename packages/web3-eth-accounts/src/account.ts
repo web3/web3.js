@@ -52,12 +52,17 @@ import {
 	toChecksumAddress,
 	utf8ToHex,
 	uuidV4,
-	TransactionFactory,
-	TypedTransaction,
 } from 'web3-utils';
 import { isBuffer, isNullish, isString, validator } from 'web3-validator';
+import { TransactionFactory } from './tx/transactionFactory';
 import { keyStoreSchema } from './schemas';
-import { SignatureObject, SignResult, SignTransactionResult, Web3Account } from './types';
+import type {
+	SignatureObject,
+	SignResult,
+	SignTransactionResult,
+	Web3Account,
+	TypedTransaction,
+} from './types';
 
 /**
  * Get the private key buffer after the validation

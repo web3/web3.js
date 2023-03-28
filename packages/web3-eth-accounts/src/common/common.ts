@@ -16,20 +16,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { buf as crc32Buffer } from 'crc-32';
 import { EventEmitter } from 'events';
-import { TypeOutput, toType } from '../types';
-import { intToBuffer } from '../bytes';
-
+import type { Numbers } from 'web3-types';
+import { intToBuffer, TypeOutput, toType } from 'web3-utils';
 import * as goerli from './chains/goerli.json';
 import * as mainnet from './chains/mainnet.json';
-import * as rinkeby from './chains/rinkeby.json';
-import * as ropsten from './chains/ropsten.json';
 import * as sepolia from './chains/sepolia.json';
 import { EIPs } from './eips';
+import type { ConsensusAlgorithm, ConsensusType } from './enums';
 import { Chain, CustomChain, Hardfork } from './enums';
 import { hardforks as HARDFORK_SPECS } from './hardforks';
 import { parseGethGenesis } from './utils';
-
-import type { ConsensusAlgorithm, ConsensusType } from './enums';
 import type {
 	BootstrapNodeConfig,
 	CasperConfig,
@@ -44,7 +40,6 @@ import type {
 	GethConfigOpts,
 	HardforkConfig,
 } from './types';
-import type { BigIntLike } from '../types';
 
 type HardforkSpecKeys = keyof typeof HARDFORK_SPECS;
 type HardforkSpecValues = typeof HARDFORK_SPECS[HardforkSpecKeys];
@@ -328,9 +323,9 @@ export class Common extends EventEmitter {
 	 * @returns The name of the HF
 	 */
 	public getHardforkByBlockNumber(
-		_blockNumber: BigIntLike,
-		_td?: BigIntLike,
-		_timestamp?: BigIntLike,
+		_blockNumber: Numbers,
+		_td?: Numbers,
+		_timestamp?: Numbers,
 	): string {
 		const blockNumber = toType(_blockNumber, TypeOutput.BigInt);
 		const td = toType(_td, TypeOutput.BigInt);
@@ -465,9 +460,9 @@ export class Common extends EventEmitter {
 	 * @returns The name of the HF set
 	 */
 	public setHardforkByBlockNumber(
-		blockNumber: BigIntLike,
-		td?: BigIntLike,
-		timestamp?: BigIntLike,
+		blockNumber: Numbers,
+		td?: Numbers,
+		timestamp?: Numbers,
 	): string {
 		const hardfork = this.getHardforkByBlockNumber(blockNumber, td, timestamp);
 		this.setHardfork(hardfork);
@@ -623,9 +618,9 @@ export class Common extends EventEmitter {
 	public paramByBlock(
 		topic: string,
 		name: string,
-		blockNumber: BigIntLike,
-		td?: BigIntLike,
-		timestamp?: BigIntLike,
+		blockNumber: Numbers,
+		td?: Numbers,
+		timestamp?: Numbers,
 	): bigint {
 		const hardfork = this.getHardforkByBlockNumber(blockNumber, td, timestamp);
 		return this.paramByHardfork(topic, name, hardfork);
@@ -667,7 +662,7 @@ export class Common extends EventEmitter {
 	public hardforkIsActiveOnBlock(
 		// eslint-disable-next-line @typescript-eslint/ban-types
 		_hardfork: string | Hardfork | null,
-		_blockNumber: BigIntLike,
+		_blockNumber: Numbers,
 	): boolean {
 		const blockNumber = toType(_blockNumber, TypeOutput.BigInt);
 		const hardfork = _hardfork ?? this._hardfork;
@@ -683,7 +678,7 @@ export class Common extends EventEmitter {
 	 * @param blockNumber
 	 * @returns True if HF is active on block number
 	 */
-	public activeOnBlock(blockNumber: BigIntLike): boolean {
+	public activeOnBlock(blockNumber: Numbers): boolean {
 		// eslint-disable-next-line no-null/no-null
 		return this.hardforkIsActiveOnBlock(null, blockNumber);
 	}
@@ -799,7 +794,7 @@ export class Common extends EventEmitter {
 	 * @returns True if blockNumber is HF block
 	 * @deprecated
 	 */
-	public isHardforkBlock(_blockNumber: BigIntLike, _hardfork?: string | Hardfork): boolean {
+	public isHardforkBlock(_blockNumber: Numbers, _hardfork?: string | Hardfork): boolean {
 		const blockNumber = toType(_blockNumber, TypeOutput.BigInt);
 		const hardfork = _hardfork ?? this._hardfork;
 		const block = this.hardforkBlock(hardfork);
@@ -920,7 +915,7 @@ export class Common extends EventEmitter {
 	 * @returns True if blockNumber is HF block
 	 * @deprecated
 	 */
-	public isNextHardforkBlock(_blockNumber: BigIntLike, _hardfork?: string | Hardfork): boolean {
+	public isNextHardforkBlock(_blockNumber: Numbers, _hardfork?: string | Hardfork): boolean {
 		const blockNumber = toType(_blockNumber, TypeOutput.BigInt);
 		const hardfork = _hardfork ?? this._hardfork;
 		// eslint-disable-next-line deprecation/deprecation
@@ -1051,7 +1046,7 @@ export class Common extends EventEmitter {
 	 * Returns bootstrap nodes for the current chain
 	 * @returns {Dictionary} Dict with bootstrap nodes
 	 */
-	public bootstrapNodes(): BootstrapNodeConfig[] {
+	public bootstrapNodes(): BootstrapNodeConfig[] | undefined {
 		return this._chainParams.bootstrapNodes;
 	}
 
@@ -1198,7 +1193,7 @@ export class Common extends EventEmitter {
 		for (const [name, id] of Object.entries(Chain)) {
 			names[id] = name.toLowerCase();
 		}
-		const chains = { mainnet, ropsten, rinkeby, goerli, sepolia } as ChainsConfig;
+		const chains = { mainnet, goerli, sepolia } as ChainsConfig;
 		if (customChains) {
 			for (const chain of customChains) {
 				const { name } = chain;

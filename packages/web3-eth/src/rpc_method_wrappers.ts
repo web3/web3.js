@@ -53,8 +53,8 @@ import {
 	format,
 	hexToBytes,
 	bytesToBuffer,
-	TransactionFactory,
 } from 'web3-utils';
+import { TransactionFactory } from 'web3-eth-accounts';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
 	ContractExecutionError,

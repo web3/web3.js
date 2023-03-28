@@ -94,6 +94,7 @@ describe('accounts', () => {
 			const account = create();
 
 			const signedResult = await signTransaction(
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				TransactionFactory.fromTxData(txData),
 				account.privateKey,
 			);
@@ -110,6 +111,7 @@ describe('accounts', () => {
 			const account = create();
 			const txObj = { ...txData, from: account.address };
 			const signedResult = await signTransaction(
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				TransactionFactory.fromTxData(txObj),
 				account.privateKey,
 			);

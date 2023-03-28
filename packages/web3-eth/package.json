@@ -60,7 +60,5 @@
 		"web3-types": "^1.0.0-rc.0",
 		"web3-utils": "^4.0.1-rc.0",
 		"web3-validator": "^1.0.0-rc.0"
-	},
-	"sideEffects": false,
-	"module": "ES2020"
+	}
 }

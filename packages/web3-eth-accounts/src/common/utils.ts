@@ -14,8 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { intToHex } from '../bytes';
-import { isHexPrefixed, stripHexPrefix } from '../internal';
+import { stripHexPrefix, intToHex } from 'web3-utils';
+import { isHexPrefixed } from 'web3-validator';
 
 import { Hardfork } from './enums';
 

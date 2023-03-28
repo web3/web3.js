@@ -14,14 +14,18 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import {
+	bufferToBigInt,
+	bufferToHex,
+	toBuffer,
+	unpadBuffer,
+	MAX_INTEGER,
+	MAX_UINT64,
+	SECP256K1_ORDER_DIV_2,
+} from 'web3-utils';
+import { Numbers } from 'web3-types';
+import { signSync } from 'ethereum-cryptography/secp256k1';
 import { Chain, Common, Hardfork } from '../common';
-import { unpadBuffer, bufferToHex, bufferToBigInt, toBuffer } from '../bytes';
-import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from '../constants';
-import { Address } from '../address';
-import { ecsign } from '../signature';
-import { Capability } from './types';
-import { publicToAddress } from '../account';
-
 import type {
 	AccessListEIP2930TxData,
 	AccessListEIP2930ValuesArray,
@@ -32,7 +36,8 @@ import type {
 	TxOptions,
 	TxValuesArray,
 } from './types';
-import type { BigIntLike } from '../types';
+import { Capability, ECDSASignature } from './types';
+import { Address } from './address';
 
 interface TransactionCache {
 	hash: Buffer | undefined;
@@ -308,7 +313,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * Returns the sender's address
 	 */
 	public getSenderAddress(): Address {
-		return new Address(publicToAddress(this.getSenderPublicKey()));
+		return new Address(Address.publicToAddress(this.getSenderPublicKey()));
 	}
 
 	/**
@@ -346,7 +351,7 @@ export abstract class BaseTransaction<TransactionObject> {
 		}
 
 		const msgHash = this.getMessageToSign(true);
-		const { v, r, s } = ecsign(msgHash, privateKey);
+		const { v, r, s } = this._ecsign(msgHash, privateKey);
 		const tx = this._processSignature(v, r, s);
 
 		// Hack part 2
@@ -376,7 +381,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * @param common - {@link Common} instance from tx options
 	 * @param chainId - Chain ID from tx options (typed txs) or signature (legacy tx)
 	 */
-	protected _getCommon(common?: Common, chainId?: BigIntLike) {
+	protected _getCommon(common?: Common, chainId?: Numbers) {
 		// Chain ID provided
 		if (chainId !== undefined) {
 			const chainIdBigInt = bufferToBigInt(toBuffer(chainId));
@@ -532,5 +537,22 @@ export abstract class BaseTransaction<TransactionObject> {
 		postfix += `signed=${isSigned} hf=${hf}`;
 
 		return postfix;
+	}
+	// eslint-disable-next-line class-methods-use-this
+	private _ecsign(msgHash: Buffer, privateKey: Buffer, chainId?: bigint): ECDSASignature {
+		const [signature, recovery] = signSync(msgHash, privateKey, {
+			recovered: true,
+			der: false,
+		});
+
+		const r = Buffer.from(signature.slice(0, 32));
+		const s = Buffer.from(signature.slice(32, 64));
+
+		const v =
+			chainId === undefined
+				? BigInt(recovery + 27)
+				: BigInt(recovery + 35) + BigInt(chainId) * BigInt(2);
+
+		return { r, s, v };
 	}
 }

@@ -51,7 +51,5 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4"
-	},
-	"sideEffects": false,
-	"module": "ES2020"
+	}
 }

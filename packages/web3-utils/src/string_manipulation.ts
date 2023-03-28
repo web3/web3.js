@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Numbers } from 'web3-types';
 import { NibbleWidthError } from 'web3-errors';
-import { isHexStrict, validator, utils as validatorUtils } from 'web3-validator';
+import { isHexStrict, utils as validatorUtils, validator } from 'web3-validator';
 import { numberToHex, toHex, toNumber } from './converters';
 
 /**

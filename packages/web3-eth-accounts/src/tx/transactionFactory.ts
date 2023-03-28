@@ -14,22 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { JsonRpcProvider } from '@ethersproject/providers';
-import { bufferToBigInt, toBuffer } from '../bytes';
+import { bufferToBigInt, toBuffer } from 'web3-utils';
 import { FeeMarketEIP1559Transaction } from './eip1559Transaction';
 import { AccessListEIP2930Transaction } from './eip2930Transaction';
-import { BlobEIP4844Transaction } from './eip4844Transaction';
-import { normalizeTxParams } from './fromRpc';
 import { Transaction } from './legacyTransaction';
+import type { TypedTransaction } from '../types';
 
-import type {
-	AccessListEIP2930TxData,
-	BlobEIP4844TxData,
-	FeeMarketEIP1559TxData,
-	TxData,
-	TxOptions,
-	TypedTransaction,
-} from './types';
+import type { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData, TxOptions } from './types';
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TransactionFactory {
 	// It is not possible to instantiate a TransactionFactory object.
@@ -43,7 +35,7 @@ export class TransactionFactory {
 	 * @param txOptions - Options to pass on to the constructor of the transaction
 	 */
 	public static fromTxData(
-		txData: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData | BlobEIP4844TxData,
+		txData: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
 		txOptions: TxOptions = {},
 	): TypedTransaction {
 		if (!('type' in txData) || txData.type === undefined) {
@@ -69,10 +61,6 @@ export class TransactionFactory {
 				txOptions,
 			);
 		}
-		if (txType === 5) {
-			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-			return BlobEIP4844Transaction.fromTxData(<BlobEIP4844TxData>txData, txOptions);
-		}
 		throw new Error(`Tx instantiation with type ${txType} not supported`);
 	}
 
@@ -90,8 +78,6 @@ export class TransactionFactory {
 					return AccessListEIP2930Transaction.fromSerializedTx(data, txOptions);
 				case 2:
 					return FeeMarketEIP1559Transaction.fromSerializedTx(data, txOptions);
-				case 5:
-					return BlobEIP4844Transaction.fromSerializedTx(data, txOptions);
 				default:
 					throw new Error(`TypedTransaction with ID ${data[0]} unknown`);
 			}
@@ -118,25 +104,5 @@ export class TransactionFactory {
 			return Transaction.fromValuesArray(data, txOptions);
 		}
 		throw new Error('Cannot decode transaction: unknown type input');
-	}
-
-	/**
-	 *  Method to retrieve a transaction from the provider
-	 * @param provider - An Ethers JsonRPCProvider
-	 * @param txHash - Transaction hash
-	 * @param txOptions - The transaction options
-	 * @returns the transaction specified by `txHash`
-	 */
-	public static async fromEthersProvider(
-		provider: string | JsonRpcProvider,
-		txHash: string,
-		txOptions?: TxOptions,
-	) {
-		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-assignment
-		const prov = typeof provider === 'string' ? new JsonRpcProvider(provider) : provider;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		const txData = await prov.send('eth_getTransactionByHash', [txHash]);
-		const normedTx = normalizeTxParams(txData);
-		return TransactionFactory.fromTxData(normedTx, txOptions);
 	}
 }

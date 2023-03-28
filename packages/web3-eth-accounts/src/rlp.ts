@@ -14,24 +14,52 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { bytesToHex, hexToBytes, numberToHex } from '../converters';
-import { isHexPrefixed, stripHexPrefix } from '../internal';
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Input = string | number | bigint | Uint8Array | Array<Input> | null | undefined;
 
 export type NestedUint8Array = Array<Uint8Array | NestedUint8Array>;
-
-export interface Decoded {
-	data: Uint8Array | NestedUint8Array;
-	remainder: Uint8Array;
-}
-
 // Global symbols in both browsers and Node.js since v11
 // See https://github.com/microsoft/TypeScript/issues/31535
 declare const TextEncoder: any;
 declare const TextDecoder: any;
-
+export interface Decoded {
+	data: Uint8Array | NestedUint8Array;
+	remainder: Uint8Array;
+}
+/** Transform an integer into its hexadecimal value */
+function numberToHex(integer: number | bigint): string {
+	if (integer < 0) {
+		throw new Error('Invalid integer as argument, must be unsigned!');
+	}
+	const hex = integer.toString(16);
+	return hex.length % 2 ? `0${hex}` : hex;
+}
+function parseHexByte(hexByte: string): number {
+	const byte = Number.parseInt(hexByte, 16);
+	if (Number.isNaN(byte)) throw new Error('Invalid byte sequence');
+	return byte;
+}
+function hexToBytes(hex: string): Uint8Array {
+	if (typeof hex !== 'string') {
+		throw new TypeError(`hexToBytes: expected string, got ${typeof hex}`);
+	}
+	if (hex.length % 2) throw new Error('hexToBytes: received invalid unpadded hex');
+	const array = new Uint8Array(hex.length / 2);
+	for (let i = 0; i < array.length; i += 1) {
+		const j = i * 2;
+		array[i] = parseHexByte(hex.slice(j, j + 2));
+	}
+	return array;
+}
+function encodeLength(len: number, offset: number): Uint8Array {
+	if (len < 56) {
+		return Uint8Array.from([len + offset]);
+	}
+	const hexLength = numberToHex(len);
+	const lLength = hexLength.length / 2;
+	const firstByte = numberToHex(offset + 55 + lLength);
+	return Uint8Array.from(hexToBytes(firstByte + hexLength));
+}
 /** Concatenates two Uint8Arrays into one. */
 function concatBytes(...arrays: Uint8Array[]): Uint8Array {
 	if (arrays.length === 1) return arrays[0];
@@ -44,17 +72,8 @@ function concatBytes(...arrays: Uint8Array[]): Uint8Array {
 	}
 	return result;
 }
-function encodeLength(len: number, offset: number): Uint8Array {
-	if (len < 56) {
-		return Uint8Array.from([len + offset]);
-	}
-	const hexLength = numberToHex(len);
-	const lLength = hexLength.length / 2;
-	const firstByte = numberToHex(offset + 55 + lLength);
-	return Uint8Array.from(hexToBytes(firstByte + hexLength));
-}
 function utf8ToBytes(utf: string): Uint8Array {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
 	return new TextEncoder().encode(utf);
 }
 
@@ -63,15 +82,26 @@ function padToEven(a: string): string {
 	return a.length % 2 ? `0${a}` : a;
 }
 
+/** Check if a string is prefixed by 0x */
+function isHexPrefixed(str: string): boolean {
+	return str.length >= 2 && str.startsWith('0') && str[1] === 'x';
+}
+
+/** Removes 0x from a given String */
+function stripHexPrefix(str: string): string {
+	if (typeof str !== 'string') {
+		return str;
+	}
+	return isHexPrefixed(str) ? str.slice(2) : str;
+}
+
 /** Transform anything into a Uint8Array */
 function toBytes(v: Input): Uint8Array {
 	if (v instanceof Uint8Array) {
 		return v;
 	}
 	if (typeof v === 'string') {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		if (isHexPrefixed(v)) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
 			return hexToBytes(padToEven(stripHexPrefix(v)));
 		}
 		return utf8ToBytes(v);
@@ -128,10 +158,15 @@ function safeSlice(input: Uint8Array, start: number, end: number) {
 	return input.slice(start, end);
 }
 
-function parseHexByte(hexByte: string): number {
-	const byte = Number.parseInt(hexByte, 16);
-	if (Number.isNaN(byte)) throw new Error('Invalid byte sequence');
-	return byte;
+const cachedHexes = Array.from({ length: 256 }, (_v, i) => i.toString(16).padStart(2, '0'));
+function bytesToHex(uint8a: Uint8Array): string {
+	// Pre-caching chars with `cachedHexes` speeds this up 6x
+	let hex = '';
+	// eslint-disable-next-line @typescript-eslint/prefer-for-of
+	for (let i = 0; i < uint8a.length; i += 1) {
+		hex += cachedHexes[uint8a[i]];
+	}
+	return hex;
 }
 /**
  * Parse integers. Check if there is no leading zeros
@@ -142,6 +177,35 @@ function decodeLength(v: Uint8Array): number {
 		throw new Error('invalid RLP: extra zeros');
 	}
 	return parseHexByte(bytesToHex(v));
+}
+
+/**
+ * RLP Decoding based on https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/
+ * @param input Will be converted to Uint8Array
+ * @param stream Is the input a stream (false by default)
+ * @returns decoded Array of Uint8Arrays containing the original message
+ * */
+export function decode(input: Input, stream?: false): Uint8Array | NestedUint8Array;
+export function decode(input: Input, stream?: true): Decoded;
+export function decode(input: Input, stream = false): Uint8Array | NestedUint8Array | Decoded {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,  @typescript-eslint/no-unsafe-member-access, no-null/no-null
+	if (typeof input === 'undefined' || input === null || (input as any).length === 0) {
+		return Uint8Array.from([]);
+	}
+
+	// eslint-disable-next-line no-use-before-define
+	const inputBytes = toBytes(input);
+	// eslint-disable-next-line no-use-before-define
+	const decoded = _decode(inputBytes);
+
+	if (stream) {
+		return decoded;
+	}
+	if (decoded.remainder.length !== 0) {
+		throw new Error('invalid RLP: remainder must be zero');
+	}
+
+	return decoded.data;
 }
 
 /** Decode an input with RLP */
@@ -240,33 +304,6 @@ function _decode(input: Uint8Array): Decoded {
 		data: decoded,
 		remainder: input.slice(totalLength),
 	};
-}
-
-/**
- * RLP Decoding based on https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/
- * @param input Will be converted to Uint8Array
- * @param stream Is the input a stream (false by default)
- * @returns decoded Array of Uint8Arrays containing the original message
- * */
-export function decode(input: Input, stream?: false): Uint8Array | NestedUint8Array;
-export function decode(input: Input, stream?: true): Decoded;
-export function decode(input: Input, stream = false): Uint8Array | NestedUint8Array | Decoded {
-	// eslint-disable-next-line no-null/no-null, @typescript-eslint/no-unsafe-member-access
-	if (typeof input === 'undefined' || input === null || (input as any).length === 0) {
-		return Uint8Array.from([]);
-	}
-
-	const inputBytes = toBytes(input);
-	const decoded = _decode(inputBytes);
-
-	if (stream) {
-		return decoded;
-	}
-	if (decoded.remainder.length !== 0) {
-		throw new Error('invalid RLP: remainder must be zero');
-	}
-
-	return decoded.data;
 }
 
 export const utils = {

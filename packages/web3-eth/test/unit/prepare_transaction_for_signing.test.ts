@@ -19,7 +19,11 @@ import { EthExecutionAPI } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
 import { isNullish } from 'web3-validator';
-import { AccessListEIP2930Transaction, FeeMarketEIP1559Transaction, Transaction } from 'web3-utils';
+import {
+	AccessListEIP2930Transaction,
+	FeeMarketEIP1559Transaction,
+	Transaction,
+} from 'web3-eth-accounts';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';

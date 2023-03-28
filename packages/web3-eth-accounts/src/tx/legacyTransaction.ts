@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { RLP } from '../rlp';
 import {
 	arrToBufArr,
 	bigIntToHex,
@@ -24,10 +23,11 @@ import {
 	bufferToBigInt,
 	toBuffer,
 	unpadBuffer,
-	validateNoLeadingZeroes,
-} from '../bytes';
-import { MAX_INTEGER } from '../constants';
-import { ecrecover } from '../signature';
+	MAX_INTEGER,
+	ecrecover,
+} from 'web3-utils';
+import { validateNoLeadingZeroes } from 'web3-validator';
+import { RLP } from '../rlp';
 
 import { BaseTransaction } from './baseTransaction';
 import { checkMaxInitCodeSize } from './util';
@@ -303,6 +303,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 			throw new Error(msg);
 		}
 		const message = this._getMessageToSign();
+		// eslint
 		return Buffer.from(keccak256(RLP.encode(bufArrToArr(message))));
 	}
 

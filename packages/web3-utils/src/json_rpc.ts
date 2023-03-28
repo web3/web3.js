@@ -17,15 +17,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { isNullish } from 'web3-validator';
 import {
-	JsonRpcPayload,
-	JsonRpcResponse,
-	JsonRpcResponseWithResult,
-	JsonRpcResponseWithError,
-	JsonRpcOptionalRequest,
 	JsonRpcBatchRequest,
-	JsonRpcNotification,
-	JsonRpcRequest,
 	JsonRpcBatchResponse,
+	JsonRpcNotification,
+	JsonRpcOptionalRequest,
+	JsonRpcPayload,
+	JsonRpcRequest,
+	JsonRpcResponse,
+	JsonRpcResponseWithError,
+	JsonRpcResponseWithResult,
 	JsonRpcSubscriptionResult,
 } from 'web3-types';
 import { rpcErrorsMap } from 'web3-errors';

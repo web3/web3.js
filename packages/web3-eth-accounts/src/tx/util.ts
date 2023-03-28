@@ -15,12 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { HexString } from 'web3-types';
-import { bufferToHex, setLengthLeft, toBuffer } from '../bytes';
-
+import { bufferToHex, setLengthLeft, toBuffer } from 'web3-utils';
+import type { AccessList, AccessListBuffer, AccessListItem } from './types';
 import { isAccessList } from './types';
 
-import type { BlobEIP4844Transaction } from './eip4844Transaction';
-import type { AccessList, AccessListBuffer, AccessListItem } from './types';
 import type { Common } from '../common';
 
 export function checkMaxInitCodeSize(common: Common, length: number) {
@@ -149,35 +147,3 @@ export class AccessLists {
 		return addresses * Number(accessListAddressCost) + slots * Number(accessListStorageKeyCost);
 	}
 }
-
-export const blobTxToNetworkWrapperDataFormat = (tx: BlobEIP4844Transaction) => {
-	const to = {
-		selector: tx.to !== undefined ? 1 : 0,
-		// eslint-disable-next-line no-null/no-null
-		value: tx.to?.toBuffer() ?? null,
-	};
-	return {
-		message: {
-			chainId: tx.common.chainId(),
-			nonce: tx.nonce,
-			maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
-			maxFeePerGas: tx.maxFeePerGas,
-			gas: tx.gasLimit,
-			to,
-			value: tx.value,
-			data: tx.data,
-			accessList: tx.accessList.map(listItem => ({
-				address: listItem[0],
-				storageKeys: listItem[1],
-			})),
-			blobVersionedHashes: tx.versionedHashes,
-			maxFeePerDataGas: tx.maxFeePerDataGas,
-		},
-		// If transaction is unsigned, signature fields will be initialized to zeroes
-		signature: {
-			r: tx.r ?? BigInt(0),
-			s: tx.s ?? BigInt(0),
-			yParity: tx.v === BigInt(1),
-		},
-	};
-};
