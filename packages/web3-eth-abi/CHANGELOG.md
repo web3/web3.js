@@ -90,6 +90,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
 ### Removed
 
 -   Removed `formatDecodedObject` function (#5934)

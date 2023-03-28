@@ -239,6 +239,7 @@ const transactionHash = receipt.transactionHash;
 
 ### Added
 
+-   Added hybrid build (ESM and CJS) of library (#5904)
 -   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the
     `Contract` class) (#5915)
 

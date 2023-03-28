@@ -1,5 +1,5 @@
 {
-	"extends": "../tsconfig",
+	"extends": "../tsconfig.cjs.json",
 	"compilerOptions": {
 		"declaration": false,
 		"declarationMap": false

@@ -90,3 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Exposes the getter of `SocketConnection` in `SocketProvider` (#5891)
 
 ## [Unreleased]
+
+### Added
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
