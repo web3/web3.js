@@ -28,7 +28,13 @@ import {
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '../rlp';
 import { BaseTransaction } from './baseTransaction';
-import { AccessLists, checkMaxInitCodeSize } from './util';
+import {
+	checkMaxInitCodeSize,
+	getAccessListData,
+	getAccessListJSON,
+	getDataFeeEIP2930,
+	verifyAccessList,
+} from './util';
 
 import type {
 	AccessList,
@@ -183,11 +189,11 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 		this.activeCapabilities = this.activeCapabilities.concat([1559, 2718, 2930]);
 
 		// Populate the access list fields
-		const accessListData = AccessLists.getAccessListData(accessList ?? []);
+		const accessListData = getAccessListData(accessList ?? []);
 		this.accessList = accessListData.accessList;
 		this.AccessListJSON = accessListData.AccessListJSON;
 		// Verify the access list format.
-		AccessLists.verifyAccessList(this.accessList);
+		verifyAccessList(this.accessList);
 
 		this.maxFeePerGas = bufferToBigInt(toBuffer(maxFeePerGas === '' ? '0x' : maxFeePerGas));
 		this.maxPriorityFeePerGas = bufferToBigInt(
@@ -237,7 +243,7 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 		}
 
 		let cost = super.getDataFee();
-		cost += BigInt(AccessLists.getDataFeeEIP2930(this.accessList, this.common));
+		cost += BigInt(getDataFeeEIP2930(this.accessList, this.common));
 
 		if (Object.isFrozen(this)) {
 			this.cache.dataFee = {
@@ -416,7 +422,7 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 	 * Returns an object with the JSON representation of the transaction
 	 */
 	public toJSON(): JsonTx {
-		const accessListJSON = AccessLists.getAccessListJSON(this.accessList);
+		const accessListJSON = getAccessListJSON(this.accessList);
 
 		return {
 			chainId: bigIntToHex(this.chainId),

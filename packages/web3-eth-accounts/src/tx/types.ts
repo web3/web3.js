@@ -14,39 +14,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import {
-	BooleanType,
-	ByteListType,
-	ByteVectorType,
-	ContainerType,
-	ListCompositeType,
-	NoneType,
-	UintBigintType,
-	UnionType,
-} from '@chainsafe/ssz';
-
 import type { HexString, Numbers } from 'web3-types';
 import type { BufferLike, PrefixedHexString } from 'web3-utils';
 import { Buffer } from 'buffer';
-import {
-	BYTES_PER_FIELD_ELEMENT,
-	FIELD_ELEMENTS_PER_BLOB,
-	LIMIT_BLOBS_PER_TX,
-	MAX_ACCESS_LIST_SIZE,
-	MAX_CALLDATA_SIZE,
-	MAX_TX_WRAP_KZG_COMMITMENTS,
-	MAX_VERSIONED_HASHES_LIST_SIZE,
-} from './constants';
 
 import type { Common } from '../common/common';
 import { Address } from './address';
-
-const Bytes20 = new ByteVectorType(20);
-const Bytes32 = new ByteVectorType(32);
-const Bytes48 = new ByteVectorType(48);
-
-const Uint64 = new UintBigintType(8);
-const Uint256 = new UintBigintType(32);
 
 /**
  * Can be used in conjunction with {@link Transaction.supports}
@@ -307,86 +280,3 @@ export interface JsonTx {
 	maxFeePerDataGas?: string;
 	versionedHashes?: string[];
 }
-
-/*
- * Based on https://ethereum.org/en/developers/docs/apis/json-rpc/
- */
-export interface JsonRpcTx {
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	blockHash: string | null; // DATA, 32 Bytes - hash of the block where this transaction was in. null when it's pending.
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	blockNumber: string | null; // QUANTITY - block number where this transaction was in. null when it's pending.
-	from: string; // DATA, 20 Bytes - address of the sender.
-	gas: string; // QUANTITY - gas provided by the sender.
-	gasPrice: string; // QUANTITY - gas price provided by the sender in wei. If EIP-1559 tx, defaults to maxFeePerGas.
-	maxFeePerGas?: string; // QUANTITY - max total fee per gas provided by the sender in wei.
-	maxPriorityFeePerGas?: string; // QUANTITY - max priority fee per gas provided by the sender in wei.
-	type: string; // QUANTITY - EIP-2718 Typed Transaction type
-	accessList?: JsonTx['accessList']; // EIP-2930 access list
-	chainId?: string; // Chain ID that this transaction is valid on.
-	hash: string; // DATA, 32 Bytes - hash of the transaction.
-	input: string; // DATA - the data send along with the transaction.
-	nonce: string; // QUANTITY - the number of transactions made by the sender prior to this one.
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	to: string | null; /// DATA, 20 Bytes - address of the receiver. null when it's a contract creation transaction.
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	transactionIndex: string | null; // QUANTITY - integer of the transactions index position in the block. null when it's pending.
-	value: string; // QUANTITY - value transferred in Wei.
-	v: string; // QUANTITY - ECDSA recovery id
-	r: string; // DATA, 32 Bytes - ECDSA signature r
-	s: string; // DATA, 32 Bytes - ECDSA signature s
-	maxFeePerDataGas?: string; // QUANTITY - max data fee for blob transactions
-	versionedHashes?: string[]; // DATA - array of 32 byte versioned hashes for blob transactions
-}
-
-/** EIP4844 types */
-export const AddressType = Bytes20; // SSZ encoded address
-
-// SSZ encoded container for address and storage keys
-export const AccessTupleType = new ContainerType({
-	address: AddressType,
-	storageKeys: new ListCompositeType(Bytes32, MAX_VERSIONED_HASHES_LIST_SIZE),
-});
-
-// SSZ encoded blob transaction
-export const BlobTransactionType = new ContainerType({
-	chainId: Uint256,
-	nonce: Uint64,
-	maxPriorityFeePerGas: Uint256,
-	maxFeePerGas: Uint256,
-	gas: Uint64,
-	to: new UnionType([new NoneType(), AddressType]),
-	value: Uint256,
-	data: new ByteListType(MAX_CALLDATA_SIZE),
-	accessList: new ListCompositeType(AccessTupleType, MAX_ACCESS_LIST_SIZE),
-	maxFeePerDataGas: Uint256,
-	blobVersionedHashes: new ListCompositeType(Bytes32, MAX_VERSIONED_HASHES_LIST_SIZE),
-});
-
-// SSZ encoded ECDSA Signature
-export const ECDSASignatureType = new ContainerType({
-	yParity: new BooleanType(),
-	r: Uint256,
-	s: Uint256,
-});
-
-// SSZ encoded signed blob transaction
-export const SignedBlobTransactionType = new ContainerType({
-	message: BlobTransactionType,
-	signature: ECDSASignatureType,
-});
-
-// SSZ encoded KZG Commitment/Proof (48 bytes)
-export const KZGCommitmentType = Bytes48;
-export const KZGProofType = KZGCommitmentType;
-
-// SSZ encoded blob network transaction wrapper
-export const BlobNetworkTransactionWrapper = new ContainerType({
-	tx: SignedBlobTransactionType,
-	blobKzgs: new ListCompositeType(KZGCommitmentType, MAX_TX_WRAP_KZG_COMMITMENTS),
-	blobs: new ListCompositeType(
-		new ByteVectorType(FIELD_ELEMENTS_PER_BLOB * BYTES_PER_FIELD_ELEMENT),
-		LIMIT_BLOBS_PER_TX,
-	),
-	kzgAggregatedProof: KZGProofType,
-});

@@ -29,7 +29,13 @@ import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '../rlp';
 
 import { BaseTransaction } from './baseTransaction';
-import { AccessLists, checkMaxInitCodeSize } from './util';
+import {
+	getAccessListData,
+	checkMaxInitCodeSize,
+	verifyAccessList,
+	getAccessListJSON,
+	getDataFeeEIP2930,
+} from './util';
 
 import type {
 	AccessList,
@@ -164,11 +170,11 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 		this.activeCapabilities = this.activeCapabilities.concat([2718, 2930]);
 
 		// Populate the access list fields
-		const accessListData = AccessLists.getAccessListData(accessList ?? []);
+		const accessListData = getAccessListData(accessList ?? []);
 		this.accessList = accessListData.accessList;
 		this.AccessListJSON = accessListData.AccessListJSON;
 		// Verify the access list format.
-		AccessLists.verifyAccessList(this.accessList);
+		verifyAccessList(this.accessList);
 
 		this.gasPrice = bufferToBigInt(toBuffer(gasPrice === '' ? '0x' : gasPrice));
 
@@ -204,7 +210,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 		}
 
 		let cost = super.getDataFee();
-		cost += BigInt(AccessLists.getDataFeeEIP2930(this.accessList, this.common));
+		cost += BigInt(getDataFeeEIP2930(this.accessList, this.common));
 
 		if (Object.isFrozen(this)) {
 			this.cache.dataFee = {
@@ -378,7 +384,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	 * Returns an object with the JSON representation of the transaction
 	 */
 	public toJSON(): JsonTx {
-		const accessListJSON = AccessLists.getAccessListJSON(this.accessList);
+		const accessListJSON = getAccessListJSON(this.accessList);
 
 		return {
 			chainId: bigIntToHex(this.chainId),
