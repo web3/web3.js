@@ -17,6 +17,7 @@
 		"npm": ">=6.12.0"
 	},
 	"author": "ChainSafe Systems",
+	"browser": "./dist/web3.min.js",
 	"license": "LGPL-3.0",
 	"keywords": [
 		"Ethereum",

@@ -11,6 +11,7 @@
 			"require": "./lib/commonjs/index.js"
 		}
 	},
+	"browser": "./dist/web3.min.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
