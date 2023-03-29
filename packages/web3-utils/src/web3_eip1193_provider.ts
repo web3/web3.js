@@ -64,7 +64,7 @@ export abstract class Eip1193Provider<
 				.then(chainId => {
 					if (chainId !== this._chainId) {
 						this._chainId = chainId;
-						this._eventEmitter.emit('chainChanged', undefined, {
+						this._eventEmitter.emit('chainChanged', {
 							chainId: this._chainId,
 						});
 					}
@@ -93,7 +93,7 @@ export abstract class Eip1193Provider<
 				}),
 		])
 			.then(() =>
-				this._eventEmitter.emit('connect', undefined, {
+				this._eventEmitter.emit('connect', {
 					chainId: this._chainId,
 				}),
 			)
