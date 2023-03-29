@@ -24,13 +24,14 @@ import {
 	JsonRpcRequest,
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
-	JsonRpcResult,
+	// JsonRpcResult,
 	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
 	Web3APISpec,
-	Web3ProviderEventCallback,
+	// Web3ProviderEventCallback,
+	Web3Eip1193ProviderEventCallback,
 	Web3ProviderStatus,
 } from 'web3-types';
 import {
@@ -199,7 +200,7 @@ export abstract class SocketProvider<
 	 * @param type - The event type to listen for
 	 * @param callback - The callback to be invoked when the event is emitted
 	 */
-	public on<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
+	public on<T>(type: EventType, callback: Web3Eip1193ProviderEventCallback<T>): void {
 		this._eventEmitter.on(type, callback);
 	}
 
@@ -208,7 +209,7 @@ export abstract class SocketProvider<
 	 * @param type  - The event type to listen for
 	 * @param callback - The callback to be invoked when the event is emitted
 	 */
-	public once<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
+	public once<T>(type: EventType, callback: Web3Eip1193ProviderEventCallback<T>): void {
 		this._eventEmitter.once(type, callback);
 	}
 
@@ -217,7 +218,7 @@ export abstract class SocketProvider<
 	 * @param type - The event type to remove the listener for
 	 * @param callback - The callback to be executed
 	 */
-	public removeListener(type: EventType, callback: Web3ProviderEventCallback): void {
+	public removeListener(type: EventType, callback: Web3Eip1193ProviderEventCallback<any>): void {
 		this._eventEmitter.removeListener(type, callback);
 	}
 
@@ -386,7 +387,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
 				(response as JsonRpcNotification).method.endsWith('_subscription')
 			) {
-				this._eventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', response);
 				return;
 			}
 
@@ -405,7 +406,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithResult(response) ||
 				jsonRpc.isResponseWithError(response)
 			) {
-				this._eventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', response);
 				requestItem.deferredPromise.resolve(response);
 			}
 
