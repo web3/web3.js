@@ -19,7 +19,8 @@
 		"npm": ">=6.12.0"
 	},
 	"files": [
-		"lib/**/*"
+		"lib/**/*",
+		"src/**/*"
 	],
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
