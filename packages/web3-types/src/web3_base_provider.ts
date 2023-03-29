@@ -34,6 +34,7 @@ import {
 	Web3APIPayload,
 	ProviderConnectInfo,
 	ProviderRpcError,
+	ProviderMessage,
 } from './web3_api_types';
 import { Web3EthExecutionAPI } from './apis/web3_eth_execution_api';
 import { Web3DeferredPromiseInterface } from './web3_deferred_promise_type';
@@ -56,6 +57,8 @@ export type Web3ProviderEventCallback<T = JsonRpcResult> = (
 	error: Error | ProviderRpcError | undefined,
 	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
 ) => void;
+
+export type Web3Eip1193ProviderEventCallback<T> = (data: T) => void;
 
 export type Web3ProviderRequestCallback<ResultType = unknown> = (
 	// Used "null" value to match the legacy version
@@ -157,7 +160,11 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 
 	public abstract on(
 		type: 'disconnect',
-		callback: Web3ProviderEventCallback<ProviderRpcError>,
+		callback: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public abstract on(
+		type: 'message' | string,
+		callback: Web3ProviderEventCallback<ProviderMessage>,
 	): void;
 	public abstract on<T = JsonRpcResult>(
 		type: 'message' | string,
@@ -165,20 +172,20 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	): void;
 	public abstract on(
 		type: 'connect' | 'chainChanged',
-		callback: Web3ProviderEventCallback<ProviderConnectInfo>,
+		callback: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
 	): void;
 	public abstract on(
 		type: 'accountsChanged',
-		callback: Web3ProviderEventCallback<{
+		callback: Web3Eip1193ProviderEventCallback<{
 			readonly accounts: string[];
 		}>,
 	): void;
-	public abstract removeListener(type: string, callback: Web3ProviderEventCallback): void;
-
-	public abstract once?<T = JsonRpcResult>(
+	public abstract removeListener(
 		type: string,
-		callback: Web3ProviderEventCallback<T>,
+		callback: Web3Eip1193ProviderEventCallback<unknown>,
 	): void;
+
+	public abstract once?<T>(type: string, callback: Web3Eip1193ProviderEventCallback<T>): void;
 	public abstract removeAllListeners?(type: string): void;
 	public abstract connect(): void;
 	public abstract disconnect(code?: number, data?: string): void;
