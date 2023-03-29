@@ -14,9 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { assertIsBuffer, zeros } from 'web3-utils';
 import { Point } from 'ethereum-cryptography/secp256k1';
 import { keccak256 } from 'ethereum-cryptography/keccak';
+import { assertIsBuffer, zeros } from '../common/utils';
 
 export class Address {
 	public readonly buf: Buffer;

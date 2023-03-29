@@ -17,7 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { buf as crc32Buffer } from 'crc-32';
 import { EventEmitter } from 'events';
 import type { Numbers } from 'web3-types';
-import { intToBuffer, TypeOutput, toType } from 'web3-utils';
+import { TypeOutput } from './types';
+import { intToBuffer, toType, parseGethGenesis } from './utils';
 import goerli from './chains/goerli.json';
 import mainnet from './chains/mainnet.json';
 import sepolia from './chains/sepolia.json';
@@ -25,7 +26,6 @@ import { EIPs } from './eips';
 import type { ConsensusAlgorithm, ConsensusType } from './enums';
 import { Chain, CustomChain, Hardfork } from './enums';
 import { hardforks as HARDFORK_SPECS } from './hardforks';
-import { parseGethGenesis } from './utils';
 import type {
 	BootstrapNodeConfig,
 	CasperConfig,

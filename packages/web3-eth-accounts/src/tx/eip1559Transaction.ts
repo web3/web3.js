@@ -15,16 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import {
-	arrToBufArr,
-	bigIntToHex,
-	bigIntToUnpaddedBuffer,
-	bufArrToArr,
-	bufferToBigInt,
-	toBuffer,
-	MAX_INTEGER,
-	ecrecover,
-} from 'web3-utils';
+import { MAX_INTEGER } from 'web3-utils';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '../rlp';
 import { BaseTransaction } from './baseTransaction';
@@ -34,8 +25,16 @@ import {
 	getAccessListJSON,
 	getDataFeeEIP2930,
 	verifyAccessList,
-} from './util';
-
+} from './utils';
+import {
+	arrToBufArr,
+	bigIntToHex,
+	bigIntToUnpaddedBuffer,
+	bufArrToArr,
+	bufferToBigInt,
+	toBuffer,
+	ecrecover,
+} from '../common/utils';
 import type {
 	AccessList,
 	AccessListBuffer,

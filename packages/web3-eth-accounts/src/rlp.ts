@@ -15,12 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexPrefixed } from 'web3-validator';
-import { stripHexPrefix } from 'web3-utils';
+import { stripHexPrefix } from './common/utils';
+import { NestedUint8Array } from './common/types';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Input = string | number | bigint | Uint8Array | Array<Input> | null | undefined;
 
-export type NestedUint8Array = Array<Uint8Array | NestedUint8Array>;
 // Global symbols in both browsers and Node.js since v11
 // See https://github.com/microsoft/TypeScript/issues/31535
 declare const TextEncoder: any;

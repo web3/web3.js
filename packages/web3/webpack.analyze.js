@@ -31,10 +31,10 @@ module.exports = {
 	plugins: [
 		...config.plugins,
 		new BundleAnalyzerPlugin({
-			generateStatsFile: true,
-			statsFilename: process.env.STATS_FILE ?? 'stats.json',
-			defaultSizes: process.env.ANALYZE_SERVER ? 'stat' : 'gzip',
-			analyzerMode: process.env.ANALYZE_SERVER ? 'server' : 'json',
+			// generateStatsFile: true,
+			// statsFilename: process.env.STATS_FILE ?? 'stats.json',
+			// defaultSizes: process.env.ANALYZE_SERVER ? 'stat' : 'gzip',
+			// analyzerMode: process.env.ANALYZE_SERVER ? 'server' : 'json',
 		}),
 	],
 };

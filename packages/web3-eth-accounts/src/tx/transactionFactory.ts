@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { bufferToBigInt, toBuffer } from 'web3-utils';
+import { bufferToBigInt, toBuffer } from '../common/utils';
 import { FeeMarketEIP1559Transaction } from './eip1559Transaction';
 import { AccessListEIP2930Transaction } from './eip2930Transaction';
 import { Transaction } from './legacyTransaction';

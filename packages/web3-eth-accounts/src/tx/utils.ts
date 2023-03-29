@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { HexString } from 'web3-types';
-import { bufferToHex, setLengthLeft, toBuffer } from 'web3-utils';
+import { bufferToHex, setLengthLeft, toBuffer } from '../common/utils';
 import type { AccessList, AccessListBuffer, AccessListItem } from './types';
 import { isAccessList } from './types';
 
-import type { Common } from '../common';
+import type { Common } from '../common/common';
 
 export const checkMaxInitCodeSize = (common: Common, length: number) => {
 	const maxInitCodeSize = common.param('vm', 'maxInitCodeSize');

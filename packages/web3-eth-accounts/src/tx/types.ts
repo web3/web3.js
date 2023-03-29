@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import type { HexString, Numbers } from 'web3-types';
-import type { BufferLike, PrefixedHexString } from 'web3-utils';
 import { Buffer } from 'buffer';
 
 import type { Common } from '../common/common';
+import type { BufferLike, PrefixedHexString } from '../common/types';
 import { Address } from './address';
 
 /**

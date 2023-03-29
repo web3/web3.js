@@ -31,4 +31,3 @@ export * from './uuid';
 export * from './web3_eip1193_provider';
 export * from './socket_provider';
 export * from './constants';
-export * from './types';
