@@ -160,11 +160,11 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 
 	public abstract on(
 		type: 'disconnect',
-		callback: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
 	): void;
 	public abstract on(
 		type: 'message' | string,
-		callback: Web3ProviderEventCallback<ProviderMessage>,
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage>,
 	): void;
 	public abstract on<T = JsonRpcResult>(
 		type: 'message' | string,
@@ -172,17 +172,15 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	): void;
 	public abstract on(
 		type: 'connect' | 'chainChanged',
-		callback: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
 	): void;
 	public abstract on(
 		type: 'accountsChanged',
-		callback: Web3Eip1193ProviderEventCallback<{
-			readonly accounts: string[];
-		}>,
+		listener: Web3Eip1193ProviderEventCallback<string[]>,
 	): void;
 	public abstract removeListener(
 		type: string,
-		callback: Web3Eip1193ProviderEventCallback<unknown>,
+		listener: Web3Eip1193ProviderEventCallback<unknown>,
 	): void;
 
 	public abstract once?<T>(type: string, callback: Web3Eip1193ProviderEventCallback<T>): void;
