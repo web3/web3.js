@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { CloseEvent } from 'ws';
+import { ProviderRpcError } from 'web3-types/src/web3_api_types';
 import WebSocketProvider from '../../src';
 
 import {
@@ -125,7 +126,10 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			const errorEvent = new Promise(resolve => {
 				web3Provider.on('error', error => {
 					if (
-						error?.message?.startsWith('Maximum number of reconnect attempts reached')
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+						(error as ProviderRpcError)?.message?.startsWith(
+							'Maximum number of reconnect attempts reached',
+						)
 					) {
 						resolve(error);
 					}

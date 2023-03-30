@@ -105,7 +105,7 @@ describe('WebSocketProvider', () => {
 
 				await wsProvider.request(jsonRpcPayload);
 
-				expect(messageSpy).toHaveBeenCalledWith(undefined, jsonRpcResponse);
+				expect(messageSpy).toHaveBeenCalledWith(jsonRpcResponse);
 			});
 		});
 	});

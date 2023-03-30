@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ProviderRpcError } from 'web3-types/src/web3_api_types';
 import ganache from 'ganache';
 import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse } from 'web3-types';
 import { InvalidResponseError, ConnectionNotOpenError } from 'web3-errors';
@@ -165,7 +166,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			const mockCallBack = jest.fn();
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', err => {
-					if (err?.message.startsWith('connect ECONNREFUSED')) {
+					if ((err as ProviderRpcError)?.message.startsWith('connect ECONNREFUSED')) {
 						mockCallBack();
 						resolve(true);
 					}
@@ -316,7 +317,10 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			await changeCloseCode(webSocketProvider);
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', error => {
-					if (error?.message === `Maximum number of reconnect attempts reached! (${1})`) {
+					if (
+						(error as ProviderRpcError)?.message ===
+						`Maximum number of reconnect attempts reached! (${1})`
+					) {
 						mockCallBack();
 					}
 					resolve(true);
