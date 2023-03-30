@@ -355,6 +355,8 @@ export class Web3RequestManager<
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
 			// check if its an rpc error
+			// eslint-disable-next-line no-console
+			console.log('Inside is response with error', response);
 			if (
 				this.useRpcCallSpecification &&
 				isResponseRpcError(response as JsonRpcResponseWithError)
