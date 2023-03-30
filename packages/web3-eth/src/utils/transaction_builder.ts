@@ -15,14 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	DEFAULT_RETURN_FORMAT,
-	ETH_DATA_FORMAT,
-	FormatType,
-	format,
-	DataFormat,
-	isAddress,
-} from 'web3-utils';
+import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FormatType, format, DataFormat } from 'web3-utils';
 import {
 	EthExecutionAPI,
 	Address,
@@ -40,7 +33,7 @@ import {
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId } from 'web3-net';
-import { isNullish, isNumber, isHexStrict } from 'web3-validator';
+import { isNullish, isNumber, isHexStrict, isAddress } from 'web3-validator';
 import {
 	InvalidTransactionWithSender,
 	InvalidTransactionWithReceiver,
