@@ -85,13 +85,7 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 			const messagePromise = new Promise((resolve: Resolve) => {
 				webSocketProvider.on(
 					'message',
-					(
-						error: Error | undefined,
-						result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
-					) => {
-						if (error) {
-							throw new Error(error.message);
-						}
+					(result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>) => {
 						if (result?.id !== jsonRpcPayload.id) {
 							return;
 						}
