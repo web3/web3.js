@@ -42,7 +42,8 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"@ethersproject/abi": "^5.6.4",
+		"@ethersproject/abi": "^5.7.0",
+		"@ethersproject/bignumber": "^5.7.0",
 		"web3-errors": "^1.0.0-rc.0",
 		"web3-types": "^1.0.0-rc.0",
 		"web3-utils": "^4.0.1-rc.0"

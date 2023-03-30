@@ -16,12 +16,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiCoder } from '@ethersproject/abi';
+import type { BigNumber } from '@ethersproject/bignumber';
 
 const ethersAbiCoder = new AbiCoder((_, value) => {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-	if (['BigNumber', 'BN'].includes(value?.constructor?.name)) {
-		// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-unsafe-argument
-		return BigInt(value);
+	if ((value as BigNumber)?._isBigNumber) {
+		return (value as BigNumber).toBigInt();
 	}
 
 	// Because of tye type def from @ethersproject/abi
