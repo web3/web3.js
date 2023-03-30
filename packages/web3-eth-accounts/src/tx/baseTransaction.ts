@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from 'web3-utils';
 import { Numbers } from 'web3-types';
 import { signSync } from 'ethereum-cryptography/secp256k1';
+import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from './constants';
 import {
 	Chain,
 	Common,

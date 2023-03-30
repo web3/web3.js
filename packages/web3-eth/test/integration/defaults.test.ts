@@ -689,8 +689,7 @@ describe('defaults', () => {
 			});
 			expect(res.chain).toBe('rinkeby');
 		});
-		// @todo: investigate why test fails
-		it.skip('defaultHardfork', async () => {
+		it('defaultHardfork', async () => {
 			// default
 			expect(web3Eth.defaultHardfork).toBe('london');
 

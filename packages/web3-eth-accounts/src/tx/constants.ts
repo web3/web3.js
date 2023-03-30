@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,19 +14,19 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { CURVE } from 'ethereum-cryptography/secp256k1';
 
-export * from './converters';
-export * from './validation';
-export * from './formatter';
-export * from './hash';
-export * from './random';
-export * from './string_manipulation';
-export * from './objects';
-export * from './promise_helpers';
-export * from './json_rpc';
-export * as jsonRpc from './json_rpc';
-export * from './web3_deferred_promise';
-export * from './chunk_response_parser';
-export * from './uuid';
-export * from './web3_eip1193_provider';
-export * from './socket_provider';
+/**
+ * 2^64-1
+ */
+export const MAX_UINT64 = BigInt('0xffffffffffffffff');
+
+/**
+ * The max integer that the evm can handle (2^256-1)
+ */
+export const MAX_INTEGER = BigInt(
+	'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+);
+
+export const SECP256K1_ORDER = CURVE.n;
+export const SECP256K1_ORDER_DIV_2 = CURVE.n / BigInt(2);

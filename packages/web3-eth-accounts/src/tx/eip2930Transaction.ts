@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { MAX_INTEGER } from 'web3-utils';
 import { validateNoLeadingZeroes } from 'web3-validator';
+import { MAX_INTEGER } from './constants';
 import {
 	getAccessListData,
 	checkMaxInitCodeSize,
