@@ -18,8 +18,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiEventFragment, TransactionReceipt, TransactionInfo } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
-import { hexToNumber, hexToString, numberToHex, FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { getStorageSlotNumForLongString } from 'web3-utils';
+import {
+	hexToNumber,
+	hexToString,
+	numberToHex,
+	FMT_BYTES,
+	FMT_NUMBER,
+	getStorageSlotNumForLongString,
+} from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Eth } from '../../src';
 
