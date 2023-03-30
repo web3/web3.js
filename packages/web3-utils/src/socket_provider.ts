@@ -24,13 +24,12 @@ import {
 	JsonRpcRequest,
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
-	// JsonRpcResult,
+	JsonRpcResult,
 	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
 	Web3APISpec,
-	// Web3ProviderEventCallback,
 	Web3Eip1193ProviderEventCallback,
 	Web3ProviderStatus,
 } from 'web3-types';
@@ -387,7 +386,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
 				(response as JsonRpcNotification).method.endsWith('_subscription')
 			) {
-				this._eventEmitter.emit('message', response);
+				this._eventEmitter.emit('message', undefined, response);
 				return;
 			}
 
