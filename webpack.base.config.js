@@ -54,10 +54,6 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 				net: false,
 				path: false,
 				os: false,
-				util: require.resolve('util'),
-				http: require.resolve('http-browserify'),
-				https: require.resolve('https-browserify'),
-				crypto: require.resolve('crypto-browserify'),
 				stream: require.resolve('readable-stream'),
 			},
 			alias: {
