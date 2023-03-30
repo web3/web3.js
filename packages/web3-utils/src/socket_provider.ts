@@ -24,7 +24,7 @@ import {
 	JsonRpcRequest,
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
-	JsonRpcResult,
+	// JsonRpcResult,
 	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
