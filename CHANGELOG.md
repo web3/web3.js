@@ -665,4 +665,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
-  - Improved the error propagation in `web3-providers-http` package to effectively propagate useful error infomation about failed HTTP connections (#5954)
+  - Improved the error propagation in `web3-providers-http` package to effectively propagate useful error infomation about failed HTTP connections (#5955)
