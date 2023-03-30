@@ -47,7 +47,6 @@ import {
 	bytesToBuffer,
 	bytesToHex,
 	hexToBytes,
-	isHexStrict,
 	numberToHex,
 	randomBytes,
 	sha3Raw,
@@ -55,7 +54,7 @@ import {
 	utf8ToHex,
 	uuidV4,
 } from 'web3-utils';
-import { isBuffer, isNullish, isString, validator } from 'web3-validator';
+import { isBuffer, isNullish, isString, validator, isHexStrict } from 'web3-validator';
 import { keyStoreSchema } from './schemas';
 import { SignatureObject, SignResult, SignTransactionResult, Web3Account } from './types';
 

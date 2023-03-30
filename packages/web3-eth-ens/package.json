@@ -65,6 +65,7 @@
 		"web3-eth-contract": "^4.0.1-rc.0",
 		"web3-net": "^4.0.1-rc.0",
 		"web3-types": "^1.0.0-rc.0",
-		"web3-utils": "^4.0.1-rc.0"
+		"web3-utils": "^4.0.1-rc.0",
+		"web3-validator": "1.0.0-rc.0"
 	}
 }
