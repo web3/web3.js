@@ -87,19 +87,34 @@ const getEthereumjsTransactionOptions = (
 				},
 			);
 		}
-	} else if (transaction.common)
-		common = Common.custom(
-			{
-				name: transaction.common.customChain.name ?? 'custom-network',
-				chainId: toNumber(transaction.common.customChain.chainId) as number,
-				networkId: toNumber(transaction.common.customChain.networkId) as number,
-				defaultHardfork: transaction.common.hardfork ?? web3Context.defaultHardfork,
-			},
-			{
-				baseChain: transaction.common.baseChain ?? web3Context.defaultChain,
-			},
-		);
+	} else {
+		const name =
+			transaction?.common?.customChain?.name ?? transaction.chain ?? 'custom-network';
+		const chainId = toNumber(
+			transaction?.common?.customChain?.chainId ?? transaction?.chainId,
+		) as number;
+		const networkId = toNumber(
+			transaction?.common?.customChain?.networkId ?? transaction?.networkId,
+		) as number;
+		const defaultHardfork =
+			transaction?.common?.hardfork ?? transaction?.hardfork ?? web3Context.defaultHardfork;
+		const baseChain =
+			transaction.common?.baseChain ?? transaction.chain ?? web3Context.defaultChain;
 
+		if (chainId && networkId && name) {
+			common = Common.custom(
+				{
+					name,
+					chainId,
+					networkId,
+					defaultHardfork,
+				},
+				{
+					baseChain,
+				},
+			);
+		}
+	}
 	return { common } as TxOptions;
 };
 
