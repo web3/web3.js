@@ -18,17 +18,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ETH_DATA_FORMAT } from 'web3-utils';
 import * as utils from 'web3-utils';
 import * as eth from 'web3-eth';
-import { validator } from 'web3-validator';
+import * as validator from 'web3-validator';
 import { Personal } from '../../src/index';
 
 jest.mock('web3-utils');
 jest.mock('web3-eth');
-
+jest.mock('web3-validator');
 describe('Personal', () => {
 	let personal: Personal;
 	let sendSpy: jest.SpyInstance;
 	let validateSpy: jest.SpyInstance;
-
 	beforeEach(() => {
 		personal = new Personal('http://localhost:8545');
 
@@ -36,7 +35,7 @@ describe('Personal', () => {
 			return Promise.resolve('0x0');
 		});
 
-		validateSpy = jest.spyOn(validator, 'validate').mockReturnValue(undefined);
+		validateSpy = jest.spyOn(validator.validator, 'validate').mockReturnValue(undefined);
 
 		jest.resetAllMocks();
 	});
@@ -224,7 +223,7 @@ describe('Personal', () => {
 		it('should call the correct method for request manager', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(true);
 
 			await personal.sign(data, '0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password');
 
@@ -237,7 +236,7 @@ describe('Personal', () => {
 		it('should convert input if not hex', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(false);
 			jest.spyOn(utils, 'utf8ToHex').mockReturnValue(data);
 
 			await personal.sign(data, '0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password');
@@ -249,7 +248,7 @@ describe('Personal', () => {
 		it('should not convert input if data is already hex', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(true);
 
 			await personal.sign(data, '0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password');
 
@@ -259,7 +258,7 @@ describe('Personal', () => {
 		it('should validate user input', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(true);
 
 			await personal.sign(data, '0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password');
 
@@ -275,7 +274,7 @@ describe('Personal', () => {
 		it('should call the correct method for request manager', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(true);
 
 			await personal.ecRecover(data, '0x000000');
 
@@ -288,7 +287,7 @@ describe('Personal', () => {
 		it('should convert input if not hex', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(false);
 			jest.spyOn(utils, 'utf8ToHex').mockReturnValue(data);
 
 			await personal.ecRecover(data, 'password');
@@ -300,7 +299,7 @@ describe('Personal', () => {
 		it('should not convert input if data is already hex', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(true);
 
 			await personal.ecRecover(data, 'password');
 
@@ -310,7 +309,7 @@ describe('Personal', () => {
 		it('should validate user input', async () => {
 			const data = '0x1234';
 
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
+			jest.spyOn(validator, 'isHexStrict').mockReturnValue(true);
 
 			await personal.ecRecover(data, 'password');
 

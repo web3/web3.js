@@ -10,7 +10,7 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"pretty": true,
-		"removeComments": true,
+		"removeComments": false,
 		"sourceMap": true,
 		"strict": true,
 		"strictNullChecks": true,

@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockNumberOrTag, BlockTags, TransactionForAccessList } from 'web3-types';
+import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 
 export const mockRpcResponse =
 	'{"accessList":[{"address":"0x15859bdf5aff2080a9968f6a410361e9598df62f","storageKeys":["0x0000000000000000000000000000000000000000000000000000000000000000"]}],"gasUsed":"0x7671"}';
@@ -36,33 +37,48 @@ const transaction: TransactionForAccessList = {
  *     - blocknumberortag
  * - mockRpcResponse
  */
-type TestData = [string, [TransactionForAccessList, BlockNumberOrTag | undefined]];
+type TestData = [string, [TransactionForAccessList, BlockNumberOrTag | undefined, DataFormat]];
 export const testData: TestData[] = [
 	// blockNumber = BlockTag
 	[
 		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.LATEST`,
-		[transaction, BlockTags.LATEST],
+		[transaction, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.EARLIEST`,
-		[transaction, BlockTags.EARLIEST],
+		[transaction, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.PENDING`,
-		[transaction, BlockTags.PENDING],
+		[transaction, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
-	[`${JSON.stringify(transaction)}\nblockNumber = BlockTags.SAFE`, [transaction, BlockTags.SAFE]],
+	[
+		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.SAFE`,
+		[transaction, BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
 	[
 		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.FINALIZED`,
-		[transaction, BlockTags.FINALIZED],
+		[transaction, BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
 	],
 	// blockNumber = Numbers
-	[`${JSON.stringify(transaction)}\nblockNumber = "0x4b7"`, [transaction, '0x4b7']],
-	[`${JSON.stringify(transaction)}\nblockNumber = 1207`, [transaction, 1207]],
-	[`${JSON.stringify(transaction)}\nblockNumber = "1207"`, [transaction, '1207']],
+	[
+		`${JSON.stringify(transaction)}\nblockNumber = "0x4b7"`,
+		[transaction, '0x4b7', DEFAULT_RETURN_FORMAT],
+	],
+	[
+		`${JSON.stringify(transaction)}\nblockNumber = 1207`,
+		[transaction, 1207, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		`${JSON.stringify(transaction)}\nblockNumber = "1207"`,
+		[transaction, '1207', DEFAULT_RETURN_FORMAT],
+	],
 	[
 		`${JSON.stringify(transaction)}\nblockNumber = BigInt("0x4b7")`,
-		[transaction, BigInt('0x4b7')],
+		[transaction, BigInt('0x4b7'), DEFAULT_RETURN_FORMAT],
 	],
-	[`${JSON.stringify(transaction)}\nblockNumber = undefined`, [transaction, undefined]],
+	[
+		`${JSON.stringify(transaction)}\nblockNumber = undefined`,
+		[transaction, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
+	],
 ];
