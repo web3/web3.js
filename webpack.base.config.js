@@ -49,11 +49,6 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 		resolve: {
 			extensions: ['.ts', '.js'],
 			fallback: {
-				child_process: false,
-				fs: false,
-				net: false,
-				path: false,
-				os: false,
 				stream: require.resolve('readable-stream'),
 			},
 			alias: {

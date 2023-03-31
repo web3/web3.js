@@ -18,5 +18,4 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 export { Eip1193Provider, SocketProvider } from 'web3-utils';
 
 export * as http from 'web3-providers-http';
-export * as ipc from 'web3-providers-ipc';
 export * as ws from 'web3-providers-ws';
