@@ -154,7 +154,7 @@ HttpProvider.prototype.send = function (payload, callback) {
             callback(errors.ConnectionTimeout(this.timeout));
         }
 
-        callback(errors.InvalidConnection(this.host));
+        callback(errors.InvalidConnection(this.host, error));
     }
 
     fetch(this.host, options)
