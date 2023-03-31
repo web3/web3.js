@@ -24,13 +24,14 @@ import {
 	JsonRpcRequest,
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
-	// JsonRpcResult,
+	JsonRpcResult,
 	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
 	Web3APISpec,
 	Web3Eip1193ProviderEventCallback,
+	Web3ProviderEventCallback,
 	Web3ProviderStatus,
 } from 'web3-types';
 import {
@@ -199,7 +200,10 @@ export abstract class SocketProvider<
 	 * @param type - The event type to listen for
 	 * @param callback - The callback to be invoked when the event is emitted
 	 */
-	public on<T>(type: EventType, callback: Web3Eip1193ProviderEventCallback<T>): void {
+	public on<T = JsonRpcResult>(
+		type: EventType,
+		callback: Web3Eip1193ProviderEventCallback<T> | Web3ProviderEventCallback<T>,
+	): void {
 		this._eventEmitter.on(type, callback);
 	}
 
@@ -405,7 +409,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithResult(response) ||
 				jsonRpc.isResponseWithError(response)
 			) {
-				this._eventEmitter.emit('message', response);
+				this._eventEmitter.emit('message', undefined, response);
 				requestItem.deferredPromise.resolve(response);
 			}
 
