@@ -69,7 +69,7 @@ export interface LegacySendProvider {
 		payload: JsonRpcPayload<P>,
 		// Used "null" value to match the legacy version
 		// eslint-disable-next-line @typescript-eslint/ban-types
-		callback: (err?: Error | null, response?: JsonRpcResponse<R>) => void,
+		callback: (err: Error | null, response?: JsonRpcResponse<R>) => void,
 	): void;
 }
 
@@ -82,7 +82,8 @@ export interface LegacySendAsyncProvider {
 export interface LegacyRequestProvider {
 	request<R = JsonRpcResult, P = unknown>(
 		payload: JsonRpcPayload<P>,
-		callback: (err: Error | undefined, response: JsonRpcResponse<R>) => void,
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		callback: (err: Error | null, response: JsonRpcResponse<R>) => void,
 	): void;
 }
 
@@ -124,13 +125,14 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	public send<ResultType = JsonRpcResult, P = unknown>(
 		payload: JsonRpcPayload<P>,
 		// eslint-disable-next-line @typescript-eslint/ban-types
-		callback: (err?: Error | null, response?: JsonRpcResponse<ResultType>) => void,
+		callback: (err: Error | null, response?: JsonRpcResponse<ResultType>) => void,
 	) {
 		this.request<Web3APIMethod<API>, ResultType>(
 			payload as Web3APIPayload<API, Web3APIMethod<API>>,
 		)
 			.then(response => {
-				callback(undefined, response);
+				// eslint-disable-next-line no-null/no-null
+				callback(null, response);
 			})
 			.catch((err: Error | Web3Error) => {
 				callback(err);
