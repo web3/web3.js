@@ -19,13 +19,7 @@ import { validateNoLeadingZeroes } from 'web3-validator';
 import { MAX_INTEGER } from './constants';
 import { RLP } from '../rlp';
 import { BaseTransaction } from './baseTransaction';
-import {
-	checkMaxInitCodeSize,
-	getAccessListData,
-	getAccessListJSON,
-	getDataFeeEIP2930,
-	verifyAccessList,
-} from './utils';
+import { getAccessListData, getAccessListJSON, getDataFeeEIP2930, verifyAccessList } from './utils';
 import {
 	arrToBufArr,
 	bigIntToHex,
@@ -222,10 +216,6 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 
 		this._validateYParity();
 		this._validateHighS();
-
-		if (this.common.isActivatedEIP(3860)) {
-			checkMaxInitCodeSize(this.common, this.data.length);
-		}
 
 		const freeze = opts?.freeze ?? true;
 		if (freeze) {

@@ -17,13 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { MAX_INTEGER } from './constants';
-import {
-	getAccessListData,
-	checkMaxInitCodeSize,
-	verifyAccessList,
-	getAccessListJSON,
-	getDataFeeEIP2930,
-} from './utils';
+import { getAccessListData, verifyAccessList, getAccessListJSON, getDataFeeEIP2930 } from './utils';
 import {
 	arrToBufArr,
 	bigIntToHex,
@@ -192,9 +186,6 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 		this._validateYParity();
 		this._validateHighS();
 
-		if (this.common.isActivatedEIP(3860)) {
-			checkMaxInitCodeSize(this.common, this.data.length);
-		}
 		const freeze = opts?.freeze ?? true;
 		if (freeze) {
 			Object.freeze(this);

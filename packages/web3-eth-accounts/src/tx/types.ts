@@ -78,6 +78,12 @@ export interface TxOptions {
 	 * Default: true
 	 */
 	freeze?: boolean;
+
+	/**
+	 * Allows unlimited contract code-size init while debugging. This (partially) disables EIP-3860.
+	 * Gas cost for initcode size analysis will still be charged. Use with caution.
+	 */
+	allowUnlimitedInitCodeSize?: boolean;
 }
 
 /*

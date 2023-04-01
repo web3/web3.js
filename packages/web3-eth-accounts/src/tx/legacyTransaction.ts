@@ -30,7 +30,6 @@ import {
 import { RLP } from '../rlp';
 
 import { BaseTransaction } from './baseTransaction';
-import { checkMaxInitCodeSize } from './utils';
 
 import type { JsonTx, TxData, TxOptions, TxValuesArray } from './types';
 import { Capability } from './types';
@@ -150,10 +149,6 @@ export class Transaction extends BaseTransaction<Transaction> {
 					this.activeCapabilities.push(Capability.EIP155ReplayProtection);
 				}
 			}
-		}
-
-		if (this.common.isActivatedEIP(3860)) {
-			checkMaxInitCodeSize(this.common, this.data.length);
 		}
 
 		const freeze = opts?.freeze ?? true;
