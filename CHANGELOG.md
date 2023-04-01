@@ -666,3 +666,8 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
   - Improved the error propagation in `web3-providers-http` package to effectively propagate useful error infomation about failed HTTP connections (#5955)
+
+### Changed
+
+  - `transaction.type` is now formatted to a hex string before being send to provider (#5979)
+  - When sending a transaction, if `transaction.type === '0x1' && transaction.accessList === []`, then `transaction.accessList` is set to `[]` (#5979)
