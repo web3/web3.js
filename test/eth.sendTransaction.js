@@ -138,7 +138,8 @@ var tests = [{
         to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
         value: "0x11f71f76bb1",
         gasPrice: "0x4b7dddc97a",
-        type: '0x1'
+        type: '0x1',
+        accessList: []
     }],
     result: '0x1234567',
     formattedResult: '0x1234567',
