@@ -81,10 +81,11 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 
 	describe('subscribe event tests', () => {
 		it('should subscribe to `message` event', async () => {
-			const messagePromise = new Promise((resolve: Resolve) => {
+			const messagePromise = new Promise((resolve: Resolve, reject) => {
 				webSocketProvider.on(
 					'message',
-					(result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>) => {
+					(err: any, result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>) => {
+						if (err) reject();
 						if (result?.id !== jsonRpcPayload.id) {
 							return;
 						}
