@@ -165,7 +165,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 			const mockCallBack = jest.fn();
 			const errorPromise = new Promise(resolve => {
-				webSocketProvider.on('error', err => {
+				webSocketProvider.on('error', (err: any) => {
 					if ((err as ProviderRpcError)?.message.startsWith('connect ECONNREFUSED')) {
 						mockCallBack();
 						resolve(true);
@@ -316,7 +316,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			// simulate abrupt server close
 			await changeCloseCode(webSocketProvider);
 			const errorPromise = new Promise(resolve => {
-				webSocketProvider.on('error', error => {
+				webSocketProvider.on('error', (error: any) => {
 					if (
 						(error as ProviderRpcError)?.message ===
 						`Maximum number of reconnect attempts reached! (${1})`
@@ -401,7 +401,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			// @ts-expect-error replace sendtoSocket so we don't execute request
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			webSocketProvider._sendToSocket = () => {};
-			webSocketProvider.on('error', err => {
+			webSocketProvider.on('error', (err: any) => {
 				expect(err).toBeInstanceOf(ConnectionNotOpenError);
 			});
 
