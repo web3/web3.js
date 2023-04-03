@@ -799,14 +799,13 @@ Method.prototype.buildCall = function () {
             && !!payload.params[0]
             && typeof payload.params[0] === 'object';
 
-        if (hasSendTxObject) {
-            if (
+        if (hasSendTxObject &&
                 payload.params[0].type === '0x1'
-                &&typeof payload.params[0].accessList === 'undefined'
+                && typeof payload.params[0].accessList === 'undefined'
             ) {
                 payload.params[0].accessList = [];
             }
-        }
+      
 
         // Send the actual transaction
         if (hasSendTxObject
