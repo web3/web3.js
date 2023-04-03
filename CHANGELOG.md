@@ -670,4 +670,4 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
   - `transaction.type` is now formatted to a hex string before being send to provider (#5979)
-  - When sending a transaction, if `transaction.type === '0x1' && transaction.accessList === []`, then `transaction.accessList` is set to `[]` (#5979)
+  - When sending a transaction, if `transaction.type === '0x1' && transaction.accessList === undefined`, then `transaction.accessList` is set to `[]` (#5979)
