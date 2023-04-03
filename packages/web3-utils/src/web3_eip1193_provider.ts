@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	EthExecutionAPI,
 	HexString,
+	ProviderConnectInfo,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APISpec,
@@ -90,7 +91,11 @@ export abstract class Eip1193Provider<
 					console.error(err);
 				}),
 		])
-			.then(() => this._eventEmitter.emit('connect', this._chainId))
+			.then(() =>
+				this._eventEmitter.emit('connect', {
+					chainId: this._chainId,
+				} as ProviderConnectInfo),
+			)
 			.catch(err => {
 				// todo: add error handler
 				// eslint-disable-next-line no-console

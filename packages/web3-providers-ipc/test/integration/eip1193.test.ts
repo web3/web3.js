@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { hexToNumber } from 'web3-utils';
-import { HexString, ProviderMessage, ProviderRpcError } from 'web3-types';
+import { HexString, ProviderMessage, ProviderRpcError, ProviderConnectInfo } from 'web3-types';
 import IpcProvider from '../../src/index';
 
 import {
@@ -44,12 +44,12 @@ describeIf(isIpc)('IpcProvider - eip1193', () => {
 
 	describe('check events', () => {
 		it('should send connect event', async () => {
-			const chainId = await new Promise(resolve => {
-				socketProvider.on('connect', (data: ProviderMessage) => {
+			const providerConnectInfo = await new Promise<ProviderConnectInfo>(resolve => {
+				socketProvider.on('connect', (data: ProviderConnectInfo) => {
 					resolve(data);
 				});
 			});
-			expect(hexToNumber(chainId as string)).toBeGreaterThan(0);
+			expect(hexToNumber(providerConnectInfo.chainId)).toBeGreaterThan(0);
 		});
 		it('should send disconnect event', async () => {
 			await waitForSocketConnect(socketProvider);
