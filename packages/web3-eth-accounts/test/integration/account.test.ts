@@ -17,8 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import defaultImport, * as fullImport from '@ethereumjs/tx';
 import { Address } from 'web3-types';
-import { isHexStrict } from 'web3-utils';
-import { Web3ValidatorError } from 'web3-validator';
+import { Web3ValidatorError, isHexStrict } from 'web3-validator';
 import {
 	create,
 	decrypt,
