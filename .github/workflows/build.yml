@@ -74,7 +74,7 @@ jobs:
             if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
             with:
               path: packages/web3/dist/4.x.json
-              key: web3-bundle-stats-4x.${{github.sha}}
+              key: web3-bundle-stats-4x-${{github.sha}}
 
   unit:
     name: Unit Tests
