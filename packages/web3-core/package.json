@@ -50,6 +50,9 @@
 		"web3-utils": "^4.0.1-rc.0",
 		"web3-validator": "^1.0.0-rc.0"
 	},
+	"optionalDependencies": {
+		"web3-providers-ipc": "^4.0.1-rc.0"
+	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
 		"@types/jest-when": "^3.5.2",

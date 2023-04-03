@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Socket } from 'net';
+import type { Socket } from 'net';
 
 import {
 	ContractExecutionError,
@@ -26,7 +26,6 @@ import {
 	RpcError,
 } from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
-import IpcProvider from 'web3-providers-ipc';
 import WSProvider from 'web3-providers-ws';
 import {
 	EthExecutionAPI,
@@ -61,10 +60,13 @@ export enum Web3RequestManagerEvent {
 	BEFORE_PROVIDER_CHANGE = 'BEFORE_PROVIDER_CHANGE',
 }
 
-const availableProviders = {
+const availableProviders: {
+	HttpProvider: Web3BaseProviderConstructor;
+	WebsocketProvider: Web3BaseProviderConstructor;
+	IpcProvider?: Web3BaseProviderConstructor;
+} = {
 	HttpProvider: HttpProvider as Web3BaseProviderConstructor,
 	WebsocketProvider: WSProvider as Web3BaseProviderConstructor,
-	IpcProvider: IpcProvider as Web3BaseProviderConstructor,
 };
 
 export class Web3RequestManager<
@@ -91,6 +93,16 @@ export class Web3RequestManager<
 	 * Will return all available providers
 	 */
 	public static get providers() {
+		if (typeof require === 'function') {
+			// nodejs realm
+			try {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, global-require, import/no-extraneous-dependencies, @typescript-eslint/no-var-requires
+				const ipc: Web3BaseProviderConstructor = require('web3-providers-ipc');
+				availableProviders.IpcProvider = ipc;
+			} catch (e) {
+				// module not found, ignore
+			}
+		}
 		return availableProviders;
 	}
 
@@ -108,6 +120,16 @@ export class Web3RequestManager<
 	 */
 	// eslint-disable-next-line class-methods-use-this
 	public get providers() {
+		if (typeof require === 'function') {
+			// nodejs realm
+			try {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, global-require, import/no-extraneous-dependencies, @typescript-eslint/no-var-requires, import/no-unresolved
+				const ipc: Web3BaseProviderConstructor = require('web3-providers-ipc');
+				availableProviders.IpcProvider = ipc;
+			} catch (e) {
+				// module not found, ignore
+			}
+		}
 		return availableProviders;
 	}
 
@@ -132,8 +154,14 @@ export class Web3RequestManager<
 
 				// IPC
 			} else if (typeof net === 'object' && typeof net.connect === 'function') {
+				if (this.providers.IpcProvider === undefined) {
+					throw new ProviderError('web3-providers-ipc not installed');
+				}
 				newProvider = new this.providers.IpcProvider<API>(provider, net);
 			} else if (provider.toLowerCase().endsWith('.ipc')) {
+				if (this.providers.IpcProvider === undefined) {
+					throw new ProviderError('web3-providers-ipc not installed');
+				}
 				newProvider = new this.providers.IpcProvider<API>(provider);
 			} else {
 				throw new ProviderError(`Can't autodetect provider for "${provider}"`);
