@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { Web3EthExecutionAPI } from 'web3-types';
 import { isNullish } from 'web3-validator';
-import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
+import { ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { createAccessList } from '../../../src/rpc_method_wrappers';
@@ -51,7 +51,7 @@ describe('createAccessList', () => {
 				);
 			}
 
-			await createAccessList(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
+			await createAccessList(web3Context, ...inputParameters);
 			expect(ethRpcMethods.createAccessList).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputTransactionFormatted,
@@ -73,7 +73,8 @@ describe('createAccessList', () => {
 
 			const result = await createAccessList(
 				web3Context,
-				...inputParameters,
+				inputParameters[0],
+				inputParameters[1],
 				expectedReturnFormat,
 			);
 			expect(result).toStrictEqual(expectedFormattedResult);

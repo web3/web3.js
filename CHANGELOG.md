@@ -1319,9 +1319,78 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Added
 
+#### web3
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-core
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-errors
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-eth
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-eth-abi
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-eth-accounts
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
 #### web3-eth-contract
 
+-   Added hybrid build (ESM and CJS) of library (#5904)
 -   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the
+
+#### web3-eth-ens
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-eth-iban
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-eth-personal
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-net
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-providers-http
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-providers-ipc
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-providers-ws
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-rpc-methods
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-types
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-utils
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
+
+#### web3-validator
+
+-   Added hybrid build (ESM and CJS) of library (#5904)
 
 ### Removed
 

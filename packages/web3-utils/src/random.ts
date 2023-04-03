@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { randomBytes as cryptoRandomBytes } from 'crypto';
+import { getRandomBytesSync } from 'ethereum-cryptography/random';
 
 /**
  * Returns a random byte array by the given bytes size
- * @param byteSize - The size of the random byte array returned
+ * @param size - The size of the random byte array returned
  * @returns - random byte array
  *
  * @example
@@ -28,13 +28,7 @@ import { randomBytes as cryptoRandomBytes } from 'crypto';
  * > <Buffer a9 a2 70 ff 00 9d 0b c9 2f 9e 5f 0e 40 a4 da 4a f9 1c 6f 23 41 59 46 a6 b5 8b 99 49 72 01 68 99>
  * ```
  */
-export const randomBytes = (byteSize: number): Buffer => {
-	const randomValues =
-		typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues
-			? window.crypto.getRandomValues(new Uint8Array(byteSize))
-			: cryptoRandomBytes(byteSize);
-	return Buffer.from(randomValues);
-};
+export const randomBytes = (size: number): Buffer => Buffer.from(getRandomBytesSync(size));
 
 /**
  * Returns a random hex string by the given bytes size

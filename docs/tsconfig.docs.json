@@ -1,8 +1,10 @@
 {
-	"extends": "../tsconfig.json",
+	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
 		"declarationDir": "dts",
-		"outDir": "dts"
+		"outDir": "dts",
+		"declaration": true,
+		"declarationMap": true
 	},
 	"include": ["../packages/*/src/**/*", "../packages/*/types/**/*"]
 }

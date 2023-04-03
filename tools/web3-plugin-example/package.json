@@ -15,7 +15,8 @@
 		"API"
 	],
 	"files": [
-		"lib/**/*"
+		"lib/**/*",
+		"src/**/*"
 	],
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",

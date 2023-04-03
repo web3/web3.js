@@ -1,8 +1,11 @@
 {
-	"extends": "../../tsconfig",
+	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"outDir": "lib",
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"module": "commonjs",
+		"declaration": true,
+		"declarationMap": true
 	},
 	"include": ["src/**/*"]
 }
