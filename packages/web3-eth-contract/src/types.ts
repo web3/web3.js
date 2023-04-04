@@ -337,7 +337,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @returns - The gas amount estimated.
 	 */
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		options?: NonPayableCallOptions,
+		options?: Omit<NonPayableCallOptions, 'nonce' | 'type'>,
 		returnFormat?: ReturnFormat,
 	): Promise<FormatType<Numbers, ReturnFormat>>;
 
@@ -526,7 +526,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The gas amount estimated.
 	 */
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		options?: PayableCallOptions,
+		options?: Omit<PayableCallOptions, 'nonce' | 'type'>,
 		returnFormat?: ReturnFormat,
 	): Promise<FormatType<Numbers, ReturnFormat>>;
 
@@ -549,7 +549,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
 	 *
-	 *  ```ts
+	 * ```ts
 	 *  const result = await MyContract.methods.myFunction().createAccessList();
 	 *  console.log(result);
 	 *
@@ -564,16 +564,10 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 *   ],
 	 *   "gasUsed": "0x7671"
 	 * }
-	 *  ```
+	 *```
 	 */
 	createAccessList(
-		tx?: {
-			from?: Address;
-			gas?: string;
-			gasPrice?: string;
-			maxPriorityFeePerGas?: HexString;
-			maxFeePerGas?: HexString;
-		},
+		tx?: Omit<PayableCallOptions, 'nonce' | 'type'>,
 		block?: BlockNumberOrTag,
 	): Promise<AccessListResult>;
 }
