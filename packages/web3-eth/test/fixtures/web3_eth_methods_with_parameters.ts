@@ -1605,34 +1605,94 @@ export const getFeeHistoryValidData: [
  * - array of passed RPC parameters (excluding Web3Context) - This is to account for any defaults set by the method
  */
 export const getStorageAtValidData: [
-	[Address, Uint256, BlockNumberOrTag | undefined],
-	[Address, Uint256, BlockNumberOrTag],
+	[Address, Uint256, BlockNumberOrTag | undefined, DataFormat],
+	[Address, Uint256, BlockNumberOrTag, DataFormat],
 ][] = [
 	// All possible undefined values
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.LATEST],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			undefined,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 	],
 	// Defined address, storageSlot, and blockNumber
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.LATEST],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.LATEST],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.EARLIEST],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.EARLIEST],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.PENDING],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.PENDING],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.SAFE],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.SAFE],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.FINALIZED],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.FINALIZED],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.FINALIZED,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x0',
+			BlockTags.FINALIZED,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 	],
 ];
 
@@ -1643,33 +1703,33 @@ export const getStorageAtValidData: [
  */
 export const getCodeValidData: [
 	[Address, BlockNumberOrTag | undefined],
-	[Address, BlockNumberOrTag],
+	[Address, BlockNumberOrTag, DataFormat],
 ][] = [
 	// All possible undefined values
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined address and blockNumber
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
 	],
 ];
 
@@ -1678,16 +1738,33 @@ export const getCodeValidData: [
  * - input
  * - mock RPC result
  */
-export const sendSignedTransactionValidData: [HexStringBytes][] = [
-	['0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675'],
+export const sendSignedTransactionValidData: [[string], [string, DataFormat, undefined]][] = [
+	[
+		['signedTransaction = HexString'],
+		['signedTransaction = HexString', DEFAULT_RETURN_FORMAT, undefined],
+	],
+	[
+		['0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675'],
+		[
+			'0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+			DEFAULT_RETURN_FORMAT,
+			undefined,
+		],
+	],
 ];
 
 /**
  * Array consists of:
  * - array of inputs
  */
-export const signValidData: [[HexStringBytes, Address]][] = [
-	[['0xdeadbeaf', '0x407d73d8a49eeb85d32cf465507dd71d507100c1']],
+export const signValidData: [
+	[HexStringBytes, Address, DataFormat | undefined],
+	[HexStringBytes, Address, DataFormat | undefined],
+][] = [
+	[
+		['0xdeadbeaf', '0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined],
+		['0xdeadbeaf', '0x407d73d8a49eeb85d32cf465507dd71d507100c1', DEFAULT_RETURN_FORMAT],
+	],
 ];
 
 /**
@@ -1695,93 +1772,124 @@ export const signValidData: [[HexStringBytes, Address]][] = [
  * - array of inputs
  * - array of passed RPC parameters (excluding Web3Context) - This is to account for any defaults set by the method
  */
-export const getPastLogsValidData: [Filter, Filter][] = [
+export const getPastLogsValidData: [[Filter, DataFormat | undefined], [Filter, DataFormat]][] = [
 	[
-		{},
-		{
-			fromBlock: BlockTags.LATEST,
-			toBlock: BlockTags.LATEST,
-		},
+		[{}, undefined],
+		[{}, DEFAULT_RETURN_FORMAT],
 	],
 	[
-		{
-			address: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-			topics: [
-				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-				// Using "null" value intentionally for validation
-				// eslint-disable-next-line no-null/no-null
-				null,
-				[
+		[
+			{
+				address: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+				topics: [
 					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-					'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+					// Using "null" value intentionally for validation
+					// eslint-disable-next-line no-null/no-null
+					null,
+					[
+						'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+						'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+					],
 				],
-			],
-		},
-		{
-			fromBlock: BlockTags.LATEST,
-			toBlock: BlockTags.LATEST,
-			address: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-			topics: [
-				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-				// Using "null" value intentionally for validation
-				// eslint-disable-next-line no-null/no-null
-				null,
-				[
+			},
+			undefined,
+		],
+		[
+			{
+				address: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+				topics: [
 					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-					'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+					// Using "null" value intentionally for validation
+					// eslint-disable-next-line no-null/no-null
+					null,
+					[
+						'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+						'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+					],
 				],
-			],
-		},
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
-		{
-			fromBlock: BlockTags.LATEST,
-			toBlock: BlockTags.LATEST,
-		},
-		{
-			fromBlock: BlockTags.LATEST,
-			toBlock: BlockTags.LATEST,
-		},
+		[
+			{
+				fromBlock: BlockTags.LATEST,
+				toBlock: BlockTags.LATEST,
+			},
+			undefined,
+		],
+		[
+			{
+				fromBlock: BlockTags.LATEST,
+				toBlock: BlockTags.LATEST,
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
-		{
-			fromBlock: BlockTags.PENDING,
-			toBlock: BlockTags.PENDING,
-		},
-		{
-			fromBlock: BlockTags.PENDING,
-			toBlock: BlockTags.PENDING,
-		},
+		[
+			{
+				fromBlock: BlockTags.PENDING,
+				toBlock: BlockTags.PENDING,
+			},
+			undefined,
+		],
+		[
+			{
+				fromBlock: BlockTags.PENDING,
+				toBlock: BlockTags.PENDING,
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
-		{
-			fromBlock: BlockTags.EARLIEST,
-			toBlock: BlockTags.EARLIEST,
-		},
-		{
-			fromBlock: BlockTags.EARLIEST,
-			toBlock: BlockTags.EARLIEST,
-		},
+		[
+			{
+				fromBlock: BlockTags.EARLIEST,
+				toBlock: BlockTags.EARLIEST,
+			},
+			undefined,
+		],
+		[
+			{
+				fromBlock: BlockTags.EARLIEST,
+				toBlock: BlockTags.EARLIEST,
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
-		{
-			fromBlock: BlockTags.SAFE,
-			toBlock: BlockTags.SAFE,
-		},
-		{
-			fromBlock: BlockTags.SAFE,
-			toBlock: BlockTags.SAFE,
-		},
+		[
+			{
+				fromBlock: BlockTags.SAFE,
+				toBlock: BlockTags.SAFE,
+			},
+			undefined,
+		],
+		[
+			{
+				fromBlock: BlockTags.SAFE,
+				toBlock: BlockTags.SAFE,
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
-		{
-			fromBlock: BlockTags.FINALIZED,
-			toBlock: BlockTags.FINALIZED,
-		},
-		{
-			fromBlock: BlockTags.FINALIZED,
-			toBlock: BlockTags.FINALIZED,
-		},
+		[
+			{
+				fromBlock: BlockTags.FINALIZED,
+				toBlock: BlockTags.FINALIZED,
+			},
+			undefined,
+		],
+		[
+			{
+				fromBlock: BlockTags.FINALIZED,
+				toBlock: BlockTags.FINALIZED,
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 ];
 

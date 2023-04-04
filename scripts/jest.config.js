@@ -17,4 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 module.exports = {
 	preset: 'ts-jest',
 	testEnvironment: 'node',
+	globals: {
+		'ts-jest': {
+			tsconfig: './scripts/changelog/tsconfig.json',
+		},
+	},
 };

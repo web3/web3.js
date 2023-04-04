@@ -18,11 +18,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 export const InvalidTransactionWithSenderData: [unknown, string][] = [
 	[
 		BigInt(9007199254740991),
-		'Invalid value given "9007199254740991". Error: invalid transaction with sender.',
+		'Invalid value given "9007199254740991". Error: invalid transaction with invalid sender.',
 	],
-	['Invalid data', 'Invalid value given "Invalid data". Error: invalid transaction with sender.'],
-	['0x0', 'Invalid value given "0x0". Error: invalid transaction with sender.'],
-	[0, 'Invalid value given "0". Error: invalid transaction with sender.'],
+	[
+		'Invalid data',
+		'Invalid value given "Invalid data". Error: invalid transaction with invalid sender.',
+	],
+	['0x0', 'Invalid value given "0x0". Error: invalid transaction with invalid sender.'],
+	[0, 'Invalid value given "0". Error: invalid transaction with invalid sender.'],
 ];
 
 export const InvalidTransactionCallData: [unknown, string][] = [

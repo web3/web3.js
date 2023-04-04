@@ -21,7 +21,7 @@ const path = require('path');
 /**
  * Shared webpack configuration for all packages
  */
-function getWebPackConfig(packagePath, filename, library, entry) {
+function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 	return {
 		mode: 'production',
 		entry: path.resolve(packagePath, entry),
@@ -39,6 +39,9 @@ function getWebPackConfig(packagePath, filename, library, entry) {
 				{
 					test: /\.ts$/,
 					loader: 'ts-loader',
+					options: {
+						configFile: path.resolve(packagePath, tsconf),
+					},
 					exclude: ['/node_modules/', '/test/'],
 				},
 			],
@@ -51,10 +54,6 @@ function getWebPackConfig(packagePath, filename, library, entry) {
 				net: false,
 				path: false,
 				os: false,
-				util: require.resolve('util'),
-				http: require.resolve('http-browserify'),
-				https: require.resolve('https-browserify'),
-				crypto: require.resolve('crypto-browserify'),
 				stream: require.resolve('readable-stream'),
 			},
 			alias: {

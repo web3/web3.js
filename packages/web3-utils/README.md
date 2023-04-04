@@ -7,8 +7,7 @@
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
 [![NPM Package][npm-image]][npm-url]
-[![Dependency Status][deps-image]][deps-url]
-[![Dev Dependency Status][deps-dev-image]][deps-dev-url]
+[![Downloads][downloads-image]][npm-url]
 
 This is a sub-package of [web3.js][repo].
 
@@ -68,9 +67,6 @@ console.log(Web3Utils);
 
 [docs]: https://docs.web3js.org/
 [repo]: https://github.com/web3/web3.js/tree/4.x/packages/web3-utils
-[npm-image]: https://img.shields.io/npm/v/web3-utils.svg
-[npm-url]: https://npmjs.org/packages/web3-utils
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=packages/web3-utils
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=packages/web3-utils
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=packages/web3-utils
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=packages/web3-utils
+[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=packages%2Fweb3-utils%2Fpackage.json
+[npm-url]: https://npmjs.org/package/web3-utils
+[downloads-image]: https://img.shields.io/npm/dm/web3-utils?label=npm%20downloads

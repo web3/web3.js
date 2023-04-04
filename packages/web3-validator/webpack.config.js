@@ -22,4 +22,5 @@ module.exports = getWebPackConfig(
 	'web3-validator.min.js',
 	'web3-validator',
 	'src/index.ts',
+	'tsconfig.cjs.json',
 );

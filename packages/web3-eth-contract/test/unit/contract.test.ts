@@ -18,6 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import * as eth from 'web3-eth';
 import { ValidChains, Hardfork, AccessListResult, Address } from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
+import { Web3Context } from 'web3-core';
+
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -599,6 +601,16 @@ describe('Contract', () => {
 			expect(res).toStrictEqual(result);
 
 			spyEthCall.mockClear();
+		});
+
+		it('should correctly apply provided Web3Context to new Contract instance', async () => {
+			const expectedProvider = 'http://127.0.0.1:8545';
+			const web3Context = new Web3Context({
+				provider: expectedProvider,
+				config: { handleRevert: true, defaultTransactionType: '0x2' },
+			});
+			const contract = new Contract(GreeterAbi, web3Context);
+			expect(contract.config).toStrictEqual(web3Context.config);
 		});
 	});
 });

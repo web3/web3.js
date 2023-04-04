@@ -53,10 +53,11 @@ jobs:
                 path: /tmp
         -   run: tar -xf /tmp/web3-16.js.tar.gz -C ./
         -   name: Restore default branch stats
+            if: github.event_name != 'push'
             uses: actions/cache/restore@v3
             with:
               path: packages/web3/dist/4.x.json
-              key: web3-bundle-stats-4x
+              key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
         -   run: yarn build:web:analyze
             env:
               STATS_FILE: ${{ github.ref_name }}.json
@@ -73,7 +74,7 @@ jobs:
             if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
             with:
               path: packages/web3/dist/4.x.json
-              key: web3-bundle-stats-4x
+              key: web3-bundle-stats-4x-${{github.sha}}
 
   unit:
     name: Unit Tests

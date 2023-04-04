@@ -7,10 +7,9 @@
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
 [![NPM Package][npm-image]][npm-url]
-[![Dependency Status][deps-image]][deps-url]
-[![Dev Dependency Status][deps-dev-image]][deps-dev-url]
+[![Downloads][downloads-image]][npm-url]
 
-This is the main package of [web3.js](https://github.com/ChainSafe/web3.js).
+This is the main package of [web3.js](repo).
 
 `web3` contains the ideal setup for a Web3.js package.
 
@@ -55,9 +54,6 @@ yarn add web3
 
 [docs]: https://docs.web3js.org/
 [repo]: https://github.com/web3/web3.js/tree/4.x/packages/web3
-[npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
-[npm-url]: https://npmjs.org/packages/web3
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3
+[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=packages%2Fweb3%2Fpackage.json
+[npm-url]: https://npmjs.org/package/web3
+[downloads-image]: https://img.shields.io/npm/dm/web3?label=npm%20downloads
