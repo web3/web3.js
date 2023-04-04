@@ -567,7 +567,6 @@ export class Contract<Abi extends ContractAbi>
 		 * The byte code of the contract.
 		 */
 		data?: HexString;
-		input?: HexString;
 		/**
 		 * The arguments which get passed to the constructor on deployment.
 		 */
@@ -585,7 +584,7 @@ export class Contract<Abi extends ContractAbi>
 
 		const _input = format(
 			{ eth: 'bytes' },
-			deployOptions?.input ?? deployOptions?.data ?? this.options.input,
+			deployOptions?.data ?? this.options.input,
 			DEFAULT_RETURN_FORMAT,
 		);
 
