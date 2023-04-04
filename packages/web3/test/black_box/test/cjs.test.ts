@@ -16,9 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { getSystemTestProvider } from 'web3/test/shared_fixtures/system_tests_utils';
-// eslint-disable-next-line import/no-relative-packages
-import { closeOpenConnection, isWs } from '../../shared_fixtures/system_tests_utils';
+import { getSystemTestProvider, closeOpenConnection, isWs } from './fixtures/system_tests_utils';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const Web3 = require('web3');
 

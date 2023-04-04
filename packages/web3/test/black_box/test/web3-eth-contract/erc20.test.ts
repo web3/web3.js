@@ -24,7 +24,7 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
-} from 'web3/test/shared_fixtures/system_tests_utils';
+} from '../fixtures/system_tests_utils';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../fixtures/contracts/ERC20Token';
 
 describeIf(getSystemTestBackend() === 'infura')('Black Box Unit Tests - web3.eth.Contract', () => {

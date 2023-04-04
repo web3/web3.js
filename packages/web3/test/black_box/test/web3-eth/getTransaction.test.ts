@@ -20,7 +20,7 @@ import {
 	getSystemTestProvider,
 	isWs,
 	itIf,
-} from 'web3/test/shared_fixtures/system_tests_utils';
+} from '../fixtures/system_tests_utils';
 
 describe('Black Box Unit Tests - web3.eth.getTransaction', () => {
 	let web3: Web3;
