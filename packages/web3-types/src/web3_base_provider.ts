@@ -185,9 +185,25 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		listener: Web3Eip1193ProviderEventCallback<any> | Web3ProviderEventCallback,
 	): void;
 
-	public abstract once?<T>(
-		type: string,
-		callback: Web3Eip1193ProviderEventCallback<T> | Web3ProviderEventCallback<T>,
+	public abstract once(
+		type: 'disconnect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public abstract once<T = JsonRpcResult>(
+		type: 'message' | string,
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+	): void;
+	public abstract once(
+		type: 'connect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+	): void;
+	public abstract once(
+		type: 'chainChanged',
+		listener: Web3Eip1193ProviderEventCallback<string>,
+	): void;
+	public abstract once(
+		type: 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<string[]>,
 	): void;
 	public abstract removeAllListeners?(type: string): void;
 	public abstract connect(): void;
