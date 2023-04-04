@@ -243,7 +243,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 */
 
 	call<SpecialOutput = Outputs>(
-		tx?: NonPayableCallOptions,
+		tx?: Omit<NonPayableCallOptions, 'nonce'>,
 		block?: BlockNumberOrTag,
 	): Promise<SpecialOutput>;
 
@@ -432,7 +432,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
 	call<SpecialOutput = Outputs>(
-		tx?: PayableCallOptions,
+		tx?: Omit<PayableCallOptions, 'nonce'>,
 		block?: BlockNumberOrTag,
 	): Promise<SpecialOutput>;
 
