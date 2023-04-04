@@ -14,6 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+// @ethereumjs/tx version 4.1.1
 export { FeeMarketEIP1559Transaction } from './eip1559Transaction';
 export { AccessListEIP2930Transaction } from './eip2930Transaction';
 export { Transaction } from './legacyTransaction';

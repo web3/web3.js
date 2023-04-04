@@ -1308,6 +1308,10 @@ should use 4.0.1-alpha.0 for testing.
 -   `formatTransaction` will now replace `data` transaction property with `input` (#5915)
 -   `isTransactionCall` will now check if `value.input` `isHexStrict` if provided (#5915)
 
+#### web3-eth-accounts
+
+-   Moved @ethereumjs/tx, @ethereumjs/common, @ethereumjs/rlp code to our source code (#5963)
+
 #### web3-eth-contract
 
 -   `getSendTxParams` will now return `input` instead of `data` in returned transaction parameters object (#5915)
@@ -1321,82 +1325,100 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-core
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-errors
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-eth
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-eth-abi
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-eth-accounts
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-eth-contract
 
+-   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the `Contract` class) (#5915)
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
--   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the
 
 #### web3-eth-ens
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-eth-iban
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-eth-personal
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-net
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-providers-http
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-providers-ipc
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-providers-ws
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-rpc-methods
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-types
 
--   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-utils
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-validator
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added functions `isHexString`, `isHexPrefixed`, `validateNoLeadingZeroes` (#5963)
 
 ### Removed
 
 #### web3-core
 
 -   `getConfig` method from `Web3Config` class, `config` is now public and accessible using `Web3Config.config` (#5950)
+
+#### web3-eth
+
+-   Removed dependencies @ethereumjs/tx, @ethereumjs/common (#5963)
 
 #### web3-eth-abi
 
@@ -1405,3 +1427,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   `data` was removed as a property of `ContractOptions` type (#5915)
+
+#### web3-utils
+
+-   Removed dependencies @ethereumjs/tx, @ethereumjs/common (#5963)

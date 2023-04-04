@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+// @ethereumjs/rlp version 4.0.1
 import { NestedUint8Array } from '../common/types';
 import { bytesToHex, concatBytes, encodeLength, Input, parseHexByte, toBytes } from './utils';
 

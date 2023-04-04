@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+// @ethereumjs/common version 3.1.1
 export * from './common';
 export * from './enums';
 export * from './types';
