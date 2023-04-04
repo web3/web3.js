@@ -795,10 +795,20 @@ Method.prototype.buildCall = function () {
             return method.requestManager.send(payload, sendTxCallback);
         };
 
-        // Send the actual transaction
-        if (isSendTx
+        const hasSendTxObject = isSendTx
             && !!payload.params[0]
-            && typeof payload.params[0] === 'object'
+            && typeof payload.params[0] === 'object';
+
+        if (hasSendTxObject &&
+                payload.params[0].type === '0x1'
+                && typeof payload.params[0].accessList === 'undefined'
+            ) {
+                payload.params[0].accessList = [];
+            }
+      
+
+        // Send the actual transaction
+        if (hasSendTxObject
             && (
                 typeof payload.params[0].gasPrice === 'undefined'
                 && (
