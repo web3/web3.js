@@ -607,10 +607,6 @@ export class Contract<Abi extends ContractAbi>
 			> => {
 				const modifiedOptions = { ...options };
 
-				// Remove to address
-				// modifiedOptions.to = '0x0000000000000000000000000000000000000000';
-				delete modifiedOptions.to;
-
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return this._contractMethodDeploySend(
 					abi as AbiFunctionFragment,
@@ -624,9 +620,6 @@ export class Contract<Abi extends ContractAbi>
 				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
-
-				// Remove to address
-				delete modifiedOptions.to;
 
 				return this._contractMethodEstimateGas({
 					abi: abi as AbiFunctionFragment,
