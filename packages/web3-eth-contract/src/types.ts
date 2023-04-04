@@ -193,16 +193,6 @@ export interface PayableCallOptions extends NonPayableCallOptions {
 export type NonPayableTxOptions = NonPayableCallOptions;
 export type PayableTxOptions = PayableCallOptions;
 
-export type InputNonPayableCallOptions = Pick<
-	NonPayableCallOptions,
-	Exclude<keyof NonPayableCallOptions, 'chainId' | 'to' | 'data' | 'input'>
->;
-
-export type InputPayableCallOptions = InputNonPayableCallOptions & { value?: string };
-
-export type InputNonPayableTxOptions = InputNonPayableCallOptions;
-export type InputPayableTxOptions = InputPayableCallOptions;
-
 export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	/**
@@ -253,7 +243,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 */
 
 	call<SpecialOutput = Outputs>(
-		tx?: InputNonPayableCallOptions,
+		tx?: NonPayableCallOptions,
 		block?: BlockNumberOrTag,
 	): Promise<SpecialOutput>;
 
@@ -324,7 +314,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @returns - Returns a {@link PromiEvent} resolved with transaction receipt.
 	 */
 	send(
-		tx?: InputNonPayableTxOptions,
+		tx?: NonPayableTxOptions,
 	): Web3PromiEvent<
 		FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
