@@ -16,26 +16,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // TODO For some reason when running this test with a WebSocket provider
 // the test takes a long time to run afterAll
-import Web3 from 'web3';
-import { validator } from 'web3-validator';
-import { closeOpenConnection, getSystemTestProvider, isWs } from '../fixtures/system_tests_utils';
+import {
+	closeOpenConnection,
+	getSystemTestProvider,
+	isWs,
+} from '../../fixtures/system_tests_utils';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+const Web3 = require('web3').default;
 
 jest.setTimeout(15000);
 
-// TODO Consider adding this to web3.eth.accounts package
-const accountSchema = {
-	type: 'object',
-	required: ['address', 'privateKey'],
-	// TODO Should validation functions as well
-	// required: ['address', 'privateKey', 'signTransaction', 'sign', 'encrypt'],
-	properties: {
-		address: { type: 'string' },
-		privateKey: { type: 'string' },
-	},
-};
-
-describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
-	let web3: Web3;
+describe('CJS - Black Box Unit Tests - web3.eth.accounts.hashMessage', () => {
+	let web3: typeof Web3;
 
 	beforeAll(() => {
 		web3 = new Web3(getSystemTestProvider());
@@ -45,12 +38,9 @@ describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
 		if (isWs) await closeOpenConnection(web3);
 	});
 
-	it('should create an account', () => {
-		const response = web3.eth.accounts.create();
-		expect(response).toBeDefined();
-		expect(response.signTransaction).toBeDefined();
-		expect(response.sign).toBeDefined();
-		expect(response.encrypt).toBeDefined();
-		expect(validator.validateJSONSchema(accountSchema, response)).toBeUndefined();
+	it('should hash provided message', () => {
+		expect(web3.eth.accounts.hashMessage('Hello World')).toBe(
+			'0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+		);
 	});
 });

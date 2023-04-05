@@ -14,16 +14,18 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import Web3 from 'web3';
 import {
 	closeOpenConnection,
 	getSystemTestProvider,
 	isWs,
 	itIf,
-} from '../fixtures/system_tests_utils';
+} from '../../fixtures/system_tests_utils';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+const Web3 = require('web3').default;
 
-describe('Black Box Unit Tests - web3.eth.getTransaction', () => {
-	let web3: Web3;
+describe('CJS - Black Box Unit Tests - web3.eth.getTransaction', () => {
+	let web3: typeof Web3;
 
 	beforeAll(() => {
 		web3 = new Web3(getSystemTestProvider());

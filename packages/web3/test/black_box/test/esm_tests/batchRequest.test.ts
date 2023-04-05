@@ -17,9 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import Web3 from 'web3';
 
 // eslint-disable-next-line import/no-relative-packages
-import { closeOpenConnection, isWs, getSystemTestProvider } from './fixtures/system_tests_utils';
+import { closeOpenConnection, isWs, getSystemTestProvider } from '../fixtures/system_tests_utils';
 
-describe('Black Box Unit Tests - web3.BatchRequest', () => {
+describe('ESM - Black Box Unit Tests - web3.BatchRequest', () => {
 	let web3: Web3;
 
 	beforeAll(() => {
