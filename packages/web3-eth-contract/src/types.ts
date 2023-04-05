@@ -333,7 +333,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @returns - The gas amount estimated.
 	 */
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		options?: Omit<NonPayableCallOptions, 'nonce' | 'type'>,
+		options?: Omit<NonPayableCallOptions, 'nonce'>,
 		returnFormat?: ReturnFormat,
 	): Promise<FormatType<Numbers, ReturnFormat>>;
 
@@ -522,7 +522,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The gas amount estimated.
 	 */
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		options?: Omit<PayableCallOptions, 'nonce' | 'type'>,
+		options?: Omit<PayableCallOptions, 'nonce'>,
 		returnFormat?: ReturnFormat,
 	): Promise<FormatType<Numbers, ReturnFormat>>;
 
