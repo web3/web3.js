@@ -41,13 +41,15 @@ import {
 /* eslint-disable jest/no-standalone-expect */
 
 describe('Web3 instance', () => {
-	let provider: string;
+	let provider: string | SupportedProviders;
+	let providerUrl: string;
 	let accounts: string[];
 	let web3: Web3;
 	let currentAttempt = 0;
 
 	beforeAll(async () => {
-		provider = getSystemTestProviderUrl();
+		provider = getSystemTestProvider();
+		providerUrl = getSystemTestProviderUrl();
 		const acc1 = await createTempAccount();
 		const acc2 = await createTempAccount();
 		accounts = [acc1.address, acc2.address];
@@ -92,7 +94,7 @@ describe('Web3 instance', () => {
 		}
 	});
 	itIf(isWs)('check disconnect function for WebSocket provider', async () => {
-		const web3Instance = new Web3(new WebSocketProvider(provider));
+		const web3Instance = new Web3(new WebSocketProvider(providerUrl));
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
@@ -101,7 +103,7 @@ describe('Web3 instance', () => {
 		web3Instance.currentProvider?.disconnect();
 	});
 	itIf(isIpc)('check disconnect function for ipc provider', async () => {
-		const web3Instance = new Web3(new IpcProvider(provider));
+		const web3Instance = new Web3(new IpcProvider(providerUrl));
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
@@ -110,7 +112,7 @@ describe('Web3 instance', () => {
 		web3Instance.currentProvider?.disconnect();
 	});
 	itIf(isHttp)('check disconnect function for http provider', async () => {
-		const web3Instance = new Web3(new HttpProvider(provider));
+		const web3Instance = new Web3(new HttpProvider(providerUrl));
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
@@ -174,11 +176,11 @@ describe('Web3 instance', () => {
 			let newProvider: Web3BaseProvider;
 			web3 = new Web3('http://dummy.com');
 			if (isHttp) {
-				newProvider = new Web3.providers.HttpProvider(provider);
+				newProvider = new Web3.providers.HttpProvider(providerUrl);
 			} else if (isWs) {
-				newProvider = new Web3.providers.WebsocketProvider(provider);
+				newProvider = new Web3.providers.WebsocketProvider(providerUrl);
 			} else {
-				newProvider = new IpcProvider(provider);
+				newProvider = new IpcProvider(providerUrl);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			web3.setProvider(newProvider as SupportedProviders);
