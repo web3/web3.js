@@ -91,12 +91,12 @@ export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BA
 export const getSystemE2ETestProvider = (): string => {
 	if (process.env.WEB3_SYTEM_TEST_MODE === 'http') {
 		return getSystemTestBackend() === 'sepolia'
-			? process.env.INFURA_SEPOLIA_HTTP ?? secrets.INFURA_SEPOLIA_HTTP
-			: process.env.INFURA_MAINNET_HTTP ?? secrets.INFURA_MAINNET_HTTP;
+			? process.env.INFURA_SEPOLIA_HTTP ?? secrets.SEPOLIA.HTTP
+			: process.env.INFURA_MAINNET_HTTP ?? secrets.SEPOLIA.HTTP;
 	}
 	return getSystemTestBackend() === 'sepolia'
-		? process.env.INFURA_SEPOLIA_WS ?? secrets.INFURA_SEPOLIA_WS
-		: process.env.INFURA_MAINNET_WS ?? secrets.INFURA_MAINNET_WS;
+		? process.env.INFURA_SEPOLIA_WS ?? secrets.SEPOLIA.WS
+		: process.env.INFURA_MAINNET_WS ?? secrets.MAINNET.WS;
 };
 
 export const createAccount = _createAccount;
