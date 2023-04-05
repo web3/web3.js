@@ -1330,18 +1330,22 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-core
 
+-   Added hybrid build (ESM and CJS) of library (#5904)
 -   Added source files (#5956)
 
 #### web3-errors
 
+-   Added hybrid build (ESM and CJS) of library (#5904)
 -   Added source files (#5956)
 
 #### web3-eth
 
+-   Added hybrid build (ESM and CJS) of library (#5904)
 -   Added source files (#5956)
 
 #### web3-eth-abi
 
+-   Added hybrid build (ESM and CJS) of library (#5904)
 -   Added source files (#5956)
 
 #### web3-eth-accounts
@@ -1397,6 +1401,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-types
 
+-   Added hybrid build (ESM and CJS) of library (#5904)
 -   Added source files (#5956)
 
 #### web3-utils
@@ -1431,3 +1436,9 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-utils
 
 -   Removed dependencies @ethereumjs/tx, @ethereumjs/common (#5963)
+
+### Fixed
+
+#### web3-eth-ens
+
+-   Bug fix of `checkNetwork` in ENS (#5988)
