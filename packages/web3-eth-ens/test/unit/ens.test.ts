@@ -19,7 +19,6 @@ import { Web3Context, Web3ContextObject, Web3PromiEvent } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError } from 'web3-errors';
 import { sha3Raw, DEFAULT_RETURN_FORMAT } from 'web3-utils';
-import { Block } from 'web3-types';
 import { registryAddresses } from '../../src/config';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 
@@ -29,13 +28,13 @@ jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
 
 jest.mock('web3-eth', () => ({
 	__esModule: true,
-	getBlock: jest.fn(),
+	isSyncing: jest.fn(),
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-const { getBlock } = require('web3-eth');
+const { isSyncing } = require('web3-eth');
 
-const expectedNetworkId = 'main';
+const expectedNetworkId = '0x1';
 jest.mock('web3-net', () => ({
 	getId: jest.fn(),
 }));
@@ -381,17 +380,19 @@ describe('ens', () => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			getId.mockReset();
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			getBlock.mockReset();
+			isSyncing.mockReset();
 		});
 		it('Not last sync/ENSNetworkNotSyncedError', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			getId.mockImplementation(() => expectedNetworkId);
 
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			getBlock.mockImplementation(() => {
+			isSyncing.mockImplementation(() => {
 				return {
-					timestamp: BigInt(Date.now() / 1000 - 3601),
-				} as unknown as Block;
+					startingBlock: 100,
+					currentBlock: 312,
+					highestBlock: 51266,
+				} as unknown;
 			});
 			await expect(ens.checkNetwork()).rejects.toThrow(new ENSNetworkNotSyncedError());
 		});
@@ -402,10 +403,8 @@ describe('ens', () => {
 
 			// An initial check, in order to update `_lastSyncCheck`
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			getBlock.mockImplementation(() => {
-				return {
-					timestamp: BigInt(Date.now() / 1000),
-				} as unknown as Block;
+			isSyncing.mockImplementation(() => {
+				return false;
 			});
 			// update `_lastSyncCheck`
 			await ens.checkNetwork();
@@ -426,10 +425,12 @@ describe('ens', () => {
 			getId.mockImplementation(() => network);
 
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			getBlock.mockImplementation(() => {
+			isSyncing.mockImplementation(() => {
 				return {
-					timestamp: BigInt(111111111),
-				} as unknown as Block;
+					startingBlock: 100,
+					currentBlock: 312,
+					highestBlock: 51266,
+				} as unknown;
 			});
 
 			await expect(ens.checkNetwork()).rejects.toThrow(
