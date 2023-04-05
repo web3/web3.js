@@ -19,8 +19,8 @@ module.exports = {
 	resolve: {
 		extensions: ['.ts', '.js'],
 		fallback: {
-			net: require.resolve('net'),
-			fs: require.resolve('fs'),
+			fs: false,
+			net: false,
 			util: require.resolve('util'),
 			http: require.resolve('http-browserify'),
 			https: require.resolve('https-browserify'),
