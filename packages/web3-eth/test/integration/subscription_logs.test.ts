@@ -69,7 +69,7 @@ describeIf(isSocket)('subscription', () => {
 		clientUrl = getSystemTestProviderUrl();
 		provider = isWs ? new WebSocketProvider(clientUrl) : new IpcProvider(clientUrl);
 		contract = new Contract(BasicAbi, undefined, {
-			provider: clientUrl,
+			provider,
 		});
 	});
 	afterAll(async () => {

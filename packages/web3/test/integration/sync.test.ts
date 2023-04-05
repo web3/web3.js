@@ -15,16 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	describeIf,
-	isIpc,
-	closeOpenConnection,
-	isWs,
-	isSyncTest,
-	getSystemTestProvider,
-	getSystemTestProviderUrl,
-} from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
+import {
+	closeOpenConnection,
+	describeIf,
+	getSystemTestProviderUrl,
+	isIpc,
+	isSyncTest,
+	isWs,
+} from '../shared_fixtures/system_tests_utils';
 
 const addPeer = async (web3: Web3, eNode: string) => {
 	return web3.requestManager.send({
