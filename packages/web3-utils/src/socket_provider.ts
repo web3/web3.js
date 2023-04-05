@@ -200,40 +200,10 @@ export abstract class SocketProvider<
 	 * @param type - The event type to listen for
 	 * @param callback - The callback to be invoked when the event is emitted
 	 */
-	public abstract on(
-		type: 'disconnect',
-		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
-	): void {
-		this._eventEmitter.on(type, listener);
-	}
-	public abstract on<T = JsonRpcResult>(
-		type: 'message' | string,
-		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
-	): void {
-		this._eventEmitter.on(type, listener);
-	}
-	public abstract on(
-		type: 'connect',
-		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
-	): void {
-		this._eventEmitter.on(type, listener);
-	}
-	public abstract on(
-		type: 'chainChanged',
-		listener: Web3Eip1193ProviderEventCallback<string>,
-	): void {
-		this._eventEmitter.on(type, listener);
-	}
-	public abstract on(
-		type: 'accountsChanged',
-		listener: Web3Eip1193ProviderEventCallback<string[]>,
-	): void {
-		this._eventEmitter.on(type, listener);
-	}
-	public abstract removeListener(
-		type: string,
-		listener: Web3Eip1193ProviderEventCallback<any> | Web3ProviderEventCallback,
-	): void {
+	public on<T = JsonRpcResult>(
+		type: EventType,
+		listener: Web3Eip1193ProviderEventCallback<T> | Web3ProviderEventCallback<T>,
+	) {
 		this._eventEmitter.on(type, listener);
 	}
 
