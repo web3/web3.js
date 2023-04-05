@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { getSystemTestProvider, closeOpenConnection, isWs } from './fixtures/system_tests_utils';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-const Web3 = require('web3');
+const Web3 = require('web3').default;
 
 describe('Black Box Unit Tests - web3.BatchRequest', () => {
 	let web3: typeof Web3;
