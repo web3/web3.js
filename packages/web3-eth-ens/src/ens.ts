@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getBlock } from 'web3-eth';
+import { isSyncing } from 'web3-eth';
 import {
 	RevertInstructionError,
 	ENSNetworkNotSyncedError,
@@ -35,7 +35,7 @@ import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
 
 import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { Registry } from './registry';
-import { registryAddresses } from './config';
+import { networkIds, registryAddresses } from './config';
 import { Resolver } from './resolver';
 
 /**
@@ -449,10 +449,9 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	public async checkNetwork() {
 		const now = Date.now() / 1000;
 		if (!this._lastSyncCheck || now - this._lastSyncCheck > 3600) {
-			const block = await getBlock(this, 'latest', false, DEFAULT_RETURN_FORMAT);
-			const headAge = BigInt(now) - BigInt(block.timestamp);
+			const syncInfo = await isSyncing(this);
 
-			if (headAge > 3600) {
+			if (!(typeof syncInfo === 'boolean' && !syncInfo)) {
 				throw new ENSNetworkNotSyncedError();
 			}
 
@@ -466,7 +465,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 			...DEFAULT_RETURN_FORMAT,
 			number: FMT_NUMBER.HEX,
 		}); // get the network from provider
-		const addr = registryAddresses[networkType];
+		const addr = registryAddresses[networkIds[networkType]];
 
 		if (typeof addr === 'undefined') {
 			throw new ENSUnsupportedNetworkError(networkType);

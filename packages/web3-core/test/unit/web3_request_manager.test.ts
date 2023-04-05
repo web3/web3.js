@@ -679,7 +679,8 @@ describe('Web3RequestManager', () => {
 					request: jest
 						.fn()
 						.mockImplementation((_, cb: (error?: any, data?: any) => void) => {
-							cb(undefined, errorResponse);
+							// eslint-disable-next-line no-null/no-null
+							cb(null, errorResponse);
 						}),
 				} as any;
 
