@@ -21,7 +21,7 @@ import IpcProvider from 'web3-providers-ipc';
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
 import {
-	getSystemTestProvider,
+	getSystemTestProviderUrl,
 	describeIf,
 	isWs,
 	isSocket,
@@ -34,8 +34,8 @@ describeIf(isSocket)('unsubscribe', () => {
 	let provider: WebSocketProvider | IpcProvider;
 	beforeAll(() => {
 		provider = isWs
-			? new WebSocketProvider(getSystemTestProvider())
-			: new IpcProvider(getSystemTestProvider());
+			? new WebSocketProvider(getSystemTestProviderUrl())
+			: new IpcProvider(getSystemTestProviderUrl());
 	});
 	afterAll(async () => {
 		await closeOpenConnection(web3Eth);

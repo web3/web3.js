@@ -43,6 +43,7 @@ import {
 	ProviderRpcError,
 	JsonRpcSubscriptionResult,
 	JsonRpcNotification,
+	SupportedProviders,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -53,6 +54,8 @@ import Web3 from 'web3';
 import { NonPayableMethodObject } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import HttpProvider from 'web3-providers-http';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import IpcProvider from 'web3-providers-ipc';
 import accountsString from './accounts.json';
 
 /**
@@ -67,15 +70,23 @@ export const getEnvVar = (name: string): string | undefined =>
 export const DEFAULT_SYSTEM_PROVIDER = 'http://127.0.0.1:8545';
 export const DEFAULT_SYSTEM_ENGINE = 'node';
 
-export const getSystemTestProvider = (): string =>
+export const getSystemTestProviderUrl = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
+
+export const getSystemTestProvider = (): string | SupportedProviders => {
+	const url = getSystemTestProviderUrl();
+	if (url.includes('ipc')) {
+		return new IpcProvider(url);
+	}
+	return url;
+};
 
 export const getSystemTestEngine = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_ENGINE') ?? DEFAULT_SYSTEM_ENGINE;
 
-export const isHttp: boolean = getSystemTestProvider().startsWith('http');
-export const isWs: boolean = getSystemTestProvider().startsWith('ws');
-export const isIpc: boolean = getSystemTestProvider().includes('ipc');
+export const isHttp: boolean = getSystemTestProviderUrl().startsWith('http');
+export const isWs: boolean = getSystemTestProviderUrl().startsWith('ws');
+export const isIpc: boolean = getSystemTestProviderUrl().includes('ipc');
 export const isChrome: boolean = getSystemTestEngine() === 'chrome';
 export const isFirefox: boolean = getSystemTestEngine() === 'firefox';
 export const isElectron: boolean = getSystemTestEngine() === 'electron';

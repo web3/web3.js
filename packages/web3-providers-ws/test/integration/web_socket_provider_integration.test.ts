@@ -15,25 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Web3WSProviderError } from 'web3-errors';
 import {
 	EthExecutionAPI,
-	Web3APIPayload,
-	JsonRpcNotification,
-	JsonRpcSubscriptionResult,
 	JsonRpcId,
+	JsonRpcNotification,
 	JsonRpcResponse,
+	JsonRpcSubscriptionResult,
 	ProviderRpcError,
-	Web3ProviderEventCallback,
 	SocketRequestItem,
+	Web3APIPayload,
+	Web3ProviderEventCallback,
 } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
-import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 import {
-	getSystemTestProvider,
-	describeIf,
-	isWs,
 	createTempAccount,
+	describeIf,
+	getSystemTestProviderUrl,
+	isWs,
 	waitForCloseSocketConnection,
 	waitForOpenSocketConnection,
 } from '../fixtures/system_test_utils';
@@ -48,7 +48,7 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 	// helper function
 
 	beforeAll(async () => {
-		clientWsUrl = getSystemTestProvider();
+		clientWsUrl = getSystemTestProviderUrl();
 		tempAccount = (await createTempAccount()).address;
 	});
 	beforeEach(() => {

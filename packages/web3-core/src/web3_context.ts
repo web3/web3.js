@@ -140,7 +140,6 @@ export class Web3Context<
 			requestManager ??
 			new Web3RequestManager<API>(
 				provider,
-				undefined,
 				config?.enableExperimentalFeatures?.useSubscriptionWhenCheckingBlockTimeout,
 			);
 

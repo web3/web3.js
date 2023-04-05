@@ -22,6 +22,7 @@ import {
 	isWs,
 	isSyncTest,
 	getSystemTestProvider,
+	getSystemTestProviderUrl,
 } from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
 
@@ -60,11 +61,11 @@ describeIf((isIpc || isWs) && isSyncTest)('Sync nodes test', () => {
 	let web3Node2: Web3;
 	beforeAll(async () => {
 		const providerPath1 = isWs
-			? getSystemTestProvider().replace('8545', '18545')
-			: getSystemTestProvider().replace('/tmp/ipc', '/tmp/ipc1');
+			? getSystemTestProviderUrl().replace('8545', '18545')
+			: getSystemTestProviderUrl().replace('/tmp/ipc', '/tmp/ipc1');
 		const providerPath2 = isWs
-			? getSystemTestProvider().replace('8545', '28545')
-			: getSystemTestProvider().replace('/tmp/ipc', '/tmp/ipc2');
+			? getSystemTestProviderUrl().replace('8545', '28545')
+			: getSystemTestProviderUrl().replace('/tmp/ipc', '/tmp/ipc2');
 
 		web3Node1 = new Web3(providerPath1);
 		await addAccount(web3Node1);

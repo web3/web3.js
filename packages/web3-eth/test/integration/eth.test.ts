@@ -35,7 +35,7 @@ import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 
 describe('eth', () => {
 	let web3Eth: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;

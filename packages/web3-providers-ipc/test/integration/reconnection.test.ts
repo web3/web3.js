@@ -17,15 +17,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import IpcProvider from '../../src';
 
+import { startGethServer } from '../fixtures/helpers';
 import {
 	describeIf,
-	getSystemTestProvider,
+	getSystemTestProviderUrl,
 	isIpc,
-	waitForOpenSocketConnection,
 	waitForCloseSocketConnection,
 	waitForEvent,
+	waitForOpenSocketConnection,
 } from '../fixtures/system_test_utils';
-import { startGethServer } from '../fixtures/helpers';
 
 describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
@@ -42,7 +42,7 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			};
 		});
 		it('check defaults', async () => {
-			const web3Provider = new IpcProvider(getSystemTestProvider());
+			const web3Provider = new IpcProvider(getSystemTestProviderUrl());
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual({
 				autoReconnect: true,
@@ -54,7 +54,11 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('set custom reconnectOptions', async () => {
-			const web3Provider = new IpcProvider(getSystemTestProvider(), {}, reconnectionOptions);
+			const web3Provider = new IpcProvider(
+				getSystemTestProviderUrl(),
+				{},
+				reconnectionOptions,
+			);
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual(reconnectionOptions);
 			await waitForOpenSocketConnection(web3Provider);
@@ -62,7 +66,7 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('should emit connect and disconnected events', async () => {
-			const web3Provider = new IpcProvider(getSystemTestProvider());
+			const web3Provider = new IpcProvider(getSystemTestProviderUrl());
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			const disconnectPromise = waitForEvent(web3Provider, 'disconnect');
 			web3Provider.disconnect();
@@ -71,7 +75,11 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			expect(web3Provider.isReconnecting).toBe(false);
 		});
 		it('should connect, disconnect and reconnect', async () => {
-			const web3Provider = new IpcProvider(getSystemTestProvider(), {}, reconnectionOptions);
+			const web3Provider = new IpcProvider(
+				getSystemTestProviderUrl(),
+				{},
+				reconnectionOptions,
+			);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			const connectEvent = waitForEvent(web3Provider, 'connect');
 			// @ts-expect-error call protected function
