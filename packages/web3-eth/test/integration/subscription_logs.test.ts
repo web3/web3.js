@@ -21,17 +21,17 @@ import { AbiEventFragment, Web3BaseProvider } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
-import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
-	describeIf,
-	getSystemTestProvider as getSystemTestProviderUrl,
-	isWs,
-	isSocket,
-	createTempAccount,
 	closeOpenConnection,
+	createTempAccount,
+	describeIf,
+	getSystemTestProviderUrl,
+	isSocket,
+	isWs,
 } from '../fixtures/system_test_utils';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
+import { eventAbi, Resolve } from './helper';
 
 const checkEventCount = 2;
 

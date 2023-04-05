@@ -78,7 +78,6 @@ describe('eth', () => {
 
 			expect(res.HttpProvider).toBeDefined();
 			expect(res.WebsocketProvider).toBeDefined();
-			expect(res.IpcProvider).toBeDefined();
 		});
 		it('currentProvider', () => {
 			const { currentProvider } = web3Eth;

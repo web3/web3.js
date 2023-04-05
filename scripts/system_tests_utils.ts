@@ -44,6 +44,8 @@ import {
 	JsonRpcSubscriptionResult,
 	JsonRpcNotification,
 	SupportedProviders,
+	Web3APISpec,
+	Web3EthExecutionAPI,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -73,10 +75,12 @@ export const DEFAULT_SYSTEM_ENGINE = 'node';
 export const getSystemTestProviderUrl = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
 
-export const getSystemTestProvider = (): string | SupportedProviders => {
+export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecutionAPI>():
+	| string
+	| SupportedProviders<API> => {
 	const url = getSystemTestProviderUrl();
 	if (url.includes('ipc')) {
-		return new IpcProvider(url);
+		return new IpcProvider<API>(url);
 	}
 	return url;
 };
