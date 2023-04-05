@@ -45,15 +45,6 @@ import {
 	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import {
-	ETH_DATA_FORMAT,
-	FormatType,
-	DataFormat,
-	DEFAULT_RETURN_FORMAT,
-	format,
-	hexToBytes,
-	bytesToBuffer,
-} from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
 	ContractExecutionError,
@@ -66,6 +57,8 @@ import {
 import { ethRpcMethods } from 'web3-rpc-methods';
 import defaultImport, * as fullImport from '@ethereumjs/tx';
 
+import { DataFormat, DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FormatType } from 'web3-types';
+import { bytesToBuffer, format, hexToBytes } from 'web3-utils';
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,

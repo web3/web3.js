@@ -15,25 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	DataFormat,
-	DEFAULT_RETURN_FORMAT,
-	FMT_BYTES,
-	FMT_NUMBER,
-	format,
-	isNullish,
-} from 'web3-utils';
+import { format, isNullish } from 'web3-utils';
 
 import {
 	AbiConstructorFragment,
 	AbiEventFragment,
 	AbiFunctionFragment,
+	ContractAbiWithSignature,
+	ContractOptions,
+	EventLog,
 	LogsInput,
 	BlockNumberOrTag,
 	Filter,
 	HexString,
 	Topic,
 	Numbers,
+	FMT_NUMBER,
+	FMT_BYTES,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
 } from 'web3-types';
 
 import {
@@ -50,8 +50,6 @@ import {
 import { blockSchema, logSchema } from 'web3-eth';
 
 import { Web3ContractError } from 'web3-errors';
-// eslint-disable-next-line import/no-cycle
-import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
 
 export const encodeEventABI = (
 	{ address }: ContractOptions,

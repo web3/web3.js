@@ -22,16 +22,14 @@ import {
 	TransactionWithSenderAPI,
 	TransactionCall,
 	HexString,
-} from 'web3-types';
-import { isNullish, mergeDeep, toHex } from 'web3-utils';
-import { encodeMethodABI } from './encoding';
-import {
 	NonPayableCallOptions,
 	PayableCallOptions,
 	ContractOptions,
-	Web3ContractContext,
 	ContractInitOptions,
-} from './types';
+} from 'web3-types';
+import { isNullish, mergeDeep, toHex } from 'web3-utils';
+import { encodeMethodABI } from './encoding';
+import { Web3ContractContext } from './types';
 
 export const getSendTxParams = ({
 	abi,

@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ETH_DATA_FORMAT, format, SocketProvider } from 'web3-utils';
+import { format, SocketProvider } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
 	create,
@@ -43,6 +43,7 @@ import {
 	ProviderRpcError,
 	JsonRpcSubscriptionResult,
 	JsonRpcNotification,
+	ETH_DATA_FORMAT,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';

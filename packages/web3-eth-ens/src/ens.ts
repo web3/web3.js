@@ -29,9 +29,13 @@ import {
 	EthExecutionAPI,
 	TransactionReceipt,
 	Web3NetAPI,
+	NonPayableCallOptions,
+	DEFAULT_RETURN_FORMAT,
+	FormatType,
+	FMT_NUMBER,
+	DataFormat,
 } from 'web3-types';
-import { DEFAULT_RETURN_FORMAT, FormatType, FMT_NUMBER, DataFormat } from 'web3-utils';
-import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
+import { Contract } from 'web3-eth-contract';
 
 import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { Registry } from './registry';

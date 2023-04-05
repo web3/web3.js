@@ -21,8 +21,13 @@ import {
 	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
-import { ContractAbi, TransactionCall, TransactionReceipt } from 'web3-types';
-import { DataFormat, FormatType } from 'web3-utils';
+import {
+	DataFormat,
+	FormatType,
+	ContractAbi,
+	TransactionCall,
+	TransactionReceipt,
+} from 'web3-types';
 import { RevertReason, RevertReasonWithCustomError } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getRevertReason, parseTransactionError } from './get_revert_reason';
