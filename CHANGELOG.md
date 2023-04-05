@@ -1321,75 +1321,93 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-core
 
 -   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-errors
 
 -   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-eth
 
 -   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-eth-abi
 
 -   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-eth-accounts
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-eth-contract
 
+-   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the `Contract` class) (#5915)
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
--   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the
 
 #### web3-eth-ens
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-eth-iban
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-eth-personal
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-net
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-providers-http
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-providers-ipc
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-providers-ws
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-rpc-methods
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-types
 
 -   Added hybrid build (ESM and CJS) of library (#5904)
+-   Added source files (#5956)
 
 #### web3-utils
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 #### web3-validator
 
+-   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
 ### Removed
@@ -1405,3 +1423,9 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   `data` was removed as a property of `ContractOptions` type (#5915)
+
+### Fixed
+
+#### web3-eth-ens
+
+-   Bug fix of `checkNetwork` in ENS (#5988)
