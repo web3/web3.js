@@ -54,6 +54,7 @@ import { NonPayableMethodObject } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import HttpProvider from 'web3-providers-http';
 import accountsString from './accounts.json';
+import secrets from '../.secrets.json';
 
 /**
  * Get the env variable from Cypress if it exists or node process
@@ -87,6 +88,16 @@ export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEn
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
+export const getSystemE2ETestProvider = (): string => {
+	if (process.env.WEB3_SYTEM_TEST_MODE === 'http') {
+		return getSystemTestBackend() === 'sepolia'
+			? process.env.INFURA_SEPOLIA_HTTP ?? secrets.INFURA_SEPOLIA_HTTP
+			: process.env.INFURA_MAINNET_HTTP ?? secrets.INFURA_MAINNET_HTTP;
+	}
+	return getSystemTestBackend() === 'sepolia'
+		? process.env.INFURA_SEPOLIA_WS ?? secrets.INFURA_SEPOLIA_WS
+		: process.env.INFURA_MAINNET_WS ?? secrets.INFURA_MAINNET_WS;
+};
 
 export const createAccount = _createAccount;
 
