@@ -86,14 +86,20 @@ describe('contract', () => {
 			).rejects.toThrow('Signer Error Signer Error  gasLimit is too low');
 		});
 
-		it.each(['0x1', '0x2'])('should return estimated gas of contract method %p', async () => {
-			const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+		it.each(['0x1', '0x2'])(
+			'should return estimated gas of contract method %p',
+			async txType => {
+				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
-			const estimatedGas = await contractDeployed.methods.setGreeting('Hello').estimateGas({
-				...sendOptions,
-			});
-			expect(Number(estimatedGas)).toBeGreaterThan(0);
-		});
+				const estimatedGas = await contractDeployed.methods
+					.setGreeting('Hello')
+					.estimateGas({
+						...sendOptions,
+						type: txType,
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			},
+		);
 
 		it('should deploy the contract if data is provided at initiation', async () => {
 			const contractWithParams = new web3.eth.Contract(GreeterAbi, undefined, {
