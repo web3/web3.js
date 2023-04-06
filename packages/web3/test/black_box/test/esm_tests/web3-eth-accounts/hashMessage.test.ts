@@ -21,11 +21,11 @@ import {
 	closeOpenConnection,
 	getSystemTestProvider,
 	isWs,
-} from 'web3/test/shared_fixtures/system_tests_utils';
+} from '../../fixtures/system_tests_utils';
 
 jest.setTimeout(15000);
 
-describe('Black Box Unit Tests - web3.eth.accounts.hashMessage', () => {
+describe('ESM - Black Box Unit Tests - web3.eth.accounts.hashMessage', () => {
 	let web3: Web3;
 
 	beforeAll(() => {

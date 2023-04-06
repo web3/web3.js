@@ -17,12 +17,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // TODO For some reason when running this test with a WebSocket provider
 // the test takes a long time to run afterAll
 import Web3 from 'web3';
+import { validator } from 'web3-validator';
 import {
 	closeOpenConnection,
 	getSystemTestProvider,
 	isWs,
-} from 'web3/test/shared_fixtures/system_tests_utils';
-import { validator } from 'web3-validator';
+} from '../../fixtures/system_tests_utils';
 
 jest.setTimeout(15000);
 
