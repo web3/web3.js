@@ -198,7 +198,7 @@ describe('Contract', () => {
 			// });
 			const deployedContract = await contract
 				.deploy({
-					input: GreeterBytecode,
+					data: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
@@ -232,7 +232,7 @@ describe('Contract', () => {
 
 			const deployedContract = await contract
 				.deploy({
-					input: GreeterBytecode,
+					data: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
