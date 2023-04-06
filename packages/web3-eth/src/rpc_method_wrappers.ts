@@ -1147,7 +1147,7 @@ export function sendTransaction<
 
 						if (wallet) {
 							const signedTransaction = await wallet.signTransaction(
-								transactionFormatted as Record<string, unknown>,
+								transactionFormatted,
 							);
 
 							transactionHash = await trySendTransaction(

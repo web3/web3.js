@@ -333,7 +333,7 @@ export const getSystemTestAccounts = async (): Promise<string[]> =>
 
 export const signTxAndSendEIP1559 = async (
 	provider: unknown,
-	tx: Record<string, unknown>,
+	tx: Transaction,
 	privateKey: string,
 ) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
@@ -351,7 +351,7 @@ export const signTxAndSendEIP1559 = async (
 
 export const signTxAndSendEIP2930 = async (
 	provider: unknown,
-	tx: Record<string, unknown>,
+	tx: Transaction,
 	privateKey: string,
 ) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
