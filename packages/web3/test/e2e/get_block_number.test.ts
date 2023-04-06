@@ -18,11 +18,8 @@ import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import { isBigInt, isHexStrict, isNumber, isString } from 'web3-validator';
 
 import Web3 from '../../src';
-import {
-	closeOpenConnection,
-	getSystemE2ETestProvider,
-	getSystemTestBackend,
-} from '../shared_fixtures/system_tests_utils';
+import { getSystemE2ETestProvider } from './get_system_e2e_test_provider';
+import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
 describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {

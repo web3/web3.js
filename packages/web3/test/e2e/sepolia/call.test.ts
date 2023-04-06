@@ -17,9 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { FMT_BYTES, FMT_NUMBER, bytesToBuffer, hexToBytes } from 'web3-utils';
 
 import Web3 from '../../../src';
+import { getSystemE2ETestProvider } from '../get_system_e2e_test_provider';
 import {
 	closeOpenConnection,
-	getSystemE2ETestProvider,
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 // eslint-disable-next-line import/no-relative-packages
