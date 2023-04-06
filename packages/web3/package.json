@@ -8,7 +8,8 @@
 		".": {
 			"types": "./lib/types/index.d.ts",
 			"import": "./lib/esm/index.js",
-			"require": "./lib/commonjs/index.js"
+			"require": "./lib/commonjs/index.js",
+			"browser": "./dist/web3.min.js"
 		}
 	},
 	"repository": "https://github.com/ChainSafe/web3.js",
