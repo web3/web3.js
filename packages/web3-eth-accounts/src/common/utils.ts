@@ -424,13 +424,13 @@ const setLength = function (msg: Buffer, length: number, right: boolean) {
 			msg.copy(buf);
 			return buf;
 		}
-		return msg.slice(0, length);
+		return msg.subarray(0, length);
 	}
 	if (msg.length < length) {
 		msg.copy(buf, length - msg.length);
 		return buf;
 	}
-	return msg.slice(-length);
+	return msg.subarray(-length);
 };
 
 /**

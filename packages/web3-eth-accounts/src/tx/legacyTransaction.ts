@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { validateNoLeadingZeroes } from 'web3-validator';
+import { RLP } from '@ethereumjs/rlp';
 import { MAX_INTEGER } from './constants';
 import {
 	arrToBufArr,
@@ -27,7 +28,6 @@ import {
 	ecrecover,
 	unpadBuffer,
 } from '../common/utils';
-import { RLP } from '../rlp';
 
 import { BaseTransaction } from './baseTransaction';
 

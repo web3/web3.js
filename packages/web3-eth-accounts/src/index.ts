@@ -43,4 +43,3 @@ export * from './types';
 export * from './schemas';
 export * from './common';
 export * from './tx';
-export * from './rlp';

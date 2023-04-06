@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { validateNoLeadingZeroes } from 'web3-validator';
+import { RLP } from '@ethereumjs/rlp';
 import { MAX_INTEGER } from './constants';
 import { getAccessListData, verifyAccessList, getAccessListJSON, getDataFeeEIP2930 } from './utils';
 import {
@@ -27,10 +28,7 @@ import {
 	toBuffer,
 	ecrecover,
 } from '../common/utils';
-import { RLP } from '../rlp';
-
 import { BaseTransaction } from './baseTransaction';
-
 import type {
 	AccessList,
 	AccessListBuffer,

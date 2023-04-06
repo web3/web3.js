@@ -14,8 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { RLP } from '@ethereumjs/rlp';
 import { Chain, Common, Hardfork } from '../../../src/common';
-import { RLP } from '../../../src/rlp';
 
 import { FeeMarketEIP1559Transaction } from '../../../src';
 
