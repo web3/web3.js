@@ -80,4 +80,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Moved @ethereumjs/tx, @ethereumjs/common, @ethereumjs/rlp code to our source code (#5963)
+-   Moved @ethereumjs/tx, @ethereumjs/common code to our source code (#5963)

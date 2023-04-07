@@ -1310,7 +1310,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-accounts
 
--   Moved @ethereumjs/tx, @ethereumjs/common, @ethereumjs/rlp code to our source code (#5963)
+-   Moved @ethereumjs/tx, @ethereumjs/common code to our source code (#5963)
 
 #### web3-eth-contract
 
@@ -1340,7 +1340,6 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth
 
--   Added hybrid build (ESM and CJS) of library (#5904)
 -   Added source files (#5956)
 
 #### web3-eth-abi
