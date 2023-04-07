@@ -15,17 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { TransactionDataAndInputError } from 'web3-errors';
+import { Transaction } from 'web3-types';
 import {
-	bytesToBuffer,
-	mergeDeep,
+	bytesToHex,
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	format,
 	FormatType,
+	mergeDeep,
 } from 'web3-utils';
-import { Transaction } from 'web3-types';
 import { isNullish, ValidationSchemaInput } from 'web3-validator';
-import { TransactionDataAndInputError } from 'web3-errors';
 import { transactionSchema } from '../schemas';
 
 export function formatTransaction<
@@ -49,8 +49,8 @@ export function formatTransaction<
 
 	if (!isNullish(formattedTransaction.data) && !isNullish(formattedTransaction.input))
 		throw new TransactionDataAndInputError({
-			data: bytesToBuffer(formattedTransaction.data).toString('hex'),
-			input: bytesToBuffer(formattedTransaction.input).toString('hex'),
+			data: bytesToHex(formattedTransaction.data),
+			input: bytesToHex(formattedTransaction.input),
 		});
 	else if (!isNullish(formattedTransaction.data)) {
 		formattedTransaction.input = formattedTransaction.data;

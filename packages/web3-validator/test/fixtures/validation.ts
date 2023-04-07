@@ -604,7 +604,7 @@ export const invalidFilterObjectData: any[] = [
 
 export const validBytesData: any[] = [
 	'0x10',
-	'0xafe',
+	'0xafea',
 	[2, 3, 255],
 	Buffer.from('abce', 'hex'),
 	Buffer.from('hello', 'utf8'),
@@ -633,6 +633,8 @@ export const invalidBytesDataWithAbiType: [any, string][] = [
 export const invalidBytesData: any[] = [
 	'0xT1',
 	'1234',
+	// odd length hex string
+	'0x123',
 	'hello',
 	[1, 2, -3, 4, 5],
 	[2, 3, 266],

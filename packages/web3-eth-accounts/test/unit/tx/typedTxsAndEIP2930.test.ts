@@ -15,17 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Point } from 'ethereum-cryptography/secp256k1';
-import { Chain, Common, Hardfork } from '../../../src/common';
+import { bytesToHex, hexToBytes, uint8ArrayEquals } from 'web3-utils';
 import {
-	bufferToBigInt,
-	bufferToHex,
 	AccessListEIP2930Transaction,
+	AccessListUint8ArrayItem,
 	FeeMarketEIP1559Transaction,
 } from '../../../src';
+import { Chain, Common, Hardfork, uint8ArrayToBigInt } from '../../../src/common';
 import { Address } from '../../../src/tx/address';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from '../../../src/tx/constants';
 
-import type { AccessList, AccessListBufferItem } from '../../../src';
+import type { AccessList } from '../../../src';
 
 const privateToPublic = function (privateKey: Buffer): Buffer {
 	return Buffer.from(Point.fromPrivateKey(privateKey).toRawBytes(false).slice(1));
@@ -164,8 +164,8 @@ describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-29
 		for (const txType of txTypes) {
 			const access: AccessList = [
 				{
-					address: bufferToHex(validAddress),
-					storageKeys: [bufferToHex(validSlot)],
+					address: bytesToHex(validAddress),
+					storageKeys: [bytesToHex(validSlot)],
 				},
 			];
 			const txn = txType.class.fromTxData(
@@ -181,8 +181,8 @@ describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-29
 			const BufferArray = txn.accessList;
 			const JSON = txn.AccessListJSON;
 
-			expect(BufferArray[0][0].equals(validAddress)).toBeTruthy();
-			expect(BufferArray[0][1][0].equals(validSlot)).toBeTruthy();
+			expect(uint8ArrayEquals(BufferArray[0][0], validAddress)).toBeTruthy();
+			expect(uint8ArrayEquals(BufferArray[0][1][0], validSlot)).toBeTruthy();
 
 			expect(JSON).toEqual(access);
 
@@ -267,7 +267,7 @@ describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-29
 			);
 			let signed = tx.sign(pKey);
 			const signedAddress = signed.getSenderAddress();
-			expect(signedAddress.buf.equals(address)).toBeTruthy();
+			expect(uint8ArrayEquals(signedAddress.buf, address)).toBeTruthy();
 			// expect(signedAddress).toEqual(Address.publicToAddress(Buffer.from(address)));
 			signed.verifySignature(); // If this throws, test will not end.
 
@@ -337,7 +337,7 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 		const buffer = Buffer.from([]);
 		const _address = Buffer.from([]);
 		const storageKeys = [Buffer.from([]), Buffer.from([])];
-		const aclBuf: AccessListBufferItem = [_address, storageKeys];
+		const aclBuf: AccessListUint8ArrayItem = [_address, storageKeys];
 		expect(() => {
 			AccessListEIP2930Transaction.fromValuesArray(
 				[buffer, buffer, buffer, buffer, buffer, buffer, buffer, [aclBuf], buffer],
@@ -441,15 +441,13 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 			},
 			{ common },
 		);
-		const expectedHash = Buffer.from(
-			'78528e2724aa359c58c13e43a7c467eb721ce8d410c2a12ee62943a3aaefb60b',
-			'hex',
+		const expectedHash = hexToBytes(
+			'0x78528e2724aa359c58c13e43a7c467eb721ce8d410c2a12ee62943a3aaefb60b',
 		);
 		expect(unsignedTx.getMessageToSign(true)).toEqual(expectedHash);
 
-		const expectedSerialization = Buffer.from(
-			'01f858018080809401010101010101010101010101010101010101018083010200f838f7940101010101010101010101010101010101010101e1a00101010101010101010101010101010101010101010101010101010101010101',
-			'hex',
+		const expectedSerialization = hexToBytes(
+			'0x01f858018080809401010101010101010101010101010101010101018083010200f838f7940101010101010101010101010101010101010101e1a00101010101010101010101010101010101010101010101010101010101010101',
 		);
 		expect(unsignedTx.getMessageToSign(false)).toEqual(expectedSerialization);
 	});
@@ -470,7 +468,7 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 			nonce: 0x00,
 			to: new Address(Buffer.from('df0a88b2b68c673713a8ec826003676f272e3573', 'hex')),
 			value: 0x01,
-			chainId: bufferToBigInt(Buffer.from('796f6c6f763378', 'hex')),
+			chainId: uint8ArrayToBigInt(Buffer.from('796f6c6f763378', 'hex')),
 			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 			accessList: <any>[[_address, [slot1]]],
 		};
@@ -503,10 +501,10 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 			'hex',
 		);
 		const v = BigInt(0);
-		const r = bufferToBigInt(
+		const r = uint8ArrayToBigInt(
 			Buffer.from('294ac94077b35057971e6b4b06dfdf55a6fbed819133a6c1d31e187f1bca938d', 'hex'),
 		);
-		const s = bufferToBigInt(
+		const s = uint8ArrayToBigInt(
 			Buffer.from('0be950468ba1c25a5cb50e9f6d8aa13c8cd21f24ba909402775b262ac76d374d', 'hex'),
 		);
 

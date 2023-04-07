@@ -46,6 +46,10 @@ export const isBytes = (
 	let valueToCheck: Uint8Array;
 
 	if (typeof value === 'string') {
+		if (value.length % 2 !== 0) {
+			// odd length hex
+			return false;
+		}
 		valueToCheck = hexToUint8Array(value);
 	} else if (Array.isArray(value)) {
 		if (value.some(d => d < 0 || d > 255 || !Number.isInteger(d))) {

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InvalidNumberError } from 'web3-errors';
+import { InvalidBytesError, InvalidNumberError } from 'web3-errors';
 import { VALID_ETH_BASE_TYPES } from './constants';
 import {
 	FullValidationSchema,
@@ -393,9 +393,13 @@ export function hexToUint8Array(hex: string): Uint8Array {
 	} else {
 		value = hex;
 	}
+	if (value.length % 2 !== 0) {
+		throw new InvalidBytesError('hex string has odd length');
+	}
 	const bytes = new Uint8Array(Math.ceil(value.length / 2));
 	for (let i = 0; i < bytes.length; i += 1) {
-		bytes[i] = parseInt(value.substring(i * 2, i * 2 + 2), 16);
+		const byte = parseInt(value.substring(i * 2, i * 2 + 2), 16);
+		bytes[i] = byte;
 	}
 	return bytes;
 }
