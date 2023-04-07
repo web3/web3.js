@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { RLP } from '@ethereumjs/rlp';
+import { hexToBytes } from 'web3-utils';
 import { Chain, Common, Hardfork } from '../../../src/common';
 
 import { FeeMarketEIP1559Transaction } from '../../../src';
@@ -120,9 +121,8 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 		const pkey = Buffer.from(data.privateKey.slice(2), 'hex');
 		let txn = FeeMarketEIP1559Transaction.fromTxData(data, { common });
 		let signed = txn.sign(pkey);
-		const expectedHash = Buffer.from(
-			'2e564c87eb4b40e7f469b2eec5aa5d18b0b46a24e8bf0919439cfb0e8fcae446',
-			'hex',
+		const expectedHash = hexToBytes(
+			'0x2e564c87eb4b40e7f469b2eec5aa5d18b0b46a24e8bf0919439cfb0e8fcae446',
 		);
 		expect(signed.hash()).toEqual(expectedHash);
 		txn = FeeMarketEIP1559Transaction.fromTxData(data, { common, freeze: false });
@@ -170,15 +170,13 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 			},
 			{ common },
 		);
-		const expectedHash = Buffer.from(
-			'fa81814f7dd57bad435657a05eabdba2815f41e3f15ddd6139027e7db56b0dea',
-			'hex',
+		const expectedHash = hexToBytes(
+			'0xfa81814f7dd57bad435657a05eabdba2815f41e3f15ddd6139027e7db56b0dea',
 		);
 		expect(unsignedTx.getMessageToSign(true)).toEqual(expectedHash);
 
-		const expectedSerialization = Buffer.from(
-			'02f85904808080809401010101010101010101010101010101010101018083010200f838f7940101010101010101010101010101010101010101e1a00101010101010101010101010101010101010101010101010101010101010101',
-			'hex',
+		const expectedSerialization = hexToBytes(
+			'0x02f85904808080809401010101010101010101010101010101010101018083010200f838f7940101010101010101010101010101010101010101e1a00101010101010101010101010101010101010101010101010101010101010101',
 		);
 		expect(unsignedTx.getMessageToSign(false)).toEqual(expectedSerialization);
 	});

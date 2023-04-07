@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { FormatType, Transaction, DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 
 export const bytesAsHexStringTransaction: FormatType<
 	Transaction,
@@ -61,7 +62,7 @@ export const bytesAsBufferTransaction: FormatType<
 	type: BigInt('0'),
 	maxFeePerGas: BigInt('78000000000'),
 	maxPriorityFeePerGas: BigInt('1230000000'),
-	data: Buffer.alloc(0),
+	data: new Uint8Array(0),
 	nonce: BigInt(4),
 	chain: 'mainnet',
 	hardfork: 'berlin',
@@ -77,8 +78,8 @@ export const bytesAsBufferTransaction: FormatType<
 	},
 	gasLimit: BigInt('21000'),
 	v: BigInt('37'),
-	r: Buffer.from('4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d', 'hex'),
-	s: Buffer.from('7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0', 'hex'),
+	r: hexToBytes('4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d'),
+	s: hexToBytes('7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0'),
 };
 
 export const bytesAsUint8ArrayTransaction: FormatType<

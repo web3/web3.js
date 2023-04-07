@@ -200,7 +200,7 @@ export const invalidPrivateKeytoAccountData: [
 	[Buffer.from([]), new PrivateKeyLengthError()],
 ];
 
-export const validEncryptData: [[any, string | Buffer, CipherOptions], KeyStore][] = [
+export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeyStore][] = [
 	[
 		[
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
@@ -397,7 +397,7 @@ export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 			{
 				iv: Buffer.from('bfb43120ae00e9de110f8325143a2709', 'hex'),
 				salt: Buffer.from(
-					'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
+					'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd0',
 					'hex',
 				),
 			},
@@ -447,7 +447,7 @@ export const invalidDecryptData: [[any, string], InvalidKdfError | KeyDerivation
 					kdf: 'pbkdf2',
 					kdfparams: {
 						dklen: 32,
-						salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
+						salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd00',
 						c: 262144,
 						prf: 'hmac-sha256',
 					},

@@ -14,8 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { toBuffer } from 'web3-eth-accounts';
+import { hexToBytes } from 'ethereum-cryptography/utils';
 import {
 	isString,
 	isHex,
@@ -128,13 +127,13 @@ describe('validation', () => {
 			});
 			it('valid', () => {
 				const noLeadingZeroes = {
-					a: toBuffer('0x123'),
+					a: hexToBytes('0x1230'),
 				};
 				const noleadingZeroBytes = {
-					a: toBuffer('0x01'),
+					a: hexToBytes('0x01'),
 				};
 				const emptyBuffer = {
-					a: toBuffer('0x'),
+					a: hexToBytes('0x'),
 				};
 				const undefinedValue = {
 					a: undefined,
@@ -147,10 +146,10 @@ describe('validation', () => {
 			});
 			it('fails', () => {
 				const leadingZeroBytes = {
-					a: toBuffer('0x001'),
+					a: hexToBytes('0x0010'),
 				};
 				const onlyZeroes = {
-					a: toBuffer('0x0'),
+					a: hexToBytes('0x00'),
 				};
 
 				expect(() => validateNoLeadingZeroes(leadingZeroBytes)).toThrow();

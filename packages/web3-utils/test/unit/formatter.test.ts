@@ -132,7 +132,7 @@ describe('formatter', () => {
 						{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.BUFFER }
 					>;
 
-					return expectTypeOf<T>().toBe<Buffer>();
+					return expectTypeOf<T>().toBe<Uint8Array>();
 				});
 			});
 		});
@@ -210,7 +210,7 @@ describe('formatter', () => {
 						{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.BUFFER }
 					>;
 
-					return expectTypeOf<T>().toBe<Buffer[]>();
+					return expectTypeOf<T>().toBe<Uint8Array[]>();
 				});
 			});
 		});
@@ -221,7 +221,7 @@ describe('formatter', () => {
 					{
 						handleRevert: boolean;
 						timeout: number;
-						data: Buffer;
+						data: Uint8Array;
 					},
 					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 				>;
@@ -238,7 +238,7 @@ describe('formatter', () => {
 					{
 						handleRevert: boolean;
 						timeout: number[];
-						data: Buffer[];
+						data: Uint8Array[];
 					},
 					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 				>;
@@ -256,7 +256,7 @@ describe('formatter', () => {
 						nested: {
 							handleRevert: boolean;
 							timeout: number[];
-							data: Buffer[];
+							data: Uint8Array[];
 						};
 					},
 					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
@@ -270,7 +270,7 @@ describe('formatter', () => {
 			typecheck('should format correct types for tuple', () => {
 				type T = FormatType<
 					{
-						tuple: [Buffer, number];
+						tuple: [Uint8Array, number];
 					},
 					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 				>;
@@ -282,7 +282,7 @@ describe('formatter', () => {
 
 			typecheck('should format correct tuple type', () => {
 				type T = FormatType<
-					[Buffer, number],
+					[Uint8Array, number],
 					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 				>;
 
@@ -335,35 +335,35 @@ describe('formatter', () => {
 				>;
 
 				return expectTypeOf<T>().toBe<{
-					readonly parentHash: Buffer;
-					readonly sha3Uncles: Buffer;
-					readonly miner: Buffer;
-					readonly stateRoot: Buffer;
-					readonly transactionsRoot: Buffer;
-					readonly receiptsRoot: Buffer;
-					readonly logsBloom?: Buffer;
+					readonly parentHash: Uint8Array;
+					readonly sha3Uncles: Uint8Array;
+					readonly miner: Uint8Array;
+					readonly stateRoot: Uint8Array;
+					readonly transactionsRoot: Uint8Array;
+					readonly receiptsRoot: Uint8Array;
+					readonly logsBloom?: Uint8Array;
 					readonly difficulty?: bigint;
 					readonly number?: bigint;
 					readonly gasLimit: bigint;
 					readonly gasUsed: bigint;
 					readonly timestamp: bigint;
-					readonly extraData: Buffer;
-					readonly mixHash: Buffer;
+					readonly extraData: Uint8Array;
+					readonly mixHash: Uint8Array;
 					readonly nonce?: bigint;
 					readonly totalDifficulty: bigint;
 					readonly baseFeePerGas?: bigint;
 					readonly size: bigint;
 					readonly transactions:
-						| Buffer[]
+						| Uint8Array[]
 						| {
-								readonly blockHash?: Buffer;
+								readonly blockHash?: Uint8Array;
 								readonly blockNumber?: bigint;
 								readonly from: Address;
-								readonly hash: Buffer;
+								readonly hash: Uint8Array;
 								readonly transactionIndex?: bigint;
 						  }[];
-					readonly uncles: Buffer[];
-					readonly hash?: Buffer;
+					readonly uncles: Uint8Array[];
+					readonly hash?: Uint8Array;
 				}>();
 			});
 
@@ -480,7 +480,7 @@ describe('formatter', () => {
 							number: FMT_NUMBER.STR,
 							bytes: FMT_BYTES.BUFFER,
 						}),
-					).toEqual(Buffer.from('100bca', 'hex'));
+					).toEqual(new Uint8Array([16, 11, 202]));
 				});
 			});
 		});

@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { keccak256 } from 'ethereum-cryptography/keccak';
+import { bytesToUtf8, utf8ToBytes } from 'ethereum-cryptography/utils';
 import { Address, Bytes, HexString, Numbers, ValueTypes } from 'web3-types';
 import {
 	isAddress,
@@ -24,7 +26,7 @@ import {
 	utils as validatorUtils,
 	validator,
 } from 'web3-validator';
-import { keccak256 } from 'ethereum-cryptography/keccak';
+
 import {
 	HexProcessingError,
 	InvalidAddressError,
@@ -80,26 +82,19 @@ export type EtherUnits = keyof typeof ethUnitMap;
  * > <Buffer 48 0c>
  * ```
  */
-export const bytesToBuffer = (data: Bytes): Buffer | never => {
+export const bytesToBuffer = (data: Bytes): Uint8Array | never => {
 	validator.validate(['bytes'], [data]);
 
-	if (Buffer.isBuffer(data)) {
+	if (data instanceof Uint8Array) {
 		return data;
 	}
 
-	if (data instanceof Uint8Array || Array.isArray(data)) {
-		return Buffer.from(data);
+	if (Array.isArray(data)) {
+		return new Uint8Array(data);
 	}
 
-	if (typeof data === 'string' && isHexStrict(data)) {
-		const dataWithoutPrefix = data.toLowerCase().replace('0x', '');
-		const dataLength = dataWithoutPrefix.length + (dataWithoutPrefix.length % 2);
-		const finalData = dataWithoutPrefix.padStart(dataLength, '0');
-		return Buffer.from(finalData, 'hex');
-	}
-
-	if (typeof data === 'string' && !isHexStrict(data)) {
-		return Buffer.from(data, 'hex');
+	if (typeof data === 'string') {
+		return validatorUtils.hexToUint8Array(data);
 	}
 
 	throw new InvalidBytesError(data);
@@ -108,7 +103,7 @@ export const bytesToBuffer = (data: Bytes): Buffer | never => {
 /**
  * @internal
  */
-const bufferToHexString = (data: Buffer) => `0x${data.toString('hex')}`;
+const bufferToHexString = validatorUtils.uint8ArrayToHexString;
 
 /**
  * Convert a byte array to a hex string
@@ -136,7 +131,12 @@ export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesTo
  * > <Buffer 74 65 73 74>
  * ```
  */
-export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
+export const hexToBytes = (bytes: HexString): Uint8Array => {
+	if (typeof bytes === 'string' && bytes.slice(0, 2).toLowerCase() !== '0x') {
+		return bytesToBuffer(`0x${bytes}`);
+	}
+	return bytesToBuffer(bytes);
+};
 
 /**
  * Converts value to it's number representation
@@ -175,7 +175,6 @@ export const toDecimal = hexToNumber;
  */
 export const numberToHex = (value: Numbers): HexString => {
 	validator.validate(['int'], [value]);
-
 	// To avoid duplicate code and circular dependency we will
 	// use `numberToHex` implementation from `web3-validator`
 	return validatorUtils.numberToHex(value);
@@ -219,7 +218,7 @@ export const utf8ToHex = (str: string): HexString => {
 	// eslint-disable-next-line no-control-regex
 	strWithoutNullCharacter = strWithoutNullCharacter.replace(/(?:\u0000)$/, '');
 
-	return `0x${Buffer.from(strWithoutNullCharacter, 'utf8').toString('hex')}`;
+	return bytesToHex(new TextEncoder().encode(strWithoutNullCharacter));
 };
 
 /**
@@ -243,12 +242,18 @@ export const stringToHex = utf8ToHex;
  * > Hello World
  * ```
  */
-export const hexToUtf8 = (str: HexString): string => bytesToBuffer(str).toString('utf8');
+export const hexToUtf8 = (str: HexString): string => bytesToUtf8(hexToBytes(str));
 
 /**
  * @alias hexToUtf8
  */
-export const toUtf8 = hexToUtf8;
+export const toUtf8 = (input: HexString | Uint8Array) => {
+	if (typeof input === 'string') {
+		return hexToUtf8(input);
+	}
+	validator.validate(['bytes'], [input]);
+	return bytesToUtf8(input);
+};
 
 /**
  * @alias hexToUtf8
@@ -288,7 +293,10 @@ export const fromAscii = asciiToHex;
  * > Hello World
  * ```
  */
-export const hexToAscii = (str: HexString): string => bytesToBuffer(str).toString('ascii');
+export const hexToAscii = (str: HexString): string => {
+	const decoder = new TextDecoder('ascii');
+	return decoder.decode(hexToBytes(str));
+};
 
 /**
  * @alias hexToAscii
@@ -553,17 +561,17 @@ export const toChecksumAddress = (address: Address): string => {
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
 
-	const hash = bytesToHex(keccak256(Buffer.from(lowerCaseAddress)));
+	const hash = bytesToHex(keccak256(utf8ToBytes(lowerCaseAddress)));
 
 	if (
 		isNullish(hash) ||
-		hash === 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+		hash === '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
 	)
 		return ''; // // EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
 
-	const addressHash = hash.replace(/^0x/i, '');
-
 	let checksumAddress = '0x';
+
+	const addressHash = hash.replace(/^0x/i, '');
 
 	for (let i = 0; i < lowerCaseAddress.length; i += 1) {
 		// If ith character is 8 to f then make it uppercase

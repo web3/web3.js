@@ -15,19 +15,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Point } from 'ethereum-cryptography/secp256k1';
-import { Chain, Common, Hardfork } from '../../../src/common';
-import { toBuffer, bufferToBigInt } from '../../../src/common/utils';
-import { MAX_UINT64, MAX_INTEGER, SECP256K1_ORDER } from '../../../src/tx/constants';
+import { uint8ArrayEquals } from 'web3-utils';
 import {
 	AccessListEIP2930Transaction,
 	Capability,
 	FeeMarketEIP1559Transaction,
 	Transaction,
 } from '../../../src';
+import { Chain, Common, Hardfork, toUint8Array, uint8ArrayToBigInt } from '../../../src/common';
+import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER } from '../../../src/tx/constants';
 
 import type { BaseTransaction } from '../../../src/tx/baseTransaction';
-import eip2930Fixtures from '../../fixtures/json/eip2930txs.json';
 import eip1559Fixtures from '../../fixtures/json/eip1559txs.json';
+import eip2930Fixtures from '../../fixtures/json/eip2930txs.json';
 
 import legacyFixtures from '../../fixtures/json/txs.json';
 
@@ -145,22 +145,22 @@ describe('[BaseTransaction]', () => {
 
 	it('fromValuesArray()', () => {
 		let rlpData: any = legacyTxs[0].raw();
-		rlpData[0] = toBuffer('0x0');
+		rlpData[0] = toUint8Array('0x00');
 		expect(() => {
 			Transaction.fromValuesArray(rlpData);
 		}).toThrow('nonce cannot have leading zeroes');
-		rlpData[0] = toBuffer('0x');
-		rlpData[6] = toBuffer('0x0');
+		rlpData[0] = toUint8Array('0x');
+		rlpData[6] = toUint8Array('0x00');
 		expect(() => {
 			Transaction.fromValuesArray(rlpData);
 		}).toThrow('v cannot have leading zeroes');
 		rlpData = eip2930Txs[0].raw();
-		rlpData[3] = toBuffer('0x0');
+		rlpData[3] = toUint8Array('0x0');
 		expect(() => {
 			AccessListEIP2930Transaction.fromValuesArray(rlpData);
 		}).toThrow('gasLimit cannot have leading zeroes');
 		rlpData = eip1559Txs[0].raw();
-		rlpData[2] = toBuffer('0x0');
+		rlpData[2] = toUint8Array('0x0');
 		expect(() => {
 			FeeMarketEIP1559Transaction.fromValuesArray(rlpData);
 		}).toThrow('maxPriorityFeePerGas cannot have leading zeroes');
@@ -278,7 +278,7 @@ describe('[BaseTransaction]', () => {
 				const signedTx = tx.sign(Buffer.from(privateKey, 'hex'));
 				const txPubKey = signedTx.getSenderPublicKey();
 				const pubKeyFromPriv = privateToPublic(Buffer.from(privateKey, 'hex'));
-				expect(txPubKey.equals(pubKeyFromPriv)).toBe(true);
+				expect(uint8ArrayEquals(txPubKey, pubKeyFromPriv)).toBe(true);
 			}
 		}
 	});
@@ -316,7 +316,7 @@ describe('[BaseTransaction]', () => {
 	});
 
 	it('initialization with defaults', () => {
-		const bufferZero = toBuffer('0x');
+		const bufferZero = toUint8Array('0x');
 		const tx = Transaction.fromTxData({
 			nonce: '',
 			gasLimit: '',
@@ -332,11 +332,11 @@ describe('[BaseTransaction]', () => {
 		expect(tx.r).toBeUndefined();
 		expect(tx.s).toBeUndefined();
 		expect(tx.to).toBeUndefined();
-		expect(tx.value).toBe(bufferToBigInt(bufferZero));
+		expect(tx.value).toBe(uint8ArrayToBigInt(bufferZero));
 		expect(tx.data).toEqual(bufferZero);
-		expect(tx.gasPrice).toBe(bufferToBigInt(bufferZero));
-		expect(tx.gasLimit).toBe(bufferToBigInt(bufferZero));
-		expect(tx.nonce).toBe(bufferToBigInt(bufferZero));
+		expect(tx.gasPrice).toBe(uint8ArrayToBigInt(bufferZero));
+		expect(tx.gasLimit).toBe(uint8ArrayToBigInt(bufferZero));
+		expect(tx.nonce).toBe(uint8ArrayToBigInt(bufferZero));
 	});
 
 	it('_validateCannotExceedMaxInteger()', () => {

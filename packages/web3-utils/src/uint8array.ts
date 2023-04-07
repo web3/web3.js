@@ -27,3 +27,24 @@ export function uint8ArrayConcat(...parts: Uint8Array[]): Uint8Array {
 	}
 	return result;
 }
+
+/**
+ * Returns true if the two passed Uint8Arrays have the same content
+ */
+export function uint8ArrayEquals(a: Uint8Array, b: Uint8Array): boolean {
+	if (a === b) {
+		return true;
+	}
+
+	if (a.byteLength !== b.byteLength) {
+		return false;
+	}
+
+	for (let i = 0; i < a.byteLength; i += 1) {
+		if (a[i] !== b[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
