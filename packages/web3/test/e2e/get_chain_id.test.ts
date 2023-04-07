@@ -14,16 +14,16 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { isBigInt, isHexStrict, isNumber, isString } from 'web3-validator';
+import { FMT_BYTES, FMT_NUMBER, toHex } from 'web3-utils';
 
 import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
-describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
+describe(`${getSystemTestBackend()} tests - getChainId`, () => {
 	const provider = getSystemE2ETestProvider();
+	const expectedChainId = getSystemTestBackend() === 'sepolia' ? 11155111 : 1;
 
 	let web3: Web3;
 
@@ -41,8 +41,8 @@ describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
 		}>({
 			format: Object.values(FMT_NUMBER),
 		}),
-	)('getBlockNumber', async ({ format }) => {
-		const result = await web3.eth.getBlockNumber({
+	)('getChainId', async ({ format }) => {
+		const result = await web3.eth.getChainId({
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});
@@ -50,19 +50,19 @@ describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
 		switch (format) {
 			case 'NUMBER_NUMBER':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isNumber(result)).toBeTruthy();
+				expect(result).toBe(expectedChainId);
 				break;
 			case 'NUMBER_HEX':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isHexStrict(result)).toBeTruthy();
+				expect(result).toBe(toHex(expectedChainId));
 				break;
 			case 'NUMBER_STR':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isString(result)).toBeTruthy();
+				expect(result).toBe(`${expectedChainId}`);
 				break;
 			case 'NUMBER_BIGINT':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isBigInt(result)).toBeTruthy();
+				expect(result).toBe(BigInt(expectedChainId));
 				break;
 			default:
 				throw new Error('Unhandled format');

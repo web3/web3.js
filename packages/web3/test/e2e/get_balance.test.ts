@@ -18,12 +18,29 @@ import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import { isBigInt, isHexStrict, isNumber, isString } from 'web3-validator';
 
 import Web3 from '../../src';
-import { getSystemE2ETestProvider } from './e2e_utils';
+import { getSystemE2ETestProvider, getTestAccountAddress } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
-describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
+describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 	const provider = getSystemE2ETestProvider();
+	const blockData: {
+		earliest: 'earliest';
+		latest: 'latest';
+		pending: 'pending';
+		finalized: 'finalized';
+		safe: 'safe';
+		blockNumber: number;
+		blockHash: string;
+	} = {
+		earliest: 'earliest',
+		latest: 'latest',
+		pending: 'pending',
+		finalized: 'finalized',
+		safe: 'safe',
+		blockNumber: 3240768,
+		blockHash: '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca',
+	};
 
 	let web3: Web3;
 
@@ -37,12 +54,29 @@ describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
 
 	it.each(
 		toAllVariants<{
+			block:
+				| 'earliest'
+				| 'latest'
+				| 'pending'
+				| 'finalized'
+				| 'safe'
+				| 'blockHash'
+				| 'blockNumber';
 			format: string;
 		}>({
+			block: [
+				'earliest',
+				'latest',
+				'pending',
+				'safe',
+				'finalized',
+				'blockHash',
+				'blockNumber',
+			],
 			format: Object.values(FMT_NUMBER),
 		}),
-	)('getBlockNumber', async ({ format }) => {
-		const result = await web3.eth.getBlockNumber({
+	)('getBalance', async ({ block, format }) => {
+		const result = await web3.eth.getBalance(getTestAccountAddress(), blockData[block], {
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});

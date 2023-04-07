@@ -15,19 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { validator } from 'web3-validator';
-import { blockSchema } from 'web3-eth';
-import { Transaction } from 'web3-types';
+import { feeHistorySchema } from 'web3-eth';
 
-import Web3 from '../../src';
+import Web3, { Numbers } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
-describe(`${getSystemTestBackend()} tests - getBlock`, () => {
+describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	const provider = getSystemE2ETestProvider();
-
-	let web3: Web3;
 	const blockData: {
 		earliest: 'earliest';
 		latest: 'latest';
@@ -37,14 +33,16 @@ describe(`${getSystemTestBackend()} tests - getBlock`, () => {
 		blockNumber: number;
 		blockHash: string;
 	} = {
-		pending: 'pending',
-		latest: 'latest',
 		earliest: 'earliest',
+		latest: 'latest',
+		pending: 'pending',
 		finalized: 'finalized',
 		safe: 'safe',
-		blockNumber: 3228743,
-		blockHash: '0x0920dc080c576f88a5280fb5fb0b8fe70f1afa91ebcef52593a80f7fecf0838f',
+		blockNumber: 3240768,
+		blockHash: '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca',
 	};
+
+	let web3: Web3;
 
 	beforeAll(() => {
 		web3 = new Web3(provider);
@@ -56,7 +54,8 @@ describe(`${getSystemTestBackend()} tests - getBlock`, () => {
 
 	it.each(
 		toAllVariants<{
-			block:
+			blockCount: Numbers;
+			newestBlock:
 				| 'earliest'
 				| 'latest'
 				| 'pending'
@@ -64,30 +63,36 @@ describe(`${getSystemTestBackend()} tests - getBlock`, () => {
 				| 'safe'
 				| 'blockHash'
 				| 'blockNumber';
-			hydrated: boolean;
+			rewardPercentiles: Numbers[];
 			format: string;
 		}>({
-			block: ['earliest', 'latest', 'safe', 'finalized', 'blockHash', 'blockNumber'],
-			hydrated: [true, false],
+			blockCount: [1, '2', 3, BigInt(4)],
+			newestBlock: [
+				'earliest',
+				'latest',
+				'pending',
+				'safe',
+				'finalized',
+				// TODO blockHash returning error: invalid argument 1: hex number > 64 bits
+				// 'blockHash',
+				'blockNumber',
+			],
+			rewardPercentiles: [['0xa', '20', 30, BigInt(40)]],
 			format: Object.values(FMT_NUMBER),
 		}),
-	)('getBlock', async ({ hydrated, block, format }) => {
-		const b = {
-			...(await web3.eth.getBlock(blockData[block], hydrated, {
+	)('getFeeHistory', async ({ blockCount, newestBlock, rewardPercentiles, format }) => {
+		const result = await web3.eth.getFeeHistory(
+			blockCount,
+			blockData[newestBlock],
+			rewardPercentiles,
+			{
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
-			})),
-		};
-		if (blockData[block] === 'pending') {
-			b.nonce = '0x0';
-			b.miner = '0x0000000000000000000000000000000000000000';
-			b.totalDifficulty = '0x0';
-		}
-		expect(validator.validateJSONSchema(blockSchema, b)).toBeUndefined();
+			},
+		);
 
-		if (hydrated && b.transactions?.length > 0) {
-			// eslint-disable-next-line jest/no-conditional-expect
-			expect(b.transactions).toBeInstanceOf(Array<Transaction>);
-		}
+		const resultKeys = Object.keys(result);
+		const schemaProperties = Object.keys(feeHistorySchema.properties);
+		resultKeys.forEach(prop => expect(schemaProperties).toContain(prop));
 	});
 });

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3 from '../../src';
-import { getSystemE2ETestProvider } from './get_system_e2e_test_provider';
+import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 
 describe(`${getSystemTestBackend()} tests - getAccounts`, () => {

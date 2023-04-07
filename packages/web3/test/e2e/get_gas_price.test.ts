@@ -22,7 +22,7 @@ import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
-describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
+describe(`${getSystemTestBackend()} tests - getGasPrice`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;
@@ -41,8 +41,8 @@ describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
 		}>({
 			format: Object.values(FMT_NUMBER),
 		}),
-	)('getBlockNumber', async ({ format }) => {
-		const result = await web3.eth.getBlockNumber({
+	)('getGasPrice', async ({ format }) => {
+		const result = await web3.eth.getGasPrice({
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});

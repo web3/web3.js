@@ -17,14 +17,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { FMT_BYTES, FMT_NUMBER, bytesToBuffer, hexToBytes } from 'web3-utils';
 
 import Web3 from '../../../src';
-import { getSystemE2ETestProvider } from '../get_system_e2e_test_provider';
 import {
 	closeOpenConnection,
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
-// eslint-disable-next-line import/no-relative-packages
-import secrets from '../../../../../.secrets.json';
 import { toAllVariants } from '../../shared_fixtures/utils';
+import {
+	getDeployedStorageContractAddress,
+	getSystemE2ETestProvider,
+	getTestAccountAddress,
+} from '../e2e_utils';
 
 describe(`${getSystemTestBackend()} tests - call`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -48,7 +50,7 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 	)('should call retrieve method from deployed contract', async ({ format }) => {
 		const result = await web3.eth.call(
 			{
-				to: secrets.SEPOLIA.DEPLOYED_STORAGE_CONTRACT_ADDRESS,
+				to: getDeployedStorageContractAddress(),
 				input: '0x2e64cec1',
 			},
 			undefined,
@@ -97,12 +99,12 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should call getOwner method from deployed contract', async ({ format }) => {
-		const expectedResult = `0x000000000000000000000000${secrets.SEPOLIA.ACCOUNT.address
+		const expectedResult = `0x000000000000000000000000${getTestAccountAddress()
 			.substring(2)
 			.toLowerCase()}`;
 		const result = await web3.eth.call(
 			{
-				to: secrets.SEPOLIA.DEPLOYED_STORAGE_CONTRACT_ADDRESS,
+				to: getDeployedStorageContractAddress(),
 				input: '0x893d20e8',
 			},
 			undefined,
