@@ -25,6 +25,9 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
+	ProviderConnectInfo,
+	ProviderMessage,
+	ProviderRpcError,
 	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -198,12 +201,26 @@ export abstract class SocketProvider<
 	/**
 	 * Registers a listener for the specified event type.
 	 * @param type - The event type to listen for
-	 * @param callback - The callback to be invoked when the event is emitted
+	 * @param listener - The callback to be invoked when the event is emitted
 	 */
+	public on(
+		type: 'disconnect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public on(
+		type: 'connect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+	): void;
+	public on(type: 'chainChanged', listener: Web3Eip1193ProviderEventCallback<string>): void;
+	public on(type: 'accountsChanged', listener: Web3Eip1193ProviderEventCallback<string[]>): void;
 	public on<T = JsonRpcResult>(
-		type: EventType,
-		listener: Web3Eip1193ProviderEventCallback<T> | Web3ProviderEventCallback<T>,
-	) {
+		type: 'message' | string,
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+	): void;
+	public on<T = JsonRpcResult>(
+		type: string,
+		listener: Web3Eip1193ProviderEventCallback<any> | Web3ProviderEventCallback<T>,
+	): void {
 		this._eventEmitter.on(type, listener);
 	}
 
@@ -212,8 +229,28 @@ export abstract class SocketProvider<
 	 * @param type  - The event type to listen for
 	 * @param callback - The callback to be invoked when the event is emitted
 	 */
-	public once<T>(type: EventType, callback: Web3Eip1193ProviderEventCallback<T>): void {
-		this._eventEmitter.once(type, callback);
+	public once(
+		type: 'disconnect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public once(
+		type: 'connect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+	): void;
+	public once(type: 'chainChanged', listener: Web3Eip1193ProviderEventCallback<string>): void;
+	public once(
+		type: 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<string[]>,
+	): void;
+	public once<T = JsonRpcResult>(
+		type: 'message' | string,
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+	): void;
+	public once<T = JsonRpcResult>(
+		type: string,
+		listener: Web3Eip1193ProviderEventCallback<any> | Web3ProviderEventCallback<T>,
+	): void {
+		this._eventEmitter.once(type, listener);
 	}
 
 	/**
