@@ -95,3 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
+
+### Removed
+
+-   Removed dependencies @ethereumjs/tx, @ethereumjs/common (#5963)

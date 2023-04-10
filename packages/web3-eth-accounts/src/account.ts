@@ -15,8 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TypedTransaction } from '@ethereumjs/tx';
-import defaultImport, * as fullImport from '@ethereumjs/tx';
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
@@ -54,11 +52,17 @@ import {
 	utf8ToHex,
 	uuidV4,
 } from 'web3-utils';
-import { isBuffer, isNullish, isString, validator, isHexStrict } from 'web3-validator';
-import { keyStoreSchema } from './schemas';
-import { SignatureObject, SignResult, SignTransactionResult, Web3Account } from './types';
 
-const { TransactionFactory } = defaultImport || fullImport;
+import { isBuffer, isNullish, isString, validator, isHexStrict } from 'web3-validator';
+import { TransactionFactory } from './tx/transactionFactory';
+import { keyStoreSchema } from './schemas';
+import type {
+	SignatureObject,
+	SignResult,
+	SignTransactionResult,
+	Web3Account,
+	TypedTransaction,
+} from './types';
 
 /**
  * Get the private key buffer after the validation
@@ -267,9 +271,9 @@ export const signTransaction = async (
 
 	return {
 		messageHash: bytesToHex(Buffer.from(signedTx.getMessageToSign(true))),
-		v: `0x${signedTx.v.toString('hex')}`,
-		r: `0x${signedTx.r.toString('hex')}`,
-		s: `0x${signedTx.s.toString('hex')}`,
+		v: `0x${signedTx.v.toString(16)}`,
+		r: `0x${signedTx.r.toString(16)}`,
+		s: `0x${signedTx.s.toString(16)}`,
 		rawTransaction: rawTx,
 		transactionHash: bytesToHex(txHash),
 	};
