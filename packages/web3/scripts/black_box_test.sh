@@ -30,7 +30,7 @@ echo "RPC client Protocol: " $MODE
 export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
-cd test/black_box
+cd test/esm_black_box
 yarn --update-checksums
 yarn
 

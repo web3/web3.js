@@ -14,32 +14,19 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// TODO For some reason when running this test with a WebSocket provider
-// the test takes a long time to run afterAll
-import Web3 from 'web3';
 import { validator } from 'web3-validator';
+import { blockSchema } from 'web3-eth';
 import {
 	closeOpenConnection,
 	getSystemTestProvider,
 	isWs,
-} from '../../fixtures/system_tests_utils';
+} from '../../../esm_black_box/test/fixtures/system_tests_utils';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+const Web3 = require('web3').default;
 
-jest.setTimeout(15000);
-
-// TODO Consider adding this to web3.eth.accounts package
-const accountSchema = {
-	type: 'object',
-	required: ['address', 'privateKey'],
-	// TODO Should validation functions as well
-	// required: ['address', 'privateKey', 'signTransaction', 'sign', 'encrypt'],
-	properties: {
-		address: { type: 'string' },
-		privateKey: { type: 'string' },
-	},
-};
-
-describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
-	let web3: Web3;
+describe('CJS - Black Box Unit Tests - web3.eth.getBlock', () => {
+	let web3: typeof Web3;
 
 	beforeAll(() => {
 		web3 = new Web3(getSystemTestProvider());
@@ -49,12 +36,15 @@ describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
 		if (isWs) await closeOpenConnection(web3);
 	});
 
-	it('should create an account', () => {
-		const response = web3.eth.accounts.create();
+	it('should get the latest block and validate it against blockSchema', async () => {
+		const response = await web3.eth.getBlock('latest');
 		expect(response).toBeDefined();
-		expect(response.signTransaction).toBeDefined();
-		expect(response.sign).toBeDefined();
-		expect(response.encrypt).toBeDefined();
-		expect(validator.validateJSONSchema(accountSchema, response)).toBeUndefined();
+		expect(validator.validateJSONSchema(blockSchema, response)).toBeUndefined();
+	});
+
+	it('should get the latest block and validate it against blockSchema - hydrated = true', async () => {
+		const response = await web3.eth.getBlock('latest', true);
+		expect(response).toBeDefined();
+		expect(validator.validateJSONSchema(blockSchema, response)).toBeUndefined();
 	});
 });

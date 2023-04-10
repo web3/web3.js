@@ -19,7 +19,7 @@ import {
 	getSystemTestProvider,
 	isWs,
 	itIf,
-} from '../../fixtures/system_tests_utils';
+} from '../../../esm_black_box/test/fixtures/system_tests_utils';
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const Web3 = require('web3').default;

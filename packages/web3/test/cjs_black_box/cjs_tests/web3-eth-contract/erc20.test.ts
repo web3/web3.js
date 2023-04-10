@@ -23,8 +23,8 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
-} from '../../fixtures/system_tests_utils';
-import { ERC20TokenAbi, ERC20TokenBytecode } from '../../fixtures/contracts/ERC20Token';
+} from '../../../esm_black_box/test/fixtures/system_tests_utils';
+import { ERC20TokenAbi, ERC20TokenBytecode } from '../../../esm_black_box/test/fixtures/contracts/ERC20Token';
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const Web3 = require('web3').default;
