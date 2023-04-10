@@ -26,7 +26,6 @@ describe('call revert', function () {
           }
         });
         provider.injectValidation(function (payload) {
-            console.log("val1");
             assert.equal(payload.jsonrpc, '2.0');
             assert.equal(payload.method, 'eth_call');
             assert.deepEqual(
@@ -68,7 +67,6 @@ describe('call revert', function () {
             }
         });
         provider.injectValidation(function (payload) {
-            console.log("val1");
             assert.equal(payload.jsonrpc, '2.0');
             assert.equal(payload.method, 'eth_call');
             assert.deepEqual(
