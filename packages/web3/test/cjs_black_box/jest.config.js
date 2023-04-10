@@ -1,8 +1,8 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-export default {
+module.exports = {
 	globals: {
 		'ts-jest': {
-			tsconfig: '../config/tsconfig.esm.json',
+			tsconfig: '../config/tsconfig.cjs.json',
 		},
 	},
 	transform: {

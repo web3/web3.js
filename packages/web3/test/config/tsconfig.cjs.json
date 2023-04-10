@@ -1,9 +1,10 @@
 {
 	"extends": "../../../../tsconfig.base.json",
 	"compilerOptions": {
-		"outDir": "./lib/esm",
+		"outDir": "./lib/commonjs",
 		"esModuleInterop": true,
-		"module": "es2020"
+		"declaration": true,
+		"module": "commonjs"
 	},
 	"include": ["src/**/*"]
 }
