@@ -16,7 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { isFilterObject } from '../../../src/validation/filter';
-import { invalidFilterObjectData, validFilterObjectData } from '../../fixtures/validation';
+import {
+	invalidFilterObjectData,
+	isTopicData,
+	isTopicInBloomData,
+	validFilterObjectData,
+} from '../../fixtures/validation';
+import { isTopic, isTopicInBloom } from '../../../src/validation/topic';
 
 describe('validation', () => {
 	describe('filter', () => {
@@ -31,6 +37,20 @@ describe('validation', () => {
 				it.each(invalidFilterObjectData)('%s', input => {
 					expect(isFilterObject(input)).toBeFalsy();
 				});
+			});
+		});
+	});
+	describe('isTopic', () => {
+		describe('valid cases', () => {
+			it.each(isTopicData)('%s', data => {
+				expect(isTopic(data.in)).toBe(data.out);
+			});
+		});
+	});
+	describe('isTopicInBloom', () => {
+		describe('valid cases', () => {
+			it.each(isTopicInBloomData)('%s', data => {
+				expect(isTopicInBloom(data.in[0], data.in[1])).toBe(data.out);
 			});
 		});
 	});
