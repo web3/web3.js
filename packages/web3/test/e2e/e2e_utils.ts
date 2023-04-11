@@ -60,3 +60,15 @@ export const getTestAccountAddress = (): string => {
 
 	throw new Error('Unable to get test account address');
 };
+
+export const getAllowedSendTransaction = (): boolean => {
+	if (process.env.ALLOWED_SEND_TRANSACTION !== undefined) {
+		return Boolean(process.env.ALLOWED_SEND_TRANSACTION);
+		// eslint-disable-next-line no-else-return
+	} else if (getSystemTestBackend() === 'sepolia' || getSystemTestBackend() === 'mainnet') {
+		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET']
+			.ALLOWED_SEND_TRANSACTION;
+	}
+
+	return false;
+};
