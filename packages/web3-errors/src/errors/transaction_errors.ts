@@ -287,7 +287,7 @@ export class CommonOrChainAndHardforkError extends InvalidValueError {
 	public constructor() {
 		super(
 			'CommonOrChainAndHardforkError',
-			'Please provide the @ethereumjs/common object or the chain and hardfork property but not all together.',
+			'Please provide the common object or the chain and hardfork property but not all together.',
 		);
 	}
 }

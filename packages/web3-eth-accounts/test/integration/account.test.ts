@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import defaultImport, * as fullImport from '@ethereumjs/tx';
 import { Address } from 'web3-types';
 import { Web3ValidatorError, isHexStrict } from 'web3-validator';
 import {
@@ -30,6 +29,7 @@ import {
 	sign,
 	signTransaction,
 } from '../../src';
+import { TransactionFactory } from '../../src/tx/transactionFactory';
 import {
 	invalidDecryptData,
 	invalidEncryptData,
@@ -44,8 +44,6 @@ import {
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
 } from '../fixtures/account';
-
-const { TransactionFactory } = defaultImport || fullImport;
 
 describe('accounts', () => {
 	describe('create', () => {
@@ -96,6 +94,7 @@ describe('accounts', () => {
 			const account = create();
 
 			const signedResult = await signTransaction(
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				TransactionFactory.fromTxData(txData),
 				account.privateKey,
 			);
@@ -112,6 +111,7 @@ describe('accounts', () => {
 			const account = create();
 			const txObj = { ...txData, from: account.address };
 			const signedResult = await signTransaction(
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				TransactionFactory.fromTxData(txObj),
 				account.privateKey,
 			);
