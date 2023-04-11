@@ -21,9 +21,6 @@ import {
 	AbiConstructorFragment,
 	AbiEventFragment,
 	AbiFunctionFragment,
-	ContractAbiWithSignature,
-	ContractOptions,
-	EventLog,
 	LogsInput,
 	BlockNumberOrTag,
 	Filter,
@@ -50,6 +47,9 @@ import {
 import { blockSchema, logSchema } from 'web3-eth';
 
 import { Web3ContractError } from 'web3-errors';
+
+// eslint-disable-next-line import/no-cycle
+import { ContractOptions, ContractAbiWithSignature, EventLog } from './types';
 
 export const encodeEventABI = (
 	{ address }: ContractOptions,

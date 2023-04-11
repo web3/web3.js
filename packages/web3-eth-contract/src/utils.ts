@@ -24,12 +24,11 @@ import {
 	HexString,
 	NonPayableCallOptions,
 	PayableCallOptions,
-	ContractOptions,
 	ContractInitOptions,
 } from 'web3-types';
 import { isNullish, mergeDeep, toHex } from 'web3-utils';
 import { encodeMethodABI } from './encoding';
-import { Web3ContractContext } from './types';
+import { ContractOptions, Web3ContractContext } from './types';
 
 export const getSendTxParams = ({
 	abi,

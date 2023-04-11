@@ -63,11 +63,7 @@ import {
 	HexString,
 	LogsInput,
 	Mutable,
-	ContractAbiWithSignature,
-	ContractEventOptions,
 	ContractInitOptions,
-	ContractOptions,
-	EventLog,
 	NonPayableCallOptions,
 	PayableCallOptions,
 	DataFormat,
@@ -86,6 +82,10 @@ import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { LogsSubscription } from './log_subscription';
 import {
+	ContractAbiWithSignature,
+	ContractEventOptions,
+	ContractOptions,
+	EventLog,
 	NonPayableMethodObject,
 	NonPayableTxOptions,
 	PayableMethodObject,
