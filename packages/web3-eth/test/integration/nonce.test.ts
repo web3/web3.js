@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from 'web3-errors';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Web3 } from 'web3';
+import { SupportedProviders, Web3 } from 'web3';
 import { Web3Account } from 'web3-eth-accounts';
 import { Web3Eth } from '../../src';
 
@@ -31,7 +31,7 @@ const gas = 30000;
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let tempAcc: Web3Account;
 	beforeEach(async () => {
 		clientUrl = getSystemTestProvider();

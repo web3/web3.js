@@ -58,6 +58,7 @@
 		"test:blackbox:infura:ws": "./scripts/black_box_test.sh infura ws"
 	},
 	"devDependencies": {
+		"web3-providers-ipc": "^4.0.1-rc.0",
 		"@truffle/hdwallet-provider": "^2.0.12",
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
@@ -87,7 +88,6 @@
 		"web3-eth-personal": "^4.0.1-rc.0",
 		"web3-net": "^4.0.1-rc.0",
 		"web3-providers-http": "^4.0.1-rc.0",
-		"web3-providers-ipc": "^4.0.1-rc.0",
 		"web3-providers-ws": "^4.0.1-rc.0",
 		"web3-rpc-methods": "^1.0.0-rc.0",
 		"web3-types": "^1.0.0-rc.0",
