@@ -258,8 +258,31 @@ export abstract class SocketProvider<
 	 * @param type - The event type to remove the listener for
 	 * @param callback - The callback to be executed
 	 */
-	public removeListener(type: EventType, callback: Web3Eip1193ProviderEventCallback<any>): void {
-		this._eventEmitter.removeListener(type, callback);
+	public removeListener(
+		type: 'disconnect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public removeListener(
+		type: 'connect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+	): void;
+	public removeListener(
+		type: 'chainChanged',
+		listener: Web3Eip1193ProviderEventCallback<string>,
+	): void;
+	public removeListener(
+		type: 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<string[]>,
+	): void;
+	public removeListener<T = JsonRpcResult>(
+		type: 'message' | string,
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+	): void;
+	public removeListener<T = JsonRpcResult>(
+		type: string,
+		listener: Web3Eip1193ProviderEventCallback<any> | Web3ProviderEventCallback<T>,
+	): void {
+		this._eventEmitter.removeListener(type, listener);
 	}
 
 	protected _onDisconnect(code?: number, data?: string) {
