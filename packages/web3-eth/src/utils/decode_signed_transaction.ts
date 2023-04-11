@@ -14,13 +14,11 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import defaultImport, * as fullImport from '@ethereumjs/tx';
 import { HexStringBytes, SignedTransactionInfoAPI, TransactionSignedAPI } from 'web3-types';
 import { bytesToHex, DataFormat, format, hexToBytes, keccak256 } from 'web3-utils';
+import { TransactionFactory } from 'web3-eth-accounts';
 import { detectRawTransactionType } from './detect_transaction_type';
 import { formatTransaction } from './format_transaction';
-
-const { TransactionFactory } = defaultImport || fullImport;
 
 /**
  * Decodes an [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded transaction.

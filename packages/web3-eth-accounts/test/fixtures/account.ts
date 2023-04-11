@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData } from '@ethereumjs/tx';
 import {
 	InvalidKdfError,
 	InvalidPrivateKeyError,
@@ -26,6 +25,7 @@ import {
 	PBKDF2IterationsError,
 } from 'web3-errors';
 import { CipherOptions, KeyStore } from 'web3-types';
+import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData } from '../../src/tx/types';
 import { sign, signTransaction, encrypt } from '../../src/account';
 
 export const validPrivateKeyToAddressData: [string, string][] = [

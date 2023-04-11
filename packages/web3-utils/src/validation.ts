@@ -19,16 +19,16 @@ import { InvalidBlockError } from 'web3-errors';
 import {
 	checkAddressCheckSum as checkAddressCheckSumValidator,
 	isAddress as isAddressValidator,
+	isBlockTag,
 	isBloom as isBloomValidator,
 	isContractAddressInBloom as isContractAddressInBloomValidator,
 	isHex as isHexValidator,
 	isHexStrict as isHexStrictValidator,
 	isInBloom as isInBloomValidator,
+	isNullish as isNullishValidator,
 	isTopic as isTopicValidator,
 	isTopicInBloom as isTopicInBloomValidator,
 	isUserEthereumAddressInBloom as isUserEthereumAddressInBloomValidator,
-	isNullish as isNullishValidator,
-	isBlockTag,
 } from 'web3-validator';
 import { BlockNumberOrTag, BlockTags } from 'web3-types';
 
