@@ -16,29 +16,32 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Contract, PayableTxOptions } from 'web3-eth-contract';
-import { sha3, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import Web3Eth from 'web3-eth';
+import { Contract, PayableTxOptions } from 'web3-eth-contract';
+import { DEFAULT_RETURN_FORMAT, sha3 } from 'web3-utils';
 
 import { Address, Bytes } from 'web3-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import IpcProvider from 'web3-providers-ipc';
 import { ENS } from '../../src';
 import { namehash } from '../../src/utils';
 
 import {
+	closeOpenConnection,
 	getSystemTestAccounts,
 	getSystemTestProvider,
-	isWs,
+	getSystemTestProviderUrl,
 	isIpc,
-	closeOpenConnection,
 	isSocket,
+	isWs,
 	itIf,
 } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
-import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
-import { NameWrapperAbi } from '../fixtures/ens/abi/NameWrapper';
-import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
+import { NameWrapperAbi } from '../fixtures/ens/abi/NameWrapper';
+import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
+import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
 describe('ens', () => {
@@ -112,9 +115,9 @@ describe('ens', () => {
 			.setSubnodeOwner(ZERO_NODE, sha3(domain) as string, defaultAccount)
 			.send(sendOptions);
 
-		const clientUrl = getSystemTestProvider();
+		const clientUrl = getSystemTestProviderUrl();
 		let provider;
-		if (isIpc) provider = new ENS.providers.IpcProvider(clientUrl);
+		if (isIpc) provider = new IpcProvider(clientUrl);
 		else if (isWs) provider = new ENS.providers.WebsocketProvider(clientUrl);
 		else provider = new ENS.providers.HttpProvider(clientUrl);
 

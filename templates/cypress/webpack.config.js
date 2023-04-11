@@ -19,11 +19,8 @@ module.exports = {
 	resolve: {
 		extensions: ['.ts', '.js'],
 		fallback: {
-			child_process: false,
 			fs: false,
 			net: false,
-			path: false,
-			os: false,
 			util: require.resolve('util'),
 			http: require.resolve('http-browserify'),
 			https: require.resolve('https-browserify'),

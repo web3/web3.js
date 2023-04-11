@@ -240,7 +240,17 @@ import * as net from 'net';
 const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
 ```
 
-In 4.x, it accepts a second parameter called `socketOptions`. And, its type is `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
+In 4.x, it's no longer installed by default as its nodejs modules are impacting web3.js browser usage.
+You can use it by installing `web3-providers-ipc` and creating a new instance. Since it's compatible with Eip1193Provider,
+you can pass it on to the Web3 instance.
+
+```ts
+import IpcProvider from 'web3-providers-ipc';
+
+const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc');
+```
+
+It accepts a second parameter called `socketOptions`. And, its type is `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
 
 ```ts
 interface SocketConstructorOpts {
