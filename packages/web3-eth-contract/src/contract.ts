@@ -506,7 +506,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * ```ts
 	 * myContract.deploy({
-	 *   input: '0x12345...',
+	 *   data: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .send({
@@ -543,7 +543,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * // Simply encoding
 	 * myContract.deploy({
-	 *   input: '0x12345...',
+	 *   data: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .encodeABI();
@@ -552,7 +552,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * // Gas estimation
 	 * myContract.deploy({
-	 *   input: '0x12345...',
+	 *   data: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .estimateGas(function(err, gas){

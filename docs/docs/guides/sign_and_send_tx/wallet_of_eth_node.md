@@ -78,7 +78,7 @@ try {
 	const contract = new web3.eth.Contract(ContractAbi);
 	const contractDeployed = await contract
 		.deploy({
-			input: ContractBytecode,
+			data: ContractBytecode,
 			arguments: ['Constructor param1', 'Constructor param2'],
 		})
 		.send({
