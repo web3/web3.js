@@ -15,8 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FeeMarketEIP1559TxData, AccessListEIP2930TxData, TxData } from '@ethereumjs/tx';
 import { Web3BaseWalletAccount, HexString } from 'web3-types';
+import { FeeMarketEIP1559TxData, AccessListEIP2930TxData, TxData } from './tx/types';
+import { AccessListEIP2930Transaction, FeeMarketEIP1559Transaction, Transaction } from './tx';
 
 export type SignatureObject = {
 	messageHash: string;
@@ -86,3 +87,8 @@ export interface WebStorage {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[name: string]: any;
 }
+
+export type TypedTransaction =
+	| Transaction
+	| AccessListEIP2930Transaction
+	| FeeMarketEIP1559Transaction;
