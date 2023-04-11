@@ -1,9 +1,10 @@
 {
-	"name": "web3_black_box_tests",
+	"name": "web3_black_box_cjs_tests",
 	"version": "1.0.0",
 	"main": "index.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
+	"type": "commonjs",
 	"scripts": {
 		"test:ganache:http": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
 		"test:ganache:ws": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 jest --forceExit",
