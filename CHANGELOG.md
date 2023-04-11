@@ -666,7 +666,7 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
   - Improved the error propagation in `web3-providers-http` package to effectively propagate useful error infomation about failed HTTP connections (#5955)
-  - Fixed "Uncaught TypeError" calling a contract function that revert using MetaMask (#4454)
+  - Fixed "Uncaught TypeError" calling a contract function that revert using MetaMask (#4454) and related "n.data.substring is not a function", that is raised when there is a revert and `web.eth.handleRevert = true` (#6000)
 
 ### Changed
 
