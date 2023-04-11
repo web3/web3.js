@@ -45,11 +45,13 @@
 		"web3-errors": "^1.0.0-rc.0",
 		"web3-eth-iban": "^4.0.1-rc.0",
 		"web3-providers-http": "^4.0.1-rc.0",
-		"web3-providers-ipc": "^4.0.1-rc.0",
 		"web3-providers-ws": "^4.0.1-rc.0",
 		"web3-types": "^1.0.0-rc.0",
 		"web3-utils": "^4.0.1-rc.0",
 		"web3-validator": "^1.0.0-rc.0"
+	},
+	"optionalDependencies": {
+		"web3-providers-ipc": "^4.0.1-rc.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",

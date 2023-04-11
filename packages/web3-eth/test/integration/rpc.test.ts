@@ -19,6 +19,7 @@ import {
 	AbiEventFragment,
 	TransactionReceipt,
 	TransactionInfo,
+	SupportedProviders,
 	FMT_BYTES,
 	FMT_NUMBER,
 } from 'web3-types';
@@ -47,7 +48,7 @@ import {
 
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let contractDeployed: Contract<typeof BasicAbi>;
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;

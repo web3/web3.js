@@ -20,6 +20,7 @@ import { hexToNumber, numberToHex } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
 import {
 	Hardfork,
+	SupportedProviders,
 	TransactionReceipt,
 	ValidChains,
 	Web3BaseProvider,
@@ -55,7 +56,7 @@ import { Resolve, sendFewTxes } from './helper';
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
 	let eth2: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;

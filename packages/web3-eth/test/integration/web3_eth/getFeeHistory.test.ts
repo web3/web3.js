@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { BlockNumberOrTag, Numbers } from 'web3-types';
+import { BlockNumberOrTag, Numbers, SupportedProviders } from 'web3-types';
 
 import Web3Eth from '../../../src';
 import {
@@ -27,7 +27,7 @@ import { feeHistorySchema } from '../../../src/schemas';
 
 describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () => {
 	let web3Eth: Web3Eth;
-	let systemProvider: string;
+	let systemProvider: string | SupportedProviders;
 
 	beforeAll(() => {
 		systemProvider = getSystemTestProvider();

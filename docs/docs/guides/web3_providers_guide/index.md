@@ -29,7 +29,7 @@ Actually, the provider could be any of the following:
 -   An instance of [HttpProvider](/api/web3-providers-http/class/HttpProvider)
 -   An instance of [WebSocketProvider](/api/web3-providers-ws/class/WebSocketProvider)
 -   An instance of [IpcProvider](/api/web3-providers-ipc/class/IpcProvider)
--   A string containing string url for `http`/`https`, `ws`/`wss`, or `ipc` protocol. And when a string is passed, an instance of the compatible class above will be created accordingly. ex. WebSocketProvider instance will be created for string containing `ws` or `ws`. And you access this instance by calling `web3.provider` to read the provider and possibly register an event listener.
+-   A string containing string url for `http`/`https` or `ws`/`wss` protocol. And when a string is passed, an instance of the compatible class above will be created accordingly. ex. WebSocketProvider instance will be created for string containing `ws` or `ws`. And you access this instance by calling `web3.provider` to read the provider and possibly register an event listener.
 -   Any provider object that adhere to [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193). And it has been tested with Ganache provider, Hardhat provider, and Incubed (IN3) as a provider.
 
 For both [WebSocketProvider](/api/web3-providers-ws/class/WebSocketProvider) and [IpcProvider](/api/web3-providers-ipc/class/IpcProvider) the user can listen to emitted events. More on this is at [Providers Events Listening](events_listening).

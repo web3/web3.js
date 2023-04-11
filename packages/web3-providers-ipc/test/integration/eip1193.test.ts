@@ -15,18 +15,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { hexToNumber } from 'web3-utils';
 import {
 	HexString,
 	ProviderConnectInfo,
 	ProviderRpcError,
 	Web3ProviderEventCallback,
 } from 'web3-types';
+import { hexToNumber } from 'web3-utils';
 import IpcProvider from '../../src/index';
 
 import {
-	getSystemTestProvider,
 	describeIf,
+	getSystemTestProviderUrl,
 	isIpc,
 	waitForSocketConnect,
 	waitForSocketDisconnect,
@@ -37,7 +37,7 @@ describeIf(isIpc)('IpcProvider - eip1193', () => {
 	let socketProvider: IpcProvider;
 
 	beforeAll(() => {
-		socketPath = getSystemTestProvider();
+		socketPath = getSystemTestProviderUrl();
 	});
 	beforeEach(() => {
 		socketProvider = new IpcProvider(socketPath);
