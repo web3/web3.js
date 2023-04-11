@@ -19,7 +19,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ETH_DATA_FORMAT, format, SocketProvider } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
-	create,
 	create as _createAccount,
 	decrypt,
 	privateKeyToAccount,
@@ -193,7 +192,7 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 	};
 
 	const createWithContext = () => {
-		const account = create();
+		const account = _createAccount();
 
 		return {
 			...account,
@@ -259,7 +258,7 @@ const walletsOnWorker = 20;
 if (tempAccountList.length === 0) {
 	tempAccountList = accountsString;
 }
-let currentIndex = Math.floor(Math.random() * tempAccountList.length);
+let currentIndex = Math.floor(Math.random() * (tempAccountList ? tempAccountList.length : 0));
 export const createTempAccount = async (
 	config: {
 		unlock?: boolean;
@@ -312,23 +311,6 @@ export const getSystemTestAccountsWithKeys = async (): Promise<
 
 export const getSystemTestAccounts = async (): Promise<string[]> =>
 	(await getSystemTestAccountsWithKeys()).map(a => a.address);
-
-// export const signTxAndSend = async (tx: any, privateKey: string): Promise<Receipt> => {
-// 	const web3 = new Web3(getSystemTestProvider());
-// 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
-// 	tx.gas = '0x5208';
-// 	tx.gasLimit = '4200000';
-// 	tx.from = acc.address;
-// 	// tx.v = '0x1';
-// 	// tx.r = '0x0';
-// 	// tx.s = '0x0';
-// 	// x.gasPrice = '0x4a817c800';
-// 	// tx.maxFeePerGas = '0x1229298c00';
-// 	// tx.maxPriorityFeePerGas = '0x49504f80';
-// 	tx.type = '0x0';
-// 	const signedTx = await acc.signTransaction(tx);
-// 	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-// };
 
 export const signTxAndSendEIP1559 = async (
 	provider: unknown,

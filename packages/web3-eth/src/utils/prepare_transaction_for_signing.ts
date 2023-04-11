@@ -15,9 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Common from '@ethereumjs/common';
-import defaultImport, * as fullImport from '@ethereumjs/tx';
-import { TxOptions } from '@ethereumjs/tx';
 import {
 	EthExecutionAPI,
 	HexString,
@@ -29,12 +26,11 @@ import {
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { FormatType, ETH_DATA_FORMAT, toNumber } from 'web3-utils';
+import { TransactionFactory, TxOptions, Common } from 'web3-eth-accounts';
 import { isNullish } from 'web3-validator';
 import { validateTransactionForSigning } from '../validation';
 import { formatTransaction } from './format_transaction';
 import { transactionBuilder } from './transaction_builder';
-
-const { TransactionFactory } = defaultImport || fullImport;
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
@@ -91,19 +87,34 @@ const getEthereumjsTransactionOptions = (
 				},
 			);
 		}
-	} else if (transaction.common)
-		common = Common.custom(
-			{
-				name: transaction.common.customChain.name ?? 'custom-network',
-				chainId: toNumber(transaction.common.customChain.chainId) as number,
-				networkId: toNumber(transaction.common.customChain.networkId) as number,
-				defaultHardfork: transaction.common.hardfork ?? web3Context.defaultHardfork,
-			},
-			{
-				baseChain: transaction.common.baseChain ?? web3Context.defaultChain,
-			},
-		);
+	} else {
+		const name =
+			transaction?.common?.customChain?.name ?? transaction.chain ?? 'custom-network';
+		const chainId = toNumber(
+			transaction?.common?.customChain?.chainId ?? transaction?.chainId,
+		) as number;
+		const networkId = toNumber(
+			transaction?.common?.customChain?.networkId ?? transaction?.networkId,
+		) as number;
+		const defaultHardfork =
+			transaction?.common?.hardfork ?? transaction?.hardfork ?? web3Context.defaultHardfork;
+		const baseChain =
+			transaction.common?.baseChain ?? transaction.chain ?? web3Context.defaultChain;
 
+		if (chainId && networkId && name) {
+			common = Common.custom(
+				{
+					name,
+					chainId,
+					networkId,
+					defaultHardfork,
+				},
+				{
+					baseChain,
+				},
+			);
+		}
+	}
 	return { common } as TxOptions;
 };
 
