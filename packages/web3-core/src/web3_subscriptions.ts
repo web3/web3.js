@@ -27,7 +27,6 @@ import {
 	Log,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
-	Web3ProviderEventCallback,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
@@ -82,10 +81,7 @@ export abstract class Web3Subscription<
 			}
 		};
 
-		(this._requestManager.provider as Web3BaseProvider).on<Log>(
-			'message',
-			messageListener as Web3ProviderEventCallback<Log>,
-		);
+		(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
 
 		this._messageListener = messageListener;
 	}
