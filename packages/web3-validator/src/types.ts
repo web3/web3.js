@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AbiParameter, Optional } from 'web3-types';
 import { ErrorObject } from 'ajv';
+import type { Buffer } from 'buffer';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 
 export { JSONSchemaType } from 'ajv';

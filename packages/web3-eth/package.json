@@ -45,6 +45,7 @@
 		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
 	},
 	"devDependencies": {
+		"@types/next-tick": "^1.0.0",
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
@@ -61,7 +62,7 @@
 		"web3-providers-http": "^4.0.1-rc.0"
 	},
 	"dependencies": {
-		"setimmediate": "^1.0.5",
+		"next-tick": "^1.1.0",
 		"web3-core": "^4.0.1-rc.0",
 		"web3-errors": "^1.0.0-rc.0",
 		"web3-eth-abi": "^4.0.1-rc.0",

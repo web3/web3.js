@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+import nextTick from 'next-tick';
 import { Web3PromiEvent } from '../../src/web3_promi_event';
 
 describe('Web3PromiEvent', () => {
@@ -61,7 +61,7 @@ describe('Web3PromiEvent', () => {
 					resolve('resolved value');
 				});
 
-				setImmediate(() => {
+				nextTick(() => {
 					p.emit('data', 'emitted data');
 				});
 

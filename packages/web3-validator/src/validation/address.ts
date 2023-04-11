@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { keccak256 } from 'ethereum-cryptography/keccak';
+import { Buffer } from 'buffer';
 import { ValidInputTypes } from '../types';
 import { isHexStrict } from './string';
 

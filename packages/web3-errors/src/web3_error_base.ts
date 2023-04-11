@@ -19,6 +19,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3Error } from 'web3-types';
 
+declare global {
+	/**
+	 * Only available in nodejs env
+	 */
+	interface ErrorConstructor {
+		captureStackTrace(func: unknown): void;
+	}
+}
+
 export abstract class BaseWeb3Error extends Error implements Web3Error {
 	public readonly name: string;
 	public abstract readonly code: number;
@@ -30,7 +39,10 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 		this.innerError = innerError;
 		this.name = this.constructor.name;
 
-		if (typeof Error.captureStackTrace === 'function') {
+		if (
+			Error.captureStackTrace !== undefined &&
+			typeof Error.captureStackTrace === 'function'
+		) {
 			Error.captureStackTrace(new.target.constructor);
 		} else {
 			this.stack = new Error().stack;

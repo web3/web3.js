@@ -42,6 +42,7 @@ import {
 	RequestAlreadySentError,
 	Web3WSProviderError,
 } from 'web3-errors';
+import nextTick from 'next-tick';
 import { Eip1193Provider } from './web3_eip1193_provider';
 import { ChunkResponseParser } from './chunk_response_parser';
 import { isNullish } from './validation';
@@ -160,7 +161,7 @@ export abstract class SocketProvider<
 					throw new InvalidClientError(this._socketPath);
 				}
 			} else {
-				setImmediate(() => {
+				nextTick(() => {
 					this._reconnect();
 				});
 			}

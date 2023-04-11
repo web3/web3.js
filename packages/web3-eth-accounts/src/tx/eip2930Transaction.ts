@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Buffer } from 'buffer';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '@ethereumjs/rlp';
@@ -86,15 +87,15 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	 * signatureYParity (v), signatureR (r), signatureS (s)])`
 	 */
 	public static fromSerializedTx(serialized: Buffer, opts: TxOptions = {}) {
-		if (!serialized.subarray(0, 1).equals(TRANSACTION_TYPE_BUFFER)) {
+		if (!serialized.slice(0, 1).equals(TRANSACTION_TYPE_BUFFER)) {
 			throw new Error(
 				`Invalid serialized tx input: not an EIP-2930 transaction (wrong tx type, expected: ${TRANSACTION_TYPE}, received: ${serialized
-					.subarray(0, 1)
+					.slice(0, 1)
 					.toString('hex')}`,
 			);
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,  @typescript-eslint/no-unsafe-call,  @typescript-eslint/no-unsafe-argument
-		const values = arrToBufArr(RLP.decode(Uint8Array.from(serialized.subarray(1))));
+		const values = arrToBufArr(RLP.decode(Uint8Array.from(serialized.slice(1))));
 
 		if (!Array.isArray(values)) {
 			throw new Error('Invalid serialized tx input: must be array');

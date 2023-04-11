@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Buffer } from 'buffer';
 import type { Chain, ConsensusAlgorithm, ConsensusType, Hardfork } from './enums';
 
 export interface ChainName {
@@ -185,6 +186,7 @@ export type NestedBufferArray = Array<Buffer | NestedBufferArray>;
 export enum TypeOutput {
 	Number,
 	BigInt,
+	// eslint-disable-next-line @typescript-eslint/no-shadow
 	Buffer,
 	PrefixedHexString,
 }

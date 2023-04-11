@@ -24,6 +24,7 @@ import {
 	InvalidUnsignedIntegerError,
 	InvalidBytesError,
 } from 'web3-errors';
+import { Buffer } from 'buffer';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { isAddress, isHexStrict, isNullish } from 'web3-validator';
 import {
@@ -122,7 +123,7 @@ export const keccak256Wrapper = (
 		processedData = data as Uint8Array | readonly number[];
 	}
 
-	return bytesToHex(keccak256(Buffer.from(processedData)));
+	return bytesToHex(keccak256(Buffer.from(processedData as Uint8Array)));
 };
 
 export { keccak256Wrapper as keccak256 };

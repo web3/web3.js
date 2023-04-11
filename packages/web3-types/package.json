@@ -41,6 +41,9 @@
 		"test:unit": "jest --config=./test/unit/jest.config.js --passWithNoTests",
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
+	"dependencies": {
+		"buffer": "^6.0.3"
+	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
 		"@types/jest": "^28.1.6",

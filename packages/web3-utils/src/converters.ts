@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Address, Bytes, HexString, Numbers, ValueTypes } from 'web3-types';
+import { Buffer } from 'buffer';
 import {
 	isAddress,
 	isHex,
@@ -88,7 +89,7 @@ export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	}
 
 	if (data instanceof Uint8Array || Array.isArray(data)) {
-		return Buffer.from(data);
+		return Buffer.from(data as Uint8Array);
 	}
 
 	if (typeof data === 'string' && isHexStrict(data)) {

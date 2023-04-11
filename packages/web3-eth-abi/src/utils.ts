@@ -28,6 +28,7 @@ import {
 	AbiFunctionFragment,
 	AbiConstructorFragment,
 } from 'web3-types';
+import { Buffer } from 'buffer';
 import ethersAbiCoder from './ethers_abi_coder';
 
 export const isAbiFragment = (item: unknown): item is AbiFragment =>

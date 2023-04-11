@@ -65,6 +65,7 @@ import {
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
+import nextTick from 'next-tick';
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -1083,7 +1084,7 @@ export function sendTransaction<
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
-			setImmediate(() => {
+			nextTick(() => {
 				(async () => {
 					let transactionFormatted = formatTransaction(
 						{
@@ -1372,7 +1373,7 @@ export function sendSignedTransaction<
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const promiEvent = new Web3PromiEvent<ResolveType, SendSignedTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
-			setImmediate(() => {
+			nextTick(() => {
 				(async () => {
 					// Formatting signedTransaction to be send to RPC endpoint
 					const signedTransactionFormattedHex = format(

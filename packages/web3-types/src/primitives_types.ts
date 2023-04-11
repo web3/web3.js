@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import type { Buffer } from 'buffer';
 
 export type HexString = string;
 export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;

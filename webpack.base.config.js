@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const webpack = require('webpack');
 const path = require('path');
 
 /**
@@ -54,7 +53,6 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 				net: false,
 				path: false,
 				os: false,
-				stream: require.resolve('readable-stream'),
 			},
 			alias: {
 				// To avoid blotting up the `bn.js` library all over the packages
@@ -63,20 +61,7 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 			},
 		},
 		devtool: 'source-map',
-		plugins: [
-			new webpack.IgnorePlugin({
-				checkResource(resource) {
-					// "@ethereumjs/common/genesisStates" consists ~800KB static files which are no more needed
-					return /(.*\/genesisStates\/.*\.json)/.test(resource);
-				},
-			}),
-			new webpack.ProvidePlugin({
-				Buffer: ['buffer', 'Buffer'],
-			}),
-			new webpack.ProvidePlugin({
-				process: 'process/browser',
-			}),
-		],
+		plugins: [],
 	};
 }
 

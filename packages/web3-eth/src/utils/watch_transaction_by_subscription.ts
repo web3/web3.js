@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Bytes, Numbers, BlockHeaderOutput, TransactionReceipt } from 'web3-types';
 import { DataFormat, format } from 'web3-utils';
+import nextTick from 'next-tick';
 
 import { NewHeadsSubscription } from '../web3_subscriptions';
 import { transactionReceiptSchema } from '../schemas';
@@ -38,7 +39,7 @@ export const watchTransactionBySubscription = <
 	//	or if watching started after an error had occurred.
 	let needToWatchLater = true;
 	let lastCaughtBlockHash: string;
-	setImmediate(() => {
+	nextTick(() => {
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
 			.then((subscription: NewHeadsSubscription) => {

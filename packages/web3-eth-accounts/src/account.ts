@@ -54,6 +54,7 @@ import {
 } from 'web3-utils';
 
 import { isBuffer, isNullish, isString, validator, isHexStrict } from 'web3-validator';
+import { Buffer } from 'buffer';
 import { TransactionFactory } from './tx/transactionFactory';
 import { keyStoreSchema } from './schemas';
 import type {

@@ -40,6 +40,7 @@ import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-c
 import { TransactionNotFound } from 'web3-errors';
 import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT, isNullish } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
+import nextTick from 'next-tick';
 
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { SendTransactionOptions } from './types';
@@ -1571,7 +1572,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			!isNullish(args.fromBlock) &&
 			Number.isFinite(Number(args.fromBlock))
 		) {
-			setImmediate(() => {
+			nextTick(() => {
 				this.getPastLogs(args)
 					.then(logs => {
 						for (const log of logs) {

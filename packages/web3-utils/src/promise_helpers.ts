@@ -54,7 +54,7 @@ export async function waitWithTimeout<T>(
 	timeout: number,
 	error?: Error,
 ): Promise<T | undefined> {
-	let timeoutId: NodeJS.Timeout | undefined;
+	let timeoutId: ReturnType<typeof setTimeout> | undefined;
 	const result = await Promise.race([
 		awaitable instanceof Promise ? awaitable : awaitable(),
 		new Promise<undefined | Error>((resolve, reject) => {
@@ -81,7 +81,7 @@ export async function pollTillDefined<T>(
 ): Promise<Exclude<T, undefined>> {
 	const awaitableRes = waitWithTimeout(func, interval);
 
-	let intervalId: NodeJS.Timer | undefined;
+	let intervalId: ReturnType<typeof setTimeout> | undefined;
 	const polledRes = new Promise<Exclude<T, undefined>>((resolve, reject) => {
 		intervalId = setInterval(() => {
 			(async () => {
@@ -122,14 +122,17 @@ export async function pollTillDefined<T>(
  * const [timerId, promise] = web3.utils.rejectIfTimeout(100, new Error('time out'));
  * ```
  */
-export function rejectIfTimeout(timeout: number, error: Error): [NodeJS.Timer, Promise<never>] {
-	let timeoutId: NodeJS.Timer | undefined;
+export function rejectIfTimeout(
+	timeout: number,
+	error: Error,
+): [ReturnType<typeof setTimeout>, Promise<never>] {
+	let timeoutId: ReturnType<typeof setTimeout> | undefined;
 	const rejectOnTimeout = new Promise<never>((_, reject) => {
 		timeoutId = setTimeout(() => {
 			reject(error);
 		}, timeout);
 	});
-	return [timeoutId as unknown as NodeJS.Timer, rejectOnTimeout];
+	return [timeoutId as ReturnType<typeof setTimeout>, rejectOnTimeout];
 }
 /**
  * Sets an interval that repeatedly executes the given cond function with the specified interval between each call.
@@ -141,8 +144,8 @@ export function rejectIfTimeout(timeout: number, error: Error): [NodeJS.Timer, P
 export function rejectIfConditionAtInterval<T>(
 	cond: AsyncFunction<T | undefined>,
 	interval: number,
-): [NodeJS.Timer, Promise<never>] {
-	let intervalId: NodeJS.Timer | undefined;
+): [ReturnType<typeof setTimeout>, Promise<never>] {
+	let intervalId: ReturnType<typeof setTimeout> | undefined;
 	const rejectIfCondition = new Promise<never>((_, reject) => {
 		intervalId = setInterval(() => {
 			(async () => {
@@ -154,5 +157,5 @@ export function rejectIfConditionAtInterval<T>(
 			})() as unknown;
 		}, interval);
 	});
-	return [intervalId as unknown as NodeJS.Timer, rejectIfCondition];
+	return [intervalId as ReturnType<typeof setTimeout>, rejectIfCondition];
 }

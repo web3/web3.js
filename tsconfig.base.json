@@ -3,6 +3,7 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"target": "es2016",
+		"lib": ["ES2022", "DOM"],
 		"moduleResolution": "node",
 		"newLine": "lf",
 		"noFallthroughCasesInSwitch": true,
@@ -15,6 +16,7 @@
 		"strict": true,
 		"strictNullChecks": true,
 		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"types": []
 	}
 }

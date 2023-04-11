@@ -48,7 +48,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /**
  *
  */
-import 'setimmediate';
 
 import { Web3Eth } from './web3_eth';
 

@@ -4,7 +4,8 @@
 		"declarationDir": "./lib/types",
 		"declaration": true,
 		"declarationMap": true,
-		"emitDeclarationOnly": true
+		"emitDeclarationOnly": true,
+		"types": ["@types/node"]
 	},
 	"include": ["src/**/*"]
 }

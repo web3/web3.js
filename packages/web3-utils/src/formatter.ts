@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { FormatterError } from 'web3-errors';
+import { Buffer } from 'buffer';
 import { Bytes, HexString, Numbers } from 'web3-types';
 import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
 import { bytesToBuffer, bytesToHex, numberToHex, toBigInt } from './converters';

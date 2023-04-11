@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { buf as crc32Buffer } from 'crc-32';
 import { EventEmitter } from 'events';
 import type { Numbers } from 'web3-types';
+import { Buffer } from 'buffer';
 import { TypeOutput } from './types';
 import { intToBuffer, toType, parseGethGenesis } from './utils';
 import goerli from './chains/goerli.json';

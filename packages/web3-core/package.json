@@ -54,8 +54,10 @@
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
 		"@types/jest-when": "^3.5.2",
+		"@types/next-tick": "^1.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
+		"next-tick": "^1.1.0",
 		"eslint": "^8.20.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-config-web3-base": "0.1.0",

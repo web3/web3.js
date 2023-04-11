@@ -32,7 +32,7 @@ export class Web3DeferredPromise<T> implements Promise<T>, Web3DeferredPromiseIn
 	private _resolve!: (value: T | PromiseLike<T>) => void;
 	private _reject!: (reason?: unknown) => void;
 	private _state: 'pending' | 'fulfilled' | 'rejected' = 'pending';
-	private _timeoutId?: NodeJS.Timeout;
+	private _timeoutId?: ReturnType<typeof setTimeout>;
 	private readonly _timeoutInterval?: number;
 	private readonly _timeoutMessage: string;
 

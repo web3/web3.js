@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"outDir": "./lib/commonjs",
 		"declaration": true,
-		"module": "commonjs"
+		"module": "commonjs",
+		"types": ["@types/node"]
 	},
 	"include": ["src/**/*"]
 }

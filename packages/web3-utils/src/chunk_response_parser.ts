@@ -20,7 +20,7 @@ import { EventEmitter } from 'events';
 
 export class ChunkResponseParser {
 	private lastChunk: string | undefined;
-	private lastChunkTimeout: NodeJS.Timeout | undefined;
+	private lastChunkTimeout: ReturnType<typeof setTimeout> | undefined;
 	private _clearQueues: (() => void) | undefined;
 	private readonly eventEmitter: EventEmitter;
 	private readonly autoReconnect: boolean;

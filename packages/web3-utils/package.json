@@ -44,7 +44,9 @@
 	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
+		"@types/events": "^3.0.0",
 		"@types/jest": "^28.1.6",
+		"@types/next-tick": "^1.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
 		"eslint": "^8.20.0",
@@ -59,7 +61,10 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
+		"buffer": "^6.0.3",
 		"ethereum-cryptography": "^1.1.2",
+		"events": "^3.3.0",
+		"next-tick": "^1.1.0",
 		"web3-errors": "^1.0.0-rc.0",
 		"web3-types": "^1.0.0-rc.0",
 		"web3-validator": "^1.0.0-rc.0"
