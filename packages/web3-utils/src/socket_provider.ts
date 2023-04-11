@@ -64,8 +64,6 @@ const DEFAULT_RECONNECTION_OPTIONS = {
 	maxAttempts: 5,
 };
 
-type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
-
 const NORMAL_CLOSE_CODE = 1000; // https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close
 
 export abstract class SocketProvider<
