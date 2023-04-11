@@ -3,6 +3,9 @@
 *.swp
 *.orig
 
+# Secrets
+.secrets.json
+
 # Logs
 logs
 *.log
