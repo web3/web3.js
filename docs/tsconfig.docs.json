@@ -4,7 +4,10 @@
 		"declarationDir": "dts",
 		"outDir": "dts",
 		"declaration": true,
-		"declarationMap": true
+		"declarationMap": true,
+		"types": [],
+		"skipLibCheck": true
 	},
-	"include": ["../packages/*/src/**/*", "../packages/*/types/**/*"]
+	"include": ["../packages/*/src/**/*", "../packages/*/types/**/*"],
+	"exclude": ["node_modules"]
 }

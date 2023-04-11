@@ -91,6 +91,7 @@
 		"@droppedcode/typedoc-plugin-relative-includes": "^1.0.2",
 		"@openzeppelin/contracts": "^4.7.1",
 		"@types/webpack": "^5.28.0",
+		"@types/node": "^18.15.11",
 		"assert": "^2.0.0",
 		"buffer": "^6.0.3",
 		"bufferutil": "^4.0.6",
