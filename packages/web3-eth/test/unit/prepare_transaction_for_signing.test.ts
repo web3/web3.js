@@ -23,7 +23,7 @@ import {
 	AccessListEIP2930Transaction,
 	FeeMarketEIP1559Transaction,
 	Transaction,
-} from '@ethereumjs/tx';
+} from 'web3-eth-accounts';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
@@ -35,7 +35,7 @@ describe('prepareTransactionForSigning', () => {
 		config: { defaultNetworkId: '0x1' },
 	});
 
-	describe('should return an @ethereumjs/tx instance with expected properties', () => {
+	describe('should return an web3-utils/tx instance with expected properties', () => {
 		it.each(validTransactions)(
 			'mockBlock: %s\nexpectedTransaction: %s\nexpectedPrivateKey: %s\nexpectedAddress: %s\nexpectedRlpEncodedTransaction: %s\nexpectedTransactionHash: %s\nexpectedMessageToSign: %s\nexpectedV: %s\nexpectedR: %s\nexpectedS: %s',
 			async (
@@ -60,7 +60,7 @@ describe('prepareTransactionForSigning', () => {
 					expectedPrivateKey,
 				);
 
-				// should produce an @ethereumjs/tx instance
+				// should produce an web3-utils/tx instance
 				expect(
 					ethereumjsTx instanceof Transaction ||
 						ethereumjsTx instanceof AccessListEIP2930Transaction ||
@@ -90,13 +90,13 @@ describe('prepareTransactionForSigning', () => {
 
 				// should have expected v, r, and s
 				const v = !isNullish(signedTransaction.v)
-					? `0x${signedTransaction.v.toString('hex')}`
+					? `0x${signedTransaction.v.toString(16)}`
 					: '';
 				const r = !isNullish(signedTransaction.r)
-					? `0x${signedTransaction.r.toString('hex')}`
+					? `0x${signedTransaction.r.toString(16)}`
 					: '';
 				const s = !isNullish(signedTransaction.s)
-					? `0x${signedTransaction.s.toString('hex')}`
+					? `0x${signedTransaction.s.toString(16)}`
 					: '';
 				expect(v).toBe(expectedV);
 				expect(r).toBe(expectedR);

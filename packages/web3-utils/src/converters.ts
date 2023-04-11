@@ -17,21 +17,20 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Address, Bytes, HexString, Numbers, ValueTypes } from 'web3-types';
 import {
-	validator,
 	isAddress,
-	isHexStrict,
 	isHex,
-	utils as validatorUtils,
+	isHexStrict,
 	isNullish,
+	utils as validatorUtils,
+	validator,
 } from 'web3-validator';
 import { keccak256 } from 'ethereum-cryptography/keccak';
-
 import {
 	HexProcessingError,
 	InvalidAddressError,
 	InvalidBytesError,
-	InvalidUnitError,
 	InvalidNumberError,
+	InvalidUnitError,
 } from 'web3-errors';
 
 const base = BigInt(10);
