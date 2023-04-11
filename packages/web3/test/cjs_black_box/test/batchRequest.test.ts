@@ -14,10 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+/* eslint-disable import/no-relative-packages */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-// eslint-disable-next-line import/no-relative-packages
-import { getSystemTestProvider, closeOpenConnection, isWs } from './fixtures/system_tests_utils';
+import {
+	getSystemTestProvider,
+	closeOpenConnection,
+	isWs,
+} from '../../shared_fixtures/system_tests_utils';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const Web3 = require('web3').default;
 

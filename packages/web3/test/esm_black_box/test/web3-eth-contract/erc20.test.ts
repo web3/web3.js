@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/* eslint-disable import/no-relative-packages */
 import Web3 from 'web3';
 import Contract from 'web3-eth-contract';
 
@@ -24,8 +25,8 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
-} from '../../fixtures/system_tests_utils';
-import { ERC20TokenAbi, ERC20TokenBytecode } from '../../fixtures/contracts/ERC20Token';
+} from '../../../shared_fixtures/system_tests_utils';
+import { ERC20TokenAbi, ERC20TokenBytecode } from '../../../shared_fixtures/contracts/ERC20Token';
 
 describeIf(getSystemTestBackend() === 'infura')(
 	'ESM - Black Box Unit Tests - web3.eth.Contract',

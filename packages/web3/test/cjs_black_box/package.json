@@ -1,5 +1,5 @@
 {
-	"name": "web3_black_box_esm_tests",
+	"name": "web3_black_box_cjs_tests",
 	"version": "1.0.0",
 	"main": "index.js",
 	"author": "ChainSafe Systems",

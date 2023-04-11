@@ -27,7 +27,8 @@ import {
 import {
 	ERC20TokenAbi,
 	ERC20TokenBytecode,
-} from '../../../esm_black_box/test/fixtures/contracts/ERC20Token';
+	// eslint-disable-next-line import/no-relative-packages
+} from '../../../shared_fixtures/contracts/ERC20Token';
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const Web3 = require('web3').default;
