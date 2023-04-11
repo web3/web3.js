@@ -653,7 +653,7 @@ Method.prototype.buildCall = function () {
                 if (!err && method.isRevertReasonString(result)){
                     reasonData = result.substring(10);
                 } else if (err && err.data){
-                    reasonData = err.data.substring(10);
+                    reasonData = (err.data.data || err.data).substring(10);
                 }
 
                 if (reasonData){
