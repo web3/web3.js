@@ -42,13 +42,12 @@ then
         exit 1
     elif [ $MODE == "http" ]
     then
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP
     else
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS
     fi
-else
-    yarn "test:$BACKEND:$MODE"
 fi
+yarn "test:$BACKEND:$MODE"
 
 cd test/cjs_black_box
 yarn --update-checksums
@@ -62,10 +61,9 @@ then
         exit 1
     elif [ $MODE == "http" ]
     then
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP
     else
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS
     fi
-else
-    yarn "test:$BACKEND:$MODE"
 fi
+yarn "test:$BACKEND:$MODE"
