@@ -43,11 +43,11 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 		pending: 'pending',
 		finalized: 'finalized',
 		safe: 'safe',
-		blockNumber: getSystemTestBackend() === 'sepolia' ? 3240768 : 17029884,
+		blockNumber: getSystemTestBackend() === 'sepolia' ? 3240768 : 17030398,
 		blockHash:
 			getSystemTestBackend() === 'sepolia'
 				? '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca'
-				: '0x2850e4a813762b2de589fa5268eacb92572defaf9520608deb129699e504cab2',
+				: '0x651bba2d39741e77f6b68bfa1e73ce73be0ac18cd0b45aa7c02752fb2201c086',
 	};
 	const simpleEthTransaction: Transaction = {
 		from: getE2ETestAccountAddress(),
