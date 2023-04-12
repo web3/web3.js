@@ -18,7 +18,7 @@ import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import { isBigInt, isHexStrict, isNumber, isString } from 'web3-validator';
 
 import Web3 from '../../src';
-import { getSystemE2ETestProvider, getTestAccountAddress } from './e2e_utils';
+import { getSystemE2ETestProvider, getE2ETestAccountAddress } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
@@ -76,7 +76,7 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 			format: Object.values(FMT_NUMBER),
 		}),
 	)('getBalance', async ({ block, format }) => {
-		const result = await web3.eth.getBalance(getTestAccountAddress(), blockData[block], {
+		const result = await web3.eth.getBalance(getE2ETestAccountAddress(), blockData[block], {
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});

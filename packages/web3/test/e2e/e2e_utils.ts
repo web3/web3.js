@@ -49,7 +49,7 @@ export const getDeployedStorageContractAddress = (): string => {
 	throw new Error('Unable to get deployed storage contract address');
 };
 
-export const getTestAccountAddress = (): string => {
+export const getE2ETestAccountAddress = (): string => {
 	if (process.env.TEST_ACCOUNT_ADDRESS !== undefined) {
 		return process.env.TEST_ACCOUNT_ADDRESS;
 		// eslint-disable-next-line no-else-return
@@ -71,4 +71,16 @@ export const getAllowedSendTransaction = (): boolean => {
 	}
 
 	return false;
+};
+
+export const getE2ETestAccountPrivateKey = (): string => {
+	if (process.env.TEST_ACCOUNT_PRIVATE_KEY !== undefined) {
+		return process.env.TEST_ACCOUNT_PRIVATE_KEY;
+		// eslint-disable-next-line no-else-return
+	} else if (getSystemTestBackend() === 'sepolia' || getSystemTestBackend() === 'mainnet') {
+		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET'].ACCOUNT
+			.privateKey;
+	}
+
+	throw new Error('Unable to get test account private key');
 };

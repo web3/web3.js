@@ -18,7 +18,7 @@ import Web3, { Numbers } from '../../../src';
 import {
 	getDeployedStorageContractAddress,
 	getSystemE2ETestProvider,
-	getTestAccountAddress,
+	getE2ETestAccountAddress,
 } from '../e2e_utils';
 import {
 	closeOpenConnection,
@@ -92,7 +92,9 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		} else {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
-				`0x000000000000000000000000${getTestAccountAddress().substring(2).toLowerCase()}`,
+				`0x000000000000000000000000${getE2ETestAccountAddress()
+					.substring(2)
+					.toLowerCase()}`,
 			);
 		}
 	});

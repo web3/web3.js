@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3 from '../../src';
-import { getSystemE2ETestProvider, getTestAccountAddress } from './e2e_utils';
+import { getSystemE2ETestProvider, getE2ETestAccountAddress } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
@@ -72,7 +72,7 @@ describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
 		}),
 	)('getTransactionCount', async ({ block }) => {
 		const result = await web3.eth.getTransactionCount(
-			getTestAccountAddress(),
+			getE2ETestAccountAddress(),
 			blockData[block],
 		);
 
