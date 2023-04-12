@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EventLog } from 'web3-types';
-import { Contract } from '../../src';
+import { Contract, EventLog } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { processAsync } from '../shared_fixtures/utils';
 import {

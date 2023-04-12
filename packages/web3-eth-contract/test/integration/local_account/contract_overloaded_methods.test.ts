@@ -19,9 +19,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Account } from 'web3-eth-accounts';
-import { EventLog } from 'web3-types';
 import { utf8ToHex } from 'web3-utils';
-import { Contract } from '../../../src';
+import { Contract, EventLog } from '../../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../../shared_fixtures/build/ERC721Token';
 import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
 import { toUpperCaseHex } from '../../shared_fixtures/utils';
