@@ -22,7 +22,7 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { getDeployedStorageContractAddress, getSystemE2ETestProvider } from '../e2e_utils';
+import { getSystemE2ETestProvider } from '../e2e_utils';
 
 describe(`${getSystemTestBackend()} tests - getCode`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -64,7 +64,7 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 		}),
 	)('should getCode for deployed contract', async ({ block, format }) => {
 		const result = await web3.eth.getCode(
-			getDeployedStorageContractAddress(),
+			'0xEdFd52255571b4a9A9d4445989E39f5c14Ff0447',
 			blockData[block],
 			{
 				number: FMT_NUMBER.HEX,

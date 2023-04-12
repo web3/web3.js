@@ -22,7 +22,7 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { getDeployedStorageContractAddress, getSystemE2ETestProvider } from '../e2e_utils';
+import { getSystemE2ETestProvider } from '../e2e_utils';
 
 describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -65,7 +65,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 			{
 				fromBlock: 'earliest',
 				toBlock: 'latest',
-				address: getDeployedStorageContractAddress(),
+				address: '0xEdFd52255571b4a9A9d4445989E39f5c14Ff0447',
 			},
 			{
 				number: FMT_NUMBER.HEX,

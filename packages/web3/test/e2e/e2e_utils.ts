@@ -38,17 +38,6 @@ export const getSystemE2ETestProvider = (): string => {
 		: process.env.INFURA_MAINNET_WS ?? secrets.MAINNET.WS;
 };
 
-export const getDeployedStorageContractAddress = (): string => {
-	if (process.env.STORAGE_CONTRACT_ADDRESS !== undefined) {
-		return process.env.STORAGE_CONTRACT_ADDRESS;
-		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === 'sepolia') {
-		return secrets.SEPOLIA.DEPLOYED_STORAGE_CONTRACT_ADDRESS;
-	}
-
-	throw new Error('Unable to get deployed storage contract address');
-};
-
 export const getE2ETestAccountAddress = (): string => {
 	if (process.env.TEST_ACCOUNT_ADDRESS !== undefined) {
 		return process.env.TEST_ACCOUNT_ADDRESS;
