@@ -4,7 +4,8 @@
 		"esModuleInterop": true,
 		"module": "commonjs",
 		"declaration": false,
-		"declarationMap": false
+		"declarationMap": false,
+		"types": ["@types/jest", "@types/node"]
 	},
 	"include": ["src/**/*"]
 }
