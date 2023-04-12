@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { TransactionReceipt } from 'web3-types';
+import { SupportedProviders, TransactionReceipt } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 import { Web3Eth } from '../../../src';
@@ -31,7 +31,7 @@ import { sendFewTxes } from '../helper';
 
 describe('rpc with block', () => {
 	let web3Eth: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;

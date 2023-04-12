@@ -23,12 +23,12 @@ import {
 	closeOpenConnection,
 	createTempAccount,
 } from '../shared_fixtures/system_tests_utils';
-import Web3 from '../../src/index';
+import Web3, { SupportedProviders } from '../../src/index';
 
 const hexRegx = /0[xX][0-9a-fA-F]+/;
 
 describe('web3.accounts', () => {
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let tempAccount: string;
 	let web3: Web3;
 

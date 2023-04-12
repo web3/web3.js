@@ -15,15 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	describeIf,
-	isIpc,
-	closeOpenConnection,
-	isWs,
-	isSyncTest,
-	getSystemTestProvider,
-} from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
+import {
+	closeOpenConnection,
+	describeIf,
+	getSystemTestProviderUrl,
+	isIpc,
+	isSyncTest,
+	isWs,
+} from '../shared_fixtures/system_tests_utils';
 
 const addPeer = async (web3: Web3, eNode: string) => {
 	return web3.requestManager.send({
@@ -60,11 +60,11 @@ describeIf((isIpc || isWs) && isSyncTest)('Sync nodes test', () => {
 	let web3Node2: Web3;
 	beforeAll(async () => {
 		const providerPath1 = isWs
-			? getSystemTestProvider().replace('8545', '18545')
-			: getSystemTestProvider().replace('/tmp/ipc', '/tmp/ipc1');
+			? getSystemTestProviderUrl().replace('8545', '18545')
+			: getSystemTestProviderUrl().replace('/tmp/ipc', '/tmp/ipc1');
 		const providerPath2 = isWs
-			? getSystemTestProvider().replace('8545', '28545')
-			: getSystemTestProvider().replace('/tmp/ipc', '/tmp/ipc2');
+			? getSystemTestProviderUrl().replace('8545', '28545')
+			: getSystemTestProviderUrl().replace('/tmp/ipc', '/tmp/ipc2');
 
 		web3Node1 = new Web3(providerPath1);
 		await addAccount(web3Node1);

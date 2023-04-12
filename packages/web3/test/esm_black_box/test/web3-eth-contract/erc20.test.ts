@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/* eslint-disable import/no-relative-packages */
 import Web3 from 'web3';
 import Contract from 'web3-eth-contract';
 
@@ -24,28 +25,31 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
-} from 'web3/test/shared_fixtures/system_tests_utils';
-import { ERC20TokenAbi, ERC20TokenBytecode } from '../fixtures/contracts/ERC20Token';
+} from '../../../shared_fixtures/system_tests_utils';
+import { ERC20TokenAbi, ERC20TokenBytecode } from '../../../shared_fixtures/contracts/ERC20Token';
 
-describeIf(getSystemTestBackend() === 'infura')('Black Box Unit Tests - web3.eth.Contract', () => {
-	describe('Infura - ERC20', () => {
-		const mainNetUSDTAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
+describeIf(getSystemTestBackend() === 'infura')(
+	'ESM - Black Box Unit Tests - web3.eth.Contract',
+	() => {
+		describe('Infura - ERC20', () => {
+			const mainNetUSDTAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
 
-		let web3: Web3;
+			let web3: Web3;
 
-		beforeAll(() => {
-			web3 = new Web3(getSystemTestProvider());
+			beforeAll(() => {
+				web3 = new Web3(getSystemTestProvider());
+			});
+
+			it('should get deployed contract info', async () => {
+				const contract = new web3.eth.Contract(ERC20TokenAbi, mainNetUSDTAddress);
+
+				expect(await contract.methods.name().call()).toBe('Tether USD');
+				expect(await contract.methods.symbol().call()).toBe('USDT');
+				expect(await contract.methods.decimals().call()).toBe(BigInt(6));
+			});
 		});
-
-		it('should get deployed contract info', async () => {
-			const contract = new web3.eth.Contract(ERC20TokenAbi, mainNetUSDTAddress);
-
-			expect(await contract.methods.name().call()).toBe('Tether USD');
-			expect(await contract.methods.symbol().call()).toBe('USDT');
-			expect(await contract.methods.decimals().call()).toBe(BigInt(6));
-		});
-	});
-});
+	},
+);
 
 describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'ganache')(
 	'Black Box Unit Tests - web3.eth.Contract',

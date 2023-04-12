@@ -15,38 +15,41 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { JsonRpcOptionalRequest, Web3BaseProvider, SupportedProviders } from 'web3-types';
 import Contract from 'web3-eth-contract';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
 import WebSocketProvider from 'web3-providers-ws';
+import { JsonRpcOptionalRequest, SupportedProviders, Web3BaseProvider } from 'web3-types';
 import Web3 from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
+import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {
-	createTempAccount,
 	closeOpenConnection,
+	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
+	getSystemTestProviderUrl,
 	isHttp,
 	isIpc,
-	isWs,
-	waitForOpenConnection,
-	itIf,
 	isSocket,
+	isWs,
+	itIf,
+	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
-import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 
 /* eslint-disable jest/no-standalone-expect */
 
 describe('Web3 instance', () => {
-	let clientUrl: string;
+	let provider: string | SupportedProviders;
+	let providerUrl: string;
 	let accounts: string[];
 	let web3: Web3;
 	let currentAttempt = 0;
 
 	beforeAll(async () => {
-		clientUrl = getSystemTestProvider();
+		provider = getSystemTestProvider();
+		providerUrl = getSystemTestProviderUrl();
 		const acc1 = await createTempAccount();
 		const acc2 = await createTempAccount();
 		accounts = [acc1.address, acc2.address];
@@ -80,7 +83,7 @@ describe('Web3 instance', () => {
 	});
 
 	it('check disconnect function', async () => {
-		const web3Instance = new Web3(clientUrl);
+		const web3Instance = new Web3(provider);
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
@@ -91,7 +94,7 @@ describe('Web3 instance', () => {
 		}
 	});
 	itIf(isWs)('check disconnect function for WebSocket provider', async () => {
-		const web3Instance = new Web3(new WebSocketProvider(clientUrl));
+		const web3Instance = new Web3(new WebSocketProvider(providerUrl));
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
@@ -100,7 +103,7 @@ describe('Web3 instance', () => {
 		web3Instance.currentProvider?.disconnect();
 	});
 	itIf(isIpc)('check disconnect function for ipc provider', async () => {
-		const web3Instance = new Web3(new IpcProvider(clientUrl));
+		const web3Instance = new Web3(new IpcProvider(providerUrl));
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
@@ -109,7 +112,7 @@ describe('Web3 instance', () => {
 		web3Instance.currentProvider?.disconnect();
 	});
 	itIf(isHttp)('check disconnect function for http provider', async () => {
-		const web3Instance = new Web3(new HttpProvider(clientUrl));
+		const web3Instance = new Web3(new HttpProvider(providerUrl));
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
@@ -142,14 +145,14 @@ describe('Web3 instance', () => {
 
 	describeIf(isHttp)('Create Web3 class instance with http string providers', () => {
 		it('should create instance with string provider', () => {
-			web3 = new Web3(clientUrl);
+			web3 = new Web3(provider);
 			expect(web3).toBeInstanceOf(Web3);
 		});
 	});
 
 	describeIf(isWs)('Create Web3 class instance with ws string providers', () => {
 		it('should create instance with string of ws provider', () => {
-			web3 = new Web3(clientUrl);
+			web3 = new Web3(provider);
 			expect(web3).toBeInstanceOf(Web3);
 		});
 	});
@@ -158,7 +161,7 @@ describe('Web3 instance', () => {
 		it('should set the provider with `.provider=`', async () => {
 			web3 = new Web3('http://dummy.com');
 
-			web3.provider = clientUrl;
+			web3.provider = provider;
 
 			expect(web3).toBeInstanceOf(Web3);
 			if (isWs) {
@@ -173,11 +176,11 @@ describe('Web3 instance', () => {
 			let newProvider: Web3BaseProvider;
 			web3 = new Web3('http://dummy.com');
 			if (isHttp) {
-				newProvider = new Web3.providers.HttpProvider(clientUrl);
+				newProvider = new Web3.providers.HttpProvider(providerUrl);
 			} else if (isWs) {
-				newProvider = new Web3.providers.WebsocketProvider(clientUrl);
+				newProvider = new Web3.providers.WebsocketProvider(providerUrl);
 			} else {
-				newProvider = new Web3.providers.IpcProvider(clientUrl);
+				newProvider = new IpcProvider(providerUrl);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			web3.setProvider(newProvider as SupportedProviders);
@@ -222,11 +225,10 @@ describe('Web3 instance', () => {
 
 			expect(Web3.providers.HttpProvider).toBe(HttpProvider);
 			expect(res.WebsocketProvider).toBe(WebSocketProvider);
-			expect(res.IpcProvider).toBe(IpcProvider);
 		});
 
 		it('currentProvider', () => {
-			web3 = new Web3(clientUrl);
+			web3 = new Web3(provider);
 
 			let checkWithClass;
 			if (isWs) {
@@ -234,7 +236,7 @@ describe('Web3 instance', () => {
 			} else if (isHttp) {
 				checkWithClass = Web3.providers.HttpProvider;
 			} else {
-				checkWithClass = Web3.providers.IpcProvider;
+				checkWithClass = IpcProvider;
 			}
 			expect(web3.currentProvider).toBeInstanceOf(checkWithClass);
 		});
@@ -270,7 +272,7 @@ describe('Web3 instance', () => {
 		});
 
 		it('should execute batch requests', async () => {
-			web3 = new Web3(clientUrl);
+			web3 = new Web3(provider);
 			if (isWs) {
 				await waitForOpenConnection(web3, 0);
 			}
@@ -306,7 +308,7 @@ describe('Web3 instance', () => {
 		let acc: { address: string; privateKey: string };
 
 		beforeAll(() => {
-			web3 = new Web3(clientUrl);
+			web3 = new Web3(provider);
 		});
 
 		beforeEach(async () => {
