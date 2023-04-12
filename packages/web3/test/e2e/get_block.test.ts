@@ -42,8 +42,11 @@ describe(`${getSystemTestBackend()} tests - getBlock`, () => {
 		earliest: 'earliest',
 		finalized: 'finalized',
 		safe: 'safe',
-		blockNumber: 3228743,
-		blockHash: '0x0920dc080c576f88a5280fb5fb0b8fe70f1afa91ebcef52593a80f7fecf0838f',
+		blockNumber: getSystemTestBackend() === 'sepolia' ? 3240768 : 17029884,
+		blockHash:
+			getSystemTestBackend() === 'sepolia'
+				? '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca'
+				: '0x2850e4a813762b2de589fa5268eacb92572defaf9520608deb129699e504cab2',
 	};
 
 	beforeAll(() => {

@@ -31,7 +31,7 @@ export const getSystemE2ETestProvider = (): string => {
 	if (process.env.WEB3_SYTEM_TEST_MODE === 'http') {
 		return getSystemTestBackend() === 'sepolia'
 			? process.env.INFURA_SEPOLIA_HTTP ?? secrets.SEPOLIA.HTTP
-			: process.env.INFURA_MAINNET_HTTP ?? secrets.SEPOLIA.HTTP;
+			: process.env.INFURA_MAINNET_HTTP ?? secrets.MAINNET.HTTP;
 	}
 	return getSystemTestBackend() === 'sepolia'
 		? process.env.INFURA_SEPOLIA_WS ?? secrets.SEPOLIA.WS
