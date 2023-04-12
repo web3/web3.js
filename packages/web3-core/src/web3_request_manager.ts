@@ -15,8 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Socket } from 'net';
-
 import {
 	ContractExecutionError,
 	InvalidResponseError,
@@ -26,7 +24,6 @@ import {
 	RpcError,
 } from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
-import IpcProvider from 'web3-providers-ipc';
 import WSProvider from 'web3-providers-ws';
 import {
 	EthExecutionAPI,
@@ -61,10 +58,12 @@ export enum Web3RequestManagerEvent {
 	BEFORE_PROVIDER_CHANGE = 'BEFORE_PROVIDER_CHANGE',
 }
 
-const availableProviders = {
+const availableProviders: {
+	HttpProvider: Web3BaseProviderConstructor;
+	WebsocketProvider: Web3BaseProviderConstructor;
+} = {
 	HttpProvider: HttpProvider as Web3BaseProviderConstructor,
 	WebsocketProvider: WSProvider as Web3BaseProviderConstructor,
-	IpcProvider: IpcProvider as Web3BaseProviderConstructor,
 };
 
 export class Web3RequestManager<
@@ -76,13 +75,12 @@ export class Web3RequestManager<
 	private readonly useRpcCallSpecification?: boolean;
 	public constructor(
 		provider?: SupportedProviders<API> | string,
-		net?: Socket,
 		useRpcCallSpecification?: boolean,
 	) {
 		super();
 
 		if (!isNullish(provider)) {
-			this.setProvider(provider, net);
+			this.setProvider(provider);
 		}
 		this.useRpcCallSpecification = useRpcCallSpecification;
 	}
@@ -113,11 +111,10 @@ export class Web3RequestManager<
 
 	/**
 	 * Use to set provider. Provider can be a provider instance or a string.
-	 * To set IPC provider as a string please use the IPC socket file which name ends with .ipc
 	 *
 	 * @param provider - The provider to set
 	 */
-	public setProvider(provider?: SupportedProviders<API> | string, net?: Socket): boolean {
+	public setProvider(provider?: SupportedProviders<API> | string): boolean {
 		let newProvider: SupportedProviders<API> | undefined;
 
 		// autodetect provider
@@ -129,12 +126,6 @@ export class Web3RequestManager<
 				// WS
 			} else if (/^ws(s)?:\/\//i.test(provider)) {
 				newProvider = new this.providers.WebsocketProvider<API>(provider);
-
-				// IPC
-			} else if (typeof net === 'object' && typeof net.connect === 'function') {
-				newProvider = new this.providers.IpcProvider<API>(provider, net);
-			} else if (provider.toLowerCase().endsWith('.ipc')) {
-				newProvider = new this.providers.IpcProvider<API>(provider);
 			} else {
 				throw new ProviderError(`Can't autodetect provider for "${provider}"`);
 			}

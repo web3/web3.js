@@ -47,13 +47,7 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 		},
 		resolve: {
 			extensions: ['.ts', '.js'],
-			fallback: {
-				child_process: false,
-				fs: false,
-				net: false,
-				path: false,
-				os: false,
-			},
+			fallback: {},
 			alias: {
 				// To avoid blotting up the `bn.js` library all over the packages
 				// use single library instance.

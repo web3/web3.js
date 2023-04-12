@@ -15,7 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { AbiEventFragment, TransactionReceipt, TransactionInfo } from 'web3-types';
+import {
+	AbiEventFragment,
+	TransactionReceipt,
+	TransactionInfo,
+	SupportedProviders,
+} from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
 import {
@@ -48,7 +53,7 @@ import {
 
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let contractDeployed: Contract<typeof BasicAbi>;
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;

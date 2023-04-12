@@ -1,0 +1,9 @@
+{
+	"extends": "../../tsconfig.cjs.json",
+	"compilerOptions": {
+		"declaration": false,
+		"declarationMap": false,
+		"types": ["@types/node", "@types/jest"]
+	},
+	"include": ["./**/*", "../node_modules/jest-extended/types/**/*.ts"]
+}

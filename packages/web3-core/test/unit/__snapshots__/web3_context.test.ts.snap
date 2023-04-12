@@ -35,7 +35,6 @@ Object {
   },
   "providers": Object {
     "HttpProvider": [Function],
-    "IpcProvider": [Function],
     "WebsocketProvider": [Function],
   },
   "registeredSubscriptions": Object {},

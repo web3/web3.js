@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Web3PromiEvent } from 'web3-core';
-import { TransactionReceipt } from 'web3-types';
+import { SupportedProviders, TransactionReceipt } from 'web3-types';
 import { TransactionBlockTimeoutError } from 'web3-errors';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
@@ -38,7 +38,7 @@ const gas = 21000;
 /* eslint-disable jest/no-standalone-expect */
 describe('defaults', () => {
 	let web3: Web3;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let account1: Web3Account;
 	let account2: Web3Account;
 

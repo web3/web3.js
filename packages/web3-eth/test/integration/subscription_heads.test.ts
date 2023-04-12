@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { BlockHeaderOutput } from 'web3-types';
+import { BlockHeaderOutput, SupportedProviders } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3 } from 'web3';
 import { Web3Eth, NewHeadsSubscription } from '../../src';
@@ -30,7 +30,7 @@ import {
 
 const checkTxCount = 2;
 describeIf(isSocket)('subscription', () => {
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let web3: Web3;
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();

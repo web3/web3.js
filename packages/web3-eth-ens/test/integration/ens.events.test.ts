@@ -21,6 +21,8 @@ import { sha3, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { getBlock } from 'web3-eth';
 
 import { Address, Bytes } from 'web3-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import IpcProvider from 'web3-providers-ipc';
 import { ENS } from '../../src';
 import { namehash } from '../../src/utils';
 
@@ -32,6 +34,7 @@ import {
 	closeOpenConnection,
 	isSocket,
 	describeIf,
+	getSystemTestProviderUrl,
 } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
@@ -113,9 +116,9 @@ describeIf(isSocket)('ens events', () => {
 			.setSubnodeOwner(ZERO_NODE, sha3(domain) as string, defaultAccount)
 			.send(sendOptions);
 
-		const clientUrl = getSystemTestProvider();
+		const clientUrl = getSystemTestProviderUrl();
 		let provider;
-		if (isIpc) provider = new ENS.providers.IpcProvider(clientUrl);
+		if (isIpc) provider = new IpcProvider(clientUrl);
 		else if (isWs) provider = new ENS.providers.WebsocketProvider(clientUrl);
 		else provider = new ENS.providers.HttpProvider(clientUrl);
 

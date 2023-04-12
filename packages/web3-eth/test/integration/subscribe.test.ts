@@ -20,18 +20,18 @@ import { Web3BaseProvider } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
 import Web3Eth, {
-	NewHeadsSubscription,
-	SyncingSubscription,
-	NewPendingTransactionsSubscription,
 	LogsSubscription,
+	NewHeadsSubscription,
+	NewPendingTransactionsSubscription,
+	SyncingSubscription,
 } from '../../src/index';
 import {
-	getSystemTestProvider,
+	closeOpenConnection,
+	createTempAccount,
 	describeIf,
+	getSystemTestProviderUrl,
 	isSocket,
 	isWs,
-	createTempAccount,
-	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describeIf(isSocket)('subscribe', () => {
@@ -40,8 +40,8 @@ describeIf(isSocket)('subscribe', () => {
 
 	beforeAll(() => {
 		provider = isWs
-			? new WebSocketProvider(getSystemTestProvider())
-			: new IpcProvider(getSystemTestProvider());
+			? new WebSocketProvider(getSystemTestProviderUrl())
+			: new IpcProvider(getSystemTestProviderUrl());
 	});
 
 	afterAll(async () => {
