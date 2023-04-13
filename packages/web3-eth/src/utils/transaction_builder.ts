@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FormatType, format, DataFormat } from 'web3-utils';
 import {
 	EthExecutionAPI,
 	Address,
@@ -29,6 +28,10 @@ import {
 	Common,
 	Web3NetAPI,
 	Numbers,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	FormatType,
+	ETH_DATA_FORMAT,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
@@ -41,6 +44,7 @@ import {
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
 } from 'web3-errors';
+import { format } from 'web3-utils';
 import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
@@ -120,8 +124,8 @@ export const getTransactionType = (
 
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
-export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
-	transaction: Record<string, unknown>;
+export async function defaultTransactionBuilder<ReturnType = Transaction>(options: {
+	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
@@ -228,7 +232,7 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	return populatedTransaction as ReturnType;
 }
 
-export const transactionBuilder = async <ReturnType = Record<string, unknown>>(options: {
+export const transactionBuilder = async <ReturnType = Transaction>(options: {
 	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI>;
 	privateKey?: HexString | Buffer;
@@ -236,5 +240,5 @@ export const transactionBuilder = async <ReturnType = Record<string, unknown>>(o
 }) =>
 	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
 		...options,
-		transaction: options.transaction as unknown as Record<string, unknown>,
+		transaction: options.transaction,
 	}) as unknown as ReturnType;

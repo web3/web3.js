@@ -18,7 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context, Web3ContextObject, Web3PromiEvent } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError } from 'web3-errors';
-import { sha3Raw, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { sha3Raw } from 'web3-utils';
+import { DEFAULT_RETURN_FORMAT } from 'web3-types';
 import { registryAddresses } from '../../src/config';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 

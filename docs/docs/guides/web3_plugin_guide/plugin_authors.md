@@ -156,8 +156,8 @@ A workaround for this issue is available, below is an example of it:
 import { Web3Context, Web3PluginBase } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
-import { Address } from 'web3-types';
-import { DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
+import { Address, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-types';
+import { format } from 'web3-utils';
 
 import { ERC20TokenAbi } from './ERC20Token';
 

@@ -16,9 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Bytes, EthExecutionAPI, TransactionReceipt } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { DataFormat, format, numberToHex } from 'web3-utils';
+import { format, numberToHex } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { DataFormat } from 'web3-types';
 import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { transactionReceiptSchema } from '../schemas';
 
