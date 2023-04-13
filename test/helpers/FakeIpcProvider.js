@@ -142,6 +142,11 @@ FakeIpcProvider.prototype.injectError = function (error) {
     this.error.push(errorStub);
 };
 
+// to simulate strange behavior of MetaMask
+FakeIpcProvider.prototype.injectRawError = function (error) {
+    this.error.push(error);
+};
+
 FakeIpcProvider.prototype.injectValidation = function (callback) {
     this.validation.push(callback);
 };
