@@ -64,14 +64,13 @@ import {
 	LogsInput,
 	Mutable,
 	Numbers,
-} from 'web3-types';
-import {
+	ContractInitOptions,
+	NonPayableCallOptions,
+	PayableCallOptions,
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
-	format,
-	isDataFormat,
-	toChecksumAddress,
-} from 'web3-utils';
+} from 'web3-types';
+import { format, isDataFormat, toChecksumAddress } from 'web3-utils';
 import {
 	isNullish,
 	validator,
@@ -86,13 +85,10 @@ import { LogsSubscription } from './log_subscription';
 import {
 	ContractAbiWithSignature,
 	ContractEventOptions,
-	ContractInitOptions,
 	ContractOptions,
 	EventLog,
-	NonPayableCallOptions,
 	NonPayableMethodObject,
 	NonPayableTxOptions,
-	PayableCallOptions,
 	PayableMethodObject,
 	PayableTxOptions,
 	Web3ContractContext,

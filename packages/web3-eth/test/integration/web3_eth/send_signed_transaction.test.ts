@@ -19,8 +19,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // error for Transaction Error Scenarios tests
 /* eslint-disable jest/no-conditional-expect */
 
-import { Address, Bytes, SignedTransactionInfoAPI, Transaction } from 'web3-types';
-import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format, hexToNumber } from 'web3-utils';
+import {
+	Address,
+	Bytes,
+	SignedTransactionInfoAPI,
+	Transaction,
+	FMT_BYTES,
+	FMT_NUMBER,
+	DEFAULT_RETURN_FORMAT,
+} from 'web3-types';
+import { format, hexToNumber } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 import { Web3Eth, InternalTransaction, transactionSchema } from '../../../src';
 import {

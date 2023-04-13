@@ -24,6 +24,7 @@ import {
 	HexString,
 	EthExecutionAPI,
 	Web3BaseProvider,
+	Transaction,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
 import { ExistingPluginNamespaceError } from 'web3-errors';
@@ -367,11 +368,10 @@ export class Web3Context<
 }
 
 // To avoid cycle dependency declare this type in this file
-// TODO: When we have `web3-types` package we can share TransactionType
 export type TransactionBuilder<API extends Web3APISpec = unknown> = <
-	ReturnType = Record<string, unknown>,
+	ReturnType = Transaction,
 >(options: {
-	transaction: Record<string, unknown>;
+	transaction: Transaction;
 	web3Context: Web3Context<API>;
 	privateKey?: HexString | Buffer;
 }) => Promise<ReturnType>;

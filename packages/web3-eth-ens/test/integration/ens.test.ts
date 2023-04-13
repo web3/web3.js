@@ -18,9 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getBlock } from 'web3-eth';
 import { Contract, PayableTxOptions } from 'web3-eth-contract';
-import { DEFAULT_RETURN_FORMAT, sha3, toChecksumAddress } from 'web3-utils';
-
-import { Address, Bytes, TransactionReceipt } from 'web3-types';
+import { sha3, toChecksumAddress } from 'web3-utils';
+import { Address, Bytes, TransactionReceipt, DEFAULT_RETURN_FORMAT } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
 import { ENS } from '../../src';
