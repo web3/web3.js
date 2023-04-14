@@ -745,24 +745,20 @@ export class Contract<Abi extends ContractAbi>
 
 		const filterKeys = Object.keys(filter);
 		return filterKeys.length > 0
-			? decodedLogs.filter(log => {
-					if (typeof log === 'string') {
-						return true;
-					}
-					return filterKeys.every((k: string) => {
-						if (Array.isArray(filter[k])) {
-							return (filter[k] as Numbers[]).some(
-								(v: Numbers) =>
-									String(log.returnValues[k]).toUpperCase() ===
-									String(v).toUpperCase(),
-							);
-						}
-						return (
-							String(log.returnValues[k]).toUpperCase() ===
-							String(filter[k]).toUpperCase()
-						);
-					});
-			  })
+			? decodedLogs.filter(log =>
+					typeof log === 'string'
+						? true
+						: filterKeys.every((k: string) =>
+								Array.isArray(filter[k])
+									? (filter[k] as Numbers[]).some(
+											(v: Numbers) =>
+												String(log.returnValues[k]).toUpperCase() ===
+												String(v).toUpperCase(),
+									  )
+									: String(log.returnValues[k]).toUpperCase() ===
+									  String(filter[k]).toUpperCase(),
+						  ),
+			  )
 			: decodedLogs;
 	}
 
