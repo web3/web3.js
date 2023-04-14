@@ -63,7 +63,6 @@ import {
 	HexString,
 	LogsInput,
 	Mutable,
-	Numbers,
 	ContractInitOptions,
 	NonPayableCallOptions,
 	PayableCallOptions,
@@ -718,9 +717,25 @@ export class Contract<Abi extends ContractAbi>
 			? param2
 			: param3 ?? DEFAULT_RETURN_FORMAT;
 
+		const guessEvent = (): AbiEventFragment & { signature: string } => {
+			if (!(typeof options?.filter === 'object')) {
+				return ALL_EVENTS_ABI;
+			}
+			const filterNames = Object.keys(options.filter);
+
+			const abi = this._jsonInterface.find(j => {
+				if (j.type !== 'event') {
+					return false;
+				}
+				const inputNames = j?.inputs?.map(i => i.name) ?? [];
+				return filterNames.every(name => inputNames.includes(name));
+			}) as AbiEventFragment & { signature: string };
+			return abi ?? ALL_EVENTS_ABI;
+		};
+
 		const abi =
 			eventName === 'allEvents'
-				? ALL_EVENTS_ABI
+				? guessEvent()
 				: (this._jsonInterface.find(
 						j => 'name' in j && j.name === eventName,
 				  ) as AbiEventFragment & { signature: string });
@@ -728,38 +743,17 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
-		const { filter = {}, ..._options }: Filter = typeof options === 'object' ? options : {};
 		const { fromBlock, toBlock, topics, address } = encodeEventABI(
 			this.options,
 			abi,
-			_options ?? {},
+			options ?? {},
 		);
-
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
-
-		const decodedLogs = logs.map(log =>
+		return logs.map(log =>
 			typeof log === 'string'
 				? log
 				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
-
-		const filterKeys = Object.keys(filter);
-		return filterKeys.length > 0
-			? decodedLogs.filter(log =>
-					typeof log === 'string'
-						? true
-						: filterKeys.every((k: string) =>
-								Array.isArray(filter[k])
-									? (filter[k] as Numbers[]).some(
-											(v: Numbers) =>
-												String(log.returnValues[k]).toUpperCase() ===
-												String(v).toUpperCase(),
-									  )
-									: String(log.returnValues[k]).toUpperCase() ===
-									  String(filter[k]).toUpperCase(),
-						  ),
-			  )
-			: decodedLogs;
 	}
 
 	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
