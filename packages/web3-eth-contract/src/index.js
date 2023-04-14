@@ -285,7 +285,7 @@ var Contract = function Contract(jsonInterface, address, options) {
             _this.options.blockHeaderTimeout = val;
         },
         enumerable: true
-    });    
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -682,6 +682,7 @@ Contract.prototype._generateEventOptions = function() {
     return {
         params: this._encodeEventABI(event, options),
         event: event,
+        filter: options.filter || {},
         callback: callback
     };
 };
@@ -808,7 +809,30 @@ Contract.prototype.getPastEvents = function(){
 
     getPastLogs = null;
 
-    return call(subOptions.params, subOptions.callback);
+    const filterResults = (data) => {
+        if (Array.isArray(data)) {
+            const filter = subOptions.filter;
+            const filterKeys = Object.keys(filter);
+            return filterKeys.length > 0
+                ? data.filter(log => typeof log === 'string' ? true : filterKeys.every((k) => Array.isArray(filter[k]) ? (filter[k]).some(
+                        (v) =>
+                            String(log.returnValues[k]).toUpperCase() ===
+                            String(v).toUpperCase(),
+                    ) : (
+                        String(log.returnValues[k]).toUpperCase() ===
+                        String(filter[k]).toUpperCase()
+                    )),
+                )
+                : data;
+        }
+        return data;
+    };
+
+    return call(subOptions.params, (err, data)=>{
+        if(typeof subOptions.callback==='function'){
+            subOptions.callback(err, filterResults(data))
+        }
+    }).then(filterResults);
 };
 
 

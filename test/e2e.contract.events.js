@@ -54,6 +54,71 @@ describe('contract.events [ @E2E ]', function() {
         assert.notEqual(events[0].id, events[1].id);
     });
 
+    it('contract.getPastEvents with filter', async function(){
+        const str1 = 'str1'
+        const str2 = 'str2'
+        const str3 = 'str3'
+        await instance
+            .methods
+            .firesIndexedStringEvent(str1)
+            .send({from: accounts[0]});
+        await instance
+            .methods
+            .firesIndexedStringEvent(str2)
+            .send({from: accounts[0]});
+        await instance
+            .methods
+            .firesIndexedStringEvent(str3)
+            .send({from: accounts[0]});
+
+        const event1 = (await instance.getPastEvents('IndexedStringEvent',{
+            filter : {str:str1},
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        }))[0]
+        assert.equal(event1.returnValues.str, str1);
+
+        const event2 = (await instance.getPastEvents('IndexedStringEvent',{
+            filter : {str:str2},
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        }))[0]
+        assert.equal(event2.returnValues.str, str2);
+
+        const event3 = (await instance.getPastEvents({
+            filter : {str:str3},
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        }))[0]
+        assert.equal(event3.returnValues.str, str3);
+
+        const events4 = await instance.getPastEvents('IndexedStringEvent',{
+            filter : {str:[str2,str3]},
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        });
+        assert.equal(events4[0].returnValues.str, str2);
+        assert.equal(events4[1].returnValues.str, str3);
+
+        instance.getPastEvents('IndexedStringEvent',{
+            filter : {str:str3},
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        },(err,events)=>{
+            assert.equal(events[0].returnValues.str, str3);
+        })
+
+        instance.getPastEvents({
+            filter : {str:str2},
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        },(err,events)=>{
+            assert.equal(events[0].returnValues.str, str2);
+        })
+
+
+    });
+
     it('contract.events.<eventName>', function(){
         return new Promise(async resolve => {
             instance
@@ -91,7 +156,7 @@ describe('contract.events [ @E2E ]', function() {
                     this.removeAllListeners();
                     resolve();
                 });
-            
+
             assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
             console.warn = originalWarn
 
@@ -106,7 +171,7 @@ describe('contract.events [ @E2E ]', function() {
         const originalWarn = console.warn
         let message
         console.warn = function(str) { message = str }
-        
+
         return new Promise(async (resolve, reject) => {
             instance
                 .events
@@ -408,9 +473,9 @@ describe('contract.events [ @E2E ]', function() {
         assert.equal(events[0].returnValues.str, msg)
     });
 
-    // Malformed utf-8 sequence in the following two tests comes from 
+    // Malformed utf-8 sequence in the following two tests comes from
     // https://www.w3.org/2001/06/utf-8-wrong/UTF-8-test.html
-    // Section: 3.1.8 
+    // Section: 3.1.8
     it('when an invalid utf-8 string is passed in JS as param to emit', async function(){
         const msg = '�������';
 
