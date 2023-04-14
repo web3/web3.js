@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-ens",
-	"version": "4.0.1-rc.0",
+	"version": "4.0.1-rc.1",
 	"description": "This package has ENS functions for interacting with Ethereum Name Service.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -59,13 +59,13 @@
 	},
 	"dependencies": {
 		"@adraffy/ens-normalize": "^1.8.8",
-		"web3-core": "^4.0.1-rc.0",
-		"web3-errors": "^1.0.0-rc.0",
-		"web3-eth": "^4.0.1-rc.0",
-		"web3-eth-contract": "^4.0.1-rc.0",
-		"web3-net": "^4.0.1-rc.0",
-		"web3-types": "^1.0.0-rc.0",
-		"web3-utils": "^4.0.1-rc.0",
-		"web3-validator": "1.0.0-rc.0"
+		"web3-core": "^4.0.1-rc.1",
+		"web3-errors": "^1.0.0-rc.1",
+		"web3-eth": "^4.0.1-rc.1",
+		"web3-eth-contract": "^4.0.1-rc.1",
+		"web3-net": "^4.0.1-rc.1",
+		"web3-types": "^1.0.0-rc.1",
+		"web3-utils": "^4.0.1-rc.1",
+		"web3-validator": "^1.0.0-rc.1"
 	}
 }
