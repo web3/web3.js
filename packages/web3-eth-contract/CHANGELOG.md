@@ -235,7 +235,7 @@ const transactionHash = receipt.transactionHash;
 
 -   `decodeErrorData` is no longer exported (method was moved to `web3-eth-abi` and renamed `decodeContractErrorData`) (#5844)
 
-## [Unreleased]
+## [4.0.1-rc.1]
 
 ### Added
 
@@ -252,3 +252,5 @@ const transactionHash = receipt.transactionHash;
 ### Removed
 
 -   `data` was removed as a property of `ContractOptions` type (#5915)
+
+## [Unreleased]
