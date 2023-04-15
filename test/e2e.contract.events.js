@@ -55,68 +55,49 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents with filter', async function(){
-        const str1 = 'str1'
-        const str2 = 'str2'
-        const str3 = 'str3'
         await instance
             .methods
-            .firesIndexedStringEvent(str1)
+            .firesEvent(accounts[0], 1)
             .send({from: accounts[0]});
         await instance
             .methods
-            .firesIndexedStringEvent(str2)
+            .firesEvent(accounts[0], 2)
             .send({from: accounts[0]});
         await instance
             .methods
-            .firesIndexedStringEvent(str3)
+            .firesEvent(accounts[0], 3)
             .send({from: accounts[0]});
 
-        const event1 = (await instance.getPastEvents('IndexedStringEvent',{
-            filter : {str:str1},
+        const event2 = (await instance.getPastEvents('BasicEvent',{
+            filter : { val : 2 },
             fromBlock: 'earliest',
             toBlock: 'latest'
         }))[0]
-        assert.equal(event1.returnValues.str, str1);
+        assert.equal(event2.returnValues.val, 2);
 
-        const event2 = (await instance.getPastEvents('IndexedStringEvent',{
-            filter : {str:str2},
+        const event3 = (await instance.getPastEvents('BasicEvent',{
+            filter : { val : 3 },
             fromBlock: 'earliest',
             toBlock: 'latest'
         }))[0]
-        assert.equal(event2.returnValues.str, str2);
 
-        const event3 = (await instance.getPastEvents({
-            filter : {str:str3},
-            fromBlock: 'earliest',
-            toBlock: 'latest'
-        }))[0]
-        assert.equal(event3.returnValues.str, str3);
+        assert.equal(event3.returnValues.val, 3);
 
-        const events4 = await instance.getPastEvents('IndexedStringEvent',{
-            filter : {str:[str2,str3]},
+        const events4 = await instance.getPastEvents('BasicEvent',{
+            filter : { val : [ 2, 3 ] },
             fromBlock: 'earliest',
             toBlock: 'latest'
         });
-        assert.equal(events4[0].returnValues.str, str2);
-        assert.equal(events4[1].returnValues.str, str3);
+        assert.equal(events4[0].returnValues.val, 2);
+        assert.equal(events4[1].returnValues.val, 3);
 
-        instance.getPastEvents('IndexedStringEvent',{
-            filter : {str:str3},
+        instance.getPastEvents('BasicEvent',{
+            filter : { val : 3},
             fromBlock: 'earliest',
             toBlock: 'latest'
-        },(err,events)=>{
-            assert.equal(events[0].returnValues.str, str3);
+        }, (err,events)=>{
+            assert.equal(events[0].returnValues.val, 3);
         })
-
-        instance.getPastEvents({
-            filter : {str:str2},
-            fromBlock: 'earliest',
-            toBlock: 'latest'
-        },(err,events)=>{
-            assert.equal(events[0].returnValues.str, str2);
-        })
-
-
     });
 
     it('contract.events.<eventName>', function(){
