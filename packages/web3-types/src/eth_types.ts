@@ -219,7 +219,7 @@ export interface SyncOutput {
 
 export type Receipt = Record<string, unknown>;
 
-type FilterOption = Record<string, Numbers | Numbers[]>;
+type FilterOption = Record<string, Numbers | Numbers[] | boolean | boolean[]>;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
 export interface Filter {

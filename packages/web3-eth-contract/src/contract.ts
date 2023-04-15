@@ -687,7 +687,7 @@ export class Contract<Abi extends ContractAbi>
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		filter: Omit<Filter, 'address'>,
+		filter: Omit<Filter, 'address' | 'filter'>,
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -717,25 +717,9 @@ export class Contract<Abi extends ContractAbi>
 			? param2
 			: param3 ?? DEFAULT_RETURN_FORMAT;
 
-		const guessEvent = (): AbiEventFragment & { signature: string } => {
-			if (!(typeof options?.filter === 'object')) {
-				return ALL_EVENTS_ABI;
-			}
-			const filterNames = Object.keys(options.filter);
-
-			const abi = this._jsonInterface.find(j => {
-				if (j.type !== 'event') {
-					return false;
-				}
-				const inputNames = j?.inputs?.map(i => i.name) ?? [];
-				return filterNames.every(name => inputNames.includes(name));
-			}) as AbiEventFragment & { signature: string };
-			return abi ?? ALL_EVENTS_ABI;
-		};
-
 		const abi =
 			eventName === 'allEvents'
-				? guessEvent()
+				? ALL_EVENTS_ABI
 				: (this._jsonInterface.find(
 						j => 'name' in j && j.name === eventName,
 				  ) as AbiEventFragment & { signature: string });

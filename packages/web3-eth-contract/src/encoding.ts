@@ -73,7 +73,7 @@ export const encodeEventABI = (
 	}
 
 	if (topics && Array.isArray(topics)) {
-		opts.topics = [...topics].filter(Boolean) as Topic[];
+		opts.topics = [...topics] as Topic[];
 	} else {
 		opts.topics = [];
 		// add event signature

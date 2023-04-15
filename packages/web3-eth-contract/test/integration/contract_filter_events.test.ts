@@ -15,8 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { toBigInt } from 'web3-utils';
 import { Contract } from '../../src';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../shared_fixtures/build/ERC20Token';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import {
 	getSystemTestProvider,
 	createTempAccount,
@@ -70,18 +72,6 @@ describe('contract getPastEvent filter', () => {
 				toAcc2.address.toUpperCase(),
 			);
 		});
-		it('should filter one event by address with only filter param', async () => {
-			const res: EventLog[] = (await contractDeployed.getPastEvents({
-				fromBlock: 'earliest',
-				filter: {
-					to: toAcc2.address,
-				},
-			})) as unknown as EventLog[];
-			expect(res[0]).toBeDefined();
-			expect((res[0]?.returnValues?.to as string).toUpperCase()).toBe(
-				toAcc2.address.toUpperCase(),
-			);
-		});
 		it('should filter few event by addresses array', async () => {
 			const res: EventLog[] = (await contractDeployed.getPastEvents('Transfer', {
 				fromBlock: 'earliest',
@@ -103,12 +93,97 @@ describe('contract getPastEvent filter', () => {
 			)[0];
 
 			expect(event2).toBeDefined();
+			expect(event3).toBeDefined();
 			expect((event2?.returnValues?.to as string).toUpperCase()).toBe(
 				toAcc2.address.toUpperCase(),
 			);
 			expect((event3?.returnValues?.to as string).toUpperCase()).toBe(
 				toAcc3.address.toUpperCase(),
 			);
+		});
+	});
+	describe('basic', () => {
+		let contract: Contract<typeof BasicAbi>;
+		let contractDeployed: Contract<typeof BasicAbi>;
+		let deployOptions: Record<string, unknown>;
+		let sendOptions: Record<string, unknown>;
+		let mainAcc: Record<string, string>;
+
+		beforeAll(async () => {
+			contract = new Contract(BasicAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
+
+			deployOptions = {
+				data: BasicBytecode,
+				arguments: [123, '123'],
+			};
+			mainAcc = await createTempAccount();
+			sendOptions = { from: mainAcc.address, gas: '10000000' };
+			contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+			await contractDeployed.methods
+				.firesMultiValueIndexedEvent('str1', 1, true)
+				.send(sendOptions);
+			await contractDeployed.methods
+				.firesMultiValueIndexedEvent('str2', 2, false)
+				.send(sendOptions);
+			await contractDeployed.methods
+				.firesMultiValueIndexedEvent('str3', 3, true)
+				.send(sendOptions);
+		});
+
+		it('should filter one event by address with event name and filter param', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents(
+				'MultiValueIndexedEvent',
+				{
+					fromBlock: 'earliest',
+					filter: {
+						val: 2,
+					},
+				},
+			)) as unknown as EventLog[];
+			expect(res[0]).toBeDefined();
+			expect(res[0]?.returnValues?.val).toBe(toBigInt(2));
+		});
+		it('should filter few event by numbers array', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents(
+				'MultiValueIndexedEvent',
+				{
+					fromBlock: 'earliest',
+					filter: {
+						val: [2, 3],
+					},
+				},
+			)) as unknown as EventLog[];
+			expect(res).toHaveLength(2);
+
+			const event2 = res.filter(e => e.returnValues.val === toBigInt(2))[0];
+			const event3 = res.filter(e => e.returnValues.val === toBigInt(3))[0];
+
+			expect(event2).toBeDefined();
+			expect(event3).toBeDefined();
+			expect(event2?.returnValues?.val).toBe(toBigInt(2));
+			expect(event3?.returnValues?.val).toBe(toBigInt(3));
+		});
+		it('should filter few event by bool array', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents(
+				'MultiValueIndexedEvent',
+				{
+					fromBlock: 'earliest',
+					filter: {
+						flag: [true],
+					},
+				},
+			)) as unknown as EventLog[];
+			expect(res).toHaveLength(2);
+
+			const event1 = res.filter(e => e.returnValues.val === toBigInt(1))[0];
+			const event3 = res.filter(e => e.returnValues.val === toBigInt(3))[0];
+
+			expect(event1).toBeDefined();
+			expect(event3).toBeDefined();
+			expect(event1?.returnValues?.val).toBe(toBigInt(1));
+			expect(event3?.returnValues?.val).toBe(toBigInt(3));
 		});
 	});
 });
