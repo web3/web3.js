@@ -653,7 +653,15 @@ Method.prototype.buildCall = function () {
                 if (!err && method.isRevertReasonString(result)){
                     reasonData = result.substring(10);
                 } else if (err && err.data){
-                    reasonData = (err.data.data || err.data).substring(10);
+                    // workaround embedded error details got from some providers like MetaMask
+                    if (typeof err.data === 'object') {
+                        // Ganache has no `originalError` sub-object unlike others
+                        var originalError = err.data.originalError ?? err.data;
+                        reasonData = originalError.data.substring(10);
+                    }
+                    else {
+                        reasonData = err.data.substring(10);
+                    }
                 }
 
                 if (reasonData){
