@@ -53,7 +53,7 @@ describe('Web3Eth.call', () => {
 		const transaction: Transaction = {
 			from: tempAcc.address,
 			data: greeterContractDeploymentData,
-			gas: '0x740b8',
+			gas: '0x742b8',
 		};
 		const response = await web3Eth.sendTransaction(transaction);
 		greeterContractAddress = response.contractAddress as string;
