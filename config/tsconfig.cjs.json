@@ -1,5 +1,5 @@
 {
-	"extends": "../../config/tsconfig.base.json",
+	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"outDir": "./lib/commonjs",
 		"esModuleInterop": true,
