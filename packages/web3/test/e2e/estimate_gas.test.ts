@@ -14,9 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { FMT_BYTES, FMT_NUMBER, toHex } from 'web3-utils';
+import { toHex } from 'web3-utils';
 
-import Web3, { Transaction } from '../../src';
+import Web3, { FMT_BYTES, FMT_NUMBER, Transaction } from '../../src';
 import { getSystemE2ETestProvider, getE2ETestAccountAddress } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';

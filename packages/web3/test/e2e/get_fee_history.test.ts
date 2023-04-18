@@ -14,10 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import { feeHistorySchema } from 'web3-eth';
 
-import Web3, { Numbers } from '../../src';
+import Web3, { FMT_BYTES, FMT_NUMBER, Numbers } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
@@ -58,28 +57,12 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	it.each(
 		toAllVariants<{
 			blockCount: Numbers;
-			newestBlock:
-				| 'earliest'
-				| 'latest'
-				| 'pending'
-				| 'finalized'
-				| 'safe'
-				| 'blockHash'
-				| 'blockNumber';
+			newestBlock: 'earliest' | 'latest' | 'pending' | 'finalized' | 'safe' | 'blockNumber';
 			rewardPercentiles: Numbers[];
 			format: string;
 		}>({
 			blockCount: [1, '2', 3, BigInt(4)],
-			newestBlock: [
-				'earliest',
-				'latest',
-				'pending',
-				'safe',
-				'finalized',
-				// TODO blockHash returning error: invalid argument 1: hex number > 64 bits
-				// 'blockHash',
-				'blockNumber',
-			],
+			newestBlock: ['earliest', 'latest', 'pending', 'safe', 'finalized', 'blockNumber'],
 			rewardPercentiles: [['0xa', '20', 30, BigInt(40)]],
 			format: Object.values(FMT_NUMBER),
 		}),
