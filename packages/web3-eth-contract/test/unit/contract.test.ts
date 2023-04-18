@@ -504,6 +504,66 @@ describe('Contract', () => {
 			spyGetLogs.mockClear();
 		});
 
+		it('getPastEvents for all events with filter should work', async () => {
+			const contract = new Contract<typeof GreeterAbi>(GreeterAbi);
+
+			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
+				const newContract = contract.clone();
+				newContract.options.address = deployedAddr;
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return Promise.resolve(newContract) as any;
+			});
+
+			const spyGetLogs = jest
+				.spyOn(eth, 'getLogs')
+				.mockImplementation((_objInstance, _params) => {
+					expect(_params.address).toStrictEqual(deployedAddr.toLocaleLowerCase());
+					expect(_params.fromBlock).toBeUndefined();
+					expect(_params.toBlock).toBeUndefined();
+					expect(_params.topics).toBeUndefined();
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(AllGetPastEventsData.getLogsData) as any; // AllGetPastEventsData.getLogsData data test is for: assume two transactions sent to contract with contractInstance.methods.setGreeting("Hello") and contractInstance.methods.setGreeting("Another Greeting")
+				});
+
+			const deployedContract = await contract
+				.deploy({
+					data: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+
+			const pastEvent = await deployedContract.getPastEvents('allEvents', {
+				filter: {
+					greeting: 'Another Greeting',
+				},
+			});
+
+			expect(pastEvent).toHaveLength(1);
+			expect(pastEvent[0]).toStrictEqual(AllGetPastEventsData.response[1]);
+
+			const pastEventWithoutEventName = await deployedContract.getPastEvents({
+				filter: {
+					greeting: 'Another Greeting',
+				},
+			});
+
+			expect(pastEventWithoutEventName).toHaveLength(1);
+			expect(pastEventWithoutEventName[0]).toStrictEqual(AllGetPastEventsData.response[1]);
+
+			const pastEventFilterArray = await deployedContract.getPastEvents({
+				filter: {
+					greeting: ['Another Greeting'],
+				},
+			});
+
+			expect(pastEventFilterArray).toHaveLength(1);
+			expect(pastEventFilterArray[0]).toStrictEqual(AllGetPastEventsData.response[1]);
+
+			spyTx.mockClear();
+			spyGetLogs.mockClear();
+		});
+
 		it('estimateGas should work', async () => {
 			const arg = 'Hello';
 
