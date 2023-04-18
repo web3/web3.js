@@ -68,6 +68,7 @@ import {
 	PayableCallOptions,
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
+	Numbers,
 } from 'web3-types';
 import { format, isDataFormat, toChecksumAddress } from 'web3-utils';
 import {
@@ -687,7 +688,7 @@ export class Contract<Abi extends ContractAbi>
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		filter: Omit<Filter, 'address' | 'filter'>,
+		filter: Omit<Filter, 'address'>,
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -733,11 +734,30 @@ export class Contract<Abi extends ContractAbi>
 			options ?? {},
 		);
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
-		return logs.map(log =>
+		const decodedLogs = logs.map(log =>
 			typeof log === 'string'
 				? log
 				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
+
+		const filter = options?.filter ?? {};
+		const filterKeys = Object.keys(filter);
+		return eventName === 'allEvents' && filterKeys.length > 0
+			? decodedLogs.filter(log =>
+					typeof log === 'string'
+						? true
+						: filterKeys.every((k: string) =>
+								Array.isArray(filter[k])
+									? (filter[k] as Numbers[]).some(
+											(v: Numbers) =>
+												String(log.returnValues[k]).toUpperCase() ===
+												String(v).toUpperCase(),
+									  )
+									: String(log.returnValues[k]).toUpperCase() ===
+									  String(filter[k]).toUpperCase(),
+						  ),
+			  )
+			: decodedLogs;
 	}
 
 	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {

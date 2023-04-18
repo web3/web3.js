@@ -72,8 +72,61 @@ describe('contract getPastEvent filter', () => {
 				toAcc2.address.toUpperCase(),
 			);
 		});
+		it('should filter one event by address without event name and filter param', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents({
+				fromBlock: 'earliest',
+				filter: {
+					to: toAcc2.address,
+				},
+			})) as unknown as EventLog[];
+			expect(res[0]).toBeDefined();
+			expect((res[0]?.returnValues?.to as string).toUpperCase()).toBe(
+				toAcc2.address.toUpperCase(),
+			);
+		});
+		it('should filter one event by address with event name allEvents and filter param', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents('allEvents', {
+				fromBlock: 'earliest',
+				filter: {
+					to: toAcc2.address,
+				},
+			})) as unknown as EventLog[];
+			expect(res[0]).toBeDefined();
+			expect((res[0]?.returnValues?.to as string).toUpperCase()).toBe(
+				toAcc2.address.toUpperCase(),
+			);
+		});
 		it('should filter few event by addresses array', async () => {
 			const res: EventLog[] = (await contractDeployed.getPastEvents('Transfer', {
+				fromBlock: 'earliest',
+				filter: {
+					to: [toAcc2.address, toAcc3.address],
+				},
+			})) as unknown as EventLog[];
+			expect(res).toHaveLength(2);
+
+			const event2 = res.filter(
+				e =>
+					String(e.returnValues.to).toUpperCase() ===
+					String(toAcc2.address).toUpperCase(),
+			)[0];
+			const event3 = res.filter(
+				e =>
+					String(e.returnValues.to).toUpperCase() ===
+					String(toAcc3.address).toUpperCase(),
+			)[0];
+
+			expect(event2).toBeDefined();
+			expect(event3).toBeDefined();
+			expect((event2?.returnValues?.to as string).toUpperCase()).toBe(
+				toAcc2.address.toUpperCase(),
+			);
+			expect((event3?.returnValues?.to as string).toUpperCase()).toBe(
+				toAcc3.address.toUpperCase(),
+			);
+		});
+		it('should filter few event by addresses array without eventName', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents({
 				fromBlock: 'earliest',
 				filter: {
 					to: [toAcc2.address, toAcc3.address],
