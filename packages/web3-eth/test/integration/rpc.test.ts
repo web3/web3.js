@@ -130,6 +130,7 @@ describe('rpc', () => {
 			expect(typeof res).toBe(mapFormatToType[format as string]);
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
+
 		it.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
 			const res = await web3Eth.getGasPrice({
 				number: format as FMT_NUMBER,
