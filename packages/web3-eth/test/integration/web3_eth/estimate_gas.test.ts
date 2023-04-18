@@ -20,6 +20,7 @@ import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
 
@@ -52,9 +53,16 @@ describe('Web3Eth.estimateGas', () => {
 		const transaction: Transaction = {
 			from: tempAcc.address,
 			data: greeterContractDeploymentData,
-			gas: '0x740b8',
+			gas: '0x742b8',
 		};
 		const response = await web3Eth.estimateGas(transaction);
-		expect(response).toBe(BigInt(475320));
+
+		if (getSystemTestBackend() === 'geth') {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(response).toBe(BigInt(475320)); // TODO: check ? pre EIP 3860 on local Geth POA
+		} else {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(response).toBe(BigInt(475494));
+		}
 	});
 });
