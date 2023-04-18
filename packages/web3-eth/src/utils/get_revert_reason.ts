@@ -18,8 +18,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { ContractExecutionError, Eip838ExecutionError, InvalidResponseError } from 'web3-errors';
 import { decodeContractErrorData, isAbiErrorFragment } from 'web3-eth-abi';
-import { AbiErrorFragment, ContractAbi, EthExecutionAPI, TransactionCall } from 'web3-types';
-import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import {
+	AbiErrorFragment,
+	ContractAbi,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	EthExecutionAPI,
+	TransactionCall,
+} from 'web3-types';
 
 // eslint-disable-next-line import/no-cycle
 import { call } from '../rpc_method_wrappers';

@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ETH_DATA_FORMAT, format, SocketProvider } from 'web3-utils';
+import { format, SocketProvider } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
 	create as _createAccount,
@@ -42,6 +42,7 @@ import {
 	ProviderRpcError,
 	JsonRpcSubscriptionResult,
 	JsonRpcNotification,
+	ETH_DATA_FORMAT,
 	SupportedProviders,
 	Web3APISpec,
 	Web3EthExecutionAPI,
@@ -329,7 +330,7 @@ export const getSystemTestAccounts = async (): Promise<string[]> =>
 
 export const signTxAndSendEIP1559 = async (
 	provider: unknown,
-	tx: Record<string, unknown>,
+	tx: Transaction,
 	privateKey: string,
 ) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
@@ -347,7 +348,7 @@ export const signTxAndSendEIP1559 = async (
 
 export const signTxAndSendEIP2930 = async (
 	provider: unknown,
-	tx: Record<string, unknown>,
+	tx: Transaction,
 	privateKey: string,
 ) => {
 	const web3 = new Web3(provider as Web3BaseProvider);

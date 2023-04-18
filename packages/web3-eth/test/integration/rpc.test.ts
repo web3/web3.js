@@ -20,17 +20,12 @@ import {
 	TransactionReceipt,
 	TransactionInfo,
 	SupportedProviders,
+	FMT_BYTES,
+	FMT_NUMBER,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
-import {
-	hexToNumber,
-	hexToString,
-	numberToHex,
-	FMT_BYTES,
-	FMT_NUMBER,
-	getStorageSlotNumForLongString,
-} from 'web3-utils';
+import { hexToNumber, hexToString, numberToHex, getStorageSlotNumForLongString } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Eth } from '../../src';
 
@@ -135,6 +130,7 @@ describe('rpc', () => {
 			expect(typeof res).toBe(mapFormatToType[format as string]);
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
+
 		it.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
 			const res = await web3Eth.getGasPrice({
 				number: format as FMT_NUMBER,

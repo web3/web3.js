@@ -18,6 +18,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import {
+	ETH_DATA_FORMAT,
+	FormatType,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
 	TransactionWithSenderAPI,
 	SignedTransactionInfoAPI,
@@ -45,15 +49,7 @@ import {
 	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import {
-	ETH_DATA_FORMAT,
-	FormatType,
-	DataFormat,
-	DEFAULT_RETURN_FORMAT,
-	format,
-	hexToBytes,
-	bytesToBuffer,
-} from 'web3-utils';
+import { format, hexToBytes, bytesToBuffer } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
@@ -65,6 +61,7 @@ import {
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
+
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -1151,7 +1148,7 @@ export function sendTransaction<
 
 						if (wallet) {
 							const signedTransaction = await wallet.signTransaction(
-								transactionFormatted as Record<string, unknown>,
+								transactionFormatted,
 							);
 
 							transactionHash = await trySendTransaction(

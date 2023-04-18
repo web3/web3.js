@@ -14,8 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { TransactionReceipt, Transaction, SupportedProviders } from 'web3-types';
+import {
+	TransactionReceipt,
+	Transaction,
+	FMT_BYTES,
+	FMT_NUMBER,
+	SupportedProviders,
+} from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 import { validator } from 'web3-validator';
@@ -24,6 +29,8 @@ import {
 	getSystemTestProvider,
 	createTempAccount,
 	closeOpenConnection,
+	getSystemTestBackend,
+	describeIf,
 } from '../../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';
@@ -42,8 +49,6 @@ describe('rpc with block', () => {
 		earliest: 'earliest';
 		latest: 'latest';
 		pending: 'pending';
-		finalized: 'finalized';
-		safe: 'safe';
 		blockNumber: number | bigint;
 		blockHash: string;
 		transactionHash: string;
@@ -83,8 +88,6 @@ describe('rpc with block', () => {
 			pending: 'pending',
 			latest: 'latest',
 			earliest: 'earliest',
-			finalized: 'finalized',
-			safe: 'safe',
 			blockNumber: Number(receipt.blockNumber),
 			blockHash: String(receipt.blockHash),
 			transactionHash: String(receipt.transactionHash),
@@ -99,18 +102,11 @@ describe('rpc with block', () => {
 	describe('methods', () => {
 		it.each(
 			toAllVariants<{
-				block:
-					| 'earliest'
-					| 'latest'
-					| 'pending'
-					| 'finalized'
-					| 'safe'
-					| 'blockHash'
-					| 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 				hydrated: boolean;
 				format: string;
 			}>({
-				block: ['earliest', 'latest', 'safe', 'finalized', 'blockHash', 'blockNumber'],
+				block: ['earliest', 'latest', 'blockHash', 'blockNumber'],
 				hydrated: [true, false],
 				format: Object.values(FMT_NUMBER),
 			}),
@@ -134,4 +130,20 @@ describe('rpc with block', () => {
 			}
 		});
 	});
+
+	describeIf(getSystemTestBackend() === 'geth')(
+		'getBlock calls with POS tags in POA node',
+		() => {
+			it.each(['safe', 'finalized'])(
+				// only geth throws this error
+				'getBlock',
+				async blockTag => {
+					const request = web3Eth.getBlock(blockTag);
+					await expect(request).rejects.toThrow(
+						`'${blockTag}' tag not supported on pre-merge network`,
+					);
+				},
+			);
+		},
+	);
 });
