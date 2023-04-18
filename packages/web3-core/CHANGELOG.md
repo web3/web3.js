@@ -99,6 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   If a transaction object with a `data` property is passed to `txInputOptionsFormatter`, it will now be replaced with `input` (#5915)
 -   The types `TransactionTypeParser` and `TransactionBuilder` are now utilizing the type `Transaction` for the transaction object. (#5993)
 -   no need for polyfilling nodejs `net` and `fs` modules
+-   Changed directly emitting events to `_triggerConfigChange` in `Web3Config` class (#5813)
 
 ### Removed
 
