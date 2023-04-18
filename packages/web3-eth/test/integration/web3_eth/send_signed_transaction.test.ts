@@ -170,7 +170,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			from: tempAcc.address,
 			data: greeterContractDeploymentData,
 			type: '0x0',
-			gas: '0x740b8',
+			gas: '0x745b8',
 		};
 		const gasPricing = await getTransactionGasPricing(
 			transaction,
@@ -189,7 +189,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			from: tempAcc.address,
 			input: greeterContractDeploymentData,
 			type: BigInt(0),
-			gas: BigInt(475320),
+			gas: BigInt(476600),
 		});
 	});
 
