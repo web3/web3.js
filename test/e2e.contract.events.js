@@ -68,12 +68,29 @@ describe('contract.events [ @E2E ]', function() {
             .firesEvent(accounts[0], 3)
             .send({from: accounts[0]});
 
-        const event2 = (await instance.getPastEvents('BasicEvent',{
+        const events2 = await instance.getPastEvents('BasicEvent',{
             filter : { val : 2 },
             fromBlock: 'earliest',
             toBlock: 'latest'
-        }))[0]
-        assert.equal(event2.returnValues.val, 2);
+        })
+        assert.equal(events2.length, 1);
+        assert.equal(events2[0].returnValues.val, 2);
+
+        const allEventsFilters = await instance.getPastEvents({
+            filter : { val : 2 },
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        })
+        assert.equal(allEventsFilters.length, 1);
+        assert.equal(allEventsFilters[0].returnValues.val, 2);
+
+        const allEventsFilters2 = await instance.getPastEvents('allEvents',{
+            filter : { val : 2 },
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        })
+        assert.equal(allEventsFilters2.length, 1);
+        assert.equal(allEventsFilters2[0].returnValues.val, 2);
 
         const event3 = (await instance.getPastEvents('BasicEvent',{
             filter : { val : 3 },
@@ -88,8 +105,29 @@ describe('contract.events [ @E2E ]', function() {
             fromBlock: 'earliest',
             toBlock: 'latest'
         });
+        assert.equal(events4.length, 2);
         assert.equal(events4[0].returnValues.val, 2);
         assert.equal(events4[1].returnValues.val, 3);
+
+        const allEventsFilter3 = await instance.getPastEvents('allEvents',{
+            filter : { val : [ 2, 3 ] },
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        });
+        assert.equal(allEventsFilter3.length, 2);
+        assert.equal(allEventsFilter3[0].returnValues.val, 2);
+        assert.equal(allEventsFilter3[1].returnValues.val, 3);
+
+
+        instance.getPastEvents('allEvents',{
+            filter : { val : [ 2, 3 ] },
+            fromBlock: 'earliest',
+            toBlock: 'latest'
+        }, (err,data)=>{
+            assert.equal(data.length, 2);
+            assert.equal(data[0].returnValues.val, 2);
+            assert.equal(data[1].returnValues.val, 3);
+        });
 
         instance.getPastEvents('BasicEvent',{
             filter : { val : 3},
