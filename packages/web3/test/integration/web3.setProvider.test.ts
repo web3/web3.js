@@ -15,15 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	getSystemTestProvider,
-	waitForOpenConnection,
-	closeOpenConnection,
-	isWs,
-	isHttp,
-	describeIf,
-} from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
+import {
+	closeOpenConnection,
+	describeIf,
+	getSystemTestProviderUrl,
+	isHttp,
+	isWs,
+	waitForOpenConnection,
+} from '../shared_fixtures/system_tests_utils';
 
 describeIf(isWs || isHttp)('web3.contract.setProvider', () => {
 	let clientUrl: string;
@@ -31,7 +31,7 @@ describeIf(isWs || isHttp)('web3.contract.setProvider', () => {
 	let web3: Web3;
 
 	beforeAll(async () => {
-		clientUrl = getSystemTestProvider();
+		clientUrl = getSystemTestProviderUrl();
 		secontUrl = clientUrl.startsWith('http')
 			? clientUrl.replace('http', 'ws')
 			: clientUrl.replace('ws', 'http');

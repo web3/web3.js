@@ -22,17 +22,17 @@ import { numberToHex } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
-import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
+	closeOpenConnection,
 	createTempAccount,
 	describeIf,
-	getSystemTestProvider,
-	isWs,
+	getSystemTestProviderUrl,
 	isSocket,
-	closeOpenConnection,
+	isWs,
 } from '../fixtures/system_test_utils';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
+import { eventAbi, Resolve } from './helper';
 
 const checkEventCount = 2;
 
@@ -59,10 +59,10 @@ describeIf(isSocket)('subscription', () => {
 	const testDataString = 'someTestString';
 
 	beforeAll(() => {
-		clientUrl = getSystemTestProvider();
+		clientUrl = getSystemTestProviderUrl();
 		providerWs = isWs ? new WebSocketProvider(clientUrl) : new IpcProvider(clientUrl);
 		contract = new Contract(BasicAbi, undefined, {
-			provider: clientUrl,
+			provider: providerWs,
 		});
 	});
 	afterAll(async () => {

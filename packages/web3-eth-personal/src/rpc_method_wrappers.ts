@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3RequestManager } from 'web3-core';
-import { ETH_DATA_FORMAT, toChecksumAddress, utf8ToHex } from 'web3-utils';
+import { toChecksumAddress, utf8ToHex } from 'web3-utils';
 import { formatTransaction } from 'web3-eth';
-import { Address, EthPersonalAPI, HexString, Transaction } from 'web3-types';
+import { Address, EthPersonalAPI, ETH_DATA_FORMAT, HexString, Transaction } from 'web3-types';
 import { validator, isHexStrict } from 'web3-validator';
 import { personalRpcMethods } from 'web3-rpc-methods';
 

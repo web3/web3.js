@@ -247,6 +247,7 @@ const transactionHash = receipt.transactionHash;
 
 -   `getSendTxParams` will now return `input` instead of `data` in returned transaction parameters object (#5915)
 -   `Contract` constructor will now thrown new `ContractTransactionDataAndInputError` if both `data` and `input` are passed in `ContractInitOptions` for `Contract` constructor (#5915)
+-   The types `ContractInitOptions`, `NonPayableCallOptions` and `PayableCallOptions` are moved to `web3-types`. (#5993)
 
 ### Removed
 

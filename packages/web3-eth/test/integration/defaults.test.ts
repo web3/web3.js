@@ -16,9 +16,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
-import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { hexToNumber, numberToHex } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
-import { Hardfork, TransactionReceipt, ValidChains, Web3BaseProvider } from 'web3-types';
+import {
+	Hardfork,
+	SupportedProviders,
+	TransactionReceipt,
+	ValidChains,
+	Web3BaseProvider,
+	DEFAULT_RETURN_FORMAT,
+} from 'web3-types';
 import {
 	detectTransactionType,
 	prepareTransactionForSigning,
@@ -49,7 +56,7 @@ import { Resolve, sendFewTxes } from './helper';
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
 	let eth2: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;

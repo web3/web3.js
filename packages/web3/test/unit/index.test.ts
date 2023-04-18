@@ -25,7 +25,6 @@ import * as personal from 'web3-eth-personal';
 import * as iban from 'web3-eth-iban';
 
 import * as http from 'web3-providers-http';
-import * as ipc from 'web3-providers-ipc';
 import * as ws from 'web3-providers-ws';
 
 import Web3Default, { Web3, providers, eth } from '../../src/index';
@@ -58,7 +57,6 @@ describe('exports of web3 package', () => {
 
 		it('providers sub-namespaces are available under `providers`', () => {
 			expect(providers.http).toEqual(http);
-			expect(providers.ipc).toEqual(ipc);
 			expect(providers.ws).toEqual(ws);
 		});
 	});

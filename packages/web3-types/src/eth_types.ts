@@ -217,8 +217,6 @@ export interface SyncOutput {
 	readonly pulledStates?: Numbers;
 }
 
-export type Receipt = Record<string, unknown>;
-
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
 export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;

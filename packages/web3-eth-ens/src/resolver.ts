@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { sha3, isNullish, format, DEFAULT_RETURN_FORMAT, DataFormat } from 'web3-utils';
-import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
+import { sha3, isNullish, format } from 'web3-utils';
+import { Contract } from 'web3-eth-contract';
 import { ResolverMethodMissingError } from 'web3-errors';
 import { isHexStrict } from 'web3-validator';
-import { Address } from 'web3-types';
+import { Address, DataFormat, DEFAULT_RETURN_FORMAT, NonPayableCallOptions } from 'web3-types';
 import { interfaceIds, methodsInInterface } from './config';
 import { Registry } from './registry';
 import { PublicResolverAbi } from './abi/ens/PublicResolver';

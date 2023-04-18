@@ -21,24 +21,12 @@ import {
 	closeOpenConnection,
 	getSystemTestProvider,
 	isWs,
-} from 'web3/test/shared_fixtures/system_tests_utils';
-import { validator } from 'web3-validator';
+	// eslint-disable-next-line import/no-relative-packages
+} from '../../../shared_fixtures/system_tests_utils';
 
 jest.setTimeout(15000);
 
-// TODO Consider adding this to web3.eth.accounts package
-const accountSchema = {
-	type: 'object',
-	required: ['address', 'privateKey'],
-	// TODO Should validation functions as well
-	// required: ['address', 'privateKey', 'signTransaction', 'sign', 'encrypt'],
-	properties: {
-		address: { type: 'string' },
-		privateKey: { type: 'string' },
-	},
-};
-
-describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
+describe('ESM - Black Box Unit Tests - web3.eth.accounts.hashMessage', () => {
 	let web3: Web3;
 
 	beforeAll(() => {
@@ -49,12 +37,9 @@ describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
 		if (isWs) await closeOpenConnection(web3);
 	});
 
-	it('should create an account', () => {
-		const response = web3.eth.accounts.create();
-		expect(response).toBeDefined();
-		expect(response.signTransaction).toBeDefined();
-		expect(response.sign).toBeDefined();
-		expect(response.encrypt).toBeDefined();
-		expect(validator.validateJSONSchema(accountSchema, response)).toBeUndefined();
+	it('should hash provided message', () => {
+		expect(web3.eth.accounts.hashMessage('Hello World')).toBe(
+			'0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+		);
 	});
 });

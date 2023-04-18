@@ -40,6 +40,7 @@ import {
 	PBKDF2SHA256Params,
 	ScryptParams,
 	KeyStore,
+	Transaction,
 } from 'web3-types';
 import {
 	bytesToBuffer,
@@ -594,7 +595,7 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 		address: privateKeyToAddress(privateKeyBuffer),
 		privateKey: bytesToHex(privateKeyBuffer),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		signTransaction: (_tx: Record<string, unknown>) => {
+		signTransaction: (_tx: Transaction) => {
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
 		},
 		sign: (data: Record<string, unknown> | string) =>

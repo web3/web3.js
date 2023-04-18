@@ -85,7 +85,15 @@ web3.currentProvider.disconnect();
 
 ## [Unreleased]
 
+### Breaking Changes
+
+-   removed IPC provider dependency, IPC path is no longer viable provider. If you wanna use IPC, please install `web3-providers-ipc` and instantiate provider yourself
+
 ### Added
 
 -   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
+
+### Changed
+
+-   no need for polyfilling nodejs `net` and `fs` modules

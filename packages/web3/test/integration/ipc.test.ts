@@ -23,15 +23,15 @@ import {
 	closeOpenConnection,
 	waitForSocketConnect,
 } from '../shared_fixtures/system_tests_utils';
-import Web3 from '../../src/index';
+import Web3, { EthExecutionAPI, SupportedProviders } from '../../src/index';
 
 describe('Web3 instance', () => {
-	let clientUrl: string;
+	let provider: SupportedProviders<EthExecutionAPI> | string;
 	let web3: Web3;
 
 	beforeAll(() => {
-		clientUrl = getSystemTestProvider();
-		web3 = new Web3(clientUrl);
+		provider = getSystemTestProvider();
+		web3 = new Web3(provider);
 	});
 	afterAll(async () => {
 		await closeOpenConnection(web3);
