@@ -19,7 +19,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node: 14
+        node: [14]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +47,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          node: 14
+          node: [14]
           mode: ['http']
           network: ['sepolia', 'mainnet']
       steps:
