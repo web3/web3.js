@@ -25,11 +25,15 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
+	ProviderConnectInfo,
+	ProviderMessage,
+	ProviderRpcError,
 	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
 	Web3APISpec,
+	Web3Eip1193ProviderEventCallback,
 	Web3ProviderEventCallback,
 	Web3ProviderStatus,
 } from 'web3-types';
@@ -59,8 +63,6 @@ const DEFAULT_RECONNECTION_OPTIONS = {
 	delay: 5000,
 	maxAttempts: 5,
 };
-
-type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
 
 const NORMAL_CLOSE_CODE = 1000; // https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close
 
@@ -197,28 +199,100 @@ export abstract class SocketProvider<
 	/**
 	 * Registers a listener for the specified event type.
 	 * @param type - The event type to listen for
-	 * @param callback - The callback to be invoked when the event is emitted
+	 * @param listener - The callback to be invoked when the event is emitted
 	 */
-	public on<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
-		this._eventEmitter.on(type, callback);
+	public on(
+		type: 'disconnect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public on(
+		type: 'connect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+	): void;
+	public on(type: 'chainChanged', listener: Web3Eip1193ProviderEventCallback<string>): void;
+	public on(type: 'accountsChanged', listener: Web3Eip1193ProviderEventCallback<string[]>): void;
+	public on<T = JsonRpcResult>(
+		type: 'message',
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+	): void;
+	public on<T = JsonRpcResult>(
+		type: string,
+		listener: Web3Eip1193ProviderEventCallback<unknown> | Web3ProviderEventCallback<T>,
+	): void;
+	public on<T = JsonRpcResult, P = unknown>(
+		type: string | 'disconnect' | 'connect' | 'chainChanged' | 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<P> | Web3ProviderEventCallback<T>,
+	): void {
+		this._eventEmitter.on(type, listener);
 	}
 
 	/**
 	 * Registers a listener for the specified event type that will be invoked at most once.
 	 * @param type  - The event type to listen for
-	 * @param callback - The callback to be invoked when the event is emitted
+	 * @param listener - The callback to be invoked when the event is emitted
 	 */
-	public once<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
-		this._eventEmitter.once(type, callback);
+	public once(
+		type: 'disconnect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public once(
+		type: 'connect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+	): void;
+	public once(type: 'chainChanged', listener: Web3Eip1193ProviderEventCallback<string>): void;
+	public once(
+		type: 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<string[]>,
+	): void;
+	public once<T = JsonRpcResult>(
+		type: 'message',
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+	): void;
+	public once<T = JsonRpcResult>(
+		type: string,
+		listener: Web3Eip1193ProviderEventCallback<unknown> | Web3ProviderEventCallback<T>,
+	): void;
+	public once<T = JsonRpcResult, P = unknown>(
+		type: string | 'disconnect' | 'connect' | 'chainChanged' | 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<P> | Web3ProviderEventCallback<T>,
+	): void {
+		this._eventEmitter.once(type, listener);
 	}
 
 	/**
 	 *  Removes a listener for the specified event type.
 	 * @param type - The event type to remove the listener for
-	 * @param callback - The callback to be executed
+	 * @param listener - The callback to be executed
 	 */
-	public removeListener(type: EventType, callback: Web3ProviderEventCallback): void {
-		this._eventEmitter.removeListener(type, callback);
+	public removeListener(
+		type: 'disconnect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>,
+	): void;
+	public removeListener(
+		type: 'connect',
+		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
+	): void;
+	public removeListener(
+		type: 'chainChanged',
+		listener: Web3Eip1193ProviderEventCallback<string>,
+	): void;
+	public removeListener(
+		type: 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<string[]>,
+	): void;
+	public removeListener<T = JsonRpcResult>(
+		type: 'message',
+		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+	): void;
+	public removeListener<T = JsonRpcResult>(
+		type: string,
+		listener: Web3Eip1193ProviderEventCallback<unknown> | Web3ProviderEventCallback<T>,
+	): void;
+	public removeListener<T = JsonRpcResult, P = unknown>(
+		type: string | 'disconnect' | 'connect' | 'chainChanged' | 'accountsChanged',
+		listener: Web3Eip1193ProviderEventCallback<P> | Web3ProviderEventCallback<T>,
+	): void {
+		this._eventEmitter.removeListener(type, listener);
 	}
 
 	protected _onDisconnect(code?: number, data?: string) {

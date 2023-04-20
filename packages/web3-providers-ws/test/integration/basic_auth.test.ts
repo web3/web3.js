@@ -22,8 +22,8 @@ import {
 	describeIf,
 	getSystemTestProviderUrl,
 	isWs,
+	waitForSocketConnect,
 	waitForCloseSocketConnection,
-	waitForOpenSocketConnection,
 } from '../fixtures/system_test_utils';
 
 describeIf(isWs)('Support of Basic Auth', () => {
@@ -81,14 +81,14 @@ describeIf(isWs)('Support of Basic Auth', () => {
 	afterEach(async () => {
 		// make sure we try to close the connection after it is established
 		if (webSocketProvider.getStatus() === 'connecting') {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 		}
 		webSocketProvider.disconnect();
 		await waitForCloseSocketConnection(webSocketProvider);
 	});
 	// eslint-disable-next-line jest/expect-expect
 	test('should connect with basic auth', async () => {
-		await waitForOpenSocketConnection(webSocketProvider);
+		await waitForSocketConnect(webSocketProvider);
 		expect(webSocketProvider.getStatus()).toBe('connected');
 	});
 });
