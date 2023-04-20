@@ -45,6 +45,8 @@
 		"test": "jest --config=./test/unit/jest.config.js",
 		"test:coverage:unit": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
 		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --forceExit --coverage=true --coverage-reporters=text",
+		"test:e2e:mainnet": "jest --config=./test/e2e/jest.config.js --forceExit",
+		"test:e2e:sepolia": "jest --config=./test/e2e/jest.config.js --forceExit",
 		"test:sync:integration": "jest --config=./test/integration/jest.config.js ./test/integration/sync.test.ts",
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
