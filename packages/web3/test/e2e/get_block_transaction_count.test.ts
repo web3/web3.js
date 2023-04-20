@@ -27,7 +27,7 @@ import { mainnetBlockData } from './fixtures/mainnet';
 describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
-	const expectedTransactionCount = getSystemTestBackend() === 'sepolia' ? 30 : 0;
+	const expectedTransactionCount = getSystemTestBackend() === 'sepolia' ? 30 : 196;
 
 	let web3: Web3;
 

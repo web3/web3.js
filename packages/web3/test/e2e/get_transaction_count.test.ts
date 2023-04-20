@@ -63,7 +63,7 @@ describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
 		);
 
 		if (block === 'blockHash' || block === 'blockNumber') {
-			const expectedTxCount = getSystemTestBackend() === 'sepolia' ? BigInt(1) : BigInt(0);
+			const expectedTxCount = getSystemTestBackend() === 'sepolia' ? BigInt(1) : BigInt(11);
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(expectedTxCount);
 		} else {
