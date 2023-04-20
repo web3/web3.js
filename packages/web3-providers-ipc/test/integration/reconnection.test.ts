@@ -22,9 +22,9 @@ import {
 	describeIf,
 	getSystemTestProviderUrl,
 	isIpc,
+	waitForSocketConnect,
 	waitForCloseSocketConnection,
 	waitForEvent,
-	waitForOpenSocketConnection,
 } from '../fixtures/system_test_utils';
 
 describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
@@ -49,7 +49,7 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 				delay: 5000,
 				maxAttempts: 5,
 			});
-			await waitForOpenSocketConnection(web3Provider);
+			await waitForSocketConnect(web3Provider);
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseSocketConnection(web3Provider);
 		});
@@ -61,7 +61,7 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			);
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual(reconnectionOptions);
-			await waitForOpenSocketConnection(web3Provider);
+			await waitForSocketConnect(web3Provider);
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseSocketConnection(web3Provider);
 		});
