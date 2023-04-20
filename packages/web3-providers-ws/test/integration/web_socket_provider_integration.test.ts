@@ -25,7 +25,6 @@ import {
 	ProviderRpcError,
 	SocketRequestItem,
 	Web3APIPayload,
-	Web3ProviderEventCallback,
 } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
 import WebSocketProvider from '../../src/index';
@@ -85,7 +84,10 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 			const messagePromise = new Promise((resolve: Resolve, reject) => {
 				webSocketProvider.on(
 					'message',
-					(err: any, result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>) => {
+					(
+						err: unknown,
+						result?: JsonRpcSubscriptionResult | JsonRpcNotification<unknown>,
+					) => {
 						if (err) reject();
 						if (result?.id !== jsonRpcPayload.id) {
 							return;

@@ -124,7 +124,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			// @ts-expect-error run protected method
 			web3Provider._addSocketListeners();
 			const errorEvent = new Promise(resolve => {
-				web3Provider.on('error', (error: any) => {
+				web3Provider.on('error', (error: unknown) => {
 					if (
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 						(error as ProviderRpcError)?.message?.startsWith(
