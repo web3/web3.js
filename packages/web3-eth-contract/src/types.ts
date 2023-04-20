@@ -187,7 +187,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 */
 
 	call<SpecialOutput = Outputs>(
-		tx?: Omit<NonPayableCallOptions, 'nonce'>,
+		tx?: NonPayableCallOptions,
 		block?: BlockNumberOrTag,
 	): Promise<SpecialOutput>;
 
@@ -281,7 +281,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @returns - The gas amount estimated.
 	 */
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		options?: Omit<NonPayableCallOptions, 'nonce'>,
+		options?: NonPayableCallOptions,
 		returnFormat?: ReturnFormat,
 	): Promise<FormatType<Numbers, ReturnFormat>>;
 
@@ -322,7 +322,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * ```
 	 */
 	createAccessList(
-		tx?: Omit<NonPayableCallOptions, 'nonce' | 'type'>,
+		tx?: NonPayableCallOptions,
 		block?: BlockNumberOrTag,
 	): Promise<AccessListResult>;
 }
