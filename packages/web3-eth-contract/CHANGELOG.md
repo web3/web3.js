@@ -242,7 +242,6 @@ const transactionHash = receipt.transactionHash;
 -   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the `Contract` class) (#5915)
 -   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
--   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
 
 ### Changed
 
@@ -255,3 +254,7 @@ const transactionHash = receipt.transactionHash;
 -   `data` was removed as a property of `ContractOptions` type (#5915)
 
 ## [Unreleased]
+
+### Added
+
+-   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)

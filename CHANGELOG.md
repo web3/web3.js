@@ -1375,7 +1375,6 @@ should use 4.0.1-alpha.0 for testing.
 -   `input` is now an acceptable property for `ContractInitOptions` in place of `data` (either can be used, but `input` is used withing the `Contract` class) (#5915)
 -   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
--   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
 
 #### web3-eth-ens
 
@@ -1462,3 +1461,13 @@ should use 4.0.1-alpha.0 for testing.
 -   Bug fix of `checkNetwork` in ENS (#5988)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-eth-contract
+
+-   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
+
+#### web3-types
+
+-   Added `filters` param to the `Filter` type (#6010)
