@@ -15,12 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ProviderRpcError } from 'web3-types/src/web3_api_types';
 import ganache from 'ganache';
 import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse } from 'web3-types';
 import { InvalidResponseError, ConnectionNotOpenError } from 'web3-errors';
 import { Web3DeferredPromise } from 'web3-utils';
 import {
-	waitForOpenSocketConnection,
+	waitForSocketConnect,
 	waitForEvent,
 	describeIf,
 	getSystemTestBackend,
@@ -79,7 +80,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			await server.listen(port);
 			const webSocketProvider = new WebSocketProvider(host);
 
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			const disconnectPromise = waitForEvent(webSocketProvider, 'disconnect');
 			await server.close();
@@ -94,7 +95,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				autoReconnect: false,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectOptions);
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			const mockReject = jest.fn();
 			webSocketProvider.once('error', () => {
@@ -146,7 +147,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			await server.listen(port);
 			const webSocketProvider = new WebSocketProvider(host);
 
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			expect(webSocketProvider.supportsSubscriptions()).toBe(true);
 
 			webSocketProvider.disconnect();
@@ -164,8 +165,8 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 			const mockCallBack = jest.fn();
 			const errorPromise = new Promise(resolve => {
-				webSocketProvider.on('error', err => {
-					if (err?.message.startsWith('connect ECONNREFUSED')) {
+				webSocketProvider.on('error', (err: unknown) => {
+					if ((err as ProviderRpcError)?.message.startsWith('connect ECONNREFUSED')) {
 						mockCallBack();
 						resolve(true);
 					}
@@ -208,7 +209,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 
-			const connectPromise = waitForOpenSocketConnection(webSocketProvider);
+			const connectPromise = waitForSocketConnect(webSocketProvider);
 
 			const server = ganache.server();
 			await server.listen(port);
@@ -229,7 +230,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			};
 			const mockCallBack = jest.fn();
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			await server.close();
 
@@ -263,7 +264,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				maxAttempts: 0,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			await server.close();
 
@@ -306,7 +307,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				payload: jsonRpcPayload,
 				deferredPromise: defPromise,
 			};
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			// add a request without executing promise
 			// @ts-expect-error run protected method
@@ -315,8 +316,11 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			// simulate abrupt server close
 			await changeCloseCode(webSocketProvider);
 			const errorPromise = new Promise(resolve => {
-				webSocketProvider.on('error', error => {
-					if (error?.message === `Maximum number of reconnect attempts reached! (${1})`) {
+				webSocketProvider.on('error', (error: unknown) => {
+					if (
+						(error as ProviderRpcError)?.message ===
+						`Maximum number of reconnect attempts reached! (${1})`
+					) {
 						mockCallBack();
 					}
 					resolve(true);
@@ -339,7 +343,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				maxAttempts: 3,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			// simulate abrupt close code
 			await changeCloseCode(webSocketProvider);
@@ -357,7 +361,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			const server2 = ganache.server();
 			await server2.listen(port);
 
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			// try to send a request
 			const result = await requestPromise;
@@ -372,7 +376,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				autoReconnect: false,
 			};
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectOptions);
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			const disconnectPromise = waitForEvent(webSocketProvider, 'disconnect');
 			await server.close();
@@ -392,12 +396,12 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			const server = ganache.server();
 			await server.listen(port);
 			const webSocketProvider = new WebSocketProvider(host);
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 
 			// @ts-expect-error replace sendtoSocket so we don't execute request
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			webSocketProvider._sendToSocket = () => {};
-			webSocketProvider.on('error', err => {
+			webSocketProvider.on('error', (err: unknown) => {
 				expect(err).toBeInstanceOf(ConnectionNotOpenError);
 			});
 
