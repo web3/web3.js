@@ -254,3 +254,7 @@ const transactionHash = receipt.transactionHash;
 -   `data` was removed as a property of `ContractOptions` type (#5915)
 
 ## [Unreleased]
+
+### Added
+
+-   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)

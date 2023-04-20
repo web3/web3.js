@@ -68,6 +68,7 @@ import {
 	PayableCallOptions,
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
+	Numbers,
 } from 'web3-types';
 import { format, isDataFormat, toChecksumAddress } from 'web3-utils';
 import {
@@ -702,7 +703,7 @@ export class Contract<Abi extends ContractAbi>
 	): Promise<(string | EventLog)[]> {
 		const eventName = typeof param1 === 'string' ? param1 : 'allEvents';
 
-		const filter =
+		const options =
 			// eslint-disable-next-line no-nested-ternary
 			typeof param1 !== 'string' && !isDataFormat(param1)
 				? param1
@@ -727,19 +728,36 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
-
 		const { fromBlock, toBlock, topics, address } = encodeEventABI(
 			this.options,
 			abi,
-			filter ?? {},
+			options ?? {},
 		);
-
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
-		return logs.map(log =>
+		const decodedLogs = logs.map(log =>
 			typeof log === 'string'
 				? log
 				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
+
+		const filter = options?.filter ?? {};
+		const filterKeys = Object.keys(filter);
+		return eventName === 'allEvents' && filterKeys.length > 0
+			? decodedLogs.filter(log =>
+					typeof log === 'string'
+						? true
+						: filterKeys.every((k: string) =>
+								Array.isArray(filter[k])
+									? (filter[k] as Numbers[]).some(
+											(v: Numbers) =>
+												String(log.returnValues[k]).toUpperCase() ===
+												String(v).toUpperCase(),
+									  )
+									: String(log.returnValues[k]).toUpperCase() ===
+									  String(filter[k]).toUpperCase(),
+						  ),
+			  )
+			: decodedLogs;
 	}
 
 	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
