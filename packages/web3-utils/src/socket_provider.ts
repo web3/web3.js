@@ -212,7 +212,7 @@ export abstract class SocketProvider<
 	public on(type: 'chainChanged', listener: Web3Eip1193ProviderEventCallback<string>): void;
 	public on(type: 'accountsChanged', listener: Web3Eip1193ProviderEventCallback<string[]>): void;
 	public on<T = JsonRpcResult>(
-		type: 'message' | string,
+		type: 'message',
 		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
 	): void;
 	public on<T = JsonRpcResult>(
@@ -245,7 +245,7 @@ export abstract class SocketProvider<
 		listener: Web3Eip1193ProviderEventCallback<string[]>,
 	): void;
 	public once<T = JsonRpcResult>(
-		type: 'message' | string,
+		type: 'message',
 		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
 	): void;
 	public once<T = JsonRpcResult>(
@@ -281,7 +281,7 @@ export abstract class SocketProvider<
 		listener: Web3Eip1193ProviderEventCallback<string[]>,
 	): void;
 	public removeListener<T = JsonRpcResult>(
-		type: 'message' | string,
+		type: 'message',
 		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
 	): void;
 	public removeListener<T = JsonRpcResult>(
