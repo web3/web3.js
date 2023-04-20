@@ -11,7 +11,7 @@ body:
         - General Discussion
         - Idea
         - Question
-        - You'd like show everyone something you've built
+        - You'd like to show everyone something you've built
         
         please [Start A Discussion](https://github.com/ChainSafe/web3.js/discussions/new) instead of opening an issue
   - type: checkboxes

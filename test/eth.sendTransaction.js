@@ -36,6 +36,153 @@ var tests = [{
     },
     call: 'eth_'+ method
 },
+// test type
+{
+    args: [{
+        from: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        to: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        // Testing 10 is formatted to '0xa'
+        type: 10
+    }],
+    formattedArgs: [{
+        from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        value: "0x11f71f76bb1",
+        gasPrice: "0x4b7dddc97a",
+        type: '0xa'
+    }],
+    result: '0x1234567',
+    formattedResult: '0x1234567',
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x1234567',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_'+ method
+},
+{
+    args: [{
+        from: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        to: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        // Testing '10' is formatted to '0xa'
+        type: '10'
+    }],
+    formattedArgs: [{
+        from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        value: "0x11f71f76bb1",
+        gasPrice: "0x4b7dddc97a",
+        type: '0xa'
+    }],
+    result: '0x1234567',
+    formattedResult: '0x1234567',
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x1234567',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_'+ method
+},
+{
+    args: [{
+        from: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        to: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        // Testing 0x10 is formatted to '0x10'
+        type: 0x10
+    }],
+    formattedArgs: [{
+        from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        value: "0x11f71f76bb1",
+        gasPrice: "0x4b7dddc97a",
+        type: '0x10'
+    }],
+    result: '0x1234567',
+    formattedResult: '0x1234567',
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x1234567',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_'+ method
+},
+{
+    args: [{
+        from: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        to: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        // Testing 1 is formatted to '0x1'
+        type: 1
+    }],
+    formattedArgs: [{
+        from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        value: "0x11f71f76bb1",
+        gasPrice: "0x4b7dddc97a",
+        type: '0x1',
+        accessList: []
+    }],
+    result: '0x1234567',
+    formattedResult: '0x1234567',
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x1234567',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_'+ method
+},
+{
+    args: [{
+        from: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        to: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        // Testing "0xc0" is formatted to '0xc0'
+        type: "0xc0"
+    }],
+    formattedArgs: [{
+        from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        value: "0x11f71f76bb1",
+        gasPrice: "0x4b7dddc97a",
+        type: '0xc0'
+    }],
+    result: '0x1234567',
+    formattedResult: '0x1234567',
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x1234567',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_'+ method
+},
 // test with gasPrice missing
 {
     args: [{
