@@ -34,12 +34,12 @@ export async function performBasicRpcCalls(provider: SupportedProviders) {
 	expect(typeof blockNumber0).toBe('bigint');
 
 	// send a transaction
-	const tx = web3.eth.sendTransaction({
+	const tx = await web3.eth.sendTransaction({
 		to: accounts[1],
 		from: accounts[0],
 		value: '1',
 	});
-	await expect(tx).resolves.not.toThrow();
+	expect(tx.status).toBe(BigInt(1));
 
 	const blockNumber1 = await web3.eth.getBlockNumber();
 	expect(typeof blockNumber1).toBe('bigint');

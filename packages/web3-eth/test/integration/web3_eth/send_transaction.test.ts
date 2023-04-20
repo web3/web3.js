@@ -180,7 +180,7 @@ describe('Web3Eth.sendTransaction', () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				data: greeterContractDeploymentData,
-				gas: BigInt('475320'),
+				gas: BigInt('475520'),
 			};
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.status).toBe(BigInt(1));
@@ -190,7 +190,7 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(minedTransactionData).toMatchObject({
 				from: tempAcc.address,
 				input: greeterContractDeploymentData,
-				gas: BigInt('475320'),
+				gas: BigInt('475520'),
 			});
 
 			greeterContractAddress = response.contractAddress as string;

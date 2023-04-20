@@ -15,62 +15,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { FormatterError } from 'web3-errors';
-import { Bytes, HexString, Numbers } from 'web3-types';
+import { Bytes, DataFormat, FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-types';
 import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
 import { bytesToBuffer, bytesToHex, numberToHex, toBigInt } from './converters';
 import { mergeDeep } from './objects';
 
 const { parseBaseType } = utils;
 
-export enum FMT_NUMBER {
-	NUMBER = 'NUMBER_NUMBER',
-	HEX = 'NUMBER_HEX',
-	STR = 'NUMBER_STR',
-	BIGINT = 'NUMBER_BIGINT',
-}
-
-export type NumberTypes = {
-	[FMT_NUMBER.NUMBER]: number;
-	[FMT_NUMBER.HEX]: HexString;
-	[FMT_NUMBER.STR]: string;
-	[FMT_NUMBER.BIGINT]: bigint;
-};
-
-export enum FMT_BYTES {
-	HEX = 'BYTES_HEX',
-	BUFFER = 'BYTES_BUFFER',
-	UINT8ARRAY = 'BYTES_UINT8ARRAY',
-}
-
-export type ByteTypes = {
-	[FMT_BYTES.HEX]: HexString;
-	[FMT_BYTES.BUFFER]: Buffer;
-	[FMT_BYTES.UINT8ARRAY]: Uint8Array;
-};
-
-export type DataFormat = {
-	readonly number: FMT_NUMBER;
-	readonly bytes: FMT_BYTES;
-};
-
-export const DEFAULT_RETURN_FORMAT = { number: FMT_NUMBER.BIGINT, bytes: FMT_BYTES.HEX } as const;
-export const ETH_DATA_FORMAT = { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX } as const;
-
 export const isDataFormat = (dataFormat: unknown): dataFormat is DataFormat =>
 	typeof dataFormat === 'object' &&
 	!isNullish(dataFormat) &&
 	'number' in dataFormat &&
 	'bytes' in dataFormat;
-
-export type FormatType<T, F extends DataFormat> = number extends Extract<T, Numbers>
-	? NumberTypes[F['number']] | Exclude<T, Numbers>
-	: Buffer extends Extract<T, Bytes>
-	? ByteTypes[F['bytes']] | Exclude<T, Bytes>
-	: T extends object | undefined
-	? {
-			[P in keyof T]: FormatType<T[P], F>;
-	  }
-	: T;
 
 /**
  * Finds the schema that corresponds to a specific data path within a larger JSON schema.

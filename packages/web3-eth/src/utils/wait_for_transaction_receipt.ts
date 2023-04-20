@@ -17,9 +17,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3Context } from 'web3-core';
 import { TransactionPollingTimeoutError } from 'web3-errors';
-import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
-import { DataFormat, rejectIfTimeout, pollTillDefined } from 'web3-utils';
+import { EthExecutionAPI, Bytes, TransactionReceipt, DataFormat } from 'web3-types';
 
+// eslint-disable-next-line import/no-cycle
+import { pollTillDefined, rejectIfTimeout } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle

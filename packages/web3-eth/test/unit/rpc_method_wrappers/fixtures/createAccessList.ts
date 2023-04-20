@@ -14,8 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { BlockNumberOrTag, BlockTags, TransactionForAccessList } from 'web3-types';
-import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import {
+	BlockNumberOrTag,
+	BlockTags,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	TransactionForAccessList,
+} from 'web3-types';
 
 export const mockRpcResponse =
 	'{"accessList":[{"address":"0x15859bdf5aff2080a9968f6a410361e9598df62f","storageKeys":["0x0000000000000000000000000000000000000000000000000000000000000000"]}],"gasUsed":"0x7671"}';

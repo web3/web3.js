@@ -30,7 +30,7 @@ echo "RPC client Protocol: " $MODE
 export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
-cd test/black_box
+cd test/esm_black_box
 yarn --update-checksums
 yarn
 
@@ -42,10 +42,28 @@ then
         exit 1
     elif [ $MODE == "http" ]
     then
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP
     else
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS
     fi
-else
-    yarn "test:$BACKEND:$MODE"
 fi
+yarn "test:$BACKEND:$MODE"
+
+cd test/cjs_black_box
+yarn --update-checksums
+yarn
+
+if [[ ${BACKEND} == "infura" ]]
+then
+    if [ ! $INFURA_HTTP ] || [ ! $INFURA_WSS ]
+    then
+        echo "No Infura provider URL specified"
+        exit 1
+    elif [ $MODE == "http" ]
+    then
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP
+    else
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS
+    fi
+fi
+yarn "test:$BACKEND:$MODE"

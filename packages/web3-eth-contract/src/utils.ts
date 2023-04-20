@@ -23,16 +23,13 @@ import {
 	TransactionCall,
 	HexString,
 	Address,
+	NonPayableCallOptions,
+	PayableCallOptions,
+	ContractInitOptions,
 } from 'web3-types';
 import { isNullish, mergeDeep, toHex } from 'web3-utils';
 import { encodeMethodABI } from './encoding';
-import {
-	NonPayableCallOptions,
-	PayableCallOptions,
-	ContractOptions,
-	Web3ContractContext,
-	ContractInitOptions,
-} from './types';
+import { ContractOptions, Web3ContractContext } from './types';
 
 export const getSendTxParams = ({
 	abi,

@@ -20,9 +20,10 @@ import {
 	getSystemTestProvider,
 	isWs,
 	itIf,
-} from 'web3/test/shared_fixtures/system_tests_utils';
+	// eslint-disable-next-line import/no-relative-packages
+} from '../../../shared_fixtures/system_tests_utils';
 
-describe('Black Box Unit Tests - web3.eth.getTransaction', () => {
+describe('ESM - Black Box Unit Tests - web3.eth.getTransaction', () => {
 	let web3: Web3;
 
 	beforeAll(() => {

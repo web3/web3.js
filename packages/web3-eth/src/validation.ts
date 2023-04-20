@@ -25,8 +25,8 @@ import {
 	TransactionLegacyUnsignedAPI,
 	Transaction,
 	TransactionWithSenderAPI,
+	ETH_DATA_FORMAT,
 } from 'web3-types';
-import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
 import {
 	ChainMismatchError,

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { TransactionReceipt } from 'web3-types';
+import { SupportedProviders, TransactionReceipt } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 import { Web3Eth } from '../../../src';
@@ -29,7 +29,7 @@ import { sendFewTxes } from '../helper';
 
 describe('rpc with block', () => {
 	let web3Eth: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
@@ -39,8 +39,6 @@ describe('rpc with block', () => {
 		earliest: 'earliest';
 		latest: 'latest';
 		pending: 'pending';
-		finalized: 'finalized';
-		safe: 'safe';
 		blockNumber: number | bigint;
 		blockHash: string;
 		transactionHash: string;
@@ -80,8 +78,6 @@ describe('rpc with block', () => {
 			pending: 'pending',
 			latest: 'latest',
 			earliest: 'earliest',
-			finalized: 'finalized',
-			safe: 'safe',
 			blockNumber: Number(receipt.blockNumber),
 			blockHash: String(receipt.blockHash),
 			transactionHash: String(receipt.transactionHash),
@@ -96,24 +92,9 @@ describe('rpc with block', () => {
 	describe('methods', () => {
 		it.each(
 			toAllVariants<{
-				block:
-					| 'earliest'
-					| 'latest'
-					| 'pending'
-					| 'finalized'
-					| 'safe'
-					| 'blockHash'
-					| 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 			}>({
-				block: [
-					'earliest',
-					'latest',
-					'pending',
-					'finalized',
-					'safe',
-					'blockHash',
-					'blockNumber',
-				],
+				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
 			}),
 		)('getBlockUncleCount', async ({ block }) => {
 			const res = await web3Eth.getBlockUncleCount(blockData[block]);

@@ -14,13 +14,16 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/* eslint-disable import/no-relative-packages */
 import Web3 from 'web3';
-import { getSystemTestProvider } from 'web3/test/shared_fixtures/system_tests_utils';
 
-// eslint-disable-next-line import/no-relative-packages
-import { closeOpenConnection, isWs } from '../../shared_fixtures/system_tests_utils';
+import {
+	closeOpenConnection,
+	isWs,
+	getSystemTestProvider,
+} from '../../shared_fixtures/system_tests_utils';
 
-describe('Black Box Unit Tests - web3.BatchRequest', () => {
+describe('ESM - Black Box Unit Tests - web3.BatchRequest', () => {
 	let web3: Web3;
 
 	beforeAll(() => {

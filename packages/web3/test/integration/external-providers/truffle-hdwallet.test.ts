@@ -31,16 +31,17 @@ describeIf(!isIpc)('compatibility with `truffle` `HDWalletProvider` provider', (
 
 	beforeAll(async () => {
 		const clientUrl = getSystemTestProvider();
-		const account = await createNewAccount({ unlock: true, refill: true });
+		const account1 = await createNewAccount({ unlock: true, refill: true });
+		const account2 = await createNewAccount({ unlock: true, refill: true });
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		provider = new HDWalletProvider({
-			privateKeys: [account.privateKey],
+			privateKeys: [account1.privateKey, account2.privateKey],
 			providerOrUrl: clientUrl,
 		});
 	});
 	afterAll(() => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		provider.engine.stop();
+		provider?.engine?.stop();
 	});
 	test('should create instance with external wallet provider', () => {
 		const web3 = new Web3(provider);
