@@ -42,7 +42,7 @@ jobs:
         INFURA_SEPOLIA_HTTP: ${{ secrets.INFURA_SEPOLIA_HTTP }}
         INFURA_MAINNET_HTTP: ${{ secrets.INFURA_MAINNET_HTTP }}
         MODE: ${{ matrix.mode }}
-        TEST_ACCOUNT_ADDRESS: fromJSON('{"sepolia":"0xa127C5E6a7E3600Ac34A9a9928E52521677e7211","mainnet":"0x0000000000000000000000000000000000000000"}')[matrix.network]
+        TEST_ACCOUNT_ADDRESS: ${{ fromJSON('{"sepolia":"0xa127C5E6a7E3600Ac34A9a9928E52521677e7211","mainnet":"0x0000000000000000000000000000000000000000"}')[matrix.network] }}
         ALLOWED_SEND_TRANSACTION: false
       strategy:
         fail-fast: false
