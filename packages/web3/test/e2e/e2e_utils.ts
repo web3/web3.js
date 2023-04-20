@@ -52,6 +52,11 @@ export const getE2ETestAccountAddress = (): string => {
 
 export const getAllowedSendTransaction = (): boolean => {
 	if (process.env.ALLOWED_SEND_TRANSACTION !== undefined) {
+		// https://github.com/actions/runner/issues/1483
+		if (process.env.ALLOWED_SEND_TRANSACTION === 'false') {
+			return false;
+		}
+
 		return Boolean(process.env.ALLOWED_SEND_TRANSACTION);
 		// eslint-disable-next-line no-else-return
 	} else if (getSystemTestBackend() === 'sepolia' || getSystemTestBackend() === 'mainnet') {
