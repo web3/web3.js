@@ -43,7 +43,8 @@ jobs:
         INFURA_MAINNET_HTTP: ${{ secrets.INFURA_MAINNET_HTTP }}
         MODE: ${{ matrix.mode }}
         TEST_ACCOUNT_ADDRESS: ${{ fromJSON('{"sepolia":"0xa127C5E6a7E3600Ac34A9a9928E52521677e7211","mainnet":"0x98AF911164f9d4E0f5983ed114949c3Bfe3ADc9d"}')[matrix.network] }}
-        ALLOWED_SEND_TRANSACTION: false
+        # https://github.com/actions/runner/issues/1483
+        ALLOWED_SEND_TRANSACTION: ${{ 'false' == 'true' }}
         TEST_ACCOUNT_PRIVATE_KEY: ${{ secrets.TEST_ACCOUNT_PRIVATE_KEY }}
       strategy:
         fail-fast: false
