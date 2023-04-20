@@ -36,8 +36,10 @@ describe(`${getSystemTestBackend()} tests - contract`, () => {
 	let deployedContractAddress: string;
 
 	beforeAll(() => {
-		web3 = new Web3(provider);
-		web3.eth.accounts.wallet.add(getE2ETestAccountPrivateKey());
+		if (getAllowedSendTransaction()) {
+			web3 = new Web3(provider);
+			web3.eth.accounts.wallet.add(getE2ETestAccountPrivateKey());
+		}
 	});
 
 	afterAll(async () => {
