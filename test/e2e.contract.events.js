@@ -190,7 +190,6 @@ describe('contract.events [ @E2E ]', function() {
                     this.removeAllListeners();
                     resolve();
                 });
-
             assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
             console.warn = originalWarn
 
@@ -205,7 +204,6 @@ describe('contract.events [ @E2E ]', function() {
         const originalWarn = console.warn
         let message
         console.warn = function(str) { message = str }
-
         return new Promise(async (resolve, reject) => {
             instance
                 .events
