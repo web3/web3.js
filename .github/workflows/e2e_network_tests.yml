@@ -1,14 +1,20 @@
 name: 'E2E Network Tests'
+# on:
+#     push:
+#       branches:
+#         - release/**
+#       tags:
+#         - v4.*
 on:
-    push:
-      branches:
-        - release/**
-      tags:
-        - v4.*
-    pull_request:
-      branches:
-        - '4.x'
-      types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - '4.x'
+    tags:
+      - v4*
+  pull_request:
+    branches:
+      - '4.x'
+    types: [opened, reopened, synchronize]
 jobs:
   build:
     strategy:
