@@ -103,3 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   Removed dependencies @ethereumjs/tx, @ethereumjs/common (#5963)
+
+### Fixed
+
+-   web3-types
