@@ -1,20 +1,10 @@
 name: 'E2E Network Tests'
-# on:
-#     push:
-#       branches:
-#         - release/**
-#       tags:
-#         - v4.*
 on:
-  push:
-    branches:
-      - '4.x'
-    tags:
-      - v4*
-  pull_request:
-    branches:
-      - '4.x'
-    types: [opened, reopened, synchronize]
+    push:
+      branches:
+        - release/**
+      tags:
+        - v4.*
 jobs:
   build:
     strategy:
@@ -43,8 +33,7 @@ jobs:
         INFURA_MAINNET_HTTP: ${{ secrets.INFURA_MAINNET_HTTP }}
         MODE: ${{ matrix.mode }}
         TEST_ACCOUNT_ADDRESS: ${{ fromJSON('{"sepolia":"0xa127C5E6a7E3600Ac34A9a9928E52521677e7211","mainnet":"0x98AF911164f9d4E0f5983ed114949c3Bfe3ADc9d"}')[matrix.network] }}
-        # https://github.com/actions/runner/issues/1483
-        ALLOWED_SEND_TRANSACTION: false
+        ALLOWED_SEND_TRANSACTION: ${{ secrets.E2E_TESTS_ALLOWED_SEND_TRANSACTION }}
         TEST_ACCOUNT_PRIVATE_KEY: ${{ secrets.TEST_ACCOUNT_PRIVATE_KEY }}
       strategy:
         fail-fast: false
