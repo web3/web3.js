@@ -57,83 +57,90 @@ describe('contract.events [ @E2E ]', function() {
         assert.notEqual(events[0].id, events[1].id);
     });
 
-    // it('contract.getPastEvents filter by val', async function() {
-    //     const events = await instance.getPastEvents('BasicEvent', {
-    //         filter: { val: 2 },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     });
-    //     assert.equal(events.length, 1);
-    //     assert.equal(events[0].returnValues.val, 2);
-    // });
-    // it('contract.getPastEvents without specify event name: filter by val', async function() {
-    //     const events = await instance.getPastEvents({
-    //         filter: { val: 2 },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     });
-    //     assert.equal(events.length, 1);
-    //     assert.equal(events[0].returnValues.val, 2);
-    // });
-    // it('contract.getPastEvents all events: filter by val', async function() {
-    //     const events = await instance.getPastEvents('allEvents', {
-    //         filter: { val: 2 },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     });
-    //     assert.equal(events.length, 1);
-    //     assert.equal(events[0].returnValues.val, 2);
-    // });
-    // it('contract.getPastEvents filter by val different value', async function() {
-    //     const events = await instance.getPastEvents('BasicEvent', {
-    //         filter: { val: 3 },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     });
-    //     assert.equal(events.length, 1);
-    //     assert.equal(events[0].returnValues.val, 3);
-    // });
-    // it('contract.getPastEvents filter by array', async function() {
-    //     const events = await instance.getPastEvents('BasicEvent', {
-    //         filter: { val: [2, 3] },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     });
-    //     assert.equal(events.length, 2);
-    //     assert.equal(events[0].returnValues.val, 2);
-    //     assert.equal(events[1].returnValues.val, 3);
-    // });
-    // it('contract.getPastEvents allEvents: filter by array', async function() {
-    //     const events = await instance.getPastEvents('allEvents', {
-    //         filter: { val: [2, 3] },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     });
-    //     assert.equal(events.length, 2);
-    //     assert.equal(events[0].returnValues.val, 2);
-    //     assert.equal(events[1].returnValues.val, 3);
-    // });
-    // it('contract.getPastEvents allEvents: filter by array using callback', async function() {
-    //     instance.getPastEvents('allEvents', {
-    //         filter: { val: [2, 3] },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     }, (err, events) => {
-    //         assert.equal(events.length, 2);
-    //         assert.equal(events[0].returnValues.val, 2);
-    //         assert.equal(events[1].returnValues.val, 3);
-    //     });
-    // });
-    // it('contract.getPastEvents filter by val using callback', async function() {
-    //     instance.getPastEvents('BasicEvent', {
-    //         filter: { val: 3 },
-    //         fromBlock: 'earliest',
-    //         toBlock: 'latest',
-    //     }, (err, events) => {
-    //         assert.equal(events.length, 1);
-    //         assert.equal(events[0].returnValues.val, 3);
-    //     });
-    // });
+    it('contract.getPastEvents filter by val', async function() {
+        const events = await instance.getPastEvents('BasicEvent', {
+            filter: { val: 2 },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        });
+        assert.equal(events.length, 1);
+        assert.equal(events[0].returnValues.val, 2);
+    });
+
+    it('contract.getPastEvents without specify event name: filter by val', async function() {
+        const events = await instance.getPastEvents({
+            filter: { val: 2 },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        });
+        assert.equal(events.length, 1);
+        assert.equal(events[0].returnValues.val, 2);
+    });
+
+    it('contract.getPastEvents all events: filter by val', async function() {
+        const events = await instance.getPastEvents('allEvents', {
+            filter: { val: 2 },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        });
+        assert.equal(events.length, 1);
+        assert.equal(events[0].returnValues.val, 2);
+    });
+
+    it('contract.getPastEvents filter by val different value', async function() {
+        const events = await instance.getPastEvents('BasicEvent', {
+            filter: { val: 3 },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        });
+        assert.equal(events.length, 1);
+        assert.equal(events[0].returnValues.val, 3);
+    });
+
+    it('contract.getPastEvents filter by array', async function() {
+        const events = await instance.getPastEvents('BasicEvent', {
+            filter: { val: [2, 3] },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        });
+        assert.equal(events.length, 2);
+        assert.equal(events[0].returnValues.val, 2);
+        assert.equal(events[1].returnValues.val, 3);
+    });
+
+    it('contract.getPastEvents allEvents: filter by array', async function() {
+        const events = await instance.getPastEvents('allEvents', {
+            filter: { val: [2, 3] },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        });
+        assert.equal(events.length, 2);
+        assert.equal(events[0].returnValues.val, 2);
+        assert.equal(events[1].returnValues.val, 3);
+    });
+
+    it('contract.getPastEvents allEvents: filter by array using callback', async function() {
+        instance.getPastEvents('allEvents', {
+            filter: { val: [2, 3] },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        }, (err, events) => {
+            assert.equal(events.length, 2);
+            assert.equal(events[0].returnValues.val, 2);
+            assert.equal(events[1].returnValues.val, 3);
+        });
+    });
+
+    it('contract.getPastEvents filter by val using callback', async function() {
+        instance.getPastEvents('BasicEvent', {
+            filter: { val: 3 },
+            fromBlock: 'earliest',
+            toBlock: 'latest',
+        }, (err, events) => {
+            assert.equal(events.length, 1);
+            assert.equal(events[0].returnValues.val, 3);
+        });
+    });
 
     it('contract.events.<eventName>', function(){
         return new Promise(async resolve => {
