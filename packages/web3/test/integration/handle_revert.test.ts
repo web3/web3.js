@@ -14,17 +14,18 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
-import { Contract } from 'web3-eth-contract';
 import { TransactionRevertInstructionError } from 'web3-errors';
+import { Contract } from 'web3-eth-contract';
+import WebSocketProvider from 'web3-providers-ws';
 import Web3 from '../../src/index';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import {
 	closeOpenConnection,
 	createTempAccount,
 	getSystemTestProvider,
+	getSystemTestProviderUrl,
 	isWs,
 } from '../shared_fixtures/system_tests_utils';
-import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 
 Error.stackTraceLimit = Infinity;
 
@@ -38,7 +39,7 @@ describe.skip('eth', () => {
 	let sendOptions: Record<string, unknown>;
 
 	beforeEach(async () => {
-		clientUrl = getSystemTestProvider();
+		clientUrl = getSystemTestProviderUrl();
 		const acc1 = await createTempAccount();
 		const acc2 = await createTempAccount();
 		accounts = [acc1.address, acc2.address];

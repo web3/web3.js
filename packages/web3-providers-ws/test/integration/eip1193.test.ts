@@ -16,12 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { hexToNumber } from 'web3-utils';
-import { HexString, ProviderRpcError, ProviderConnectInfo } from 'web3-types';
+import { HexString, ProviderConnectInfo, ProviderRpcError } from 'web3-types';
 import WebSocketProvider from '../../src/index';
 
 import {
-	getSystemTestProvider,
 	describeIf,
+	getSystemTestProviderUrl,
 	isWs,
 	waitForSocketConnect,
 	waitForSocketDisconnect,
@@ -32,7 +32,7 @@ describeIf(isWs)('WebSocketProvider - eip1193', () => {
 	let socketProvider: WebSocketProvider;
 
 	beforeAll(() => {
-		socketPath = getSystemTestProvider();
+		socketPath = getSystemTestProviderUrl();
 	});
 	beforeEach(() => {
 		socketProvider = new WebSocketProvider(socketPath);

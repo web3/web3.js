@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, Bytes, Transaction, KeyStore } from 'web3-types';
-import { ETH_DATA_FORMAT, format } from 'web3-utils';
+import { EthExecutionAPI, Bytes, Transaction, KeyStore, ETH_DATA_FORMAT } from 'web3-types';
+import { format } from 'web3-utils';
 import { Web3Context } from 'web3-core';
 import { prepareTransactionForSigning } from 'web3-eth';
 import {

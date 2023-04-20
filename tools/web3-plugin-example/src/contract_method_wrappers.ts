@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3PluginBase } from 'web3-core';
 import Contract from 'web3-eth-contract';
-import { Address, ContractAbi, Numbers } from 'web3-types';
-import { DataFormat, DEFAULT_RETURN_FORMAT, format, numberToHex } from 'web3-utils';
+import { Address, ContractAbi, DataFormat, DEFAULT_RETURN_FORMAT, Numbers } from 'web3-types';
+import { format, numberToHex } from 'web3-utils';
 
 import { ERC20TokenAbi } from './ERC20Token';
 import { Web3Context } from './reexported_web3_context';

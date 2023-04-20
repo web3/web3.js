@@ -14,18 +14,19 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, Bytes, HexString, Numbers } from 'web3-types';
-import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
-import { isDataFormatValid, convertScalarValueValid } from '../fixtures/formatter';
 import {
+	Address,
+	Bytes,
 	DEFAULT_RETURN_FORMAT,
 	FMT_BYTES,
 	FMT_NUMBER,
-	format,
 	FormatType,
-	isDataFormat,
-	convertScalarValue,
-} from '../../src/formatter';
+	HexString,
+	Numbers,
+} from 'web3-types';
+import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
+import { isDataFormatValid, convertScalarValueValid } from '../fixtures/formatter';
+import { format, isDataFormat, convertScalarValue } from '../../src/formatter';
 
 type TestTransactionInfoType = {
 	readonly blockHash?: Bytes;

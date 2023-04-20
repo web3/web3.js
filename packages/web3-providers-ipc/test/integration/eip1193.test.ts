@@ -20,8 +20,8 @@ import { HexString, ProviderRpcError, ProviderConnectInfo } from 'web3-types';
 import IpcProvider from '../../src/index';
 
 import {
-	getSystemTestProvider,
 	describeIf,
+	getSystemTestProviderUrl,
 	isIpc,
 	waitForSocketConnect,
 	waitForSocketDisconnect,
@@ -32,7 +32,7 @@ describeIf(isIpc)('IpcProvider - eip1193', () => {
 	let socketProvider: IpcProvider;
 
 	beforeAll(() => {
-		socketPath = getSystemTestProvider();
+		socketPath = getSystemTestProviderUrl();
 	});
 	beforeEach(() => {
 		socketProvider = new IpcProvider(socketPath);
