@@ -20,6 +20,17 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 
 ## Release Process
 
+### Running E2E Tests
+
+`E2E Network Tests` will be triggered to run via a Github workflow when a PR is open for a branch prefixed with `release/` and is being merged into `4.x` branch. These tests depend on a couple of ENVs to be set that are configurable in Github's Action Secrets when running these tests in CI. The following required secrets are:
+
+-   `E2E_TESTS_ALLOWED_SEND_TRANSACTION`: If set to `false` this will keep the Sepolia tests that spend ETH from runnning, setting to anything else will cause them to run
+-   `TEST_ACCOUNT_PRIVATE_KEY`: The private key of the Sepolia account to use when submitting transactions
+-   `INFURA_SEPOLIA_HTTP`: The provider to be used to access the Sepolia network
+-   `INFURA_MAINNET_HTTP`: The provider to be used to access Mainnet
+
+---
+
 1. `git checkout 4.x`: Verify you are on the `4.x` base branch
 2. `git checkout -b release/bumped-version`: Create and checkout a branch with the `bumped-version` e.g. `git checkout -b release/4.0.0-alpha.0`
     - `bumped-version` of release branch should be of main web3 package.

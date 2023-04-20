@@ -89,7 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `SocketProvider` abstract class now resolves JSON RPC response errors instead of rejecting them (#5844)
 -   Exposes the getter of `SocketConnection` in `SocketProvider` (#5891)
 
-## [Unreleased]
+## [4.0.1-rc.1]
 
 ### Added
 
@@ -103,3 +103,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   Removed dependencies @ethereumjs/tx, @ethereumjs/common (#5963)
+
+## [Unreleased]

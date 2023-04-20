@@ -83,11 +83,7 @@ web3.currentProvider.disconnect();
 
 -   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)
 
-## [Unreleased]
-
-### Breaking Changes
-
--   removed IPC provider dependency, IPC path is no longer viable provider. If you wanna use IPC, please install `web3-providers-ipc` and instantiate provider yourself
+## [4.0.1-rc.1]
 
 ### Added
 
@@ -96,4 +92,7 @@ web3.currentProvider.disconnect();
 
 ### Changed
 
--   no need for polyfilling nodejs `net` and `fs` modules
+-   No need for polyfilling nodejs `net` and `fs` modules (#5978)
+-   Removed IPC provider dependency, IPC path is no longer viable provider. If you wanna use IPC, please install `web3-providers-ipc` and instantiate provider yourself (#5978)
+
+## [Unreleased]
