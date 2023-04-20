@@ -20,6 +20,7 @@ import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/sy
 
 describe(`${getSystemTestBackend()} tests - getId`, () => {
 	const provider = getSystemE2ETestProvider();
+	const expectedChainId = getSystemTestBackend() === 'sepolia' ? BigInt(11155111) : BigInt(1);
 
 	let web3: Web3;
 
@@ -33,6 +34,6 @@ describe(`${getSystemTestBackend()} tests - getId`, () => {
 
 	it('should get the network id for the connected node', async () => {
 		const result = await web3.eth.net.getId();
-		expect(typeof result).toBe('bigint');
+		expect(result).toBe(expectedChainId);
 	});
 });

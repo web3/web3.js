@@ -21,26 +21,10 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
+import { mainnetBlockData } from '../fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData: {
-		earliest: 'earliest';
-		latest: 'latest';
-		pending: 'pending';
-		finalized: 'finalized';
-		safe: 'safe';
-		blockNumber: number;
-		blockHash: string;
-	} = {
-		earliest: 'earliest',
-		latest: 'latest',
-		pending: 'pending',
-		finalized: 'finalized',
-		safe: 'safe',
-		blockNumber: 17029884,
-		blockHash: '0x2850e4a813762b2de589fa5268eacb92572defaf9520608deb129699e504cab2',
-	};
 
 	let web3: Web3;
 
@@ -79,12 +63,17 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		const result = await web3.eth.getStorageAt(
 			'0xdAC17F958D2ee523a2206206994597C13D831ec7',
 			storageSlot,
-			blockData[block],
+			mainnetBlockData[block],
 		);
 
-		if (blockData[block] === 'earliest') {
+		if (mainnetBlockData[block] === 'earliest') {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toMatch(/0[xX][0-9a-fA-F]{64}/i);
+		} else if (block === 'blockHash' || block === 'blockNumber') {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(result).toBe(
+				'0x000000000000000000000000000000000000000000000000007d5a864f06b2d5',
+			);
 		} else {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toMatch(/0[xX][0-9a-fA-F]{64}/i);

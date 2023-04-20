@@ -21,26 +21,10 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
+import { sepoliaBlockData } from '../fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData: {
-		earliest: 'earliest';
-		latest: 'latest';
-		pending: 'pending';
-		finalized: 'finalized';
-		safe: 'safe';
-		blockNumber: number;
-		blockHash: string;
-	} = {
-		earliest: 'earliest',
-		latest: 'latest',
-		pending: 'pending',
-		finalized: 'finalized',
-		safe: 'safe',
-		blockNumber: 3240768,
-		blockHash: '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca',
-	};
 
 	let web3: Web3;
 
@@ -79,10 +63,10 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		const result = await web3.eth.getStorageAt(
 			'0xEdFd52255571b4a9A9d4445989E39f5c14Ff0447',
 			storageSlot,
-			blockData[block],
+			sepoliaBlockData[block],
 		);
 
-		if (blockData[block] === 'earliest') {
+		if (sepoliaBlockData[block] === 'earliest') {
 			// Nethermind returns 0x while Geth returns 0x0000000000000000000000000000000000000000000000000000000000000000
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(

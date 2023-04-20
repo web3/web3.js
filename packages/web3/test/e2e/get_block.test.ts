@@ -16,37 +16,22 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { validator } from 'web3-validator';
 import { blockSchema } from 'web3-eth';
-import { Transaction } from 'web3-types';
+import { Block, Transaction } from 'web3-types';
+import { format as formatter } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
+import { sepoliaBlock, sepoliaBlockData, sepoliaBlockHydrated } from './fixtures/sepolia';
+import { mainnetBlockHydrated } from './fixtures/mainnet_block_hydrated';
+import { mainnetBlock, mainnetBlockData } from './fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getBlock`, () => {
 	const provider = getSystemE2ETestProvider();
+	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
-	const blockData: {
-		earliest: 'earliest';
-		latest: 'latest';
-		pending: 'pending';
-		finalized: 'finalized';
-		safe: 'safe';
-		blockNumber: number;
-		blockHash: string;
-	} = {
-		pending: 'pending',
-		latest: 'latest',
-		earliest: 'earliest',
-		finalized: 'finalized',
-		safe: 'safe',
-		blockNumber: getSystemTestBackend() === 'sepolia' ? 3240768 : 17029884,
-		blockHash:
-			getSystemTestBackend() === 'sepolia'
-				? '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca'
-				: '0x2850e4a813762b2de589fa5268eacb92572defaf9520608deb129699e504cab2',
-	};
 
 	beforeAll(() => {
 		web3 = new Web3(provider);
@@ -74,22 +59,42 @@ describe(`${getSystemTestBackend()} tests - getBlock`, () => {
 			format: Object.values(FMT_NUMBER),
 		}),
 	)('getBlock', async ({ hydrated, block, format }) => {
-		const b = {
+		const result = {
 			...(await web3.eth.getBlock(blockData[block], hydrated, {
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
 			})),
 		};
-		if (blockData[block] === 'pending') {
-			b.nonce = '0x0';
-			b.miner = '0x0000000000000000000000000000000000000000';
-			b.totalDifficulty = '0x0';
-		}
-		expect(validator.validateJSONSchema(blockSchema, b)).toBeUndefined();
+		let expectedBlock: Block = ((): Block => {
+			if (getSystemTestBackend() === 'sepolia') {
+				return hydrated ? sepoliaBlockHydrated : sepoliaBlock;
+			}
 
-		if (hydrated && b.transactions?.length > 0) {
+			return hydrated ? mainnetBlockHydrated : mainnetBlock;
+		})();
+		if (format !== FMT_NUMBER.HEX)
+			expectedBlock = formatter(blockSchema, result as unknown as Block, {
+				number: format as FMT_NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+
+		if (blockData[block] === 'pending') {
+			result.nonce = '0x0';
+			result.miner = '0x0000000000000000000000000000000000000000';
+			result.totalDifficulty = '0x0';
+		}
+
+		if (block === 'blockHash' || block === 'blockNumber') {
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(b.transactions).toBeInstanceOf(Array<Transaction>);
+			expect(result).toEqual(expectedBlock);
+		} else {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(validator.validateJSONSchema(blockSchema, result)).toBeUndefined();
+
+			if (hydrated && result.transactions?.length > 0) {
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactions).toBeInstanceOf(Array<Transaction>);
+			}
 		}
 	});
 });

@@ -22,29 +22,12 @@ import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
+import { sepoliaBlockData, sepoliaTransactionFromBlock } from './fixtures/sepolia';
+import { mainnetBlockData, mainnetTransactionFromBlock } from './fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData: {
-		earliest: 'earliest';
-		latest: 'latest';
-		pending: 'pending';
-		finalized: 'finalized';
-		safe: 'safe';
-		blockNumber: number;
-		blockHash: string;
-	} = {
-		earliest: 'earliest',
-		latest: 'latest',
-		pending: 'pending',
-		finalized: 'finalized',
-		safe: 'safe',
-		blockNumber: getSystemTestBackend() === 'sepolia' ? 3240768 : 17029884,
-		blockHash:
-			getSystemTestBackend() === 'sepolia'
-				? '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca'
-				: '0x2850e4a813762b2de589fa5268eacb92572defaf9520608deb129699e504cab2',
-	};
+	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
 
@@ -86,6 +69,12 @@ describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 		if (blockData[block] === 'earliest') {
 			// eslint-disable-next-line no-null/no-null
 			expect(result).toBeNull();
+		} else if (block === 'blockHash' || block === 'blockNumber') {
+			const expectedTransaction =
+				getSystemTestBackend() === 'sepolia'
+					? sepoliaTransactionFromBlock
+					: mainnetTransactionFromBlock;
+			expect(result).toStrictEqual(expectedTransaction);
 		} else {
 			expect(result).toMatchObject<TransactionInfo>({
 				hash: expect.any(String),
