@@ -65,9 +65,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added named export for `HttpProvider` (#5771)
 
-## [Unreleased]
+## [4.0.1-rc.1]
 
 ### Added
 
 -   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
+
+## [Unreleased]
