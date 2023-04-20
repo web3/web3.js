@@ -1290,13 +1290,21 @@ should use 4.0.1-alpha.0 for testing.
 -   Fix contract defaults (#5756)
 -   Fixed getPastEventsError (#5819)
 
-## [Unreleased]
+## [4.0.1-rc.1]
 
 ### Changed
+
+#### web3
+
+-   No need for polyfilling nodejs `net` and `fs` modules (#5978)
+-   Removed IPC provider dependency, IPC path is no longer viable provider. If you wanna use IPC, please install `web3-providers-ipc` and instantiate provider yourself (#5978)
 
 #### web3-core
 
 -   If a transaction object with a `data` property is passed to `txInputOptionsFormatter`, it will now be replaced with `input` (#5915)
+-   The types `TransactionTypeParser` and `TransactionBuilder` are now utilizing the type `Transaction` for the transaction object. (#5993)
+-   No need for polyfilling nodejs `net` and `fs` modules (#5978)
+-   Removed IPC provider dependency, IPC path is no longer viable provider. If you wanna use IPC, please install `web3-providers-ipc` and instantiate provider yourself (#5978)
 
 #### web3-errors
 
@@ -1307,19 +1315,29 @@ should use 4.0.1-alpha.0 for testing.
 -   `signTransaction` will now return `gas` instead of `gasLimit` for returned transaction object regardless of what property name the provider uses (#5915)
 -   `formatTransaction` will now replace `data` transaction property with `input` (#5915)
 -   `isTransactionCall` will now check if `value.input` `isHexStrict` if provided (#5915)
+-   The functions `defaultTransactionBuilder` and `transactionBuilder` are now utilizing the type `Transaction` for the transaction object. (#5993)
 
 #### web3-eth-accounts
 
 -   Moved @ethereumjs/tx, @ethereumjs/common code to our source code (#5963)
+-   The method `signTransaction` returned by `privateKeyToAccount` is now accepting the type `Transaction` for its argument. (#5993)
 
 #### web3-eth-contract
 
 -   `getSendTxParams` will now return `input` instead of `data` in returned transaction parameters object (#5915)
 -   `Contract` constructor will now thrown new `ContractTransactionDataAndInputError` if both `data` and `input` are passed in `ContractInitOptions` for `Contract` constructor (#5915)
+-   The types `ContractInitOptions`, `NonPayableCallOptions` and `PayableCallOptions` are moved to `web3-types`. (#5993)
 
 #### web3-types
 
 -   `data` property in `TransactionOutput` was renamed to `input` (#5915)
+-   The method `signTransaction` inside `Web3BaseWalletAccount` is now utilizing the type `Transaction` for its argument. (#5993)
+-   The types `FMT_NUMBER`, `NumberTypes`, `FMT_BYTES`, `ByteTypes`, `DataFormat`, `DEFAULT_RETURN_FORMAT`, `ETH_DATA_FORMAT` and `FormatType` moved from `web3-utils`. (#5993)
+-   The types `ContractInitOptions`, `NonPayableCallOptions` and `PayableCallOptions` are moved from `web3-eth-contract`. (#5993)
+
+#### web3-utils
+
+-   The types `FMT_NUMBER`, `NumberTypes`, `FMT_BYTES`, `ByteTypes`, `DataFormat`, `DEFAULT_RETURN_FORMAT`, `ETH_DATA_FORMAT` and `FormatType` moved to `web3-types`. (#5993)
 
 ### Added
 
@@ -1441,3 +1459,5 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-ens
 
 -   Bug fix of `checkNetwork` in ENS (#5988)
+
+## [Unreleased]
