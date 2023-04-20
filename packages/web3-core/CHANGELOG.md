@@ -83,11 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
 -   Added support of `safe` and `finalized` block tags (#5823)
 
-## [Unreleased]
-
-### Breaking Changes
-
--   removed IPC provider dependency, IPC path is no longer viable provider. If you wanna use IPC, please install `web3-providers-ipc` and instantiate provider yourself
+## [4.0.1-rc.1]
 
 ### Added
 
@@ -98,8 +94,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   If a transaction object with a `data` property is passed to `txInputOptionsFormatter`, it will now be replaced with `input` (#5915)
 -   The types `TransactionTypeParser` and `TransactionBuilder` are now utilizing the type `Transaction` for the transaction object. (#5993)
--   no need for polyfilling nodejs `net` and `fs` modules
+-   No need for polyfilling nodejs `net` and `fs` modules (#5978)
+-   Removed IPC provider dependency, IPC path is no longer viable provider. If you wanna use IPC, please install `web3-providers-ipc` and instantiate provider yourself (#5978)
 
 ### Removed
 
 -   `getConfig` method from `Web3Config` class, `config` is now public and accessible using `Web3Config.config` (#5950)
+
+## [Unreleased]

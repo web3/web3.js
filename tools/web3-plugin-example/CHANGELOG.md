@@ -54,8 +54,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updated dependencies
 
-## [Unreleased]
+## [1.0.0-rc.1]
 
 ### Added
 
 -   Added source files (#5956)
+
+## [Unreleased]
