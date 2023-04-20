@@ -5,6 +5,20 @@ var Parent = require('./sources/Parent');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 
+const prepareEvents = async (instance,address) => {
+    await instance
+        .methods
+        .firesEvent(address, 1)
+        .send({from: address});
+    await instance
+        .methods
+        .firesEvent(address, 2)
+        .send({from: address});
+    await instance
+        .methods
+        .firesEvent(address, 3)
+        .send({from: address});
+}
 describe('contract.events [ @E2E ]', function() {
     // `getPastEvents` not working with Geth instamine over websockets.
     if (process.env.GETH_INSTAMINE) return;
@@ -30,21 +44,10 @@ describe('contract.events [ @E2E ]', function() {
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
         instance = await basic.deploy().send({from: accounts[0]});
-        await instance
-            .methods
-            .firesEvent(accounts[0], 1)
-            .send({from: accounts[0]});
-        await instance
-            .methods
-            .firesEvent(accounts[0], 2)
-            .send({from: accounts[0]});
-        await instance
-            .methods
-            .firesEvent(accounts[0], 3)
-            .send({from: accounts[0]});
     });
 
     it('contract.getPastEvents', async function(){
+        await prepareEvents(instance, accounts[0]);
         const events = await instance.getPastEvents({
             fromBlock: 0,
             toBlock: 'latest'
@@ -58,6 +61,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents filter by val', async function() {
+        await prepareEvents(instance, accounts[0]);
         const events = await instance.getPastEvents('BasicEvent', {
             filter: { val: 2 },
             fromBlock: 'earliest',
@@ -68,6 +72,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents without specify event name: filter by val', async function() {
+        await prepareEvents(instance, accounts[0]);
         const events = await instance.getPastEvents({
             filter: { val: 2 },
             fromBlock: 'earliest',
@@ -78,6 +83,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents all events: filter by val', async function() {
+        await prepareEvents(instance, accounts[0]);
         const events = await instance.getPastEvents('allEvents', {
             filter: { val: 2 },
             fromBlock: 'earliest',
@@ -88,6 +94,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents filter by val different value', async function() {
+        await prepareEvents(instance, accounts[0]);
         const events = await instance.getPastEvents('BasicEvent', {
             filter: { val: 3 },
             fromBlock: 'earliest',
@@ -98,6 +105,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents filter by array', async function() {
+        await prepareEvents(instance, accounts[0]);
         const events = await instance.getPastEvents('BasicEvent', {
             filter: { val: [2, 3] },
             fromBlock: 'earliest',
@@ -109,6 +117,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents allEvents: filter by array', async function() {
+        await prepareEvents(instance, accounts[0]);
         const events = await instance.getPastEvents('allEvents', {
             filter: { val: [2, 3] },
             fromBlock: 'earliest',
@@ -120,6 +129,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents allEvents: filter by array using callback', async function() {
+        await prepareEvents(instance, accounts[0]);
         instance.getPastEvents('allEvents', {
             filter: { val: [2, 3] },
             fromBlock: 'earliest',
@@ -132,6 +142,7 @@ describe('contract.events [ @E2E ]', function() {
     });
 
     it('contract.getPastEvents filter by val using callback', async function() {
+        await prepareEvents(instance, accounts[0]);
         instance.getPastEvents('BasicEvent', {
             filter: { val: 3 },
             fromBlock: 'earliest',
@@ -208,6 +219,11 @@ describe('contract.events [ @E2E ]', function() {
 
             assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
             console.warn = originalWarn
+
+            await instance
+                .methods
+                .firesEvent(accounts[0], 1)
+                .send({ from: accounts[0] });
         });
     });
 
@@ -483,7 +499,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesStringEvent(msg)
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents('StringEvent', {
+        const events = await instance.getPastEvents({
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -502,7 +518,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesStringEvent(msg)
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents('StringEvent', {
+        const events = await instance.getPastEvents({
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -516,7 +532,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesIllegalUtf8StringEvent()
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents('StringEvent', {
+        const events = await instance.getPastEvents({
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -532,7 +548,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesStringEvent(msg)
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents('StringEvent', {
+        const events = await instance.getPastEvents({
             fromBlock: 0,
             toBlock: 'latest'
         });
