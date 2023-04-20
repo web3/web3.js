@@ -502,7 +502,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * ```ts
 	 * myContract.deploy({
-	 *   data: '0x12345...',
+	 *   input: '0x12345...', //data keyword can be used, too. But if input is used, data will be ignored.
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .send({
@@ -539,7 +539,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * // Simply encoding
 	 * myContract.deploy({
-	 *   data: '0x12345...',
+	 *   input: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .encodeABI();
@@ -548,7 +548,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * // Gas estimation
 	 * myContract.deploy({
-	 *   data: '0x12345...',
+	 *   input: '0x12345...',
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .estimateGas(function(err, gas){
@@ -563,6 +563,7 @@ export class Contract<Abi extends ContractAbi>
 		 * The byte code of the contract.
 		 */
 		data?: HexString;
+		input?: HexString;
 		/**
 		 * The arguments which get passed to the constructor on deployment.
 		 */
@@ -580,7 +581,7 @@ export class Contract<Abi extends ContractAbi>
 
 		const _input = format(
 			{ eth: 'bytes' },
-			deployOptions?.data ?? this.options.input,
+			deployOptions?.input ?? deployOptions?.data ?? this.options.input,
 			DEFAULT_RETURN_FORMAT,
 		);
 
