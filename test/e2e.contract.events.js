@@ -208,11 +208,6 @@ describe('contract.events [ @E2E ]', function() {
 
             assert.equal(message, 'Invalid option: toBlock. Use getPastEvents for specific range.');
             console.warn = originalWarn
-
-            await instance
-                .methods
-                .firesEvent(accounts[0], 1)
-                .send({ from: accounts[0] });
         });
     });
 
@@ -488,7 +483,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesStringEvent(msg)
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents({
+        const events = await instance.getPastEvents('StringEvent', {
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -507,7 +502,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesStringEvent(msg)
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents({
+        const events = await instance.getPastEvents('StringEvent', {
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -521,7 +516,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesIllegalUtf8StringEvent()
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents({
+        const events = await instance.getPastEvents('StringEvent', {
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -537,7 +532,7 @@ describe('contract.events [ @E2E ]', function() {
             .firesStringEvent(msg)
             .send({from: accounts[0]});
 
-        const events = await instance.getPastEvents({
+        const events = await instance.getPastEvents('StringEvent', {
             fromBlock: 0,
             toBlock: 'latest'
         });
