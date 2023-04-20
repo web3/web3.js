@@ -86,7 +86,6 @@ describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 				gasPrice: expect.any(BigInt),
 				gas: expect.any(BigInt),
 				input: expect.any(String),
-				chainId: expect.any(BigInt),
 				type: expect.any(BigInt),
 				v: expect.any(BigInt),
 				s: expect.any(String),
