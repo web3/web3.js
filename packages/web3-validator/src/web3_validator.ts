@@ -100,7 +100,7 @@ export class Web3Validator {
 			]);
 		}
 
-		const schemaKey = toHex(blake2b(utf8ToBytes(`${JSON.stringify(jsonSchema)}123`)));
+		const schemaKey = toHex(blake2b(utf8ToBytes(JSON.stringify(jsonSchema))));
 
 		if (!this._validator.getSchema(schemaKey)) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
