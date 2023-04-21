@@ -502,7 +502,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * ```ts
 	 * myContract.deploy({
-	 *   input: '0x12345...', //data keyword can be used, too. But if input is used, data will be ignored.
+	 *   input: '0x12345...', // data keyword can be used, too. If input is used, data will be ignored.
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .send({
