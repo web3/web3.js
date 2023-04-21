@@ -376,7 +376,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
 	call<SpecialOutput = Outputs>(
-		tx?: Omit<PayableCallOptions, 'nonce'>,
+		tx?: PayableCallOptions,
 		block?: BlockNumberOrTag,
 	): Promise<SpecialOutput>;
 
@@ -470,7 +470,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The gas amount estimated.
 	 */
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		options?: Omit<PayableCallOptions, 'nonce'>,
+		options?: PayableCallOptions,
 		returnFormat?: ReturnFormat,
 	): Promise<FormatType<Numbers, ReturnFormat>>;
 
@@ -510,10 +510,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * }
 	 *```
 	 */
-	createAccessList(
-		tx?: Omit<PayableCallOptions, 'nonce' | 'type'>,
-		block?: BlockNumberOrTag,
-	): Promise<AccessListResult>;
+	createAccessList(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<AccessListResult>;
 }
 
 export type Web3ContractContext = Partial<
