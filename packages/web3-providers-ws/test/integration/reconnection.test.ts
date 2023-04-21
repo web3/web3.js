@@ -16,18 +16,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { CloseEvent } from 'ws';
+import { ProviderRpcError } from 'web3-types/src/web3_api_types';
 import WebSocketProvider from '../../src';
 
+import { createProxy } from '../fixtures/proxy';
 import {
 	describeIf,
-	isWs,
-	getSystemTestProvider,
+	getSystemTestProviderUrl,
 	isBrowser,
-	waitForOpenSocketConnection,
+	waitForSocketConnect,
+	isWs,
 	waitForCloseSocketConnection,
 	waitForEvent,
 } from '../fixtures/system_test_utils';
-import { createProxy } from '../fixtures/proxy';
 
 describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
@@ -44,31 +45,31 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			};
 		});
 		it('check defaults', async () => {
-			const web3Provider = new WebSocketProvider(getSystemTestProvider());
+			const web3Provider = new WebSocketProvider(getSystemTestProviderUrl());
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual({
 				autoReconnect: true,
 				delay: 5000,
 				maxAttempts: 5,
 			});
-			await waitForOpenSocketConnection(web3Provider);
+			await waitForSocketConnect(web3Provider);
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('set custom reconnectOptions', async () => {
 			const web3Provider = new WebSocketProvider(
-				getSystemTestProvider(),
+				getSystemTestProviderUrl(),
 				{},
 				reconnectionOptions,
 			);
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual(reconnectionOptions);
-			await waitForOpenSocketConnection(web3Provider);
+			await waitForSocketConnect(web3Provider);
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('should emit connect and disconnected events', async () => {
-			const server = await createProxy(18545, getSystemTestProvider());
+			const server = await createProxy(18545, getSystemTestProviderUrl());
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			// @ts-expect-error set protected option
@@ -86,13 +87,13 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 		});
 
 		it('should connect, disconnect and reconnect', async () => {
-			const server = await createProxy(18546, getSystemTestProvider());
+			const server = await createProxy(18546, getSystemTestProviderUrl());
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			web3Provider.disconnect(1002);
 			await server.close();
 			const connectEvent = waitForEvent(web3Provider, 'connect');
-			const server2 = await createProxy(18546, getSystemTestProvider());
+			const server2 = await createProxy(18546, getSystemTestProviderUrl());
 			expect(!!(await connectEvent)).toBe(true);
 
 			web3Provider.disconnect();
@@ -100,7 +101,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			await server2.close();
 		});
 		it('should connect, disconnect, try reconnect and reach max attempts', async () => {
-			const server = await createProxy(18547, getSystemTestProvider());
+			const server = await createProxy(18547, getSystemTestProviderUrl());
 			const web3Provider = new WebSocketProvider(
 				server.path,
 				{},
@@ -123,9 +124,12 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			// @ts-expect-error run protected method
 			web3Provider._addSocketListeners();
 			const errorEvent = new Promise(resolve => {
-				web3Provider.on('error', error => {
+				web3Provider.on('error', (error: unknown) => {
 					if (
-						error?.message?.startsWith('Maximum number of reconnect attempts reached')
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+						(error as ProviderRpcError)?.message?.startsWith(
+							'Maximum number of reconnect attempts reached',
+						)
 					) {
 						resolve(error);
 					}

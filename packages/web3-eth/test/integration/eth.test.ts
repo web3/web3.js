@@ -35,7 +35,7 @@ import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 
 describe('eth', () => {
 	let web3Eth: Web3Eth;
-	let clientUrl: string;
+	let clientUrl: string | SupportedProviders;
 
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
@@ -78,7 +78,6 @@ describe('eth', () => {
 
 			expect(res.HttpProvider).toBeDefined();
 			expect(res.WebsocketProvider).toBeDefined();
-			expect(res.IpcProvider).toBeDefined();
 		});
 		it('currentProvider', () => {
 			const { currentProvider } = web3Eth;

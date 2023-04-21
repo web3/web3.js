@@ -337,7 +337,6 @@ export { Iban } from 'web3-eth-iban';
 export { Personal } from 'web3-eth-personal';
 export { Net } from 'web3-net';
 export { HttpProvider } from 'web3-providers-http';
-export { IpcProvider } from 'web3-providers-ipc';
 export { WebSocketProvider } from 'web3-providers-ws';
 
 /**

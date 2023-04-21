@@ -23,6 +23,9 @@ import {
 	InvalidResponseError,
 } from 'web3-errors';
 import {
+	FormatType,
+	ETH_DATA_FORMAT,
+	DataFormat,
 	Bytes,
 	ContractAbi,
 	HexString,
@@ -30,7 +33,6 @@ import {
 	Transaction,
 	TransactionReceipt,
 } from 'web3-types';
-import { DataFormat, ETH_DATA_FORMAT, FormatType } from 'web3-utils';
 
 export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
 

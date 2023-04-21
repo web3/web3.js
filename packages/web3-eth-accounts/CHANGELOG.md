@@ -71,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updated dependencies (#5912)
 
-## [Unreleased]
+## [4.0.1-rc.1]
 
 ### Added
 
@@ -81,3 +81,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Moved @ethereumjs/tx, @ethereumjs/common code to our source code (#5963)
+-   The method `signTransaction` returned by `privateKeyToAccount` is now accepting the type `Transaction` for its argument. (#5993)
+
+## [Unreleased]

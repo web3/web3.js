@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Web3Eth } from 'web3-eth';
 import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
@@ -27,6 +28,7 @@ import {
 	signTxAndSendEIP2930,
 	signTxAndSendEIP1559,
 	sendFewSampleTxs,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -36,7 +38,10 @@ describe('contract', () => {
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
 		let pkAccount: { address: string; privateKey: string };
+		let web3Eth: Web3Eth;
+
 		beforeAll(async () => {
+			web3Eth = new Web3Eth(getSystemTestProvider());
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
@@ -48,6 +53,10 @@ describe('contract', () => {
 				provider: getSystemTestProvider(),
 			});
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+
+		afterAll(async () => {
+			await closeOpenConnection(web3Eth);
 		});
 		describe('local account', () => {
 			it.each([signTxAndSendEIP1559, signTxAndSendEIP2930])(
@@ -61,6 +70,24 @@ describe('contract', () => {
 						contract.provider,
 						{
 							data: deployData.encodeABI(),
+						},
+						pkAccount.privateKey,
+					);
+					expect(Number(res.status)).toBe(1);
+				},
+			);
+
+			it.each([signTxAndSendEIP1559, signTxAndSendEIP2930])(
+				'should deploy the contract with input%p',
+				async signTxAndSend => {
+					pkAccount = await createNewAccount({ refill: true });
+
+					const deployData = contract.deploy(deployOptions);
+
+					const res = await signTxAndSend(
+						contract.provider,
+						{
+							input: deployData.encodeABI(),
 						},
 						pkAccount.privateKey,
 					);

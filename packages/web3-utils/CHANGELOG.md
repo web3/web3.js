@@ -89,13 +89,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `SocketProvider` abstract class now resolves JSON RPC response errors instead of rejecting them (#5844)
 -   Exposes the getter of `SocketConnection` in `SocketProvider` (#5891)
 
-## [Unreleased]
+## [4.0.1-rc.1]
 
 ### Added
 
 -   Added source files (#5956)
 -   Added hybrid build (ESM and CJS) of library (#5904)
 
+### Changed
+
+-   The types `FMT_NUMBER`, `NumberTypes`, `FMT_BYTES`, `ByteTypes`, `DataFormat`, `DEFAULT_RETURN_FORMAT`, `ETH_DATA_FORMAT` and `FormatType` moved to `web3-types`. (#5993)
+
 ### Removed
 
 -   Removed dependencies @ethereumjs/tx, @ethereumjs/common (#5963)
+
+## [Unreleased]
+
+### Fixed
+
+-   web3-types

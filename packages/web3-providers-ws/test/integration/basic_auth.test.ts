@@ -15,14 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import express from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Server } from 'http';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import WebSocketProvider from '../../src/index';
 import {
-	getSystemTestProvider,
 	describeIf,
+	getSystemTestProviderUrl,
 	isWs,
-	waitForOpenSocketConnection,
+	waitForSocketConnect,
 	waitForCloseSocketConnection,
 } from '../fixtures/system_test_utils';
 
@@ -32,7 +32,7 @@ describeIf(isWs)('Support of Basic Auth', () => {
 	let webSocketProvider: WebSocketProvider;
 
 	beforeAll(() => {
-		clientWsUrl = getSystemTestProvider();
+		clientWsUrl = getSystemTestProviderUrl();
 		const app = express();
 		const port = 3000;
 		const host = 'localhost';
@@ -81,14 +81,14 @@ describeIf(isWs)('Support of Basic Auth', () => {
 	afterEach(async () => {
 		// make sure we try to close the connection after it is established
 		if (webSocketProvider.getStatus() === 'connecting') {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 		}
 		webSocketProvider.disconnect();
 		await waitForCloseSocketConnection(webSocketProvider);
 	});
 	// eslint-disable-next-line jest/expect-expect
 	test('should connect with basic auth', async () => {
-		await waitForOpenSocketConnection(webSocketProvider);
+		await waitForSocketConnect(webSocketProvider);
 		expect(webSocketProvider.getStatus()).toBe('connected');
 	});
 });
