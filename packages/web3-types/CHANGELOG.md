@@ -93,3 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   The types `ContractInitOptions`, `NonPayableCallOptions` and `PayableCallOptions` are moved from `web3-eth-contract`. (#5993)
 
 ## [Unreleased]
+
+### Added
+
+-   Added `filters` param to the `Filter` type (#6010)
