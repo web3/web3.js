@@ -25,7 +25,6 @@ import {
 	ProviderRpcError,
 	SocketRequestItem,
 	Web3APIPayload,
-	Web3ProviderEventCallback,
 } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
 import WebSocketProvider from '../../src/index';
@@ -35,7 +34,7 @@ import {
 	getSystemTestProviderUrl,
 	isWs,
 	waitForCloseSocketConnection,
-	waitForOpenSocketConnection,
+	waitForSocketConnect,
 } from '../fixtures/system_test_utils';
 
 type Resolve = (value?: unknown) => void;
@@ -67,14 +66,14 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 	afterEach(async () => {
 		// make sure we try to close the connection after it is established
 		if (webSocketProvider.getStatus() === 'connecting') {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 		}
 		webSocketProvider.disconnect(1000);
 	});
 
 	describe('websocker provider tests', () => {
 		it('should connect', async () => {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			expect(webSocketProvider).toBeInstanceOf(WebSocketProvider);
 			expect(webSocketProvider.getStatus()).toBe('connected');
 		});
@@ -82,16 +81,14 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 
 	describe('subscribe event tests', () => {
 		it('should subscribe to `message` event', async () => {
-			const messagePromise = new Promise((resolve: Resolve) => {
+			const messagePromise = new Promise((resolve: Resolve, reject) => {
 				webSocketProvider.on(
 					'message',
 					(
-						error: Error | undefined,
-						result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
+						err: unknown,
+						result?: JsonRpcSubscriptionResult | JsonRpcNotification<unknown>,
 					) => {
-						if (error) {
-							throw new Error(error.message);
-						}
+						if (err) reject();
 						if (result?.id !== jsonRpcPayload.id) {
 							return;
 						}
@@ -105,7 +102,7 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 		});
 
 		it('should subscribe to `error` event that could happen at the underlying WebSocket connection', async () => {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			const errorMsg = 'Custom WebSocket error occurred';
 
 			const errorPromise = new Promise((resolve: Resolve) => {
@@ -135,12 +132,12 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 			const code = 1000;
 
 			const closePromise = new Promise<ProviderRpcError>(resolve => {
-				webSocketProvider.on('disconnect', ((error: ProviderRpcError) => {
+				webSocketProvider.on('disconnect', (error: ProviderRpcError) => {
 					expect(error?.code).toEqual(code);
 					resolve(error);
-				}) as Web3ProviderEventCallback<ProviderRpcError>);
+				});
 			});
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			webSocketProvider.disconnect(code);
 			await closePromise;
 		});
@@ -148,20 +145,20 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 
 	describe('disconnect and reset test', () => {
 		it('should disconnect', async () => {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			const provider = new WebSocketProvider(
 				clientWsUrl,
 				{},
 				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 			);
-			await waitForOpenSocketConnection(provider);
+			await waitForSocketConnect(provider);
 			provider.disconnect(1000);
 			await waitForCloseSocketConnection(provider);
 			expect(provider.getStatus()).toBe('disconnected');
 		});
 
 		it('should reset', async () => {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			class TestReset extends WebSocketProvider {
 				public pendingRequestsSize() {
 					return this._pendingRequestsQueue.size;
@@ -185,7 +182,7 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 			);
 
-			await waitForOpenSocketConnection(testResetProvider);
+			await waitForSocketConnect(testResetProvider);
 
 			const defPromise = new Web3DeferredPromise<JsonRpcResponse<ResponseType>>();
 
@@ -211,15 +208,15 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 	describe('getStatus get and validate all status tests', () => {
 		it('should getStatus `connecting`', async () => {
 			expect(webSocketProvider.getStatus()).toBe('connecting');
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 		});
 
 		it('should getStatus `connected`', async () => {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			expect(webSocketProvider.getStatus()).toBe('connected');
 		});
 		it('should getStatus `disconnected`', async () => {
-			await waitForOpenSocketConnection(webSocketProvider);
+			await waitForSocketConnect(webSocketProvider);
 			webSocketProvider.disconnect();
 			await waitForCloseSocketConnection(webSocketProvider);
 			expect(webSocketProvider.getStatus()).toBe('disconnected');

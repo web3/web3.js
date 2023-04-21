@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	EthExecutionAPI,
 	HexString,
+	ProviderConnectInfo,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APISpec,
@@ -64,9 +65,7 @@ export abstract class Eip1193Provider<
 				.then(chainId => {
 					if (chainId !== this._chainId) {
 						this._chainId = chainId;
-						this._eventEmitter.emit('chainChanged', undefined, {
-							chainId: this._chainId,
-						});
+						this._eventEmitter.emit('chainChanged', this._chainId);
 					}
 				})
 				.catch(err => {
@@ -93,9 +92,9 @@ export abstract class Eip1193Provider<
 				}),
 		])
 			.then(() =>
-				this._eventEmitter.emit('connect', undefined, {
+				this._eventEmitter.emit('connect', {
 					chainId: this._chainId,
-				}),
+				} as ProviderConnectInfo),
 			)
 			.catch(err => {
 				// todo: add error handler
@@ -104,6 +103,7 @@ export abstract class Eip1193Provider<
 			});
 	}
 
+	// todo this must be ProvideRpcError with a message too
 	protected _onDisconnect(code?: number, data?: unknown) {
 		this._eventEmitter.emit('disconnect', {
 			code,
@@ -113,8 +113,6 @@ export abstract class Eip1193Provider<
 
 	private _onAccountsChanged() {
 		// get chainId and safe to local
-		this._eventEmitter.emit('accountsChanged', undefined, {
-			accounts: this._accounts,
-		});
+		this._eventEmitter.emit('accountsChanged', this._accounts);
 	}
 }

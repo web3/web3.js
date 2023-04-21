@@ -445,8 +445,8 @@ export const waitForEvent = async (
 	eventName: string,
 ) =>
 	new Promise(resolve => {
-		web3Provider.on(eventName, (error: any, data: any) => {
-			resolve(data || error);
+		web3Provider.on(eventName, (data: any) => {
+			resolve(data);
 		});
 	});
 

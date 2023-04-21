@@ -217,6 +217,10 @@ export interface SyncOutput {
 	readonly pulledStates?: Numbers;
 }
 
+export type Receipt = Record<string, unknown>;
+
+type FilterOption = Record<string, Numbers | Numbers[] | boolean | boolean[]>;
+
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
 export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
@@ -226,6 +230,7 @@ export interface Filter {
 	// Using "null" type intentionally to match specifications
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	readonly topics?: (null | Topic | Topic[])[];
+	readonly filter?: FilterOption;
 }
 
 export interface AccessListEntry {

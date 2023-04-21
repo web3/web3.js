@@ -1,8 +1,1 @@
-{
-	"extends": "../tsconfig.cjs.json",
-	"compilerOptions": {
-		"declaration": false,
-		"declarationMap": false
-	},
-	"include": ["./**/*", "../node_modules/jest-extended/types/**/*.ts"]
-}
+../../../config/test/tsconfig.json
