@@ -94,4 +94,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+### Changed
+
 -   Removed chainId, to, data & input properties from NonPayableCallOptions
+
+### Added
+
+-   Added `filters` param to the `Filter` type (#6010)

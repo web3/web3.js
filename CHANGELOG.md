@@ -1461,3 +1461,13 @@ should use 4.0.1-alpha.0 for testing.
 -   Bug fix of `checkNetwork` in ENS (#5988)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-eth-contract
+
+-   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
+
+#### web3-types
+
+-   Added `filters` param to the `Filter` type (#6010)
