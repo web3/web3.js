@@ -39,7 +39,7 @@ export enum FMT_BYTES {
 
 export type ByteTypes = {
 	[FMT_BYTES.HEX]: HexString;
-	[FMT_BYTES.BUFFER]: Buffer;
+	[FMT_BYTES.BUFFER]: Uint8Array;
 	[FMT_BYTES.UINT8ARRAY]: Uint8Array;
 };
 
@@ -53,7 +53,7 @@ export const ETH_DATA_FORMAT = { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX } 
 
 export type FormatType<T, F extends DataFormat> = number extends Extract<T, Numbers>
 	? NumberTypes[F['number']] | Exclude<T, Numbers>
-	: Buffer extends Extract<T, Bytes>
+	: Uint8Array extends Extract<T, Bytes>
 	? ByteTypes[F['bytes']] | Exclude<T, Bytes>
 	: T extends object | undefined
 	? {
