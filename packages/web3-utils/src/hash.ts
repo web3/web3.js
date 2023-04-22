@@ -34,12 +34,11 @@ import {
 	TypedObject,
 	TypedObjectAbbreviated,
 } from 'web3-types';
-import { isAddress, isNullish } from 'web3-validator';
+import { isAddress, isNullish, isHexStrict } from 'web3-validator';
 import {
 	bytesToBuffer,
 	bytesToHex,
 	hexToBytes,
-	numberToHex,
 	toBigInt,
 	toHex,
 	toNumber,
@@ -67,7 +66,7 @@ export const sha3 = (data: Bytes): string | undefined => {
 	let updatedData: Uint8Array;
 
 	if (typeof data === 'string') {
-		if (data.startsWith('0x')) {
+		if (data.startsWith('0x') && isHexStrict(data)) {
 			updatedData = hexToBytes(data);
 		} else {
 			updatedData = utf8ToBytes(data);
@@ -128,9 +127,11 @@ export const keccak256Wrapper = (
 ): string => {
 	let processedData;
 	if (typeof data === 'bigint' || typeof data === 'number') {
-		processedData = hexToBytes(numberToHex(data));
+		processedData = utf8ToBytes(data.toString());
 	} else if (Array.isArray(data)) {
 		processedData = new Uint8Array(data);
+	} else if (typeof data === 'string' && !isHexStrict(data)) {
+		processedData = utf8ToBytes(data);
 	} else {
 		processedData = bytesToBuffer(data as Bytes);
 	}

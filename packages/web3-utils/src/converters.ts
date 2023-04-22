@@ -165,6 +165,7 @@ export const toDecimal = hexToNumber;
 /**
  * Converts value to it's hex representation
  * @param value - Value to be converted
+ * @param hexstrict - Add padding to converted value if odd, to make it hexstrict
  * @returns - The hex representation of the input value
  *
  * @example
@@ -173,11 +174,16 @@ export const toDecimal = hexToNumber;
  * > "0xa"
  * ```
  */
-export const numberToHex = (value: Numbers): HexString => {
+export const numberToHex = (value: Numbers, hexstrict?: boolean): HexString => {
 	validator.validate(['int'], [value]);
 	// To avoid duplicate code and circular dependency we will
 	// use `numberToHex` implementation from `web3-validator`
-	return validatorUtils.numberToHex(value);
+	let updatedValue = validatorUtils.numberToHex(value);
+	if (hexstrict && updatedValue.length % 2 === 1) {
+		// To avoid duplicate a circular dependancy we will not be using the padLeft method
+		updatedValue = '0x0'.concat(updatedValue.slice(2));
+	}
+	return updatedValue;
 };
 /**
  * Converts value to it's hex representation @alias `numberToHex`
