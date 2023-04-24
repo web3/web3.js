@@ -43,6 +43,7 @@ import {
 	toHex,
 	toNumber,
 	utf8ToHex,
+	numberToHex,
 } from './converters';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 
@@ -127,7 +128,7 @@ export const keccak256Wrapper = (
 ): string => {
 	let processedData;
 	if (typeof data === 'bigint' || typeof data === 'number') {
-		processedData = utf8ToBytes(data.toString());
+		processedData = utf8ToBytes(numberToHex(data));
 	} else if (Array.isArray(data)) {
 		processedData = new Uint8Array(data);
 	} else if (typeof data === 'string' && !isHexStrict(data)) {
