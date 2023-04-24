@@ -362,7 +362,7 @@ export const recover = (
 /**
  * Get the ethereum Address from a private key
  *
- * @param privateKey - String or buffer of 32 bytes
+ * @param privateKey - String, Uint8Array or ArrayBuffer of 32 bytes
  * @param ignoreLength - if true, will not error check length
  * @returns The Ethereum address
  * @example
@@ -404,10 +404,8 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * '123',
  * {
  *   n: 8192,
- *	 iv: Buffer.from('bfb43120ae00e9de110f8325143a2709', 'hex'),
- *	 salt: Buffer.from(
- *		'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
- *		'hex',
+ *	 iv: web3.utils.hexToBytes('0xbfb43120ae00e9de110f8325143a2709'),
+ *	 salt: web3.utils.hexToBytes('0x210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd'),
  *	),
  * }).then(console.log)
  * > {

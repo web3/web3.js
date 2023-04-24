@@ -72,9 +72,9 @@ export const ethUnitMap = {
 
 export type EtherUnits = keyof typeof ethUnitMap;
 /**
- * Convert a value from bytes to Buffer
+ * Convert a value from bytes to Uint8Array
  * @param data - Data to be converted
- * @returns - The Buffer representation of the input data
+ * @returns - The Uint8Array representation of the input data
  *
  * @example
  * ```ts
