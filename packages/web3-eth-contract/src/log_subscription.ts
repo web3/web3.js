@@ -83,7 +83,8 @@ export class LogsSubscription extends Web3Subscription<
 		data: EventLog;
 		changed: EventLog & { removed: true };
 	},
-	{ address?: HexString; topics?: (Topic | Topic[])[]; abi: AbiEventFragment }
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	{ address?: HexString; topics?: (Topic | Topic[] | null)[]; abi: AbiEventFragment }
 > {
 	/**
 	 * Address of tye contract
@@ -93,7 +94,8 @@ export class LogsSubscription extends Web3Subscription<
 	/**
 	 * The list of topics subscribed
 	 */
-	public readonly topics?: (Topic | Topic[])[];
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	public readonly topics?: (Topic | Topic[] | null)[];
 
 	/**
 	 * The {@doclink glossary/json_interface | JSON Interface} of the event.
@@ -105,7 +107,8 @@ export class LogsSubscription extends Web3Subscription<
 	public constructor(
 		args: {
 			address?: HexString;
-			topics?: (Topic | Topic[])[];
+			// eslint-disable-next-line @typescript-eslint/ban-types
+			topics?: (Topic | Topic[] | null)[];
 			abi: AbiEventFragment & { signature: HexString };
 			jsonInterface: ContractAbiWithSignature;
 		},
