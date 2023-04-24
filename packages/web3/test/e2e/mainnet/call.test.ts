@@ -62,11 +62,11 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 				expect(result).toMatch(/0[xX][0-9a-fA-F]{64}/i);
 				break;
 			case 'BYTES_BUFFER':
-				// eslint-disable-next-line jest/no-conditional-expect
+				// eslint-disable-next-line jest/no-conditional-expect jest/no-conditional-expect eslint/no-unsafe-call @typescript-eslint/no-unsafe-call
 				expect(bufferToHex(result as unknown as Buffer)).toMatch(/0[xX][0-9a-fA-F]{64}/i);
 				break;
 			case 'BYTES_UINT8ARRAY':
-				// eslint-disable-next-line jest/no-conditional-expect
+				// eslint-disable-next-line jest/no-conditional-expect jest/no-conditional-expect eslint/no-unsafe-call @typescript-eslint/no-unsafe-call
 				expect(bufferToHex(result as unknown as Buffer)).toMatch(/0[xX][0-9a-fA-F]{64}/i);
 				break;
 			default:
