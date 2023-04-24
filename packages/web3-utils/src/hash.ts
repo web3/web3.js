@@ -43,7 +43,6 @@ import {
 	toHex,
 	toNumber,
 	utf8ToHex,
-	numberToHex,
 } from './converters';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 
