@@ -107,6 +107,15 @@ describe('web3-validator', () => {
 					expect(validator.validate([dataType], [data])).toBeUndefined();
 				},
 			);
+
+			it('should add id if empty', () => {
+				expect(
+					validator.validate(
+						[{ name: '', type: 'address' }],
+						['0x2df0879f1ee2b2b1f2448c64c089c29e3ad7ccc5'],
+					),
+				).toBeUndefined();
+			});
 		});
 		describe('validateJsonSchema', () => {
 			it.each(abiToJsonSchemaCases.slice(0, 5))('should pass for valid data', abi => {
