@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { CloseEvent } from 'ws';
+import { ProviderRpcError } from 'web3-types/src/web3_api_types';
 import WebSocketProvider from '../../src';
 
 import { createProxy } from '../fixtures/proxy';
@@ -23,10 +24,10 @@ import {
 	describeIf,
 	getSystemTestProviderUrl,
 	isBrowser,
+	waitForSocketConnect,
 	isWs,
 	waitForCloseSocketConnection,
 	waitForEvent,
-	waitForOpenSocketConnection,
 } from '../fixtures/system_test_utils';
 
 describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
@@ -51,7 +52,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 				delay: 5000,
 				maxAttempts: 5,
 			});
-			await waitForOpenSocketConnection(web3Provider);
+			await waitForSocketConnect(web3Provider);
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseSocketConnection(web3Provider);
 		});
@@ -63,7 +64,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			);
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual(reconnectionOptions);
-			await waitForOpenSocketConnection(web3Provider);
+			await waitForSocketConnect(web3Provider);
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseSocketConnection(web3Provider);
 		});
@@ -123,9 +124,12 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			// @ts-expect-error run protected method
 			web3Provider._addSocketListeners();
 			const errorEvent = new Promise(resolve => {
-				web3Provider.on('error', error => {
+				web3Provider.on('error', (error: unknown) => {
 					if (
-						error?.message?.startsWith('Maximum number of reconnect attempts reached')
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+						(error as ProviderRpcError)?.message?.startsWith(
+							'Maximum number of reconnect attempts reached',
+						)
 					) {
 						resolve(error);
 					}

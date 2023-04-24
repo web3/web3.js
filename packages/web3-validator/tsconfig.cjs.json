@@ -1,9 +1,1 @@
-{
-	"extends": "../../tsconfig.base.json",
-	"compilerOptions": {
-		"outDir": "./lib/commonjs",
-		"declaration": true,
-		"module": "commonjs"
-	},
-	"include": ["src/**/*"]
-}
+../../config/tsconfig.cjs.json

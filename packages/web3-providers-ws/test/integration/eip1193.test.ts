@@ -15,13 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	HexString,
-	ProviderConnectInfo,
-	ProviderRpcError,
-	Web3ProviderEventCallback,
-} from 'web3-types';
 import { hexToNumber } from 'web3-utils';
+import { HexString, ProviderConnectInfo, ProviderRpcError } from 'web3-types';
 import WebSocketProvider from '../../src/index';
 
 import {
@@ -49,19 +44,19 @@ describeIf(isWs)('WebSocketProvider - eip1193', () => {
 
 	describe('check events', () => {
 		it('should send connect event', async () => {
-			const { chainId } = await new Promise(resolve => {
-				socketProvider.on('connect', ((_error: unknown, data) => {
-					resolve(data as unknown as ProviderConnectInfo);
-				}) as Web3ProviderEventCallback<ProviderConnectInfo>);
+			const providerConnectInfo = await new Promise<ProviderConnectInfo>(resolve => {
+				socketProvider.on('connect', (data: ProviderConnectInfo) => {
+					resolve(data);
+				});
 			});
-			expect(hexToNumber(chainId)).toBeGreaterThan(0);
+			expect(hexToNumber(providerConnectInfo.chainId)).toBeGreaterThan(0);
 		});
 		it('should send disconnect event', async () => {
 			await waitForSocketConnect(socketProvider);
 			const disconnectPromise = new Promise<ProviderRpcError>(resolve => {
-				socketProvider.on('disconnect', ((error: ProviderRpcError) => {
+				socketProvider.on('disconnect', (error: ProviderRpcError) => {
 					resolve(error);
-				}) as Web3ProviderEventCallback<ProviderRpcError>);
+				});
 			});
 			socketProvider.disconnect(1000, 'Some extra data');
 
@@ -75,16 +70,16 @@ describeIf(isWs)('WebSocketProvider - eip1193', () => {
 			socketProvider._chainId = '0x1';
 			socketProvider.disconnect(1000);
 			await waitForSocketDisconnect(socketProvider);
-			const chainChangedPromise = new Promise<ProviderConnectInfo>(resolve => {
-				socketProvider.on('chainChanged', ((_error, data) => {
-					resolve(data as unknown as ProviderConnectInfo);
-				}) as Web3ProviderEventCallback<ProviderConnectInfo>);
+			const chainChangedPromise = new Promise<HexString>(resolve => {
+				socketProvider.on('chainChanged', (result: HexString) => {
+					resolve(result);
+				});
 			});
 			socketProvider.connect();
 			await waitForSocketConnect(socketProvider);
-			const changedData = await chainChangedPromise;
-			expect(changedData.chainId).not.toBe('0x1');
-			expect(hexToNumber(changedData.chainId)).toBeGreaterThan(0);
+			const chainId = await chainChangedPromise;
+			expect(chainId).not.toBe('0x1');
+			expect(hexToNumber(chainId)).toBeGreaterThan(0);
 		});
 		it('should send accountsChanged event', async () => {
 			await waitForSocketConnect(socketProvider);
@@ -93,16 +88,16 @@ describeIf(isWs)('WebSocketProvider - eip1193', () => {
 			socketProvider._accounts = ['1', '2'];
 			socketProvider.disconnect(1000);
 			await waitForSocketDisconnect(socketProvider);
-			const chainChangedPromise = new Promise<{ accounts: HexString[] }>(resolve => {
-				socketProvider.on('accountsChanged', ((_error, data) => {
-					resolve(data as unknown as { accounts: HexString[] });
-				}) as Web3ProviderEventCallback<{ accounts: HexString[] }>);
+			const chainChangedPromise = new Promise<HexString[]>(resolve => {
+				socketProvider.on('accountsChanged', (accounts: HexString[]) => {
+					resolve(accounts);
+				});
 			});
 			socketProvider.connect();
 			await waitForSocketConnect(socketProvider);
-			const changedData = await chainChangedPromise;
+			const accounts = await chainChangedPromise;
 
-			expect(JSON.stringify(changedData.accounts)).not.toBe(JSON.stringify(['1', '2']));
+			expect(JSON.stringify(accounts)).not.toBe(JSON.stringify(['1', '2']));
 		});
 	});
 });

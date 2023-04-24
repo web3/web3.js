@@ -71,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updated dependencies (#5912)
 
-## [Unreleased]
+## [4.0.1-rc.1]
 
 ### Added
 
@@ -81,3 +81,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   Bug fix of `checkNetwork` in ENS (#5988)
+
+## [Unreleased]

@@ -22,11 +22,9 @@ import {
 	AbiEventFragment,
 	AbiFunctionFragment,
 	LogsInput,
-	BlockNumberOrTag,
 	Filter,
 	HexString,
 	Topic,
-	Numbers,
 	FMT_NUMBER,
 	FMT_BYTES,
 	DataFormat,
@@ -51,27 +49,15 @@ import { Web3ContractError } from 'web3-errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractOptions, ContractAbiWithSignature, EventLog } from './types';
 
+type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 export const encodeEventABI = (
 	{ address }: ContractOptions,
 	event: AbiEventFragment & { signature: string },
-	options?: {
-		fromBlock?: BlockNumberOrTag;
-		toBlock?: BlockNumberOrTag;
-		filter?: Filter;
-		// Using "null" type intentionally to match specifications
-		// eslint-disable-next-line @typescript-eslint/ban-types
-		topics?: (null | Topic | Topic[])[];
-	},
+	options?: Filter,
 ) => {
-	const opts: {
-		filter: Filter;
-		fromBlock?: Numbers;
-		toBlock?: Numbers;
-		topics?: (Topic | Topic[])[];
-		address?: HexString;
-	} = {
-		filter: options?.filter ?? {},
-	};
+	const topics = options?.topics;
+	const filter = options?.filter ?? {};
+	const opts: Writeable<Filter> = {};
 
 	if (!isNullish(options?.fromBlock)) {
 		opts.fromBlock = format(blockSchema.properties.number, options?.fromBlock, {
@@ -86,11 +72,10 @@ export const encodeEventABI = (
 		});
 	}
 
-	if (options?.topics && Array.isArray(options.topics)) {
-		opts.topics = [...options.topics].filter(Boolean) as Topic[];
+	if (topics && Array.isArray(topics)) {
+		opts.topics = [...topics] as Topic[];
 	} else {
 		opts.topics = [];
-
 		// add event signature
 		if (event && !event.anonymous && event.name !== 'ALLEVENTS') {
 			opts.topics.push(
@@ -105,19 +90,20 @@ export const encodeEventABI = (
 					continue;
 				}
 
-				const value = opts.filter[input.name as keyof Filter];
-
+				const value = filter[input.name];
 				if (!value) {
+					// eslint-disable-next-line no-null/no-null
+					opts.topics.push(null);
 					continue;
 				}
 
 				// TODO: https://github.com/ethereum/web3.js/issues/344
 				// TODO: deal properly with components
 				if (Array.isArray(value)) {
-					opts.topics.push(...value.map(v => encodeParameter(input.type, v)));
+					opts.topics.push(value.map(v => encodeParameter(input.type, v)));
+				} else {
+					opts.topics.push(encodeParameter(input.type, value));
 				}
-
-				opts.topics.push(encodeParameter(input.type, value));
 			}
 		}
 	}
