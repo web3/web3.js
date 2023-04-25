@@ -285,7 +285,7 @@ var Contract = function Contract(jsonInterface, address, options) {
             _this.options.blockHeaderTimeout = val;
         },
         enumerable: true
-    });    
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -415,46 +415,44 @@ Contract.prototype._encodeEventABI = function (event, options) {
         result[f] = formatters.inputBlockNumberFormatter(options[f]);
     });
 
-    // use given topics
-    if(Array.isArray(options.topics)) {
-        result.topics = options.topics;
 
-    // create topics based on filter
+    let topics = []
+    if (options.topics && Array.isArray(options.topics)) {
+        topics = [...options.topics];
     } else {
-
-        result.topics = [];
-
+        topics = [];
         // add event signature
         if (event && !event.anonymous && event.name !== 'ALLEVENTS') {
-            result.topics.push(event.signature);
+            topics.push(
+                event.signature || abi.encodeEventSignature(utils.jsonInterfaceMethodToString(event)),
+            );
         }
 
         // add event topics (indexed arguments)
-        if (event.name !== 'ALLEVENTS') {
-            var indexedTopics = event.inputs.filter(function (i) {
-                return i.indexed === true;
-            }).map(function (i) {
-                var value = filter[i.name];
-                if (!value) {
-                    return null;
+        if (event.name !== 'ALLEVENTS' && event.inputs) {
+            for (const input of event.inputs) {
+                if (!input.indexed) {
+                    continue;
                 }
 
-                // TODO: https://github.com/ethereum/web3.js/issues/344
-                // TODO: deal properly with components
+                const value = filter[input.name];
+                if (!value) {
+                    // eslint-disable-next-line no-null/no-null
+                    topics.push(null);
+                    continue;
+                }
 
                 if (Array.isArray(value)) {
-                    return value.map(function (v) {
-                        return abi.encodeParameter(i.type, v);
-                    });
+                    topics.push(value.map(v => abi.encodeParameter(input.type, v)));
+                } else {
+                    topics.push(abi.encodeParameter(input.type, value));
                 }
-                return abi.encodeParameter(i.type, value);
-            });
-
-            result.topics = result.topics.concat(indexedTopics);
+            }
         }
+    }
 
-        if(!result.topics.length)
-            delete result.topics;
+    if(topics.length) {
+        result.topics = topics
     }
 
     if(this.options.address) {
@@ -682,6 +680,7 @@ Contract.prototype._generateEventOptions = function() {
     return {
         params: this._encodeEventABI(event, options),
         event: event,
+        filter: options.filter || {},
         callback: callback
     };
 };
@@ -784,6 +783,24 @@ Contract.prototype._on = function(){
     return subscription;
 };
 
+const filterAllEventsResults = (subOptions, data) => {
+    if (subOptions.event && subOptions.event.name === 'ALLEVENTS' && Array.isArray(data)) {
+        const filter = subOptions.filter || {};
+        const filterKeys = Object.keys(filter);
+        return filterKeys.length > 0
+            ? data.filter(log => typeof log === 'string' ? true : filterKeys.every((k) => Array.isArray(filter[k]) ? (filter[k]).some(
+                    (v) =>
+                        String(log.returnValues[k]).toUpperCase() ===
+                        String(v).toUpperCase(),
+                ) : (
+                    String(log.returnValues[k]).toUpperCase() ===
+                    String(filter[k]).toUpperCase()
+                )),
+            )
+            : data;
+    }
+    return data;
+};
 /**
  * Get past events from contracts
  *
@@ -808,7 +825,11 @@ Contract.prototype.getPastEvents = function(){
 
     getPastLogs = null;
 
-    return call(subOptions.params, subOptions.callback);
+    return call(subOptions.params, (err, data)=>{
+        if(typeof subOptions.callback === 'function'){
+            subOptions.callback(err, filterAllEventsResults(subOptions, data))
+        }
+    }).then(filterAllEventsResults.bind(this, subOptions));
 };
 
 
