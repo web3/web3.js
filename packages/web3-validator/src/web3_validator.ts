@@ -104,13 +104,12 @@ export class Web3Validator {
 
 		if (!this._validator.getSchema(schemaKey)) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			if (jsonSchema?.items && jsonSchema.items.length > 0) {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-plusplus
-				for (let i = 0; i < jsonSchema.items.length; i++) {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-					if (jsonSchema?.items[i]?.$id === '') {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-						jsonSchema.items[i].$id = `${schemaKey}/items/${i}`;
+			const jsonSchemaItems = jsonSchema?.items as { $id: string }[];
+			if (jsonSchemaItems && jsonSchemaItems.length > 0) {
+				// eslint-disable-next-line no-plusplus
+				for (let i = 0; i < jsonSchemaItems.length; i++) {
+					if (jsonSchemaItems[i]?.$id === '') {
+						jsonSchemaItems[i].$id = `${schemaKey}/items/${i}`;
 					}
 				}
 			}
