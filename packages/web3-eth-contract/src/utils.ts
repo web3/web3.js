@@ -22,6 +22,7 @@ import {
 	TransactionWithSenderAPI,
 	TransactionCall,
 	HexString,
+	Address,
 	NonPayableCallOptions,
 	PayableCallOptions,
 	ContractInitOptions,
@@ -38,7 +39,11 @@ export const getSendTxParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: PayableCallOptions | NonPayableCallOptions;
+	options?: (PayableCallOptions | NonPayableCallOptions) & {
+		input?: HexString;
+		data?: HexString;
+		to?: Address;
+	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
 	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input;
@@ -80,7 +85,7 @@ export const getEthTxCallParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: PayableCallOptions | NonPayableCallOptions;
+	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address };
 	contractOptions: ContractOptions;
 }): TransactionCall => {
 	if (!options?.to && !contractOptions.address) {
@@ -162,7 +167,7 @@ export const getCreateAccessListParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: PayableCallOptions | NonPayableCallOptions;
+	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address };
 	contractOptions: ContractOptions;
 }): TransactionForAccessList => {
 	if (!options?.to && !contractOptions.address) {

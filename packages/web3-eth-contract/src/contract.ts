@@ -503,7 +503,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * ```ts
 	 * myContract.deploy({
-	 *   input: '0x12345...',
+	 *   input: '0x12345...', // data keyword can be used, too. If input is used, data will be ignored.
 	 *   arguments: [123, 'My String']
 	 * })
 	 * .send({
@@ -604,10 +604,6 @@ export class Contract<Abi extends ContractAbi>
 			> => {
 				const modifiedOptions = { ...options };
 
-				// Remove to address
-				// modifiedOptions.to = '0x0000000000000000000000000000000000000000';
-				delete modifiedOptions.to;
-
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return this._contractMethodDeploySend(
 					abi as AbiFunctionFragment,
@@ -621,9 +617,6 @@ export class Contract<Abi extends ContractAbi>
 				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
-
-				// Remove to address
-				delete modifiedOptions.to;
 
 				return this._contractMethodEstimateGas({
 					abi: abi as AbiFunctionFragment,
