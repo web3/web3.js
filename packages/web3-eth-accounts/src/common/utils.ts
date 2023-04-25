@@ -317,7 +317,7 @@ export const intToUint8Array = function (i: number) {
 
 /**
  * Attempts to turn a value into a `Uint8Array`.
- * Inputs supported: `Buffer`, `Uint8Array` `String` (hex-prefixed), `Number`, null/undefined, `BigInt` and other objects
+ * Inputs supported: `Uint8Array` `String` (hex-prefixed), `Number`, null/undefined, `BigInt` and other objects
  * with a `toArray()` or `toUint8Array()` method.
  * @param v the value
  */

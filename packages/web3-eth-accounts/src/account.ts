@@ -56,7 +56,7 @@ import {
 	uuidV4,
 } from 'web3-utils';
 
-import { isBuffer, isHexStrict, isNullish, isString, validator } from 'web3-validator';
+import { isHexStrict, isNullish, isString, validator } from 'web3-validator';
 import { keyStoreSchema } from './schemas';
 import { TransactionFactory } from './tx/transactionFactory';
 import type {
@@ -79,7 +79,7 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 	}
 
 	try {
-		privateKeyBuffer = isBuffer(data) ? (data as Uint8Array) : bytesToBuffer(data);
+		privateKeyBuffer = data instanceof Uint8Array ? data : bytesToBuffer(data);
 	} catch {
 		throw new InvalidPrivateKeyError();
 	}
@@ -474,7 +474,7 @@ export const encrypt = async (
 		salt = randomBytes(32);
 	}
 
-	if (!(isString(password) || isBuffer(password))) {
+	if (!(isString(password) || password instanceof Uint8Array)) {
 		throw new InvalidPasswordError();
 	}
 

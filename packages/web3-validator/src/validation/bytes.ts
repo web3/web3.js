@@ -20,9 +20,9 @@ import { hexToUint8Array, parseBaseType } from '../utils';
 import { isHexStrict } from './string';
 
 /**
- * checks input if typeof data is valid buffer input
+ * checks input if typeof data is valid Uint8Array input
  */
-export const isBuffer = (data: ValidInputTypes) => data instanceof Uint8Array;
+export const isUint8Array = (data: ValidInputTypes) => data instanceof Uint8Array;
 
 export const isBytes = (
 	value: ValidInputTypes | Uint8Array | number[],

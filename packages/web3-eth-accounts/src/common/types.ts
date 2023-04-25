@@ -136,7 +136,7 @@ export interface CustomCommonOpts extends BaseOpts {
 
 export interface GethConfigOpts extends BaseOpts {
 	chain?: string;
-	genesisHash?: Buffer;
+	genesisHash?: Uint8Array;
 	mergeForkIdPostMerge?: boolean;
 }
 
@@ -148,7 +148,7 @@ export type PrefixedHexString = string;
 /*
  * A type that represents an input that can be converted to a Buffer.
  */
-export type Uint8ArrayLike = Buffer | Uint8Array | number[] | number | bigint | PrefixedHexString;
+export type Uint8ArrayLike = Uint8Array | number[] | number | bigint | PrefixedHexString;
 
 /*
  * A type that represents an input that can be converted to a BigInt.
