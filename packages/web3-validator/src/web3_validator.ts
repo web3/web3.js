@@ -101,7 +101,19 @@ export class Web3Validator {
 		}
 
 		const schemaKey = toHex(blake2b(utf8ToBytes(JSON.stringify(jsonSchema))));
+
 		if (!this._validator.getSchema(schemaKey)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+			if (jsonSchema?.items && jsonSchema.items.length > 0) {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-plusplus
+				for (let i = 0; i < jsonSchema.items.length; i++) {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+					if (jsonSchema?.items[i]?.$id === '') {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+						jsonSchema.items[i].$id = `${schemaKey}/items/${i}`;
+					}
+				}
+			}
 			this._validator.addSchema(jsonSchema, schemaKey);
 		}
 		if (!this._validator.validate(schemaKey, data)) {
