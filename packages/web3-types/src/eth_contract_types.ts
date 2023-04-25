@@ -49,15 +49,11 @@ export interface ContractInitOptions {
 
 export interface NonPayableCallOptions {
 	nonce?: HexString;
-	chainId?: HexString;
 	/**
 	 * The address the call `transaction` should be made from. For calls the `from` property is optional however it is
 	 * highly recommended to explicitly set it or it may default to address(0) depending on your node or provider.
 	 */
 	from?: Address;
-	to?: Address;
-	data?: HexString;
-	input?: HexString;
 	/**
 	 * The maximum gas provided for this call “transaction” (gas limit)
 	 */
