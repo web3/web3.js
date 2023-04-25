@@ -394,7 +394,7 @@ export function hexToUint8Array(hex: string): Uint8Array {
 		value = hex;
 	}
 	if (value.length % 2 !== 0) {
-		throw new InvalidBytesError('hex string has odd length');
+		throw new InvalidBytesError(`hex string has odd length: ${hex}`);
 	}
 	const bytes = new Uint8Array(Math.ceil(value.length / 2));
 	for (let i = 0; i < bytes.length; i += 1) {
