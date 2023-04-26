@@ -21,6 +21,7 @@ import {
 	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
 	InvalidResponseError,
+	Eip838ExecutionError,
 } from 'web3-errors';
 import {
 	FormatType,
@@ -95,4 +96,5 @@ export interface RevertReasonWithCustomError extends RevertReason {
 	customErrorName: string;
 	customErrorDecodedSignature: string;
 	customErrorArguments: Record<string, unknown>;
+	innerError: Eip838ExecutionError;
 }
