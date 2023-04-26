@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Bytes } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 import { Chain, Common, Hardfork, toUint8Array } from '../../../src/common';
 import { Address } from '../../../src/tx/address';
 
@@ -173,7 +174,7 @@ test('[Invalid Array Input values]', () => {
 		for (const txType of txTypes) {
 			let tx = TransactionFactory.fromTxData({ type: txType });
 			if (signed) {
-				tx = tx.sign(Buffer.from('42'.repeat(32), 'hex'));
+				tx = tx.sign(new Uint8Array(hexToBytes('42'.repeat(32))));
 			}
 			const rawValues = tx.raw();
 			for (let x = 0; x < rawValues.length; x += 1) {
@@ -245,13 +246,13 @@ test('[Invalid Access Lists]', () => {
 					});
 					if (signed) {
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-						tx = tx.sign(Buffer.from('42'.repeat(32), 'hex'));
+						tx = tx.sign(new Uint8Array(hexToBytes('42'.repeat(32))));
 					}
 				} catch (e: any) {
 					tx = TransactionFactory.fromTxData({ type: txType });
 					if (signed) {
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-						tx = tx.sign(Buffer.from('42'.repeat(32), 'hex'));
+						tx = tx.sign(new Uint8Array(hexToBytes('42'.repeat(32))));
 					}
 				}
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call

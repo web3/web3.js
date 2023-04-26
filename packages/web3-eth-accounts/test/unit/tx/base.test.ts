@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Point } from 'ethereum-cryptography/secp256k1';
-import { uint8ArrayEquals } from 'web3-utils';
+import { bytesToUint8Array, hexToBytes, uint8ArrayEquals } from 'web3-utils';
 import {
 	AccessListEIP2930Transaction,
 	Capability,
@@ -31,8 +31,8 @@ import eip2930Fixtures from '../../fixtures/json/eip2930txs.json';
 
 import legacyFixtures from '../../fixtures/json/txs.json';
 
-const privateToPublic = function (privateKey: Buffer): Buffer {
-	return Buffer.from(Point.fromPrivateKey(privateKey).toRawBytes(false).slice(1));
+const privateToPublic = function (privateKey: Uint8Array): Uint8Array {
+	return new Uint8Array(Point.fromPrivateKey(privateKey).toRawBytes(false).slice(1));
 };
 const common = new Common({
 	chain: 5,
@@ -60,7 +60,7 @@ describe('[BaseTransaction]', () => {
 		eip1559Txs.push(FeeMarketEIP1559Transaction.fromTxData(tx.data, { common }));
 	}
 
-	const zero = Buffer.alloc(0);
+	const zero = new Uint8Array(0);
 	const txTypes = [
 		{
 			class: Transaction,
@@ -81,7 +81,7 @@ describe('[BaseTransaction]', () => {
 			class: AccessListEIP2930Transaction,
 			name: 'AccessListEIP2930Transaction',
 			type: 1,
-			values: [Buffer.from([1])].concat(Array(7).fill(zero)),
+			values: [new Uint8Array([1])].concat(Array(7).fill(zero)),
 			txs: eip2930Txs,
 			fixtures: eip2930Fixtures,
 			activeCapabilities: [Capability.EIP2718TypedTransaction, Capability.EIP2930AccessLists],
@@ -91,7 +91,7 @@ describe('[BaseTransaction]', () => {
 			class: FeeMarketEIP1559Transaction,
 			name: 'FeeMarketEIP1559Transaction',
 			type: 2,
-			values: [Buffer.from([1])].concat(Array(8).fill(zero)),
+			values: [new Uint8Array([1])].concat(Array(8).fill(zero)),
 			txs: eip1559Txs,
 			fixtures: eip1559Fixtures,
 			activeCapabilities: [
@@ -225,10 +225,10 @@ describe('[BaseTransaction]', () => {
 				const { privateKey } = txType.fixtures[i];
 				if (privateKey !== undefined) {
 					// eslint-disable-next-line jest/no-conditional-expect
-					expect(tx.sign(Buffer.from(privateKey, 'hex'))).toBeTruthy();
+					expect(tx.sign(new Uint8Array(hexToBytes(privateKey)))).toBeTruthy();
 				}
 
-				expect(() => tx.sign(Buffer.from('invalid'))).toThrow();
+				expect(() => tx.sign(new Uint8Array(bytesToUint8Array('invalid')))).toThrow();
 			}
 		}
 	});
@@ -262,7 +262,7 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				const signedTx = tx.sign(Buffer.from(privateKey, 'hex'));
+				const signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
 				expect(signedTx.getSenderAddress().toString()).toBe(`0x${sendersAddress}`);
 			}
 		}
@@ -275,9 +275,9 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				const signedTx = tx.sign(Buffer.from(privateKey, 'hex'));
+				const signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
 				const txPubKey = signedTx.getSenderPublicKey();
-				const pubKeyFromPriv = privateToPublic(Buffer.from(privateKey, 'hex'));
+				const pubKeyFromPriv = privateToPublic(new Uint8Array(hexToBytes(privateKey)));
 				expect(uint8ArrayEquals(txPubKey, pubKeyFromPriv)).toBe(true);
 			}
 		}
@@ -292,7 +292,7 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				let signedTx = tx.sign(Buffer.from(privateKey, 'hex'));
+				let signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
 				signedTx = JSON.parse(JSON.stringify(signedTx)); // deep clone
 				(signedTx as any).s = SECP256K1_ORDER + BigInt(1);
 				expect(() => {
@@ -309,14 +309,14 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				const signedTx = tx.sign(Buffer.from(privateKey, 'hex'));
+				const signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
 				expect(signedTx.verifySignature()).toBeTruthy();
 			}
 		}
 	});
 
 	it('initialization with defaults', () => {
-		const bufferZero = toUint8Array('0x');
+		const uInt8ArrayZero = toUint8Array('0x');
 		const tx = Transaction.fromTxData({
 			nonce: '',
 			gasLimit: '',
@@ -332,11 +332,11 @@ describe('[BaseTransaction]', () => {
 		expect(tx.r).toBeUndefined();
 		expect(tx.s).toBeUndefined();
 		expect(tx.to).toBeUndefined();
-		expect(tx.value).toBe(uint8ArrayToBigInt(bufferZero));
-		expect(tx.data).toEqual(bufferZero);
-		expect(tx.gasPrice).toBe(uint8ArrayToBigInt(bufferZero));
-		expect(tx.gasLimit).toBe(uint8ArrayToBigInt(bufferZero));
-		expect(tx.nonce).toBe(uint8ArrayToBigInt(bufferZero));
+		expect(tx.value).toBe(uint8ArrayToBigInt(uInt8ArrayZero));
+		expect(tx.data).toEqual(uInt8ArrayZero);
+		expect(tx.gasPrice).toBe(uint8ArrayToBigInt(uInt8ArrayZero));
+		expect(tx.gasLimit).toBe(uint8ArrayToBigInt(uInt8ArrayZero));
+		expect(tx.nonce).toBe(uint8ArrayToBigInt(uInt8ArrayZero));
 	});
 
 	it('_validateCannotExceedMaxInteger()', () => {

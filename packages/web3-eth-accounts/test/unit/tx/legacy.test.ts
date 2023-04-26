@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Buffer } from 'buffer';
 import { RLP } from '@ethereumjs/rlp';
 import { bytesToHex, hexToBytes, uint8ArrayEquals } from 'web3-utils';
 import {
@@ -118,7 +117,7 @@ describe('[Transaction]', () => {
 		let common = new Common({ chain: Chain.Goerli, hardfork: Hardfork.Petersburg });
 		let tx = Transaction.fromTxData({}, { common });
 		expect(tx.common.chainId()).toEqual(BigInt(5));
-		const privKey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const privKey = new Uint8Array(hexToBytes(txFixtures[0].privateKey));
 		tx = tx.sign(privKey);
 		const serialized = tx.serialize();
 		common = new Common({ chain: Chain.Mainnet, hardfork: Hardfork.Petersburg });
@@ -259,9 +258,8 @@ describe('[Transaction]', () => {
 			'0x0de0b6b3a7640000',
 			'0x',
 		];
-		const privateKey = Buffer.from(
-			'4646464646464646464646464646464646464646464646464646464646464646',
-			'hex',
+		const privateKey = new Uint8Array(
+			hexToBytes('4646464646464646464646464646464646464646464646464646464646464646'),
 		);
 		const pt = Transaction.fromValuesArray(txRaw.map(toUint8Array));
 
@@ -287,7 +285,7 @@ describe('[Transaction]', () => {
 				common,
 			});
 
-			const privKey = Buffer.from(txData.privateKey, 'hex');
+			const privKey = new Uint8Array(hexToBytes(txData.privateKey));
 			const txSigned = tx.sign(privKey);
 
 			expect(txSigned.getSenderAddress().toString()).toBe(`0x${txData.sendersAddress}`);
@@ -303,9 +301,8 @@ describe('[Transaction]', () => {
 			'0x0de0b6b3a7640000',
 			'0x',
 		];
-		const privateKey = Buffer.from(
-			'DE3128752F183E8930D7F00A2AAA302DCB5E700B2CBA2D8CA5795660F07DEFD5',
-			'hex',
+		const privateKey = new Uint8Array(
+			hexToBytes('DE3128752F183E8930D7F00A2AAA302DCB5E700B2CBA2D8CA5795660F07DEFD5'),
 		);
 		const common = new Common({ chain: 1 });
 		const tx = Transaction.fromValuesArray(txRaw.map(toUint8Array), { common });
@@ -325,9 +322,8 @@ describe('[Transaction]', () => {
 			value: '0x0',
 		};
 
-		const privateKey = Buffer.from(
-			'4646464646464646464646464646464646464646464646464646464646464646',
-			'hex',
+		const privateKey = new Uint8Array(
+			hexToBytes('4646464646464646464646464646464646464646464646464646464646464646'),
 		);
 
 		const common = new Common({
@@ -396,7 +392,7 @@ describe('[Transaction]', () => {
 		let tx = Transaction.fromTxData({}, { common });
 		expect(tx.common.chainId()).toEqual(BigInt(5));
 
-		const privKey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const privKey = new Uint8Array(hexToBytes(txFixtures[0].privateKey));
 		tx = tx.sign(privKey);
 
 		const serialized = tx.serialize();
@@ -409,14 +405,14 @@ describe('[Transaction]', () => {
 	it('freeze property propagates from unsigned tx to signed tx', () => {
 		const tx = Transaction.fromTxData({}, { freeze: false });
 		expect(Object.isFrozen(tx)).toBe(false);
-		const privKey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const privKey = new Uint8Array(hexToBytes(txFixtures[0].privateKey));
 		const signedTxn = tx.sign(privKey);
 		expect(Object.isFrozen(signedTxn)).toBe(false);
 	});
 
 	it('common propagates from the common of tx, not the common in TxOptions', () => {
 		const common = new Common({ chain: Chain.Goerli, hardfork: Hardfork.London });
-		const pkey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const pkey = new Uint8Array(hexToBytes(txFixtures[0].privateKey));
 		const txn = Transaction.fromTxData({}, { common, freeze: false });
 		const newCommon = new Common({
 			chain: Chain.Goerli,
@@ -445,9 +441,8 @@ describe('[Transaction]', () => {
 			to: '0xd9024df085d09398ec76fbed18cac0e1149f50dc',
 			value: '0x0',
 		};
-		const privateKey = Buffer.from(
-			'4646464646464646464646464646464646464646464646464646464646464646',
-			'hex',
+		const privateKey = new Uint8Array(
+			hexToBytes('4646464646464646464646464646464646464646464646464646464646464646'),
 		);
 		tx = Transaction.fromTxData(txData);
 		expect(tx.isSigned()).toBe(false);
