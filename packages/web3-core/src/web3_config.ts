@@ -122,11 +122,7 @@ export abstract class Web3Config
 	 * Will set the handleRevert
 	 */
 	public set handleRevert(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'handleRevert',
-			oldValue: this.config.handleRevert,
-			newValue: val,
-		});
+		this._triggerConfigChange('handleRevert', val);
 		this.config.handleRevert = val;
 	}
 
@@ -144,11 +140,7 @@ export abstract class Web3Config
 	 * Will set the default account.
 	 */
 	public set defaultAccount(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultAccount',
-			oldValue: this.config.defaultAccount,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultAccount', val);
 		this.config.defaultAccount = val;
 	}
 
@@ -176,11 +168,7 @@ export abstract class Web3Config
 	 * - `"safe"` - String: (For POS networks) The safe head block is one which under normal network conditions, is expected to be included in the canonical chain. Under normal network conditions the safe head and the actual tip of the chain will be equivalent (with safe head trailing only by a few seconds). Safe heads will be less likely to be reorged than the proof of work network`s latest blocks.
 	 */
 	public set defaultBlock(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultBlock',
-			oldValue: this.config.defaultBlock,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultBlock', val);
 		this.config.defaultBlock = val;
 	}
 
@@ -197,11 +185,7 @@ export abstract class Web3Config
 	 * Will set the transactionSendTimeout.
 	 */
 	public set transactionSendTimeout(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionSendTimeout',
-			oldValue: this.config.transactionSendTimeout,
-			newValue: val,
-		});
+		this._triggerConfigChange('transactionSendTimeout', val);
 		this.config.transactionSendTimeout = val;
 	}
 
@@ -217,11 +201,7 @@ export abstract class Web3Config
 	 * Will set the transactionBlockTimeout.
 	 */
 	public set transactionBlockTimeout(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionBlockTimeout',
-			oldValue: this.config.transactionBlockTimeout,
-			newValue: val,
-		});
+		this._triggerConfigChange('transactionBlockTimeout', val);
 		this.config.transactionBlockTimeout = val;
 	}
 
@@ -237,12 +217,7 @@ export abstract class Web3Config
 	 * Will set the transactionConfirmationBlocks.
 	 */
 	public set transactionConfirmationBlocks(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionConfirmationBlocks',
-			oldValue: this.config.transactionConfirmationBlocks,
-			newValue: val,
-		});
-
+        this._triggerConfigChange('transactionConfirmationBlocks', val);
 		this.config.transactionConfirmationBlocks = val;
 	}
 
@@ -258,12 +233,7 @@ export abstract class Web3Config
 	 * Will set the transactionPollingInterval.
 	 */
 	public set transactionPollingInterval(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionPollingInterval',
-			oldValue: this.config.transactionPollingInterval,
-			newValue: val,
-		});
-
+        this._triggerConfigChange('transactionPollingInterval', val);
 		this.config.transactionPollingInterval = val;
 
 		this.transactionReceiptPollingInterval = val;
@@ -298,12 +268,7 @@ export abstract class Web3Config
 	 * Will set the transactionReceiptPollingInterval
 	 */
 	public set transactionReceiptPollingInterval(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionReceiptPollingInterval',
-			oldValue: this.config.transactionReceiptPollingInterval,
-			newValue: val,
-		});
-
+        this._triggerConfigChange('transactionReceiptPollingInterval', val);
 		this.config.transactionReceiptPollingInterval = val;
 	}
 
@@ -312,12 +277,7 @@ export abstract class Web3Config
 	}
 
 	public set transactionConfirmationPollingInterval(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionConfirmationPollingInterval',
-			oldValue: this.config.transactionConfirmationPollingInterval,
-			newValue: val,
-		});
-
+        this._triggerConfigChange('transactionConfirmationPollingInterval', val);
 		this.config.transactionConfirmationPollingInterval = val;
 	}
 
