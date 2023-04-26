@@ -26,7 +26,7 @@ import {
 } from 'web3-eth-accounts';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { bytesToHex } from 'web3-utils';
+import { bytesToHex, hexToBytes } from 'web3-utils';
 import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
 import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 
@@ -71,7 +71,7 @@ describe('prepareTransactionForSigning', () => {
 
 				// should sign transaction
 				const signedTransaction = ethereumjsTx.sign(
-					Buffer.from(expectedPrivateKey.substring(2), 'hex'),
+					hexToBytes(expectedPrivateKey.substring(2)),
 				);
 
 				const senderAddress = signedTransaction.getSenderAddress().toString();
