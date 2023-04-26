@@ -126,10 +126,10 @@ describe('formatter', () => {
 					return expectTypeOf<T>().toBe<HexString>();
 				});
 
-				typecheck('should format for FMT_BYTES.BUFFER', () => {
+				typecheck('should format for FMT_BYTES.UINT8ARRAY', () => {
 					type T = FormatType<
 						Bytes,
-						{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.BUFFER }
+						{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 					>;
 
 					return expectTypeOf<T>().toBe<Uint8Array>();
@@ -204,10 +204,10 @@ describe('formatter', () => {
 					return expectTypeOf<T>().toBe<HexString[]>();
 				});
 
-				typecheck('should format for FMT_BYTES.BUFFER', () => {
+				typecheck('should format for FMT_BYTES.UINT8ARRAY', () => {
 					type T = FormatType<
 						Bytes[],
-						{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.BUFFER }
+						{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 					>;
 
 					return expectTypeOf<T>().toBe<Uint8Array[]>();
@@ -331,7 +331,7 @@ describe('formatter', () => {
 			typecheck('should format block for number as "bigint" and bytes as "buffer"', () => {
 				type T = FormatType<
 					TestBlockType,
-					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.BUFFER }
+					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 				>;
 
 				return expectTypeOf<T>().toBe<{
@@ -456,15 +456,6 @@ describe('formatter', () => {
 			});
 
 			describe('bytes', () => {
-				it('should format for FMT_BYTES.UINT8ARRAY', () => {
-					expect(
-						format({ eth: 'bytes' }, '0x100bca', {
-							number: FMT_NUMBER.STR,
-							bytes: FMT_BYTES.UINT8ARRAY,
-						}),
-					).toEqual(new Uint8Array([16, 11, 202]));
-				});
-
 				it('should format for FMT_BYTES.HEX', () => {
 					expect(
 						format({ eth: 'bytes' }, Buffer.from('100bca', 'hex'), {
@@ -474,11 +465,11 @@ describe('formatter', () => {
 					).toBe('0x100bca');
 				});
 
-				it('should format for FMT_BYTES.BUFFER', () => {
+				it('should format for FMT_BYTES.UINT8ARRAY', () => {
 					expect(
 						format({ eth: 'bytes' }, '0x100bca', {
 							number: FMT_NUMBER.STR,
-							bytes: FMT_BYTES.BUFFER,
+							bytes: FMT_BYTES.UINT8ARRAY,
 						}),
 					).toEqual(new Uint8Array([16, 11, 202]));
 				});
@@ -735,7 +726,7 @@ describe('formatter', () => {
 					expect(
 						convertScalarValue(100, 'int', {
 							number: FMT_NUMBER.BIGINT,
-							bytes: FMT_BYTES.BUFFER,
+							bytes: FMT_BYTES.UINT8ARRAY,
 						}),
 					).toBe(BigInt(100));
 				});

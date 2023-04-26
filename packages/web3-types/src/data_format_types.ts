@@ -33,13 +33,11 @@ export type NumberTypes = {
 
 export enum FMT_BYTES {
 	HEX = 'BYTES_HEX',
-	BUFFER = 'BYTES_BUFFER',
 	UINT8ARRAY = 'BYTES_UINT8ARRAY',
 }
 
 export type ByteTypes = {
 	[FMT_BYTES.HEX]: HexString;
-	[FMT_BYTES.BUFFER]: Uint8Array;
 	[FMT_BYTES.UINT8ARRAY]: Uint8Array;
 };
 

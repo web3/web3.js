@@ -112,7 +112,7 @@ const type0x2SignedTransactionInfo = {
 	tx: signedType0x2Transaction as TransactionSignedAPI,
 };
 
-export const returnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+export const returnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 
 /**
  * Array consists of:

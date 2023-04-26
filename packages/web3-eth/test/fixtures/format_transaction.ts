@@ -52,7 +52,7 @@ export const bytesAsHexStringTransaction: FormatType<
 
 export const bytesAsBufferTransaction: FormatType<
 	Transaction,
-	{ number: typeof DEFAULT_RETURN_FORMAT.number; bytes: FMT_BYTES.BUFFER }
+	{ number: typeof DEFAULT_RETURN_FORMAT.number; bytes: FMT_BYTES.UINT8ARRAY }
 > = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',

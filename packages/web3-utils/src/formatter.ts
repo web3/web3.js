@@ -112,8 +112,6 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 			switch (format.bytes) {
 				case FMT_BYTES.HEX:
 					return bytesToHex(bytesToUint8Array(value as Bytes));
-				case FMT_BYTES.BUFFER:
-					return bytesToUint8Array(value as Bytes);
 				case FMT_BYTES.UINT8ARRAY:
 					return new Uint8Array(bytesToUint8Array(value as Bytes));
 				default:

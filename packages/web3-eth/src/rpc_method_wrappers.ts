@@ -273,7 +273,7 @@ export async function getBalance<ReturnFormat extends DataFormat>(
  *      "0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234",
  *      0,
  *      undefined,
- *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.BUFFER }
+ *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.UINT8ARRAY }
  * ).then(console.log);
  * > <Buffer 03 34 56 73 21 23 ff ff 23 42 34 2d d1 23 42 43 43 24 23 42 34 fd 23 4f d2 3f d4 f2 3d 42 34>
  * ```
@@ -314,7 +314,7 @@ export async function getStorageAt<ReturnFormat extends DataFormat>(
  * web3.eth.getCode(
  *      "0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234",
  *      undefined,
- *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.BUFFER }
+ *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.UINT8ARRAY }
  * ).then(console.log);
  * > <Buffer 30 78 36 30 30 31 36 30 30 30 38 30 33 35 38 31 31 61 38 31 38 31 38 31 31 34 36 30 31 32 35 37 38 33 30 31 30 30 35 62 36 30 31 62 36 30 30 31 33 35 ... >
  * ```
@@ -1543,7 +1543,7 @@ export function sendSignedTransaction<
  * > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
  *
  * // Using an unlocked account managed by connected RPC client
- * web3.eth.sign("0x48656c6c6f20776f726c64", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.BUFFER }).then(console.log);
+ * web3.eth.sign("0x48656c6c6f20776f726c64", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.UINT8ARRAY }).then(console.log);
  * > <Buffer 30 78 33 30 37 35 35 65 64 36 35 33 39 36 66 61 63 66 38 36 63 35 33 65 36 32 31 37 63 35 32 62 34 64 61 65 62 65 37 32 61 61 34 39 34 31 64 38 39 36 ... >
  * ```
  *

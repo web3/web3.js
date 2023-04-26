@@ -35,7 +35,7 @@ const transactionsDataForNumberTypes: Record<FMT_NUMBER, Record<string, unknown>
 
 const transactionsDataForByteTypes: Record<FMT_BYTES, Record<string, unknown>> = {
 	[FMT_BYTES.HEX]: bytesAsHexStringTransaction,
-	[FMT_BYTES.BUFFER]: bytesAsBufferTransaction,
+	[FMT_BYTES.UINT8ARRAY]: bytesAsBufferTransaction,
 	[FMT_BYTES.UINT8ARRAY]: bytesAsUint8ArrayTransaction,
 };
 
