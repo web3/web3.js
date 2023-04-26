@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { buf as crc32Buffer } from 'crc-32';
+import { buf as crc32Uint8Array } from 'crc-32';
 import { EventEmitter } from 'events';
 import type { Numbers } from 'web3-types';
 import { bytesToHex, hexToBytes, uint8ArrayConcat } from 'web3-utils';
@@ -932,7 +932,7 @@ export class Common extends EventEmitter {
 	 * @returns Fork hash as hex string
 	 */
 	public _calcForkHash(hardfork: string | Hardfork, genesisHash: Uint8Array) {
-		let hfBuffer = new Uint8Array();
+		let hfUint8Array = new Uint8Array();
 		let prevBlockOrTime = 0;
 		for (const hf of this.hardforks()) {
 			const { block, timestamp, name } = hf;
@@ -951,19 +951,19 @@ export class Common extends EventEmitter {
 				blockOrTime !== prevBlockOrTime &&
 				name !== Hardfork.Merge
 			) {
-				const hfBlockBuffer = hexToBytes(blockOrTime.toString(16).padStart(16, '0'));
-				hfBuffer = uint8ArrayConcat(hfBuffer, hfBlockBuffer);
+				const hfBlockUint8Array = hexToBytes(blockOrTime.toString(16).padStart(16, '0'));
+				hfUint8Array = uint8ArrayConcat(hfUint8Array, hfBlockUint8Array);
 				prevBlockOrTime = blockOrTime;
 			}
 
 			if (hf.name === hardfork) break;
 		}
-		const inputBuffer = uint8ArrayConcat(genesisHash, hfBuffer);
+		const inputUint8Array = uint8ArrayConcat(genesisHash, hfUint8Array);
 
 		// CRC32 delivers result as signed (negative) 32-bit integer,
 		// convert to hex string
 		// eslint-disable-next-line no-bitwise
-		const forkhash = bytesToHex(intToUint8Array(crc32Buffer(inputBuffer) >>> 0));
+		const forkhash = bytesToHex(intToUint8Array(crc32Uint8Array(inputUint8Array) >>> 0));
 		return forkhash;
 	}
 

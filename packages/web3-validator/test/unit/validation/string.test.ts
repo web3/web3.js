@@ -132,7 +132,7 @@ describe('validation', () => {
 				const noleadingZeroBytes = {
 					a: hexToBytes('0x01'),
 				};
-				const emptyBuffer = {
+				const emptyUint8Array = {
 					a: hexToBytes('0x'),
 				};
 				const undefinedValue = {
@@ -140,7 +140,7 @@ describe('validation', () => {
 				};
 
 				expect(() => validateNoLeadingZeroes(noLeadingZeroes)).not.toThrow();
-				expect(() => validateNoLeadingZeroes(emptyBuffer)).not.toThrow();
+				expect(() => validateNoLeadingZeroes(emptyUint8Array)).not.toThrow();
 				expect(() => validateNoLeadingZeroes(undefinedValue)).not.toThrow();
 				expect(() => validateNoLeadingZeroes(noleadingZeroBytes)).not.toThrow();
 			});

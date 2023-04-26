@@ -18,7 +18,6 @@ import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER } from 'web3-types';
 import { formatTransaction } from '../../src/utils/format_transaction';
 import {
 	bytesAsHexStringTransaction,
-	bytesAsBufferTransaction,
 	numbersAsBigIntTransaction,
 	numbersAsHexStringTransaction,
 	numbersAsStringTransaction,

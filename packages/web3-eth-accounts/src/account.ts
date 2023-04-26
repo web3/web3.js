@@ -68,10 +68,10 @@ import type {
 } from './types';
 
 /**
- * Get the private key buffer after the validation
+ * Get the private key Uint8Array after the validation
  */
 export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Uint8Array => {
-	let privateKeyBuffer: Uint8Array;
+	let privateKeyUint8Array: Uint8Array;
 
 	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToUint8Array'
 	if (!ignoreLength && typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
@@ -79,16 +79,16 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 	}
 
 	try {
-		privateKeyBuffer = data instanceof Uint8Array ? data : bytesToUint8Array(data);
+		privateKeyUint8Array = data instanceof Uint8Array ? data : bytesToUint8Array(data);
 	} catch {
 		throw new InvalidPrivateKeyError();
 	}
 
-	if (!ignoreLength && privateKeyBuffer.byteLength !== 32) {
+	if (!ignoreLength && privateKeyUint8Array.byteLength !== 32) {
 		throw new PrivateKeyLengthError();
 	}
 
-	return privateKeyBuffer;
+	return privateKeyUint8Array;
 };
 
 /**
@@ -140,11 +140,11 @@ export const hashMessage = (message: string): string => {
  * ```
  */
 export const sign = (data: string, privateKey: Bytes): SignResult => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	const hash = hashMessage(data);
 
-	const [signature, recoverId] = signSync(hash.substring(2), privateKeyBuffer, {
+	const [signature, recoverId] = signSync(hash.substring(2), privateKeyUint8Array, {
 		// Makes signatures compatible with libsecp256k1
 		recovered: true,
 
@@ -362,7 +362,7 @@ export const recover = (
 /**
  * Get the ethereum Address from a private key
  *
- * @param privateKey - String, Uint8Array or ArrayBuffer of 32 bytes
+ * @param privateKey - String or Uint8Array of 32 bytes
  * @param ignoreLength - if true, will not error check length
  * @returns The Ethereum address
  * @example
@@ -372,10 +372,10 @@ export const recover = (
  * ```
  */
 export const privateKeyToAddress = (privateKey: Bytes): string => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	// Get public key from private key in compressed format
-	const publicKey = getPublicKey(privateKeyBuffer);
+	const publicKey = getPublicKey(privateKeyUint8Array);
 
 	// Uncompressed ECDSA public key contains the prefix `0x04` which is not used in the Ethereum public key
 	const publicKeyHash = sha3Raw(publicKey.slice(1));
@@ -464,7 +464,7 @@ export const encrypt = async (
 	password: string | Uint8Array,
 	options?: CipherOptions,
 ): Promise<KeyStore> => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	// if given salt or iv is a string, convert it to a Uint8Array
 	let salt;
@@ -478,7 +478,7 @@ export const encrypt = async (
 		throw new InvalidPasswordError();
 	}
 
-	const bufferPassword =
+	const uint8ArrayPassword =
 		typeof password === 'string' ? hexToBytes(utf8ToHex(password)) : password;
 
 	let initializationVector;
@@ -509,7 +509,7 @@ export const encrypt = async (
 			// error when c < 1000, pbkdf2 is less secure with less iterations
 			throw new PBKDF2IterationsError();
 		}
-		derivedKey = pbkdf2Sync(bufferPassword, salt, kdfparams.c, kdfparams.dklen, 'sha256');
+		derivedKey = pbkdf2Sync(uint8ArrayPassword, salt, kdfparams.c, kdfparams.dklen, 'sha256');
 	} else if (kdf === 'scrypt') {
 		kdfparams = {
 			n: options?.n ?? 8192,
@@ -519,7 +519,7 @@ export const encrypt = async (
 			salt: bytesToHex(salt).replace('0x', ''),
 		};
 		derivedKey = scryptSync(
-			bufferPassword,
+			uint8ArrayPassword,
 			salt,
 			kdfparams.n,
 			kdfparams.p,
@@ -531,7 +531,7 @@ export const encrypt = async (
 	}
 
 	const cipher = await createCipheriv(
-		privateKeyBuffer,
+		privateKeyUint8Array,
 		derivedKey.slice(0, 16),
 		initializationVector,
 		'aes-128-ctr',
@@ -543,7 +543,7 @@ export const encrypt = async (
 	return {
 		version: 3,
 		id: uuidV4(),
-		address: privateKeyToAddress(privateKeyBuffer).toLowerCase().replace('0x', ''),
+		address: privateKeyToAddress(privateKeyUint8Array).toLowerCase().replace('0x', ''),
 		crypto: {
 			ciphertext,
 			cipherparams: {
@@ -560,7 +560,7 @@ export const encrypt = async (
 /**
  * Get an Account object from the privateKey
  *
- * @param privateKey - String or buffer of 32 bytes
+ * @param privateKey - String or Uint8Array of 32 bytes
  * @param ignoreLength - if true, will not error check length
  * @returns A Web3Account object
  *
@@ -579,19 +579,19 @@ export const encrypt = async (
  * ```
  */
 export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): Web3Account => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey, ignoreLength);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey, ignoreLength);
 
 	return {
-		address: privateKeyToAddress(privateKeyBuffer),
-		privateKey: bytesToHex(privateKeyBuffer),
+		address: privateKeyToAddress(privateKeyUint8Array),
+		privateKey: bytesToHex(privateKeyUint8Array),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		signTransaction: (_tx: Transaction) => {
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
 		},
 		sign: (data: Record<string, unknown> | string) =>
-			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyBuffer),
+			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyUint8Array),
 		encrypt: async (password: string, options?: Record<string, unknown>) =>
-			encrypt(privateKeyBuffer, password, options),
+			encrypt(privateKeyUint8Array, password, options),
 	};
 };
 
@@ -672,19 +672,19 @@ export const decrypt = async (
 
 	if (json.version !== 3) throw new KeyStoreVersionError();
 
-	const bufferPassword =
+	const uint8ArrayPassword =
 		typeof password === 'string' ? hexToBytes(utf8ToHex(password)) : password;
 
-	validator.validate(['bytes'], [bufferPassword]);
+	validator.validate(['bytes'], [uint8ArrayPassword]);
 
 	let derivedKey;
 	if (json.crypto.kdf === 'scrypt') {
 		const kdfparams = json.crypto.kdfparams as ScryptParams;
-		const bufferSalt =
+		const uint8ArraySalt =
 			typeof kdfparams.salt === 'string' ? hexToBytes(kdfparams.salt) : kdfparams.salt;
 		derivedKey = scryptSync(
-			bufferPassword,
-			bufferSalt,
+			uint8ArrayPassword,
+			uint8ArraySalt,
 			kdfparams.n,
 			kdfparams.p,
 			kdfparams.r,
@@ -693,10 +693,16 @@ export const decrypt = async (
 	} else if (json.crypto.kdf === 'pbkdf2') {
 		const kdfparams: PBKDF2SHA256Params = json.crypto.kdfparams as PBKDF2SHA256Params;
 
-		const bufferSalt =
+		const uint8ArraySalt =
 			typeof kdfparams.salt === 'string' ? hexToBytes(kdfparams.salt) : kdfparams.salt;
 
-		derivedKey = pbkdf2Sync(bufferPassword, bufferSalt, kdfparams.c, kdfparams.dklen, 'sha256');
+		derivedKey = pbkdf2Sync(
+			uint8ArrayPassword,
+			uint8ArraySalt,
+			kdfparams.c,
+			kdfparams.dklen,
+			'sha256',
+		);
 	} else {
 		throw new InvalidKdfError();
 	}

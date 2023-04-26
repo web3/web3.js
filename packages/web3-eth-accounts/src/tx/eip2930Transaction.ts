@@ -39,7 +39,7 @@ import type {
 import type { Common } from '../common';
 
 const TRANSACTION_TYPE = 1;
-const TRANSACTION_TYPE_BUFFER = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));
+const TRANSACTION_TYPE_UINT8ARRAY = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));
 
 /**
  * Typed transaction with optional access lists
@@ -85,7 +85,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	 * signatureYParity (v), signatureR (r), signatureS (s)])`
 	 */
 	public static fromSerializedTx(serialized: Uint8Array, opts: TxOptions = {}) {
-		if (!uint8ArrayEquals(serialized.subarray(0, 1), TRANSACTION_TYPE_BUFFER)) {
+		if (!uint8ArrayEquals(serialized.subarray(0, 1), TRANSACTION_TYPE_UINT8ARRAY)) {
 			throw new Error(
 				`Invalid serialized tx input: not an EIP-2930 transaction (wrong tx type, expected: ${TRANSACTION_TYPE}, received: ${bytesToHex(
 					serialized.subarray(0, 1),
@@ -225,7 +225,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	 * Use {@link AccessListEIP2930Transaction.serialize} to add a transaction to a block
 	 * with {@link Block.fromValuesArray}.
 	 *
-	 * For an unsigned tx this method uses the empty Buffer values for the
+	 * For an unsigned tx this method uses the empty UINT8ARRAY values for the
 	 * signature parameters `v`, `r` and `s` for encoding. For an EIP-155 compliant
 	 * representation for external signing use {@link AccessListEIP2930Transaction.getMessageToSign}.
 	 */
@@ -257,7 +257,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	 */
 	public serialize(): Uint8Array {
 		const base = this.raw();
-		return uint8ArrayConcat(TRANSACTION_TYPE_BUFFER, RLP.encode(base));
+		return uint8ArrayConcat(TRANSACTION_TYPE_UINT8ARRAY, RLP.encode(base));
 	}
 
 	/**
@@ -275,7 +275,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	 */
 	public getMessageToSign(hashMessage = true): Uint8Array {
 		const base = this.raw().slice(0, 8);
-		const message = uint8ArrayConcat(TRANSACTION_TYPE_BUFFER, RLP.encode(base));
+		const message = uint8ArrayConcat(TRANSACTION_TYPE_UINT8ARRAY, RLP.encode(base));
 		if (hashMessage) {
 			return keccak256(message);
 		}

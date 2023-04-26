@@ -54,9 +54,9 @@ export const isInBloom = (bloom: string, value: string | Uint8Array): boolean =>
 		return false;
 	}
 
-	const buffer = typeof value === 'string' ? hexToUint8Array(value) : value;
+	const uint8Array = typeof value === 'string' ? hexToUint8Array(value) : value;
 
-	const hash = uint8ArrayToHexString(keccak256(buffer)).slice(2);
+	const hash = uint8ArrayToHexString(keccak256(uint8Array)).slice(2);
 
 	for (let i = 0; i < 12; i += 4) {
 		// calculate bit position in bloom filter that must be active
