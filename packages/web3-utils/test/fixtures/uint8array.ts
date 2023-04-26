@@ -43,7 +43,7 @@ export const uint8ArrayConcatData: [Uint8Array[], Uint8Array][] = [
 		new Uint8Array([12, 12, 13, 14]),
 	],
 ];
-
+const singleArray = new Uint8Array([0x13]);
 export const uint8ArrayEqualsValidData: [[Uint8Array, Uint8Array], boolean][] = [
 	[[new Uint8Array([0]), new Uint8Array([0])], true],
 	[
@@ -62,7 +62,7 @@ export const uint8ArrayEqualsValidData: [[Uint8Array, Uint8Array], boolean][] = 
 	[[new Uint8Array([12, 12]), new Uint8Array([12, 12])], true],
 	[[new Uint8Array([0]), new Uint8Array([1])], false],
 	[[new Uint8Array([0x00]), new Uint8Array([0])], true],
-	[[new Uint8Array([0x1]), new Uint8Array([1])], false],
+	[[new Uint8Array([0x1]), new Uint8Array([1])], true],
 	[
 		[
 			new Uint8Array([
@@ -73,4 +73,5 @@ export const uint8ArrayEqualsValidData: [[Uint8Array, Uint8Array], boolean][] = 
 		],
 		false,
 	],
+	[[singleArray, singleArray], true],
 ];
