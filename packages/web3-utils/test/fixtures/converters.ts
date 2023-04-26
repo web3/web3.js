@@ -88,6 +88,21 @@ export const numberToHexValidData: [Numbers, HexString][] = [
 	[-0xff, '-0xff'],
 ];
 
+export const numberToHexstrictValidData: [Numbers, HexString][] = [
+	[1, '0x01'],
+	[255, '0xff'],
+	[256, '0x0100'],
+	[54, '0x36'],
+	[BigInt(12), '0x0c'],
+	['768', '0x0300'],
+	['-768', '-0x0300'],
+	[-255, '-0xff'],
+	['0xFF0', '0x0ff0'],
+	['-0xa0', '-0xa0'],
+	[0xff, '0xff'],
+	[-0xff, '-0xff'],
+];
+
 export const numberToHexInvalidData: [any, string][] = [
 	[12.2, 'value "12.2" at "/0" must pass "int" validation'],
 	['0xag', 'value "0xag" at "/0" must pass "int" validation'],

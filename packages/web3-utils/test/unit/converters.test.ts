@@ -69,6 +69,7 @@ import {
 	toBigIntValidData,
 	toBigIntInvalidData,
 	toCheckSumInvalidData,
+	numberToHexstrictValidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -110,6 +111,12 @@ describe('converters', () => {
 		describe('invalid cases', () => {
 			it.each(numberToHexInvalidData)('%s', (input, output) => {
 				expect(() => numberToHex(input)).toThrow(output);
+			});
+		});
+
+		describe('valid hexstrict cases', () => {
+			it.each(numberToHexstrictValidData)('%s', (input, output) => {
+				expect(numberToHex(input, true)).toEqual(output);
 			});
 		});
 	});

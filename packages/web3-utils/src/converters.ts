@@ -180,9 +180,12 @@ export const numberToHex = (value: Numbers, hexstrict?: boolean): HexString => {
 	// use `numberToHex` implementation from `web3-validator`
 	let updatedValue = validatorUtils.numberToHex(value);
 	// return validatorUtils.numberToHex(value);
-	if (hexstrict && updatedValue.length % 2 === 1) {
-		// To avoid duplicate a circular dependancy we will not be using the padLeft method
-		updatedValue = '0x0'.concat(updatedValue.slice(2));
+	if (hexstrict) {
+		if (!updatedValue.startsWith('-') && updatedValue.length % 2 === 1) {
+			// To avoid duplicate a circular dependancy we will not be using the padLeft method
+			updatedValue = '0x0'.concat(updatedValue.slice(2));
+		} else if (updatedValue.length % 2 === 0 && updatedValue.startsWith('-'))
+			updatedValue = '-0x0'.concat(updatedValue.slice(3));
 	}
 	return updatedValue;
 };
