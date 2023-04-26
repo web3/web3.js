@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Point } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { Chain, Common, Hardfork } from '../../../src/common';
 import { toBuffer, bufferToBigInt } from '../../../src/common/utils';
 import { MAX_UINT64, MAX_INTEGER, SECP256K1_ORDER } from '../../../src/tx/constants';
@@ -32,7 +32,7 @@ import eip1559Fixtures from '../../fixtures/json/eip1559txs.json';
 import legacyFixtures from '../../fixtures/json/txs.json';
 
 const privateToPublic = function (privateKey: Buffer): Buffer {
-	return Buffer.from(Point.fromPrivateKey(privateKey).toRawBytes(false).slice(1));
+	return Buffer.from(secp256k1.getPublicKey(privateKey, false).slice(1));
 };
 const common = new Common({
 	chain: 5,

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Point } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { Chain, Common, Hardfork } from '../../../src/common';
 import {
 	bufferToBigInt,
@@ -28,7 +28,7 @@ import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from '../../../src/tx/
 import type { AccessList, AccessListBufferItem } from '../../../src';
 
 const privateToPublic = function (privateKey: Buffer): Buffer {
-	return Buffer.from(Point.fromPrivateKey(privateKey).toRawBytes(false).slice(1));
+	return Buffer.from(secp256k1.getPublicKey(privateKey, false).slice(1));
 };
 const pKey = Buffer.from('4646464646464646464646464646464646464646464646464646464646464646', 'hex');
 const address = Address.publicToAddress(privateToPublic(pKey));

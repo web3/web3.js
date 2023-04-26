@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
-import { getPublicKey, recoverPublicKey, signSync, utils } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import {
 	InvalidKdfError,
 	InvalidPasswordError,
@@ -143,17 +143,11 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
 
 	const hash = hashMessage(data);
 
-	const [signature, recoverId] = signSync(hash.substring(2), privateKeyBuffer, {
-		// Makes signatures compatible with libsecp256k1
-		recovered: true,
-
-		// Returned signature should be in DER format ( non compact )
-		der: false,
-	});
-
-	const r = Buffer.from(signature.slice(0, 32));
-	const s = Buffer.from(signature.slice(32, 64));
-	const v = recoverId + 27;
+	const signature = secp256k1.sign(hash.substring(2), privateKeyBuffer);
+	const signatureBytes = signature.toCompactRawBytes();
+	const r = Buffer.from(signatureBytes.subarray(0, 32));
+	const s = Buffer.from(signatureBytes.subarray(32, 64));
+	const v = signature.recovery! + 27;
 
 	return {
 		message: data,
@@ -161,7 +155,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
 		v: numberToHex(v),
 		r: bytesToHex(r),
 		s: bytesToHex(s),
-		signature: `0x${Buffer.from(signature).toString('hex')}${v.toString(16)}`,
+		signature: `0x${Buffer.from(signatureBytes).toString('hex')}${v.toString(16)}`,
 	};
 };
 
@@ -345,12 +339,10 @@ export const recover = (
 
 	const v = signatureOrV.substring(V_INDEX); // 0x + r + s + v
 
-	const ecPublicKey = recoverPublicKey(
-		Buffer.from(hashedMessage.substring(2), 'hex'),
-		Buffer.from(signatureOrV.substring(2, V_INDEX), 'hex'),
-		parseInt(v, 16) - 27,
-		false,
-	);
+	const ecPublicKey = secp256k1.Signature.fromCompact(signatureOrV.slice(2, V_INDEX))
+		.addRecoveryBit(parseInt(v, 16) - 27)
+		.recoverPublicKey(hashedMessage.replace('0x', ''))
+		.toRawBytes(false);
 
 	const publicKey = `0x${Buffer.from(ecPublicKey).toString('hex').slice(2)}`;
 
@@ -377,7 +369,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
 	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
 	// Get public key from private key in compressed format
-	const publicKey = getPublicKey(privateKeyBuffer);
+	const publicKey = secp256k1.getPublicKey(privateKeyBuffer, false);
 
 	// Uncompressed ECDSA public key contains the prefix `0x04` which is not used in the Ethereum public key
 	const publicKeyHash = sha3Raw(publicKey.slice(1));
@@ -625,7 +617,7 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
  * ```
  */
 export const create = (): Web3Account => {
-	const privateKey = utils.randomPrivateKey();
+	const privateKey = secp256k1.utils.randomPrivateKey();
 
 	return privateKeyToAccount(`0x${Buffer.from(privateKey).toString('hex')}`);
 };

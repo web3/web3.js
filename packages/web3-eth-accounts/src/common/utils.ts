@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexPrefixed, isHexString } from 'web3-validator';
-import { recoverPublicKey } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { Hardfork } from './enums';
 import {
 	NestedBufferArray,
@@ -550,13 +550,15 @@ export const ecrecover = function (
 	s: Buffer,
 	chainId?: bigint,
 ): Buffer {
-	const signature = Buffer.concat([setLengthLeft(r, 32), setLengthLeft(s, 32)], 64);
 	const recovery = calculateSigRecovery(v, chainId);
 	if (!isValidSigRecovery(recovery)) {
 		throw new Error('Invalid signature v value');
 	}
 
-	const senderPubKey = recoverPublicKey(msgHash, signature, Number(recovery));
+	const senderPubKey = new secp256k1.Signature(bufferToBigInt(r), bufferToBigInt(s))
+		.addRecoveryBit(Number(recovery))
+		.recoverPublicKey(msgHash)
+		.toRawBytes(false);
 	return Buffer.from(senderPubKey.slice(1));
 };
 
