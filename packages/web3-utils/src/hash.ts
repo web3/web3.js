@@ -36,7 +36,7 @@ import {
 } from 'web3-types';
 import { isAddress, isNullish, isHexStrict } from 'web3-validator';
 import {
-	bytesToBuffer,
+	bytesToUint8Array,
 	bytesToHex,
 	hexToBytes,
 	toBigInt,
@@ -133,7 +133,7 @@ export const keccak256Wrapper = (
 	} else if (typeof data === 'string' && !isHexStrict(data)) {
 		processedData = utf8ToBytes(data);
 	} else {
-		processedData = bytesToBuffer(data as Bytes);
+		processedData = bytesToUint8Array(data as Bytes);
 	}
 	return bytesToHex(keccak256(processedData));
 };

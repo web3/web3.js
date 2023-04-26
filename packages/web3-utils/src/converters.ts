@@ -78,11 +78,11 @@ export type EtherUnits = keyof typeof ethUnitMap;
  *
  * @example
  * ```ts
- * console.log(web3.utils.bytesToBuffer(new Uint8Array([72, 12])));
+ * console.log(web3.utils.bytesToUint8Array(new Uint8Array([72, 12])));
  * > <Buffer 48 0c>
  * ```
  */
-export const bytesToBuffer = (data: Bytes): Uint8Array | never => {
+export const bytesToUint8Array = (data: Bytes): Uint8Array | never => {
 	validator.validate(['bytes'], [data]);
 
 	if (data instanceof Uint8Array) {
@@ -118,7 +118,7 @@ const bufferToHexString = validatorUtils.uint8ArrayToHexString;
  * console.log(web3.utils.bytesToHex(Buffer.from("0c12", "hex")));
  * > "0x0c12"
  */
-export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesToBuffer(bytes));
+export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesToUint8Array(bytes));
 
 /**
  * Convert a hex string to a byte array
@@ -133,9 +133,9 @@ export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesTo
  */
 export const hexToBytes = (bytes: HexString): Uint8Array => {
 	if (typeof bytes === 'string' && bytes.slice(0, 2).toLowerCase() !== '0x') {
-		return bytesToBuffer(`0x${bytes}`);
+		return bytesToUint8Array(`0x${bytes}`);
 	}
-	return bytesToBuffer(bytes);
+	return bytesToUint8Array(bytes);
 };
 
 /**

@@ -43,7 +43,7 @@ import {
 	Transaction,
 } from 'web3-types';
 import {
-	bytesToBuffer,
+	bytesToUint8Array,
 	bytesToHex,
 	fromUtf8,
 	hexToBytes,
@@ -73,13 +73,13 @@ import type {
 export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Uint8Array => {
 	let privateKeyBuffer: Uint8Array;
 
-	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToBuffer'
+	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToUint8Array'
 	if (!ignoreLength && typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
 		throw new PrivateKeyLengthError();
 	}
 
 	try {
-		privateKeyBuffer = data instanceof Uint8Array ? data : bytesToBuffer(data);
+		privateKeyBuffer = data instanceof Uint8Array ? data : bytesToUint8Array(data);
 	} catch {
 		throw new InvalidPrivateKeyError();
 	}

@@ -310,9 +310,9 @@ export const toCheckSumInvalidData: [string, string][] = [
 	['not an address', 'Invalid value given "not an address". Error: invalid ethereum address.'],
 ];
 
-export const bytesToBufferInvalidData: [any, string][] = bytesToHexInvalidData;
+export const bytesToUint8ArrayInvalidData: [any, string][] = bytesToHexInvalidData;
 
-export const bytesToBufferValidData: [Bytes, Uint8Array][] = [
+export const bytesToUint8ArrayValidData: [Bytes, Uint8Array][] = [
 	[new Uint8Array([72]), new Uint8Array([72])],
 	[new Uint8Array([72, 12]), new Uint8Array([72, 12])],
 	['0x9c12', new Uint8Array([156, 18])],

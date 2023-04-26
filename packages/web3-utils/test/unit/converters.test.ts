@@ -38,7 +38,7 @@ import {
 	toWei,
 	utf8ToHex,
 	toChecksumAddress,
-	bytesToBuffer,
+	bytesToUint8Array,
 	toBigInt,
 } from '../../src/converters';
 
@@ -64,8 +64,8 @@ import {
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
 	toCheckSumValidData,
-	bytesToBufferInvalidData,
-	bytesToBufferValidData,
+	bytesToUint8ArrayInvalidData,
+	bytesToUint8ArrayValidData,
 	toBigIntValidData,
 	toBigIntInvalidData,
 	toCheckSumInvalidData,
@@ -374,17 +374,17 @@ describe('converters', () => {
 			});
 		});
 	});
-	describe('bytesToBuffer', () => {
-		describe('bytesToBuffer', () => {
+	describe('bytesToUint8Array', () => {
+		describe('bytesToUint8Array', () => {
 			describe('valid cases', () => {
-				it.each(bytesToBufferValidData)('%s', (input, output) => {
-					expect(bytesToBuffer(input)).toEqual(output);
+				it.each(bytesToUint8ArrayValidData)('%s', (input, output) => {
+					expect(bytesToUint8Array(input)).toEqual(output);
 				});
 			});
 
 			describe('invalid cases', () => {
-				it.each(bytesToBufferInvalidData)('%s', (input, output) => {
-					expect(() => bytesToBuffer(input)).toThrow(output);
+				it.each(bytesToUint8ArrayInvalidData)('%s', (input, output) => {
+					expect(() => bytesToUint8Array(input)).toThrow(output);
 				});
 			});
 		});

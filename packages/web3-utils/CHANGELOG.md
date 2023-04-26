@@ -113,5 +113,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Replaced Buffer for Uint8Array (#6004)
--   The methods `bytesToBuffer`, `hexToBytes`, `randomBytes` does not return type `Buffer` but type `Uint8Array` (#6004)
+-   The methods `bytesToUint8Array`, `hexToBytes`, `randomBytes` does not return type `Buffer` but type `Uint8Array` (#6004)
 -   The methods `sha3` and `keccak256Wrapper` does not accept type `Buffer` but type `Uint8Array` (#6004)

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { bytesToBuffer, hexToBytes } from 'web3-utils';
+import { bytesToUint8Array, hexToBytes } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, LogAPI } from '../../../src';
 import {
@@ -83,19 +83,21 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 				expect(result).toStrictEqual([
 					{
 						...expectedLogs[0],
-						blockHash: bytesToBuffer(hexToBytes(expectedLogs[0].blockHash as string)),
-						data: bytesToBuffer(hexToBytes(expectedLogs[0].data as string)),
-						transactionHash: bytesToBuffer(
+						blockHash: bytesToUint8Array(
+							hexToBytes(expectedLogs[0].blockHash as string),
+						),
+						data: bytesToUint8Array(hexToBytes(expectedLogs[0].data as string)),
+						transactionHash: bytesToUint8Array(
 							hexToBytes(expectedLogs[0].transactionHash as string),
 						),
 						topics: expectedLogs[0].topics?.map(topic =>
-							bytesToBuffer(hexToBytes(topic)),
+							bytesToUint8Array(hexToBytes(topic)),
 						),
 						// TODO Should these be formatted?
-						// blockNumber: bytesToBuffer(hexToBytes((expectedLogs[0]).blockNumber as string)),
-						// data: bytesToBuffer(hexToBytes((expectedLogs[0]).data as string)),
-						// logIndex: bytesToBuffer(hexToBytes((expectedLogs[0]).logIndex as string)),
-						// transactionIndex: bytesToBuffer(hexToBytes((expectedLogs[0]).transactionIndex as string)),
+						// blockNumber: bytesToUint8Array(hexToBytes((expectedLogs[0]).blockNumber as string)),
+						// data: bytesToUint8Array(hexToBytes((expectedLogs[0]).data as string)),
+						// logIndex: bytesToUint8Array(hexToBytes((expectedLogs[0]).logIndex as string)),
+						// transactionIndex: bytesToUint8Array(hexToBytes((expectedLogs[0]).transactionIndex as string)),
 					},
 				]);
 				break;
