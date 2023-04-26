@@ -103,7 +103,7 @@ export const bytesToUint8Array = (data: Bytes): Uint8Array | never => {
 /**
  * @internal
  */
-const bufferToHexString = validatorUtils.uint8ArrayToHexString;
+const { uint8ArrayToHexString } = validatorUtils;
 
 /**
  * Convert a byte array to a hex string
@@ -118,7 +118,8 @@ const bufferToHexString = validatorUtils.uint8ArrayToHexString;
  * console.log(web3.utils.bytesToHex(Buffer.from("0c12", "hex")));
  * > "0x0c12"
  */
-export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesToUint8Array(bytes));
+export const bytesToHex = (bytes: Bytes): HexString =>
+	uint8ArrayToHexString(bytesToUint8Array(bytes));
 
 /**
  * Convert a hex string to a byte array
