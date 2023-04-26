@@ -126,6 +126,8 @@ export class ContractInstantiationError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_INSTANTIATION;
 }
 
+type ProviderErrorData = HexString | { data: HexString } | { originalError: { data: HexString } };
+
 /**
  * This class is expected to be set as an `innerError` inside ContractExecutionError
  * The properties would be typically decoded from the `data` if it was encoded according to EIP-838
@@ -138,11 +140,35 @@ export class Eip838ExecutionError extends Web3ContractError {
 	public errorSignature?: string;
 	public errorArgs?: { [K in string]: unknown };
 
-	public constructor(code: number, message: string, data?: HexString) {
-		super(message);
-		this.name = this.constructor.name;
-		this.code = code;
-		this.data = data;
+	// eslint-disable-next-line no-use-before-define
+	public innerError: Eip838ExecutionError | undefined;
+
+	public constructor(error: JsonRpcError<ProviderErrorData> | Eip838ExecutionError) {
+		super(error.message || 'Error');
+
+		this.name = ('name' in error && error.name) || this.constructor.name;
+		this.stack = ('stack' in error && error.stack) || undefined;
+		this.code = error.code;
+
+		// get embedded error details got from some providers like MetaMask
+		// and set this.data from the inner error data for easier read.
+		// note: the data is a hex string inside either:
+		//	 error.data, error.data.data or error.data.originalError.data (https://github.com/web3/web3.js/issues/4454#issuecomment-1485953455)
+		if (typeof error.data === 'object') {
+			let originalError: { data: string };
+			if ('originalError' in error.data) {
+				originalError = error.data.originalError;
+			} else {
+				// Ganache has no `originalError` sub-object unlike others
+				originalError = error.data;
+			}
+			this.data = originalError.data;
+			this.innerError = new Eip838ExecutionError(
+				originalError as JsonRpcError<ProviderErrorData>,
+			);
+		} else {
+			this.data = error.data;
+		}
 	}
 
 	public setDecodedProperties(
@@ -166,11 +192,7 @@ export class ContractExecutionError extends Web3ContractError {
 	public constructor(rpcError: JsonRpcError) {
 		super('Error happened while trying to execute a function inside a smart contract');
 		this.code = ERR_CONTRACT_EXECUTION_REVERTED;
-		this.innerError = new Eip838ExecutionError(
-			rpcError.code,
-			rpcError.message,
-			rpcError.data as string,
-		);
+		this.innerError = new Eip838ExecutionError(rpcError as JsonRpcError<ProviderErrorData>);
 	}
 }
 
