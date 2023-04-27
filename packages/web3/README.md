@@ -33,5 +33,5 @@ All the TypeScript typings are placed in the `types` folder.
 [repo-readme]: https://github.com/ethereum/web3.js/blob/1.x/README.md
 [npm-image]: https://img.shields.io/npm/v/web3.svg
 [npm-url]: https://npmjs.org/package/web3
-[4x-release]: https://github.com/ChainSafe/web3.js/releases/tag/v4.0.0-alpha.0
+[4x-release]: https://github.com/ChainSafe/web3.js/releases/tag/v4.0.1-rc.1
 [4xdoc]: https://docs.web3js.org/
