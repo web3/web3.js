@@ -30,8 +30,8 @@ const common = new Common({
 common._chainParams.chainId = 4;
 const TWO_POW256 = BigInt('0x10000000000000000000000000000000000000000000000000000000000000000');
 
-const validAddress = new Uint8Array(hexToBytes('01'.repeat(20)));
-const validSlot = new Uint8Array(hexToBytes('01'.repeat(32)));
+const validAddress = hexToBytes('01'.repeat(20));
+const validSlot = hexToBytes('01'.repeat(32));
 const chainId = BigInt(4);
 
 describe('[FeeMarketEIP1559Transaction]', () => {
@@ -106,21 +106,19 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 		for (let index = 0; index < testdata.length; index += 1) {
 			const data = testdata[index];
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			const pkey = new Uint8Array(hexToBytes(data.privateKey.slice(2)));
+			const pkey = hexToBytes(data.privateKey.slice(2));
 			const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common });
 			const signed = txn.sign(pkey);
 			const rlpSerialized = RLP.encode(Uint8Array.from(signed.serialize()));
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			expect(rlpSerialized).toEqual(
-				new Uint8Array(hexToBytes(data.signedTransactionRLP.slice(2))),
-			);
+			expect(rlpSerialized).toEqual(hexToBytes(data.signedTransactionRLP.slice(2)));
 		}
 	});
 
 	it('hash()', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = new Uint8Array(hexToBytes(data.privateKey.slice(2)));
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		let txn = FeeMarketEIP1559Transaction.fromTxData(data, { common });
 		let signed = txn.sign(pkey);
 		const expectedHash = hexToBytes(
@@ -135,7 +133,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('freeze property propagates from unsigned tx to signed tx', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = new Uint8Array(hexToBytes(data.privateKey.slice(2)));
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common, freeze: false });
 		expect(Object.isFrozen(txn)).toBe(false);
 		const signedTxn = txn.sign(pkey);
@@ -145,7 +143,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('common propagates from the common of tx, not the common in TxOptions', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = new Uint8Array(hexToBytes(data.privateKey.slice(2)));
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common, freeze: false });
 		const newCommon = new Common({
 			chain: Chain.Goerli,
@@ -165,7 +163,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('unsigned tx -> getMessageToSign()', () => {
 		const unsignedTx = FeeMarketEIP1559Transaction.fromTxData(
 			{
-				data: new Uint8Array(hexToBytes('010200')),
+				data: hexToBytes('010200'),
 				to: validAddress,
 				accessList: [[validAddress, [validSlot]]],
 				chainId,
@@ -186,7 +184,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('toJSON()', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = new Uint8Array(hexToBytes(data.privateKey.slice(2)));
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common });
 		const signed = txn.sign(pkey);
 

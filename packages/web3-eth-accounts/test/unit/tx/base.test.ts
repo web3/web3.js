@@ -225,7 +225,7 @@ describe('[BaseTransaction]', () => {
 				const { privateKey } = txType.fixtures[i];
 				if (privateKey !== undefined) {
 					// eslint-disable-next-line jest/no-conditional-expect
-					expect(tx.sign(new Uint8Array(hexToBytes(privateKey)))).toBeTruthy();
+					expect(tx.sign(hexToBytes(privateKey))).toBeTruthy();
 				}
 
 				expect(() => tx.sign(new Uint8Array(bytesToUint8Array('invalid')))).toThrow();
@@ -262,7 +262,7 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				const signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
+				const signedTx = tx.sign(hexToBytes(privateKey));
 				expect(signedTx.getSenderAddress().toString()).toBe(`0x${sendersAddress}`);
 			}
 		}
@@ -275,9 +275,9 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				const signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
+				const signedTx = tx.sign(hexToBytes(privateKey));
 				const txPubKey = signedTx.getSenderPublicKey();
-				const pubKeyFromPriv = privateToPublic(new Uint8Array(hexToBytes(privateKey)));
+				const pubKeyFromPriv = privateToPublic(hexToBytes(privateKey));
 				expect(uint8ArrayEquals(txPubKey, pubKeyFromPriv)).toBe(true);
 			}
 		}
@@ -292,7 +292,7 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				let signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
+				let signedTx = tx.sign(hexToBytes(privateKey));
 				signedTx = JSON.parse(JSON.stringify(signedTx)); // deep clone
 				(signedTx as any).s = SECP256K1_ORDER + BigInt(1);
 				expect(() => {
@@ -309,7 +309,7 @@ describe('[BaseTransaction]', () => {
 				if (privateKey === undefined) {
 					continue;
 				}
-				const signedTx = tx.sign(new Uint8Array(hexToBytes(privateKey)));
+				const signedTx = tx.sign(hexToBytes(privateKey));
 				expect(signedTx.verifySignature()).toBeTruthy();
 			}
 		}

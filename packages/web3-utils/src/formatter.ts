@@ -113,7 +113,7 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 				case FMT_BYTES.HEX:
 					return bytesToHex(bytesToUint8Array(value as Bytes));
 				case FMT_BYTES.UINT8ARRAY:
-					return new Uint8Array(bytesToUint8Array(value as Bytes));
+					return bytesToUint8Array(value as Bytes);
 				default:
 					throw new FormatterError(`Invalid format: ${String(format.bytes)}`);
 			}

@@ -35,11 +35,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', address],
 	],
 	[
-		'message = new Uint8Array(hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"))',
-		[new Uint8Array(hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8')), address],
+		'message = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), address],
 	],
 	[
-		'message = Uint8Array(hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"))',
+		'message = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,

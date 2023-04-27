@@ -29,9 +29,7 @@ const common = new Common({
 	hardfork: Hardfork.London,
 });
 
-const pKey = new Uint8Array(
-	hexToBytes('4646464646464646464646464646464646464646464646464646464646464646'),
-);
+const pKey = hexToBytes('4646464646464646464646464646464646464646464646464646464646464646');
 
 const unsignedTx = Transaction.fromTxData({});
 const signedTx = unsignedTx.sign(pKey);

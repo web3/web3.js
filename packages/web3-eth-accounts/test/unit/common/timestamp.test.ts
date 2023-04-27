@@ -79,8 +79,8 @@ describe('[Common]: Timestamp Hardfork logic', () => {
 		]);
 
 		const c = Common.custom({ hardforks }, { baseChain: Chain.Mainnet });
-		const mainnetGenesisHash = new Uint8Array(
-			hexToBytes('d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3'),
+		const mainnetGenesisHash = hexToBytes(
+			'd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
 		);
 		for (const hf of c.hardforks()) {
 			if (typeof hf.forkHash !== 'string') {
@@ -117,8 +117,8 @@ describe('[Common]: Timestamp Hardfork logic', () => {
 		]);
 
 		const c = Common.custom({ hardforks }, { baseChain: Chain.Mainnet });
-		const mainnetGenesisHash = new Uint8Array(
-			hexToBytes('d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3'),
+		const mainnetGenesisHash = hexToBytes(
+			'd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
 		);
 
 		let noForkHashes = c.hardforks().reduce((acc, hf) => {

@@ -39,7 +39,7 @@ import type {
 import type { Common } from '../common';
 
 const TRANSACTION_TYPE = 2;
-const TRANSACTION_TYPE_BUFFER = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));
+const TRANSACTION_TYPE_UINT8ARRAY = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));
 
 /**
  * Typed transaction with a new gas fee market mechanism
@@ -86,7 +86,7 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 	 * accessList, signatureYParity, signatureR, signatureS])`
 	 */
 	public static fromSerializedTx(serialized: Uint8Array, opts: TxOptions = {}) {
-		if (!uint8ArrayEquals(serialized.subarray(0, 1), TRANSACTION_TYPE_BUFFER)) {
+		if (!uint8ArrayEquals(serialized.subarray(0, 1), TRANSACTION_TYPE_UINT8ARRAY)) {
 			throw new Error(
 				`Invalid serialized tx input: not an EIP-1559 transaction (wrong tx type, expected: ${TRANSACTION_TYPE}, received: ${bytesToHex(
 					serialized.subarray(0, 1),
@@ -299,7 +299,7 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 	 */
 	public serialize(): Uint8Array {
 		const base = this.raw();
-		return uint8ArrayConcat(TRANSACTION_TYPE_BUFFER, RLP.encode(base));
+		return uint8ArrayConcat(TRANSACTION_TYPE_UINT8ARRAY, RLP.encode(base));
 	}
 
 	/**
@@ -317,7 +317,7 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 	 */
 	public getMessageToSign(hashMessage = true): Uint8Array {
 		const base = this.raw().slice(0, 9);
-		const message = uint8ArrayConcat(TRANSACTION_TYPE_BUFFER, RLP.encode(base));
+		const message = uint8ArrayConcat(TRANSACTION_TYPE_UINT8ARRAY, RLP.encode(base));
 		if (hashMessage) {
 			return keccak256(message);
 		}

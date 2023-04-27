@@ -30,9 +30,7 @@ import type { AccessList } from '../../../src';
 const privateToPublic = function (privateKey: Uint8Array): Uint8Array {
 	return new Uint8Array(Point.fromPrivateKey(privateKey).toRawBytes(false).slice(1));
 };
-const pKey = new Uint8Array(
-	hexToBytes('4646464646464646464646464646464646464646464646464646464646464646'),
-);
+const pKey = hexToBytes('4646464646464646464646464646464646464646464646464646464646464646');
 const address = Address.publicToAddress(privateToPublic(pKey));
 
 const common = new Common({
@@ -53,8 +51,8 @@ const txTypes = [
 	},
 ];
 
-const validAddress = new Uint8Array(hexToBytes('01'.repeat(20)));
-const validSlot = new Uint8Array(hexToBytes('01'.repeat(32)));
+const validAddress = hexToBytes('01'.repeat(20));
+const validSlot = hexToBytes('01'.repeat(32));
 const chainId = BigInt(1);
 
 describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-2930 Compatibility', () => {
@@ -158,7 +156,7 @@ describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-29
 			expect(() => {
 				const serialized = uint8ArrayConcat(
 					new Uint8Array([txType.type]),
-					new Uint8Array(hexToBytes('c0')),
+					hexToBytes('c0'),
 				);
 				txType.class.fromSerializedTx(serialized, {});
 			}).toThrow('values (for unsigned tx)');
@@ -211,7 +209,7 @@ describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-29
 		for (const txType of txTypes) {
 			let accessList: any[] = [
 				[
-					new Uint8Array(hexToBytes('01'.repeat(21))), // Address of 21 bytes instead of 20
+					hexToBytes('01'.repeat(21)), // Address of 21 bytes instead of 20
 					[],
 				],
 			];
@@ -224,7 +222,7 @@ describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-29
 				[
 					validAddress,
 					[
-						new Uint8Array(hexToBytes('01'.repeat(31))), // Slot of 31 bytes instead of 32
+						hexToBytes('01'.repeat(31)), // Slot of 31 bytes instead of 32
 					],
 				],
 			];
@@ -263,7 +261,7 @@ describe('[AccessListEIP2930Transaction / FeeMarketEIP1559Transaction] -> EIP-29
 		for (const txType of txTypes) {
 			let tx = txType.class.fromTxData(
 				{
-					data: new Uint8Array(hexToBytes('010200')),
+					data: hexToBytes('010200'),
 					to: validAddress,
 					accessList: [[validAddress, [validSlot]]],
 					chainId,
@@ -322,13 +320,13 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 		const tx = AccessListEIP2930Transaction.fromTxData({}, { common });
 		expect(AccessListEIP2930Transaction.fromTxData(tx, { common })).toBeTruthy();
 
-		const _validAddress = new Uint8Array(hexToBytes('01'.repeat(20)));
-		const _validSlot = new Uint8Array(hexToBytes('01'.repeat(32)));
+		const _validAddress = hexToBytes('01'.repeat(20));
+		const _validSlot = hexToBytes('01'.repeat(32));
 		const _chainId = BigInt(1);
 		expect(() => {
 			AccessListEIP2930Transaction.fromTxData(
 				{
-					data: new Uint8Array(hexToBytes('010200')),
+					data: hexToBytes('010200'),
 					to: _validAddress,
 					accessList: [[_validAddress, [_validSlot]]],
 					chainId: _chainId,
@@ -364,7 +362,7 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 	it('should return right upfront cost', () => {
 		let tx = AccessListEIP2930Transaction.fromTxData(
 			{
-				data: new Uint8Array(hexToBytes('010200')),
+				data: hexToBytes('010200'),
 				to: validAddress,
 				accessList: [[validAddress, [validSlot]]],
 				chainId,
@@ -396,7 +394,7 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 		// In this Tx, `to` is `undefined`, so we should charge homestead creation gas.
 		tx = AccessListEIP2930Transaction.fromTxData(
 			{
-				data: new Uint8Array(hexToBytes('010200')),
+				data: hexToBytes('010200'),
 				accessList: [[validAddress, [validSlot]]],
 				chainId,
 			},
@@ -449,7 +447,7 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 	it('unsigned tx -> getMessageToSign()', () => {
 		const unsignedTx = AccessListEIP2930Transaction.fromTxData(
 			{
-				data: new Uint8Array(hexToBytes('010200')),
+				data: hexToBytes('010200'),
 				to: validAddress,
 				accessList: [[validAddress, [validSlot]]],
 				chainId,
@@ -471,18 +469,18 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 	// https://github.com/INFURA/go-ethlibs/blob/75b2a52a39d353ed8206cffaf68d09bd1b154aae/eth/transaction_signing_test.go#L87
 
 	it('should sign transaction correctly and return expected JSON', () => {
-		const _address = new Uint8Array(hexToBytes('0000000000000000000000000000000000001337'));
-		const slot1 = new Uint8Array(
-			hexToBytes('0000000000000000000000000000000000000000000000000000000000000000'),
+		const _address = hexToBytes('0000000000000000000000000000000000001337');
+		const slot1 = hexToBytes(
+			'0000000000000000000000000000000000000000000000000000000000000000',
 		);
 		const txData = {
-			data: new Uint8Array(hexToBytes('')),
+			data: hexToBytes(''),
 			gasLimit: 0x62d4,
 			gasPrice: 0x3b9aca00,
 			nonce: 0x00,
-			to: new Address(new Uint8Array(hexToBytes('df0a88b2b68c673713a8ec826003676f272e3573'))),
+			to: new Address(hexToBytes('df0a88b2b68c673713a8ec826003676f272e3573')),
 			value: 0x01,
-			chainId: uint8ArrayToBigInt(new Uint8Array(hexToBytes('796f6c6f763378'))),
+			chainId: uint8ArrayToBigInt(hexToBytes('796f6c6f763378')),
 			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 			accessList: <any>[[_address, [slot1]]],
 		};
@@ -498,32 +496,22 @@ describe('[AccessListEIP2930Transaction] -> Class Specific Tests', () => {
 		});
 		usedCommon.setEIPs([2718, 2929, 2930]);
 
-		const expectedUnsignedRaw = new Uint8Array(
-			hexToBytes(
-				'01f86587796f6c6f76337880843b9aca008262d494df0a88b2b68c673713a8ec826003676f272e35730180f838f7940000000000000000000000000000000000001337e1a00000000000000000000000000000000000000000000000000000000000000000808080',
-			),
+		const expectedUnsignedRaw = hexToBytes(
+			'01f86587796f6c6f76337880843b9aca008262d494df0a88b2b68c673713a8ec826003676f272e35730180f838f7940000000000000000000000000000000000001337e1a00000000000000000000000000000000000000000000000000000000000000000808080',
 		);
-		const pkey = new Uint8Array(
-			hexToBytes('fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19'),
+		const pkey = hexToBytes('fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19');
+		const expectedSigned = hexToBytes(
+			'01f8a587796f6c6f76337880843b9aca008262d494df0a88b2b68c673713a8ec826003676f272e35730180f838f7940000000000000000000000000000000000001337e1a0000000000000000000000000000000000000000000000000000000000000000080a0294ac94077b35057971e6b4b06dfdf55a6fbed819133a6c1d31e187f1bca938da00be950468ba1c25a5cb50e9f6d8aa13c8cd21f24ba909402775b262ac76d374d',
 		);
-		const expectedSigned = new Uint8Array(
-			hexToBytes(
-				'01f8a587796f6c6f76337880843b9aca008262d494df0a88b2b68c673713a8ec826003676f272e35730180f838f7940000000000000000000000000000000000001337e1a0000000000000000000000000000000000000000000000000000000000000000080a0294ac94077b35057971e6b4b06dfdf55a6fbed819133a6c1d31e187f1bca938da00be950468ba1c25a5cb50e9f6d8aa13c8cd21f24ba909402775b262ac76d374d',
-			),
-		);
-		const expectedHash = new Uint8Array(
-			hexToBytes('bbd570a3c6acc9bb7da0d5c0322fe4ea2a300db80226f7df4fef39b2d6649eec'),
+		const expectedHash = hexToBytes(
+			'bbd570a3c6acc9bb7da0d5c0322fe4ea2a300db80226f7df4fef39b2d6649eec',
 		);
 		const v = BigInt(0);
 		const r = uint8ArrayToBigInt(
-			new Uint8Array(
-				hexToBytes('294ac94077b35057971e6b4b06dfdf55a6fbed819133a6c1d31e187f1bca938d'),
-			),
+			hexToBytes('294ac94077b35057971e6b4b06dfdf55a6fbed819133a6c1d31e187f1bca938d'),
 		);
 		const s = uint8ArrayToBigInt(
-			new Uint8Array(
-				hexToBytes('0be950468ba1c25a5cb50e9f6d8aa13c8cd21f24ba909402775b262ac76d374d'),
-			),
+			hexToBytes('0be950468ba1c25a5cb50e9f6d8aa13c8cd21f24ba909402775b262ac76d374d'),
 		);
 
 		const unsignedTx = AccessListEIP2930Transaction.fromTxData(txData, { common: usedCommon });

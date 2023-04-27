@@ -78,12 +78,8 @@ export const bytesAsUint8ArrayTransaction: FormatType<
 	},
 	gasLimit: BigInt('21000'),
 	v: BigInt('37'),
-	r: new Uint8Array(
-		hexToBytes('0x4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d'),
-	),
-	s: new Uint8Array(
-		hexToBytes('7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0'),
-	),
+	r: hexToBytes('0x4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d'),
+	s: hexToBytes('7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0'),
 };
 
 export const numbersAsHexStringTransaction: FormatType<

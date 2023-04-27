@@ -87,11 +87,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', false],
 	],
 	[
-		'blockNumber = new Uint8Array(hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")), hydrated = false',
-		[new Uint8Array(hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8')), false],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = false',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), false],
 	],
 	[
-		'blockNumber = new Uint8Array(hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")), hydrated = false',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = false',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
@@ -120,11 +120,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', true],
 	],
 	[
-		'blockNumber = new Uint8Array(hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")), hydrated = true',
-		[new Uint8Array(hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8')), true],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = true',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), true],
 	],
 	[
-		'blockNumber = new Uint8Array(hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")), hydrated = true',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = true',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,

@@ -57,11 +57,11 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 
 		switch (format) {
 			case 'BYTES_HEX':
-				// eslint-disable-next-line jest/no-conditional-expect, @typescript-eslint/no-unsafe-call
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result).toMatch(/0[xX][0-9a-fA-F]{64}/i);
 				break;
 			case 'BYTES_UINT8ARRAY':
-				// eslint-disable-next-line jest/no-conditional-expect, @typescript-eslint/no-unsafe-call
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(bytesToHex(result)).toMatch(/0[xX][0-9a-fA-F]{64}/i);
 				break;
 			default:

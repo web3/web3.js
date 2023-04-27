@@ -561,7 +561,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *  }
 	 *
 	 * web3.eth.getTransaction(
-	 *     new Uint8Array(hexToBytes("0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400")),
+	 *     web3.utils.hexToBytes("0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"),
 	 *     { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.HEX }
 	 * ).then(console.log);
 	 * {
@@ -713,7 +713,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *  }
 	 *
 	 * web3.eth.getTransactionFromBlock(
-	 *     new Uint8Array(hexToBytes("0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400")),
+	 *     hexToBytes("0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"),
 	 *     0,
 	 *     { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.HEX }
 	 * ).then(console.log);

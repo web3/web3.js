@@ -220,21 +220,15 @@ describe('[Common]: Hardfork logic', () => {
 		const chains: [Chain, Uint8Array][] = [
 			[
 				Chain.Mainnet,
-				new Uint8Array(
-					hexToBytes('d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3'),
-				),
+				hexToBytes('d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3'),
 			],
 			[
 				Chain.Goerli,
-				new Uint8Array(
-					hexToBytes('bf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a'),
-				),
+				hexToBytes('bf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a'),
 			],
 			[
 				Chain.Sepolia,
-				new Uint8Array(
-					hexToBytes('25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9'),
-				),
+				hexToBytes('25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9'),
 			],
 		];
 
@@ -261,8 +255,8 @@ describe('[Common]: Hardfork logic', () => {
 		let c = new Common({ chain: Chain.Mainnet, hardfork: Hardfork.Byzantium });
 		expect(c.forkHash()).toBe('0xa00bc324');
 		expect(c.forkHash(Hardfork.SpuriousDragon)).toBe('0x3edd5b10');
-		const genesisHash = new Uint8Array(
-			hexToBytes('d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3'),
+		const genesisHash = hexToBytes(
+			'd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
 		);
 		expect(c.forkHash(Hardfork.SpuriousDragon, genesisHash)).toBe('0x3edd5b10');
 

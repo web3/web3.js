@@ -62,16 +62,12 @@ export const testData: TestData[] = [
 	],
 	// storageKey = Uint8Array
 	[
-		'storageKey = [new Uint8Array(hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"))], blockNumber = "0x1"',
-		[
-			address,
-			[new Uint8Array(hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'))],
-			'0x1',
-		],
+		'storageKey = [hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")], blockNumber = "0x1"',
+		[address, [hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8')], '0x1'],
 	],
 	// storageKey = Uint8Array
 	[
-		'storageKey = [new Uint8Array(hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"))], blockNumber = "0x1"',
+		'storageKey = [hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")], blockNumber = "0x1"',
 		[
 			address,
 			[
