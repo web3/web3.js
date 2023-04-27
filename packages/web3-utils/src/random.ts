@@ -26,7 +26,12 @@ import { bytesToHex } from './converters';
  * @example
  * ```ts
  * console.log(web3.utils.randomBytes(32));
- * > <Buffer a9 a2 70 ff 00 9d 0b c9 2f 9e 5f 0e 40 a4 da 4a f9 1c 6f 23 41 59 46 a6 b5 8b 99 49 72 01 68 99>
+ * > Uint8Array(32) [
+ *       93, 172, 226,  32,  33, 176, 156, 156,
+ *       182,  30, 240,   2,  69,  96, 174, 197,
+ *       33, 136, 194, 241, 197, 156, 110, 111,
+ *       66,  87,  17,  88,  67,  48, 245, 183
+ *    ]
  * ```
  */
 export const randomBytes = (size: number): Uint8Array => getRandomBytesSync(size);

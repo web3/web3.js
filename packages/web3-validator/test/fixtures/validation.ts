@@ -94,6 +94,7 @@ export const invalidIntDataWithSize: [any, number][] = [
 	['-0x4812', 8],
 	['-0x123ccdef', 16],
 	['-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 8],
+	[Number.MAX_SAFE_INTEGER + 1, 256],
 ];
 
 export const validIntDataWithAbiType: [any, string][] = [
@@ -326,6 +327,7 @@ export const validAddressData: any[] = [
 	'0xe247a45c287191d435a8a5d72a7c8dc030451e9f',
 	'0xE247A45C287191D435A8A5D72A7C8DC030451E9F',
 	'0XE247A45C287191D435A8A5D72A7C8DC030451E9F',
+	new Uint8Array(hexToBytes('0xE247A45C287191D435A8A5D72A7C8DC030451E9F')),
 ];
 
 export const invalidAddressData: any[] = [

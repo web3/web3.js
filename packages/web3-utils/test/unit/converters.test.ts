@@ -55,6 +55,7 @@ import {
 	hexToNumberValidData,
 	hexToUtf8InvalidData,
 	hexToUtf8ValidData,
+	toUtf8ValidData,
 	numberToHexInvalidData,
 	numberToHexValidData,
 	toHexValidData,
@@ -227,7 +228,7 @@ describe('converters', () => {
 
 	describe('toUtf8', () => {
 		describe('valid cases', () => {
-			it.each(hexToUtf8ValidData)('%s', (input, output) => {
+			it.each(toUtf8ValidData)('%s', (input, output) => {
 				expect(toUtf8(input)).toEqual(output);
 			});
 		});

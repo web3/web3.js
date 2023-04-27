@@ -169,7 +169,13 @@ export const hexToUtf8ValidData: [HexString, string][] = [
 	['0x206e756c6c20737566666978', ' null suffix'],
 	['0x6e756c6c20707265666978', 'null prefix'],
 	['4d6172696e', 'Marin'],
-	['0x', ''],
+];
+
+export const toUtf8ValidData: [string | Uint8Array, string][] = [
+	...hexToUtf8ValidData,
+	[hexToBytes('0x206e756c6c20737566666978'), ' null suffix'],
+	[hexToBytes('0x4920002064617461'), 'I \u0000 data'],
+	[hexToBytes('0x49206861766520313030c2a3'), 'I have 100£'],
 ];
 
 export const hexToUtf8InvalidData: [any, string][] = [
@@ -319,7 +325,6 @@ export const bytesToUint8ArrayValidData: [Bytes, Uint8Array][] = [
 	['0X12c6', new Uint8Array([18, 198])],
 	['0X01', new Uint8Array([1])],
 	['0X00', new Uint8Array([0])],
-
 	['0x1234', new Uint8Array([18, 52])],
 	[new Uint8Array(hexToBytes('0c12')), new Uint8Array(hexToBytes('0c12'))],
 ];
