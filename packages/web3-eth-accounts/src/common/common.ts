@@ -14,14 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { buf as crc32Buffer } from 'crc-32';
+
 import { EventEmitter } from 'events';
 import type { Numbers } from 'web3-types';
 import { TypeOutput } from './types';
 import { intToBuffer, toType, parseGethGenesis } from './utils';
-import goerli from './chains/goerli.json';
-import mainnet from './chains/mainnet.json';
-import sepolia from './chains/sepolia.json';
+import goerli from './chains/goerli' ;
+import mainnet from './chains/mainnet' ;
+import sepolia from './chains/sepolia';
 import { EIPs } from './eips';
 import type { ConsensusAlgorithm, ConsensusType } from './enums';
 import { Chain, CustomChain, Hardfork } from './enums';
@@ -40,6 +40,10 @@ import type {
 	GethConfigOpts,
 	HardforkConfig,
 } from './types';
+
+import pkg from 'crc-32';
+
+const { buf: crc32Buffer } = pkg;
 
 type HardforkSpecKeys = keyof typeof HARDFORK_SPECS;
 type HardforkSpecValues = typeof HARDFORK_SPECS[HardforkSpecKeys];
