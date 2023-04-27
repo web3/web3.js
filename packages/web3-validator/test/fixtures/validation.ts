@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Filter } from 'web3-types';
+import { hexToBytes } from 'ethereum-cryptography/utils';
 import { ValidInputTypes } from '../../src/types';
 
 export const validUintData: any[] = [
@@ -253,7 +254,7 @@ export const isObjectData: any[] = [
 	// eslint-disable-next-line no-null/no-null
 	{ in: null, out: false },
 	{ in: undefined, out: false },
-	{ in: Buffer.from('asd'), out: false },
+	{ in: new Uint8Array([0x61, 0x73, 0x64]), out: false },
 ];
 export const isHexString32BytesData: any[] = [
 	{ in: ['0x0000000000000000000000000000000000000000000000000000000000000001', true], out: true },
@@ -296,8 +297,8 @@ export const validStringNumbersWithHex: [string, string][] = [
 
 export const invalidStringNumbers: ValidInputTypes[] = [
 	new ArrayBuffer(23255),
-	Buffer.from('abce', 'hex'),
-	Buffer.from('hello', 'utf8'),
+	new Uint8Array([0x97, 0x98, 0x99]),
+	new Uint8Array(hexToBytes('abcd')),
 ];
 export const validCheckAddressCheckSumData: any[] = [
 	'0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',
@@ -643,28 +644,28 @@ export const validBytesData: any[] = [
 	'0x10',
 	'0xafea',
 	[2, 3, 255],
-	Buffer.from('abce', 'hex'),
-	Buffer.from('hello', 'utf8'),
+	new Uint8Array(hexToBytes('abce')),
+	new Uint8Array([0x91, 0x92]),
 ];
 
 export const validBytesDataWithSize: [any, number][] = [
 	['0x10', 1],
-	[Buffer.from('abce', 'hex'), 2],
+	[new Uint8Array(hexToBytes('abce')), 2],
 ];
 
 export const invalidBytesDataWithSize: [any, number][] = [
 	['0x10', 2],
-	[Buffer.from('abce', 'hex'), 1],
+	[new Uint8Array(hexToBytes('abce')), 1],
 ];
 
 export const validBytesDataWithAbiType: [any, string][] = [
 	['0x10', 'bytes1'],
-	[Buffer.from('abce', 'hex'), 'bytes2'],
+	[new Uint8Array(hexToBytes('abce')), 'bytes2'],
 ];
 
 export const invalidBytesDataWithAbiType: [any, string][] = [
 	['0x10', 'bytes2'],
-	[Buffer.from('abce', 'hex'), 'bytes1'],
+	[new Uint8Array(hexToBytes('abce')), 'bytes1'],
 ];
 
 export const invalidBytesData: any[] = [

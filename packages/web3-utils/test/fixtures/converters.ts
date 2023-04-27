@@ -16,12 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Address, Bytes, HexString, Numbers, ValueTypes } from 'web3-types';
-import { EtherUnits } from '../../src/converters';
+import { EtherUnits, hexToBytes } from '../../src/converters';
 
 export const bytesToHexValidData: [Bytes, HexString][] = [
 	[new Uint8Array([72]), '0x48'],
 	[new Uint8Array([72, 12]), '0x480c'],
-	[Buffer.from('0c12', 'hex'), '0x0c12'],
+	[new Uint8Array(hexToBytes('0c12')), '0x0c12'],
 	['0x9c12', '0x9c12'],
 	['0X12c6', '0x12c6'],
 ];
@@ -321,7 +321,7 @@ export const bytesToUint8ArrayValidData: [Bytes, Uint8Array][] = [
 	['0X00', new Uint8Array([0])],
 
 	['0x1234', new Uint8Array([18, 52])],
-	[Buffer.from('0c12', 'hex'), Buffer.from('0c12', 'hex')],
+	[new Uint8Array(hexToBytes('0c12')), new Uint8Array(hexToBytes('0c12'))],
 ];
 
 export const toBigIntValidData: [any, bigint][] = [
@@ -332,7 +332,7 @@ export const toBigIntValidData: [any, bigint][] = [
 ];
 
 export const toBigIntInvalidData: [any, string][] = [
-	[Buffer.from(''), 'can not parse as number data'],
+	[new Uint8Array([]), 'can not parse as number data'],
 	['wwwww', ' Error: can not parse as number data'],
 	['zzzzee0xiiuu', ' Error: can not parse as number data'],
 ];

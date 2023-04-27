@@ -44,13 +44,12 @@ export const sha3ValidData: [string, string | undefined][] = [
 ];
 
 export const compareSha3JSValidData: [string, any | undefined][] = [
-	// cases that include buffer data
-	['0x80', Buffer.from(hexToBytes('0x80'))],
+	['0x80', new Uint8Array(hexToBytes('0x80'))],
 	[
 		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
-		Buffer.from(hexToBytes('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68')),
+		new Uint8Array(hexToBytes('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68')),
 	],
-	['0x1234', Buffer.from(hexToBytes('0x1234'))],
+	['0x1234', new Uint8Array(hexToBytes('0x1234'))],
 ];
 
 export const sha3InvalidData: [any, string][] = [

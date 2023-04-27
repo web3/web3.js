@@ -27,6 +27,7 @@ import {
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
 import { isDataFormatValid, convertScalarValueValid } from '../fixtures/formatter';
 import { format, isDataFormat, convertScalarValue } from '../../src/formatter';
+import { hexToBytes } from '../../src/converters';
 
 type TestTransactionInfoType = {
 	readonly blockHash?: Bytes;
@@ -328,44 +329,47 @@ describe('formatter', () => {
 				}>();
 			});
 
-			typecheck('should format block for number as "bigint" and bytes as "buffer"', () => {
-				type T = FormatType<
-					TestBlockType,
-					{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
-				>;
+			typecheck(
+				'should format block for number as "bigint" and bytes as "uint8array"',
+				() => {
+					type T = FormatType<
+						TestBlockType,
+						{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
+					>;
 
-				return expectTypeOf<T>().toBe<{
-					readonly parentHash: Uint8Array;
-					readonly sha3Uncles: Uint8Array;
-					readonly miner: Uint8Array;
-					readonly stateRoot: Uint8Array;
-					readonly transactionsRoot: Uint8Array;
-					readonly receiptsRoot: Uint8Array;
-					readonly logsBloom?: Uint8Array;
-					readonly difficulty?: bigint;
-					readonly number?: bigint;
-					readonly gasLimit: bigint;
-					readonly gasUsed: bigint;
-					readonly timestamp: bigint;
-					readonly extraData: Uint8Array;
-					readonly mixHash: Uint8Array;
-					readonly nonce?: bigint;
-					readonly totalDifficulty: bigint;
-					readonly baseFeePerGas?: bigint;
-					readonly size: bigint;
-					readonly transactions:
-						| Uint8Array[]
-						| {
-								readonly blockHash?: Uint8Array;
-								readonly blockNumber?: bigint;
-								readonly from: Address;
-								readonly hash: Uint8Array;
-								readonly transactionIndex?: bigint;
-						  }[];
-					readonly uncles: Uint8Array[];
-					readonly hash?: Uint8Array;
-				}>();
-			});
+					return expectTypeOf<T>().toBe<{
+						readonly parentHash: Uint8Array;
+						readonly sha3Uncles: Uint8Array;
+						readonly miner: Uint8Array;
+						readonly stateRoot: Uint8Array;
+						readonly transactionsRoot: Uint8Array;
+						readonly receiptsRoot: Uint8Array;
+						readonly logsBloom?: Uint8Array;
+						readonly difficulty?: bigint;
+						readonly number?: bigint;
+						readonly gasLimit: bigint;
+						readonly gasUsed: bigint;
+						readonly timestamp: bigint;
+						readonly extraData: Uint8Array;
+						readonly mixHash: Uint8Array;
+						readonly nonce?: bigint;
+						readonly totalDifficulty: bigint;
+						readonly baseFeePerGas?: bigint;
+						readonly size: bigint;
+						readonly transactions:
+							| Uint8Array[]
+							| {
+									readonly blockHash?: Uint8Array;
+									readonly blockNumber?: bigint;
+									readonly from: Address;
+									readonly hash: Uint8Array;
+									readonly transactionIndex?: bigint;
+							  }[];
+						readonly uncles: Uint8Array[];
+						readonly hash?: Uint8Array;
+					}>();
+				},
+			);
 
 			typecheck(
 				'should format block for number as "number" and bytes as "uint8array"',
@@ -458,7 +462,7 @@ describe('formatter', () => {
 			describe('bytes', () => {
 				it('should format for FMT_BYTES.HEX', () => {
 					expect(
-						format({ eth: 'bytes' }, Buffer.from('100bca', 'hex'), {
+						format({ eth: 'bytes' }, new Uint8Array(hexToBytes('100bca')), {
 							number: FMT_NUMBER.STR,
 							bytes: FMT_BYTES.HEX,
 						}),
@@ -499,9 +503,9 @@ describe('formatter', () => {
 				const data = {
 					int_arr: [10, 10, 10],
 					bytes_arr: [
-						Buffer.from('FF', 'hex'),
-						Buffer.from('FF', 'hex'),
-						Buffer.from('FF', 'hex'),
+						new Uint8Array(hexToBytes('FF')),
+						new Uint8Array(hexToBytes('FF')),
+						new Uint8Array(hexToBytes('FF')),
 					],
 				};
 
@@ -538,8 +542,8 @@ describe('formatter', () => {
 
 				const data = {
 					arr: [
-						{ prop1: 10, prop2: Buffer.from('FF', 'hex') },
-						{ prop1: 10, prop2: Buffer.from('FF', 'hex') },
+						{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
+						{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
 					],
 				};
 
@@ -574,7 +578,7 @@ describe('formatter', () => {
 				};
 
 				const data = {
-					tuple: [10, Buffer.from('FF', 'hex')],
+					tuple: [10, new Uint8Array(hexToBytes('FF'))],
 				};
 
 				const result = {
@@ -616,7 +620,7 @@ describe('formatter', () => {
 					],
 				};
 
-				const data = [10, Buffer.from('FF', 'hex')];
+				const data = [10, new Uint8Array(hexToBytes('FF'))];
 
 				const result = ['0xa', '0xff'];
 
@@ -646,7 +650,7 @@ describe('formatter', () => {
 				const data = {
 					handleRevert: true,
 					timeout: 10,
-					data: Buffer.from('FE', 'hex'),
+					data: new Uint8Array(hexToBytes('FE')),
 				};
 
 				const expected = {
@@ -688,7 +692,7 @@ describe('formatter', () => {
 					nested: {
 						handleRevert: true,
 						timeout: 10,
-						data: Buffer.from('FE', 'hex'),
+						data: new Uint8Array(hexToBytes('FE')),
 					},
 				};
 
