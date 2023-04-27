@@ -78,8 +78,8 @@ export type EtherUnits = keyof typeof ethUnitMap;
  *
  * @example
  * ```ts
- * console.log(web3.utils.bytesToUint8Array(new Uint8Array([72, 12])));
- * > <Buffer 48 0c>
+ * console.log(web3.utils.bytesToUint8Array("0xab")));
+ * > Uint8Array(1) [ 171 ]
  * ```
  */
 export const bytesToUint8Array = (data: Bytes): Uint8Array | never => {
@@ -115,8 +115,6 @@ const { uint8ArrayToHexString } = validatorUtils;
  * console.log(web3.utils.bytesToHex(new Uint8Array([72, 12])));
  * > "0x480c"
  *
- * console.log(web3.utils.bytesToHex(Buffer.from("0c12", "hex")));
- * > "0x0c12"
  */
 export const bytesToHex = (bytes: Bytes): HexString =>
 	uint8ArrayToHexString(bytesToUint8Array(bytes));
@@ -129,7 +127,7 @@ export const bytesToHex = (bytes: Bytes): HexString =>
  * @example
  * ```ts
  * console.log(web3.utils.hexToBytes('0x74657374'));
- * > <Buffer 74 65 73 74>
+ * > Uint8Array(4) [ 116, 101, 115, 116 ]
  * ```
  */
 export const hexToBytes = (bytes: HexString): Uint8Array => {
