@@ -187,7 +187,7 @@ export const hexToUtf8InvalidData: [any, string][] = [
 
 export const asciiToHexValidData: [string, HexString][] = [
 	['I have 100', '0x49206861766520313030'],
-	['I \u1234data', '0x49203464617461'],
+	['I \u0001data', '0x49200164617461'],
 	['I data', '0x492064617461'],
 	['I \u0000 data', '0x4920002064617461'],
 	['\u0000 null suffix', '0x00206e756c6c20737566666978'],

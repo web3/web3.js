@@ -282,8 +282,13 @@ export const hexToString = hexToUtf8;
  */
 export const asciiToHex = (str: string): HexString => {
 	validator.validate(['string'], [str]);
-
-	return `0x${Buffer.from(str, 'ascii').toString('hex')}`;
+	let hexString = '';
+	for (let i = 0; i < str.length; i += 1) {
+		const hexCharCode = str.charCodeAt(i).toString(16);
+		// might need a leading 0
+		hexString += hexCharCode.length % 2 !== 0 ? `0${hexCharCode}` : hexCharCode;
+	}
+	return `0x${hexString}`;
 };
 
 /**
