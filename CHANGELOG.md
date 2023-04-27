@@ -1472,3 +1472,8 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Added `filters` param to the `Filter` type (#6010)
 
+### Fixed
+
+#### web3-eth-accounts
+
+- Fixed ESM import bugs reported in (#6032) and (#6034)

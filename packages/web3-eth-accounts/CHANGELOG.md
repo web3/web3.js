@@ -84,3 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   The method `signTransaction` returned by `privateKeyToAccount` is now accepting the type `Transaction` for its argument. (#5993)
 
 ## [Unreleased]
+
+### Fixed
+
+- Fixed ESM import bugs reported in (#6032) and (#6034)
