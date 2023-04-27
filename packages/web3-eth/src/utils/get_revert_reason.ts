@@ -49,7 +49,6 @@ export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi)
 				customErrorName: error.innerError.errorName,
 				customErrorDecodedSignature: error.innerError.errorSignature,
 				customErrorArguments: error.innerError.errorArgs,
-				innerError: error.innerError,
 			} as RevertReasonWithCustomError;
 		}
 
