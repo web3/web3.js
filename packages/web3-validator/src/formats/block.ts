@@ -15,17 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FormatDefinition } from 'ajv';
 import { isBlockNumber, isBlockNumberOrTag, isBlockTag } from '../validation/block';
 
-export const blockNumber: FormatDefinition<string> = {
-	validate: (data: string) => isBlockNumber(data),
-};
+export const blockNumber = (data: string) => isBlockNumber(data);
 
-export const blockTag: FormatDefinition<string> = {
-	validate: (data: string) => isBlockTag(data),
-};
+export const blockTag = (data: string) => isBlockTag(data);
 
-export const blockNumberOrTag: FormatDefinition<string> = {
-	validate: (data: string) => isBlockNumberOrTag(data),
-};
+export const blockNumberOrTag = (data: string) => isBlockNumberOrTag(data);

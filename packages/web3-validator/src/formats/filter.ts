@@ -15,12 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './address';
-export * from './block';
-export * from './bloom';
-export * from './boolean';
-export * from './bytes';
-export * from './filter';
-export * from './hex';
-export * from './number';
-export * from './string';
+import { Filter } from 'web3-types';
+import { isFilterObject } from '../validation/filter';
+import { ValidInputTypes } from '../types';
+
+export const filter = (data: ValidInputTypes) => isFilterObject(data as Filter);

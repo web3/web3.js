@@ -15,19 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FormatDefinition } from 'ajv';
 import { isHex, isHexStrict, isHexString32Bytes, isHexString8Bytes } from '../validation/string';
 
-export const hex: FormatDefinition<string> = { validate: (data: string) => isHex(data) };
+export const hex = (data: string) => isHex(data);
 
-export const hexStrict: FormatDefinition<string> = {
-	validate: (data: string) => isHexStrict(data),
-};
+export const hexStrict = (data: string) => isHexStrict(data);
 
-export const hex8Bytes: FormatDefinition<string> = {
-	validate: (data: string) => isHexString8Bytes(data),
-};
+export const hex8Bytes = (data: string) => isHexString8Bytes(data);
 
-export const hexString32Bytes: FormatDefinition<string> = {
-	validate: (data: string) => isHexString32Bytes(data),
-};
+export const hexString32Bytes = (data: string) => isHexString32Bytes(data);

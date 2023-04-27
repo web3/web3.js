@@ -15,9 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FormatDefinition } from 'ajv';
-import { isUInt, isNumber } from '../validation/numbers';
+import { isUInt, isInt, isNumber } from '../validation/numbers';
+import { ValidInputTypes } from '../types';
 
-export const uint: FormatDefinition<string> = { validate: (data: string) => isUInt(data) };
-export const int: FormatDefinition<string> = { validate: (data: string) => isUInt(data) };
-export const number: FormatDefinition<string> = { validate: (data: string) => isNumber(data) };
+export const uint = (data: ValidInputTypes) => isUInt(data);
+export const uint256 = (data: ValidInputTypes) => isUInt(data, { abiType: 'uint256' });
+export const int = (data: ValidInputTypes) => isInt(data);
+export const int256 = (data: ValidInputTypes) => isInt(data, { abiType: 'int256' });
+export const number = (data: ValidInputTypes) => isNumber(data);
