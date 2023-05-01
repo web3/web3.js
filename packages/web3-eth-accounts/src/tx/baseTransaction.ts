@@ -111,7 +111,7 @@ export abstract class BaseTransaction<TransactionObject> {
 		this._type = Number(uint8ArrayToBigInt(toUint8Array(type)));
 
 		this.txOptions = opts;
-
+		console.log(r)
 		const toB = toUint8Array(to === '' ? '0x' : to);
 		const vB = toUint8Array(v === '' ? '0x' : v);
 		const rB = toUint8Array(r === '' ? '0x' : r);
