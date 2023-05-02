@@ -111,7 +111,6 @@ describe('rpc with block', () => {
 				format: Object.values(FMT_NUMBER),
 			}),
 		)('getBlock', async ({ hydrated, block, format }) => {
-			console.log(await web3Eth.getBlock(blockData[block], hydrated))
 			const b = {
 				...(await web3Eth.getBlock(blockData[block], hydrated, {
 					number: format as FMT_NUMBER,
