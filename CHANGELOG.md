@@ -675,3 +675,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 -   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6015)
+
+### Security
+  - Updated dependencies (#6044)
