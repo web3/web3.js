@@ -92,7 +92,7 @@ export type Schema = {
 	$recursiveAnchor?: boolean;
 	// generic
 	type?: string | Array<string>;
-	required?: Array<string>;
+	required?: Array<string> | boolean;
 	default?: Json;
 	// constant values
 	enum?: Array<Json>;

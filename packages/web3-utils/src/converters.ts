@@ -82,7 +82,6 @@ export type EtherUnits = keyof typeof ethUnitMap;
  */
 export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	validator.validate(['bytes'], [data]);
-
 	if (Buffer.isBuffer(data)) {
 		return data;
 	}

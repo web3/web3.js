@@ -76,7 +76,10 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arraySizes };
 };
 
-const convertEthType = (type: string, parentSchema: Schema = {}): { format?: string } => {
+const convertEthType = (
+	type: string,
+	parentSchema: Schema = {},
+): { format?: string; required?: boolean } => {
 	const typePropertyPresent = Object.keys(parentSchema).includes('type');
 
 	if (typePropertyPresent) {
@@ -109,10 +112,10 @@ const convertEthType = (type: string, parentSchema: Schema = {}): { format?: str
 		if (baseType === 'tuple') {
 			throw new Error('"tuple" type is not implemented directly.');
 		}
-		return { format: `${baseType}${baseTypeSize ?? ''}` };
+		return { format: `${baseType}${baseTypeSize ?? ''}`, required: true };
 	}
 	if (type) {
-		return { format: type };
+		return { format: type, required: true };
 	}
 
 	return {};

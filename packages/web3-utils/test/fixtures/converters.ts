@@ -39,7 +39,7 @@ export const bytesToHexInvalidData: [any, string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 	['1', 'value "1" at "/0" must pass "bytes" validation'],
 	['0', 'value "0" at "/0" must pass "bytes" validation'],
@@ -66,8 +66,8 @@ export const hexToBytesInvalidData: [any, string][] = [
 	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
-	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[null, 'Web3 validator found 1 error[s]:\nvalue at "/0" must pass "bytes" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 ];
 
@@ -93,7 +93,7 @@ export const numberToHexInvalidData: [any, string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "int" validation'],
-	[undefined, 'value at "/0" must pass "int" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "int" validation'],
 ];
 
@@ -138,7 +138,7 @@ export const utf8ToHexInvalidData: [any, string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "string" validation'],
-	[undefined, 'value at "/0" must pass "string" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "string" validation'],
 	[true, 'value "true" at "/0" must pass "string" validation'],
 	[false, 'value "false" at "/0" must pass "string" validation'],
@@ -163,7 +163,7 @@ export const hexToUtf8InvalidData: [any, string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 	[true, 'value "true" at "/0" must pass "bytes" validation'],
 ];
@@ -279,7 +279,7 @@ export const toWeiInvalidData: [[any, any], string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[[null, 'kwei'], 'value at "/0" must pass "number" validation'],
-	[[undefined, 'kwei'], 'value at "/0" must pass "number" validation'],
+	[[undefined, 'kwei'], 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[[{}, 'kwei'], 'value "[object Object]" at "/0" must pass "number" validation'],
 	[['data', 'kwei'], 'value "data" at "/0" must pass "number" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],

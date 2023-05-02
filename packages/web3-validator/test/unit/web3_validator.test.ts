@@ -56,7 +56,7 @@ describe('web3-validator', () => {
 
 			it('should raise error by default', () => {
 				expect(() => validator.validate(['uint'], [-1])).toThrow(
-					'Web3 validator found 1 error[s]:\nvalue "-1" at "/0" must be uint format',
+					'Web3 validator found 1 error[s]:\nvalue "-1" at "/0" must pass "uint" validation',
 				);
 			});
 
@@ -66,7 +66,7 @@ describe('web3-validator', () => {
 						instancePath: '/0',
 						keyword: 'data["0"]',
 						// keyword: 'eth',
-						message: 'must be uint format',
+						message: 'must pass "uint" validation',
 						params: { value: -1 },
 						schemaPath: '#',
 						// schemaPath: '#/items/0/eth',
