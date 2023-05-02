@@ -126,7 +126,10 @@ export class ContractInstantiationError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_INSTANTIATION;
 }
 
-type ProviderErrorData = HexString | { data: HexString } | { originalError: { data: HexString } };
+export type ProviderErrorData =
+	| HexString
+	| { data: HexString }
+	| { originalError: { data: HexString } };
 
 /**
  * This class is expected to be set as an `innerError` inside ContractExecutionError
@@ -179,6 +182,32 @@ export class Eip838ExecutionError extends Web3ContractError {
 		this.errorName = errorName;
 		this.errorSignature = errorSignature;
 		this.errorArgs = errorArgs;
+	}
+
+	public toJSON() {
+		let json = {
+			...super.toJSON(),
+			data: this.data,
+		} as {
+			name: string;
+			code: number;
+			message: string;
+			innerError: Error | Error[] | undefined;
+			data: string;
+			errorName?: string;
+			errorSignature?: string;
+			errorArgs?: { [K in string]: unknown };
+		};
+
+		if (this.errorName) {
+			json = {
+				...json,
+				errorName: this.errorName,
+				errorSignature: this.errorSignature,
+				errorArgs: this.errorArgs,
+			};
+		}
+		return json;
 	}
 }
 
