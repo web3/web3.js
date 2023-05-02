@@ -312,7 +312,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [stackexchange-url]: https://ethereum.stackexchange.com/questions/tagged/web3js
 [gitpoap-image]: https://public-api.gitpoap.io/v1/repo/ChainSafe/web3.js/badge
 [gitpoap-url]: https://www.gitpoap.io/gh/ChainSafe/web3.js
-[4x-release]: https://github.com/ChainSafe/web3.js/releases/tag/v4.0.0-alpha.0 
+[4x-release]: https://github.com/ChainSafe/web3.js/releases/tag/v4.0.1-rc.1 
 [4xdoc]: https://docs.web3js.org/
 [cdnhits-image]: https://data.jsdelivr.com/v1/package/npm/web3/badge
 [cdnhits-url]: https://www.jsdelivr.com/package/npm/web3
