@@ -145,16 +145,16 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
 
 	const signature = secp256k1.sign(hash.substring(2), privateKeyBuffer);
 	const signatureBytes = signature.toCompactRawBytes();
-	const r = Buffer.from(signatureBytes.subarray(0, 32));
-	const s = Buffer.from(signatureBytes.subarray(32, 64));
+	const r = signature.r.toString(16);
+	const s = signature.s.toString(16);
 	const v = signature.recovery! + 27;
 
 	return {
 		message: data,
 		messageHash: hash,
 		v: numberToHex(v),
-		r: bytesToHex(r),
-		s: bytesToHex(s),
+		r: `0x${r}`,
+		s: `0x${s}`,
 		signature: `0x${Buffer.from(signatureBytes).toString('hex')}${v.toString(16)}`,
 	};
 };
