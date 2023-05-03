@@ -15,35 +15,36 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	InvalidStringError,
-	InvalidBooleanError,
-	InvalidAddressError,
-	InvalidSizeError,
-	InvalidLargeValueError,
-	InvalidUnsignedIntegerError,
-	InvalidBytesError,
-} from 'web3-errors';
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { isAddress, isHexStrict, isNullish } from 'web3-validator';
+import { utf8ToBytes } from 'ethereum-cryptography/utils';
 import {
+	InvalidAddressError,
+	InvalidBooleanError,
+	InvalidBytesError,
+	InvalidLargeValueError,
+	InvalidSizeError,
+	InvalidStringError,
+	InvalidUnsignedIntegerError,
+} from 'web3-errors';
+import {
+	Bytes,
+	EncodingTypes,
 	Numbers,
+	Sha3Input,
 	TypedObject,
 	TypedObjectAbbreviated,
-	EncodingTypes,
-	Bytes,
-	Sha3Input,
 } from 'web3-types';
-import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
+import { isAddress, isNullish, isHexStrict } from 'web3-validator';
 import {
-	utf8ToHex,
-	hexToBytes,
-	toNumber,
+	bytesToUint8Array,
 	bytesToHex,
-	bytesToBuffer,
-	toHex,
+	hexToBytes,
 	toBigInt,
+	toHex,
+	toNumber,
+	utf8ToHex,
 } from './converters';
+import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
@@ -62,9 +63,20 @@ const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfa
  * ```
  */
 export const sha3 = (data: Bytes): string | undefined => {
-	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
+	let updatedData: Uint8Array;
 
-	const hash = bytesToHex(keccak256(Buffer.from(updatedData as Buffer)));
+	if (typeof data === 'string') {
+		if (data.startsWith('0x') && isHexStrict(data)) {
+			updatedData = hexToBytes(data);
+		} else {
+			updatedData = utf8ToBytes(data);
+		}
+	} else if (data instanceof ArrayBuffer || Array.isArray(data)) {
+		updatedData = new Uint8Array(data);
+	} else {
+		updatedData = data;
+	}
+	const hash = bytesToHex(keccak256(updatedData));
 
 	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
 	return hash === SHA3_EMPTY_BYTES ? undefined : hash;
@@ -115,14 +127,15 @@ export const keccak256Wrapper = (
 ): string => {
 	let processedData;
 	if (typeof data === 'bigint' || typeof data === 'number') {
-		processedData = data.toString();
-	} else if (typeof data === 'string' && isHexStrict(data)) {
-		processedData = bytesToBuffer(data);
+		processedData = utf8ToBytes(data.toString());
+	} else if (Array.isArray(data)) {
+		processedData = new Uint8Array(data);
+	} else if (typeof data === 'string' && !isHexStrict(data)) {
+		processedData = utf8ToBytes(data);
 	} else {
-		processedData = data as Uint8Array | readonly number[];
+		processedData = bytesToUint8Array(data as Bytes);
 	}
-
-	return bytesToHex(keccak256(Buffer.from(processedData)));
+	return bytesToHex(keccak256(processedData));
 };
 
 export { keccak256Wrapper as keccak256 };

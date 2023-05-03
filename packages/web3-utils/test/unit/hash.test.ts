@@ -52,7 +52,7 @@ describe('hash', () => {
 			});
 		});
 
-		describe('compare with js-sha3 buffer cases', () => {
+		describe('compare with js-sha3 uint8array cases', () => {
 			it.each(compareSha3JSValidData)('%s', (input, output) => {
 				expect(sha3(input)).toBe(`0x${keccak256(output)}`);
 			});

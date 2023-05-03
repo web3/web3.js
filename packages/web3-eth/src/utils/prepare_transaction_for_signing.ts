@@ -123,7 +123,7 @@ const getEthereumjsTransactionOptions = (
 export const prepareTransactionForSigning = async (
 	transaction: Transaction,
 	web3Context: Web3Context<EthExecutionAPI>,
-	privateKey?: HexString | Buffer,
+	privateKey?: HexString | Uint8Array,
 ) => {
 	const populatedTransaction = (await transactionBuilder({
 		transaction,

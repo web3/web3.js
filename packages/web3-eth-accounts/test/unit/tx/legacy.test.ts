@@ -14,17 +14,17 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Buffer } from 'buffer';
 import { RLP } from '@ethereumjs/rlp';
-import { Chain, Common, Hardfork } from '../../../src/common';
+import { bytesToHex, hexToBytes, uint8ArrayEquals } from 'web3-utils';
 import {
-	arrToBufArr,
-	bufferToBigInt,
-	bufferToHex,
-	intToBuffer,
-	toBuffer,
-	unpadBuffer,
-} from '../../../src/common/utils';
+	Chain,
+	Common,
+	Hardfork,
+	intToUint8Array,
+	toUint8Array,
+	uint8ArrayToBigInt,
+	unpadUint8Array,
+} from '../../../src/common';
 
 import { Transaction } from '../../../src';
 import type { TxData } from '../../../src';
@@ -71,45 +71,45 @@ describe('[Transaction]', () => {
 		const nonEIP2930Common = new Common({ chain: Chain.Mainnet, hardfork: Hardfork.Istanbul });
 		expect(Transaction.fromTxData({}, { common: nonEIP2930Common })).toBeTruthy();
 
-		const txData = txFixtures[3].raw.map(toBuffer);
-		txData[6] = intToBuffer(45); // v with 0-parity and chain ID 5
+		const txData = txFixtures[3].raw.map(toUint8Array);
+		txData[6] = intToUint8Array(45); // v with 0-parity and chain ID 5
 		let tx = Transaction.fromValuesArray(txData);
 		expect(tx.common.chainId() === BigInt(5)).toBe(true);
 
-		txData[6] = intToBuffer(46); // v with 1-parity and chain ID 5
+		txData[6] = intToUint8Array(46); // v with 1-parity and chain ID 5
 		tx = Transaction.fromValuesArray(txData);
 		expect(tx.common.chainId() === BigInt(5)).toBe(true);
 
-		txData[6] = intToBuffer(2033); // v with 0-parity and chain ID 999
+		txData[6] = intToUint8Array(2033); // v with 0-parity and chain ID 999
 		tx = Transaction.fromValuesArray(txData);
 		expect(tx.common.chainId()).toEqual(BigInt(999));
 
-		txData[6] = intToBuffer(2034); // v with 1-parity and chain ID 999
+		txData[6] = intToUint8Array(2034); // v with 1-parity and chain ID 999
 		tx = Transaction.fromValuesArray(txData);
 		expect(tx.common.chainId()).toEqual(BigInt(999));
 	});
 
 	it('Initialization -> decode with fromValuesArray()', () => {
 		for (const tx of txFixtures.slice(0, 4)) {
-			const txData = tx.raw.map(toBuffer);
+			const txData = tx.raw.map(toUint8Array);
 			const pt = Transaction.fromValuesArray(txData);
 
-			expect(bufferToHex(unpadBuffer(toBuffer(pt.nonce)))).toEqual(tx.raw[0]);
-			expect(bufferToHex(toBuffer(pt.gasPrice))).toEqual(tx.raw[1]);
-			expect(bufferToHex(toBuffer(pt.gasLimit))).toEqual(tx.raw[2]);
+			expect(bytesToHex(unpadUint8Array(toUint8Array(pt.nonce)))).toEqual(tx.raw[0]);
+			expect(bytesToHex(toUint8Array(pt.gasPrice))).toEqual(tx.raw[1]);
+			expect(bytesToHex(toUint8Array(pt.gasLimit))).toEqual(tx.raw[2]);
 			expect(pt.to?.toString()).toEqual(tx.raw[3]);
-			expect(bufferToHex(unpadBuffer(toBuffer(pt.value)))).toEqual(tx.raw[4]);
-			expect(`0x${pt.data.toString('hex')}`).toEqual(tx.raw[5]);
-			expect(bufferToHex(toBuffer(pt.v))).toEqual(tx.raw[6]);
-			expect(bufferToHex(toBuffer(pt.r))).toEqual(tx.raw[7]);
-			expect(bufferToHex(toBuffer(pt.s))).toEqual(tx.raw[8]);
+			expect(bytesToHex(unpadUint8Array(toUint8Array(pt.value)))).toEqual(tx.raw[4]);
+			expect(bytesToHex(pt.data)).toEqual(tx.raw[5]);
+			expect(bytesToHex(toUint8Array(pt.v))).toEqual(tx.raw[6]);
+			expect(bytesToHex(toUint8Array(pt.r))).toEqual(tx.raw[7]);
+			expect(bytesToHex(toUint8Array(pt.s))).toEqual(tx.raw[8]);
 
 			transactions.push(pt);
 		}
 	});
 
 	it('Initialization -> should accept lesser r values', () => {
-		const tx = Transaction.fromTxData({ r: bufferToBigInt(toBuffer('0x0005')) });
+		const tx = Transaction.fromTxData({ r: uint8ArrayToBigInt(toUint8Array('0x0005')) });
 		expect(tx.r!.toString(16)).toBe('5');
 	});
 
@@ -117,7 +117,7 @@ describe('[Transaction]', () => {
 		let common = new Common({ chain: Chain.Goerli, hardfork: Hardfork.Petersburg });
 		let tx = Transaction.fromTxData({}, { common });
 		expect(tx.common.chainId()).toEqual(BigInt(5));
-		const privKey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const privKey = hexToBytes(txFixtures[0].privateKey);
 		tx = tx.sign(privKey);
 		const serialized = tx.serialize();
 		common = new Common({ chain: Chain.Mainnet, hardfork: Hardfork.Petersburg });
@@ -146,10 +146,10 @@ describe('[Transaction]', () => {
 		let tx = Transaction.fromTxData({});
 		expect(tx.getDataFee()).toEqual(BigInt(0));
 
-		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toBuffer));
+		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toUint8Array));
 		expect(tx.getDataFee()).toEqual(BigInt(1716));
 
-		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toBuffer), { freeze: false });
+		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toUint8Array), { freeze: false });
 		expect(tx.getDataFee()).toEqual(BigInt(1716));
 	});
 
@@ -158,7 +158,7 @@ describe('[Transaction]', () => {
 		let tx = Transaction.fromTxData({}, { common });
 		expect(tx.getDataFee()).toEqual(BigInt(0));
 
-		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toBuffer), {
+		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toUint8Array), {
 			common,
 		});
 		expect(tx.getDataFee()).toEqual(BigInt(1716));
@@ -166,7 +166,7 @@ describe('[Transaction]', () => {
 
 	it('getDataFee() -> should invalidate cached value on hardfork change', () => {
 		const common = new Common({ chain: Chain.Mainnet, hardfork: Hardfork.Byzantium });
-		const tx = Transaction.fromValuesArray(txFixtures[0].raw.map(toBuffer), {
+		const tx = Transaction.fromValuesArray(txFixtures[0].raw.map(toUint8Array), {
 			common,
 		});
 		expect(tx.getDataFee()).toEqual(BigInt(656));
@@ -186,8 +186,8 @@ describe('[Transaction]', () => {
 	it('serialize()', () => {
 		for (const [i, tx] of transactions.entries()) {
 			const s1 = tx.serialize();
-			const s2 = Buffer.from(RLP.encode(txFixtures[i].raw));
-			expect(s1.equals(s2)).toBe(true);
+			const s2 = RLP.encode(txFixtures[i].raw);
+			expect(uint8ArrayEquals(s1, s2)).toBe(true);
 		}
 	});
 
@@ -195,11 +195,11 @@ describe('[Transaction]', () => {
 		const tx = Transaction.fromTxData({ value: 5000 });
 		const s1 = tx.serialize();
 
-		const s1Rlp = toBuffer(`0x${s1.toString('hex')}`);
+		const s1Rlp = toUint8Array(bytesToHex(s1));
 		const tx2 = Transaction.fromSerializedTx(s1Rlp);
 		const s2 = tx2.serialize();
 
-		expect(s1.equals(s2)).toBe(true);
+		expect(uint8ArrayEquals(s1, s2)).toBe(true);
 	});
 
 	it('hash() / getMessageToSign(true) / getMessageToSign(false)', () => {
@@ -208,45 +208,42 @@ describe('[Transaction]', () => {
 			hardfork: Hardfork.TangerineWhistle,
 		});
 
-		let tx = Transaction.fromValuesArray(txFixtures[3].raw.slice(0, 6).map(toBuffer), {
+		let tx = Transaction.fromValuesArray(txFixtures[3].raw.slice(0, 6).map(toUint8Array), {
 			common,
 		});
 		expect(() => {
 			tx.hash();
 		}).toThrow();
-		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toBuffer), {
+		tx = Transaction.fromValuesArray(txFixtures[3].raw.map(toUint8Array), {
 			common,
 		});
 		expect(tx.hash()).toEqual(
-			Buffer.from('375a8983c9fc56d7cfd118254a80a8d7403d590a6c9e105532b67aca1efb97aa', 'hex'),
+			hexToBytes('0x375a8983c9fc56d7cfd118254a80a8d7403d590a6c9e105532b67aca1efb97aa'),
 		);
 		expect(tx.getMessageToSign()).toEqual(
-			Buffer.from('61e1ec33764304dddb55348e7883d4437426f44ab3ef65e6da1e025734c03ff0', 'hex'),
+			hexToBytes('0x61e1ec33764304dddb55348e7883d4437426f44ab3ef65e6da1e025734c03ff0'),
 		);
 		expect(tx.getMessageToSign(false)).toHaveLength(6);
 		expect(tx.hash()).toEqual(
-			Buffer.from('375a8983c9fc56d7cfd118254a80a8d7403d590a6c9e105532b67aca1efb97aa', 'hex'),
+			hexToBytes('0x375a8983c9fc56d7cfd118254a80a8d7403d590a6c9e105532b67aca1efb97aa'),
 		);
 	});
 
 	it('hash() -> with defined chainId', () => {
-		const tx = Transaction.fromValuesArray(txFixtures[4].raw.map(toBuffer));
-		expect(tx.hash().toString('hex')).toBe(
-			'0f09dc98ea85b7872f4409131a790b91e7540953992886fc268b7ba5c96820e4',
+		const tx = Transaction.fromValuesArray(txFixtures[4].raw.map(toUint8Array));
+		expect(bytesToHex(tx.hash())).toBe(
+			'0x0f09dc98ea85b7872f4409131a790b91e7540953992886fc268b7ba5c96820e4',
 		);
-		expect(tx.hash().toString('hex')).toBe(
-			'0f09dc98ea85b7872f4409131a790b91e7540953992886fc268b7ba5c96820e4',
-		);
-		expect(tx.getMessageToSign().toString('hex')).toBe(
-			'f97c73fdca079da7652dbc61a46cd5aeef804008e057be3e712c43eac389aaf0',
+		expect(bytesToHex(tx.getMessageToSign())).toBe(
+			'0xf97c73fdca079da7652dbc61a46cd5aeef804008e057be3e712c43eac389aaf0',
 		);
 	});
 
 	it("getMessageToSign(), getSenderPublicKey() (implicit call) -> verify EIP155 signature based on Vitalik's tests", () => {
 		for (const tx of txFixturesEip155) {
-			const pt = Transaction.fromSerializedTx(toBuffer(tx.rlp));
-			expect(pt.getMessageToSign().toString('hex')).toEqual(tx.hash);
-			expect(`0x${pt.serialize().toString('hex')}`).toEqual(tx.rlp);
+			const pt = Transaction.fromSerializedTx(toUint8Array(tx.rlp));
+			expect(bytesToHex(pt.getMessageToSign())).toEqual(tx.hash);
+			expect(bytesToHex(pt.serialize())).toEqual(tx.rlp);
 			expect(pt.getSenderAddress().toString()).toBe(`0x${tx.sender}`);
 		}
 	});
@@ -261,35 +258,34 @@ describe('[Transaction]', () => {
 			'0x0de0b6b3a7640000',
 			'0x',
 		];
-		const privateKey = Buffer.from(
+		const privateKey = hexToBytes(
 			'4646464646464646464646464646464646464646464646464646464646464646',
-			'hex',
 		);
-		const pt = Transaction.fromValuesArray(txRaw.map(toBuffer));
+		const pt = Transaction.fromValuesArray(txRaw.map(toUint8Array));
 
 		// Note that Vitalik's example has a very similar value denoted "signing data".
 		// It's not the output of `serialize()`, but the pre-image of the hash returned by `tx.hash(false)`.
 		// We don't have a getter for such a value in Transaction.
-		expect(pt.serialize().toString('hex')).toBe(
-			'ec098504a817c800825208943535353535353535353535353535353535353535880de0b6b3a764000080808080',
+		expect(bytesToHex(pt.serialize())).toBe(
+			'0xec098504a817c800825208943535353535353535353535353535353535353535880de0b6b3a764000080808080',
 		);
 		const signedTx = pt.sign(privateKey);
-		expect(signedTx.getMessageToSign().toString('hex')).toBe(
-			'daf5a779ae972f972197303d7b574746c7ef83eadac0f2791ad23db92e4c8e53',
+		expect(bytesToHex(signedTx.getMessageToSign())).toBe(
+			'0xdaf5a779ae972f972197303d7b574746c7ef83eadac0f2791ad23db92e4c8e53',
 		);
-		expect(signedTx.serialize().toString('hex')).toBe(
-			'f86c098504a817c800825208943535353535353535353535353535353535353535880de0b6b3a76400008025a028ef61340bd939bc2195fe537567866003e1a15d3c71ff63e1590620aa636276a067cbe9d8997f761aecb703304b3800ccf555c9f3dc64214b297fb1966a3b6d83',
+		expect(bytesToHex(signedTx.serialize())).toBe(
+			'0xf86c098504a817c800825208943535353535353535353535353535353535353535880de0b6b3a76400008025a028ef61340bd939bc2195fe537567866003e1a15d3c71ff63e1590620aa636276a067cbe9d8997f761aecb703304b3800ccf555c9f3dc64214b297fb1966a3b6d83',
 		);
 	});
 
 	it('sign(), getSenderPublicKey() (implicit call) -> EIP155 hashing when singing', () => {
 		const common = new Common({ chain: 1, hardfork: Hardfork.Petersburg });
 		for (const txData of txFixtures.slice(0, 3)) {
-			const tx = Transaction.fromValuesArray(txData.raw.slice(0, 6).map(toBuffer), {
+			const tx = Transaction.fromValuesArray(txData.raw.slice(0, 6).map(toUint8Array), {
 				common,
 			});
 
-			const privKey = Buffer.from(txData.privateKey, 'hex');
+			const privKey = hexToBytes(txData.privateKey);
 			const txSigned = tx.sign(privKey);
 
 			expect(txSigned.getSenderAddress().toString()).toBe(`0x${txData.sendersAddress}`);
@@ -305,15 +301,14 @@ describe('[Transaction]', () => {
 			'0x0de0b6b3a7640000',
 			'0x',
 		];
-		const privateKey = Buffer.from(
+		const privateKey = hexToBytes(
 			'DE3128752F183E8930D7F00A2AAA302DCB5E700B2CBA2D8CA5795660F07DEFD5',
-			'hex',
 		);
 		const common = new Common({ chain: 1 });
-		const tx = Transaction.fromValuesArray(txRaw.map(toBuffer), { common });
+		const tx = Transaction.fromValuesArray(txRaw.map(toUint8Array), { common });
 		const signedTx = tx.sign(privateKey);
-		expect(signedTx.serialize().toString('hex')).toBe(
-			'f86c018502540be40082520894d7250824390ec5c8b71d856b5de895e271170d9d880de0b6b3a76400008026a05e5c85a426b11e1ba5d9b567e904818a33975962942f538d247cd7391f5fb27aa00c8ec23ca4a3cdc2515916e4adc89676ce124fd7d0ddbb3ddd37c441dd584c21',
+		expect(bytesToHex(signedTx.serialize())).toBe(
+			'0xf86c018502540be40082520894d7250824390ec5c8b71d856b5de895e271170d9d880de0b6b3a76400008026a05e5c85a426b11e1ba5d9b567e904818a33975962942f538d247cd7391f5fb27aa00c8ec23ca4a3cdc2515916e4adc89676ce124fd7d0ddbb3ddd37c441dd584c21',
 		);
 	});
 
@@ -327,9 +322,8 @@ describe('[Transaction]', () => {
 			value: '0x0',
 		};
 
-		const privateKey = Buffer.from(
+		const privateKey = hexToBytes(
 			'4646464646464646464646464646464646464646464646464646464646464646',
-			'hex',
 		);
 
 		const common = new Common({
@@ -398,7 +392,7 @@ describe('[Transaction]', () => {
 		let tx = Transaction.fromTxData({}, { common });
 		expect(tx.common.chainId()).toEqual(BigInt(5));
 
-		const privKey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const privKey = hexToBytes(txFixtures[0].privateKey);
 		tx = tx.sign(privKey);
 
 		const serialized = tx.serialize();
@@ -411,14 +405,14 @@ describe('[Transaction]', () => {
 	it('freeze property propagates from unsigned tx to signed tx', () => {
 		const tx = Transaction.fromTxData({}, { freeze: false });
 		expect(Object.isFrozen(tx)).toBe(false);
-		const privKey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const privKey = hexToBytes(txFixtures[0].privateKey);
 		const signedTxn = tx.sign(privKey);
 		expect(Object.isFrozen(signedTxn)).toBe(false);
 	});
 
 	it('common propagates from the common of tx, not the common in TxOptions', () => {
 		const common = new Common({ chain: Chain.Goerli, hardfork: Hardfork.London });
-		const pkey = Buffer.from(txFixtures[0].privateKey, 'hex');
+		const pkey = hexToBytes(txFixtures[0].privateKey);
 		const txn = Transaction.fromTxData({}, { common, freeze: false });
 		const newCommon = new Common({
 			chain: Chain.Goerli,
@@ -447,9 +441,8 @@ describe('[Transaction]', () => {
 			to: '0xd9024df085d09398ec76fbed18cac0e1149f50dc',
 			value: '0x0',
 		};
-		const privateKey = Buffer.from(
+		const privateKey = hexToBytes(
 			'4646464646464646464646464646464646464646464646464646464646464646',
-			'hex',
 		);
 		tx = Transaction.fromTxData(txData);
 		expect(tx.isSigned()).toBe(false);
@@ -470,10 +463,10 @@ describe('[Transaction]', () => {
 		tx = Transaction.fromSerializedTx(rawSigned);
 		expect(tx.isSigned()).toBe(true);
 
-		const signedValues = arrToBufArr(RLP.decode(Uint8Array.from(rawSigned))) as Buffer[];
-		tx = Transaction.fromValuesArray(signedValues);
+		const signedValues = RLP.decode(Uint8Array.from(rawSigned));
+		tx = Transaction.fromValuesArray(signedValues as Uint8Array[]);
 		expect(tx.isSigned()).toBe(true);
-		tx = Transaction.fromValuesArray(signedValues.slice(0, 6));
+		tx = Transaction.fromValuesArray(signedValues.slice(0, 6) as Uint8Array[]);
 		expect(tx.isSigned()).toBe(false);
 	});
 });

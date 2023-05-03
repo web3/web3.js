@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getRandomBytesSync } from 'ethereum-cryptography/random';
+import { bytesToHex } from './converters';
 
 /**
  * Returns a random byte array by the given bytes size
@@ -25,10 +26,15 @@ import { getRandomBytesSync } from 'ethereum-cryptography/random';
  * @example
  * ```ts
  * console.log(web3.utils.randomBytes(32));
- * > <Buffer a9 a2 70 ff 00 9d 0b c9 2f 9e 5f 0e 40 a4 da 4a f9 1c 6f 23 41 59 46 a6 b5 8b 99 49 72 01 68 99>
+ * > Uint8Array(32) [
+ *       93, 172, 226,  32,  33, 176, 156, 156,
+ *       182,  30, 240,   2,  69,  96, 174, 197,
+ *       33, 136, 194, 241, 197, 156, 110, 111,
+ *       66,  87,  17,  88,  67,  48, 245, 183
+ *    ]
  * ```
  */
-export const randomBytes = (size: number): Buffer => Buffer.from(getRandomBytesSync(size));
+export const randomBytes = (size: number): Uint8Array => getRandomBytesSync(size);
 
 /**
  * Returns a random hex string by the given bytes size
@@ -40,4 +46,4 @@ export const randomBytes = (size: number): Buffer => Buffer.from(getRandomBytesS
  * > 0x139f5b88b72a25eab053d3b57fe1f8a9dbc62a526b1cb1774d0d7db1c3e7ce9e
  * ```
  */
-export const randomHex = (byteSize: number): string => `0x${randomBytes(byteSize).toString('hex')}`;
+export const randomHex = (byteSize: number): string => bytesToHex(randomBytes(byteSize));
