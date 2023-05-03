@@ -125,7 +125,7 @@ describe('promise helpers', () => {
 		it('reject if later throws', async () => {
 			const dummyError = new Error('error');
 			let counter = 0;
-			const asyncHelper = () => {
+			const asyncHelper = async () => {
 				if (counter === 0) {
 					counter += 1;
 					return undefined;
