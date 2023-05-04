@@ -52,7 +52,11 @@ class TestProvider extends SocketProvider<any, any, any> {
 	): void {}
 	// eslint-disable-next-line
 	getStatus(): Web3ProviderStatus {
-		return 'connected';
+		return this._connectionStatus;
+	}
+	// eslint-disable-next-line
+	setStatus(status: Web3ProviderStatus) {
+		this._connectionStatus = status;
 	}
 }
 
@@ -80,6 +84,26 @@ describe('SocketProvider', () => {
 		it('should call method reconnect', () => {
 			const reconnectOptions = { autoReconnect: true };
 			const provider = new TestProvider(socketPath, socketOption, reconnectOptions);
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_reconnect').mockReturnValue('');
+			provider.message('');
+			// @ts-expect-error run protected method
+			expect(provider._reconnect).toHaveBeenCalled();
+		});
+		it('should call method reconnect in case of error at _openSocketConnection', () => {
+			const provider = new TestProvider(socketPath, socketOption);
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_openSocketConnection').mockRejectedValue(new Error());
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_reconnect').mockReturnValue('');
+			provider.message('');
+			// @ts-expect-error run protected method
+			expect(provider._reconnect).toHaveBeenCalled();
+		});
+		it('should call method reconnect in case of error at _addSocketListeners', () => {
+			const provider = new TestProvider(socketPath, socketOption);
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_addSocketListeners').mockRejectedValue(new Error());
 			// @ts-expect-error run protected method
 			jest.spyOn(provider, '_reconnect').mockReturnValue('');
 			provider.message('');
