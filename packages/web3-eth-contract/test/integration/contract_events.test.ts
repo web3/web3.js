@@ -201,8 +201,7 @@ describe('contract', () => {
 				}),
 			).toHaveLength(2);
 		});
-		// @todo: investigate why it fails
-		it.skip('should return all past events using number options', async () => {
+		it('should return all past events using number options', async () => {
 			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 1', 11, true)
 				.send(sendOptions);
@@ -216,8 +215,7 @@ describe('contract', () => {
 				}),
 			).toHaveLength(2);
 		});
-		// @todo: investigate why it fails
-		it.skip('should return all past events using string options', async () => {
+		it('should return all past events using string options', async () => {
 			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 1', 11, true)
 				.send(sendOptions);
@@ -232,8 +230,7 @@ describe('contract', () => {
 				}),
 			).toHaveLength(2);
 		});
-		// @todo: investigate why it fails
-		it.skip('should return all past events using bigint options', async () => {
+		it('should return all past events using bigint options', async () => {
 			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 1', 11, true)
 				.send(sendOptions);
