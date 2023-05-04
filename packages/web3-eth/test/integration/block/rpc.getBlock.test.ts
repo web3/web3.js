@@ -134,9 +134,17 @@ describe('rpc with block', () => {
 			// just fix tests for oneOf validation
 			// @TODO: when use schemasafe remove this fix
 			const schema = JSON.parse(JSON.stringify(blockSchema));
-			if (b.transactions && typeof b.transactions[0] === 'object') {
+			if (
+				b.transactions &&
+				Array.isArray(b.transactions) &&
+				typeof b.transactions[0] === 'object'
+			) {
 				// eslint-disable-next-line prefer-destructuring
 				schema.properties.transactions = schema.properties.transactions.oneOf[0];
+				// @ts-expect-error add leading zeros
+				b.transactions[0].s = `0x${`000000000000000${b?.transactions[0]?.s.slice(2)}`.slice(
+					-64,
+				)}`;
 			} else {
 				// eslint-disable-next-line prefer-destructuring
 				schema.properties.transactions = schema.properties.transactions.oneOf[1];
