@@ -980,7 +980,7 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 
 // TODO - Add input formatting to filter
 /**
- * View additional documentations here: {@link Web3Eth.getLogs}
+ * View additional documentations here: {@link Web3Eth.getPastLogs}
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
  */
 export async function getLogs<ReturnFormat extends DataFormat>(
