@@ -31,6 +31,8 @@ import {
 	closeOpenConnection,
 	getSystemTestBackend,
 	describeIf,
+	createNewAccount,
+	refillAccount,
 } from '../../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';
@@ -73,7 +75,14 @@ describe('rpc with block', () => {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
-		tempAcc = await createTempAccount();
+		tempAcc = await createNewAccount({ unlock: true });
+		await refillAccount(
+			(
+				await createTempAccount()
+			).address,
+			tempAcc.address,
+			'10000000000000000',
+		);
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
 		await contract.deploy(deployOptions).send(sendOptions);
