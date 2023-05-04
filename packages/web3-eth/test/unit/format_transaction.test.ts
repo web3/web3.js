@@ -18,7 +18,6 @@ import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER } from 'web3-types';
 import { formatTransaction } from '../../src/utils/format_transaction';
 import {
 	bytesAsHexStringTransaction,
-	bytesAsBufferTransaction,
 	numbersAsBigIntTransaction,
 	numbersAsHexStringTransaction,
 	numbersAsStringTransaction,
@@ -35,7 +34,6 @@ const transactionsDataForNumberTypes: Record<FMT_NUMBER, Record<string, unknown>
 
 const transactionsDataForByteTypes: Record<FMT_BYTES, Record<string, unknown>> = {
 	[FMT_BYTES.HEX]: bytesAsHexStringTransaction,
-	[FMT_BYTES.BUFFER]: bytesAsBufferTransaction,
 	[FMT_BYTES.UINT8ARRAY]: bytesAsUint8ArrayTransaction,
 };
 

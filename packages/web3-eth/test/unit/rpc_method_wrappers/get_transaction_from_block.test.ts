@@ -78,7 +78,7 @@ describe('getTransactionFromBlock', () => {
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters) => {
 			const [inputBlock] = inputParameters;
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedFormattedResult = formatTransaction(
 				mockRpcResponse,
 				expectedReturnFormat,

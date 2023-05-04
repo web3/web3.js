@@ -74,6 +74,10 @@ export const isInt = (
 		return false;
 	}
 
+	if (typeof value === 'number' && value > Number.MAX_SAFE_INTEGER) {
+		return false;
+	}
+
 	let size!: number;
 
 	if (options?.abiType) {

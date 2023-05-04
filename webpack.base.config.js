@@ -66,9 +66,6 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 				},
 			}),
 			new webpack.ProvidePlugin({
-				Buffer: ['buffer', 'Buffer'],
-			}),
-			new webpack.ProvidePlugin({
 				process: 'process/browser',
 			}),
 		],

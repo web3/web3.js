@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { ValidInputTypes } from '../types';
-import { codePointToInt, padLeft } from '../utils';
+import { codePointToInt, hexToUint8Array, padLeft, uint8ArrayToHexString } from '../utils';
 import { isAddress } from './address';
 import { isHexStrict } from './string';
 
@@ -54,11 +54,9 @@ export const isInBloom = (bloom: string, value: string | Uint8Array): boolean =>
 		return false;
 	}
 
-	const buffer = typeof value === 'string' ? Buffer.from(value.slice(2), 'hex') : value;
+	const uint8Array = typeof value === 'string' ? hexToUint8Array(value) : value;
 
-	const hash = Buffer.from(keccak256(buffer) as Buffer)
-		.toString('hex')
-		.replace(/^0x/i, '');
+	const hash = uint8ArrayToHexString(keccak256(uint8Array)).slice(2);
 
 	for (let i = 0; i < 12; i += 4) {
 		// calculate bit position in bloom filter that must be active

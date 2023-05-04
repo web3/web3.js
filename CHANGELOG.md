@@ -1475,3 +1475,9 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-types
 
 -   Added `filters` param to the `Filter` type (#6010)
+
+### Changed
+
+#### web3-eth
+
+-   Refactored documentation for `rpc_method_wrappers` to point to the previously duplicated documentation found under the `Web3Eth` class documentation (#6054)

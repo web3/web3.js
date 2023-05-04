@@ -14,11 +14,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { buf as crc32Buffer } from 'crc-32';
+import { buf as crc32Uint8Array } from 'crc-32';
 import { EventEmitter } from 'events';
 import type { Numbers } from 'web3-types';
+import { bytesToHex, hexToBytes, uint8ArrayConcat } from 'web3-utils';
 import { TypeOutput } from './types';
-import { intToBuffer, toType, parseGethGenesis } from './utils';
+import { intToUint8Array, toType, parseGethGenesis } from './utils';
 import goerli from './chains/goerli.json';
 import mainnet from './chains/mainnet.json';
 import sepolia from './chains/sepolia.json';
@@ -930,8 +931,8 @@ export class Common extends EventEmitter {
 	 * @param genesisHash Genesis block hash of the chain
 	 * @returns Fork hash as hex string
 	 */
-	public _calcForkHash(hardfork: string | Hardfork, genesisHash: Buffer) {
-		let hfBuffer = Buffer.alloc(0);
+	public _calcForkHash(hardfork: string | Hardfork, genesisHash: Uint8Array) {
+		let hfUint8Array = new Uint8Array();
 		let prevBlockOrTime = 0;
 		for (const hf of this.hardforks()) {
 			const { block, timestamp, name } = hf;
@@ -950,23 +951,20 @@ export class Common extends EventEmitter {
 				blockOrTime !== prevBlockOrTime &&
 				name !== Hardfork.Merge
 			) {
-				const hfBlockBuffer = Buffer.from(
-					blockOrTime.toString(16).padStart(16, '0'),
-					'hex',
-				);
-				hfBuffer = Buffer.concat([hfBuffer, hfBlockBuffer]);
+				const hfBlockUint8Array = hexToBytes(blockOrTime.toString(16).padStart(16, '0'));
+				hfUint8Array = uint8ArrayConcat(hfUint8Array, hfBlockUint8Array);
 				prevBlockOrTime = blockOrTime;
 			}
 
 			if (hf.name === hardfork) break;
 		}
-		const inputBuffer = Buffer.concat([genesisHash, hfBuffer]);
+		const inputUint8Array = uint8ArrayConcat(genesisHash, hfUint8Array);
 
 		// CRC32 delivers result as signed (negative) 32-bit integer,
 		// convert to hex string
 		// eslint-disable-next-line no-bitwise
-		const forkhash = intToBuffer(crc32Buffer(inputBuffer) >>> 0).toString('hex');
-		return `0x${forkhash}`;
+		const forkhash = bytesToHex(intToUint8Array(crc32Uint8Array(inputUint8Array) >>> 0));
+		return forkhash;
 	}
 
 	/**
@@ -974,7 +972,7 @@ export class Common extends EventEmitter {
 	 * @param hardfork Hardfork name, optional if HF set
 	 * @param genesisHash Genesis block hash of the chain, optional if already defined and not needed to be calculated
 	 */
-	public forkHash(_hardfork?: string | Hardfork, genesisHash?: Buffer): string {
+	public forkHash(_hardfork?: string | Hardfork, genesisHash?: Uint8Array): string {
 		const hardfork = _hardfork ?? this._hardfork;
 		const data = this._getHardfork(hardfork);
 		if (
@@ -1011,7 +1009,7 @@ export class Common extends EventEmitter {
 	 * @param common The {@link Common} to set the forkHashes for
 	 * @param genesisHash The genesis block hash
 	 */
-	public setForkHashes(genesisHash: Buffer) {
+	public setForkHashes(genesisHash: Uint8Array) {
 		for (const hf of this.hardforks()) {
 			const blockOrTime = hf.timestamp ?? hf.block;
 			if (

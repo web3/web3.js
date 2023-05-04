@@ -136,15 +136,8 @@ export interface CustomCommonOpts extends BaseOpts {
 
 export interface GethConfigOpts extends BaseOpts {
 	chain?: string;
-	genesisHash?: Buffer;
+	genesisHash?: Uint8Array;
 	mergeForkIdPostMerge?: boolean;
-}
-/*
- * A type that represents an object that has a `toBuffer()` method.
- */
-export interface TransformableToBuffer {
-	toBuffer(): Buffer;
-	toArray?(): Uint8Array;
 }
 
 /*
@@ -155,55 +148,44 @@ export type PrefixedHexString = string;
 /*
  * A type that represents an input that can be converted to a Buffer.
  */
-export type BufferLike =
-	| Buffer
-	| Uint8Array
-	| number[]
-	| number
-	| bigint
-	| TransformableToBuffer
-	| PrefixedHexString;
+export type Uint8ArrayLike = Uint8Array | number[] | number | bigint | PrefixedHexString;
 
 /*
  * A type that represents an input that can be converted to a BigInt.
  */
-export type BigIntLike = bigint | PrefixedHexString | number | Buffer;
+export type BigIntLike = bigint | PrefixedHexString | number | Uint8Array;
 
 /*
  * A type that represents an object that has a `toArray()` method.
  */
 export interface TransformableToArray {
 	toArray(): Uint8Array;
-	toBuffer?(): Buffer;
 }
 
 export type NestedUint8Array = Array<Uint8Array | NestedUint8Array>;
-export type NestedBufferArray = Array<Buffer | NestedBufferArray>;
 /**
  * Type output options
  */
 export enum TypeOutput {
 	Number,
 	BigInt,
-	Buffer,
+	Uint8Array,
 	PrefixedHexString,
 }
 
 export type TypeOutputReturnType = {
 	[TypeOutput.Number]: number;
 	[TypeOutput.BigInt]: bigint;
-	[TypeOutput.Buffer]: Buffer;
+	[TypeOutput.Uint8Array]: Uint8Array;
 	[TypeOutput.PrefixedHexString]: PrefixedHexString;
 };
-export type ToBufferInputTypes =
+export type ToBytesInputTypes =
 	| PrefixedHexString
 	| number
 	| bigint
-	| Buffer
 	| Uint8Array
 	| number[]
 	| TransformableToArray
-	| TransformableToBuffer
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	| null
 	| undefined;
