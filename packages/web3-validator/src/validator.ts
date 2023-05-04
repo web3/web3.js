@@ -90,7 +90,7 @@ export class Validator {
 			formats,
 			greedy: true,
 			verbose: true,
-			additionalProperties: true,
+			additionalProperties: false,
 		}) as Validate;
 	}
 

@@ -45,7 +45,7 @@ describe('getFeeHistory', () => {
 		async (_, inputParameters) => {
 			const [inputBlockCount, inputNewestBlock, inputRewardPercentiles] = inputParameters;
 			const inputBlockCountFormatted = format(
-				{ eth: 'uint' },
+				{ format: 'uint' },
 				inputBlockCount,
 				ETH_DATA_FORMAT,
 			);
@@ -53,7 +53,7 @@ describe('getFeeHistory', () => {
 				{
 					type: 'array',
 					items: {
-						eth: 'uint',
+						format: 'uint',
 					},
 				},
 				inputRewardPercentiles,
@@ -66,7 +66,7 @@ describe('getFeeHistory', () => {
 				inputNewestBlockFormatted = web3Context.defaultBlock;
 			} else {
 				inputNewestBlockFormatted = format(
-					{ eth: 'uint' },
+					{ format: 'uint' },
 					inputNewestBlock,
 					ETH_DATA_FORMAT,
 				);

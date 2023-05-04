@@ -56,7 +56,7 @@ describe('rpc with block', () => {
 	};
 	let tempAcc: { address: string; privateKey: string };
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 		web3Eth = new Web3Eth({
 			provider: clientUrl,
@@ -73,8 +73,6 @@ describe('rpc with block', () => {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
-	});
-	beforeAll(async () => {
 		tempAcc = await createTempAccount();
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
@@ -94,6 +92,7 @@ describe('rpc with block', () => {
 			transactionIndex: Number(receipt.transactionIndex),
 		};
 	});
+
 	afterAll(async () => {
 		await closeOpenConnection(web3Eth);
 		await closeOpenConnection(contract);
@@ -122,7 +121,21 @@ describe('rpc with block', () => {
 				b.miner = '0x0000000000000000000000000000000000000000';
 				b.totalDifficulty = '0x0';
 			}
-			expect(validator.validateJSONSchema(blockSchema, b)).toBeUndefined();
+
+			// just fix tests for oneOf validation
+			// @TODO: when use schemasafe remove this fix
+			const schema = JSON.parse(JSON.stringify(blockSchema));
+			if (b.transactions) {
+				if (typeof b.transactions[0] === 'string') {
+					// eslint-disable-next-line prefer-destructuring
+					schema.properties.transactions = schema.properties.transactions.oneOf[1];
+				} else {
+					// eslint-disable-next-line prefer-destructuring
+					schema.properties.transactions = schema.properties.transactions.oneOf[0];
+				}
+			}
+
+			expect(validator.validateJSONSchema(schema, b)).toBeUndefined();
 
 			if (hydrated && b.transactions?.length > 0) {
 				// eslint-disable-next-line jest/no-conditional-expect

@@ -56,7 +56,7 @@ export class Registry {
 	) {
 		try {
 			const receipt = this.contract.methods
-				.setOwner(namehash(name), format({ eth: 'address' }, address, returnFormat))
+				.setOwner(namehash(name), format({ format: 'address' }, address, returnFormat))
 				.send(txConfig);
 
 			return receipt;
@@ -100,7 +100,7 @@ export class Registry {
 				.setSubnodeOwner(
 					namehash(node),
 					hexStrictLabel,
-					format({ eth: 'address' }, address, returnFormat),
+					format({ format: 'address' }, address, returnFormat),
 				)
 				.send(txConfig);
 			return receipt;
@@ -124,8 +124,8 @@ export class Registry {
 				.setSubnodeRecord(
 					namehash(name),
 					hexStrictLabel,
-					format({ eth: 'address' }, owner, returnFormat),
-					format({ eth: 'address' }, resolver, returnFormat),
+					format({ format: 'address' }, owner, returnFormat),
+					format({ format: 'address' }, resolver, returnFormat),
 					ttl,
 				)
 				.send(txConfig);
@@ -159,8 +159,8 @@ export class Registry {
 		try {
 			const result = this.contract.methods
 				.isApprovedForAll(
-					format({ eth: 'address' }, owner, returnFormat),
-					format({ eth: 'address' }, operator, returnFormat),
+					format({ format: 'address' }, owner, returnFormat),
+					format({ format: 'address' }, operator, returnFormat),
 				)
 				.call();
 
@@ -207,7 +207,7 @@ export class Registry {
 	) {
 		try {
 			return this.contract.methods
-				.setResolver(namehash(name), format({ eth: 'address' }, address, returnFormat))
+				.setResolver(namehash(name), format({ format: 'address' }, address, returnFormat))
 				.send(txConfig);
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-eth call method is implemented
@@ -226,8 +226,8 @@ export class Registry {
 			return this.contract.methods
 				.setRecord(
 					namehash(name),
-					format({ eth: 'address' }, owner, returnFormat),
-					format({ eth: 'address' }, resolver, returnFormat),
+					format({ format: 'address' }, owner, returnFormat),
+					format({ format: 'address' }, resolver, returnFormat),
 					ttl,
 				)
 				.send(txConfig);

@@ -178,7 +178,7 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 	const signTransactionWithContext = async (transaction: Transaction, privateKey: Bytes) => {
 		const tx = await prepareTransactionForSigning(transaction, context);
 
-		const privateKeyBytes = format({ eth: 'bytes' }, privateKey, ETH_DATA_FORMAT);
+		const privateKeyBytes = format({ format: 'bytes' }, privateKey, ETH_DATA_FORMAT);
 
 		return signTransaction(tx, privateKeyBytes);
 	};

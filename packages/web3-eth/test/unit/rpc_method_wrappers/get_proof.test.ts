@@ -44,7 +44,7 @@ describe('getProof', () => {
 		async (_, inputParameters) => {
 			const [inputAddress, inputStorageKey, inputBlockNumber] = inputParameters;
 			const inputStorageKeyFormatted = inputStorageKey.map(s =>
-				format({ eth: 'bytes' }, s, ETH_DATA_FORMAT),
+				format({ format: 'bytes' }, s, ETH_DATA_FORMAT),
 			);
 
 			let inputBlockNumberFormatted;
@@ -53,7 +53,7 @@ describe('getProof', () => {
 				inputBlockNumberFormatted = web3Context.defaultBlock;
 			} else {
 				inputBlockNumberFormatted = format(
-					{ eth: 'uint' },
+					{ format: 'uint' },
 					inputBlockNumber,
 					ETH_DATA_FORMAT,
 				);

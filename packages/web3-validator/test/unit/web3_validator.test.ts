@@ -119,7 +119,7 @@ describe('web3-validator', () => {
 					validator.validateJSONSchema(
 						{
 							type: 'array',
-							items: [{ $id: 'a', eth: 'uint' }],
+							items: [{ $id: 'a', required: true, format: 'uint' }],
 							minItems: 1,
 							maxItems: 1,
 						},
@@ -132,7 +132,7 @@ describe('web3-validator', () => {
 					validator.validateJSONSchema(
 						{
 							type: 'array',
-							items: [{ $id: 'a', eth: 'uint' }],
+							items: [{ $id: 'a', required: true, format: 'uint' }],
 							minItems: 1,
 							maxItems: 1,
 						},

@@ -88,7 +88,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: string) {
-		this.emit('data', format({ eth: 'string' }, data, super.returnFormat));
+		this.emit('data', format({ format: 'string' }, data, super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {
