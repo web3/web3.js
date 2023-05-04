@@ -40,7 +40,7 @@ describe('getPendingTransactions', () => {
 	});
 
 	it('should format return value using provided return format', async () => {
-		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 		const expectedFormattedResult = mockRpcResponse.map(transaction =>
 			formatTransaction(transaction, expectedReturnFormat),
 		);

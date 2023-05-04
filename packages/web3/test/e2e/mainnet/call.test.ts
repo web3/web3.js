@@ -14,8 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { bufferToHex } from 'web3-eth-accounts';
-
+import { bytesToHex } from 'web3-utils';
 import Web3, { FMT_BYTES, FMT_NUMBER } from '../../../src';
 import {
 	closeOpenConnection,
@@ -61,13 +60,9 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result).toMatch(/0[xX][0-9a-fA-F]{64}/i);
 				break;
-			case 'BYTES_BUFFER':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(bufferToHex(result as unknown as Buffer)).toMatch(/0[xX][0-9a-fA-F]{64}/i);
-				break;
 			case 'BYTES_UINT8ARRAY':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(bufferToHex(result as unknown as Buffer)).toMatch(/0[xX][0-9a-fA-F]{64}/i);
+				expect(bytesToHex(result)).toMatch(/0[xX][0-9a-fA-F]{64}/i);
 				break;
 			default:
 				throw new Error('Unhandled format');

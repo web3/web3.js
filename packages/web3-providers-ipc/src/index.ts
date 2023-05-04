@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Socket, SocketConstructorOpts } from 'net';
 import { ConnectionNotOpenError, InvalidClientError } from 'web3-errors';
-import { ReconnectOptions, SocketProvider } from 'web3-utils';
+import { ReconnectOptions, SocketProvider, toUtf8 } from 'web3-utils';
 import {
 	EthExecutionAPI,
 	Web3APIMethod,
@@ -60,7 +60,7 @@ import { existsSync } from 'fs';
  * ```
  */
 export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> extends SocketProvider<
-	Buffer | string,
+	Uint8Array | string,
 	CloseEvent,
 	Error,
 	API
@@ -118,10 +118,8 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._socketConnection?.write(JSON.stringify(payload));
 	}
 
-	protected _parseResponses(e: Buffer | string) {
-		return this.chunkResponseParser.parseResponse(
-			typeof e === 'string' ? e : e.toString('utf8'),
-		);
+	protected _parseResponses(e: Uint8Array | string) {
+		return this.chunkResponseParser.parseResponse(typeof e === 'string' ? e : toUtf8(e));
 	}
 
 	protected _addSocketListeners(): void {

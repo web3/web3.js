@@ -73,7 +73,7 @@ export interface Web3EthInterface extends Eth {
 	};
 	accounts: {
 		create: () => Web3Account;
-		privateKeyToAccount: (privateKey: Buffer | string) => Web3Account;
+		privateKeyToAccount: (privateKey: Uint8Array | string) => Web3Account;
 		signTransaction: (
 			transaction: Transaction,
 			privateKey: Bytes,
