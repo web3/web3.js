@@ -145,6 +145,10 @@ describe('rpc with block', () => {
 				b.transactions[0].s = `0x${`000000000000000${b?.transactions[0]?.s.slice(2)}`.slice(
 					-64,
 				)}`;
+				// @ts-expect-error add leading zeros
+				b.transactions[0].r = `0x${`000000000000000${b?.transactions[0]?.r.slice(2)}`.slice(
+					-64,
+				)}`;
 			} else {
 				// eslint-disable-next-line prefer-destructuring
 				schema.properties.transactions = schema.properties.transactions.oneOf[1];
