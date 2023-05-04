@@ -62,7 +62,7 @@ export const getTransactionFromOrToAttr = (
 		| TransactionWithFromLocalWalletIndex
 		| TransactionWithToLocalWalletIndex
 		| TransactionWithFromAndToLocalWalletIndex,
-	privateKey?: HexString | Buffer,
+	privateKey?: HexString | Uint8Array,
 ): Address | undefined => {
 	if (transaction !== undefined && attr in transaction && transaction[attr] !== undefined) {
 		if (typeof transaction[attr] === 'string' && isAddress(transaction[attr] as string)) {
@@ -127,7 +127,7 @@ export const getTransactionType = (
 export async function defaultTransactionBuilder<ReturnType = Transaction>(options: {
 	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
-	privateKey?: HexString | Buffer;
+	privateKey?: HexString | Uint8Array;
 }): Promise<ReturnType> {
 	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 	let populatedTransaction = format(
@@ -235,7 +235,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 export const transactionBuilder = async <ReturnType = Transaction>(options: {
 	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI>;
-	privateKey?: HexString | Buffer;
+	privateKey?: HexString | Uint8Array;
 	// eslint-disable-next-line @typescript-eslint/require-await
 }) =>
 	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({

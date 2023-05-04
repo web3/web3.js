@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { isBuffer, isBytes } from '../../../src/validation/bytes';
+import { isBytes } from '../../../src/validation/bytes';
 import {
 	invalidBytesData,
 	invalidBytesDataWithAbiType,
@@ -27,16 +27,6 @@ import {
 
 describe('validation', () => {
 	describe('bytes', () => {
-		describe('isBuffer', () => {
-			it('should return true for the Buffer value', () => {
-				expect(isBuffer(Buffer.from('abc0', 'hex'))).toBeTruthy();
-			});
-
-			it('should return false for the no-buffer value', () => {
-				expect(isBuffer('0x12')).toBeFalsy();
-			});
-		});
-
 		describe('isBytes', () => {
 			describe('raw bytes', () => {
 				describe('valid cases', () => {

@@ -34,8 +34,8 @@ export type Web3ValidationErrorObject<
 	schema?: S;
 	data?: unknown;
 };
-export type ValidInputTypes = ArrayBuffer | Buffer | bigint | string | number | boolean;
 
+export type ValidInputTypes = ArrayBuffer | Uint8Array | bigint | string | number | boolean;
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
 export type EthBaseTypesWithMeta =
 	| `string${string}`

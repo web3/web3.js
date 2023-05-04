@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InvalidNumberError } from 'web3-errors';
+import { InvalidNumberError, InvalidBytesError } from 'web3-errors';
 import { ValidInputTypes } from '../../src/types';
 import {
 	ethAbiToJsonSchema,
@@ -24,6 +24,8 @@ import {
 	hexToNumber,
 	numberToHex,
 	padLeft,
+	hexToUint8Array,
+	uint8ArrayToHexString,
 } from '../../src/utils';
 import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 import {
@@ -31,13 +33,31 @@ import {
 	invalidCodePoints,
 	validHexStrictDataWithNumber,
 	invalidHexData,
+	invalidHexStrictStringData,
 	validHexStrictData,
 	validStringNumbersWithHex,
 	invalidStringNumbers,
 	padLeftData,
+	validHexStrictDataWithUint8Array,
 } from '../fixtures/validation';
 
 describe('utils', () => {
+	describe('uint8Array', () => {
+		it.each(validHexStrictDataWithUint8Array)('uint8Array to hex', (res, input) => {
+			expect(uint8ArrayToHexString(input)).toEqual(res.toLowerCase());
+		});
+		describe('hex to uint8Array', () => {
+			it.each(validHexStrictDataWithUint8Array)('valid hex string data', (input, res) => {
+				expect(hexToUint8Array(input)).toEqual(res);
+			});
+
+			it.each(invalidHexStrictStringData)('invalidHexData', (input: string) => {
+				expect(() => {
+					hexToUint8Array(input);
+				}).toThrow(new InvalidBytesError(`hex string has odd length: ${input}`));
+			});
+		});
+	});
 	describe('ethAbiToJsonSchema', () => {
 		describe('full schema', () => {
 			it.each(abiToJsonSchemaCases)('$title', ({ abi, json }) => {

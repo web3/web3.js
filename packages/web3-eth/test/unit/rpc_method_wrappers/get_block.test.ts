@@ -67,7 +67,7 @@ describe('getBlock', () => {
 		`should format expectedMockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters) => {
 			const [inputBlock, hydrated] = inputParameters;
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedMockRpcResponse = hydrated ? mockRpcResponseHydrated : mockRpcResponse;
 			const expectedFormattedResult = format(
 				blockSchema,

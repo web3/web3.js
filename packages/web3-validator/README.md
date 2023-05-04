@@ -56,7 +56,7 @@ Following eth types are supported to validate.
 | ----- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | uint  | `number`, `string`, `HexString` | Unsigned integer, all ethereum compatible variants are also supported e.g. `uint8`, `uint256`. You can also use array specifiers as `uint[]` or `uint[2]` |
 | int   | `number`, `string`, `HexString` | Signed integer, all ethereum compatible variants are also supported e.g. `int8`, `int256`. You can also use array specifiers as `int[]` or `int[2]`       |
-| bytes | `HexString`, `Buffer`           | Raw bytes. You can also use fixed length bytes as `bytes[2]`                                                                                              |
+| bytes | `HexString`, `Uint8Array`       | Raw bytes. You can also use fixed length bytes as `bytes[2]`                                                                                              |
 
 | string | `string` | String values |
 | address | `string`, `HexString` | Ethereum network compatible address |

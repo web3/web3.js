@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Address, BlockNumberOrTag, BlockTags, Bytes } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 
 export const mockRpcResponse = {
 	accountProof: [
@@ -51,7 +52,7 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  * 	   - storageKey
  *  	   - blockNumber
  */
-type TestData = [string, [Address, Bytes[] | Buffer[], BlockNumberOrTag | undefined]];
+type TestData = [string, [Address, Bytes[] | Uint8Array[], BlockNumberOrTag | undefined]];
 export const testData: TestData[] = [
 	// Testing storageKey cases
 	// storageKey = HexString
@@ -59,14 +60,14 @@ export const testData: TestData[] = [
 		'storageKey = ["0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"], blockNumber = "0x1"',
 		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], '0x1'],
 	],
-	// storageKey = Buffer
+	// storageKey = Uint8Array
 	[
-		'storageKey = [Buffer.from("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex")], blockNumber = "0x1"',
-		[address, [Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex')], '0x1'],
+		'storageKey = [hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")], blockNumber = "0x1"',
+		[address, [hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8')], '0x1'],
 	],
 	// storageKey = Uint8Array
 	[
-		'storageKey = [Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")], blockNumber = "0x1"',
+		'storageKey = [hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")], blockNumber = "0x1"',
 		[
 			address,
 			[

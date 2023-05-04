@@ -72,7 +72,7 @@ describe('getProof', () => {
 	it.each(testData)(
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters) => {
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedFormattedResult = format(
 				accountSchema,
 				mockRpcResponse,

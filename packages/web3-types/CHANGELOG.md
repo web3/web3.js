@@ -92,7 +92,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   The types `FMT_NUMBER`, `NumberTypes`, `FMT_BYTES`, `ByteTypes`, `DataFormat`, `DEFAULT_RETURN_FORMAT`, `ETH_DATA_FORMAT` and `FormatType` moved from `web3-utils`. (#5993)
 -   The types `ContractInitOptions`, `NonPayableCallOptions` and `PayableCallOptions` are moved from `web3-eth-contract`. (#5993)
 
-
 ## [Unreleased]
 
 ### Changed
@@ -102,3 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added `filters` param to the `Filter` type (#6010)
+
+### Changed
+
+-   Replaced Buffer for Uint8Array (#6004)
+-   types `FMT_BYTES.BUFFER`, `Bytes` and `FormatType` and encryption option types for `salt` and `iv` has replaced support for `Buffer` for `Uint8Array` (#6004)
