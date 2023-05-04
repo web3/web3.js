@@ -462,7 +462,7 @@ describe('formatter', () => {
 			describe('bytes', () => {
 				it('should format for FMT_BYTES.HEX', () => {
 					expect(
-						format({ eth: 'bytes' }, new Uint8Array(hexToBytes('100bca')), {
+						format({ format: 'bytes' }, new Uint8Array(hexToBytes('100bca')), {
 							number: FMT_NUMBER.STR,
 							bytes: FMT_BYTES.HEX,
 						}),

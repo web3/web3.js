@@ -125,18 +125,14 @@ describe('rpc with block', () => {
 			// just fix tests for oneOf validation
 			// @TODO: when use schemasafe remove this fix
 			const schema = JSON.parse(JSON.stringify(blockSchema));
-			if (b.transactions) {
-				if (typeof b.transactions[0] === 'string') {
-					// eslint-disable-next-line prefer-destructuring
-					schema.properties.transactions = schema.properties.transactions.oneOf[1];
-				} else {
-					// eslint-disable-next-line prefer-destructuring
-					schema.properties.transactions = schema.properties.transactions.oneOf[0];
-				}
+			if (b.transactions && typeof b.transactions[0] === 'object') {
+				// eslint-disable-next-line prefer-destructuring
+				schema.properties.transactions = schema.properties.transactions.oneOf[0];
+			} else {
+				// eslint-disable-next-line prefer-destructuring
+				schema.properties.transactions = schema.properties.transactions.oneOf[1];
 			}
-
 			expect(validator.validateJSONSchema(schema, b)).toBeUndefined();
-
 			if (hydrated && b.transactions?.length > 0) {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(b.transactions).toBeInstanceOf(Array<Transaction>);
