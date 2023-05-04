@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Filter } from 'web3-types';
+import { hexToBytes } from 'ethereum-cryptography/utils';
 import { ValidInputTypes } from '../../src/types';
 
 export const validUintData: any[] = [
@@ -93,6 +94,7 @@ export const invalidIntDataWithSize: [any, number][] = [
 	['-0x4812', 8],
 	['-0x123ccdef', 16],
 	['-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 8],
+	[Number.MAX_SAFE_INTEGER + 1, 256],
 ];
 
 export const validIntDataWithAbiType: [any, string][] = [
@@ -128,6 +130,43 @@ export const validHexStrictDataWithNumber: [string, number | bigint][] = [
 	['0x1', 1],
 	['0xcd', 205],
 	['-0xcd', -205],
+];
+export const validHexStrictDataWithUint8Array: [string, Uint8Array][] = [
+	['0x48', new Uint8Array([72])],
+	['0x123c', new Uint8Array([18, 60])],
+	[
+		'0xdec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0',
+		new Uint8Array([
+			0xde, 0xc0, 0x51, 0x8f, 0xa6, 0x72, 0xa7, 0x00, 0x27, 0xb0, 0x4c, 0x28, 0x65, 0x82,
+			0xe5, 0x43, 0xab, 0x17, 0x31, 0x9f, 0xbd, 0xd3, 0x84, 0xfa, 0x7b, 0xc8, 0xf3, 0xd5,
+			0xa5, 0x42, 0xc0,
+		]),
+	],
+	[
+		'0xd115bffabbdd893a6f7cea402e7338643ced44a6',
+		new Uint8Array([
+			0xd1, 0x15, 0xbf, 0xfa, 0xbb, 0xdd, 0x89, 0x3a, 0x6f, 0x7c, 0xea, 0x40, 0x2e, 0x73,
+			0x38, 0x64, 0x3c, 0xed, 0x44, 0xa6,
+		]),
+	],
+	['0xcd', new Uint8Array([205])],
+	['0x', new Uint8Array([])],
+	['0x01', new Uint8Array([1])],
+	[
+		'0x2C941171bD2A7aEda7c2767c438DfF36EAaFdaFc',
+		new Uint8Array([
+			0x2c, 0x94, 0x11, 0x71, 0xbd, 0x2a, 0x7a, 0xed, 0xa7, 0xc2, 0x76, 0x7c, 0x43, 0x8d,
+			0xff, 0x36, 0xea, 0xaf, 0xda, 0xfc,
+		]),
+	],
+];
+
+export const invalidHexStrictStringData: [string][] = [
+	['0x1'],
+	['-0x'],
+	// ['-0x1'],
+	['0xdec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c01'],
+	['I have 100£'],
 ];
 export const validHexStrictData: any[] = [
 	...validHexStrictDataWithNumber.map(tuple => tuple[0]),
@@ -216,7 +255,7 @@ export const isObjectData: any[] = [
 	// eslint-disable-next-line no-null/no-null
 	{ in: null, out: false },
 	{ in: undefined, out: false },
-	{ in: Buffer.from('asd'), out: false },
+	{ in: new Uint8Array([0x61, 0x73, 0x64]), out: false },
 ];
 export const isHexString32BytesData: any[] = [
 	{ in: ['0x0000000000000000000000000000000000000000000000000000000000000001', true], out: true },
@@ -259,8 +298,8 @@ export const validStringNumbersWithHex: [string, string][] = [
 
 export const invalidStringNumbers: ValidInputTypes[] = [
 	new ArrayBuffer(23255),
-	Buffer.from('abce', 'hex'),
-	Buffer.from('hello', 'utf8'),
+	new Uint8Array([0x97, 0x98, 0x99]),
+	new Uint8Array(hexToBytes('abcd')),
 ];
 export const validCheckAddressCheckSumData: any[] = [
 	'0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',
@@ -288,6 +327,7 @@ export const validAddressData: any[] = [
 	'0xe247a45c287191d435a8a5d72a7c8dc030451e9f',
 	'0xE247A45C287191D435A8A5D72A7C8DC030451E9F',
 	'0XE247A45C287191D435A8A5D72A7C8DC030451E9F',
+	new Uint8Array(hexToBytes('0xE247A45C287191D435A8A5D72A7C8DC030451E9F')),
 ];
 
 export const invalidAddressData: any[] = [
@@ -304,7 +344,7 @@ export const validBloomData: any[] = [
 
 export const invalidBloomData: any[] = ['0x1100', '0x1212', 'test', 100];
 
-export const validInBloomData: any[] = [
+export const validInBloomData: [string, string][] = [
 	[
 		'0x00000000200000000010000080000000000002000000000000000000000000000000000000020200000000000000000000800001000000000000000000200000000000000000000000000008000000800000000000000000000000000000000000000000020000000000000000000800000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000080000000000000000000000100000000000000000000000002000000000001000080000000000000000000000000000000000020200010000000000000000000000000000000000000100000000000000000000000',
 		'0x98afe7a8d28bbc88dcf41f8e06d97c74958a47dc',
@@ -604,35 +644,37 @@ export const invalidFilterObjectData: any[] = [
 
 export const validBytesData: any[] = [
 	'0x10',
-	'0xafe',
+	'0xafea',
 	[2, 3, 255],
-	Buffer.from('abce', 'hex'),
-	Buffer.from('hello', 'utf8'),
+	new Uint8Array(hexToBytes('abce')),
+	new Uint8Array([0x91, 0x92]),
 ];
 
 export const validBytesDataWithSize: [any, number][] = [
 	['0x10', 1],
-	[Buffer.from('abce', 'hex'), 2],
+	[new Uint8Array(hexToBytes('abce')), 2],
 ];
 
 export const invalidBytesDataWithSize: [any, number][] = [
 	['0x10', 2],
-	[Buffer.from('abce', 'hex'), 1],
+	[new Uint8Array(hexToBytes('abce')), 1],
 ];
 
 export const validBytesDataWithAbiType: [any, string][] = [
 	['0x10', 'bytes1'],
-	[Buffer.from('abce', 'hex'), 'bytes2'],
+	[new Uint8Array(hexToBytes('abce')), 'bytes2'],
 ];
 
 export const invalidBytesDataWithAbiType: [any, string][] = [
 	['0x10', 'bytes2'],
-	[Buffer.from('abce', 'hex'), 'bytes1'],
+	[new Uint8Array(hexToBytes('abce')), 'bytes1'],
 ];
 
 export const invalidBytesData: any[] = [
 	'0xT1',
 	'1234',
+	// odd length hex string
+	'0x123',
 	'hello',
 	[1, 2, -3, 4, 5],
 	[2, 3, 266],

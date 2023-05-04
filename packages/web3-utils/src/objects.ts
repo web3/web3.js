@@ -22,7 +22,6 @@ const isIterable = (item: unknown): item is Record<string, unknown> =>
 	typeof item === 'object' &&
 	!isNullish(item) &&
 	!Array.isArray(item) &&
-	!Buffer.isBuffer(item) &&
 	!(item instanceof TypedArray);
 
 // The following code is a derivative work of the code from the "LiskHQ/lisk-sdk" project,

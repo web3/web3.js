@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { bytesToBuffer, hexToBytes } from 'web3-utils';
+import { hexToBytes } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, LogAPI } from '../../../src';
 import {
@@ -77,27 +77,6 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 			case 'BYTES_HEX':
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result).toStrictEqual(expectedLogs);
-				break;
-			case 'BYTES_BUFFER':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result).toStrictEqual([
-					{
-						...expectedLogs[0],
-						blockHash: bytesToBuffer(hexToBytes(expectedLogs[0].blockHash as string)),
-						data: bytesToBuffer(hexToBytes(expectedLogs[0].data as string)),
-						transactionHash: bytesToBuffer(
-							hexToBytes(expectedLogs[0].transactionHash as string),
-						),
-						topics: expectedLogs[0].topics?.map(topic =>
-							bytesToBuffer(hexToBytes(topic)),
-						),
-						// TODO Should these be formatted?
-						// blockNumber: bytesToBuffer(hexToBytes((expectedLogs[0]).blockNumber as string)),
-						// data: bytesToBuffer(hexToBytes((expectedLogs[0]).data as string)),
-						// logIndex: bytesToBuffer(hexToBytes((expectedLogs[0]).logIndex as string)),
-						// transactionIndex: bytesToBuffer(hexToBytes((expectedLogs[0]).transactionIndex as string)),
-					},
-				]);
 				break;
 			case 'BYTES_UINT8ARRAY':
 				// eslint-disable-next-line jest/no-conditional-expect

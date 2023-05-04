@@ -191,7 +191,7 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 	// Format correct length for bytes[0-9]+
 	match = paramTypeBytes.exec(type);
 	if (match) {
-		const hexParam = Buffer.isBuffer(param) ? toHex(param) : param;
+		const hexParam = param instanceof Uint8Array ? toHex(param) : param;
 
 		// format to correct length
 		const size = parseInt(match[1], 10);
