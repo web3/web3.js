@@ -289,5 +289,41 @@ describe('SocketProvider', () => {
 				expect(provider._sentRequestsQueue.get(payload.id).payload).toBe(payload);
 			});
 		});
+
+		describe('testing _clearQueues() method', () => {
+			it('should clear queues when called', () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload1 = { id: 1, method: 'some_rpc_method' };
+				provider.setStatus('connecting');
+				const req1 = provider.request(payload1);
+				// when the queues will be cleared the promise will reject
+				req1.catch(() => {
+					// nothing
+				});
+				// @ts-expect-error run protected method
+				expect(provider._pendingRequestsQueue.size).toBe(1);
+
+				const payload2 = { id: 2, method: 'some_rpc_method' };
+				provider.setStatus('connected');
+				const req2 = provider.request(payload2);
+				// when the queues will be cleared the promise will reject
+				req2.catch(() => {
+					// nothing
+				});
+
+				// @ts-expect-error run protected method
+				expect(provider._sentRequestsQueue.size).toBe(1);
+
+				provider.on('error', () => {
+					// nothing
+				});
+				// @ts-expect-error run protected method
+				provider._clearQueues();
+				// @ts-expect-error run protected method
+				expect(provider._pendingRequestsQueue.size).toBe(0);
+				// @ts-expect-error run protected method
+				expect(provider._sentRequestsQueue.size).toBe(0);
+			});
+		});
 	});
 });
