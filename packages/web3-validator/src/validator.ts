@@ -16,59 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { toHex, utf8ToBytes } from 'ethereum-cryptography/utils';
 import { blake2b } from 'ethereum-cryptography/blake2b';
-import { Filter } from 'web3-types';
+import formats from './formats';
 import { Web3ValidatorError } from './errors';
-import {
-	Web3ValidationErrorObject,
-	Validate,
-	Json,
-	Schema,
-	RawValidationError,
-	ValidInputTypes,
-} from './types';
-import {
-	isAddress,
-	isBlockNumber,
-	isBlockNumberOrTag,
-	isBlockTag,
-	isBloom,
-	isBoolean,
-	isBytes,
-	isFilterObject,
-	isHexStrict,
-	isInt,
-	isNumber,
-	isString,
-	isUInt,
-} from './validation';
-
-const formats: { [key: string]: (data: unknown) => boolean } = {
-	address: (data: unknown) => isAddress(data as ValidInputTypes),
-	bloom: (data: unknown) => isBloom(data as ValidInputTypes),
-	blockNumber: (data: unknown) => isBlockNumber(data as string | number | bigint),
-	blockTag: (data: unknown) => isBlockTag(data as string),
-	blockNumberOrTag: (data: unknown) => isBlockNumberOrTag(data as string | number | bigint),
-	bool: (data: unknown) => isBoolean(data as ValidInputTypes),
-	bytes: (data: unknown) => isBytes(data as ValidInputTypes | Uint8Array | number[]),
-	filter: (data: unknown) => isFilterObject(data as Filter),
-	hex: (data: unknown) => isHexStrict(data as ValidInputTypes),
-	uint: (data: unknown) => isUInt(data as ValidInputTypes),
-	int: (data: unknown) => isInt(data as ValidInputTypes),
-	number: (data: unknown) => isNumber(data as ValidInputTypes),
-	string: (data: unknown) => isString(data as ValidInputTypes),
-};
-// generate formats for all numbers types
-for (let i = 3; i <= 8; i += 1) {
-	const bitSize = 2 ** i;
-	formats[`int${bitSize}`] = data => isInt(data as ValidInputTypes, { bitSize });
-	formats[`uint${bitSize}`] = data => isUInt(data as ValidInputTypes, { bitSize });
-}
-// generate bytes
-for (let i = 1; i <= 32; i += 1) {
-	const size = 2 ** i;
-	formats[`bytes${size}`] = data =>
-		isBytes(data as ValidInputTypes | Uint8Array | number[], { size });
-}
+import { Web3ValidationErrorObject, Validate, Json, Schema, RawValidationError } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const validator = require('is-my-json-valid');
@@ -198,8 +148,9 @@ export class Validator {
 			if (typeof obj !== 'object') throw new Error('Invalid input object');
 			if (typeof pointer !== 'string') throw new Error('Invalid JSON pointer');
 			const parts = pointer.split('/');
-			if (!['', '#'].includes(parts.shift() as string))
+			if (!['', '#'].includes(parts.shift() as string)) {
 				throw new Error('Invalid JSON pointer');
+			}
 			if (parts.length === 0) return obj;
 
 			let curr: any = obj;

@@ -208,6 +208,7 @@ describe('contract', () => {
 			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 2', 12, true)
 				.send(sendOptions);
+
 			expect(
 				await contractDeployed.getPastEvents('MultiValueEvent', {
 					fromBlock: 0,
