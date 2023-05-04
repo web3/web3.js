@@ -373,7 +373,7 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
 >(options: {
 	transaction: Transaction;
 	web3Context: Web3Context<API>;
-	privateKey?: HexString | Buffer;
+	privateKey?: HexString | Uint8Array;
 }) => Promise<ReturnType>;
 
 /**

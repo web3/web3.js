@@ -15,10 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import type { HexString, Numbers } from 'web3-types';
-import { Buffer } from 'buffer';
 
 import type { Common } from '../common/common';
-import type { BufferLike, PrefixedHexString } from '../common/types';
+import type { Uint8ArrayLike, PrefixedHexString } from '../common/types';
 import { Address } from './address';
 
 /**
@@ -96,15 +95,15 @@ export type AccessListItem = {
 };
 
 /*
- * An Access List as a tuple of [address: Buffer, storageKeys: Buffer[]]
+ * An Access List as a tuple of [address: Uint8Array, storageKeys: Uint8Array[]]
  */
-export type AccessListBufferItem = [Buffer, Buffer[]];
-export type AccessListBuffer = AccessListBufferItem[];
+export type AccessListUint8ArrayItem = [Uint8Array, Uint8Array[]];
+export type AccessListUint8Array = AccessListUint8ArrayItem[];
 export type AccessList = AccessListItem[];
 
-export function isAccessListBuffer(
-	input: AccessListBuffer | AccessList,
-): input is AccessListBuffer {
+export function isAccessListUint8Array(
+	input: AccessListUint8Array | AccessList,
+): input is AccessListUint8Array {
 	if (input.length === 0) {
 		return true;
 	}
@@ -115,14 +114,14 @@ export function isAccessListBuffer(
 	return false;
 }
 
-export function isAccessList(input: AccessListBuffer | AccessList): input is AccessList {
-	return !isAccessListBuffer(input); // This is exactly the same method, except the output is negated.
+export function isAccessList(input: AccessListUint8Array | AccessList): input is AccessList {
+	return !isAccessListUint8Array(input); // This is exactly the same method, except the output is negated.
 }
 
 export interface ECDSASignature {
 	v: bigint;
-	r: Buffer;
-	s: Buffer;
+	r: Uint8Array;
+	s: Uint8Array;
 }
 
 /**
@@ -132,48 +131,48 @@ export type TxData = {
 	/**
 	 * The transaction's nonce.
 	 */
-	nonce?: Numbers | Buffer;
+	nonce?: Numbers | Uint8Array;
 
 	/**
 	 * The transaction's gas price.
 	 */
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	gasPrice?: Numbers | Buffer | null;
+	gasPrice?: Numbers | Uint8Array | null;
 
 	/**
 	 * The transaction's gas limit.
 	 */
-	gasLimit?: Numbers | Buffer;
+	gasLimit?: Numbers | Uint8Array;
 
 	/**
 	 * The transaction's the address is sent to.
 	 */
-	to?: Address | Buffer | HexString;
+	to?: Address | Uint8Array | HexString;
 
 	/**
 	 * The amount of Ether sent.
 	 */
-	value?: Numbers | Buffer;
+	value?: Numbers | Uint8Array;
 
 	/**
 	 * This will contain the data of the message or the init of a contract.
 	 */
-	data?: BufferLike;
+	data?: Uint8ArrayLike;
 
 	/**
 	 * EC recovery ID.
 	 */
-	v?: Numbers | Buffer;
+	v?: Numbers | Uint8Array;
 
 	/**
 	 * EC signature parameter.
 	 */
-	r?: Numbers | Buffer;
+	r?: Numbers | Uint8Array;
 
 	/**
 	 * EC signature parameter.
 	 */
-	s?: Numbers | Buffer;
+	s?: Numbers | Uint8Array;
 
 	/**
 	 * The transaction type
@@ -195,7 +194,7 @@ export interface AccessListEIP2930TxData extends TxData {
 	 * The access list which contains the addresses/storage slots which the transaction wishes to access
 	 */
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	accessList?: AccessListBuffer | AccessList | null;
+	accessList?: AccessListUint8Array | AccessList | null;
 }
 
 /**
@@ -211,51 +210,51 @@ export interface FeeMarketEIP1559TxData extends AccessListEIP2930TxData {
 	/**
 	 * The maximum inclusion fee per gas (this fee is given to the miner)
 	 */
-	maxPriorityFeePerGas?: Numbers | Buffer;
+	maxPriorityFeePerGas?: Numbers | Uint8Array;
 	/**
 	 * The maximum total fee
 	 */
-	maxFeePerGas?: Numbers | Buffer;
+	maxFeePerGas?: Numbers | Uint8Array;
 }
 
 /**
- * Buffer values array for a legacy {@link Transaction}
+ * Uint8Array values array for a legacy {@link Transaction}
  */
-export type TxValuesArray = Buffer[];
+export type TxValuesArray = Uint8Array[];
 
 /**
- * Buffer values array for an {@link AccessListEIP2930Transaction}
+ * Uint8Array values array for an {@link AccessListEIP2930Transaction}
  */
 export type AccessListEIP2930ValuesArray = [
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	AccessListBuffer,
-	Buffer?,
-	Buffer?,
-	Buffer?,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	AccessListUint8Array,
+	Uint8Array?,
+	Uint8Array?,
+	Uint8Array?,
 ];
 
 /**
- * Buffer values array for a {@link FeeMarketEIP1559Transaction}
+ * Uint8Array values array for a {@link FeeMarketEIP1559Transaction}
  */
 export type FeeMarketEIP1559ValuesArray = [
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	Buffer,
-	AccessListBuffer,
-	Buffer?,
-	Buffer?,
-	Buffer?,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	AccessListUint8Array,
+	Uint8Array?,
+	Uint8Array?,
+	Uint8Array?,
 ];
 
 type JsonAccessListItem = { address: string; storageKeys: string[] };

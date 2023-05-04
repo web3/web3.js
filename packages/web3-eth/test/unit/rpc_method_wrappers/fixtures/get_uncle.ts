@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockNumberOrTag, BlockTags, Bytes, Numbers, Block } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 
 export const mockRpcResponse: Block = {
 	parentHash: '0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54',
@@ -64,11 +65,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', '0x0'],
 	],
 	[
-		'blockNumber = Buffer("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex"), uncleIndex = "0x0"',
-		[Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), '0x0'],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = "0x0"',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), '0x0'],
 	],
 	[
-		'blockNumber = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = "0x0"',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = "0x0"',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
@@ -96,11 +97,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8, uncleIndex = 0', 0],
 	],
 	[
-		'blockNumber = Buffer("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex"), uncleIndex = 0',
-		[Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), 0],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = 0',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), 0],
 	],
 	[
-		'blockNumber = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = 0',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = 0',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
@@ -128,11 +129,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', '0'],
 	],
 	[
-		'blockNumber = Buffer("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex"), uncleIndex = "0"',
-		[Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), '0'],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = "0"',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), '0'],
 	],
 	[
-		'blockNumber = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = "0"',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = "0"',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
@@ -160,11 +161,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', BigInt('0x0')],
 	],
 	[
-		'blockNumber = Buffer("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex"), uncleIndex = BigInt("0x0")',
-		[Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), BigInt('0x0')],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = BigInt("0x0")',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), BigInt('0x0')],
 	],
 	[
-		'blockNumber = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = BigInt("0x0")',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), uncleIndex = BigInt("0x0")',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,

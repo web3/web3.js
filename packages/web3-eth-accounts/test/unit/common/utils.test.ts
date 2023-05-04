@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { hexToBytes } from 'web3-utils';
 import { Common } from '../../../src/common/common';
 import { Hardfork } from '../../../src/common';
 import { parseGethGenesis } from '../../../src/common/utils';
@@ -80,9 +81,8 @@ describe('[Utils/Parse]', () => {
 	it('should successfully parse kiln genesis and set forkhash', async () => {
 		const common = Common.fromGethGenesis(gethGenesisKiln, {
 			chain: 'customChain',
-			genesisHash: Buffer.from(
+			genesisHash: hexToBytes(
 				'51c7fe41be669f69c45c33a56982cbde405313342d9e2b00d7c91a7b284dd4f8',
-				'hex',
 			),
 			mergeForkIdPostMerge: false,
 		});

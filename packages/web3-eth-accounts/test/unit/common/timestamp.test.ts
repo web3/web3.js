@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { hexToBytes } from 'web3-utils';
 import { Chain, Common, Hardfork } from '../../../src/common';
 
 import * as timestampJson from '../../fixtures/common/shanghai-time.json';
@@ -78,9 +79,8 @@ describe('[Common]: Timestamp Hardfork logic', () => {
 		]);
 
 		const c = Common.custom({ hardforks }, { baseChain: Chain.Mainnet });
-		const mainnetGenesisHash = Buffer.from(
+		const mainnetGenesisHash = hexToBytes(
 			'd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
-			'hex',
 		);
 		for (const hf of c.hardforks()) {
 			if (typeof hf.forkHash !== 'string') {
@@ -117,9 +117,8 @@ describe('[Common]: Timestamp Hardfork logic', () => {
 		]);
 
 		const c = Common.custom({ hardforks }, { baseChain: Chain.Mainnet });
-		const mainnetGenesisHash = Buffer.from(
+		const mainnetGenesisHash = hexToBytes(
 			'd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
-			'hex',
 		);
 
 		let noForkHashes = c.hardforks().reduce((acc, hf) => {
