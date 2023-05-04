@@ -153,14 +153,14 @@ describe('SocketProvider', () => {
 		});
 
 		describe('testing supportsSubscriptions() function', () => {
-			it('should returns false when calling `supportsSubscriptions()`', async () => {
+			it('should returns false when calling `supportsSubscriptions()`', () => {
 				const provider = new TestProvider(socketPath, socketOption);
 				expect(provider.supportsSubscriptions()).toBe(true);
 			});
 		});
 
 		describe('testing on() method', () => {
-			it('should internally call `_eventEmitter.on`', async () => {
+			it('should internally call `_eventEmitter.on`', () => {
 				const provider = new TestProvider(socketPath, socketOption);
 
 				// @ts-expect-error run protected method
@@ -175,7 +175,7 @@ describe('SocketProvider', () => {
 		});
 
 		describe('testing once() method', () => {
-			it('should internally call `_eventEmitter.once`', async () => {
+			it('should internally call `_eventEmitter.once`', () => {
 				const provider = new TestProvider(socketPath, socketOption);
 
 				// @ts-expect-error run protected method
@@ -190,7 +190,7 @@ describe('SocketProvider', () => {
 		});
 
 		describe('testing removeListener() method', () => {
-			it('should internally call `_eventEmitter.removeListener`', async () => {
+			it('should internally call `_eventEmitter.removeListener`', () => {
 				const provider = new TestProvider(socketPath, socketOption);
 
 				const funcBSpy = jest
@@ -207,7 +207,7 @@ describe('SocketProvider', () => {
 		});
 
 		describe('testing disconnect() method', () => {
-			it('should internally call `super._onDisconnect` and change the connectionStatus to `disconnected`', async () => {
+			it('should internally call `super._onDisconnect` and change the connectionStatus to `disconnected`', () => {
 				const provider = new TestProvider(socketPath, socketOption);
 
 				const funcBSpy = jest
@@ -225,6 +225,68 @@ describe('SocketProvider', () => {
 				// @ts-expect-error run protected method
 				expect(provider._connectionStatus).toBe('disconnected');
 				expect(funcBSpy).toHaveBeenCalledWith(code, data);
+			});
+		});
+
+		describe('testing reset() method', () => {
+			it('should set `_reconnectAttempts` to 0', () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				provider.reset();
+				// @ts-expect-error run protected method
+				expect(provider._reconnectAttempts).toBe(0);
+			});
+		});
+
+		describe('testing request() method', () => {
+			it('should throw if the _socketConnection is null', async () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload = { method: 'some_rpc_method' };
+				// @ts-expect-error run protected method
+				provider._socketConnection = undefined;
+				await expect(provider.request(payload)).rejects.toThrow('Connection is undefined');
+			});
+			it('should throw if the payload id was not provided', async () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload = { method: 'some_rpc_method' };
+				await expect(provider.request(payload)).rejects.toThrow('Request Id not defined');
+			});
+			it('should throw if the payload id was provided twice', async () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload = { id: 1, method: 'some_rpc_method' };
+				provider.setStatus('connected');
+				const reqPromise = provider.request(payload);
+				expect(reqPromise).toBeInstanceOf(Promise);
+				await expect(provider.request(payload)).rejects.toThrow(
+					'Request already sent with following id: 1',
+				);
+			});
+
+			it('should call `connect` when the status is `disconnected`', async () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload = { id: 1, method: 'some_rpc_method' };
+				provider.setStatus('disconnected');
+				jest.spyOn(provider, 'connect').mockReturnValue();
+				await provider.request(payload);
+				expect(provider.connect).toHaveBeenCalled();
+			});
+			it('should add request to the `_pendingRequestsQueue` when the status is `connecting`', () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload = { id: 1, method: 'some_rpc_method' };
+				provider.setStatus('connecting');
+				const reqPromise = provider.request(payload);
+				expect(reqPromise).toBeInstanceOf(Promise);
+				// @ts-expect-error run protected method
+				expect(provider._pendingRequestsQueue.get(payload.id).payload).toBe(payload);
+			});
+
+			it('should add request to the `_sentRequestsQueue` when the status is `connected`', () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload = { id: 1, method: 'some_rpc_method' };
+				provider.setStatus('connected');
+				const reqPromise = provider.request(payload);
+				expect(reqPromise).toBeInstanceOf(Promise);
+				// @ts-expect-error run protected method
+				expect(provider._sentRequestsQueue.get(payload.id).payload).toBe(payload);
 			});
 		});
 	});
