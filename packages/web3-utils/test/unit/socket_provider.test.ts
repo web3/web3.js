@@ -261,12 +261,22 @@ describe('SocketProvider', () => {
 				);
 			});
 
-			it('should call `connect` when the status is `disconnected`', async () => {
+			it('should call `connect` when the status is `disconnected`', () => {
 				const provider = new TestProvider(socketPath, socketOption);
 				const payload = { id: 1, method: 'some_rpc_method' };
 				provider.setStatus('disconnected');
 				jest.spyOn(provider, 'connect').mockReturnValue();
-				await provider.request(payload);
+				// @ts-expect-error run protected method
+				jest.spyOn(provider, '_sendToSocket').mockReturnValue();
+				provider
+					.request(payload)
+					.then(() => {
+						// the status of the provider is manipulate manually to be disconnected,
+						// 	for that, this request promise will never resolve
+					})
+					.catch(() => {
+						// nothing
+					});
 				expect(provider.connect).toHaveBeenCalled();
 			});
 			it('should add request to the `_pendingRequestsQueue` when the status is `connecting`', () => {
