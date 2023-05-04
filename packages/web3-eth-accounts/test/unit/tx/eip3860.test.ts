@@ -30,14 +30,14 @@ const addressZero = Address.zero();
 
 describe('[EIP3860 tests]', () => {
 	it('Should instantiate create txs with MAX_INITCODE_SIZE', () => {
-		const data = Buffer.alloc(Number(maxInitCodeSize));
+		const data = new Uint8Array(Number(maxInitCodeSize));
 		for (const txType of txTypes) {
 			expect(TransactionFactory.fromTxData({ data, type: txType }, { common })).toBeTruthy();
 		}
 	});
 
 	it('Should instantiate txs with MAX_INITCODE_SIZE data', () => {
-		const data = Buffer.alloc(Number(maxInitCodeSize));
+		const data = new Uint8Array(Number(maxInitCodeSize));
 		for (const txType of txTypes) {
 			expect(
 				TransactionFactory.fromTxData({ data, type: txType, to: addressZero }, { common }),
@@ -46,7 +46,7 @@ describe('[EIP3860 tests]', () => {
 	});
 
 	it('Should not instantiate create txs with MAX_INITCODE_SIZE+1 data', () => {
-		const data = Buffer.alloc(Number(maxInitCodeSize) + 1);
+		const data = new Uint8Array(Number(maxInitCodeSize) + 1);
 		for (const txType of txTypes) {
 			expect(() =>
 				TransactionFactory.fromTxData({ data, type: txType }, { common }),
@@ -55,7 +55,7 @@ describe('[EIP3860 tests]', () => {
 	});
 
 	it('Should instantiate txs with MAX_INITCODE_SIZE+1 data', () => {
-		const data = Buffer.alloc(Number(maxInitCodeSize) + 1);
+		const data = new Uint8Array(Number(maxInitCodeSize) + 1);
 		for (const txType of txTypes) {
 			expect(
 				TransactionFactory.fromTxData({ data, type: txType, to: addressZero }, { common }),
@@ -64,7 +64,7 @@ describe('[EIP3860 tests]', () => {
 	});
 
 	it('Should allow txs with MAX_INITCODE_SIZE+1 data if allowUnlimitedInitCodeSize is active', () => {
-		const data = Buffer.alloc(Number(maxInitCodeSize) + 1);
+		const data = new Uint8Array(Number(maxInitCodeSize) + 1);
 		for (const txType of txTypes) {
 			expect(
 				TransactionFactory.fromTxData(
@@ -76,7 +76,7 @@ describe('[EIP3860 tests]', () => {
 	});
 
 	it('Should charge initcode analysis gas is allowUnlimitedInitCodeSize is active', () => {
-		const data = Buffer.alloc(Number(maxInitCodeSize));
+		const data = new Uint8Array(Number(maxInitCodeSize));
 		for (const txType of txTypes) {
 			const eip3860ActiveTx = TransactionFactory.fromTxData(
 				{ data, type: txType },

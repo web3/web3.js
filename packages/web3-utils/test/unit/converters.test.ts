@@ -38,7 +38,7 @@ import {
 	toWei,
 	utf8ToHex,
 	toChecksumAddress,
-	bytesToBuffer,
+	bytesToUint8Array,
 	toBigInt,
 } from '../../src/converters';
 
@@ -55,6 +55,7 @@ import {
 	hexToNumberValidData,
 	hexToUtf8InvalidData,
 	hexToUtf8ValidData,
+	toUtf8ValidData,
 	numberToHexInvalidData,
 	numberToHexValidData,
 	toHexValidData,
@@ -64,11 +65,12 @@ import {
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
 	toCheckSumValidData,
-	bytesToBufferInvalidData,
-	bytesToBufferValidData,
+	bytesToUint8ArrayInvalidData,
+	bytesToUint8ArrayValidData,
 	toBigIntValidData,
 	toBigIntInvalidData,
 	toCheckSumInvalidData,
+	numberToHexstrictValidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -110,6 +112,12 @@ describe('converters', () => {
 		describe('invalid cases', () => {
 			it.each(numberToHexInvalidData)('%s', (input, output) => {
 				expect(() => numberToHex(input)).toThrow(output);
+			});
+		});
+
+		describe('valid hexstrict cases', () => {
+			it.each(numberToHexstrictValidData)('%s', (input, output) => {
+				expect(numberToHex(input, true)).toEqual(output);
 			});
 		});
 	});
@@ -220,7 +228,7 @@ describe('converters', () => {
 
 	describe('toUtf8', () => {
 		describe('valid cases', () => {
-			it.each(hexToUtf8ValidData)('%s', (input, output) => {
+			it.each(toUtf8ValidData)('%s', (input, output) => {
 				expect(toUtf8(input)).toEqual(output);
 			});
 		});
@@ -367,17 +375,17 @@ describe('converters', () => {
 			});
 		});
 	});
-	describe('bytesToBuffer', () => {
-		describe('bytesToBuffer', () => {
+	describe('bytesToUint8Array', () => {
+		describe('bytesToUint8Array', () => {
 			describe('valid cases', () => {
-				it.each(bytesToBufferValidData)('%s', (input, output) => {
-					expect(bytesToBuffer(input)).toEqual(output);
+				it.each(bytesToUint8ArrayValidData)('%s', (input, output) => {
+					expect(bytesToUint8Array(input)).toEqual(output);
 				});
 			});
 
 			describe('invalid cases', () => {
-				it.each(bytesToBufferInvalidData)('%s', (input, output) => {
-					expect(() => bytesToBuffer(input)).toThrow(output);
+				it.each(bytesToUint8ArrayInvalidData)('%s', (input, output) => {
+					expect(() => bytesToUint8Array(input)).toThrow(output);
 				});
 			});
 		});

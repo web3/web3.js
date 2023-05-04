@@ -48,7 +48,7 @@ export const initAccountsForContext = (context: Web3Context<EthExecutionAPI>) =>
 		return signTransaction(tx, privateKeyBytes);
 	};
 
-	const privateKeyToAccountWithContext = (privateKey: Buffer | string) => {
+	const privateKeyToAccountWithContext = (privateKey: Uint8Array | string) => {
 		const account = privateKeyToAccount(privateKey);
 
 		return {

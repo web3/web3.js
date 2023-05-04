@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export type HexString = string;
-export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
+export type Bytes = Uint8Array | ArrayBuffer | HexString;
 export type Numbers = number | bigint | string | HexString;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

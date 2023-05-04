@@ -67,7 +67,7 @@ export function isHexPrefixed(str: string): boolean {
 }
 
 /**
- * Checks provided Buffers for leading zeroes and throws if found.
+ * Checks provided Uint8Array for leading zeroes and throws if found.
  *
  * Examples:
  *
@@ -76,13 +76,15 @@ export function isHexPrefixed(str: string): boolean {
  *
  * Note: This method is useful for validating that RLP encoded integers comply with the rule that all
  * integer values encoded to RLP must be in the most compact form and contain no leading zero bytes
- * @param values An object containing string keys and Buffer values
+ * @param values An object containing string keys and Uint8Array values
  * @throws if any provided value is found to have leading zero bytes
  */
-export const validateNoLeadingZeroes = function (values: { [key: string]: Buffer | undefined }) {
+export const validateNoLeadingZeroes = function (values: {
+	[key: string]: Uint8Array | undefined;
+}) {
 	for (const [k, v] of Object.entries(values)) {
 		if (v !== undefined && v.length > 0 && v[0] === 0) {
-			throw new Error(`${k} cannot have leading zeroes, received: ${v.toString('hex')}`);
+			throw new Error(`${k} cannot have leading zeroes, received: ${v.toString()}`);
 		}
 	}
 };

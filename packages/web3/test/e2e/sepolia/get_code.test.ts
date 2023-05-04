@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { bytesToBuffer, hexToBytes } from 'web3-utils';
+import { hexToBytes } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER } from '../../../src';
 import {
@@ -62,10 +62,6 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 			case 'BYTES_HEX':
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result).toBe(expectedCode);
-				break;
-			case 'BYTES_BUFFER':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result).toStrictEqual(bytesToBuffer(hexToBytes(expectedCode)));
 				break;
 			case 'BYTES_UINT8ARRAY':
 				// eslint-disable-next-line jest/no-conditional-expect

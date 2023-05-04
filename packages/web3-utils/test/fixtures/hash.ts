@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TypedObject, TypedObjectAbbreviated } from 'web3-types';
+import { TypedObject, TypedObjectAbbreviated, Bytes } from 'web3-types';
 import { hexToBytes } from '../../src/converters';
 
-export const sha3Data: [string, string | undefined][] = [
+export const sha3Data: [Bytes, string | undefined][] = [
 	['test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad'],
 	[
 		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image',
@@ -26,9 +26,13 @@ export const sha3Data: [string, string | undefined][] = [
 	],
 	['1234', '0x387a8233c96e1fc0ad5e284353276177af2186e7afa85296f106336e376669f7'],
 	['helloworld', '0xfa26db7ca85ead399216e7c6316bc50ed24393c3122b582735e7f3b0f91b93f0'],
+	[
+		new Uint8Array([91, 92, 93, 94]),
+		'0xafde16013fa7d7214985cb9219a059e063934a01bdb1dc2254f42cf53da68c89',
+	],
 ];
 
-export const sha3ValidData: [string, string | undefined][] = [
+export const sha3ValidData: [Bytes, string | undefined][] = [
 	...sha3Data,
 	['', undefined],
 	[
@@ -44,13 +48,12 @@ export const sha3ValidData: [string, string | undefined][] = [
 ];
 
 export const compareSha3JSValidData: [string, any | undefined][] = [
-	// cases that include buffer data
-	['0x80', Buffer.from(hexToBytes('0x80'))],
+	['0x80', new Uint8Array(hexToBytes('0x80'))],
 	[
 		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
-		Buffer.from(hexToBytes('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68')),
+		new Uint8Array(hexToBytes('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68')),
 	],
-	['0x1234', Buffer.from(hexToBytes('0x1234'))],
+	['0x1234', new Uint8Array(hexToBytes('0x1234'))],
 ];
 
 export const sha3InvalidData: [any, string][] = [
@@ -59,7 +62,7 @@ export const sha3InvalidData: [any, string][] = [
 	[undefined, 'Invalid value given "undefined". Error: not a valid string.'],
 ];
 
-export const sha3RawValidData: [string, string | undefined][] = [
+export const sha3RawValidData: [Bytes, string | undefined][] = [
 	...sha3Data,
 	['', '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'],
 ];

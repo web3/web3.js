@@ -14,26 +14,25 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { keccak256 } from 'ethereum-cryptography/keccak';
-import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '@ethereumjs/rlp';
-import { MAX_INTEGER } from './constants';
+import { keccak256 } from 'ethereum-cryptography/keccak';
+import { bytesToHex } from 'web3-utils';
+import { validateNoLeadingZeroes } from 'web3-validator';
 import {
-	arrToBufArr,
 	bigIntToHex,
-	bigIntToUnpaddedBuffer,
-	bufArrToArr,
-	bufferToBigInt,
-	toBuffer,
+	bigIntToUnpaddedUint8Array,
 	ecrecover,
-	unpadBuffer,
+	toUint8Array,
+	uint8ArrayToBigInt,
+	unpadUint8Array,
 } from '../common/utils';
+import { MAX_INTEGER } from './constants';
 
 import { BaseTransaction } from './baseTransaction';
 
+import type { Common } from '../common';
 import type { JsonTx, TxData, TxOptions, TxValuesArray } from './types';
 import { Capability } from './types';
-import type { Common } from '../common';
 
 const TRANSACTION_TYPE = 0;
 
@@ -69,14 +68,14 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 *
 	 * Format: `rlp([nonce, gasPrice, gasLimit, to, value, data, v, r, s])`
 	 */
-	public static fromSerializedTx(serialized: Buffer, opts: TxOptions = {}) {
-		const values = arrToBufArr(RLP.decode(Uint8Array.from(serialized))) as Buffer[];
+	public static fromSerializedTx(serialized: Uint8Array, opts: TxOptions = {}) {
+		const values = RLP.decode(serialized);
 
 		if (!Array.isArray(values)) {
 			throw new Error('Invalid serialized tx input. Must be array');
 		}
 
-		return this.fromValuesArray(values, opts);
+		return this.fromValuesArray(values as Uint8Array[], opts);
 	}
 
 	/**
@@ -85,7 +84,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 * Format: `[nonce, gasPrice, gasLimit, to, value, data, v, r, s]`
 	 */
 	public static fromValuesArray(values: TxValuesArray, opts: TxOptions = {}) {
-		// If length is not 6, it has length 9. If v/r/s are empty Buffers, it is still an unsigned transaction
+		// If length is not 6, it has length 9. If v/r/s are empty Uint8Array, it is still an unsigned transaction
 		// This happens if you get the RLP data from `raw()`
 		if (values.length !== 6 && values.length !== 9) {
 			throw new Error(
@@ -125,7 +124,9 @@ export class Transaction extends BaseTransaction<Transaction> {
 
 		this.common = this._validateTxV(this.v, opts.common);
 
-		this.gasPrice = bufferToBigInt(toBuffer(txData.gasPrice === '' ? '0x' : txData.gasPrice));
+		this.gasPrice = uint8ArrayToBigInt(
+			toUint8Array(txData.gasPrice === '' ? '0x' : txData.gasPrice),
+		);
 
 		if (this.gasPrice * this.gasLimit > MAX_INTEGER) {
 			const msg = this._errorMsg('gas limit * gasPrice cannot exceed MAX_INTEGER (2^256-1)');
@@ -158,7 +159,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 	}
 
 	/**
-	 * Returns a Buffer Array of the raw Buffers of the legacy transaction, in order.
+	 * Returns a Uint8Array Array of the raw Uint8Arrays of the legacy transaction, in order.
 	 *
 	 * Format: `[nonce, gasPrice, gasLimit, to, value, data, v, r, s]`
 	 *
@@ -166,21 +167,21 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 * to a block with {@link Block.fromValuesArray} (use the `serialize()` method
 	 * for typed txs).
 	 *
-	 * For an unsigned tx this method returns the empty Buffer values
+	 * For an unsigned tx this method returns the empty Uint8Array values
 	 * for the signature parameters `v`, `r` and `s`. For an EIP-155 compliant
 	 * representation have a look at {@link Transaction.getMessageToSign}.
 	 */
 	public raw(): TxValuesArray {
 		return [
-			bigIntToUnpaddedBuffer(this.nonce),
-			bigIntToUnpaddedBuffer(this.gasPrice),
-			bigIntToUnpaddedBuffer(this.gasLimit),
-			this.to !== undefined ? this.to.buf : Buffer.from([]),
-			bigIntToUnpaddedBuffer(this.value),
+			bigIntToUnpaddedUint8Array(this.nonce),
+			bigIntToUnpaddedUint8Array(this.gasPrice),
+			bigIntToUnpaddedUint8Array(this.gasLimit),
+			this.to !== undefined ? this.to.buf : Uint8Array.from([]),
+			bigIntToUnpaddedUint8Array(this.value),
 			this.data,
-			this.v !== undefined ? bigIntToUnpaddedBuffer(this.v) : Buffer.from([]),
-			this.r !== undefined ? bigIntToUnpaddedBuffer(this.r) : Buffer.from([]),
-			this.s !== undefined ? bigIntToUnpaddedBuffer(this.s) : Buffer.from([]),
+			this.v !== undefined ? bigIntToUnpaddedUint8Array(this.v) : Uint8Array.from([]),
+			this.r !== undefined ? bigIntToUnpaddedUint8Array(this.r) : Uint8Array.from([]),
+			this.s !== undefined ? bigIntToUnpaddedUint8Array(this.s) : Uint8Array.from([]),
 		];
 	}
 
@@ -189,28 +190,28 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 *
 	 * Format: `rlp([nonce, gasPrice, gasLimit, to, value, data, v, r, s])`
 	 *
-	 * For an unsigned tx this method uses the empty Buffer values for the
+	 * For an unsigned tx this method uses the empty Uint8Array values for the
 	 * signature parameters `v`, `r` and `s` for encoding. For an EIP-155 compliant
 	 * representation for external signing use {@link Transaction.getMessageToSign}.
 	 */
-	public serialize(): Buffer {
-		return Buffer.from(RLP.encode(bufArrToArr(this.raw())));
+	public serialize(): Uint8Array {
+		return RLP.encode(this.raw());
 	}
 
 	private _getMessageToSign() {
 		const values = [
-			bigIntToUnpaddedBuffer(this.nonce),
-			bigIntToUnpaddedBuffer(this.gasPrice),
-			bigIntToUnpaddedBuffer(this.gasLimit),
-			this.to !== undefined ? this.to.buf : Buffer.from([]),
-			bigIntToUnpaddedBuffer(this.value),
+			bigIntToUnpaddedUint8Array(this.nonce),
+			bigIntToUnpaddedUint8Array(this.gasPrice),
+			bigIntToUnpaddedUint8Array(this.gasLimit),
+			this.to !== undefined ? this.to.buf : Uint8Array.from([]),
+			bigIntToUnpaddedUint8Array(this.value),
 			this.data,
 		];
 
 		if (this.supports(Capability.EIP155ReplayProtection)) {
-			values.push(toBuffer(this.common.chainId()));
-			values.push(unpadBuffer(toBuffer(0)));
-			values.push(unpadBuffer(toBuffer(0)));
+			values.push(toUint8Array(this.common.chainId()));
+			values.push(unpadUint8Array(toUint8Array(0)));
+			values.push(unpadUint8Array(toUint8Array(0)));
 		}
 
 		return values;
@@ -227,17 +228,17 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 * import { bufArrToArr } from '../util'
 	 * import { RLP } from '../rlp'
 	 * const message = tx.getMessageToSign(false)
-	 * const serializedMessage = Buffer.from(RLP.encode(bufArrToArr(message))) // use this for the HW wallet input
+	 * const serializedMessage = RLP.encode(message) // use this for the HW wallet input
 	 * ```
 	 *
 	 * @param hashMessage - Return hashed message if set to true (default: true)
 	 */
-	public getMessageToSign(hashMessage: false): Buffer[];
-	public getMessageToSign(hashMessage?: true): Buffer;
+	public getMessageToSign(hashMessage: false): Uint8Array[];
+	public getMessageToSign(hashMessage?: true): Uint8Array;
 	public getMessageToSign(hashMessage = true) {
 		const message = this._getMessageToSign();
 		if (hashMessage) {
-			return Buffer.from(keccak256(RLP.encode(bufArrToArr(message))));
+			return keccak256(RLP.encode(message));
 		}
 		return message;
 	}
@@ -273,7 +274,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 * This method can only be used for signed txs (it throws otherwise).
 	 * Use {@link Transaction.getMessageToSign} to get a tx hash for the purpose of signing.
 	 */
-	public hash(): Buffer {
+	public hash(): Uint8Array {
 		if (!this.isSigned()) {
 			const msg = this._errorMsg('Cannot call hash method if transaction is not signed');
 			throw new Error(msg);
@@ -281,12 +282,12 @@ export class Transaction extends BaseTransaction<Transaction> {
 
 		if (Object.isFrozen(this)) {
 			if (!this.cache.hash) {
-				this.cache.hash = Buffer.from(keccak256(RLP.encode(bufArrToArr(this.raw()))));
+				this.cache.hash = keccak256(RLP.encode(this.raw()));
 			}
 			return this.cache.hash;
 		}
 
-		return Buffer.from(keccak256(RLP.encode(bufArrToArr(this.raw()))));
+		return keccak256(RLP.encode(this.raw()));
 	}
 
 	/**
@@ -298,14 +299,13 @@ export class Transaction extends BaseTransaction<Transaction> {
 			throw new Error(msg);
 		}
 		const message = this._getMessageToSign();
-		// eslint
-		return Buffer.from(keccak256(RLP.encode(bufArrToArr(message))));
+		return keccak256(RLP.encode(message));
 	}
 
 	/**
 	 * Returns the public key of the sender
 	 */
-	public getSenderPublicKey(): Buffer {
+	public getSenderPublicKey(): Uint8Array {
 		const msgHash = this.getMessageToVerifySignature();
 
 		const { v, r, s } = this;
@@ -316,8 +316,8 @@ export class Transaction extends BaseTransaction<Transaction> {
 			return ecrecover(
 				msgHash,
 				v!,
-				bigIntToUnpaddedBuffer(r!),
-				bigIntToUnpaddedBuffer(s!),
+				bigIntToUnpaddedUint8Array(r!),
+				bigIntToUnpaddedUint8Array(s!),
 				this.supports(Capability.EIP155ReplayProtection)
 					? this.common.chainId()
 					: undefined,
@@ -331,7 +331,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 	/**
 	 * Process the v, r, s values from the `sign` method of the base transaction.
 	 */
-	protected _processSignature(_v: bigint, r: Buffer, s: Buffer) {
+	protected _processSignature(_v: bigint, r: Uint8Array, s: Uint8Array) {
 		let v = _v;
 		if (this.supports(Capability.EIP155ReplayProtection)) {
 			v += this.common.chainId() * BigInt(2) + BigInt(8);
@@ -348,8 +348,8 @@ export class Transaction extends BaseTransaction<Transaction> {
 				value: this.value,
 				data: this.data,
 				v,
-				r: bufferToBigInt(r),
-				s: bufferToBigInt(s),
+				r: uint8ArrayToBigInt(r),
+				s: uint8ArrayToBigInt(s),
 			},
 			opts,
 		);
@@ -365,7 +365,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 			gasLimit: bigIntToHex(this.gasLimit),
 			to: this.to !== undefined ? this.to.toString() : undefined,
 			value: bigIntToHex(this.value),
-			data: `0x${this.data.toString('hex')}`,
+			data: bytesToHex(this.data),
 			v: this.v !== undefined ? bigIntToHex(this.v) : undefined,
 			r: this.r !== undefined ? bigIntToHex(this.r) : undefined,
 			s: this.s !== undefined ? bigIntToHex(this.s) : undefined,

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InvalidNumberError } from 'web3-errors';
+import { InvalidBytesError, InvalidNumberError } from 'web3-errors';
 import { VALID_ETH_BASE_TYPES } from './constants';
 import {
 	FullValidationSchema,
@@ -28,7 +28,7 @@ import { isAbiParameterSchema } from './validation/abi';
 import { isHexStrict } from './validation/string';
 // import { abiToJsonSchemaCases } from '../test/fixtures/abi_to_json_schema';
 
-export const parseBaseType = <T = (typeof VALID_ETH_BASE_TYPES)[number]>(
+export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	type: string,
 ): {
 	baseType?: T;
@@ -376,3 +376,30 @@ export const padLeft = (value: ValidInputTypes, characterAmount: number, sign = 
 
 	return `${prefix}${hexValue.padStart(characterAmount, sign)}`;
 };
+
+export function uint8ArrayToHexString(uint8Array: Uint8Array): string {
+	let hexString = '0x';
+	for (const e of uint8Array) {
+		const hex = e.toString(16);
+		hexString += hex.length === 1 ? `0${hex}` : hex;
+	}
+	return hexString;
+}
+
+export function hexToUint8Array(hex: string): Uint8Array {
+	let value;
+	if (hex.toLowerCase().startsWith('0x')) {
+		value = hex.slice(2);
+	} else {
+		value = hex;
+	}
+	if (value.length % 2 !== 0) {
+		throw new InvalidBytesError(`hex string has odd length: ${hex}`);
+	}
+	const bytes = new Uint8Array(Math.ceil(value.length / 2));
+	for (let i = 0; i < bytes.length; i += 1) {
+		const byte = parseInt(value.substring(i * 2, i * 2 + 2), 16);
+		bytes[i] = byte;
+	}
+	return bytes;
+}
