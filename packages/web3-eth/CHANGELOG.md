@@ -128,4 +128,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   Refactored documentation for `rpc_method_wrappers` to point to the previously duplicated documentation found under the `Web3Eth` class documentation (#6054)
 -   Replaced Buffer for Uint8Array (#6004)
