@@ -58,7 +58,7 @@ import { isBlockTag, isHex, isNullish } from 'web3-validator';
  * @deprecated Use format function from web3-utils package instead
  * Will format the given storage key array values to hex strings.
  */
-export const inputStorageKeysFormatter = (keys: Array<string>) => keys.map(numberToHex);
+export const inputStorageKeysFormatter = (keys: Array<string>) => keys.map(num => numberToHex(num));
 
 /**
  * @deprecated Use format function from web3-utils package instead

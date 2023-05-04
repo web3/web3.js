@@ -25,10 +25,16 @@ export const mergeDeepData: {
 		message: 'multiple sources',
 		destination: {},
 		sources: [
-			{ a: undefined, b: true, c: Buffer.from('123') },
+			{ a: undefined, b: true, c: new Uint8Array([1, 2, 3]) },
 			{ a: 3, d: 'string', e: { nested: BigInt(4) } },
 		],
-		output: { a: 3, b: true, c: Buffer.from('123'), d: 'string', e: { nested: BigInt(4) } },
+		output: {
+			a: 3,
+			b: true,
+			c: new Uint8Array([1, 2, 3]),
+			d: 'string',
+			e: { nested: BigInt(4) },
+		},
 	},
 
 	{
@@ -56,19 +62,19 @@ export const mergeDeepData: {
 		message: 'items pre-exists in the destination',
 		destination: { a: 4, b: false },
 		sources: [
-			{ a: undefined, b: true, c: Buffer.from('123') },
+			{ a: undefined, b: true, c: new Uint8Array([1, 2, 3]) },
 			{ a: undefined, d: 'string', e: { nested: 4 } },
 		],
-		output: { a: 4, b: true, c: Buffer.from('123'), d: 'string', e: { nested: 4 } },
+		output: { a: 4, b: true, c: new Uint8Array([1, 2, 3]), d: 'string', e: { nested: 4 } },
 	},
 
 	{
 		message: 'items with different types',
 		destination: { a: 4, b: false },
 		sources: [
-			{ a: undefined, b: true, c: Buffer.from('123') },
+			{ a: undefined, b: true, c: new Uint8Array([1, 2, 3]) },
 			{ a: '4', b: 'true', d: 'string', e: { nested: 4 } },
 		],
-		output: { a: '4', b: 'true', c: Buffer.from('123'), d: 'string', e: { nested: 4 } },
+		output: { a: '4', b: 'true', c: new Uint8Array([1, 2, 3]), d: 'string', e: { nested: 4 } },
 	},
 ];

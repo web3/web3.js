@@ -49,7 +49,7 @@ import {
 	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { format, hexToBytes, bytesToBuffer } from 'web3-utils';
+import { format, hexToBytes, bytesToUint8Array } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
@@ -715,7 +715,7 @@ export function sendSignedTransaction<
 						ETH_DATA_FORMAT,
 					);
 					const unSerializedTransaction = TransactionFactory.fromSerializedData(
-						bytesToBuffer(hexToBytes(signedTransactionFormattedHex)),
+						bytesToUint8Array(hexToBytes(signedTransactionFormattedHex)),
 					);
 					const unSerializedTransactionWithFrom = {
 						...unSerializedTransaction.toJSON(),

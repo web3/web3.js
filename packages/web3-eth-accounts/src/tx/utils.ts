@@ -15,8 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { HexString } from 'web3-types';
-import { bufferToHex, setLengthLeft, toBuffer } from '../common/utils';
-import type { AccessList, AccessListBuffer, AccessListItem } from './types';
+import { bytesToHex } from 'web3-utils';
+import { setLengthLeft, toUint8Array } from '../common/utils';
+import type { AccessList, AccessListUint8Array, AccessListItem } from './types';
 import { isAccessList } from './types';
 
 import type { Common } from '../common/common';
@@ -33,36 +34,36 @@ export const checkMaxInitCodeSize = (common: Common, length: number) => {
 	}
 };
 
-export const getAccessListData = (accessList: AccessListBuffer | AccessList) => {
+export const getAccessListData = (accessList: AccessListUint8Array | AccessList) => {
 	let AccessListJSON;
-	let bufferAccessList;
+	let uint8arrayAccessList;
 	if (isAccessList(accessList)) {
 		AccessListJSON = accessList;
-		const newAccessList: AccessListBuffer = [];
+		const newAccessList: AccessListUint8Array = [];
 		// eslint-disable-next-line @typescript-eslint/prefer-for-of
 		for (let i = 0; i < accessList.length; i += 1) {
 			const item: AccessListItem = accessList[i];
-			const addressBuffer = toBuffer(item.address);
-			const storageItems: Buffer[] = [];
+			const addressBytes = toUint8Array(item.address);
+			const storageItems: Uint8Array[] = [];
 			// eslint-disable-next-line @typescript-eslint/prefer-for-of
 			for (let index = 0; index < item.storageKeys.length; index += 1) {
-				storageItems.push(toBuffer(item.storageKeys[index]));
+				storageItems.push(toUint8Array(item.storageKeys[index]));
 			}
-			newAccessList.push([addressBuffer, storageItems]);
+			newAccessList.push([addressBytes, storageItems]);
 		}
-		bufferAccessList = newAccessList;
+		uint8arrayAccessList = newAccessList;
 	} else {
-		bufferAccessList = accessList ?? [];
+		uint8arrayAccessList = accessList ?? [];
 		// build the JSON
 		const json: AccessList = [];
 		// eslint-disable-next-line @typescript-eslint/prefer-for-of
-		for (let i = 0; i < bufferAccessList.length; i += 1) {
-			const data = bufferAccessList[i];
-			const address = bufferToHex(data[0]);
+		for (let i = 0; i < uint8arrayAccessList.length; i += 1) {
+			const data = uint8arrayAccessList[i];
+			const address = bytesToHex(data[0]);
 			const storageKeys: string[] = [];
 			// eslint-disable-next-line @typescript-eslint/prefer-for-of
 			for (let item = 0; item < data[1].length; item += 1) {
-				storageKeys.push(bufferToHex(data[1][item]));
+				storageKeys.push(bytesToHex(data[1][item]));
 			}
 			const jsonItem: AccessListItem = {
 				address,
@@ -75,11 +76,11 @@ export const getAccessListData = (accessList: AccessListBuffer | AccessList) => 
 
 	return {
 		AccessListJSON,
-		accessList: bufferAccessList,
+		accessList: uint8arrayAccessList,
 	};
 };
 
-export const verifyAccessList = (accessList: AccessListBuffer) => {
+export const verifyAccessList = (accessList: AccessListUint8Array) => {
 	// eslint-disable-next-line @typescript-eslint/prefer-for-of
 	for (let key = 0; key < accessList.length; key += 1) {
 		const accessListItem = accessList[key];
@@ -106,7 +107,7 @@ export const verifyAccessList = (accessList: AccessListBuffer) => {
 };
 
 export const getAccessListJSON = (
-	accessList: AccessListBuffer,
+	accessList: AccessListUint8Array,
 ): {
 	address: HexString;
 	storageKeys: HexString[];
@@ -117,22 +118,22 @@ export const getAccessListJSON = (
 		const item: any = accessList[index];
 		const JSONItem: { address: HexString; storageKeys: HexString[] } = {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/consistent-type-assertions
-			address: `0x${setLengthLeft(<Buffer>item[0], 20).toString('hex')}`,
+			address: bytesToHex(setLengthLeft(<Uint8Array>item[0], 20)),
 			storageKeys: [],
 		};
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/prefer-optional-chain
-		const storageSlots: Buffer[] = item && item[1];
+		const storageSlots: Uint8Array[] = item && item[1];
 		// eslint-disable-next-line @typescript-eslint/prefer-for-of
 		for (let slot = 0; slot < storageSlots.length; slot += 1) {
 			const storageSlot = storageSlots[slot];
-			JSONItem.storageKeys.push(`0x${setLengthLeft(storageSlot, 32).toString('hex')}`);
+			JSONItem.storageKeys.push(bytesToHex(setLengthLeft(storageSlot, 32)));
 		}
 		accessListJSON.push(JSONItem);
 	}
 	return accessListJSON;
 };
 
-export const getDataFeeEIP2930 = (accessList: AccessListBuffer, common: Common): number => {
+export const getDataFeeEIP2930 = (accessList: AccessListUint8Array, common: Common): number => {
 	const accessListStorageKeyCost = common.param('gasPrices', 'accessListStorageKeyCost');
 	const accessListAddressCost = common.param('gasPrices', 'accessListAddressCost');
 

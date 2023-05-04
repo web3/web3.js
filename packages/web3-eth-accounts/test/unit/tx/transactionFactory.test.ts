@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { hexToBytes } from 'web3-utils';
 import { Chain, Common, Hardfork } from '../../../src/common';
 
 import {
@@ -28,7 +29,7 @@ const common = new Common({
 	hardfork: Hardfork.London,
 });
 
-const pKey = Buffer.from('4646464646464646464646464646464646464646464646464646464646464646', 'hex');
+const pKey = hexToBytes('4646464646464646464646464646464646464646464646464646464646464646');
 
 const unsignedTx = Transaction.fromTxData({});
 const signedTx = unsignedTx.sign(pKey);
@@ -110,7 +111,7 @@ describe('[TransactionFactory]: Basic functions', () => {
 			if (txType.eip2718) {
 				rawTx = txType.signed.serialize();
 			} else {
-				rawTx = txType.signed.raw() as Buffer[];
+				rawTx = txType.signed.raw() as Uint8Array[];
 			}
 			const tx = TransactionFactory.fromBlockBodyData(rawTx, { common });
 			expect(tx.constructor.name).toEqual(txType.name);

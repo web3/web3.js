@@ -25,6 +25,7 @@ import {
 	PBKDF2IterationsError,
 } from 'web3-errors';
 import { CipherOptions, KeyStore } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData } from '../../src/tx/types';
 import { sign, signTransaction, encrypt } from '../../src/account';
 
@@ -52,7 +53,7 @@ export const invalidPrivateKeyToAddressData: [
 	PrivateKeyLengthError | InvalidPrivateKeyError,
 ][] = [
 	['', new InvalidPrivateKeyError()],
-	[Buffer.from([]), new PrivateKeyLengthError()],
+	[new Uint8Array([]), new PrivateKeyLengthError()],
 ];
 
 export const validPrivateKeytoAccountData: [any, any][] = [
@@ -197,20 +198,19 @@ export const invalidPrivateKeytoAccountData: [
 	PrivateKeyLengthError | InvalidPrivateKeyError,
 ][] = [
 	['', new InvalidPrivateKeyError()],
-	[Buffer.from([]), new PrivateKeyLengthError()],
+	[new Uint8Array([]), new PrivateKeyLengthError()],
 ];
 
-export const validEncryptData: [[any, string | Buffer, CipherOptions], KeyStore][] = [
+export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeyStore][] = [
 	[
 		[
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
 			'123',
 			{
 				n: 8192,
-				iv: Buffer.from('bfb43120ae00e9de110f8325143a2709', 'hex'),
-				salt: Buffer.from(
+				iv: hexToBytes('0xbfb43120ae00e9de110f8325143a2709'),
+				salt: hexToBytes(
 					'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
-					'hex',
 				),
 			},
 		],
@@ -339,7 +339,7 @@ export const invalidEncryptData: [
 			'123',
 			{
 				n: 8192,
-				iv: Buffer.from('bfb43120ae00e9de110f8325143a27', 'hex'),
+				iv: hexToBytes('0xbfb43120ae00e9de110f8325143a27'),
 				salt: undefined,
 			},
 		],
@@ -395,10 +395,9 @@ export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
 			'123',
 			{
-				iv: Buffer.from('bfb43120ae00e9de110f8325143a2709', 'hex'),
-				salt: Buffer.from(
+				iv: hexToBytes('0xbfb43120ae00e9de110f8325143a2709'),
+				salt: hexToBytes(
 					'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
-					'hex',
 				),
 			},
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
@@ -447,7 +446,7 @@ export const invalidDecryptData: [[any, string], InvalidKdfError | KeyDerivation
 					kdf: 'pbkdf2',
 					kdfparams: {
 						dklen: 32,
-						salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
+						salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd00',
 						c: 262144,
 						prf: 'hmac-sha256',
 					},

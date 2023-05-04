@@ -16,7 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { keccak256 } from 'ethereum-cryptography/keccak';
+import { utf8ToBytes } from 'ethereum-cryptography/utils';
 import { ValidInputTypes } from '../types';
+import { uint8ArrayToHexString } from '../utils';
 import { isHexStrict } from './string';
 
 /**
@@ -25,11 +27,9 @@ import { isHexStrict } from './string';
 export const checkAddressCheckSum = (data: string): boolean => {
 	if (!/^(0x)?[0-9a-f]{40}$/i.test(data)) return false;
 	const address = data.slice(2);
-	const updatedData = Buffer.from(address.toLowerCase(), 'utf-8');
+	const updatedData = utf8ToBytes(address.toLowerCase());
 
-	const addressHash = Buffer.from(keccak256(updatedData) as Buffer)
-		.toString('hex')
-		.replace(/^0x/i, '');
+	const addressHash = uint8ArrayToHexString(keccak256(updatedData)).slice(2);
 
 	for (let i = 0; i < 40; i += 1) {
 		// the nth letter should be uppercase if the nth digit of casemap is 1
@@ -47,16 +47,16 @@ export const checkAddressCheckSum = (data: string): boolean => {
  * Checks if a given string is a valid Ethereum address. It will also check the checksum, if the address has upper and lowercase letters.
  */
 export const isAddress = (value: ValidInputTypes, checkChecksum = true) => {
-	if (typeof value !== 'string' && !Buffer.isBuffer(value)) {
+	if (typeof value !== 'string' && !(value instanceof Uint8Array)) {
 		return false;
 	}
 
 	let valueToCheck: string;
 
-	if (Buffer.isBuffer(value)) {
-		valueToCheck = `0x${value.toString('hex')}`;
+	if (value instanceof Uint8Array) {
+		valueToCheck = uint8ArrayToHexString(value);
 	} else if (typeof value === 'string' && !isHexStrict(value)) {
-		valueToCheck = `0x${value}`;
+		valueToCheck = value.toLowerCase().startsWith('0x') ? value : `0x${value}`;
 	} else {
 		valueToCheck = value;
 	}
