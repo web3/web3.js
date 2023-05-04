@@ -16,6 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3APIPayload, EthExecutionAPI, JsonRpcResponse, Web3ProviderStatus } from 'web3-types';
+// eslint-disable-next-line import/no-relative-packages
+import { sleep } from '../../../../fixtures/utils';
 import { SocketProvider } from '../../src/socket_provider';
 
 const dummySocketConnection = { dummy: 'dummy' };
@@ -90,25 +92,60 @@ describe('SocketProvider', () => {
 			// @ts-expect-error run protected method
 			expect(provider._reconnect).toHaveBeenCalled();
 		});
-		it('should call method reconnect in case of error at _openSocketConnection', () => {
+		it('should call method reconnect in case of error at _openSocketConnection', async () => {
 			const provider = new TestProvider(socketPath, socketOption);
 			// @ts-expect-error run protected method
-			jest.spyOn(provider, '_openSocketConnection').mockRejectedValue(new Error());
+			jest.spyOn(provider, '_openSocketConnection').mockImplementation(() => {
+				throw new Error();
+			});
 			// @ts-expect-error run protected method
 			jest.spyOn(provider, '_reconnect').mockReturnValue('');
-			provider.message('');
+			// @ts-expect-error run protected method
+			provider.isReconnecting = true;
+			provider.connect();
+
+			await sleep(100);
+
 			// @ts-expect-error run protected method
 			expect(provider._reconnect).toHaveBeenCalled();
 		});
-		it('should call method reconnect in case of error at _addSocketListeners', () => {
+		it('should call method reconnect in case of error at _addSocketListeners', async () => {
 			const provider = new TestProvider(socketPath, socketOption);
 			// @ts-expect-error run protected method
-			jest.spyOn(provider, '_addSocketListeners').mockRejectedValue(new Error());
+			jest.spyOn(provider, '_addSocketListeners').mockImplementation(() => {
+				throw new Error();
+			});
 			// @ts-expect-error run protected method
 			jest.spyOn(provider, '_reconnect').mockReturnValue('');
-			provider.message('');
+			// @ts-expect-error run protected method
+			provider.isReconnecting = true;
+			provider.connect();
+
+			await sleep(100);
+
 			// @ts-expect-error run protected method
 			expect(provider._reconnect).toHaveBeenCalled();
+		});
+		it('should throw "Error while connecting..." in case of error inside `connect()`', () => {
+			const dummyError = new Error('error');
+			const reconnectOptions = { autoReconnect: true };
+			const provider = new TestProvider(socketPath, socketOption, reconnectOptions);
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_addSocketListeners').mockImplementation(() => {
+				throw dummyError;
+			});
+			expect(() => provider.connect()).toThrow(
+				`Error while connecting to ${socketPath}. Reason: ${dummyError.message}`,
+			);
+		});
+		it('should throw "Client URL ... is invalid" in case of error with no message inside `connect()`', () => {
+			const reconnectOptions = { autoReconnect: true };
+			const provider = new TestProvider(socketPath, socketOption, reconnectOptions);
+			// @ts-expect-error run protected method
+			jest.spyOn(provider, '_addSocketListeners').mockImplementation(() => {
+				throw new Error();
+			});
+			expect(() => provider.connect()).toThrow(`Client URL "${socketPath}" is invalid.`);
 		});
 	});
 });
