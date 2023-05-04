@@ -14,9 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Chain, Common, Hardfork } from '../../../src/common';
+import { Bytes } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
+import { Chain, Common, Hardfork, toUint8Array } from '../../../src/common';
 import { Address } from '../../../src/tx/address';
-import { toBuffer } from '../../../src/common/utils';
 
 import {
 	AccessListEIP2930Transaction,
@@ -30,22 +31,22 @@ import type {
 	FeeMarketEIP1559ValuesArray,
 	TxValuesArray,
 } from '../../../src';
-import type { BigIntLike, BufferLike, PrefixedHexString } from '../../../src/common/types';
+import type { BigIntLike, PrefixedHexString } from '../../../src/common/types';
 
-type AddressLike = Address | Buffer | PrefixedHexString;
+type AddressLike = Address | Uint8Array | PrefixedHexString;
 // @returns: Array with subtypes of the AddressLike type for a given address
 function generateAddressLikeValues(address: string): AddressLike[] {
-	return [address, toBuffer(address), new Address(toBuffer(address))];
+	return [address, toUint8Array(address), new Address(toUint8Array(address))];
 }
 
 // @returns: Array with subtypes of the BigIntLike type for a given number
 function generateBigIntLikeValues(value: number): BigIntLike[] {
-	return [value, BigInt(value), `0x${value.toString(16)}`, toBuffer(value)];
+	return [value, BigInt(value), `0x${value.toString(16)}`, toUint8Array(value)];
 }
 
 // @returns: Array with subtypes of the BufferLike type for a given string
-function generateBufferLikeValues(value: string): BufferLike[] {
-	return [value, toBuffer(value)];
+function generateBufferLikeValues(value: string): Bytes[] {
+	return [value, toUint8Array(value)];
 }
 
 interface GenerateCombinationsArgs {
@@ -173,7 +174,7 @@ test('[Invalid Array Input values]', () => {
 		for (const txType of txTypes) {
 			let tx = TransactionFactory.fromTxData({ type: txType });
 			if (signed) {
-				tx = tx.sign(Buffer.from('42'.repeat(32), 'hex'));
+				tx = tx.sign(hexToBytes('42'.repeat(32)));
 			}
 			const rawValues = tx.raw();
 			for (let x = 0; x < rawValues.length; x += 1) {
@@ -245,13 +246,13 @@ test('[Invalid Access Lists]', () => {
 					});
 					if (signed) {
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-						tx = tx.sign(Buffer.from('42'.repeat(32), 'hex'));
+						tx = tx.sign(hexToBytes('42'.repeat(32)));
 					}
 				} catch (e: any) {
 					tx = TransactionFactory.fromTxData({ type: txType });
 					if (signed) {
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-						tx = tx.sign(Buffer.from('42'.repeat(32), 'hex'));
+						tx = tx.sign(hexToBytes('42'.repeat(32)));
 					}
 				}
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call

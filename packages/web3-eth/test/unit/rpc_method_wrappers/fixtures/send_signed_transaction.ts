@@ -46,6 +46,5 @@ const signedTransaction =
 	'0xf8650f8415aa14088252089400000000000000000000000000000000000000000180820a95a0e6d6bc9c7af306733eb44b2a8a4a4efed5db2fbff947e21521fe81dfb144a00aa01a8a87c872f59564abbbe60e9d4e54dee5e1f1647477ab170ecd7e2704d3c94d';
 export const testData: [string, Bytes][] = [
 	['signedTransaction = HexString', signedTransaction],
-	['signedTransaction = Buffer', hexToBytes(signedTransaction)],
-	['signedTransaction = Uint8Array', new Uint8Array(hexToBytes(signedTransaction))],
+	['signedTransaction = Uint8Array', hexToBytes(signedTransaction)],
 ];

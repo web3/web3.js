@@ -20,8 +20,8 @@ import { HexString } from './primitives_types';
 export type Cipher = 'aes-128-ctr' | 'aes-128-cbc' | 'aes-256-cbc';
 
 export type CipherOptions = {
-	salt?: Buffer | string;
-	iv?: Buffer | string;
+	salt?: Uint8Array | string;
+	iv?: Uint8Array | string;
 	kdf?: 'scrypt' | 'pbkdf2';
 	dklen?: number;
 	c?: number; // iterrations
@@ -35,13 +35,13 @@ export type ScryptParams = {
 	n: number;
 	p: number;
 	r: number;
-	salt: Buffer | string;
+	salt: Uint8Array | string;
 };
 export type PBKDF2SHA256Params = {
 	c: number; // iterations
 	dklen: number;
 	prf: 'hmac-sha256';
-	salt: Buffer | string;
+	salt: Uint8Array | string;
 };
 
 export type KeyStore = {

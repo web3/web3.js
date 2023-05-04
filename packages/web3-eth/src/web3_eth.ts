@@ -285,9 +285,14 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *      "0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234",
 	 *      0,
 	 *      undefined,
-	 *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.BUFFER }
+	 *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.UINT8ARRAY }
 	 * ).then(console.log);
-	 * > <Buffer 03 34 56 73 21 23 ff ff 23 42 34 2d d1 23 42 43 43 24 23 42 34 fd 23 4f d2 3f d4 f2 3d 42 34>
+	 * > Uint8Array(31) [
+	 *       3, 52,  86, 115,  33,  35, 255, 255,
+	 *       35, 66,  52,  45, 209,  35,  66,  67,
+	 *       67, 36,  35,  66,  52, 253,  35,  79,
+	 *       210, 63, 212, 242,  61,  66,  52
+	 *    ]
 	 * ```
 	 */
 	public async getStorageAt<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -318,11 +323,17 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * > "0x600160008035811a818181146012578301005b601b6001356025565b8060005260206000f25b600060078202905091905056"
 	 *
 	 * web3.eth.getCode(
-	 *      "0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234",
+	 *      "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
 	 *      undefined,
-	 *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.BUFFER }
+	 *      { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.UINT8ARRAY }
 	 * ).then(console.log);
-	 * > <Buffer 30 78 36 30 30 31 36 30 30 30 38 30 33 35 38 31 31 61 38 31 38 31 38 31 31 34 36 30 31 32 35 37 38 33 30 31 30 30 35 62 36 30 31 62 36 30 30 31 33 35 ... >
+	 * > Uint8Array(50) [
+	 *   96,  1,  96,   0, 128, 53, 129, 26, 129, 129, 129,
+	 *   20, 96,  18,  87, 131,  1,   0, 91,  96,  27,  96,
+	 *   1, 53,  96,  37,  86, 91, 128, 96,   0,  82,  96,
+	 *   32, 96,   0, 242,  91, 96,   0, 96,   7, 130,   2,
+	 *   144, 80, 145, 144,  80, 86
+	 * ]
 	 * ```
 	 */
 	public async getCode<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -550,7 +561,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *  }
 	 *
 	 * web3.eth.getTransaction(
-	 *     <Buffer 30 78 37 33 61 65 61 37 30 65 39 36 39 39 34 31 66 32 33 66 39 64 32 34 31 30 33 65 39 31 61 61 31 66 35 35 63 37 39 36 34 65 62 31 33 64 61 66 31 63 ... >,
+	 *     web3.utils.hexToBytes("0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"),
 	 *     { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.HEX }
 	 * ).then(console.log);
 	 * {
@@ -702,7 +713,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *  }
 	 *
 	 * web3.eth.getTransactionFromBlock(
-	 *     <Buffer 30 78 34 33 32 30 32 62 64 31 36 62 36 62 64 35 34 62 65 61 31 62 33 31 30 37 33 36 62 64 37 38 62 64 62 65 39 33 61 36 34 61 64 39 34 30 66 37 35 38 ... >,
+	 *     hexToBytes("0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"),
 	 *     0,
 	 *     { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.HEX }
 	 * ).then(console.log);
@@ -1047,8 +1058,15 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
 	 *
 	 * // Using an unlocked account managed by connected RPC client
-	 * web3.eth.sign("0x48656c6c6f20776f726c64", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.BUFFER }).then(console.log);
-	 * > <Buffer 30 78 33 30 37 35 35 65 64 36 35 33 39 36 66 61 63 66 38 36 63 35 33 65 36 32 31 37 63 35 32 62 34 64 61 65 62 65 37 32 61 61 34 39 34 31 64 38 39 36 ... >
+	 * web3.eth.sign("0x48656c6c6f20776f726c64", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.UINT8ARRAY }).then(console.log);
+	 * > Uint8Array(65) [
+	 *    48, 117,  94, 214,  83, 150, 250, 207, 134, 197,  62,
+	 *    98,  23, 197,  43,  77, 174, 190, 114, 170,  73,  65,
+	 *   216, 150,  53,  64, 157, 228, 201, 199, 249,  70, 109,
+	 *    78, 154, 174, 199, 151, 127,   5, 233,  35, 136, 155,
+	 *    51, 192, 208, 221,  39, 215,  34, 107, 110, 111,  86,
+	 *   206, 115, 116, 101, 197, 207, 208,  75, 228,   0
+	 * ]
 	 * ```
 	 *
 	 * // Using an indexed account managed by local Web3 wallet

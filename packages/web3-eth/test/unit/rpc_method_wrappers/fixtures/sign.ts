@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Address, Bytes } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 
 export const mockRpcResponse = '0x736f796c656e7420677265656e2069732070656f706c65';
 
@@ -34,11 +35,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', address],
 	],
 	[
-		'message = Buffer("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex")',
-		[Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), address],
+		'message = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), address],
 	],
 	[
-		'message = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")',
+		'message = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,

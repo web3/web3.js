@@ -16,13 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ValidInputTypes } from '../types';
-import { parseBaseType } from '../utils';
+import { hexToUint8Array, parseBaseType } from '../utils';
 import { isHexStrict } from './string';
 
 /**
- * checks input if typeof data is valid buffer input
+ * checks input if typeof data is valid Uint8Array input
  */
-export const isBuffer = (data: ValidInputTypes) => Buffer.isBuffer(data);
+export const isUint8Array = (data: ValidInputTypes) => data instanceof Uint8Array;
 
 export const isBytes = (
 	value: ValidInputTypes | Uint8Array | number[],
@@ -30,12 +30,7 @@ export const isBytes = (
 		abiType: 'bytes',
 	},
 ) => {
-	if (
-		typeof value !== 'string' &&
-		!Buffer.isBuffer(value) &&
-		!Array.isArray(value) &&
-		!(value instanceof Uint8Array)
-	) {
+	if (typeof value !== 'string' && !Array.isArray(value) && !(value instanceof Uint8Array)) {
 		return false;
 	}
 
@@ -48,27 +43,21 @@ export const isBytes = (
 		return false;
 	}
 
-	let valueToCheck: Buffer;
+	let valueToCheck: Uint8Array;
 
-	if (typeof value === 'string' && isHexStrict(value)) {
-		valueToCheck = Buffer.from(value.substring(2), 'hex');
+	if (typeof value === 'string') {
+		if (value.length % 2 !== 0) {
+			// odd length hex
+			return false;
+		}
+		valueToCheck = hexToUint8Array(value);
 	} else if (Array.isArray(value)) {
-		if (value.some(d => d < 0)) {
+		if (value.some(d => d < 0 || d > 255 || !Number.isInteger(d))) {
 			return false;
 		}
-
-		if (value.some(d => d > 255)) {
-			return false;
-		}
-
-		if (value.some(d => !Number.isInteger(d))) {
-			return false;
-		}
-		valueToCheck = Buffer.from(value);
-	} else if (value instanceof Uint8Array) {
-		valueToCheck = Buffer.from(value);
+		valueToCheck = new Uint8Array(value);
 	} else {
-		valueToCheck = value as unknown as Buffer;
+		valueToCheck = value;
 	}
 
 	if (options?.abiType) {
