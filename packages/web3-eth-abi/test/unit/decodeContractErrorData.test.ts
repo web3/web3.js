@@ -25,11 +25,7 @@ describe('decodeContractErrorData', () => {
 		it.each(validDecodeContractErrorData)(
 			'%#: should pass for valid values: %j',
 			({ input: [abi, errorData], output }) => {
-				const err = new Eip838ExecutionError(
-					errorData.code,
-					errorData.message,
-					errorData.data,
-				);
+				const err = new Eip838ExecutionError(errorData);
 
 				decodeContractErrorData(abi, err);
 
@@ -37,6 +33,7 @@ describe('decodeContractErrorData', () => {
 				expect(err.errorSignature).toEqual(output.errorSignature);
 				expect(err.errorArgs?.message).toEqual(output.errorArgs?.message);
 				expect(Number(err.errorArgs?.code)).toEqual(output.errorArgs?.code);
+				expect(err.innerError?.code).toEqual(output.innerError?.code);
 			},
 		);
 	});
@@ -47,11 +44,7 @@ describe('decodeContractErrorData', () => {
 			({ input: [abi, errorData] }) => {
 				// mock console.error
 				const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => 'error');
-				const err = new Eip838ExecutionError(
-					errorData.code,
-					errorData.message,
-					errorData.data,
-				);
+				const err = new Eip838ExecutionError(errorData);
 				decodeContractErrorData(abi, err);
 				expect(consoleSpy).toHaveBeenCalled();
 			},
