@@ -24,6 +24,16 @@ import { Web3ValidationErrorObject, Validate, Json, Schema, RawValidationError }
 const validator = require('is-my-json-valid');
 
 export class Validator {
+	// eslint-disable-next-line no-use-before-define
+	private static validatorInstance?: Validator;
+	// eslint-disable-next-line no-useless-constructor, @typescript-eslint/no-empty-function
+	private constructor() {}
+	public static factory(): Validator {
+		if (!Validator.validatorInstance) {
+			Validator.validatorInstance = new Validator();
+		}
+		return Validator.validatorInstance;
+	}
 	private readonly _schemas: Map<string, Validate> = new Map();
 	public getSchema(key: string) {
 		return this._schemas.get(key);

@@ -37,7 +37,7 @@ const formatNames = [
 describe('instance of validator', () => {
 	let validator: Validator;
 	beforeAll(() => {
-		validator = new Validator();
+		validator = Validator.factory();
 	});
 	it('instance', () => {
 		expect(validator).toBeDefined();

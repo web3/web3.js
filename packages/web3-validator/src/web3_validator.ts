@@ -29,7 +29,7 @@ export class Web3Validator {
 	private readonly _validator: Validator;
 
 	public constructor() {
-		this._validator = new Validator();
+		this._validator = Validator.factory();
 	}
 
 	public validateJSONSchema(
