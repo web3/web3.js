@@ -1462,6 +1462,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ## [Unreleased]
 
+### Breaking Changes
+
+-   dropped support for NodeJs@14
+
 ### Added
 
 #### web3-eth-contract
