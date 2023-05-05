@@ -55,31 +55,43 @@ To solve this problem, you can use a custom script that copies the JSON artifact
 Script:
 
 ```typescript title="gen.ts"
-#!/usr/bin/node
-
 import fs from 'fs';
 import path from 'path';
 
+//read destination directory submitted as first param
 var destination = process.argv.slice(2)[0];
 
-const artifacts: string[] = JSON.parse(fs.readFileSync('./artifacts.json', 'utf-8'));
+//read all contract artifacts from artifacts.json which should be in the directoy from where script should be executed
+const artifactContent = fs.readFileSync('./artifacts.json', 'utf-8');
 
-artifacts.forEach(artifact => {
-	const content = fs.readFileSync(artifact, 'utf-8');
-	const filename = path.basename(artifact, '.json');
-	fs.writeFileSync(
-		path.join(destination, filename + '.ts'),
-		`const artifact = ${content.trimEnd()} as const; export default artifact;`,
-	);
-});
+const artifacts: string[] = JSON.parse(artifactContent);
+
+(async function () {
+	for (const artifact of artifacts) {
+		let content;
+		try {
+			//try to import from node_modules
+			content = JSON.stringify(await import(artifact));
+		} catch (e) {
+			//try to read as path on disc
+			content = fs.readFileSync(artifact, 'utf-8');
+		}
+		const filename = path.basename(artifact, '.json');
+		//create and write typescript file
+		fs.writeFileSync(
+			path.join(destination, filename + '.ts'),
+			`const artifact = ${content.trimEnd()} as const; export default artifact;`,
+		);
+	}
+})();
 ```
 
 To use this script, just create an `artifacts.json` file at the root of your project with all the artifacts you are using.
 
 ```json title="artifacts.json"
 [
-	"./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json",
-	"./node_modules/@openzeppelin/contracts/build/contracts/ERC1155.json",
+	"@openzeppelin/contracts/build/contracts/ERC20.json",
+	"@openzeppelin/contracts/build/contracts/ERC1155.json",
 	"./build/contracts/MyContract.json"
 ]
 ```
