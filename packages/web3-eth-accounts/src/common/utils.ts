@@ -14,9 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { recoverPublicKey } from 'ethereum-cryptography/secp256k1';
-import { bytesToHex, hexToBytes, numberToHex, uint8ArrayConcat } from 'web3-utils';
 import { isHexPrefixed, isHexString } from 'web3-validator';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
+import { bytesToHex, hexToBytes, numberToHex } from 'web3-utils';
 import { Hardfork } from './enums';
 import { ToBytesInputTypes, TypeOutput, TypeOutputReturnType } from './types';
 
@@ -506,13 +506,15 @@ export const ecrecover = function (
 	s: Uint8Array,
 	chainId?: bigint,
 ): Uint8Array {
-	const signature = uint8ArrayConcat(setLengthLeft(r, 32), setLengthLeft(s, 32));
 	const recovery = calculateSigRecovery(v, chainId);
 	if (!isValidSigRecovery(recovery)) {
 		throw new Error('Invalid signature v value');
 	}
 
-	const senderPubKey = recoverPublicKey(msgHash, signature, Number(recovery));
+	const senderPubKey = new secp256k1.Signature(uint8ArrayToBigInt(r), uint8ArrayToBigInt(s))
+		.addRecoveryBit(Number(recovery))
+		.recoverPublicKey(msgHash)
+		.toRawBytes(false);
 	return senderPubKey.slice(1);
 };
 
