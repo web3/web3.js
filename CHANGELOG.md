@@ -1462,6 +1462,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ## [Unreleased]
 
+### Breaking Changes
+
+-   dropped support for NodeJs@14
+
 ### Added
 
 #### web3-eth-contract
@@ -1471,6 +1475,12 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-types
 
 -   Added `filters` param to the `Filter` type (#6010)
+
+### Fixed
+
+#### web3-eth-accounts
+
+-   Fixed ESM import bugs reported in (#6032) and (#6034)
 
 ### Changed
 

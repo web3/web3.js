@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Point } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { bytesToHex, uint8ArrayEquals } from 'web3-utils';
 import { assertIsUint8Array, zeros } from '../common/utils';
@@ -74,7 +74,7 @@ export class Address {
 		let pubKey = _pubKey;
 		assertIsUint8Array(pubKey);
 		if (sanitize && pubKey.length !== 64) {
-			pubKey = Point.fromHex(pubKey).toRawBytes(false).slice(1);
+			pubKey = secp256k1.ProjectivePoint.fromHex(pubKey).toRawBytes(false).slice(1);
 		}
 		if (pubKey.length !== 64) {
 			throw new Error('Expected pubKey to be of length 64');
