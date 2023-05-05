@@ -85,6 +85,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed ESM import bugs reported in (#6032) and (#6034)
+
 ### Changed
 
 -   Replaced `Buffer` for `Uint8Array` (#6004)
