@@ -74,10 +74,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.1-alpha.5]
 
-### Changed
-
--   web3.js dependencies (#5757)
-
 ## [4.0.1-rc.0]
 
 ### Removed
@@ -100,3 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Removed `formatDecodedObject` function (#5934)
 
 ## [Unreleased]
+
+### Changed
+
+-   Nested Smart Contract error data hex string is decoded when the error contains the data as object (when the data hex string is inside data.originalError.data or data.data) (#6045)
