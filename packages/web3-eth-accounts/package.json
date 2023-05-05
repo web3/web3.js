@@ -60,7 +60,7 @@
 	"dependencies": {
 		"@ethereumjs/rlp": "^4.0.1",
 		"crc-32": "^1.2.2",
-		"ethereum-cryptography": "^1.1.2",
+		"ethereum-cryptography": "^2.0.0",
 		"web3-errors": "^1.0.0-rc.1",
 		"web3-types": "^1.0.0-rc.1",
 		"web3-utils": "^4.0.1-rc.1",

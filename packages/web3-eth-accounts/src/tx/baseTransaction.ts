@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Numbers } from 'web3-types';
-import { signSync } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { bytesToHex } from 'web3-utils';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from './constants';
 import {
@@ -111,7 +111,7 @@ export abstract class BaseTransaction<TransactionObject> {
 		this._type = Number(uint8ArrayToBigInt(toUint8Array(type)));
 
 		this.txOptions = opts;
-		
+
 		const toB = toUint8Array(to === '' ? '0x' : to);
 		const vB = toUint8Array(v === '' ? '0x' : v);
 		const rB = toUint8Array(r === '' ? '0x' : r);
@@ -553,18 +553,16 @@ export abstract class BaseTransaction<TransactionObject> {
 	}
 	// eslint-disable-next-line class-methods-use-this
 	private _ecsign(msgHash: Uint8Array, privateKey: Uint8Array, chainId?: bigint): ECDSASignature {
-		const [signature, recovery] = signSync(msgHash, privateKey, {
-			recovered: true,
-			der: false,
-		});
+		const signature = secp256k1.sign(msgHash, privateKey);
+		const signatureBytes = signature.toCompactRawBytes();
 
-		const r = signature.slice(0, 32);
-		const s = signature.slice(32, 64);
+		const r = signatureBytes.subarray(0, 32);
+		const s = signatureBytes.subarray(32, 64);
 
 		const v =
 			chainId === undefined
-				? BigInt(recovery + 27)
-				: BigInt(recovery + 35) + BigInt(chainId) * BigInt(2);
+				? BigInt(signature.recovery! + 27)
+				: BigInt(signature.recovery! + 35) + BigInt(chainId) * BigInt(2);
 
 		return { r, s, v };
 	}

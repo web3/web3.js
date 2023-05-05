@@ -59,7 +59,7 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"ethereum-cryptography": "^1.1.2",
+		"ethereum-cryptography": "^2.0.0",
 		"web3-errors": "^1.0.0-rc.1",
 		"web3-types": "^1.0.0-rc.1",
 		"web3-validator": "^1.0.0-rc.1"
