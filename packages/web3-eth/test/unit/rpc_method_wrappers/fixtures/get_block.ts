@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Block, TransactionInfo, BlockNumberOrTag, BlockTags, Bytes } from 'web3-types';
+import { hexToBytes } from 'web3-utils';
 
 export const mockRpcResponse: Block = {
 	parentHash: '0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54',
@@ -86,11 +87,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', false],
 	],
 	[
-		'blockNumber = Buffer("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex"), hydrated = false',
-		[Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), false],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = false',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), false],
 	],
 	[
-		'blockNumber = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = false',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = false',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
@@ -119,11 +120,11 @@ export const testData: TestData[] = [
 		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', true],
 	],
 	[
-		'blockNumber = Buffer("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex"), hydrated = true',
-		[Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), true],
+		'blockNumber = hexToBytes("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = true',
+		[hexToBytes('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'), true],
 	],
 	[
-		'blockNumber = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = true',
+		'blockNumber = hexToBytes("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), hydrated = true',
 		[
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,

@@ -217,7 +217,7 @@ export abstract class Web3Config
 	 * Will set the transactionConfirmationBlocks.
 	 */
 	public set transactionConfirmationBlocks(val) {
-        this._triggerConfigChange('transactionConfirmationBlocks', val);
+		this._triggerConfigChange('transactionConfirmationBlocks', val);
 		this.config.transactionConfirmationBlocks = val;
 	}
 
@@ -233,7 +233,7 @@ export abstract class Web3Config
 	 * Will set the transactionPollingInterval.
 	 */
 	public set transactionPollingInterval(val) {
-        this._triggerConfigChange('transactionPollingInterval', val);
+		this._triggerConfigChange('transactionPollingInterval', val);
 		this.config.transactionPollingInterval = val;
 
 		this.transactionReceiptPollingInterval = val;
@@ -268,7 +268,7 @@ export abstract class Web3Config
 	 * Will set the transactionReceiptPollingInterval
 	 */
 	public set transactionReceiptPollingInterval(val) {
-        this._triggerConfigChange('transactionReceiptPollingInterval', val);
+		this._triggerConfigChange('transactionReceiptPollingInterval', val);
 		this.config.transactionReceiptPollingInterval = val;
 	}
 
@@ -277,7 +277,7 @@ export abstract class Web3Config
 	}
 
 	public set transactionConfirmationPollingInterval(val) {
-        this._triggerConfigChange('transactionConfirmationPollingInterval', val);
+		this._triggerConfigChange('transactionConfirmationPollingInterval', val);
 		this.config.transactionConfirmationPollingInterval = val;
 	}
 

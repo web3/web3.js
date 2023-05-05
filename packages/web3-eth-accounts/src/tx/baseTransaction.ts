@@ -16,16 +16,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Numbers } from 'web3-types';
-import { signSync } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
+import { bytesToHex } from 'web3-utils';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from './constants';
 import {
 	Chain,
 	Common,
 	Hardfork,
-	bufferToBigInt,
-	bufferToHex,
-	toBuffer,
-	unpadBuffer,
+	toUint8Array,
+	uint8ArrayToBigInt,
+	unpadUint8Array,
 } from '../common';
 import type {
 	AccessListEIP2930TxData,
@@ -42,7 +42,7 @@ import { Address } from './address';
 import { checkMaxInitCodeSize } from './utils';
 
 interface TransactionCache {
-	hash: Buffer | undefined;
+	hash: Uint8Array | undefined;
 	dataFee?: {
 		value: bigint;
 		hardfork: string | Hardfork;
@@ -63,7 +63,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	public readonly gasLimit: bigint;
 	public readonly to?: Address;
 	public readonly value: bigint;
-	public readonly data: Buffer;
+	public readonly data: Uint8Array;
 
 	public readonly v?: bigint;
 	public readonly r?: bigint;
@@ -108,24 +108,24 @@ export abstract class BaseTransaction<TransactionObject> {
 		opts: TxOptions,
 	) {
 		const { nonce, gasLimit, to, value, data, v, r, s, type } = txData;
-		this._type = Number(bufferToBigInt(toBuffer(type)));
+		this._type = Number(uint8ArrayToBigInt(toUint8Array(type)));
 
 		this.txOptions = opts;
 
-		const toB = toBuffer(to === '' ? '0x' : to);
-		const vB = toBuffer(v === '' ? '0x' : v);
-		const rB = toBuffer(r === '' ? '0x' : r);
-		const sB = toBuffer(s === '' ? '0x' : s);
+		const toB = toUint8Array(to === '' ? '0x' : to);
+		const vB = toUint8Array(v === '' ? '0x' : v);
+		const rB = toUint8Array(r === '' ? '0x' : r);
+		const sB = toUint8Array(s === '' ? '0x' : s);
 
-		this.nonce = bufferToBigInt(toBuffer(nonce === '' ? '0x' : nonce));
-		this.gasLimit = bufferToBigInt(toBuffer(gasLimit === '' ? '0x' : gasLimit));
+		this.nonce = uint8ArrayToBigInt(toUint8Array(nonce === '' ? '0x' : nonce));
+		this.gasLimit = uint8ArrayToBigInt(toUint8Array(gasLimit === '' ? '0x' : gasLimit));
 		this.to = toB.length > 0 ? new Address(toB) : undefined;
-		this.value = bufferToBigInt(toBuffer(value === '' ? '0x' : value));
-		this.data = toBuffer(data === '' ? '0x' : data);
+		this.value = uint8ArrayToBigInt(toUint8Array(value === '' ? '0x' : value));
+		this.data = toUint8Array(data === '' ? '0x' : data);
 
-		this.v = vB.length > 0 ? bufferToBigInt(vB) : undefined;
-		this.r = rB.length > 0 ? bufferToBigInt(rB) : undefined;
-		this.s = sB.length > 0 ? bufferToBigInt(sB) : undefined;
+		this.v = vB.length > 0 ? uint8ArrayToBigInt(vB) : undefined;
+		this.r = rB.length > 0 ? uint8ArrayToBigInt(rB) : undefined;
+		this.s = sB.length > 0 ? uint8ArrayToBigInt(sB) : undefined;
 
 		this._validateCannotExceedMaxInteger({ value: this.value, r: this.r, s: this.s });
 
@@ -267,12 +267,12 @@ export abstract class BaseTransaction<TransactionObject> {
 	}
 
 	/**
-	 * Returns a Buffer Array of the raw Buffers of this transaction, in order.
+	 * Returns a Uint8Array Array of the raw Uint8Arrays of this transaction, in order.
 	 *
 	 * Use {@link BaseTransaction.serialize} to add a transaction to a block
 	 * with {@link Block.fromValuesArray}.
 	 *
-	 * For an unsigned tx this method uses the empty Buffer values for the
+	 * For an unsigned tx this method uses the empty Uint8Array values for the
 	 * signature parameters `v`, `r` and `s` for encoding. For an EIP-155 compliant
 	 * representation for external signing use {@link BaseTransaction.getMessageToSign}.
 	 */
@@ -284,18 +284,18 @@ export abstract class BaseTransaction<TransactionObject> {
 	/**
 	 * Returns the encoding of the transaction.
 	 */
-	public abstract serialize(): Buffer;
+	public abstract serialize(): Uint8Array;
 
 	// Returns the unsigned tx (hashed or raw), which is used to sign the transaction.
 	//
 	// Note: do not use code docs here since VS Studio is then not able to detect the
 	// comments from the inherited methods
-	public abstract getMessageToSign(hashMessage: false): Buffer | Buffer[];
-	public abstract getMessageToSign(hashMessage?: true): Buffer;
+	public abstract getMessageToSign(hashMessage: false): Uint8Array | Uint8Array[];
+	public abstract getMessageToSign(hashMessage?: true): Uint8Array;
 
-	public abstract hash(): Buffer;
+	public abstract hash(): Uint8Array;
 
-	public abstract getMessageToVerifySignature(): Buffer;
+	public abstract getMessageToVerifySignature(): Uint8Array;
 
 	public isSigned(): boolean {
 		const { v, r, s } = this;
@@ -312,7 +312,7 @@ export abstract class BaseTransaction<TransactionObject> {
 		try {
 			// Main signature verification is done in `getSenderPublicKey()`
 			const publicKey = this.getSenderPublicKey();
-			return unpadBuffer(publicKey).length !== 0;
+			return unpadUint8Array(publicKey).length !== 0;
 		} catch (e: any) {
 			return false;
 		}
@@ -328,7 +328,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	/**
 	 * Returns the public key of the sender
 	 */
-	public abstract getSenderPublicKey(): Buffer;
+	public abstract getSenderPublicKey(): Uint8Array;
 
 	/**
 	 * Signs a transaction.
@@ -339,7 +339,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * const signedTx = tx.sign(privateKey)
 	 * ```
 	 */
-	public sign(privateKey: Buffer): TransactionObject {
+	public sign(privateKey: Uint8Array): TransactionObject {
 		if (privateKey.length !== 32) {
 			const msg = this._errorMsg('Private key must be 32 bytes in length.');
 			throw new Error(msg);
@@ -380,7 +380,11 @@ export abstract class BaseTransaction<TransactionObject> {
 	public abstract toJSON(): JsonTx;
 
 	// Accept the v,r,s values from the `sign` method, and convert this into a TransactionObject
-	protected abstract _processSignature(v: bigint, r: Buffer, s: Buffer): TransactionObject;
+	protected abstract _processSignature(
+		v: bigint,
+		r: Uint8Array,
+		s: Uint8Array,
+	): TransactionObject;
 
 	/**
 	 * Does chain ID checks on common and returns a common
@@ -393,7 +397,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	protected _getCommon(common?: Common, chainId?: Numbers) {
 		// Chain ID provided
 		if (chainId !== undefined) {
-			const chainIdBigInt = bufferToBigInt(toBuffer(chainId));
+			const chainIdBigInt = uint8ArrayToBigInt(toUint8Array(chainId));
 			if (common) {
 				if (common.chainId() !== chainIdBigInt) {
 					const msg = this._errorMsg(
@@ -525,7 +529,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	protected _getSharedErrorPostfix() {
 		let hash = '';
 		try {
-			hash = this.isSigned() ? bufferToHex(this.hash()) : 'not available (unsigned)';
+			hash = this.isSigned() ? bytesToHex(this.hash()) : 'not available (unsigned)';
 		} catch (e: any) {
 			hash = 'error';
 		}
@@ -548,19 +552,17 @@ export abstract class BaseTransaction<TransactionObject> {
 		return postfix;
 	}
 	// eslint-disable-next-line class-methods-use-this
-	private _ecsign(msgHash: Buffer, privateKey: Buffer, chainId?: bigint): ECDSASignature {
-		const [signature, recovery] = signSync(msgHash, privateKey, {
-			recovered: true,
-			der: false,
-		});
+	private _ecsign(msgHash: Uint8Array, privateKey: Uint8Array, chainId?: bigint): ECDSASignature {
+		const signature = secp256k1.sign(msgHash, privateKey);
+		const signatureBytes = signature.toCompactRawBytes();
 
-		const r = Buffer.from(signature.slice(0, 32));
-		const s = Buffer.from(signature.slice(32, 64));
+		const r = signatureBytes.subarray(0, 32);
+		const s = signatureBytes.subarray(32, 64);
 
 		const v =
 			chainId === undefined
-				? BigInt(recovery + 27)
-				: BigInt(recovery + 35) + BigInt(chainId) * BigInt(2);
+				? BigInt(signature.recovery! + 27)
+				: BigInt(signature.recovery! + 35) + BigInt(chainId) * BigInt(2);
 
 		return { r, s, v };
 	}

@@ -15,15 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexPrefixed, isHexString } from 'web3-validator';
-import { recoverPublicKey } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
+import { bytesToHex, hexToBytes, numberToHex } from 'web3-utils';
 import { Hardfork } from './enums';
-import {
-	NestedBufferArray,
-	ToBufferInputTypes,
-	TypeOutput,
-	TypeOutputReturnType,
-	NestedUint8Array,
-} from './types';
+import { ToBytesInputTypes, TypeOutput, TypeOutputReturnType } from './types';
 
 type ConfigHardfork =
 	// eslint-disable-next-line @typescript-eslint/ban-types
@@ -311,83 +306,70 @@ export function padToEven(value: string): string {
 }
 
 /**
- * Converts an `Number` to a `Buffer`
+ * Converts an `Number` to a `Uint8Array`
  * @param {Number} i
- * @return {Buffer}
+ * @return {Uint8Array}
  */
-export const intToBuffer = function (i: number) {
+export const intToUint8Array = function (i: number) {
 	const hex = intToHex(i);
-	return Buffer.from(padToEven(hex.slice(2)), 'hex');
+	return hexToBytes(`0x${padToEven(hex.slice(2))}`);
 };
 
 /**
- * Attempts to turn a value into a `Buffer`.
- * Inputs supported: `Buffer`, `String` (hex-prefixed), `Number`, null/undefined, `BigInt` and other objects
- * with a `toArray()` or `toBuffer()` method.
+ * Attempts to turn a value into a `Uint8Array`.
+ * Inputs supported: `Uint8Array` `String` (hex-prefixed), `Number`, null/undefined, `BigInt` and other objects
+ * with a `toArray()` or `toUint8Array()` method.
  * @param v the value
  */
-export const toBuffer = function (v: ToBufferInputTypes): Buffer {
+export const toUint8Array = function (v: ToBytesInputTypes): Uint8Array {
 	// eslint-disable-next-line no-null/no-null
 	if (v === null || v === undefined) {
-		return Buffer.allocUnsafe(0);
+		return new Uint8Array();
 	}
 
-	if (Buffer.isBuffer(v)) {
-		return Buffer.from(v);
+	if (v instanceof Uint8Array) {
+		return v;
 	}
 
-	if (Array.isArray(v) || v instanceof Uint8Array) {
-		return Buffer.from(v as Uint8Array);
+	if (Array.isArray(v)) {
+		return Uint8Array.from(v);
 	}
 
 	if (typeof v === 'string') {
 		if (!isHexString(v)) {
 			throw new Error(
-				`Cannot convert string to buffer. toBuffer only supports 0x-prefixed hex strings and this string was given: ${v}`,
+				`Cannot convert string to Uint8Array. only supports 0x-prefixed hex strings and this string was given: ${v}`,
 			);
 		}
-		return Buffer.from(padToEven(stripHexPrefix(v)), 'hex');
+		return hexToBytes(padToEven(stripHexPrefix(v)));
 	}
 
 	if (typeof v === 'number') {
-		return intToBuffer(v);
+		return toUint8Array(numberToHex(v));
 	}
 
 	if (typeof v === 'bigint') {
 		if (v < BigInt(0)) {
-			throw new Error(`Cannot convert negative bigint to buffer. Given: ${v}`);
+			throw new Error(`Cannot convert negative bigint to Uint8Array. Given: ${v}`);
 		}
 		let n = v.toString(16);
 		if (n.length % 2) n = `0${n}`;
-		return Buffer.from(n, 'hex');
+		return toUint8Array(`0x${n}`);
 	}
 
 	if (v.toArray) {
-		// converts a BN to a Buffer
-		return Buffer.from(v.toArray());
-	}
-
-	if (v.toBuffer) {
-		return Buffer.from(v.toBuffer());
+		// converts a BN to a Uint8Array
+		return Uint8Array.from(v.toArray());
 	}
 
 	throw new Error('invalid type');
 };
 
 /**
- * Converts a `Buffer` into a `0x`-prefixed hex `String`.
- * @param buf `Buffer` object to convert
+ * Converts a {@link Uint8Array} to a {@link bigint}
  */
-export const bufferToHex = function (_buf: Buffer): string {
-	const buf = toBuffer(_buf);
-	return `0x${buf.toString('hex')}`;
-};
-
-/**
- * Converts a {@link Buffer} to a {@link bigint}
- */
-export function bufferToBigInt(buf: Buffer) {
-	const hex = bufferToHex(buf);
+export function uint8ArrayToBigInt(buf: Uint8Array) {
+	const hex = bytesToHex(buf);
 	if (hex === '0x') {
 		return BigInt(0);
 	}
@@ -395,108 +377,95 @@ export function bufferToBigInt(buf: Buffer) {
 }
 
 /**
- * Converts a {@link bigint} to a {@link Buffer}
+ * Converts a {@link bigint} to a {@link Uint8Array}
  */
-export function bigIntToBuffer(num: bigint) {
-	return toBuffer(`0x${num.toString(16)}`);
+export function bigIntToUint8Array(num: bigint) {
+	return toUint8Array(`0x${num.toString(16)}`);
 }
 
 /**
- * Returns a buffer filled with 0s.
- * @param bytes the number of bytes the buffer should be
+ * Returns a Uint8Array filled with 0s.
+ * @param bytes the number of bytes the Uint8Array should be
  */
-export const zeros = function (bytes: number): Buffer {
-	return Buffer.allocUnsafe(bytes).fill(0);
+export const zeros = function (bytes: number): Uint8Array {
+	return new Uint8Array(bytes).fill(0);
 };
 
 /**
- * Pads a `Buffer` with zeros till it has `length` bytes.
+ * Pads a `Uint8Array` with zeros till it has `length` bytes.
  * Truncates the beginning or end of input if its length exceeds `length`.
- * @param msg the value to pad (Buffer)
+ * @param msg the value to pad (Uint8Array)
  * @param length the number of bytes the output should be
  * @param right whether to start padding form the left or right
- * @return (Buffer)
+ * @return (Uint8Array)
  */
-const setLength = function (msg: Buffer, length: number, right: boolean) {
+const setLength = function (msg: Uint8Array, length: number, right: boolean) {
 	const buf = zeros(length);
 	if (right) {
 		if (msg.length < length) {
-			msg.copy(buf);
+			buf.set(msg);
 			return buf;
 		}
 		return msg.subarray(0, length);
 	}
 	if (msg.length < length) {
-		msg.copy(buf, length - msg.length);
+		buf.set(msg, length - msg.length);
 		return buf;
 	}
 	return msg.subarray(-length);
 };
 
 /**
- * Throws if input is not a buffer
- * @param {Buffer} input value to check
+ * Throws if input is not a Uint8Array
+ * @param {Uint8Array} input value to check
  */
-export const assertIsBuffer = function (input: Buffer): void {
-	if (!Buffer.isBuffer(input)) {
+export function assertIsUint8Array(input: unknown): asserts input is Uint8Array {
+	if (!(input instanceof Uint8Array)) {
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-		const msg = `This method only supports Buffer but input was: ${input}`;
+		const msg = `This method only supports Uint8Array but input was: ${input}`;
 		throw new Error(msg);
 	}
-};
+}
 /**
- * Left Pads a `Buffer` with leading zeros till it has `length` bytes.
+ * Left Pads a `Uint8Array` with leading zeros till it has `length` bytes.
  * Or it truncates the beginning if it exceeds.
- * @param msg the value to pad (Buffer)
+ * @param msg the value to pad (Uint8Array)
  * @param length the number of bytes the output should be
- * @return (Buffer)
+ * @return (Uint8Array)
  */
-export const setLengthLeft = function (msg: Buffer, length: number) {
-	assertIsBuffer(msg);
+export const setLengthLeft = function (msg: Uint8Array, length: number) {
+	assertIsUint8Array(msg);
 	return setLength(msg, length, false);
 };
 
 /**
- * Trims leading zeros from a `Buffer`, `String` or `Number[]`.
- * @param a (Buffer|Array|String)
- * @return (Buffer|Array|String)
+ * Trims leading zeros from a `Uint8Array`, `String` or `Number[]`.
+ * @param a (Uint8Array|Array|String)
+ * @return (Uint8Array|Array|String)
  */
-const stripZeros = function (a: any): Buffer | number[] | string {
+export function stripZeros<T extends Uint8Array | number[] | string>(a: T): T {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
 	let first = a[0];
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	while (a.length > 0 && first.toString() === '0') {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, prefer-destructuring, @typescript-eslint/no-unsafe-call, no-param-reassign
-		a = a.slice(1);
+		a = a.slice(1) as T;
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, prefer-destructuring, @typescript-eslint/no-unsafe-member-access
 		first = a[0];
 	}
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	return a;
-};
-
-/**
- * Trims leading zeros from a `Buffer`.
- * @param a (Buffer)
- * @return (Buffer)
- */
-export const unpadBuffer = function (a: Buffer): Buffer {
-	assertIsBuffer(a);
-	return stripZeros(a) as Buffer;
-};
-
-/**
- * Converts a {@link Uint8Array} or {@link NestedUint8Array} to {@link Buffer} or {@link NestedBufferArray}
- */
-export function arrToBufArr(arr: Uint8Array): Buffer;
-export function arrToBufArr(arr: NestedUint8Array): NestedBufferArray;
-export function arrToBufArr(arr: Uint8Array | NestedUint8Array): Buffer | NestedBufferArray;
-export function arrToBufArr(arr: Uint8Array | NestedUint8Array): Buffer | NestedBufferArray {
-	if (!Array.isArray(arr)) {
-		return Buffer.from(arr);
-	}
-	return arr.map(a => arrToBufArr(a));
 }
+
+/**
+ * Trims leading zeros from a `Uint8Array`.
+ * @param a (Uint8Array)
+ * @return (Uint8Array)
+ */
+export const unpadUint8Array = function (a: Uint8Array): Uint8Array {
+	assertIsUint8Array(a);
+	return stripZeros(a);
+};
 
 /**
  * Converts a {@link bigint} to a `0x` prefixed hex string
@@ -504,25 +473,12 @@ export function arrToBufArr(arr: Uint8Array | NestedUint8Array): Buffer | Nested
 export const bigIntToHex = (num: bigint) => `0x${num.toString(16)}`;
 
 /**
- * Convert value from bigint to an unpadded Buffer
+ * Convert value from bigint to an unpadded Uint8Array
  * (useful for RLP transport)
  * @param value value to convert
  */
-export function bigIntToUnpaddedBuffer(value: bigint): Buffer {
-	return unpadBuffer(bigIntToBuffer(value));
-}
-
-/**
- * Converts a {@link Buffer} or {@link NestedBufferArray} to {@link Uint8Array} or {@link NestedUint8Array}
- */
-export function bufArrToArr(arr: Buffer): Uint8Array;
-export function bufArrToArr(arr: NestedBufferArray): NestedUint8Array;
-export function bufArrToArr(arr: Buffer | NestedBufferArray): Uint8Array | NestedUint8Array;
-export function bufArrToArr(arr: Buffer | NestedBufferArray): Uint8Array | NestedUint8Array {
-	if (!Array.isArray(arr)) {
-		return Uint8Array.from(arr ?? []);
-	}
-	return arr.map(a => bufArrToArr(a));
+export function bigIntToUnpaddedUint8Array(value: bigint): Uint8Array {
+	return unpadUint8Array(bigIntToUint8Array(value));
 }
 
 function calculateSigRecovery(v: bigint, chainId?: bigint): bigint {
@@ -544,20 +500,22 @@ function isValidSigRecovery(recovery: bigint): boolean {
  * @returns Recovered public key
  */
 export const ecrecover = function (
-	msgHash: Buffer,
+	msgHash: Uint8Array,
 	v: bigint,
-	r: Buffer,
-	s: Buffer,
+	r: Uint8Array,
+	s: Uint8Array,
 	chainId?: bigint,
-): Buffer {
-	const signature = Buffer.concat([setLengthLeft(r, 32), setLengthLeft(s, 32)], 64);
+): Uint8Array {
 	const recovery = calculateSigRecovery(v, chainId);
 	if (!isValidSigRecovery(recovery)) {
 		throw new Error('Invalid signature v value');
 	}
 
-	const senderPubKey = recoverPublicKey(msgHash, signature, Number(recovery));
-	return Buffer.from(senderPubKey.slice(1));
+	const senderPubKey = new secp256k1.Signature(uint8ArrayToBigInt(r), uint8ArrayToBigInt(s))
+		.addRecoveryBit(Number(recovery))
+		.recoverPublicKey(msgHash)
+		.toRawBytes(false);
+	return senderPubKey.slice(1);
 };
 
 /**
@@ -570,11 +528,11 @@ export const ecrecover = function (
 export function toType<T extends TypeOutput>(input: null, outputType: T): null;
 export function toType<T extends TypeOutput>(input: undefined, outputType: T): undefined;
 export function toType<T extends TypeOutput>(
-	input: ToBufferInputTypes,
+	input: ToBytesInputTypes,
 	outputType: T,
 ): TypeOutputReturnType[T];
 export function toType<T extends TypeOutput>(
-	input: ToBufferInputTypes,
+	input: ToBytesInputTypes,
 	outputType: T,
 	// eslint-disable-next-line @typescript-eslint/ban-types
 ): TypeOutputReturnType[T] | undefined | null {
@@ -595,15 +553,15 @@ export function toType<T extends TypeOutput>(
 		);
 	}
 
-	const output = toBuffer(input);
+	const output = toUint8Array(input);
 
 	switch (outputType) {
-		case TypeOutput.Buffer:
+		case TypeOutput.Uint8Array:
 			return output as TypeOutputReturnType[T];
 		case TypeOutput.BigInt:
-			return bufferToBigInt(output) as TypeOutputReturnType[T];
+			return uint8ArrayToBigInt(output) as TypeOutputReturnType[T];
 		case TypeOutput.Number: {
-			const bigInt = bufferToBigInt(output);
+			const bigInt = uint8ArrayToBigInt(output);
 			if (bigInt > BigInt(Number.MAX_SAFE_INTEGER)) {
 				throw new Error(
 					'The provided number is greater than MAX_SAFE_INTEGER (please use an alternative output type)',
@@ -612,7 +570,7 @@ export function toType<T extends TypeOutput>(
 			return Number(bigInt) as TypeOutputReturnType[T];
 		}
 		case TypeOutput.PrefixedHexString:
-			return bufferToHex(output) as TypeOutputReturnType[T];
+			return bytesToHex(output) as TypeOutputReturnType[T];
 		default:
 			throw new Error('unknown outputType');
 	}

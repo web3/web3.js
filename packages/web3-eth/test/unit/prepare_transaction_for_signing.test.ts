@@ -26,6 +26,7 @@ import {
 } from 'web3-eth-accounts';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { bytesToHex, hexToBytes } from 'web3-utils';
 import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
 import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 
@@ -70,24 +71,23 @@ describe('prepareTransactionForSigning', () => {
 
 				// should sign transaction
 				const signedTransaction = ethereumjsTx.sign(
-					Buffer.from(expectedPrivateKey.substring(2), 'hex'),
+					hexToBytes(expectedPrivateKey.substring(2)),
 				);
 
 				const senderAddress = signedTransaction.getSenderAddress().toString();
 				expect(senderAddress).toBe(expectedAddress.toLowerCase());
 
 				// should be able to obtain expectedRlpEncodedTransaction
-				const rlpEncodedTransaction = `0x${signedTransaction.serialize().toString('hex')}`;
+				const rlpEncodedTransaction = bytesToHex(signedTransaction.serialize());
 				expect(rlpEncodedTransaction).toBe(expectedRlpEncodedTransaction);
 
 				// should be able to obtain expectedTransactionHash
-				const transactionHash = `0x${signedTransaction.hash().toString('hex')}`;
+				const transactionHash = bytesToHex(signedTransaction.hash());
 				expect(transactionHash).toBe(expectedTransactionHash);
 
 				// should be able to obtain expectedMessageToSign
-				const messageToSign = `0x${signedTransaction.getMessageToSign().toString('hex')}`;
+				const messageToSign = bytesToHex(signedTransaction.getMessageToSign());
 				expect(messageToSign).toBe(expectedMessageToSign);
-
 				// should have expected v, r, and s
 				const v = !isNullish(signedTransaction.v)
 					? `0x${signedTransaction.v.toString(16)}`

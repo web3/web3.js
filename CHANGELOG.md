@@ -1462,6 +1462,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ## [Unreleased]
 
+### Breaking Changes
+
+-   dropped support for NodeJs@14
+
 ### Added
 
 #### web3-eth-contract
@@ -1476,4 +1480,10 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-accounts
 
-- Fixed ESM import bugs reported in (#6032) and (#6034)
+-   Fixed ESM import bugs reported in (#6032) and (#6034)
+
+### Changed
+
+#### web3-eth
+
+-   Refactored documentation for `rpc_method_wrappers` to point to the previously duplicated documentation found under the `Web3Eth` class documentation (#6054)

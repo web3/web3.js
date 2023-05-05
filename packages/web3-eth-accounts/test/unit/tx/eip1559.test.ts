@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { RLP } from '@ethereumjs/rlp';
+import { hexToBytes } from 'web3-utils';
 import { Chain, Common, Hardfork } from '../../../src/common';
 
 import { FeeMarketEIP1559Transaction } from '../../../src';
@@ -29,8 +30,8 @@ const common = new Common({
 common._chainParams.chainId = 4;
 const TWO_POW256 = BigInt('0x10000000000000000000000000000000000000000000000000000000000000000');
 
-const validAddress = Buffer.from('01'.repeat(20), 'hex');
-const validSlot = Buffer.from('01'.repeat(32), 'hex');
+const validAddress = hexToBytes('01'.repeat(20));
+const validSlot = hexToBytes('01'.repeat(32));
 const chainId = BigInt(4);
 
 describe('[FeeMarketEIP1559Transaction]', () => {
@@ -105,24 +106,23 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 		for (let index = 0; index < testdata.length; index += 1) {
 			const data = testdata[index];
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			const pkey = Buffer.from(data.privateKey.slice(2), 'hex');
+			const pkey = hexToBytes(data.privateKey.slice(2));
 			const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common });
 			const signed = txn.sign(pkey);
-			const rlpSerialized = Buffer.from(RLP.encode(Uint8Array.from(signed.serialize())));
+			const rlpSerialized = RLP.encode(Uint8Array.from(signed.serialize()));
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			expect(rlpSerialized).toEqual(Buffer.from(data.signedTransactionRLP.slice(2), 'hex'));
+			expect(rlpSerialized).toEqual(hexToBytes(data.signedTransactionRLP.slice(2)));
 		}
 	});
 
 	it('hash()', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = Buffer.from(data.privateKey.slice(2), 'hex');
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		let txn = FeeMarketEIP1559Transaction.fromTxData(data, { common });
 		let signed = txn.sign(pkey);
-		const expectedHash = Buffer.from(
-			'2e564c87eb4b40e7f469b2eec5aa5d18b0b46a24e8bf0919439cfb0e8fcae446',
-			'hex',
+		const expectedHash = hexToBytes(
+			'0x2e564c87eb4b40e7f469b2eec5aa5d18b0b46a24e8bf0919439cfb0e8fcae446',
 		);
 		expect(signed.hash()).toEqual(expectedHash);
 		txn = FeeMarketEIP1559Transaction.fromTxData(data, { common, freeze: false });
@@ -133,7 +133,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('freeze property propagates from unsigned tx to signed tx', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = Buffer.from(data.privateKey.slice(2), 'hex');
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common, freeze: false });
 		expect(Object.isFrozen(txn)).toBe(false);
 		const signedTxn = txn.sign(pkey);
@@ -143,7 +143,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('common propagates from the common of tx, not the common in TxOptions', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = Buffer.from(data.privateKey.slice(2), 'hex');
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common, freeze: false });
 		const newCommon = new Common({
 			chain: Chain.Goerli,
@@ -163,22 +163,20 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('unsigned tx -> getMessageToSign()', () => {
 		const unsignedTx = FeeMarketEIP1559Transaction.fromTxData(
 			{
-				data: Buffer.from('010200', 'hex'),
+				data: hexToBytes('010200'),
 				to: validAddress,
 				accessList: [[validAddress, [validSlot]]],
 				chainId,
 			},
 			{ common },
 		);
-		const expectedHash = Buffer.from(
-			'fa81814f7dd57bad435657a05eabdba2815f41e3f15ddd6139027e7db56b0dea',
-			'hex',
+		const expectedHash = hexToBytes(
+			'0xfa81814f7dd57bad435657a05eabdba2815f41e3f15ddd6139027e7db56b0dea',
 		);
 		expect(unsignedTx.getMessageToSign(true)).toEqual(expectedHash);
 
-		const expectedSerialization = Buffer.from(
-			'02f85904808080809401010101010101010101010101010101010101018083010200f838f7940101010101010101010101010101010101010101e1a00101010101010101010101010101010101010101010101010101010101010101',
-			'hex',
+		const expectedSerialization = hexToBytes(
+			'0x02f85904808080809401010101010101010101010101010101010101018083010200f838f7940101010101010101010101010101010101010101e1a00101010101010101010101010101010101010101010101010101010101010101',
 		);
 		expect(unsignedTx.getMessageToSign(false)).toEqual(expectedSerialization);
 	});
@@ -186,7 +184,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 	it('toJSON()', () => {
 		const data = testdata[0];
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		const pkey = Buffer.from(data.privateKey.slice(2), 'hex');
+		const pkey = hexToBytes(data.privateKey.slice(2));
 		const txn = FeeMarketEIP1559Transaction.fromTxData(data, { common });
 		const signed = txn.sign(pkey);
 
