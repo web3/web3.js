@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { JsonRpcError } from 'web3-types';
 import * as accountErrors from '../../src/errors/account_errors';
 import * as connectionErrors from '../../src/errors/connection_errors';
 import * as contractErrors from '../../src/errors/contract_errors';
@@ -282,6 +283,29 @@ describe('errors', () => {
 		it('should have valid json structure', () => {
 			expect(
 				new contractErrors.ContractNoFromAddressDefinedError().toJSON(),
+			).toMatchSnapshot();
+		});
+	});
+
+	describe('Eip838ExecutionError', () => {
+		it('should get the data from error.data.data', () => {
+			expect(
+				new contractErrors.Eip838ExecutionError({
+					data: {
+						data: '0x0000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000001800000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000001610000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000016300000000000000000000000000000000000000000000000000000000000000',
+					},
+				} as JsonRpcError<contractErrors.ProviderErrorData>).toJSON(),
+			).toMatchSnapshot();
+		});
+		it('should get the data from error.data.originalError.data', () => {
+			expect(
+				new contractErrors.Eip838ExecutionError({
+					data: {
+						originalError: {
+							data: '0x0000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000001800000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000001610000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000016300000000000000000000000000000000000000000000000000000000000000',
+						},
+					},
+				} as JsonRpcError<contractErrors.ProviderErrorData>).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
