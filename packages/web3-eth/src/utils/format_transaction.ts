@@ -40,7 +40,11 @@ export function formatTransaction<
 
 	formattedTransaction = format(options.transactionSchema, formattedTransaction, returnFormat);
 
-	if (!isNullish(formattedTransaction.data) && !isNullish(formattedTransaction.input))
+	if (
+		!isNullish(formattedTransaction.data) &&
+		!isNullish(formattedTransaction.input) &&
+		formattedTransaction.data !== formattedTransaction.input
+	)
 		throw new TransactionDataAndInputError({
 			data: bytesToHex(formattedTransaction.data),
 			input: bytesToHex(formattedTransaction.input),
