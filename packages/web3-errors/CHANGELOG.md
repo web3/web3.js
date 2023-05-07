@@ -98,3 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `gasLimit` is no longer accepted as a parameter for `MissingGasError` and `TransactionGasMismatchError, and is also no longer included in error message (#5915)
 
 ## [Unreleased]
+
+### Changed
+
+-   Nested Smart Contract error data is extracted at `Eip838ExecutionError` constructor and the nested error is set at `innerError` (#6045)
