@@ -68,7 +68,7 @@ if [[ $TEST_OPTION == "sync" ]]; then
 elif [[ $BACKEND == "geth" || $BACKEND == "ganache" ]]; then
 	yarn "$BACKEND:start:background" && yarn generate:accounts && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
 elif [[ $BACKEND == "geth-binary" ]]; then
-	 yarn "geth-binary:start" && yarn test:sync:integration && yarn "geth-binary:stop"
+	 yarn "geth-binary:start:background" && yarn test:sync:integration && yarn "geth-binary:stop"
 else
 	yarn $TEST_COMMAND
 fi
