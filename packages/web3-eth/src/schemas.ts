@@ -228,10 +228,10 @@ export const transactionInfoSchema = {
 			eth: 'uint',
 		},
 		r: {
-			eth: 'bytes',
+			eth: 'bytes32',
 		},
 		s: {
-			eth: 'bytes',
+			eth: 'bytes32',
 		},
 	},
 };

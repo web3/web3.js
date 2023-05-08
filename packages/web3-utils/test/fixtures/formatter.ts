@@ -37,8 +37,10 @@ export const convertScalarValueValid: [[any, any, any], any][] = [
 		[new Uint8Array(hexToBytes('FF')), 'bytes32', { bytes: FMT_BYTES.HEX }],
 		'0x00000000000000000000000000000000000000000000000000000000000000ff',
 	],
-	// [
-	// 	[new Uint8Array(hexToBytes('FF')), 'bytes32', { bytes: FMT_BYTES.UINT8ARRAY }],
-	// 	new Uint8Array(hexToBytes('0x000000000000000000000000000000000000000000000000000000000000FF')),
-	// ],
+	[
+		[new Uint8Array(hexToBytes('FF')), 'bytes32', { bytes: FMT_BYTES.UINT8ARRAY }],
+		new Uint8Array(
+			hexToBytes('0x00000000000000000000000000000000000000000000000000000000000000ff'),
+		),
+	],
 ];
