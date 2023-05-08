@@ -49,8 +49,6 @@ import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
 import { detectTransactionType } from './detect_transaction_type';
-// eslint-disable-next-line import/no-cycle
-import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 import { transactionSchema } from '../schemas';
 import { InternalTransaction } from '../types';
 
@@ -130,7 +128,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
 	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
-	let populatedTransaction = format(
+	const populatedTransaction = format(
 		transactionSchema,
 		options.transaction,
 		DEFAULT_RETURN_FORMAT,
@@ -219,15 +217,6 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	) {
 		populatedTransaction.accessList = [];
 	}
-
-	populatedTransaction = {
-		...populatedTransaction,
-		...(await getTransactionGasPricing(
-			populatedTransaction,
-			options.web3Context,
-			ETH_DATA_FORMAT,
-		)),
-	};
 
 	return populatedTransaction as ReturnType;
 }
