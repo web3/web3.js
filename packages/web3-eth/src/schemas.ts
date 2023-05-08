@@ -158,10 +158,10 @@ export const transactionSchema = {
 			eth: 'uint',
 		},
 		r: {
-			eth: 'bytes',
+			eth: 'bytes32',
 		},
 		s: {
-			eth: 'bytes',
+			eth: 'bytes32',
 		},
 	},
 };
