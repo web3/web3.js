@@ -64,15 +64,13 @@ describeIf(isSocket)('subscription', () => {
 
 	beforeEach(async () => {
 		tempAcc = await createTempAccount();
-	});
-	beforeAll(() => {
 		clientUrl = getSystemTestProviderUrl();
 		provider = isWs ? new WebSocketProvider(clientUrl) : new IpcProvider(clientUrl);
 		contract = new Contract(BasicAbi, undefined, {
 			provider,
 		});
 	});
-	afterAll(async () => {
+	afterEach(async () => {
 		provider.disconnect();
 		await closeOpenConnection(web3Eth);
 	});
@@ -86,7 +84,7 @@ describeIf(isSocket)('subscription', () => {
 				arguments: [10, 'string init value'],
 			};
 
-			sendOptions = { from, gas: await contract.deploy(deployOptions).estimateGas() };
+			sendOptions = { from, gas: '1000000' };
 			contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
