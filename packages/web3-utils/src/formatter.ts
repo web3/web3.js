@@ -108,17 +108,20 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 					throw new FormatterError(`Invalid format: ${String(format.number)}`);
 			}
 		}
-
 		if (baseType === 'bytes') {
 			switch (format.bytes) {
 				case FMT_BYTES.HEX:
 					return baseTypeSize
-						? padLeft(bytesToHex(bytesToUint8Array(value as Bytes)), baseTypeSize)
+						? padLeft(bytesToHex(bytesToUint8Array(value as Bytes)), baseTypeSize * 2)
 						: bytesToHex(bytesToUint8Array(value as Bytes));
 				case FMT_BYTES.UINT8ARRAY:
+					// eslint-disable-next-line no-case-declarations
+					// const a = (baseTypeSize ? new Uint8Array(baseTypeSize).set([1,2,3], baseTypeSize): new Uint8Array(0))
+					// console.log(a);
 					return baseTypeSize
 						? uint8ArrayConcat(
 								new Uint8Array(baseTypeSize - (value as Uint8Array).length),
+								value as Uint8Array,
 						  )
 						: bytesToUint8Array(value as Bytes);
 				default:
