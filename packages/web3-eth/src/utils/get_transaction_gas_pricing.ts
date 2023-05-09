@@ -44,7 +44,7 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 
 	if (!isNullish(transaction.gasPrice)) {
 		const convertedTransactionGasPrice = format(
-			{ eth: 'uint' },
+			{ format: 'uint' },
 			transaction.gasPrice as Numbers,
 			returnFormat,
 		);
@@ -56,12 +56,12 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	}
 	return {
 		maxPriorityFeePerGas: format(
-			{ eth: 'uint' },
+			{ format: 'uint' },
 			transaction.maxPriorityFeePerGas ?? web3Context.defaultMaxPriorityFeePerGas,
 			returnFormat,
 		),
 		maxFeePerGas: format(
-			{ eth: 'uint' },
+			{ format: 'uint' },
 			(transaction.maxFeePerGas ??
 				BigInt(block.baseFeePerGas) * BigInt(2) +
 					BigInt(

@@ -14,14 +14,15 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Point } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { assertIsBuffer, zeros } from '../common/utils';
+import { bytesToHex, uint8ArrayEquals } from 'web3-utils';
+import { assertIsUint8Array, zeros } from '../common/utils';
 
 export class Address {
-	public readonly buf: Buffer;
+	public readonly buf: Uint8Array;
 
-	public constructor(buf: Buffer) {
+	public constructor(buf: Uint8Array) {
 		if (buf.length !== 20) {
 			throw new Error('Invalid address length');
 		}
@@ -39,7 +40,7 @@ export class Address {
 	 * Is address equal to another.
 	 */
 	public equals(address: Address): boolean {
-		return this.buf.equals(address.buf);
+		return uint8ArrayEquals(this.buf, address.buf);
 	}
 
 	/**
@@ -53,14 +54,14 @@ export class Address {
 	 * Returns hex encoding of address.
 	 */
 	public toString(): string {
-		return `0x${this.buf.toString('hex')}`;
+		return bytesToHex(this.buf);
 	}
 
 	/**
-	 * Returns Buffer representation of address.
+	 * Returns Uint8Array representation of address.
 	 */
-	public toBuffer(): Buffer {
-		return Buffer.from(this.buf);
+	public toArray(): Uint8Array {
+		return this.buf;
 	}
 
 	/**
@@ -69,17 +70,16 @@ export class Address {
 	 * @param pubKey The two points of an uncompressed key, unless sanitize is enabled
 	 * @param sanitize Accept public keys in other formats
 	 */
-	public static publicToAddress(_pubKey: Buffer, sanitize = false): Buffer {
+	public static publicToAddress(_pubKey: Uint8Array, sanitize = false): Uint8Array {
 		let pubKey = _pubKey;
-		assertIsBuffer(pubKey);
+		assertIsUint8Array(pubKey);
 		if (sanitize && pubKey.length !== 64) {
-			pubKey = Buffer.from(Point.fromHex(pubKey).toRawBytes(false).slice(1));
+			pubKey = secp256k1.ProjectivePoint.fromHex(pubKey).toRawBytes(false).slice(1);
 		}
 		if (pubKey.length !== 64) {
 			throw new Error('Expected pubKey to be of length 64');
 		}
 		// Only take the lower 160bits of the hash
-		// eslint-disable-next-line deprecation/deprecation
-		return Buffer.from(keccak256(pubKey)).slice(-20);
+		return keccak256(pubKey).slice(-20);
 	}
 }

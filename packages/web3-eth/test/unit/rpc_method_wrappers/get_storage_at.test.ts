@@ -43,7 +43,7 @@ describe('getStorageAt', () => {
 		async (_, inputParameters) => {
 			const [inputAddress, inputStorageSlot, inputBlockNumber] = inputParameters;
 			const inputStorageSlotFormatted = format(
-				{ eth: 'uint' },
+				{ format: 'uint' },
 				inputStorageSlot,
 				ETH_DATA_FORMAT,
 			);
@@ -54,7 +54,7 @@ describe('getStorageAt', () => {
 				inputBlockNumberFormatted = web3Context.defaultBlock;
 			} else {
 				inputBlockNumberFormatted = format(
-					{ eth: 'uint' },
+					{ format: 'uint' },
 					inputBlockNumber,
 					ETH_DATA_FORMAT,
 				);
@@ -73,9 +73,9 @@ describe('getStorageAt', () => {
 	it.each(testData)(
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
 		async (_, inputParameters) => {
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedFormattedResult = format(
-				{ eth: 'bytes' },
+				{ format: 'bytes' },
 				mockRpcResponse,
 				expectedReturnFormat,
 			);

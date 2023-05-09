@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Transaction, DataFormat, DEFAULT_RETURN_FORMAT, FormatType } from 'web3-types';
 import { isNullish, ValidationSchemaInput } from 'web3-validator';
 import { TransactionDataAndInputError } from 'web3-errors';
-import { mergeDeep, bytesToBuffer, format } from 'web3-utils';
+import { mergeDeep, bytesToHex, format } from 'web3-utils';
 import { transactionSchema } from '../schemas';
 
 export function formatTransaction<
@@ -40,10 +40,14 @@ export function formatTransaction<
 
 	formattedTransaction = format(options.transactionSchema, formattedTransaction, returnFormat);
 
-	if (!isNullish(formattedTransaction.data) && !isNullish(formattedTransaction.input))
+	if (
+		!isNullish(formattedTransaction.data) &&
+		!isNullish(formattedTransaction.input) &&
+		formattedTransaction.data !== formattedTransaction.input
+	)
 		throw new TransactionDataAndInputError({
-			data: bytesToBuffer(formattedTransaction.data).toString('hex'),
-			input: bytesToBuffer(formattedTransaction.input).toString('hex'),
+			data: bytesToHex(formattedTransaction.data),
+			input: bytesToHex(formattedTransaction.input),
 		});
 	else if (!isNullish(formattedTransaction.data)) {
 		formattedTransaction.input = formattedTransaction.data;

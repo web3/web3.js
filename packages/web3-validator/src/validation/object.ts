@@ -28,5 +28,4 @@ export const isObject = (item: unknown): item is Record<string, unknown> =>
 	typeof item === 'object' &&
 	!isNullish(item) &&
 	!Array.isArray(item) &&
-	!Buffer.isBuffer(item) &&
 	!(item instanceof TypedArray);

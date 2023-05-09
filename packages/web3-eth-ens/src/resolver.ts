@@ -73,7 +73,7 @@ export class Resolver {
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setAddr);
 
 		return resolverContract.methods
-			.setAddr(namehash(ENSName), format({ eth: 'address' }, address, returnFormat))
+			.setAddr(namehash(ENSName), format({ format: 'address' }, address, returnFormat))
 			.send(txConfig);
 	}
 

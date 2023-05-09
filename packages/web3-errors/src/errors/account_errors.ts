@@ -40,7 +40,7 @@ export class PrivateKeyLengthError extends BaseWeb3Error {
 export class InvalidPrivateKeyError extends BaseWeb3Error {
 	public code = ERR_INVALID_PRIVATE_KEY;
 	public constructor() {
-		super(`Invalid Private Key, Not a valid string or buffer`);
+		super(`Invalid Private Key, Not a valid string or uint8Array`);
 	}
 }
 

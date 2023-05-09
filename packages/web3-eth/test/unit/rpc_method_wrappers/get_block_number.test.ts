@@ -37,9 +37,9 @@ describe('getBlockNumber', () => {
 
 	it('should format mockRpcResponse using provided return format', async () => {
 		const mockRpcResponse = '0x4b7';
-		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 		const expectedFormattedResult = format(
-			{ eth: 'uint' },
+			{ format: 'uint' },
 			mockRpcResponse,
 			expectedReturnFormat,
 		);

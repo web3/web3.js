@@ -969,6 +969,76 @@ export const validDecodeContractErrorData: {
 			},
 		},
 	},
+	{
+		input: [
+			[
+				{ inputs: [], name: 'ErrorWithNoParams', type: 'error' },
+				{
+					inputs: [
+						{ name: 'code', type: 'uint256' },
+						{ name: 'message', type: 'string' },
+					],
+					name: 'ErrorWithParams',
+					type: 'error',
+				},
+			],
+			{
+				code: 12,
+				message: 'message',
+				data: {
+					code: -32000,
+					data: '0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
+				},
+			},
+		],
+		output: {
+			errorName: 'ErrorWithParams',
+			errorSignature: 'ErrorWithParams(uint256,string)',
+			errorArgs: {
+				code: 42,
+				message: 'This is an error with params',
+			},
+			innerError: {
+				code: -32000,
+			},
+		},
+	},
+	{
+		input: [
+			[
+				{ inputs: [], name: 'ErrorWithNoParams', type: 'error' },
+				{
+					inputs: [
+						{ name: 'code', type: 'uint256' },
+						{ name: 'message', type: 'string' },
+					],
+					name: 'ErrorWithParams',
+					type: 'error',
+				},
+			],
+			{
+				code: 12,
+				message: 'message',
+				data: {
+					originalError: {
+						code: 3,
+						data: '0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
+					},
+				},
+			},
+		],
+		output: {
+			errorName: 'ErrorWithParams',
+			errorSignature: 'ErrorWithParams(uint256,string)',
+			errorArgs: {
+				code: 42,
+				message: 'This is an error with params',
+			},
+			innerError: {
+				code: 3,
+			},
+		},
+	},
 ];
 
 export const invalidDecodeContractErrorData: {

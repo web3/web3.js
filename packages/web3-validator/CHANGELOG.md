@@ -88,3 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added functions `isHexString`, `isHexPrefixed`, `validateNoLeadingZeroes` (#5963)
 
 ## [Unreleased]
+
+### Changed
+
+-   Replaced Buffer for Uint8Array (#6004)

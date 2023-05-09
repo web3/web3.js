@@ -16,12 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Address, Bytes, HexString, Numbers, ValueTypes } from 'web3-types';
-import { EtherUnits } from '../../src/converters';
+import { EtherUnits, hexToBytes } from '../../src/converters';
 
 export const bytesToHexValidData: [Bytes, HexString][] = [
 	[new Uint8Array([72]), '0x48'],
 	[new Uint8Array([72, 12]), '0x480c'],
-	[Buffer.from('0c12', 'hex'), '0x0c12'],
+	[new Uint8Array(hexToBytes('0c12')), '0x0c12'],
 	['0x9c12', '0x9c12'],
 	['0X12c6', '0x12c6'],
 ];
@@ -33,25 +33,26 @@ export const bytesToHexInvalidData: [any, string][] = [
 	[[786, 12, 34, -2, 3], 'value "786,12,34,-2,3" at "/0" must pass "bytes" validation'],
 	['0x0c1g', 'value "0x0c1g" at "/0" must pass "bytes" validation'],
 	['0c1g', 'value "0c1g" at "/0" must pass "bytes" validation'],
+	['0x123', 'value "0x123" at "/0" must pass "bytes" validation'],
 	['data', 'value "data" at "/0" must pass "bytes" validation'],
 	[12, 'value "12" at "/0" must pass "bytes" validation'],
 	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 	['1', 'value "1" at "/0" must pass "bytes" validation'],
 	['0', 'value "0" at "/0" must pass "bytes" validation'],
 ];
 
-export const hexToBytesValidData: [HexString, Buffer][] = [
-	['0x48', Buffer.from([72])],
-	['0x3772', Buffer.from('3772', 'hex')],
-	['0x480c', Buffer.from([72, 12])],
-	['0x0c12', Buffer.from('0c12', 'hex')],
-	['0x9c12', Buffer.from('9c12', 'hex')],
-	['0X12c6', Buffer.from('12c6', 'hex')],
+export const hexToBytesValidData: [HexString, Uint8Array][] = [
+	['0x48', new Uint8Array([72])],
+	['0x3772', new Uint8Array([55, 114])],
+	['0x480c', new Uint8Array([72, 12])],
+	['0x0c12', new Uint8Array([12, 18])],
+	['0x9c12', new Uint8Array([156, 18])],
+	['0X12c6', new Uint8Array([18, 198])],
 ];
 
 export const hexToBytesInvalidData: [any, string][] = [
@@ -60,14 +61,15 @@ export const hexToBytesInvalidData: [any, string][] = [
 	[[567, 10098], 'value "567,10098" at "/0" must pass "bytes" validation'],
 	[[786, 12, 34, -2, 3], 'value "786,12,34,-2,3" at "/0" must pass "bytes" validation'],
 	['0x0c1g', 'value "0x0c1g" at "/0" must pass "bytes" validation'],
-	['0c1g', 'value "0c1g" at "/0" must pass "bytes" validation'],
-	['data', 'value "data" at "/0" must pass "bytes" validation'],
+	['0c1g', 'value "0x0c1g" at "/0" must pass "bytes" validation'],
+	['0x123', 'value "0x123" at "/0" must pass "bytes" validation'],
+	['data', 'value "0xdata" at "/0" must pass "bytes" validation'],
 	[12, 'value "12" at "/0" must pass "bytes" validation'],
 	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
-	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[null, 'Web3 validator found 1 error[s]:\nvalue at "/0" must pass "bytes" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 ];
 
@@ -86,6 +88,21 @@ export const numberToHexValidData: [Numbers, HexString][] = [
 	[-0xff, '-0xff'],
 ];
 
+export const numberToHexstrictValidData: [Numbers, HexString][] = [
+	[1, '0x01'],
+	[255, '0xff'],
+	[256, '0x0100'],
+	[54, '0x36'],
+	[BigInt(12), '0x0c'],
+	['768', '0x0300'],
+	['-768', '-0x0300'],
+	[-255, '-0xff'],
+	['0xFF0', '0x0ff0'],
+	['-0xa0', '-0xa0'],
+	[0xff, '0xff'],
+	[-0xff, '-0xff'],
+];
+
 export const numberToHexInvalidData: [any, string][] = [
 	[12.2, 'value "12.2" at "/0" must pass "int" validation'],
 	['0xag', 'value "0xag" at "/0" must pass "int" validation'],
@@ -93,7 +110,7 @@ export const numberToHexInvalidData: [any, string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "int" validation'],
-	[undefined, 'value at "/0" must pass "int" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "int" validation'],
 ];
 
@@ -138,7 +155,7 @@ export const utf8ToHexInvalidData: [any, string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "string" validation'],
-	[undefined, 'value at "/0" must pass "string" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "string" validation'],
 	[true, 'value "true" at "/0" must pass "string" validation'],
 	[false, 'value "false" at "/0" must pass "string" validation'],
@@ -151,7 +168,14 @@ export const hexToUtf8ValidData: [HexString, string][] = [
 	['0x4920002064617461', 'I \u0000 data'],
 	['0x206e756c6c20737566666978', ' null suffix'],
 	['0x6e756c6c20707265666978', 'null prefix'],
-	['0x', ''],
+	['4d6172696e', 'Marin'],
+];
+
+export const toUtf8ValidData: [string | Uint8Array, string][] = [
+	...hexToUtf8ValidData,
+	[hexToBytes('0x206e756c6c20737566666978'), ' null suffix'],
+	[hexToBytes('0x4920002064617461'), 'I \u0000 data'],
+	[hexToBytes('0x49206861766520313030c2a3'), 'I have 100£'],
 ];
 
 export const hexToUtf8InvalidData: [any, string][] = [
@@ -159,18 +183,17 @@ export const hexToUtf8InvalidData: [any, string][] = [
 		'0x4920686176652031303g0c2a3',
 		'value "0x4920686176652031303g0c2a3" at "/0" must pass "bytes" validation',
 	],
-	['afde', 'value "afde" at "/0" must pass "bytes" validation'],
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[undefined, 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 	[true, 'value "true" at "/0" must pass "bytes" validation'],
 ];
 
 export const asciiToHexValidData: [string, HexString][] = [
 	['I have 100', '0x49206861766520313030'],
-	['I \u1234data', '0x49203464617461'],
+	['I \u0001data', '0x49200164617461'],
 	['I data', '0x492064617461'],
 	['I \u0000 data', '0x4920002064617461'],
 	['\u0000 null suffix', '0x00206e756c6c20737566666978'],
@@ -279,7 +302,7 @@ export const toWeiInvalidData: [[any, any], string][] = [
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[[null, 'kwei'], 'value at "/0" must pass "number" validation'],
-	[[undefined, 'kwei'], 'value at "/0" must pass "number" validation'],
+	[[undefined, 'kwei'], 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
 	[[{}, 'kwei'], 'value "[object Object]" at "/0" must pass "number" validation'],
 	[['data', 'kwei'], 'value "data" at "/0" must pass "number" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
@@ -293,20 +316,17 @@ export const toCheckSumInvalidData: [string, string][] = [
 	['not an address', 'Invalid value given "not an address". Error: invalid ethereum address.'],
 ];
 
-export const bytesToBufferInvalidData: [any, string][] = bytesToHexInvalidData;
+export const bytesToUint8ArrayInvalidData: [any, string][] = bytesToHexInvalidData;
 
-export const bytesToBufferValidData: [Bytes, Buffer][] = [
-	[new Uint8Array([72]), Buffer.from('48', 'hex')],
-	[new Uint8Array([72, 12]), Buffer.from('480c', 'hex')],
-	['0x9c12', Buffer.from('9c12', 'hex')],
-	['0X12c6', Buffer.from('12c6', 'hex')],
-	['0X1', Buffer.from('01', 'hex')],
-	['0x1', Buffer.from('01', 'hex')],
-	['0x0', Buffer.from('00', 'hex')],
-	['0X0', Buffer.from('00', 'hex')],
-	['0X123', Buffer.from('0123', 'hex')],
-	['0x1234', Buffer.from('1234', 'hex')],
-	[Buffer.from('0c12', 'hex'), Buffer.from('0c12', 'hex')],
+export const bytesToUint8ArrayValidData: [Bytes, Uint8Array][] = [
+	[new Uint8Array([72]), new Uint8Array([72])],
+	[new Uint8Array([72, 12]), new Uint8Array([72, 12])],
+	['0x9c12', new Uint8Array([156, 18])],
+	['0X12c6', new Uint8Array([18, 198])],
+	['0X01', new Uint8Array([1])],
+	['0X00', new Uint8Array([0])],
+	['0x1234', new Uint8Array([18, 52])],
+	[new Uint8Array(hexToBytes('0c12')), new Uint8Array(hexToBytes('0c12'))],
 ];
 
 export const toBigIntValidData: [any, bigint][] = [
@@ -317,7 +337,7 @@ export const toBigIntValidData: [any, bigint][] = [
 ];
 
 export const toBigIntInvalidData: [any, string][] = [
-	[Buffer.from(''), 'can not parse as number data'],
+	[new Uint8Array([]), 'can not parse as number data'],
 	['wwwww', ' Error: can not parse as number data'],
 	['zzzzee0xiiuu', ' Error: can not parse as number data'],
 ];

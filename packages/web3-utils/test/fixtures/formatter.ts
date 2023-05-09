@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { FMT_NUMBER, FMT_BYTES } from 'web3-types';
+import { hexToBytes } from '../../src/converters';
 
 export const isDataFormatValid: [any, boolean][] = [
 	[{ number: 'number', bytes: 'number' }, true],
@@ -27,10 +28,13 @@ export const convertScalarValueValid: [[any, any, any], any][] = [
 	[[100, 'uint', { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }], '0x64'],
 	[[64, 'uint8', { number: FMT_NUMBER.STR }], '64'],
 
-	[[Buffer.from('FF', 'hex'), 'bytes', { bytes: FMT_BYTES.HEX }], '0xff'],
+	[[new Uint8Array(hexToBytes('FF')), 'bytes', { bytes: FMT_BYTES.HEX }], '0xff'],
 	[
-		[Buffer.from('FF', 'hex'), 'bytes', { bytes: FMT_BYTES.UINT8ARRAY }],
-		new Uint8Array(Buffer.from('FF', 'hex')),
+		[new Uint8Array(hexToBytes('FF')), 'bytes', { bytes: FMT_BYTES.UINT8ARRAY }],
+		new Uint8Array(new Uint8Array(hexToBytes('FF'))),
 	],
-	[[Buffer.from('FF', 'hex'), 'bytes', { bytes: FMT_BYTES }], Buffer.from('FF', 'hex')],
+	[
+		[new Uint8Array(hexToBytes('FF')), 'bytes', { bytes: FMT_BYTES }],
+		new Uint8Array(hexToBytes('FF')),
+	],
 ];

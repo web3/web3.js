@@ -27,7 +27,7 @@ describe('objects', () => {
 		});
 
 		it('should not mutate the sources', () => {
-			const before = { a: undefined, b: true, c: Buffer.from('123') };
+			const before = { a: undefined, b: true, c: new Uint8Array([1, 2, 3]) };
 			const result = mergeDeep({}, before, {
 				a: 3,
 				d: 'string',
@@ -36,19 +36,19 @@ describe('objects', () => {
 
 			expect(before.a).toBeUndefined();
 			expect(result.b).toBe(true);
-			expect(result.c).toEqual(Buffer.from('123'));
+			expect(result.c).toEqual(new Uint8Array([1, 2, 3]));
 		});
 
 		it('should not overwrite if undefined', () => {
 			const result = mergeDeep(
 				{},
-				{ a: undefined, b: true, c: Buffer.from('123'), f: 99 },
+				{ a: undefined, b: true, c: new Uint8Array([1, 2, 3]), f: 99 },
 				{ a: 3, d: 'string', e: { nested: BigInt(4) }, f: undefined },
 			) as any;
 
 			expect(result.a).toBe(3);
 			expect(result.b).toBe(true);
-			expect(result.c).toEqual(Buffer.from('123'));
+			expect(result.c).toEqual(new Uint8Array([1, 2, 3]));
 			expect(result.d).toBe('string');
 			expect(result.e).toEqual({ nested: BigInt(4) });
 			expect(result.f).toBe(99);

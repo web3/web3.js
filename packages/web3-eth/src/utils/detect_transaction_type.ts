@@ -24,7 +24,7 @@ import { InternalTransaction } from '../types';
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;
 
-	if (!isNullish(tx.type)) return format({ eth: 'uint' }, tx.type, ETH_DATA_FORMAT);
+	if (!isNullish(tx.type)) return format({ format: 'uint' }, tx.type, ETH_DATA_FORMAT);
 
 	if (
 		!isNullish(tx.maxFeePerGas) ||
@@ -48,5 +48,5 @@ export const detectTransactionType = (
 		transaction as unknown as Record<string, unknown>,
 	);
 
-export const detectRawTransactionType = (transaction: Buffer) =>
+export const detectRawTransactionType = (transaction: Uint8Array) =>
 	transaction[0] > 0x7f ? '0x0' : toHex(transaction[0]);

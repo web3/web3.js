@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
-import { getPublicKey, recoverPublicKey, signSync, utils } from 'ethereum-cryptography/secp256k1';
+import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import {
 	InvalidKdfError,
 	InvalidPasswordError,
@@ -35,58 +35,60 @@ import {
 import {
 	Address,
 	Bytes,
-	HexString,
 	CipherOptions,
+	HexString,
+	KeyStore,
 	PBKDF2SHA256Params,
 	ScryptParams,
-	KeyStore,
 	Transaction,
 } from 'web3-types';
 import {
-	bytesToBuffer,
+	bytesToUint8Array,
 	bytesToHex,
+	fromUtf8,
 	hexToBytes,
 	numberToHex,
 	randomBytes,
 	sha3Raw,
 	toChecksumAddress,
+	uint8ArrayConcat,
 	utf8ToHex,
 	uuidV4,
 } from 'web3-utils';
 
-import { isBuffer, isNullish, isString, validator, isHexStrict } from 'web3-validator';
-import { TransactionFactory } from './tx/transactionFactory';
+import { isHexStrict, isNullish, isString, validator } from 'web3-validator';
 import { keyStoreSchema } from './schemas';
+import { TransactionFactory } from './tx/transactionFactory';
 import type {
 	SignatureObject,
 	SignResult,
 	SignTransactionResult,
-	Web3Account,
 	TypedTransaction,
+	Web3Account,
 } from './types';
 
 /**
- * Get the private key buffer after the validation
+ * Get the private key Uint8Array after the validation
  */
-export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Buffer => {
-	let privateKeyBuffer: Buffer;
+export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Uint8Array => {
+	let privateKeyUint8Array: Uint8Array;
 
-	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToBuffer'
+	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToUint8Array'
 	if (!ignoreLength && typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
 		throw new PrivateKeyLengthError();
 	}
 
 	try {
-		privateKeyBuffer = Buffer.isBuffer(data) ? data : bytesToBuffer(data);
+		privateKeyUint8Array = data instanceof Uint8Array ? data : bytesToUint8Array(data);
 	} catch {
 		throw new InvalidPrivateKeyError();
 	}
 
-	if (!ignoreLength && privateKeyBuffer.byteLength !== 32) {
+	if (!ignoreLength && privateKeyUint8Array.byteLength !== 32) {
 		throw new PrivateKeyLengthError();
 	}
 
-	return privateKeyBuffer;
+	return privateKeyUint8Array;
 };
 
 /**
@@ -108,12 +110,11 @@ export const hashMessage = (message: string): string => {
 
 	const messageBytes = hexToBytes(messageHex);
 
-	const preamble = Buffer.from(
-		`\x19Ethereum Signed Message:\n${messageBytes.byteLength}`,
-		'utf8',
+	const preamble = hexToBytes(
+		fromUtf8(`\x19Ethereum Signed Message:\n${messageBytes.byteLength}`),
 	);
 
-	const ethMessage = Buffer.concat([preamble, messageBytes]);
+	const ethMessage = uint8ArrayConcat(preamble, messageBytes);
 
 	return sha3Raw(ethMessage); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
@@ -139,29 +140,23 @@ export const hashMessage = (message: string): string => {
  * ```
  */
 export const sign = (data: string, privateKey: Bytes): SignResult => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	const hash = hashMessage(data);
 
-	const [signature, recoverId] = signSync(hash.substring(2), privateKeyBuffer, {
-		// Makes signatures compatible with libsecp256k1
-		recovered: true,
-
-		// Returned signature should be in DER format ( non compact )
-		der: false,
-	});
-
-	const r = Buffer.from(signature.slice(0, 32));
-	const s = Buffer.from(signature.slice(32, 64));
-	const v = recoverId + 27;
+	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
+	const signatureBytes = signature.toCompactRawBytes();
+	const r = signature.r.toString(16);
+	const s = signature.s.toString(16);
+	const v = signature.recovery! + 27;
 
 	return {
 		message: data,
 		messageHash: hash,
 		v: numberToHex(v),
-		r: bytesToHex(r),
-		s: bytesToHex(s),
-		signature: `0x${Buffer.from(signature).toString('hex')}${v.toString(16)}`,
+		r: `0x${r}`,
+		s: `0x${s}`,
+		signature: `${bytesToHex(signatureBytes)}${v.toString(16)}`,
 	};
 };
 
@@ -253,7 +248,7 @@ export const signTransaction = async (
 	// To make it compatible with rest of the API, have to keep it async
 	// eslint-disable-next-line @typescript-eslint/require-await
 ): Promise<SignTransactionResult> => {
-	const signedTx = transaction.sign(Buffer.from(privateKey.substring(2), 'hex'));
+	const signedTx = transaction.sign(hexToBytes(privateKey));
 	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new TransactionSigningError('Signer Error');
 
@@ -271,7 +266,7 @@ export const signTransaction = async (
 	const txHash = sha3Raw(rawTx); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 
 	return {
-		messageHash: bytesToHex(Buffer.from(signedTx.getMessageToSign(true))),
+		messageHash: bytesToHex(signedTx.getMessageToSign(true)),
 		v: `0x${signedTx.v.toString(16)}`,
 		r: `0x${signedTx.r.toString(16)}`,
 		s: `0x${signedTx.s.toString(16)}`,
@@ -293,7 +288,7 @@ export const signTransaction = async (
 export const recoverTransaction = (rawTransaction: HexString): Address => {
 	if (isNullish(rawTransaction)) throw new UndefinedRawTransactionError();
 
-	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
+	const tx = TransactionFactory.fromSerializedData(hexToBytes(rawTransaction));
 
 	return toChecksumAddress(tx.getSenderAddress().toString());
 };
@@ -345,16 +340,12 @@ export const recover = (
 
 	const v = signatureOrV.substring(V_INDEX); // 0x + r + s + v
 
-	const ecPublicKey = recoverPublicKey(
-		Buffer.from(hashedMessage.substring(2), 'hex'),
-		Buffer.from(signatureOrV.substring(2, V_INDEX), 'hex'),
-		parseInt(v, 16) - 27,
-		false,
-	);
+	const ecPublicKey = secp256k1.Signature.fromCompact(signatureOrV.slice(2, V_INDEX))
+		.addRecoveryBit(parseInt(v, 16) - 27)
+		.recoverPublicKey(hashedMessage.replace('0x', ''))
+		.toRawBytes(false);
 
-	const publicKey = `0x${Buffer.from(ecPublicKey).toString('hex').slice(2)}`;
-
-	const publicHash = sha3Raw(publicKey);
+	const publicHash = sha3Raw(ecPublicKey.subarray(1));
 
 	const address = toChecksumAddress(`0x${publicHash.slice(-40)}`);
 
@@ -364,7 +355,7 @@ export const recover = (
 /**
  * Get the ethereum Address from a private key
  *
- * @param privateKey - String or buffer of 32 bytes
+ * @param privateKey - String or Uint8Array of 32 bytes
  * @param ignoreLength - if true, will not error check length
  * @returns The Ethereum address
  * @example
@@ -374,10 +365,10 @@ export const recover = (
  * ```
  */
 export const privateKeyToAddress = (privateKey: Bytes): string => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	// Get public key from private key in compressed format
-	const publicKey = getPublicKey(privateKeyBuffer);
+	const publicKey = secp256k1.getPublicKey(privateKeyUint8Array, false);
 
 	// Uncompressed ECDSA public key contains the prefix `0x04` which is not used in the Ethereum public key
 	const publicKeyHash = sha3Raw(publicKey.slice(1));
@@ -406,10 +397,8 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * '123',
  * {
  *   n: 8192,
- *	 iv: Buffer.from('bfb43120ae00e9de110f8325143a2709', 'hex'),
- *	 salt: Buffer.from(
- *		'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
- *		'hex',
+ *	 iv: web3.utils.hexToBytes('0xbfb43120ae00e9de110f8325143a2709'),
+ *	 salt: web3.utils.hexToBytes('0x210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd'),
  *	),
  * }).then(console.log)
  * > {
@@ -465,30 +454,30 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  */
 export const encrypt = async (
 	privateKey: Bytes,
-	password: string | Buffer,
+	password: string | Uint8Array,
 	options?: CipherOptions,
 ): Promise<KeyStore> => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	// if given salt or iv is a string, convert it to a Uint8Array
 	let salt;
 	if (options?.salt) {
-		salt = typeof options.salt === 'string' ? Buffer.from(options.salt, 'hex') : options.salt;
+		salt = typeof options.salt === 'string' ? hexToBytes(options.salt) : options.salt;
 	} else {
 		salt = randomBytes(32);
 	}
 
-	if (!(isString(password) || isBuffer(password))) {
+	if (!(isString(password) || password instanceof Uint8Array)) {
 		throw new InvalidPasswordError();
 	}
 
-	const bufferPassword = typeof password === 'string' ? Buffer.from(password) : password;
+	const uint8ArrayPassword =
+		typeof password === 'string' ? hexToBytes(utf8ToHex(password)) : password;
 
 	let initializationVector;
 	if (options?.iv) {
-		initializationVector =
-			typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex') : options.iv;
-		if (initializationVector.toString('hex').length !== 32) {
+		initializationVector = typeof options.iv === 'string' ? hexToBytes(options.iv) : options.iv;
+		if (initializationVector.length !== 16) {
 			throw new IVLengthError();
 		}
 	} else {
@@ -504,7 +493,7 @@ export const encrypt = async (
 	if (kdf === 'pbkdf2') {
 		kdfparams = {
 			dklen: options?.dklen ?? 32,
-			salt: salt.toString('hex'),
+			salt: bytesToHex(salt).replace('0x', ''),
 			c: options?.c ?? 262144,
 			prf: 'hmac-sha256',
 		};
@@ -513,24 +502,18 @@ export const encrypt = async (
 			// error when c < 1000, pbkdf2 is less secure with less iterations
 			throw new PBKDF2IterationsError();
 		}
-		derivedKey = pbkdf2Sync(
-			bufferPassword,
-			Buffer.from(salt),
-			kdfparams.c,
-			kdfparams.dklen,
-			'sha256',
-		);
+		derivedKey = pbkdf2Sync(uint8ArrayPassword, salt, kdfparams.c, kdfparams.dklen, 'sha256');
 	} else if (kdf === 'scrypt') {
 		kdfparams = {
 			n: options?.n ?? 8192,
 			r: options?.r ?? 8,
 			p: options?.p ?? 1,
 			dklen: options?.dklen ?? 32,
-			salt: salt.toString('hex'),
+			salt: bytesToHex(salt).replace('0x', ''),
 		};
 		derivedKey = scryptSync(
-			bufferPassword,
-			Buffer.from(salt),
+			uint8ArrayPassword,
+			salt,
 			kdfparams.n,
 			kdfparams.p,
 			kdfparams.r,
@@ -541,23 +524,23 @@ export const encrypt = async (
 	}
 
 	const cipher = await createCipheriv(
-		privateKeyBuffer,
-		Buffer.from(derivedKey.slice(0, 16)),
+		privateKeyUint8Array,
+		derivedKey.slice(0, 16),
 		initializationVector,
 		'aes-128-ctr',
 	);
 
 	const ciphertext = bytesToHex(cipher).slice(2);
 
-	const mac = sha3Raw(Buffer.from([...derivedKey.slice(16, 32), ...cipher])).replace('0x', '');
+	const mac = sha3Raw(uint8ArrayConcat(derivedKey.slice(16, 32), cipher)).replace('0x', '');
 	return {
 		version: 3,
 		id: uuidV4(),
-		address: privateKeyToAddress(privateKeyBuffer).toLowerCase().replace('0x', ''),
+		address: privateKeyToAddress(privateKeyUint8Array).toLowerCase().replace('0x', ''),
 		crypto: {
 			ciphertext,
 			cipherparams: {
-				iv: initializationVector.toString('hex'),
+				iv: bytesToHex(initializationVector).replace('0x', ''),
 			},
 			cipher: 'aes-128-ctr',
 			kdf,
@@ -570,7 +553,7 @@ export const encrypt = async (
 /**
  * Get an Account object from the privateKey
  *
- * @param privateKey - String or buffer of 32 bytes
+ * @param privateKey - String or Uint8Array of 32 bytes
  * @param ignoreLength - if true, will not error check length
  * @returns A Web3Account object
  *
@@ -589,19 +572,19 @@ export const encrypt = async (
  * ```
  */
 export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): Web3Account => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey, ignoreLength);
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey, ignoreLength);
 
 	return {
-		address: privateKeyToAddress(privateKeyBuffer),
-		privateKey: bytesToHex(privateKeyBuffer),
+		address: privateKeyToAddress(privateKeyUint8Array),
+		privateKey: bytesToHex(privateKeyUint8Array),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		signTransaction: (_tx: Transaction) => {
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
 		},
 		sign: (data: Record<string, unknown> | string) =>
-			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyBuffer),
+			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyUint8Array),
 		encrypt: async (password: string, options?: Record<string, unknown>) =>
-			encrypt(privateKeyBuffer, password, options),
+			encrypt(privateKeyUint8Array, password, options),
 	};
 };
 
@@ -625,9 +608,9 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
  * ```
  */
 export const create = (): Web3Account => {
-	const privateKey = utils.randomPrivateKey();
+	const privateKey = secp256k1.utils.randomPrivateKey();
 
-	return privateKeyToAccount(`0x${Buffer.from(privateKey).toString('hex')}`);
+	return privateKeyToAccount(`${bytesToHex(privateKey)}`);
 };
 
 /**
@@ -670,7 +653,7 @@ export const create = (): Web3Account => {
  */
 export const decrypt = async (
 	keystore: KeyStore | string,
-	password: string | Buffer,
+	password: string | Uint8Array,
 	nonStrict?: boolean,
 ): Promise<Web3Account> => {
 	const json =
@@ -682,20 +665,19 @@ export const decrypt = async (
 
 	if (json.version !== 3) throw new KeyStoreVersionError();
 
-	const bufferPassword = typeof password === 'string' ? Buffer.from(password) : password;
+	const uint8ArrayPassword =
+		typeof password === 'string' ? hexToBytes(utf8ToHex(password)) : password;
 
-	validator.validate(['bytes'], [bufferPassword]);
+	validator.validate(['bytes'], [uint8ArrayPassword]);
 
 	let derivedKey;
 	if (json.crypto.kdf === 'scrypt') {
 		const kdfparams = json.crypto.kdfparams as ScryptParams;
-		const bufferSalt =
-			typeof kdfparams.salt === 'string'
-				? Buffer.from(kdfparams.salt, 'hex')
-				: kdfparams.salt;
+		const uint8ArraySalt =
+			typeof kdfparams.salt === 'string' ? hexToBytes(kdfparams.salt) : kdfparams.salt;
 		derivedKey = scryptSync(
-			bufferPassword,
-			bufferSalt,
+			uint8ArrayPassword,
+			uint8ArraySalt,
 			kdfparams.n,
 			kdfparams.p,
 			kdfparams.r,
@@ -704,31 +686,32 @@ export const decrypt = async (
 	} else if (json.crypto.kdf === 'pbkdf2') {
 		const kdfparams: PBKDF2SHA256Params = json.crypto.kdfparams as PBKDF2SHA256Params;
 
-		const bufferSalt =
-			typeof kdfparams.salt === 'string'
-				? Buffer.from(kdfparams.salt, 'hex')
-				: kdfparams.salt;
+		const uint8ArraySalt =
+			typeof kdfparams.salt === 'string' ? hexToBytes(kdfparams.salt) : kdfparams.salt;
 
-		derivedKey = pbkdf2Sync(bufferPassword, bufferSalt, kdfparams.c, kdfparams.dklen, 'sha256');
+		derivedKey = pbkdf2Sync(
+			uint8ArrayPassword,
+			uint8ArraySalt,
+			kdfparams.c,
+			kdfparams.dklen,
+			'sha256',
+		);
 	} else {
 		throw new InvalidKdfError();
 	}
 
-	const ciphertext = hexToBytes(`0X${json.crypto.ciphertext}`);
-	const mac = sha3Raw(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace(
-		'0x',
-		'',
-	);
+	const ciphertext = hexToBytes(json.crypto.ciphertext);
+	const mac = sha3Raw(uint8ArrayConcat(derivedKey.slice(16, 32), ciphertext)).replace('0x', '');
 
 	if (mac !== json.crypto.mac) {
 		throw new KeyDerivationError();
 	}
 
 	const seed = await createDecipheriv(
-		Buffer.from(json.crypto.ciphertext, 'hex'),
+		hexToBytes(json.crypto.ciphertext),
 		derivedKey.slice(0, 16),
-		Buffer.from(json.crypto.cipherparams.iv, 'hex'),
+		hexToBytes(json.crypto.cipherparams.iv),
 	);
 
-	return privateKeyToAccount(Buffer.from(seed));
+	return privateKeyToAccount(seed);
 };

@@ -335,7 +335,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.BUFFER,
+				bytes: FMT_BYTES.UINT8ARRAY,
 			});
 
 			const expectedThrownError = {
@@ -359,7 +359,6 @@ describe('Web3Eth.sendSignedTransaction', () => {
 					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
 			).rejects.toMatchObject(expectedThrownError);
 		});
-
 		it('Should throw InvalidResponseError because insufficient funds', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
@@ -371,7 +370,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			transaction.gasPrice = await web3Eth.getGasPrice();
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.BUFFER,
+				bytes: FMT_BYTES.UINT8ARRAY,
 			});
 
 			const expectedThrownError = {
@@ -408,7 +407,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.BUFFER,
+				bytes: FMT_BYTES.UINT8ARRAY,
 			});
 
 			web3Eth.handleRevert = true;
@@ -443,7 +442,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.BUFFER,
+				bytes: FMT_BYTES.UINT8ARRAY,
 			});
 
 			web3Eth.handleRevert = true;
@@ -482,7 +481,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.BUFFER,
+				bytes: FMT_BYTES.UINT8ARRAY,
 			});
 
 			web3Eth.handleRevert = true;
@@ -525,7 +524,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.BUFFER,
+				bytes: FMT_BYTES.UINT8ARRAY,
 			});
 
 			web3Eth.handleRevert = false;

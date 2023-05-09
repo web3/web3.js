@@ -46,7 +46,7 @@ describe('getUncle', () => {
 			const [inputBlock, inputUncleIndex] = inputParameters;
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			const inputUncleIndexFormatted = format(
-				{ eth: 'uint' },
+				{ format: 'uint' },
 				inputUncleIndex,
 				ETH_DATA_FORMAT,
 			);
@@ -54,11 +54,11 @@ describe('getUncle', () => {
 			let inputBlockFormatted;
 
 			if (inputBlockIsBytes) {
-				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, ETH_DATA_FORMAT);
+				inputBlockFormatted = format({ format: 'bytes32' }, inputBlock, ETH_DATA_FORMAT);
 			} else if (isNullish(inputBlock)) {
 				inputBlockFormatted = web3Context.defaultBlock;
 			} else {
-				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, ETH_DATA_FORMAT);
+				inputBlockFormatted = format({ format: 'uint' }, inputBlock, ETH_DATA_FORMAT);
 			}
 
 			await getUncle(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
@@ -78,7 +78,7 @@ describe('getUncle', () => {
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
 		async (_, inputParameters) => {
 			const [inputBlock] = inputParameters;
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedFormattedResult = format(
 				blockSchema,
 				mockRpcResponse,

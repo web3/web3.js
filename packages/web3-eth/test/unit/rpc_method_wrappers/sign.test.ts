@@ -36,7 +36,7 @@ describe('sign', () => {
 		async (_, inputParameters) => {
 			const [inputMessage, inputAddress] = inputParameters;
 			const inputMessageFormatted = format(
-				{ eth: 'bytes' },
+				{ format: 'bytes' },
 				inputMessage,
 				DEFAULT_RETURN_FORMAT,
 			);
@@ -53,9 +53,9 @@ describe('sign', () => {
 	it.each(testData)(
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters) => {
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedFormattedResult = format(
-				{ eth: 'bytes' },
+				{ format: 'bytes' },
 				mockRpcResponse,
 				expectedReturnFormat,
 			);
