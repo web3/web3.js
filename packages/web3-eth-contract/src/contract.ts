@@ -581,7 +581,7 @@ export class Contract<Abi extends ContractAbi>
 		}
 
 		const _input = format(
-			{ eth: 'bytes' },
+			{ format: 'bytes' },
 			deployOptions?.input ?? deployOptions?.data ?? this.options.input,
 			DEFAULT_RETURN_FORMAT,
 		);
@@ -630,7 +630,7 @@ export class Contract<Abi extends ContractAbi>
 				encodeMethodABI(
 					abi as AbiFunctionFragment,
 					args as unknown[],
-					format({ eth: 'bytes' }, _input as Bytes, DEFAULT_RETURN_FORMAT),
+					format({ format: 'bytes' }, _input as Bytes, DEFAULT_RETURN_FORMAT),
 				),
 		};
 	}
@@ -755,7 +755,7 @@ export class Contract<Abi extends ContractAbi>
 
 	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
 		this._address = value
-			? toChecksumAddress(format({ eth: 'address' }, value, returnFormat))
+			? toChecksumAddress(format({ format: 'address' }, value, returnFormat))
 			: value;
 	}
 

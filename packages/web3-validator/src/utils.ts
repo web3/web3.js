@@ -20,13 +20,16 @@ import { VALID_ETH_BASE_TYPES } from './constants';
 import {
 	FullValidationSchema,
 	JsonSchema,
+	Schema,
 	ShortValidationSchema,
 	ValidationSchemaInput,
 	ValidInputTypes,
 } from './types';
 import { isAbiParameterSchema } from './validation/abi';
 import { isHexStrict } from './validation/string';
-// import { abiToJsonSchemaCases } from '../test/fixtures/abi_to_json_schema';
+import { Web3ValidatorError } from './errors';
+
+const extraTypes = ['hex', 'number', 'blockNumber', 'blockNumberOrTag', 'filter', 'bloom'];
 
 export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	type: string,
@@ -71,6 +74,51 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	}
 
 	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arraySizes };
+};
+
+const convertEthType = (
+	type: string,
+	parentSchema: Schema = {},
+): { format?: string; required?: boolean } => {
+	const typePropertyPresent = Object.keys(parentSchema).includes('type');
+
+	if (typePropertyPresent) {
+		throw new Web3ValidatorError([
+			{
+				keyword: 'eth',
+				message: 'Either "eth" or "type" can be presented in schema',
+				params: { eth: type },
+				instancePath: '',
+				schemaPath: '',
+			},
+		]);
+	}
+
+	const { baseType, baseTypeSize } = parseBaseType(type);
+
+	if (!baseType && !extraTypes.includes(type)) {
+		throw new Web3ValidatorError([
+			{
+				keyword: 'eth',
+				message: `Eth data type "${type}" is not valid`,
+				params: { eth: type },
+				instancePath: '',
+				schemaPath: '',
+			},
+		]);
+	}
+
+	if (baseType) {
+		if (baseType === 'tuple') {
+			throw new Error('"tuple" type is not implemented directly.');
+		}
+		return { format: `${baseType}${baseTypeSize ?? ''}`, required: true };
+	}
+	if (type) {
+		return { format: type, required: true };
+	}
+
+	return {};
 };
 
 export const abiSchemaToJsonSchema = (
@@ -161,9 +209,7 @@ export const abiSchemaToJsonSchema = (
 			const item: JsonSchema = {
 				type: 'array',
 				$id: abiName,
-				items: {
-					eth: baseType,
-				},
+				items: convertEthType(String(baseType)),
 				minItems: arraySize,
 				maxItems: arraySize,
 			};
@@ -176,12 +222,12 @@ export const abiSchemaToJsonSchema = (
 			(lastSchema.items as JsonSchema[]).push(item);
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
-			(lastSchema.items as JsonSchema[]).push({ $id: abiName, eth: abiType });
+			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
 		} else {
 			// Nested object
 			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({
 				$id: abiName,
-				eth: abiType,
+				...convertEthType(abiType),
 			});
 		}
 	}
