@@ -117,8 +117,6 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 						new Uint8Array(baseTypeSize - value.length),
 						value,
 					);
-				} else {
-					paddedValue = value;
 				}
 			} else {
 				paddedValue = value;
