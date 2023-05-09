@@ -37,7 +37,7 @@ export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ): SignedTransactionInfoAPI {
 	return {
-		raw: format({ eth: 'bytes' }, encodedSignedTransaction, returnFormat),
+		raw: format({ format: 'bytes' }, encodedSignedTransaction, returnFormat),
 		tx: formatTransaction(
 			{
 				...TransactionFactory.fromSerializedData(

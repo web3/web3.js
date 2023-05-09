@@ -19,14 +19,14 @@ import { isNullish } from 'web3-validator';
 
 /**
  * An alternative to the node function `isPromise` that exists in `util/types` because it is not available on the browser.
- * @param object to check if it is a `Promise`
+ * @param object - to check if it is a `Promise`
  * @returns `true` if it is an `object` or a `function` that has a `then` function. And returns `false` otherwise.
  */
 export function isPromise(object: unknown): boolean {
 	return (
 		(typeof object === 'object' || typeof object === 'function') &&
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-		(typeof (object as any).then as unknown) === 'function'
+		typeof (object as { then: unknown }).then === 'function'
 	);
 }
 

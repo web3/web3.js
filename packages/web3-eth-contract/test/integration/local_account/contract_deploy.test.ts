@@ -32,7 +32,7 @@ describe('contract', () => {
 		let localAccount: Web3Account;
 		let web3: Web3;
 
-		beforeAll(async () => {
+		beforeEach(async () => {
 			web3 = new Web3(getSystemTestProvider());
 			contract = new web3.eth.Contract(GreeterAbi) as unknown as Contract<typeof GreeterAbi>;
 			deployOptions = {

@@ -418,13 +418,13 @@ describe('formatter', () => {
 	describe('format', () => {
 		describe('scalar values', () => {
 			it('should not format non-formatable scalar type', () => {
-				expect(format({ eth: 'boolean' }, true, DEFAULT_RETURN_FORMAT)).toBe(true);
+				expect(format({ format: 'boolean' }, true, DEFAULT_RETURN_FORMAT)).toBe(true);
 			});
 
 			describe('number', () => {
 				it('should format for FMT_NUMBER.BIGINT', () => {
 					expect(
-						format({ eth: 'uint' }, 10, {
+						format({ format: 'uint' }, 10, {
 							number: FMT_NUMBER.BIGINT,
 							bytes: FMT_BYTES.HEX,
 						}),
@@ -433,7 +433,7 @@ describe('formatter', () => {
 
 				it('should format for FMT_NUMBER.HEX', () => {
 					expect(
-						format({ eth: 'uint' }, 10, {
+						format({ format: 'uint' }, 10, {
 							number: FMT_NUMBER.HEX,
 							bytes: FMT_BYTES.HEX,
 						}),
@@ -442,7 +442,7 @@ describe('formatter', () => {
 
 				it('should format for FMT_NUMBER.NUMBER', () => {
 					expect(
-						format({ eth: 'uint' }, '0xa', {
+						format({ format: 'uint' }, '0xa', {
 							number: FMT_NUMBER.NUMBER,
 							bytes: FMT_BYTES.HEX,
 						}),
@@ -451,7 +451,7 @@ describe('formatter', () => {
 
 				it('should format for FMT_NUMBER.STR', () => {
 					expect(
-						format({ eth: 'uint' }, 10, {
+						format({ format: 'uint' }, 10, {
 							number: FMT_NUMBER.STR,
 							bytes: FMT_BYTES.HEX,
 						}),
@@ -462,7 +462,7 @@ describe('formatter', () => {
 			describe('bytes', () => {
 				it('should format for FMT_BYTES.HEX', () => {
 					expect(
-						format({ eth: 'bytes' }, new Uint8Array(hexToBytes('100bca')), {
+						format({ format: 'bytes' }, new Uint8Array(hexToBytes('100bca')), {
 							number: FMT_NUMBER.STR,
 							bytes: FMT_BYTES.HEX,
 						}),
@@ -471,7 +471,7 @@ describe('formatter', () => {
 
 				it('should format for FMT_BYTES.UINT8ARRAY', () => {
 					expect(
-						format({ eth: 'bytes' }, '0x100bca', {
+						format({ format: 'bytes' }, '0x100bca', {
 							number: FMT_NUMBER.STR,
 							bytes: FMT_BYTES.UINT8ARRAY,
 						}),
@@ -488,13 +488,13 @@ describe('formatter', () => {
 						int_arr: {
 							type: 'array',
 							items: {
-								eth: 'uint',
+								format: 'uint',
 							},
 						},
 						bytes_arr: {
 							type: 'array',
 							items: {
-								eth: 'bytes',
+								format: 'bytes',
 							},
 						},
 					},
@@ -529,10 +529,10 @@ describe('formatter', () => {
 								type: 'object',
 								properties: {
 									prop1: {
-										eth: 'uint',
+										format: 'uint',
 									},
 									prop2: {
-										eth: 'bytes',
+										format: 'bytes',
 									},
 								},
 							},
@@ -567,10 +567,10 @@ describe('formatter', () => {
 							type: 'array',
 							items: [
 								{
-									eth: 'uint',
+									format: 'uint',
 								},
 								{
-									eth: 'bytes',
+									format: 'bytes',
 								},
 							],
 						},
@@ -594,7 +594,7 @@ describe('formatter', () => {
 				const schema = {
 					type: 'array',
 					items: {
-						eth: 'uint',
+						format: 'uint',
 					},
 				};
 
@@ -612,10 +612,10 @@ describe('formatter', () => {
 					type: 'array',
 					items: [
 						{
-							eth: 'uint',
+							format: 'uint',
 						},
 						{
-							eth: 'bytes',
+							format: 'bytes',
 						},
 					],
 				};
@@ -636,13 +636,13 @@ describe('formatter', () => {
 					type: 'object',
 					properties: {
 						handleRevert: {
-							eth: 'bool',
+							format: 'bool',
 						},
 						timeout: {
-							eth: 'uint',
+							format: 'uint',
 						},
 						data: {
-							eth: 'bytes',
+							format: 'bytes',
 						},
 					},
 				};
@@ -675,13 +675,13 @@ describe('formatter', () => {
 							type: 'object',
 							properties: {
 								handleRevert: {
-									eth: 'bool',
+									format: 'bool',
 								},
 								timeout: {
-									eth: 'uint',
+									format: 'uint',
 								},
 								data: {
-									eth: 'bytes',
+									format: 'bytes',
 								},
 							},
 						},

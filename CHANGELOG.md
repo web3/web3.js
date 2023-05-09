@@ -1486,4 +1486,5 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth
 
+-   `formatTransaction` no longer throws a `TransactionDataAndInputError` if it's passed a transaction object with both `data` and `input` properties set (as long as they are the same value) (#6064)
 -   Refactored documentation for `rpc_method_wrappers` to point to the previously duplicated documentation found under the `Web3Eth` class documentation (#6054)

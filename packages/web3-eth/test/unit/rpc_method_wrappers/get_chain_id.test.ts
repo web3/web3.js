@@ -39,7 +39,7 @@ describe('getChainId', () => {
 		const mockRpcResponse = '0x4b7';
 		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 		const expectedFormattedResult = format(
-			{ eth: 'uint' },
+			{ format: 'uint' },
 			mockRpcResponse,
 			expectedReturnFormat,
 		);

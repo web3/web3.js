@@ -45,8 +45,8 @@ export function watchTransactionForConfirmations<
 	if (isNullish(transactionReceipt) || isNullish(transactionReceipt.blockHash))
 		throw new TransactionMissingReceiptOrBlockHashError({
 			receipt: transactionReceipt,
-			blockHash: format({ eth: 'bytes32' }, transactionReceipt?.blockHash, returnFormat),
-			transactionHash: format({ eth: 'bytes32' }, transactionHash, returnFormat),
+			blockHash: format({ format: 'bytes32' }, transactionReceipt?.blockHash, returnFormat),
+			transactionHash: format({ format: 'bytes32' }, transactionHash, returnFormat),
 		});
 
 	if (!transactionReceipt.blockNumber)
@@ -54,9 +54,9 @@ export function watchTransactionForConfirmations<
 
 	// As we have the receipt, it's the first confirmation that tx is accepted.
 	transactionPromiEvent.emit('confirmation', {
-		confirmations: format({ eth: 'uint' }, 1, returnFormat),
+		confirmations: format({ format: 'uint' }, 1, returnFormat),
 		receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
-		latestBlockHash: format({ eth: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
+		latestBlockHash: format({ format: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
 	});
 
 	// so a subscription for newBlockHeaders can be made instead of polling

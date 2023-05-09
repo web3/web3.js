@@ -64,15 +64,13 @@ describeIf(isSocket)('subscription', () => {
 
 	beforeEach(async () => {
 		tempAcc = await createTempAccount();
-	});
-	beforeAll(() => {
 		clientUrl = getSystemTestProviderUrl();
 		provider = isWs ? new WebSocketProvider(clientUrl) : new IpcProvider(clientUrl);
 		contract = new Contract(BasicAbi, undefined, {
 			provider,
 		});
 	});
-	afterAll(async () => {
+	afterEach(async () => {
 		provider.disconnect();
 		await closeOpenConnection(web3Eth);
 	});

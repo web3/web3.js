@@ -37,7 +37,7 @@ describe('getTransactionReceipt', () => {
 		async (_, inputParameters) => {
 			const [inputTransactionHash] = inputParameters;
 			const inputTransactionHashFormatted = format(
-				{ eth: 'bytes32' },
+				{ format: 'bytes32' },
 				inputTransactionHash,
 				DEFAULT_RETURN_FORMAT,
 			);

@@ -41,13 +41,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', eth: 'uint' }],
+				items: [{ $id: 'a', format: 'uint', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', eth: 'uint' }],
+				items: [{ $id: '/0/0', format: 'uint', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -64,13 +64,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', eth: 'address' }],
+				items: [{ $id: 'a', format: 'address', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', eth: 'address' }],
+				items: [{ $id: '/0/0', format: 'address', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -87,13 +87,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', eth: 'bool' }],
+				items: [{ $id: 'a', format: 'bool', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', eth: 'bool' }],
+				items: [{ $id: '/0/0', format: 'bool', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -110,13 +110,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', eth: 'bytes' }],
+				items: [{ $id: 'a', format: 'bytes', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', eth: 'bytes' }],
+				items: [{ $id: '/0/0', format: 'bytes', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -138,8 +138,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 			fullSchema: {
 				type: 'array',
 				items: [
-					{ $id: 'a', eth: 'uint' },
-					{ $id: 'b', eth: 'int' },
+					{ $id: 'a', format: 'uint', required: true },
+					{ $id: 'b', format: 'int', required: true },
 				],
 				minItems: 2,
 				maxItems: 2,
@@ -147,8 +147,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 			shortSchema: {
 				type: 'array',
 				items: [
-					{ $id: '/0/0', eth: 'uint' },
-					{ $id: '/0/1', eth: 'int' },
+					{ $id: '/0/0', format: 'uint', required: true },
+					{ $id: '/0/1', format: 'int', required: true },
 				],
 				minItems: 2,
 				maxItems: 2,
@@ -171,7 +171,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						$id: 'a',
 						type: 'array',
-						items: { eth: 'uint' },
+						items: { format: 'uint', required: true },
 						maxItems: undefined,
 						minItems: undefined,
 					},
@@ -185,7 +185,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						$id: '/0/0',
 						type: 'array',
-						items: { eth: 'uint' },
+						items: { format: 'uint', required: true },
 					},
 				],
 				minItems: 1,
@@ -209,7 +209,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						$id: 'a',
 						type: 'array',
-						items: { eth: 'uint' },
+						items: { format: 'uint', required: true },
 						maxItems: 3,
 						minItems: 3,
 					},
@@ -223,7 +223,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						$id: '/0/0',
 						type: 'array',
-						items: { eth: 'uint' },
+						items: { format: 'uint', required: true },
 						maxItems: 3,
 						minItems: 3,
 					},
@@ -257,21 +257,21 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						$id: 'a',
 						type: 'array',
-						items: { eth: 'uint' },
+						items: { format: 'uint', required: true },
 						maxItems: 3,
 						minItems: 3,
 					},
 					{
 						$id: 'b',
 						type: 'array',
-						items: { eth: 'int' },
+						items: { format: 'int', required: true },
 						maxItems: undefined,
 						minItems: undefined,
 					},
 					{
 						$id: 'c',
 						type: 'array',
-						items: { eth: 'string' },
+						items: { format: 'string', required: true },
 						maxItems: 5,
 						minItems: 5,
 					},
@@ -285,21 +285,21 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						$id: '/0/0',
 						type: 'array',
-						items: { eth: 'uint' },
+						items: { format: 'uint', required: true },
 						maxItems: 3,
 						minItems: 3,
 					},
 					{
 						$id: '/0/1',
 						type: 'array',
-						items: { eth: 'int' },
+						items: { format: 'int', required: true },
 						maxItems: undefined,
 						minItems: undefined,
 					},
 					{
 						$id: '/0/2',
 						type: 'array',
-						items: { eth: 'string' },
+						items: { format: 'string', required: true },
 						maxItems: 5,
 						minItems: 5,
 					},
@@ -329,7 +329,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						type: 'array',
 						$id: 'a',
-						items: [{ $id: 'b', eth: 'uint' }],
+						items: [{ $id: 'b', format: 'uint', required: true }],
 						minItems: 1,
 						maxItems: 1,
 					},
@@ -343,7 +343,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					{
 						type: 'array',
 						$id: '/0/0',
-						items: [{ $id: '/0/0/0', eth: 'uint' }],
+						items: [{ $id: '/0/0/0', format: 'uint', required: true }],
 						minItems: 1,
 						maxItems: 1,
 					},
@@ -379,8 +379,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						type: 'array',
 						$id: 'a',
 						items: [
-							{ $id: 'b', eth: 'uint' },
-							{ $id: 'c', eth: 'string' },
+							{ $id: 'b', format: 'uint', required: true },
+							{ $id: 'c', format: 'string', required: true },
 						],
 						minItems: 2,
 						maxItems: 2,
@@ -396,8 +396,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						type: 'array',
 						$id: '/0/0',
 						items: [
-							{ $id: '/0/0/0', eth: 'uint' },
-							{ $id: '/0/0/1', eth: 'string' },
+							{ $id: '/0/0/0', format: 'uint', required: true },
+							{ $id: '/0/0/1', format: 'string', required: true },
 						],
 						minItems: 2,
 						maxItems: 2,
@@ -441,8 +441,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'a1', eth: 'uint' },
-								{ $id: 'a2', eth: 'string' },
+								{ $id: 'a1', format: 'uint', required: true },
+								{ $id: 'a2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -463,8 +463,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/0/0', eth: 'uint' },
-								{ $id: '/0/0/1', eth: 'string' },
+								{ $id: '/0/0/0', format: 'uint', required: true },
+								{ $id: '/0/0/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -517,8 +517,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'a1', eth: 'uint' },
-								{ $id: 'a2', eth: 'string' },
+								{ $id: 'a1', format: 'uint', required: true },
+								{ $id: 'a2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -539,8 +539,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/0/0', eth: 'uint' },
-								{ $id: '/0/0/1', eth: 'string' },
+								{ $id: '/0/0/0', format: 'uint', required: true },
+								{ $id: '/0/0/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -612,8 +612,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'a1', eth: 'uint' },
-								{ $id: 'a2', eth: 'string' },
+								{ $id: 'a1', format: 'uint', required: true },
+								{ $id: 'a2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -628,8 +628,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'b1', eth: 'uint' },
-								{ $id: 'b2', eth: 'string' },
+								{ $id: 'b1', format: 'uint', required: true },
+								{ $id: 'b2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -650,8 +650,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/0/0', eth: 'uint' },
-								{ $id: '/0/0/1', eth: 'string' },
+								{ $id: '/0/0/0', format: 'uint', required: true },
+								{ $id: '/0/0/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -665,8 +665,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/1/0', eth: 'uint' },
-								{ $id: '/0/1/1', eth: 'string' },
+								{ $id: '/0/1/0', format: 'uint', required: true },
+								{ $id: '/0/1/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -720,7 +720,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 							type: 'array',
 							$id: 'a',
 							items: {
-								eth: 'uint',
+								format: 'uint',
+								required: true,
 							},
 							minItems: 2,
 							maxItems: 2,
@@ -741,7 +742,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 							type: 'array',
 							$id: '/0/0',
 							items: {
-								eth: 'uint',
+								format: 'uint',
+								required: true,
 							},
 							minItems: 2,
 							maxItems: 2,
@@ -791,7 +793,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 							type: 'array',
 							$id: 'a',
 							items: {
-								eth: 'uint',
+								format: 'uint',
+								required: true,
 							},
 						},
 					],
@@ -810,7 +813,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 							type: 'array',
 							$id: '/0/0',
 							items: {
-								eth: 'uint',
+								format: 'uint',
+								required: true,
 							},
 						},
 					],
@@ -886,11 +890,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 								items: [
 									{
 										$id: 'level',
-										eth: 'uint',
+										format: 'uint',
+										required: true,
 									},
 									{
 										$id: 'message',
-										eth: 'string',
+										format: 'string',
+										required: true,
 									},
 								],
 								maxItems: 2,
@@ -917,11 +923,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 								items: [
 									{
 										$id: '/0/0/0',
-										eth: 'uint',
+										format: 'uint',
+										required: true,
 									},
 									{
 										$id: '/0/0/1',
-										eth: 'string',
+										format: 'string',
+										required: true,
 									},
 								],
 								maxItems: 2,
@@ -1023,11 +1031,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 								items: [
 									{
 										$id: 'level',
-										eth: 'uint',
+										format: 'uint',
+										required: true,
 									},
 									{
 										$id: 'message',
-										eth: 'string',
+										format: 'string',
+										required: true,
 									},
 								],
 								maxItems: 2,
@@ -1056,11 +1066,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 								items: [
 									{
 										$id: '/0/0/0',
-										eth: 'uint',
+										format: 'uint',
+										required: true,
 									},
 									{
 										$id: '/0/0/1',
-										eth: 'string',
+										format: 'string',
+										required: true,
 									},
 								],
 								maxItems: 2,
@@ -1146,14 +1158,14 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						type: 'array',
 						$id: 'user',
 						items: [
-							{ $id: 'name', eth: 'string' },
-							{ $id: 'addr', eth: 'address' },
+							{ $id: 'name', format: 'string', required: true },
+							{ $id: 'addr', format: 'address', required: true },
 							{
 								type: 'array',
 								$id: 'contact',
 								items: [
-									{ $id: 'email', eth: 'string' },
-									{ $id: 'phone', eth: 'string' },
+									{ $id: 'email', format: 'string', required: true },
+									{ $id: 'phone', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1173,14 +1185,14 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						type: 'array',
 						$id: '/0/0',
 						items: [
-							{ $id: '/0/0/0', eth: 'string' },
-							{ $id: '/0/0/1', eth: 'address' },
+							{ $id: '/0/0/0', format: 'string', required: true },
+							{ $id: '/0/0/1', format: 'address', required: true },
 							{
 								type: 'array',
 								$id: '/0/0/2',
 								items: [
-									{ $id: '/0/0/2/0', eth: 'string' },
-									{ $id: '/0/0/2/1', eth: 'string' },
+									{ $id: '/0/0/2/0', format: 'string', required: true },
+									{ $id: '/0/0/2/1', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1244,14 +1256,14 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						type: 'array',
 						$id: 'user',
 						items: [
-							{ $id: 'name', eth: 'string' },
-							{ $id: 'addr', eth: 'address' },
+							{ $id: 'name', format: 'string', required: true },
+							{ $id: 'addr', format: 'address', required: true },
 							{
 								type: 'array',
 								$id: 'contact',
 								items: [
-									{ $id: 'email', eth: 'string' },
-									{ $id: 'phone', eth: 'string' },
+									{ $id: 'email', format: 'string', required: true },
+									{ $id: 'phone', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1271,14 +1283,14 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						type: 'array',
 						$id: '/0/0',
 						items: [
-							{ $id: '/0/0/0', eth: 'string' },
-							{ $id: '/0/0/1', eth: 'address' },
+							{ $id: '/0/0/0', format: 'string', required: true },
+							{ $id: '/0/0/1', format: 'address', required: true },
 							{
 								type: 'array',
 								$id: '/0/0/2',
 								items: [
-									{ $id: '/0/0/2/0', eth: 'string' },
-									{ $id: '/0/0/2/1', eth: 'string' },
+									{ $id: '/0/0/2/0', format: 'string', required: true },
+									{ $id: '/0/0/2/1', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1412,8 +1424,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 									{
 										type: 'array',
 										items: [
-											{ $id: 'x', eth: 'int256' },
-											{ $id: 'y', eth: 'int256' },
+											{ $id: 'x', format: 'int256', required: true },
+											{ $id: 'y', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
@@ -1422,8 +1434,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 									{
 										type: 'array',
 										items: [
-											{ $id: 'x', eth: 'int256' },
-											{ $id: 'y', eth: 'int256' },
+											{ $id: 'x', format: 'int256', required: true },
+											{ $id: 'y', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
@@ -1434,8 +1446,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 								minItems: 2,
 							},
 						},
-						{ $id: 'numberValue', eth: 'uint256' },
-						{ $id: 'boolValue', eth: 'bool' },
+						{ $id: 'numberValue', format: 'uint256', required: true },
+						{ $id: 'boolValue', format: 'bool', required: true },
 					],
 					maxItems: 3,
 					minItems: 3,
@@ -1457,8 +1469,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 									{
 										type: 'array',
 										items: [
-											{ $id: '/0/0/0/0', eth: 'int256' },
-											{ $id: '/0/0/0/1', eth: 'int256' },
+											{ $id: '/0/0/0/0', format: 'int256', required: true },
+											{ $id: '/0/0/0/1', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
@@ -1467,8 +1479,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 									{
 										type: 'array',
 										items: [
-											{ $id: '/0/0/1/0', eth: 'int256' },
-											{ $id: '/0/0/1/1', eth: 'int256' },
+											{ $id: '/0/0/1/0', format: 'int256', required: true },
+											{ $id: '/0/0/1/1', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
@@ -1479,8 +1491,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 								minItems: 2,
 							},
 						},
-						{ $id: '/0/1', eth: 'uint256' },
-						{ $id: '/0/2', eth: 'bool' },
+						{ $id: '/0/1', format: 'uint256', required: true },
+						{ $id: '/0/2', format: 'bool', required: true },
 					],
 					maxItems: 3,
 					minItems: 3,
