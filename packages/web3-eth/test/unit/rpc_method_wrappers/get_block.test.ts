@@ -49,11 +49,11 @@ describe('getBlock', () => {
 			let inputBlockFormatted;
 
 			if (inputBlockIsBytes) {
-				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, ETH_DATA_FORMAT);
+				inputBlockFormatted = format({ format: 'bytes32' }, inputBlock, ETH_DATA_FORMAT);
 			} else if (isNullish(inputBlock)) {
 				inputBlockFormatted = web3Context.defaultBlock;
 			} else {
-				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, ETH_DATA_FORMAT);
+				inputBlockFormatted = format({ format: 'uint' }, inputBlock, ETH_DATA_FORMAT);
 			}
 
 			await getBlock(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);

@@ -39,7 +39,7 @@ describe('getHashRate', () => {
 		const mockRpcResponse = '0x38a';
 		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 		const expectedFormattedResult = format(
-			{ eth: 'uint' },
+			{ format: 'uint' },
 			mockRpcResponse,
 			expectedReturnFormat,
 		);

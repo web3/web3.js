@@ -53,7 +53,7 @@ describe('sendTransaction', () => {
 			).mockResolvedValueOnce(expectedTransactionReceipt);
 
 			const inputSignedTransactionFormatted = format(
-				{ eth: 'bytes' },
+				{ format: 'bytes' },
 				inputSignedTransaction,
 				DEFAULT_RETURN_FORMAT,
 			);
@@ -77,7 +77,7 @@ describe('sendTransaction', () => {
 			).mockResolvedValueOnce(expectedTransactionReceipt);
 
 			const inputSignedTransactionFormatted = format(
-				{ eth: 'bytes' },
+				{ format: 'bytes' },
 				inputSignedTransaction,
 				DEFAULT_RETURN_FORMAT,
 			);
@@ -97,7 +97,7 @@ describe('sendTransaction', () => {
 			).mockResolvedValueOnce(expectedTransactionReceipt);
 
 			const inputSignedTransactionFormatted = format(
-				{ eth: 'bytes' },
+				{ format: 'bytes' },
 				inputSignedTransaction,
 				DEFAULT_RETURN_FORMAT,
 			);
