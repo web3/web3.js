@@ -19,6 +19,8 @@ import { Bytes, DataFormat, FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-types
 import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
 import { bytesToUint8Array, bytesToHex, numberToHex, toBigInt } from './converters';
 import { mergeDeep } from './objects';
+import { padLeft } from './string_manipulation';
+import { uint8ArrayConcat } from './uint8array';
 
 const { parseBaseType } = utils;
 
@@ -34,7 +36,7 @@ export const isDataFormat = (dataFormat: unknown): dataFormat is DataFormat =>
  *
  * @param schema - represents a JSON schema, which is an object that describes the structure of JSON data
  * @param dataPath - represents an array of strings that specifies the path to the data within the JSON schema
- * @param oneOfPath - epresents an optional array of two-element tuples that specifies the "oneOf" option to choose, if the schema has oneOf and the data path can match multiple subschemas
+ * @param oneOfPath - represents an optional array of two-element tuples that specifies the "oneOf" option to choose, if the schema has oneOf and the data path can match multiple subschemas
  * @returns the JSON schema that matches the data path
  *
  */
@@ -91,8 +93,7 @@ const findSchemaByDataPath = (
  */
 export const convertScalarValue = (value: unknown, ethType: string, format: DataFormat) => {
 	try {
-		const { baseType } = parseBaseType(ethType);
-
+		const { baseType, baseTypeSize } = parseBaseType(ethType);
 		if (baseType === 'int' || baseType === 'uint') {
 			switch (format.number) {
 				case FMT_NUMBER.NUMBER:
@@ -107,13 +108,24 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 					throw new FormatterError(`Invalid format: ${String(format.number)}`);
 			}
 		}
-
 		if (baseType === 'bytes') {
+			let paddedValue;
+			if (baseTypeSize) {
+				if (typeof value === 'string') paddedValue = padLeft(value, baseTypeSize * 2);
+				else if (value instanceof Uint8Array) {
+					paddedValue = uint8ArrayConcat(
+						new Uint8Array(baseTypeSize - value.length),
+						value,
+					);
+				}
+			} else {
+				paddedValue = value;
+			}
 			switch (format.bytes) {
 				case FMT_BYTES.HEX:
-					return bytesToHex(bytesToUint8Array(value as Bytes));
+					return bytesToHex(bytesToUint8Array(paddedValue as Bytes));
 				case FMT_BYTES.UINT8ARRAY:
-					return bytesToUint8Array(value as Bytes);
+					return bytesToUint8Array(paddedValue as Bytes);
 				default:
 					throw new FormatterError(`Invalid format: ${String(format.bytes)}`);
 			}
