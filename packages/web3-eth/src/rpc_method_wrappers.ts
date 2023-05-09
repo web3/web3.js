@@ -257,7 +257,6 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 			hydrated,
 		);
 	}
-
 	return format(blockSchema, response as unknown as Block, returnFormat);
 }
 
