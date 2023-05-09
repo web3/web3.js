@@ -15,37 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Ajv from 'ajv';
-import { blake2b } from 'ethereum-cryptography/blake2b';
-import { utf8ToBytes, toHex } from 'ethereum-cryptography/utils';
+import { Validator } from './validator';
 import { ethAbiToJsonSchema } from './utils';
-import { ValidationSchemaInput, Web3ValidationErrorObject, Web3ValidationOptions } from './types';
-import { ethKeyword } from './keywords/eth';
+import {
+	Json,
+	ValidationSchemaInput,
+	Web3ValidationErrorObject,
+	Web3ValidationOptions,
+} from './types';
 import { Web3ValidatorError } from './errors';
-import * as formats from './formats';
 
 export class Web3Validator {
-	private readonly _validator: Ajv;
+	private readonly _validator: Validator;
 
 	public constructor() {
-		this._validator = new Ajv({
-			strict: true,
-			strictSchema: true,
-			allErrors: true,
-			useDefaults: false,
-			// To avoid warnings for not defining `type` for each property
-			strictTypes: false,
-
-			// To avoid strict mode error for minItems or maxItems/additionalItems
-			strictTuples: false,
-		});
-
-		this._validator.addKeyword(ethKeyword);
-
-		for (const formatName of Object.keys(formats)) {
-			// eslint-disable-next-line import/namespace
-			this._validator.addFormat(formatName, formats[formatName as keyof typeof formats]);
-		}
+		this._validator = Validator.factory();
 	}
 
 	public validateJSONSchema(
@@ -53,21 +37,7 @@ export class Web3Validator {
 		data: object,
 		options?: Web3ValidationOptions,
 	): Web3ValidationErrorObject[] | undefined {
-		let errors: Web3ValidationErrorObject[] = [];
-
-		if (!this._validator.validate(schema, data)) {
-			errors = this._validator.errors as Web3ValidationErrorObject[];
-		}
-
-		if (options?.silent) {
-			return errors;
-		}
-
-		if (errors.length && !options?.silent) {
-			throw new Web3ValidatorError(errors);
-		}
-
-		return undefined;
+		return this._validator.validate(schema, data as Json, options);
 	}
 
 	public validate(
@@ -100,34 +70,6 @@ export class Web3Validator {
 			]);
 		}
 
-		const schemaKey = toHex(blake2b(utf8ToBytes(JSON.stringify(jsonSchema))));
-
-		if (!this._validator.getSchema(schemaKey)) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			if (jsonSchema?.items && jsonSchema.items.length > 0) {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-plusplus
-				for (let i = 0; i < jsonSchema.items.length; i++) {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-					if (jsonSchema?.items[i]?.$id === '') {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-						jsonSchema.items[i].$id = `${schemaKey}/items/${i}`;
-					}
-				}
-			}
-			this._validator.addSchema(jsonSchema, schemaKey);
-		}
-		if (!this._validator.validate(schemaKey, data)) {
-			const errors = this._validator.errors as Web3ValidationErrorObject[];
-
-			if (options?.silent) {
-				return errors;
-			}
-
-			if (errors.length && !options?.silent) {
-				throw new Web3ValidatorError(errors);
-			}
-		}
-
-		return undefined;
+		return this._validator.validate(jsonSchema, data as Json, options);
 	}
 }

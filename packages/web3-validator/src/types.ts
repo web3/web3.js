@@ -15,16 +15,27 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { AbiParameter, Optional } from 'web3-types';
-import { ErrorObject } from 'ajv';
-import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
+import { AbiParameter } from 'web3-types';
+import { ValidationError } from 'is-my-json-valid';
 
-export { JSONSchemaType } from 'ajv';
-export { DataValidateFunction, DataValidationCxt } from 'ajv/dist/types';
+export type Web3ValidationErrorObject<
+	K extends string = string,
+	P = Record<string, any>,
+	S = unknown,
+> = {
+	keyword: K;
+	instancePath: string;
+	schemaPath: string;
+	params: P;
+	// Added to validation errors of "propertyNames" keyword schema
+	propertyName?: string;
+	// Excluded if option `messages` set to false.
+	message?: string;
+	schema?: S;
+	data?: unknown;
+};
 
-export type Web3ValidationErrorObject = ErrorObject;
 export type ValidInputTypes = ArrayBuffer | Uint8Array | bigint | string | number | boolean;
-
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
 export type EthBaseTypesWithMeta =
 	| `string${string}`
@@ -63,8 +74,96 @@ export type Web3ValidationOptions = {
 	readonly silent: boolean;
 };
 
-// In `JSONSchemaType` from `ajv` the `type` is required
-// We need to make it optional
-export type JsonSchema = Optional<SomeJSONSchema, 'type'> & {
+// is-my-json-valid types
+export type Json = string | number | boolean | Array<Json> | { [id: string]: Json };
+
+export type Schema = {
+	// version
+	$schema?: string;
+	$vocabulary?: string;
+	// pointers
+	id?: string;
+	$id?: string;
+	$anchor?: string;
+	$ref?: string;
+	definitions?: { [id: string]: Schema };
+	$defs?: { [id: string]: Schema };
+	$recursiveRef?: string;
+	$recursiveAnchor?: boolean;
+	// generic
+	type?: string | Array<string>;
+	required?: Array<string> | boolean;
+	default?: Json;
+	// constant values
+	enum?: Array<Json>;
+	const?: Json;
+	// logical checks
+	not?: Schema;
+	allOf?: Array<Schema>;
+	anyOf?: Array<Schema>;
+	oneOf?: Array<Schema>;
+	if?: Schema;
+	then?: Schema;
+	else?: Schema;
+	// numbers
+	maximum?: number;
+	minimum?: number;
+	exclusiveMaximum?: number | boolean;
+	exclusiveMinimum?: number | boolean;
+	multipleOf?: number;
+	divisibleBy?: number;
+	// arrays, basic
+	maxItems?: number;
+	minItems?: number;
+	additionalItems?: Schema;
+	// arrays, complex
+	contains?: Schema;
+	minContains?: number;
+	maxContains?: number;
+	uniqueItems?: boolean;
+	// strings
+	maxLength?: number;
+	minLength?: number;
+	format?: string;
+	pattern?: string;
+	// strings content
+	contentEncoding?: string;
+	contentMediaType?: string;
+	contentSchema?: Schema;
+	// objects
+	properties?: { [id: string]: Schema };
+	maxProperties?: number;
+	minProperties?: number;
+	additionalProperties?: Schema;
+	patternProperties?: { [pattern: string]: Schema };
+	propertyNames?: Schema;
+	dependencies?: { [id: string]: Array<string> | Schema };
+	dependentRequired?: { [id: string]: Array<string> };
+	dependentSchemas?: { [id: string]: Schema };
+	// see-through
+	unevaluatedProperties?: Schema;
+	unevaluatedItems?: Schema;
+	// Unused meta keywords not affecting validation (annotations and comments)
+	// https://json-schema.org/understanding-json-schema/reference/generic.html
+	// https://json-schema.org/draft/2019-09/json-schema-validation.html#rfc.section.9
+	title?: string;
+	description?: string;
+	deprecated?: boolean;
+	readOnly?: boolean;
+	writeOnly?: boolean;
+	examples?: Array<Json>;
+	$comment?: string;
+	// optimization hint and error filtering only, does not affect validation result
+	discriminator?: { propertyName: string; mapping?: { [value: string]: string } };
 	readonly eth?: string;
+	items?: Schema | Schema[];
 };
+export interface Validate {
+	(value: Json): boolean;
+	errors?: ValidationError[];
+}
+export type RawValidationError = ValidationError & {
+	schemaPath: string[];
+};
+
+export type JsonSchema = Schema;

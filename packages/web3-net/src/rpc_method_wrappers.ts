@@ -26,7 +26,7 @@ export async function getId<ReturnFormat extends DataFormat>(
 ) {
 	const response = await netRpcMethods.getId(web3Context.requestManager);
 
-	return format({ eth: 'uint' }, response as unknown as number, returnFormat);
+	return format({ format: 'uint' }, response as unknown as number, returnFormat);
 }
 
 export async function getPeerCount<ReturnFormat extends DataFormat>(
@@ -36,7 +36,7 @@ export async function getPeerCount<ReturnFormat extends DataFormat>(
 	const response = await netRpcMethods.getPeerCount(web3Context.requestManager);
 
 	// Data returned is number in hex format
-	return format({ eth: 'uint' }, response as unknown as number, returnFormat);
+	return format({ format: 'uint' }, response as unknown as number, returnFormat);
 }
 
 export const isListening = async (web3Context: Web3Context<Web3NetAPI>) =>
