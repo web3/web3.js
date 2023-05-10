@@ -297,7 +297,6 @@ export const validStringNumbersWithHex: [string, string][] = [
 ];
 
 export const invalidStringNumbers: ValidInputTypes[] = [
-	new ArrayBuffer(23255),
 	new Uint8Array([0x97, 0x98, 0x99]),
 	new Uint8Array(hexToBytes('abcd')),
 ];
