@@ -49,10 +49,6 @@ export function formatTransaction<
 			data: bytesToHex(formattedTransaction.data),
 			input: bytesToHex(formattedTransaction.input),
 		});
-	else if (!isNullish(formattedTransaction.data)) {
-		formattedTransaction.input = formattedTransaction.data;
-		delete formattedTransaction.data;
-	}
 
 	if (!isNullish(formattedTransaction.gasLimit)) {
 		formattedTransaction.gas = formattedTransaction.gasLimit;
