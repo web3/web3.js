@@ -44,7 +44,7 @@ import {
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
 } from 'web3-errors';
-import { format } from 'web3-utils';
+import { bytesToHex, format } from 'web3-utils';
 import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
@@ -158,20 +158,28 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 		populatedTransaction.value = '0x';
 	}
 
-	if (!isNullish(populatedTransaction.data) && !isNullish(populatedTransaction.input)) {
-		throw new TransactionDataAndInputError({
-			data: populatedTransaction.data,
-			input: populatedTransaction.input,
-		});
-	} else if (!isNullish(populatedTransaction.data)) {
-		populatedTransaction.input = populatedTransaction.data;
-		delete populatedTransaction.data;
-	}
+	if (!isNullish(populatedTransaction.data)) {
+		if (
+			!isNullish(populatedTransaction.input) &&
+			populatedTransaction.data !== populatedTransaction.input
+		)
+			throw new TransactionDataAndInputError({
+				data: bytesToHex(populatedTransaction.data),
+				input: bytesToHex(populatedTransaction.input),
+			});
 
-	if (isNullish(populatedTransaction.input) || populatedTransaction.input === '') {
+		if (!populatedTransaction.data.startsWith('0x'))
+			populatedTransaction.data = `0x${populatedTransaction.data}`;
+
+		populatedTransaction.input = populatedTransaction.data;
+	} else if (!isNullish(populatedTransaction.input)) {
+		if (!populatedTransaction.input.startsWith('0x'))
+			populatedTransaction.input = `0x${populatedTransaction.input}`;
+
+		populatedTransaction.data = populatedTransaction.input;
+	} else {
 		populatedTransaction.input = '0x';
-	} else if (!populatedTransaction.input.startsWith('0x')) {
-		populatedTransaction.input = `0x${populatedTransaction.input}`;
+		populatedTransaction.data = '0x';
 	}
 
 	if (isNullish(populatedTransaction.common)) {
