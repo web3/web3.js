@@ -158,10 +158,10 @@ export const transactionSchema = {
 			format: 'uint',
 		},
 		r: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 		s: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 	},
 };
@@ -228,10 +228,10 @@ export const transactionInfoSchema = {
 			format: 'uint',
 		},
 		r: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 		s: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 	},
 };

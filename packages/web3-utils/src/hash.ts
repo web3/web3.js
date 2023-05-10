@@ -71,8 +71,6 @@ export const sha3 = (data: Bytes): string | undefined => {
 		} else {
 			updatedData = utf8ToBytes(data);
 		}
-	} else if (data instanceof ArrayBuffer || Array.isArray(data)) {
-		updatedData = new Uint8Array(data);
 	} else {
 		updatedData = data;
 	}
