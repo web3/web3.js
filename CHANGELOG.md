@@ -661,7 +661,7 @@ Released with 1.0.0-beta.37 code base.
 ### Security
   - Updated dependencies (#5885)
 
-## [Unreleased]
+## [1.10.0]
 
 ### Fixed
 
@@ -678,3 +678,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
   - Updated dependencies (#6044)
+
+
+## [Unreleased]
