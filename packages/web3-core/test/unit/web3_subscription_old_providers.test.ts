@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ExampleSubscription } from './fixtures/example_subscription';
 import { Web3EventEmitter } from '../../src/web3_event_emitter';
-// jest.mock('./fixtures/example_subscription');
 
 describe('Web3Subscription', () => {
 	let requestManager: any;
@@ -26,7 +25,6 @@ describe('Web3Subscription', () => {
 	beforeEach(() => {
 		provider = new Web3EventEmitter();
 		requestManager = { send: jest.fn(), on: jest.fn(), provider };
-		// (ExampleSubscription as jest.Mock).mockClear();
 	});
 
 	describe('old providers response', () => {
