@@ -205,7 +205,7 @@ export async function getStorageAt<ReturnFormat extends DataFormat>(
 		storageSlotFormatted,
 		blockNumberFormatted,
 	);
-	return format({ format: 'bytes' }, response, returnFormat);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 /**
@@ -226,7 +226,7 @@ export async function getCode<ReturnFormat extends DataFormat>(
 		address,
 		blockNumberFormatted,
 	);
-	return format({ format: 'bytes' }, response, returnFormat);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 /**
@@ -896,7 +896,8 @@ export async function sign<ReturnFormat extends DataFormat>(
 		addressOrIndex,
 		messageFormatted,
 	);
-	return format({ format: 'bytes' }, response, returnFormat);
+
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 /**
@@ -948,7 +949,7 @@ export async function call<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	);
 
-	return format({ format: 'bytes' }, response, returnFormat);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 // TODO - Investigate whether response is padded as 1.x docs suggest
