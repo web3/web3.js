@@ -25,6 +25,7 @@ import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 import { AllGetPastEventsData, getLogsData, getPastEventsData } from '../fixtures/unitTestFixtures';
 import { getSystemTestProvider } from '../fixtures/system_test_utils';
+import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 
 jest.mock('web3-eth');
@@ -120,6 +121,26 @@ describe('Contract', () => {
 		});
 
 		it('should pass the returnDataFormat to `_parseAndSetAddress` and `_parseAndSetJsonInterface`', () => {
+			const contract = new Contract([], '', ETH_DATA_FORMAT);
+
+			// @ts-expect-error run protected method
+			const parseAndSetAddressSpy = jest.spyOn(contract, '_parseAndSetAddress');
+			contract.options.address = '0x6e599da0bff7a6598ac1224e4985430bf16458a4';
+
+			expect(parseAndSetAddressSpy).toHaveBeenCalledWith(
+				'0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+				ETH_DATA_FORMAT,
+			);
+			const parseAndSetJsonInterfaceSpy = jest.spyOn(
+				contract,
+				// @ts-expect-error run protected method
+				'_parseAndSetJsonInterface',
+			);
+			contract.options.jsonInterface = [];
+			expect(parseAndSetJsonInterfaceSpy).toHaveBeenCalledWith([], ETH_DATA_FORMAT);
+		});
+
+		it('should pass the returnDataFormat, as the constructor forth parameter, to `_parseAndSetAddress` and `_parseAndSetJsonInterface`', () => {
 			const contract = new Contract([], '', {}, ETH_DATA_FORMAT);
 
 			// @ts-expect-error run protected method
@@ -139,7 +160,7 @@ describe('Contract', () => {
 			expect(parseAndSetJsonInterfaceSpy).toHaveBeenCalledWith([], ETH_DATA_FORMAT);
 		});
 
-		it('should pass the returnDataFormat, as the fifth parameter, to `_parseAndSetAddress` and `_parseAndSetJsonInterface`', () => {
+		it('should pass the returnDataFormat, as the constructor fifth parameter, to `_parseAndSetAddress` and `_parseAndSetJsonInterface`', () => {
 			const contract = new Contract([], '', {}, {}, ETH_DATA_FORMAT);
 
 			// @ts-expect-error run protected method
@@ -506,6 +527,31 @@ describe('Contract', () => {
 
 			contract.options.jsonInterface = ERC20TokenAbi;
 			expect(contract.options.jsonInterface).toMatchObject(ERC20TokenAbi);
+		});
+
+		it('should be able call a payable method', async () => {
+			const contract = new Contract(
+				erc721Abi,
+				'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
+				{ gas: '123' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
+			);
+
+			const spyEthCall = jest
+				.spyOn(eth, 'call')
+				.mockImplementation(async (_objInstance, _tx) => {
+					expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
+					expect(_tx.input).toBe(
+						'0x095ea7b300000000000000000000000000000000219ab540356cbb839cbe05303d7705fa0000000000000000000000000000000000000000000000000000000000000001',
+					);
+					return '0x00';
+				});
+
+			await expect(
+				contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).call(),
+			).resolves.toBeTruthy();
+
+			spyEthCall.mockClear();
 		});
 
 		it('getPastEvents with filter should work', async () => {
