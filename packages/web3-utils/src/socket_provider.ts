@@ -460,7 +460,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
 				(response as JsonRpcNotification).method.endsWith('_subscription')
 			) {
-				this._eventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', response);
 				return;
 			}
 
@@ -479,7 +479,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithResult(response) ||
 				jsonRpc.isResponseWithError(response)
 			) {
-				this._eventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', response);
 				requestItem.deferredPromise.resolve(response);
 			}
 

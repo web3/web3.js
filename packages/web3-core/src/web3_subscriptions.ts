@@ -28,6 +28,7 @@ import {
 	JsonRpcSubscriptionResult,
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
+	JsonRpcSubscriptionResultOld,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
@@ -44,7 +45,7 @@ export abstract class Web3Subscription<
 	private readonly _lastBlock?: BlockOutput;
 	private readonly _returnFormat: DataFormat;
 	private _id?: HexString;
-	private _messageListener?: (e: Error | undefined, data?: JsonRpcNotification<Log>) => void;
+	private _messageListener?: (data?: JsonRpcNotification<Log>) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
@@ -71,14 +72,14 @@ export abstract class Web3Subscription<
 		});
 
 		const messageListener = (
-			err: Error | undefined,
-			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
+			data?:
+				| JsonRpcSubscriptionResult
+				| JsonRpcSubscriptionResultOld<Log>
+				| JsonRpcNotification<Log>,
 		) => {
-			if ((err as unknown as { data?: { result: unknown } })?.data) {
-				this._processSubscriptionResult(
-					(err as unknown as { data?: { result: unknown } })?.data?.result ??
-						(err as unknown as { data?: { result: unknown } })?.data,
-				);
+			// for old providers
+			if (data?.data) {
+				this._processSubscriptionResult(data?.data?.result ?? data?.data);
 				return;
 			}
 
@@ -89,9 +90,6 @@ export abstract class Web3Subscription<
 				)
 			) {
 				this._processSubscriptionResult(data?.params.result);
-			}
-			if (err) {
-				this._processSubscriptionError(err);
 			}
 		};
 

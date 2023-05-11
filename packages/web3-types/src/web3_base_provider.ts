@@ -54,8 +54,7 @@ export interface SocketRequestItem<
 export type Web3ProviderStatus = 'connecting' | 'connected' | 'disconnected';
 
 export type Web3ProviderEventCallback<T = JsonRpcResult> = (
-	error: Error | ProviderRpcError | undefined,
-	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
+	data?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
 ) => void;
 
 export type Web3Eip1193ProviderEventCallback<T> = (data: T) => void;
