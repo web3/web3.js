@@ -74,7 +74,20 @@ export abstract class Web3Subscription<
 			err: Error | undefined,
 			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
 		) => {
-			if (data && jsonRpc.isResponseWithNotification(data)) {
+			if ((err as unknown as { data?: { result: unknown } })?.data) {
+				this._processSubscriptionResult(
+					(err as unknown as { data?: { result: unknown } })?.data?.result ??
+						(err as unknown as { data?: { result: unknown } })?.data,
+				);
+				return;
+			}
+
+			if (
+				data &&
+				jsonRpc.isResponseWithNotification(
+					data as unknown as JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
+				)
+			) {
 				this._processSubscriptionResult(data?.params.result);
 			}
 			if (err) {
