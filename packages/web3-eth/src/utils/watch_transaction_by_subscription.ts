@@ -62,13 +62,13 @@ export const watchTransactionBySubscription = <
 
 					transactionPromiEvent.emit('confirmation', {
 						confirmations: format(
-							{ eth: 'uint' },
+							{ format: 'uint' },
 							confirmations as Numbers,
 							returnFormat,
 						),
 						receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 						latestBlockHash: format(
-							{ eth: 'bytes32' },
+							{ format: 'bytes32' },
 							newBlockHeader.parentHash as Bytes,
 							returnFormat,
 						),

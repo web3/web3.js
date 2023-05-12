@@ -51,7 +51,7 @@ describe('call', () => {
 				inputBlockNumberFormatted = web3Context.defaultBlock;
 			} else {
 				inputBlockNumberFormatted = format(
-					{ eth: 'uint' },
+					{ format: 'uint' },
 					inputBlockNumber,
 					ETH_DATA_FORMAT,
 				);
@@ -71,7 +71,7 @@ describe('call', () => {
 		async (_, inputParameters) => {
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedFormattedResult = format(
-				{ eth: 'uint' },
+				{ format: 'uint' },
 				mockRpcResponse,
 				expectedReturnFormat,
 			);

@@ -66,10 +66,10 @@ export const watchTransactionByPolling = <
 				confirmations += 1;
 
 				transactionPromiEvent.emit('confirmation', {
-					confirmations: format({ eth: 'uint' }, confirmations, returnFormat),
+					confirmations: format({ format: 'uint' }, confirmations, returnFormat),
 					receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 					latestBlockHash: format(
-						{ eth: 'bytes32' },
+						{ format: 'bytes32' },
 						nextBlock.hash as Bytes,
 						returnFormat,
 					),
