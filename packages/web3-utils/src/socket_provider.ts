@@ -35,6 +35,7 @@ import {
 	Web3APISpec,
 	Web3Eip1193ProviderEventCallback,
 	Web3ProviderEventCallback,
+	Web3ProviderMessageEventCallback,
 	Web3ProviderStatus,
 } from 'web3-types';
 import {
@@ -213,7 +214,9 @@ export abstract class SocketProvider<
 	public on(type: 'accountsChanged', listener: Web3Eip1193ProviderEventCallback<string[]>): void;
 	public on<T = JsonRpcResult>(
 		type: 'message',
-		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+		listener:
+			| Web3Eip1193ProviderEventCallback<ProviderMessage>
+			| Web3ProviderMessageEventCallback<T>,
 	): void;
 	public on<T = JsonRpcResult>(
 		type: string,
