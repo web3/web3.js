@@ -37,11 +37,11 @@ import {
 	getSystemTestProviderUrl,
 } from '../fixtures/system_tests_utils';
 
-import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
+import { ENSRegistryAbi } from '../fixtures/ens/abi/ENSRegistry';
 import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
 import { NameWrapperAbi } from '../fixtures/ens/abi/NameWrapper';
 import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
-import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
+import { PublicResolverAbi } from '../fixtures/ens/abi/PublicResolver';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
 describeIf(isSocket)('ens events', () => {
@@ -163,7 +163,7 @@ describeIf(isSocket)('ens events', () => {
 				resolve();
 			});
 
-			await ens.setApprovalForAll(accountOne, true, sendOptions);
+			await registry.methods.setApprovalForAll(accountOne, true).send(sendOptions);
 		});
 	});
 
@@ -181,7 +181,7 @@ describeIf(isSocket)('ens events', () => {
 				resolve();
 			});
 
-			await ens.setTTL(web3jsName, ttl, sendOptions);
+			await registry.methods.setTTL(web3jsName, ttl).send(sendOptions);
 		});
 	});
 
@@ -196,12 +196,9 @@ describeIf(isSocket)('ens events', () => {
 				resolve();
 			});
 
-			await ens.setResolver(
-				domain,
-				resolver.options.address as string,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
+			await registry.methods
+				.setResolver(domain, resolver.options.address as string)
+				.send(sendOptions);
 		});
 	});
 });
