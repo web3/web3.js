@@ -17,8 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 import { Web3Validator } from '../../src/web3_validator';
 import { Web3ValidatorError } from '../../src/errors';
-import * as keywords from '../../src/keywords';
-import * as formats from '../../src/formats';
 import { validNotBaseTypeData } from '../fixtures/validation';
 
 describe('web3-validator', () => {
@@ -31,17 +29,6 @@ describe('web3-validator', () => {
 
 		it('should initialize the validator', () => {
 			expect(validator['_validator']).toBeDefined();
-		});
-
-		it.each(Object.keys(keywords))('should have keyword "%s"', keyword => {
-			expect(validator['_validator'].getKeyword(keyword)).toBeDefined();
-		});
-
-		it.each(Object.keys(formats))('should have format "%s"', format => {
-			expect(validator['_validator'].formats[format]).toEqual(
-				// eslint-disable-next-line import/namespace
-				formats[format as keyof typeof formats],
-			);
 		});
 
 		describe('validate', () => {
@@ -77,10 +64,12 @@ describe('web3-validator', () => {
 				expect(validator.validate(['uint'], [-1], { silent: true })).toEqual([
 					{
 						instancePath: '/0',
-						keyword: 'eth',
+						keyword: 'data["0"]',
+						// keyword: 'eth',
 						message: 'must pass "uint" validation',
 						params: { value: -1 },
-						schemaPath: '#/items/0/eth',
+						schemaPath: '#',
+						// schemaPath: '#/items/0/eth',
 					},
 				]);
 			});
@@ -130,7 +119,7 @@ describe('web3-validator', () => {
 					validator.validateJSONSchema(
 						{
 							type: 'array',
-							items: [{ $id: 'a', eth: 'uint' }],
+							items: [{ $id: 'a', required: true, format: 'uint' }],
 							minItems: 1,
 							maxItems: 1,
 						},
@@ -143,7 +132,7 @@ describe('web3-validator', () => {
 					validator.validateJSONSchema(
 						{
 							type: 'array',
-							items: [{ $id: 'a', eth: 'uint' }],
+							items: [{ $id: 'a', format: 'uint' }],
 							minItems: 1,
 							maxItems: 1,
 						},

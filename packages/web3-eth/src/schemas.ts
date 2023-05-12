@@ -18,12 +18,12 @@ export const accessListItemSchema = {
 	type: 'object',
 	properties: {
 		address: {
-			eth: 'address',
+			format: 'address',
 		},
 		storageKeys: {
 			type: 'array',
 			items: {
-				eth: 'bytes32',
+				format: 'bytes32',
 			},
 		},
 	},
@@ -78,13 +78,13 @@ export const customChainSchema = {
 	type: 'object',
 	properties: {
 		name: {
-			eth: 'string',
+			format: 'string',
 		},
 		networkId: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		chainId: {
-			eth: 'uint',
+			format: 'uint',
 		},
 	},
 };
@@ -93,51 +93,51 @@ export const transactionSchema = {
 	type: 'object',
 	properties: {
 		from: {
-			eth: 'address',
+			format: 'address',
 		},
 		to: {
-			oneOf: [{ eth: 'address' }, { type: 'null' }],
+			oneOf: [{ format: 'address' }, { type: 'null' }],
 		},
 		value: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gas: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasPrice: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		effectiveGasPrice: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		type: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		maxFeePerGas: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		maxPriorityFeePerGas: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		accessList: {
 			...accessListSchema,
 		},
 		data: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		input: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		nonce: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		chain: { ...chainSchema },
 		hardfork: { ...hardforkSchema },
 		chainId: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		networkId: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		common: {
 			type: 'object',
@@ -152,16 +152,16 @@ export const transactionSchema = {
 			},
 		},
 		gasLimit: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		v: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		r: {
-			eth: 'bytes',
+			format: 'bytes32',
 		},
 		s: {
-			eth: 'bytes',
+			format: 'bytes32',
 		},
 	},
 };
@@ -171,67 +171,67 @@ export const transactionInfoSchema = {
 	properties: {
 		...transactionSchema.properties,
 		blockHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		blockNumber: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		hash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		transactionIndex: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		from: {
-			eth: 'address',
+			format: 'address',
 		},
 		to: {
-			oneOf: [{ eth: 'address' }, { type: 'null' }],
+			oneOf: [{ format: 'address' }, { type: 'null' }],
 		},
 		value: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gas: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasPrice: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		effectiveGasPrice: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		type: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		maxFeePerGas: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		maxPriorityFeePerGas: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		accessList: {
 			...accessListSchema,
 		},
 		data: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		input: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		nonce: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasLimit: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		v: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		r: {
-			eth: 'bytes',
+			format: 'bytes32',
 		},
 		s: {
-			eth: 'bytes',
+			format: 'bytes32',
 		},
 	},
 };
@@ -240,58 +240,58 @@ export const blockSchema = {
 	type: 'object',
 	properties: {
 		parentHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		sha3Uncles: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		miner: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		stateRoot: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		transactionsRoot: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		receiptsRoot: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		logsBloom: {
-			eth: 'bytes256',
+			format: 'bytes256',
 		},
 		difficulty: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		number: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasLimit: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasUsed: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		timestamp: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		extraData: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		mixHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		nonce: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		totalDifficulty: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		baseFeePerGas: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		size: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		transactions: {
 			oneOf: [
@@ -304,7 +304,7 @@ export const blockSchema = {
 				{
 					type: 'array',
 					items: {
-						eth: 'bytes32',
+						format: 'bytes32',
 					},
 				},
 			],
@@ -312,11 +312,11 @@ export const blockSchema = {
 		uncles: {
 			type: 'array',
 			items: {
-				eth: 'bytes32',
+				format: 'bytes32',
 			},
 		},
 		hash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 	},
 };
@@ -325,46 +325,46 @@ export const blockHeaderSchema = {
 	type: 'object',
 	properties: {
 		parentHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		receiptRoot: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		miner: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		stateRoot: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		transactionsRoot: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		logsBloom: {
-			eth: 'bytes256',
+			format: 'bytes256',
 		},
 		difficulty: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		number: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasLimit: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasUsed: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		timestamp: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		extraData: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		nonce: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		sha3Uncles: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 	},
 };
@@ -373,33 +373,33 @@ export const logSchema = {
 	type: 'object',
 	properties: {
 		removed: {
-			eth: 'bool',
+			format: 'bool',
 		},
 		logIndex: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		transactionIndex: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		transactionHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		blockHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		blockNumber: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		address: {
-			eth: 'address',
+			format: 'address',
 		},
 		data: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		topics: {
 			type: 'array',
 			items: {
-				eth: 'bytes32',
+				format: 'bytes32',
 			},
 		},
 	},
@@ -408,19 +408,19 @@ export const syncSchema = {
 	type: 'object',
 	properties: {
 		startingBlock: {
-			eth: 'string',
+			format: 'string',
 		},
 		currentBlock: {
-			eth: 'string',
+			format: 'string',
 		},
 		highestBlock: {
-			eth: 'string',
+			format: 'string',
 		},
 		knownStates: {
-			eth: 'string',
+			format: 'string',
 		},
 		pulledStates: {
-			eth: 'string',
+			format: 'string',
 		},
 	},
 };
@@ -429,34 +429,34 @@ export const transactionReceiptSchema = {
 	type: 'object',
 	properties: {
 		transactionHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		transactionIndex: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		blockHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		blockNumber: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		from: {
-			eth: 'address',
+			format: 'address',
 		},
 		to: {
-			eth: 'address',
+			format: 'address',
 		},
 		cumulativeGasUsed: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		gasUsed: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		effectiveGasPrice: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		contractAddress: {
-			eth: 'address',
+			format: 'address',
 		},
 		logs: {
 			type: 'array',
@@ -465,16 +465,16 @@ export const transactionReceiptSchema = {
 			},
 		},
 		logsBloom: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		root: {
-			eth: 'bytes',
+			format: 'bytes',
 		},
 		status: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		type: {
-			eth: 'uint',
+			format: 'uint',
 		},
 	},
 };
@@ -483,12 +483,12 @@ export const feeHistorySchema = {
 	type: 'object',
 	properties: {
 		oldestBlock: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		baseFeePerGas: {
 			type: 'array',
 			items: {
-				eth: 'uint',
+				format: 'uint',
 			},
 		},
 		reward: {
@@ -496,7 +496,7 @@ export const feeHistorySchema = {
 			items: {
 				type: 'array',
 				items: {
-					eth: 'uint',
+					format: 'uint',
 				},
 			},
 		},
@@ -513,15 +513,15 @@ export const storageProofSchema = {
 	type: 'object',
 	properties: {
 		key: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		value: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		proof: {
 			type: 'array',
 			items: {
-				eth: 'bytes32',
+				format: 'bytes32',
 			},
 		},
 	},
@@ -531,21 +531,21 @@ export const accountSchema = {
 	type: 'object',
 	properties: {
 		balance: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		codeHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		nonce: {
-			eth: 'uint',
+			format: 'uint',
 		},
 		storageHash: {
-			eth: 'bytes32',
+			format: 'bytes32',
 		},
 		accountProof: {
 			type: 'array',
 			items: {
-				eth: 'bytes32',
+				format: 'bytes32',
 			},
 		},
 		storageProof: {

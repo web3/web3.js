@@ -71,7 +71,7 @@ export const getTransactionFromOrToAttr = (
 		if (!isHexStrict(transaction[attr] as string) && isNumber(transaction[attr] as Numbers)) {
 			if (web3Context.wallet) {
 				const account = web3Context.wallet.get(
-					format({ eth: 'uint' }, transaction[attr] as Numbers, NUMBER_DATA_FORMAT),
+					format({ format: 'uint' }, transaction[attr] as Numbers, NUMBER_DATA_FORMAT),
 				);
 
 				if (!isNullish(account)) {
@@ -117,7 +117,7 @@ export const getTransactionType = (
 
 	if (!isNullish(inferredType)) return inferredType;
 	if (!isNullish(web3Context.defaultTransactionType))
-		return format({ eth: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
+		return format({ format: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
 
 	return undefined;
 };

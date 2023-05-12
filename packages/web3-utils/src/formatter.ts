@@ -19,6 +19,8 @@ import { Bytes, DataFormat, FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-types
 import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
 import { bytesToUint8Array, bytesToHex, numberToHex, toBigInt } from './converters';
 import { mergeDeep } from './objects';
+import { padLeft } from './string_manipulation';
+import { uint8ArrayConcat } from './uint8array';
 
 const { parseBaseType } = utils;
 
@@ -34,7 +36,7 @@ export const isDataFormat = (dataFormat: unknown): dataFormat is DataFormat =>
  *
  * @param schema - represents a JSON schema, which is an object that describes the structure of JSON data
  * @param dataPath - represents an array of strings that specifies the path to the data within the JSON schema
- * @param oneOfPath - epresents an optional array of two-element tuples that specifies the "oneOf" option to choose, if the schema has oneOf and the data path can match multiple subschemas
+ * @param oneOfPath - represents an optional array of two-element tuples that specifies the "oneOf" option to choose, if the schema has oneOf and the data path can match multiple subschemas
  * @returns the JSON schema that matches the data path
  *
  */
@@ -74,7 +76,7 @@ const findSchemaByDataPath = (
 		} else if (result.items && isObject(result.items)) {
 			result = result.items;
 		} else if (result.items && Array.isArray(result.items)) {
-			result = (result.items as JsonSchema[])[parseInt(dataPart, 10)];
+			result = result.items[parseInt(dataPart, 10)];
 		}
 
 		if (result && dataPart) previousDataPath = dataPart;
@@ -91,8 +93,7 @@ const findSchemaByDataPath = (
  */
 export const convertScalarValue = (value: unknown, ethType: string, format: DataFormat) => {
 	try {
-		const { baseType } = parseBaseType(ethType);
-
+		const { baseType, baseTypeSize } = parseBaseType(ethType);
 		if (baseType === 'int' || baseType === 'uint') {
 			switch (format.number) {
 				case FMT_NUMBER.NUMBER:
@@ -107,13 +108,24 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 					throw new FormatterError(`Invalid format: ${String(format.number)}`);
 			}
 		}
-
 		if (baseType === 'bytes') {
+			let paddedValue;
+			if (baseTypeSize) {
+				if (typeof value === 'string') paddedValue = padLeft(value, baseTypeSize * 2);
+				else if (value instanceof Uint8Array) {
+					paddedValue = uint8ArrayConcat(
+						new Uint8Array(baseTypeSize - value.length),
+						value,
+					);
+				}
+			} else {
+				paddedValue = value;
+			}
 			switch (format.bytes) {
 				case FMT_BYTES.HEX:
-					return bytesToHex(bytesToUint8Array(value as Bytes));
+					return bytesToHex(bytesToUint8Array(paddedValue as Bytes));
 				case FMT_BYTES.UINT8ARRAY:
-					return bytesToUint8Array(value as Bytes);
+					return bytesToUint8Array(paddedValue as Bytes);
 				default:
 					throw new FormatterError(`Invalid format: ${String(format.bytes)}`);
 			}
@@ -144,7 +156,7 @@ export const convert = (
 ) => {
 	// If it's a scalar value
 	if (!isObject(data) && !Array.isArray(data)) {
-		return convertScalarValue(data, schema?.eth as string, format);
+		return convertScalarValue(data, schema?.format as string, format);
 	}
 
 	const object = data as Record<string, unknown>;
@@ -206,12 +218,12 @@ export const convert = (
 			}
 
 			// If schema for array items is a single type
-			if (isObject(_schemaProp.items) && !isNullish(_schemaProp.items.eth)) {
+			if (isObject(_schemaProp.items) && !isNullish(_schemaProp.items.format)) {
 				for (let i = 0; i < value.length; i += 1) {
 					(object[key] as unknown[])[i] = convertScalarValue(
 						value[i],
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-						_schemaProp?.items?.eth as string,
+						_schemaProp?.items?.format,
 						format,
 					);
 				}
@@ -221,10 +233,7 @@ export const convert = (
 			}
 
 			// If schema for array items is an object
-			if (
-				!Array.isArray(_schemaProp?.items) &&
-				(_schemaProp?.items as JsonSchema).type === 'object'
-			) {
+			if (!Array.isArray(_schemaProp?.items) && _schemaProp?.items?.type === 'object') {
 				for (const arrObject of value) {
 					convert(
 						arrObject as Record<string, unknown> | unknown[],
@@ -244,7 +253,7 @@ export const convert = (
 				for (let i = 0; i < value.length; i += 1) {
 					(object[key] as unknown[])[i] = convertScalarValue(
 						value[i],
-						(_schemaProp.items as JsonSchema[])[i].eth as string,
+						_schemaProp.items[i].format as string,
 						format,
 					);
 				}
@@ -254,7 +263,7 @@ export const convert = (
 			}
 		}
 
-		object[key] = convertScalarValue(value, schemaProp.eth as string, format);
+		object[key] = convertScalarValue(value, schemaProp.format as string, format);
 
 		dataPath.pop();
 	}
@@ -283,7 +292,7 @@ export const format = <
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const jsonSchema: JsonSchema = isObject(schema) ? schema : utils.ethAbiToJsonSchema(schema);
 
-	if (!jsonSchema.properties && !jsonSchema.items && !jsonSchema.eth) {
+	if (!jsonSchema.properties && !jsonSchema.items && !jsonSchema.format) {
 		throw new FormatterError('Invalid json schema for formatting');
 	}
 

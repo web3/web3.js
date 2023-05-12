@@ -402,7 +402,6 @@ describe('Web3Eth.sendTransaction', () => {
 					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
 			).rejects.toMatchObject(expectedThrownError);
 		});
-
 		it('Should throw TransactionRevertInstructionError because insufficient funds', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,

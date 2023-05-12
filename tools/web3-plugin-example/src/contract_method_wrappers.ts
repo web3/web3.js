@@ -52,7 +52,7 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 		returnFormat: ReturnFormat,
 	) {
 		return format(
-			{ eth: 'unit' },
+			{ format: 'unit' },
 			await this._contract.methods.balanceOf(address).call(),
 			returnFormat,
 		);
