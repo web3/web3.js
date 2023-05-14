@@ -1,3 +1,8 @@
+---
+sidebar_position: 1
+sidebar_label: 'Deploying and Interacting with Smart Contracts'
+---
+
 # Deploying and Interacting with Smart Contracts
 
 ## Introduction
@@ -68,14 +73,19 @@ This simple smart contract defines a `myNumber` variable that can be set by call
 
 ## Step 4: Compile the Solidity code using the Solidity Compiler and get its ABI and Bytecode.
 
-> 📝 Alternatively, you can use something like `npm i solc && npx solcjs MyContract.sol --bin --abi`. And then rename the files to `MyContractBytecode.bin` and `MyContractAbi.json`, in order to keep them the same as they will be used later in this tutorial.
-> More on solc-js is at https://github.com/ethereum/solc-js
+:::tip
+📝 Alternatively, you can use something like `npm i solc && npx solcjs MyContract.sol --bin --abi`. And then rename the files to `MyContractBytecode.bin` and `MyContractAbi.json`, in order to keep them the same as they will be used later in this tutorial.
+More on solc-js is at https://github.com/ethereum/solc-js
+:::
 
 In this step, we will use the Solidity Compiler (solc) to compile the Solidity code and generate the compiled code.
 
 First, install the `solc` package using npm.
 
-> 📝 Specify a version for the compiler that is compatible with the version you specified in the .sol file above (with `pragma solidity ^0.8.0;`):
+:::note
+📝 Specify a version for the compiler that is compatible with the version you specified in the .sol file above (with `pragma solidity ^0.8.0;`):
+:::
+c
 
 ```
 npm install solc@0.8.0
@@ -149,8 +159,10 @@ node compile.js
 
 If everything is working correctly, you should see both the Contract Bytecode and the Contract ABI logged to the console.
 
-> 📝 There are couple of other ways to get the bytecode and the ABI like using Truffle development framework and running `truffle compile` (https://trufflesuite.com/docs/truffle/quickstart/#compile).
-> Another way is to use Remix and check the _Compilation Details_ after compiling the smart contract (https://remix-ide.readthedocs.io/en/latest/run.html#using-the-abi-with-ataddress)
+:::tip
+📝 There are couple of other ways to get the bytecode and the ABI like using Truffle development framework and running `truffle compile` (https://trufflesuite.com/docs/truffle/quickstart/#compile).
+Another way is to use Remix and check the _Compilation Details_ after compiling the smart contract (https://remix-ide.readthedocs.io/en/latest/run.html#using-the-abi-with-ataddress)
+:::
 
 ## Step 5: Set up web3.js and connect to the Ganache network
 
