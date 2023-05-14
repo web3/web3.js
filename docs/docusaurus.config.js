@@ -128,6 +128,12 @@ const config = {
 						position: 'left',
 					},
 					{
+						to: 'docs/tutorials/deploying_and_interacting_with_smart_contracts',
+						activeBasePath: 'docs/tutorials',
+						label: 'Tutorials',
+						position: 'left',
+					},
+					{
 						to: 'api', // 'api' is the 'out' directory
 						label: 'API',
 						position: 'left',
