@@ -81,6 +81,7 @@ export type AbiParameter = {
 	readonly components?: ReadonlyArray<AbiParameter>;
 	readonly arrayLength?: number;
 	readonly arrayChildren?: ReadonlyArray<AbiParameter>;
+	readonly internalType?: string;
 };
 
 type FragmentTypes = 'constructor' | 'event' | 'function' | 'fallback';
