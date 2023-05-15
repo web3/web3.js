@@ -463,6 +463,7 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 				value: '0x1',
 				from: fromAcc.address,
 				gas: '300000',
+				type: '0x2', // TODO should be fixed in https://github.com/web3/web3.js/issues/6065 and removed here
 			}),
 		);
 	}

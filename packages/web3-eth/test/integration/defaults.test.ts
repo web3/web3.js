@@ -341,6 +341,7 @@ describe('defaults', () => {
 				to,
 				value,
 				from,
+				type: '0x1', // TODO should be fixed in https://github.com/web3/web3.js/issues/6065 and removed here
 			});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {

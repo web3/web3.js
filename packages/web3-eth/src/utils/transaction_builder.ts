@@ -51,6 +51,8 @@ import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
 import { detectTransactionType } from './detect_transaction_type';
 import { transactionSchema } from '../schemas';
 import { InternalTransaction } from '../types';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 
 export const getTransactionFromOrToAttr = (
 	attr: 'from' | 'to',
@@ -122,13 +124,16 @@ export const getTransactionType = (
 
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
-export async function defaultTransactionBuilder<ReturnType = Transaction>(options: {
-	transaction: Transaction;
-	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
-	privateKey?: HexString | Uint8Array;
-}): Promise<ReturnType> {
+export async function defaultTransactionBuilder<ReturnType = Transaction>(
+	options: {
+		transaction: Transaction;
+		web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
+		privateKey?: HexString | Uint8Array;
+	},
+	fillGasPrice = false,
+): Promise<ReturnType> {
 	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
-	const populatedTransaction = format(
+	let populatedTransaction = format(
 		transactionSchema,
 		options.transaction,
 		DEFAULT_RETURN_FORMAT,
@@ -218,16 +223,32 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 		populatedTransaction.accessList = [];
 	}
 
+	if (fillGasPrice)
+		populatedTransaction = {
+			...populatedTransaction,
+			...(await getTransactionGasPricing(
+				populatedTransaction,
+				options.web3Context,
+				ETH_DATA_FORMAT,
+			)),
+		};
+
 	return populatedTransaction as ReturnType;
 }
 
-export const transactionBuilder = async <ReturnType = Transaction>(options: {
-	transaction: Transaction;
-	web3Context: Web3Context<EthExecutionAPI>;
-	privateKey?: HexString | Uint8Array;
+export const transactionBuilder = async <ReturnType = Transaction>(
+	options: {
+		transaction: Transaction;
+		web3Context: Web3Context<EthExecutionAPI>;
+		privateKey?: HexString | Uint8Array;
+	},
+	fillGasPrice = false,
 	// eslint-disable-next-line @typescript-eslint/require-await
-}) =>
-	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
-		...options,
-		transaction: options.transaction,
-	}) as unknown as ReturnType;
+) =>
+	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)(
+		{
+			...options,
+			transaction: options.transaction,
+		},
+		fillGasPrice,
+	) as unknown as ReturnType;

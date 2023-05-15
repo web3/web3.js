@@ -368,13 +368,14 @@ export class Web3Context<
 }
 
 // To avoid cycle dependency declare this type in this file
-export type TransactionBuilder<API extends Web3APISpec = unknown> = <
-	ReturnType = Transaction,
->(options: {
-	transaction: Transaction;
-	web3Context: Web3Context<API>;
-	privateKey?: HexString | Uint8Array;
-}) => Promise<ReturnType>;
+export type TransactionBuilder<API extends Web3APISpec = unknown> = <ReturnType = Transaction>(
+	options: {
+		transaction: Transaction;
+		web3Context: Web3Context<API>;
+		privateKey?: HexString | Uint8Array;
+	},
+	fillGasPrice: boolean,
+) => Promise<ReturnType>;
 
 /**
  * Extend this class when creating a plugin that either doesn't require {@link EthExecutionAPI},
