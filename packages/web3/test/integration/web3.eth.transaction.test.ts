@@ -98,7 +98,7 @@ describe('signTransaction', () => {
 								expect(payload.params[0]).toBe(txObj.signedBerlin); // validate transaction for Berlin HF
 							}
 							response.result =
-								'0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331';
+								'0x895ebb29d30e0afa891a5ca3a2687e073bd2c7ab544117ac386c8d8ff3ad583b';
 							break;
 
 						default:
@@ -115,7 +115,6 @@ describe('signTransaction', () => {
 				ignoreGasPricing: true,
 				checkRevertBeforeSending: false,
 			});
-
 			expect(res).toBeDefined();
 		},
 	);
