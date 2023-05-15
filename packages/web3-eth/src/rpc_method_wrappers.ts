@@ -71,6 +71,7 @@ import {
 	transactionReceiptSchema,
 	transactionInfoSchema,
 	accessListResultSchema,
+	SignatureObjectSchema,
 } from './schemas';
 import {
 	SendSignedTransactionEvents,
@@ -880,8 +881,9 @@ export async function sign<ReturnFormat extends DataFormat>(
 
 	if (web3Context.wallet?.get(addressOrIndex)) {
 		const wallet = web3Context.wallet.get(addressOrIndex) as Web3BaseWalletAccount;
+		const signed = wallet.sign(messageFormatted);
 
-		return wallet.sign(messageFormatted);
+		return format(SignatureObjectSchema, signed, returnFormat);
 	}
 
 	if (typeof addressOrIndex === 'number') {
