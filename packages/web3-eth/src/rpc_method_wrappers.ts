@@ -878,11 +878,9 @@ export async function sign<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const messageFormatted = format({ format: 'bytes' }, message, DEFAULT_RETURN_FORMAT);
-
 	if (web3Context.wallet?.get(addressOrIndex)) {
 		const wallet = web3Context.wallet.get(addressOrIndex) as Web3BaseWalletAccount;
 		const signed = wallet.sign(messageFormatted);
-
 		return format(SignatureObjectSchema, signed, returnFormat);
 	}
 

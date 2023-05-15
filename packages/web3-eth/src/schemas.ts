@@ -492,7 +492,7 @@ export const SignatureObjectSchema = {
 			format: 'bytes32',
 		},
 		v: {
-			format: 'bytes32',
+			format: 'bytes',
 		},
 		message: {
 			format: 'bytes',
