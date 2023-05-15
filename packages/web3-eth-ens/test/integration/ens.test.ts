@@ -63,8 +63,6 @@ describe('ens', () => {
 	const fullDomain = `${subdomain}.${domain}`;
 	const web3jsName = 'web3js.test';
 
-	const ttl = 3600;
-
 	let accounts: string[];
 	let ens: ENS;
 	let defaultAccount: string;
