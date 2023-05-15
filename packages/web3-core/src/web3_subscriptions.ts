@@ -77,7 +77,7 @@ export abstract class Web3Subscription<
 				| JsonRpcSubscriptionResultOld<Log>
 				| JsonRpcNotification<Log>,
 		) => {
-			// for old providers
+			// for EIP-1193 provider
 			if (data?.data) {
 				this._processSubscriptionResult(data?.data?.result ?? data?.data);
 				return;
@@ -93,7 +93,12 @@ export abstract class Web3Subscription<
 			}
 		};
 
-		(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
+		// @ts-expect-error subscribe using old providers
+		if ((typeof this._requestManager.provider as Web3BaseProvider).request === 'function') {
+			(this._requestManager.provider as Web3BaseProvider).on<Log>('data', messageListener);
+		} else {
+			(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
+		}
 
 		this._messageListener = messageListener;
 	}

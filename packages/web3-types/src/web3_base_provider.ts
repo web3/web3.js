@@ -174,6 +174,13 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 			| Web3Eip1193ProviderEventCallback<ProviderMessage>
 			| Web3ProviderMessageEventCallback<T>,
 	): void;
+	// for old providers
+	public abstract on<T = JsonRpcResult>(
+		type: 'data' | string,
+		listener:
+			| Web3Eip1193ProviderEventCallback<ProviderMessage>
+			| Web3ProviderMessageEventCallback<T>,
+	): void;
 	public abstract on(
 		type: 'connect',
 		listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>,
