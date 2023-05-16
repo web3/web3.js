@@ -7,7 +7,7 @@ sidebar_label: 'Deploying and Interacting with Smart Contracts'
 
 ## Introduction
 
-In this tutorial, we will walk through the process of deploying a smart contract to the Ethereum network, generating the ABI, and interacting with the smart contract using web3.js version 4.x. We will cover the basic concepts of Ethereum, Solidity, and web3.js and provide step-by-step instructions for deploying a simple smart contract to the Ganache network.
+In this tutorial, we will walk through the process of deploying a smart contract to the Ethereum network, generating the ABI, and interacting with the smart contract using web3.js version 4.x. We will cover the basic concepts of Ethereum, Solidity, and web3.js and provide step-by-step instructions for deploying a simple smart contract to a test network using Ganache.
 
 ## Overview
 
