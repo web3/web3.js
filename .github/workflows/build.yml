@@ -43,7 +43,6 @@ jobs:
                   name: web3-${{ matrix.node }}.js.tar.gz
                   path: /tmp
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-
           -   run: yarn build:esm
           -   run: yarn build:types
           -   run: yarn lint
