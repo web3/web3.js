@@ -85,7 +85,7 @@ const config = {
 			},
 		],
 	],
-
+	themes: ['@easyops-cn/docusaurus-search-local'],
 	presets: [
 		[
 			'classic',
