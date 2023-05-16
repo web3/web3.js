@@ -28,6 +28,8 @@ import {
 	JsonRpcSubscriptionResult,
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
+	JsonRpcSubscriptionResultOld,
+	EIP1193Provider,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
@@ -44,7 +46,7 @@ export abstract class Web3Subscription<
 	private readonly _lastBlock?: BlockOutput;
 	private readonly _returnFormat: DataFormat;
 	private _id?: HexString;
-	private _messageListener?: (e: Error | undefined, data?: JsonRpcNotification<Log>) => void;
+	private _messageListener?: (data?: JsonRpcNotification<Log>) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
@@ -71,18 +73,32 @@ export abstract class Web3Subscription<
 		});
 
 		const messageListener = (
-			err: Error | undefined,
-			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
+			data?:
+				| JsonRpcSubscriptionResult
+				| JsonRpcSubscriptionResultOld<Log>
+				| JsonRpcNotification<Log>,
 		) => {
-			if (data && jsonRpc.isResponseWithNotification(data)) {
-				this._processSubscriptionResult(data?.params.result);
+			// for EIP-1193 provider
+			if (data?.data) {
+				this._processSubscriptionResult(data?.data?.result ?? data?.data);
+				return;
 			}
-			if (err) {
-				this._processSubscriptionError(err);
+
+			if (
+				data &&
+				jsonRpc.isResponseWithNotification(
+					data as unknown as JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
+				)
+			) {
+				this._processSubscriptionResult(data?.params.result);
 			}
 		};
 
-		(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
+		if (typeof (this._requestManager.provider as EIP1193Provider<API>).request === 'function') {
+			(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
+		} else {
+			(this._requestManager.provider as Web3BaseProvider).on<Log>('data', messageListener);
+		}
 
 		this._messageListener = messageListener;
 	}
