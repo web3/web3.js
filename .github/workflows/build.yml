@@ -30,8 +30,8 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
-  build-cjs-types:
-      name: Build ESM and types
+  build-cjs-types-lint:
+      name: Build ESM & types + Lint
       needs: build
       runs-on: ubuntu-latest
       strategy:
@@ -46,18 +46,7 @@ jobs:
 
           -   run: yarn build:esm
           -   run: yarn build:types
-
-  lint:
-    name: lint
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-14.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
-      - run: yarn lint
+          -   run: yarn lint
 
   build-web:
     name: Build Web
