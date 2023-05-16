@@ -14,7 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { hexToBytes } from 'web3-utils';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { hexToBytes, numberToHex, hexToNumber, toBN } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, LogAPI } from '../../../src';
 import {
@@ -54,11 +55,13 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 
 	it.each(
 		toAllVariants<{
-			format: string;
+			byteFormat: string;
+			numberFormat: string;
 		}>({
-			format: Object.values(FMT_BYTES),
+			byteFormat: Object.values(FMT_BYTES),
+			numberFormat: Object.values(FMT_NUMBER),
 		}),
-	)('should getPastLogs for deployed contract', async ({ format }) => {
+	)('should getPastLogs for deployed contract', async ({ byteFormat, numberFormat }) => {
 		const result = (
 			await web3.eth.getPastLogs(
 				{
@@ -67,13 +70,67 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 					address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
 				},
 				{
-					number: FMT_NUMBER.HEX,
-					bytes: format as FMT_BYTES,
+					number: numberFormat as FMT_NUMBER,
+					bytes: byteFormat as FMT_BYTES,
 				},
 			)
 		)[0];
 
-		switch (format) {
+		switch (numberFormat) {
+			case 'NUMBER_STR':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(
+					hexToNumber(numberToHex(expectedLog.blockNumber as string).toString()),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLog.logIndex as string).toString()),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLog.blockNumber as string).toString()),
+				);
+				break;
+			case 'NUMBER_BIGINT':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(toBN(expectedLog.blockNumber as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(toBN(expectedLog.logIndex as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					toBN(expectedLog.blockNumber as string),
+				);
+				break;
+			case 'NUMBER_NUMBER':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(
+					hexToNumber(numberToHex(expectedLog.blockNumber as string)),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLog.logIndex as string)),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLog.blockNumber as string)),
+				);
+				break;
+			case 'NUMBER_HEX':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(
+					numberToHex(expectedLog.blockNumber as string),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(numberToHex(expectedLog.logIndex as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					numberToHex(expectedLog.blockNumber as string),
+				);
+				break;
+			default:
+				throw new Error('Unhandled format');
+		}
+		switch (byteFormat) {
 			case 'BYTES_HEX':
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result).toStrictEqual(expectedLog);
