@@ -28,7 +28,7 @@ describe('Web3Subscription', () => {
 		provider = new Web3EventEmitter();
 		eipProvider = new Web3EventEmitter();
 		// @ts-expect-error add to test eip providers
-		eipProvider.request = async () => true;
+		eipProvider.request = jest.fn();
 		requestManager = { send: jest.fn(), on: jest.fn(), provider };
 		eipRequestManager = { send: jest.fn(), on: jest.fn(), provider: eipProvider };
 	});
