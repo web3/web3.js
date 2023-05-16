@@ -35,6 +35,7 @@ import {
 	Web3APISpec,
 	Web3Eip1193ProviderEventCallback,
 	Web3ProviderEventCallback,
+	Web3ProviderMessageEventCallback,
 	Web3ProviderStatus,
 } from 'web3-types';
 import {
@@ -213,7 +214,9 @@ export abstract class SocketProvider<
 	public on(type: 'accountsChanged', listener: Web3Eip1193ProviderEventCallback<string[]>): void;
 	public on<T = JsonRpcResult>(
 		type: 'message',
-		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+		listener:
+			| Web3Eip1193ProviderEventCallback<ProviderMessage>
+			| Web3ProviderMessageEventCallback<T>,
 	): void;
 	public on<T = JsonRpcResult>(
 		type: string,
@@ -460,7 +463,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
 				(response as JsonRpcNotification).method.endsWith('_subscription')
 			) {
-				this._eventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', response);
 				return;
 			}
 
@@ -479,7 +482,7 @@ export abstract class SocketProvider<
 				jsonRpc.isResponseWithResult(response) ||
 				jsonRpc.isResponseWithError(response)
 			) {
-				this._eventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', response);
 				requestItem.deferredPromise.resolve(response);
 			}
 
