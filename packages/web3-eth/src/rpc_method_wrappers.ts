@@ -71,6 +71,7 @@ import {
 	transactionReceiptSchema,
 	transactionInfoSchema,
 	accessListResultSchema,
+	SignatureObjectSchema,
 } from './schemas';
 import {
 	SendSignedTransactionEvents,
@@ -205,7 +206,7 @@ export async function getStorageAt<ReturnFormat extends DataFormat>(
 		storageSlotFormatted,
 		blockNumberFormatted,
 	);
-	return format({ format: 'bytes' }, response, returnFormat);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 /**
@@ -226,7 +227,7 @@ export async function getCode<ReturnFormat extends DataFormat>(
 		address,
 		blockNumberFormatted,
 	);
-	return format({ format: 'bytes' }, response, returnFormat);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 /**
@@ -877,11 +878,10 @@ export async function sign<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const messageFormatted = format({ format: 'bytes' }, message, DEFAULT_RETURN_FORMAT);
-
 	if (web3Context.wallet?.get(addressOrIndex)) {
 		const wallet = web3Context.wallet.get(addressOrIndex) as Web3BaseWalletAccount;
-
-		return wallet.sign(messageFormatted);
+		const signed = wallet.sign(messageFormatted);
+		return format(SignatureObjectSchema, signed, returnFormat);
 	}
 
 	if (typeof addressOrIndex === 'number') {
@@ -896,7 +896,8 @@ export async function sign<ReturnFormat extends DataFormat>(
 		addressOrIndex,
 		messageFormatted,
 	);
-	return format({ format: 'bytes' }, response, returnFormat);
+
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 /**
@@ -948,7 +949,7 @@ export async function call<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	);
 
-	return format({ format: 'bytes' }, response, returnFormat);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 // TODO - Investigate whether response is padded as 1.x docs suggest
