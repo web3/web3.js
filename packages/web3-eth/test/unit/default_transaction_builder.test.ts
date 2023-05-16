@@ -29,6 +29,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 
 import {
 	Eip1559NotSupportedError,
+	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from 'web3-errors';
@@ -210,28 +211,44 @@ describe('defaultTransactionBuilder', () => {
 		});
 	});
 
-	describe('should populate input', () => {
+	describe('should populate input/data', () => {
 		it('should populate with 0x', async () => {
 			const input = { ...transaction };
 			delete input.input;
+			delete input.data;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
 			});
 			expect(result.input).toBe('0x');
+			expect(result.data).toBe('0x');
 		});
 
 		it('should prefix with 0x', async () => {
 			const input = { ...transaction };
-			delete input.data;
 			input.input = '123';
+			input.data = '123';
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
 			});
 			expect(result.input).toBe('0x123');
+			expect(result.data).toBe('0x123');
+		});
+
+		it('should throw TransactionDataAndInputError', async () => {
+			const input = { ...transaction };
+			input.data = '0x3211';
+			input.input = '0x1233';
+
+			await expect(
+				defaultTransactionBuilder({
+					transaction: input,
+					web3Context,
+				}),
+			).rejects.toThrow(TransactionDataAndInputError);
 		});
 	});
 
