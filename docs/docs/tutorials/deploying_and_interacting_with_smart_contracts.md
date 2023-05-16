@@ -52,21 +52,22 @@ In this step, we will write the Solidity code for the smart contract and save it
 
 Create a new file called `MyContract.sol` in your project directory and add the following Solidity code to it:
 
-```
+```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract MyContract {
-    uint256 public myNumber;
+	uint256 public myNumber;
 
-    constructor(uint256 _myNumber) {
-        myNumber = _myNumber;
-    }
+	constructor(uint256 _myNumber) {
+		myNumber = _myNumber;
+	}
 
-    function setMyNumber(uint256 _myNumber) public {
-        myNumber = _myNumber;
-    }
+	function setMyNumber(uint256 _myNumber) public {
+		myNumber = _myNumber;
+	}
 }
+
 ```
 
 This simple smart contract defines a `myNumber` variable that can be set by calling the `setMyNumber` function.
@@ -85,7 +86,6 @@ First, install the `solc` package using npm.
 :::note
 📝 Specify a version for the compiler that is compatible with the version you specified in the .sol file above (with `pragma solidity ^0.8.0;`):
 :::
-c
 
 ```
 npm install solc@0.8.0
@@ -97,9 +97,9 @@ Next, create a new file called `compile.js` in your project directory and add th
 // This code will compile smart contract and generate its ABI and bytecode
 // Alternatively, you can use something like `npm i solc && npx solcjs MyContract.sol --bin --abi`
 
-const solc = require('solc');
-const path = require('path');
-const fs = require('fs');
+import solc from 'solc';
+import path from 'path';
+import fs from 'fs';
 
 const fileName = 'MyContract.sol';
 const contractName = 'MyContract';
@@ -179,7 +179,7 @@ Note that we are installing the latest version of 4.x, at the time of this tutor
 Next, create a new file called `index.js` in your project directory and add the following code to it:
 
 ```javascript
-const { Web3 } = require('web3');
+const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import { Web3 } from 'web3'`)
 
 // Set up a connection to the Ganache network
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
@@ -212,7 +212,9 @@ In this step, we will use web3.js to deploy the smart contract to the Ganache ne
 Create a file named `deploy.js` and fill it with the following code:
 
 ```javascript
-const { Web3 } = require('web3');
+// For simplicity we use `web3` package here. However, if you are concerned with the size,
+//	you may import individual packages like 'web3-eth', 'web3-eth-contract' and 'web3-providers-http'.
+const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import { Web3 } from 'web3'`)
 const fs = require('fs');
 const path = require('path');
 
@@ -248,7 +250,7 @@ async function deploy() {
 		// Deploy the contract to the Ganache network
 		const tx = await myContract.send({
 			from: defaultAccount,
-			gas: 1000000,
+			gas,
 			gasPrice: 10000000000,
 		});
 		console.log('Contract deployed at address: ' + tx.options.address);
@@ -287,7 +289,7 @@ In this step, we will use web3.js to interact with the smart contract on the Gan
 Create a file named `interact.js` and fill it with the following code:
 
 ```javascript
-const { Web3 } = require('web3');
+const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import { Web3 } from 'web3'`)
 const fs = require('fs');
 const path = require('path');
 
