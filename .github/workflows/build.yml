@@ -68,9 +68,9 @@ jobs:
     steps:
         -   uses: actions/download-artifact@v3
             with:
-                name: web3-16.js.tar.gz
+                name: web3-18.js.tar.gz
                 path: /tmp
-        -   run: tar -xf /tmp/web3-16.js.tar.gz -C ./
+        -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
         -   name: Restore default branch stats
             if: github.event_name != 'push'
             uses: actions/cache/restore@v3
@@ -114,7 +114,7 @@ jobs:
         with:
           flags: UnitTests
           token: ${{ secrets.CODECOV_TOKEN }}
-        if: ${{ matrix.node == 16 }}
+        if: ${{ matrix.node == 18 }}
 
   integration:
     name: Integration
@@ -167,7 +167,7 @@ jobs:
       strategy:
           fail-fast: false
           matrix:
-              node: [ 16 ]
+              node: [ 18 ]
               backend: [ 'geth' ]
               mode: [ 'ws','ipc' ]
       steps:
@@ -210,7 +210,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            node: [ 16 ]
+            node: [ 18 ]
     steps:
         -   uses: actions/download-artifact@v3
             with:
