@@ -21,7 +21,7 @@ import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { SupportedProviders } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 
 import {

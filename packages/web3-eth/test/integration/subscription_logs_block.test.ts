@@ -20,7 +20,7 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { AbiEventFragment, Web3BaseProvider } from 'web3-types';
 import { numberToHex } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {

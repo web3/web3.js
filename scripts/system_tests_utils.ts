@@ -57,7 +57,7 @@ import { NonPayableMethodObject } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import HttpProvider from 'web3-providers-http';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers-ipc';
 import accountsString from './accounts.json';
 
 /**

@@ -19,7 +19,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { AbiEventFragment, Web3BaseProvider } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {

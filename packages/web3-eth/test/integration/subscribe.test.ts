@@ -18,7 +18,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Web3BaseProvider } from 'web3-types';
 /* eslint-disable import/no-named-as-default */
 // eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers-ipc';
 import Web3Eth, {
 	LogsSubscription,
 	NewHeadsSubscription,
