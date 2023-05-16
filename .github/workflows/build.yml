@@ -23,12 +23,29 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      - run: yarn
+      - run: yarn install --ignore-scripts
+      - run: yarn build:cjs
+      - run: yarn build:types
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+  build-cjs:
+      name: Build ESM
+      needs: build
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              node: [ 14, 16 ]
+      steps:
+          -   uses: actions/download-artifact@v3
+              with:
+                  name: web3-${{ matrix.node }}.js.tar.gz
+                  path: /tmp
+          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+
+          -   run: yarn build:esm
 
   lint:
     name: lint
