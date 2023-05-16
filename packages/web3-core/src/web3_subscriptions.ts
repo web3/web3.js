@@ -95,9 +95,9 @@ export abstract class Web3Subscription<
 
 		// @ts-expect-error subscribe using old providers
 		if ((typeof this._requestManager.provider as Web3BaseProvider).request === 'function') {
-			(this._requestManager.provider as Web3BaseProvider).on<Log>('data', messageListener);
-		} else {
 			(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
+		} else {
+			(this._requestManager.provider as Web3BaseProvider).on<Log>('data', messageListener);
 		}
 
 		this._messageListener = messageListener;
