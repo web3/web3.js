@@ -47,7 +47,6 @@ jobs:
           -   run: yarn build:types
   lint:
       name: Lint
-      needs: build
       runs-on: ubuntu-latest
       steps:
           - uses: actions/checkout@v3
