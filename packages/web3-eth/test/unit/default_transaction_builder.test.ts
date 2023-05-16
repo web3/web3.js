@@ -227,14 +227,15 @@ describe('defaultTransactionBuilder', () => {
 
 		it('should prefix with 0x', async () => {
 			const input = { ...transaction };
-			delete input.data;
 			input.input = '123';
+			input.data = '123';
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
 			});
 			expect(result.input).toBe('0x123');
+			expect(result.data).toBe('0x123');
 		});
 
 		it('should throw TransactionDataAndInputError', async () => {
