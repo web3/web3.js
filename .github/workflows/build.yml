@@ -25,14 +25,13 @@ jobs:
           cache: yarn
       - run: yarn install --ignore-scripts
       - run: yarn build:cjs
-      - run: yarn build:types
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
-  build-cjs:
-      name: Build ESM
+  build-cjs-types:
+      name: Build ESM and types
       needs: build
       runs-on: ubuntu-latest
       strategy:
@@ -46,6 +45,7 @@ jobs:
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
 
           -   run: yarn build:esm
+          -   run: yarn build:types
 
   lint:
     name: lint
