@@ -47,16 +47,18 @@ jobs:
           -   run: yarn build:types
   lint:
       name: Lint
+      needs: build
       runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              node: [ 16 ]
       steps:
-          - uses: actions/checkout@v3
-          - uses: actions/setup-node@v3
-            with:
-                node-version: 16
-                cache: yarn
-          -   run: yarn install --ignore-scripts
-          -   run: yarn build:cjs
-          -   run: yarn build:esm
+          -   uses: actions/download-artifact@v3
+              with:
+                  name: web3-${{ matrix.node }}.js.tar.gz
+                  path: /tmp
+          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          -   run: test -f ./.secrets.json || echo '{}' > .secrets.json
           -   run: yarn lint
 
   build-web:
