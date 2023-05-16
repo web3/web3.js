@@ -100,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   `getConfig` method from `Web3Config` class, `config` is now public and accessible using `Web3Config.config` (#5950)
+-   Error param in the `messageListener` in subscription was removed (triggered by `.on('data')` or `.on('message')`) to properly support all providers. (#6082)
 
 ## [Unreleased]
 
