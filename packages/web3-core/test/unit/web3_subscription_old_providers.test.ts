@@ -20,14 +20,20 @@ import { Web3EventEmitter } from '../../src/web3_event_emitter';
 
 describe('Web3Subscription', () => {
 	let requestManager: any;
+	let eipRequestManager: any;
 	let provider: Web3EventEmitter<any>;
+	let eipProvider: Web3EventEmitter<any>;
 
 	beforeEach(() => {
 		provider = new Web3EventEmitter();
+		eipProvider = new Web3EventEmitter();
+		// @ts-expect-error add to test eip providers
+		eipProvider.request = async () => true;
 		requestManager = { send: jest.fn(), on: jest.fn(), provider };
+		eipRequestManager = { send: jest.fn(), on: jest.fn(), provider: eipProvider };
 	});
 
-	describe('old providers response', () => {
+	describe('providers response for old provider', () => {
 		it('data with result', async () => {
 			const testData = {
 				data: {
@@ -40,11 +46,11 @@ describe('Web3Subscription', () => {
 			await sub.subscribe();
 			// @ts-expect-error spy on protected method
 			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
-			provider.emit('message', testData);
+			provider.emit('data', testData);
 			expect(processResult).toHaveBeenCalledWith(testData.data.result);
 		});
 
-		it('data without result', async () => {
+		it('data without result for old provider', async () => {
 			const testData = {
 				data: {
 					other: {
@@ -56,7 +62,44 @@ describe('Web3Subscription', () => {
 			await sub.subscribe();
 			// @ts-expect-error spy on protected method
 			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
-			provider.emit('message', testData);
+			provider.emit('data', testData);
+			expect(processResult).toHaveBeenCalledWith(testData.data);
+		});
+		it('data with result for eipProvider', async () => {
+			const testData = {
+				data: {
+					result: {
+						some: 1,
+					},
+				},
+			};
+			const sub = new ExampleSubscription(
+				{ param1: 'param1' },
+				{ requestManager: eipRequestManager },
+			);
+			await sub.subscribe();
+			// @ts-expect-error spy on protected method
+			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
+			eipProvider.emit('message', testData);
+			expect(processResult).toHaveBeenCalledWith(testData.data.result);
+		});
+
+		it('data without result for eipProvider', async () => {
+			const testData = {
+				data: {
+					other: {
+						some: 1,
+					},
+				},
+			};
+			const sub = new ExampleSubscription(
+				{ param1: 'param1' },
+				{ requestManager: eipRequestManager },
+			);
+			await sub.subscribe();
+			// @ts-expect-error spy on protected method
+			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
+			eipProvider.emit('message', testData);
 			expect(processResult).toHaveBeenCalledWith(testData.data);
 		});
 	});

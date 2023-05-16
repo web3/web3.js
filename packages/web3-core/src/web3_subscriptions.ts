@@ -29,6 +29,7 @@ import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	JsonRpcSubscriptionResultOld,
+	EIP1193Provider,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
@@ -93,8 +94,7 @@ export abstract class Web3Subscription<
 			}
 		};
 
-		// @ts-expect-error subscribe using old providers
-		if ((typeof this._requestManager.provider as Web3BaseProvider).request === 'function') {
+		if (typeof (this._requestManager.provider as EIP1193Provider<API>).request === 'function') {
 			(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
 		} else {
 			(this._requestManager.provider as Web3BaseProvider).on<Log>('data', messageListener);
