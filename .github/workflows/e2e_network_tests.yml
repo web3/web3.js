@@ -38,14 +38,13 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          node: [14]
+          node: [16]
           mode: ['http']
           network: ['sepolia', 'mainnet']
       steps:
         - uses: actions/setup-node@v3
           with:
             node-version: ${{ matrix.node }}
-            cache: yarn
         - uses: actions/download-artifact@v3
           with:
             name: web3-${{ matrix.node }}.js.tar.gz

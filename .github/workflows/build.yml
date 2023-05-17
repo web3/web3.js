@@ -40,9 +40,8 @@ jobs:
               node: [ 18, 16 ]
       steps:
           -   uses: actions/setup-node@v3
-            with:
+              with:
                 node-version: ${{ matrix.node }}
-                cache: yarn
           -   uses: actions/download-artifact@v3
               with:
                 name: web3-${{ matrix.node }}.js.tar.gz
@@ -61,7 +60,6 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node }}
-                cache: yarn
           -   uses: actions/download-artifact@v3
               with:
                 name: web3-${{ matrix.node }}.js.tar.gz
@@ -73,11 +71,13 @@ jobs:
     name: Build Web
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            node: [ 18 ]
     steps:
         -   uses: actions/setup-node@v3
             with:
-              node-version: 16
-              cache: yarn
+              node-version: ${{ matrix.node }}
         -   uses: actions/download-artifact@v3
             with:
               name: web3-18.js.tar.gz
@@ -118,7 +118,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: yarn
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -149,7 +148,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: yarn
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -175,7 +173,6 @@ jobs:
       -   uses: actions/setup-node@v3
           with:
             node-version: ${{ matrix.node }}
-            cache: yarn
       -   uses: actions/download-artifact@v3
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
@@ -198,7 +195,6 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
-                  cache: yarn
           -   uses: actions/download-artifact@v3
               with:
                   name: web3-${{ matrix.node }}.js.tar.gz
@@ -220,7 +216,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
             node-version: ${{ matrix.node }}
-            cache: yarn
       - uses: browser-actions/setup-firefox@latest
         if: matrix.browser == 'firefox'
       - uses: actions/download-artifact@v3
@@ -247,7 +242,6 @@ jobs:
         -   uses: actions/setup-node@v3
             with:
                 node-version: ${{ matrix.node }}
-                cache: yarn
         -   uses: actions/download-artifact@v3
             with:
                 name: web3-${{ matrix.node }}.js.tar.gz
