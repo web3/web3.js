@@ -14,7 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { secp256k1 } from 'ethereum-cryptography/secp256k1';
+// eslint-disable-next-line import/extensions
+import { secp256k1 } from 'ethereum-cryptography/secp256k1.js';
 import { bytesToHex, hexToBytes, uint8ArrayEquals, uint8ArrayConcat } from 'web3-utils';
 import {
 	AccessListEIP2930Transaction,

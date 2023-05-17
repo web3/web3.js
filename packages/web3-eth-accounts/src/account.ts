@@ -18,7 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
-import { secp256k1 } from 'ethereum-cryptography/secp256k1';
+// eslint-disable-next-line import/extensions
+import { secp256k1 } from 'ethereum-cryptography/secp256k1.js';
 import {
 	InvalidKdfError,
 	InvalidPasswordError,
