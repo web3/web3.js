@@ -14,7 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { hexToBytes } from 'web3-utils';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { hexToBytes, numberToHex, hexToNumber, toBN } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, LogAPI } from '../../../src';
 import {
@@ -56,11 +57,13 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 
 	it.each(
 		toAllVariants<{
-			format: string;
+			byteFormat: string;
+			numberFormat: string;
 		}>({
-			format: Object.values(FMT_BYTES),
+			byteFormat: Object.values(FMT_BYTES),
+			numberFormat: Object.values(FMT_NUMBER),
 		}),
-	)('should getPastLogs for deployed contract', async ({ format }) => {
+	)('should getPastLogs for deployed contract', async ({ byteFormat, numberFormat }) => {
 		const result = await web3.eth.getPastLogs(
 			{
 				fromBlock: 'earliest',
@@ -68,12 +71,71 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 				address: '0xEdFd52255571b4a9A9d4445989E39f5c14Ff0447',
 			},
 			{
-				number: FMT_NUMBER.HEX,
-				bytes: format as FMT_BYTES,
+				number: numberFormat as FMT_NUMBER.HEX,
+				bytes: byteFormat as FMT_BYTES,
 			},
 		);
 
-		switch (format) {
+		switch (numberFormat) {
+			case 'NUMBER_STR':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(
+					hexToNumber(numberToHex(expectedLogs[0].blockNumber as string).toString()),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLogs[0].logIndex as string).toString()),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLogs[0].blockNumber as string).toString()),
+				);
+				break;
+			case 'NUMBER_BIGINT':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(
+					toBN(expectedLogs[0].blockNumber as string),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(toBN(expectedLogs[0].logIndex as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					toBN(expectedLogs[0].blockNumber as string),
+				);
+				break;
+			case 'NUMBER_NUMBER':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(
+					hexToNumber(numberToHex(expectedLogs[0].blockNumber as string)),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLogs[0].logIndex as string)),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					hexToNumber(numberToHex(expectedLogs[0].blockNumber as string)),
+				);
+				break;
+			case 'NUMBER_HEX':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toStrictEqual(
+					numberToHex(expectedLogs[0].blockNumber as string),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toStrictEqual(
+					numberToHex(expectedLogs[0].logIndex as string),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toStrictEqual(
+					numberToHex(expectedLogs[0].blockNumber as string),
+				);
+				break;
+			default:
+				throw new Error('Unhandled format');
+		}
+
+		switch (byteFormat) {
 			case 'BYTES_HEX':
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result).toStrictEqual(expectedLogs);
@@ -91,11 +153,6 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 						topics: expectedLogs[0].topics?.map(
 							topic => new Uint8Array(hexToBytes(topic)),
 						),
-						// TODO Should these be formatted?
-						// blockNumber: new Uint8Array(hexToBytes((expectedLogs[0]).blockNumber as string)),
-						// data: new Uint8Array(hexToBytes((expectedLogs[0]).data as string)),
-						// logIndex: new Uint8Array(hexToBytes((expectedLogs[0]).logIndex as string)),
-						// transactionIndex: new Uint8Array(hexToBytes((expectedLogs[0]).transactionIndex as string)),
 					},
 				]);
 				break;
