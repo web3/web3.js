@@ -101,8 +101,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added `filters` param to the `Filter` type (#6010)
+-   Added types `JsonRpcSubscriptionResultOld`, `Web3ProviderMessageEventCallback`. Added `.on('data')` type support for old providers (#6082)
 
 ### Changed
 
 -   Replaced Buffer for Uint8Array (#6004)
 -   types `FMT_BYTES.BUFFER`, `Bytes` and `FormatType` and encryption option types for `salt` and `iv` has replaced support for `Buffer` for `Uint8Array` (#6004)
+-   Added `internalType` property to the `AbiParameter` type.
