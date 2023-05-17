@@ -18,9 +18,11 @@ import { Web3Context } from 'web3-core';
 import { format } from 'web3-utils';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, Web3EthExecutionAPI } from 'web3-types';
 import { ethRpcMethods } from 'web3-rpc-methods';
-
+import { Wallet } from 'web3-eth-accounts';
 import { sign } from '../../../src/rpc_method_wrappers';
-import { mockRpcResponse, testData } from './fixtures/sign';
+import { mockRpcResponse, testData, walletTestData } from './fixtures/sign';
+import { createAccountProvider } from '../../fixtures/system_test_utils';
+import { SignatureObjectSchema } from '../../../src/schemas';
 
 jest.mock('web3-rpc-methods');
 
@@ -40,13 +42,31 @@ describe('sign', () => {
 				inputMessage,
 				DEFAULT_RETURN_FORMAT,
 			);
-
 			await sign(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(ethRpcMethods.sign).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputAddress,
 				inputMessageFormatted,
 			);
+		},
+	);
+	it.each(walletTestData)(
+		`should call rpcMethods.sign using the context wallet with expected parameters\nTitle: %s\nInput parameters: %s\n and return with expected format`,
+		async (_, inputParameters, expectedReturnFormat) => {
+			// set up wallet for signing
+			const localContext = new Web3Context('http://127.0.0.1:8545');
+			const accountProvider = createAccountProvider(localContext);
+			const wallet = new Wallet(accountProvider);
+			wallet.create(1);
+			localContext['_wallet'] = wallet;
+
+			const result = await sign(localContext, ...inputParameters, expectedReturnFormat);
+			const expectedFormattedResult = format(
+				SignatureObjectSchema,
+				result,
+				expectedReturnFormat,
+			);
+			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);
 
