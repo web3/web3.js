@@ -84,8 +84,8 @@ const config = {
 				},
 			},
 		],
+		'docusaurus-lunr-search',
 	],
-	themes: ['@easyops-cn/docusaurus-search-local'],
 	presets: [
 		[
 			'classic',
