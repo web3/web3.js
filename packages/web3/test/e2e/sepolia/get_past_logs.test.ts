@@ -25,11 +25,12 @@ import {
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { getSystemE2ETestProvider } from '../e2e_utils';
 
+const address = '0xedfd52255571b4a9a9d4445989e39f5c14ff0447';
 describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 	const provider = getSystemE2ETestProvider();
 	const expectedLogs: LogAPI[] = [
 		{
-			address: '0xedfd52255571b4a9a9d4445989e39f5c14ff0447',
+			address,
 			blockHash: '0xdb1cb1fc3867fa28e4ba2297fbb1e65b81a3212beb1b73cbcbfe40c4192ee948',
 			blockNumber: '0x314675',
 			data: '0x',
@@ -68,7 +69,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 			{
 				fromBlock: 'earliest',
 				toBlock: 'latest',
-				address: '0xEdFd52255571b4a9A9d4445989E39f5c14Ff0447',
+				address,
 			},
 			{
 				number: numberFormat as FMT_NUMBER.HEX,
