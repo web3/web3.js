@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
           cache: yarn
       - run: yarn
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
@@ -44,6 +44,10 @@ jobs:
           mode: ['http', 'ws']
           backend: ['geth', 'infura']
       steps:
+        - uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node }}
+            cache: yarn
         - uses: actions/download-artifact@v3
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
