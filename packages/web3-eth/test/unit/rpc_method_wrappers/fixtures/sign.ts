@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, Bytes } from 'web3-types';
+import { Address, Bytes, FMT_BYTES, FMT_NUMBER } from 'web3-types';
 import { hexToBytes } from 'web3-utils';
 
 export const mockRpcResponse = '0x736f796c656e7420677265656e2069732070656f706c65';
@@ -47,5 +47,17 @@ export const testData: TestData[] = [
 			]),
 			address,
 		],
+	],
+];
+export const walletTestData: [string, [Bytes, Address | number], any][] = [
+	[
+		'message = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"',
+		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 0],
+		{ number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY },
+	],
+	[
+		'message = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"',
+		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 0],
+		{ number: FMT_NUMBER.STR, bytes: FMT_BYTES.HEX },
 	],
 ];

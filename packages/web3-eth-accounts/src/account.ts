@@ -61,10 +61,10 @@ import { keyStoreSchema } from './schemas';
 import { TransactionFactory } from './tx/transactionFactory';
 import type {
 	SignatureObject,
-	SignResult,
 	SignTransactionResult,
 	TypedTransaction,
 	Web3Account,
+	SignResult,
 } from './types';
 
 /**

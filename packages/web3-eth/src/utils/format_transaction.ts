@@ -40,18 +40,19 @@ export function formatTransaction<
 
 	formattedTransaction = format(options.transactionSchema, formattedTransaction, returnFormat);
 
-	if (
-		!isNullish(formattedTransaction.data) &&
-		!isNullish(formattedTransaction.input) &&
-		formattedTransaction.data !== formattedTransaction.input
-	)
-		throw new TransactionDataAndInputError({
-			data: bytesToHex(formattedTransaction.data),
-			input: bytesToHex(formattedTransaction.input),
-		});
-	else if (!isNullish(formattedTransaction.data)) {
+	if (!isNullish(formattedTransaction.data)) {
+		if (
+			!isNullish(formattedTransaction.input) &&
+			formattedTransaction.data !== formattedTransaction.input
+		)
+			throw new TransactionDataAndInputError({
+				data: bytesToHex(formattedTransaction.data),
+				input: bytesToHex(formattedTransaction.input),
+			});
+
 		formattedTransaction.input = formattedTransaction.data;
-		delete formattedTransaction.data;
+	} else if (!isNullish(formattedTransaction.input)) {
+		formattedTransaction.data = formattedTransaction.input;
 	}
 
 	if (!isNullish(formattedTransaction.gasLimit)) {
