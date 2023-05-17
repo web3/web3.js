@@ -1,6 +1,5 @@
 {
 	"name": "web3-eth-accounts",
-	"type": "module",
 	"version": "4.0.1-rc.1",
 	"description": "Package for managing Ethereum accounts and signing",
 	"main": "./lib/commonjs/index.js",

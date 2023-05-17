@@ -16,7 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/extensions
-import { secp256k1 } from 'ethereum-cryptography/secp256k1.js';
+import * as ss from 'ethereum-cryptography/secp256k1.js';
+// eslint-disable-next-line no-console
+console.log('ss', ss);
+const { secp256k1 } = ss;
 /**
  * 2^64-1
  */
@@ -28,6 +31,9 @@ export const MAX_UINT64 = BigInt('0xffffffffffffffff');
 export const MAX_INTEGER = BigInt(
 	'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
 );
+// eslint-disable-next-line no-console
+console.log('test________secp256k1', secp256k1);
+export const SECP256K1_ORDER = secp256k1?.CURVE?.n;
 
-export const SECP256K1_ORDER = secp256k1.CURVE.n;
-export const SECP256K1_ORDER_DIV_2 = secp256k1.CURVE.n / BigInt(2);
+// eslint-disable-next-line no-unsafe-optional-chaining
+export const SECP256K1_ORDER_DIV_2 = secp256k1?.CURVE?.n / BigInt(2);
