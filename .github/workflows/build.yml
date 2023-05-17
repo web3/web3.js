@@ -80,9 +80,9 @@ jobs:
               node-version: ${{ matrix.node }}
         -   uses: actions/download-artifact@v3
             with:
-              name: web3-18.js.tar.gz
+              name: web3-${{ matrix.node }}.js.tar.gz
               path: /tmp
-        -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
+        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         -   name: Restore default branch stats
             if: github.event_name != 'push'
             uses: actions/cache/restore@v3
