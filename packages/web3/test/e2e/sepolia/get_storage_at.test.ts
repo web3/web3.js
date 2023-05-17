@@ -21,7 +21,7 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { sepoliaBlockData } from '../fixtures/sepolia';
+import { sepoliaAddress, sepoliaBlockData } from '../fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -61,7 +61,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
 		const result = await web3.eth.getStorageAt(
-			'0xEdFd52255571b4a9A9d4445989E39f5c14Ff0447',
+			sepoliaAddress,
 			storageSlot,
 			sepoliaBlockData[block],
 		);

@@ -24,13 +24,13 @@ import {
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { getSystemE2ETestProvider } from '../e2e_utils';
+import { sepoliaAddress } from '../fixtures/sepolia';
 
-const address = '0xedfd52255571b4a9a9d4445989e39f5c14ff0447';
 describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 	const provider = getSystemE2ETestProvider();
 	const expectedLogs: LogAPI[] = [
 		{
-			address,
+			address: sepoliaAddress,
 			blockHash: '0xdb1cb1fc3867fa28e4ba2297fbb1e65b81a3212beb1b73cbcbfe40c4192ee948',
 			blockNumber: '0x314675',
 			data: '0x',
@@ -69,7 +69,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 			{
 				fromBlock: 'earliest',
 				toBlock: 'latest',
-				address,
+				address: sepoliaAddress,
 			},
 			{
 				number: numberFormat as FMT_NUMBER.HEX,

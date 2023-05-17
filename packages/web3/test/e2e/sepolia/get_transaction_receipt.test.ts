@@ -24,6 +24,7 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
+import { sepoliaAddress } from '../fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getTransactionReceipt`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -62,14 +63,14 @@ describe(`${getSystemTestBackend()} tests - getTransactionReceipt`, () => {
 		expect(result).toMatchObject({
 			blockHash: '0xdb1cb1fc3867fa28e4ba2297fbb1e65b81a3212beb1b73cbcbfe40c4192ee948',
 			blockNumber: BigInt(3229301),
-			contractAddress: '0xedfd52255571b4a9a9d4445989e39f5c14ff0447',
+			contractAddress: sepoliaAddress,
 			cumulativeGasUsed: BigInt(579732),
 			effectiveGasPrice: BigInt(2500000008),
 			from: '0xa127c5e6a7e3600ac34a9a9928e52521677e7211',
 			gasUsed: BigInt(347850),
 			logs: [
 				{
-					address: '0xedfd52255571b4a9a9d4445989e39f5c14ff0447',
+					address: sepoliaAddress,
 					blockHash: '0xdb1cb1fc3867fa28e4ba2297fbb1e65b81a3212beb1b73cbcbfe40c4192ee948',
 					blockNumber: BigInt(3229301),
 					data: '0x',
