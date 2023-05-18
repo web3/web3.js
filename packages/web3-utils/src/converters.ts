@@ -23,6 +23,7 @@ import {
 	isHex,
 	isHexStrict,
 	isNullish,
+	isInt,
 	utils as validatorUtils,
 	validator,
 } from 'web3-validator';
@@ -365,9 +366,10 @@ export const toHex = (
 		if (isHexStrict(value)) {
 			return returnType ? 'bytes' : value;
 		}
-		if (isHex(value) && !/^[0-9]+$/.test(value)) {
+		if (isHex(value) && !isInt(value)) {
 			return returnType ? 'bytes' : value;
 		}
+
 		if (!Number.isFinite(value)) {
 			return returnType ? 'string' : utf8ToHex(value);
 		}
