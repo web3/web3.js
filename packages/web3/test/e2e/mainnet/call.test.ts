@@ -22,6 +22,7 @@ import {
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { getSystemE2ETestProvider } from '../e2e_utils';
+import { mainnetAddress } from '../fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - call`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -45,7 +46,7 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 	)('should call retrieve method from deployed contract', async ({ format }) => {
 		const result = await web3.eth.call(
 			{
-				to: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+				to: mainnetAddress,
 				input: '0x18160ddd',
 			},
 			undefined,

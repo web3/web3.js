@@ -152,7 +152,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 							hexToBytes(expectedLogs[0].transactionHash as string),
 						),
 						topics: expectedLogs[0].topics?.map(
-							topic => new Uint8Array(hexToBytes(topic)),
+							topic => newxUint8Array(hexToBytes(topic)),
 						),
 					},
 				]);

@@ -24,6 +24,7 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
+import { mainnetAddress } from '../fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getTransactionReceipt`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -85,7 +86,7 @@ describe(`${getSystemTestBackend()} tests - getTransactionReceipt`, () => {
 					transactionIndex: BigInt(91),
 				},
 				{
-					address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+					address: mainnetAddress,
 					blockHash: '0xabc81c29235c7962f5a0420644761627bdc064a560c7d1842cdf9517f7d7984e',
 					blockNumber: BigInt(17030310),
 					data: '0x0000000000000000000000000000000000000000000000000000000000015bb2',

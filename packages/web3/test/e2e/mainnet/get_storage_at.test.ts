@@ -21,7 +21,7 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { mainnetBlockData } from '../fixtures/mainnet';
+import { mainnetBlockData, mainnetAddress } from '../fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -61,7 +61,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
 		const result = await web3.eth.getStorageAt(
-			'0xdAC17F958D2ee523a2206206994597C13D831ec7',
+			mainnetAddress,
 			storageSlot,
 			mainnetBlockData[block],
 		);

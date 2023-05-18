@@ -23,7 +23,7 @@ import {
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { getSystemE2ETestProvider } from '../e2e_utils';
-import { mainnetCode } from '../fixtures/mainnet';
+import { mainnetCode, mainnetAddress } from '../fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getCode`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -63,7 +63,7 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 		}),
 	)('should getCode for deployed contract', async ({ block, format }) => {
 		const result = await web3.eth.getCode(
-			'0xdAC17F958D2ee523a2206206994597C13D831ec7',
+			mainnetAddress,
 			blockData[block],
 			{
 				number: FMT_NUMBER.HEX,
