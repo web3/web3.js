@@ -76,99 +76,86 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 				},
 			)
 		)[0] as unknown as Log;
-		if (typeof result !== 'string') {
-			switch (numberFormat) {
-				case 'NUMBER_STR':
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.blockNumber).toStrictEqual(
-						hexToNumber(numberToHex(expectedLog.blockNumber as string).toString()),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.logIndex).toStrictEqual(
-						hexToNumber(numberToHex(expectedLog.logIndex as string).toString()),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.transactionIndex).toStrictEqual(
-						hexToNumber(numberToHex(expectedLog.blockNumber as string).toString()),
-					);
-					break;
-				case 'NUMBER_BIGINT':
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.blockNumber).toStrictEqual(
-						BigInt(expectedLog.blockNumber as string),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.logIndex).toStrictEqual(BigInt(expectedLog.logIndex as string));
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.transactionIndex).toStrictEqual(
-						BigInt(expectedLog.blockNumber as string),
-					);
-					break;
-				case 'NUMBER_NUMBER':
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.blockNumber).toStrictEqual(
-						hexToNumber(numberToHex(expectedLog.blockNumber as string)),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.logIndex).toStrictEqual(
-						hexToNumber(numberToHex(expectedLog.logIndex as string)),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.transactionIndex).toStrictEqual(
-						hexToNumber(numberToHex(expectedLog.blockNumber as string)),
-					);
-					break;
-				case 'NUMBER_HEX':
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.blockNumber).toStrictEqual(
-						numberToHex(expectedLog.blockNumber as string),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.logIndex).toStrictEqual(
-						numberToHex(expectedLog.logIndex as string),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result?.transactionIndex).toStrictEqual(
-						numberToHex(expectedLog.blockNumber as string),
-					);
-					break;
-				default:
-					throw new Error('Unhandled format');
-			}
-			switch (byteFormat) {
-				case 'BYTES_HEX':
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.blockHash).toBe(expectedLog.blockHash as string);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.data).toBe(expectedLog.data as string);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.transactionHash).toBe(expectedLog.transactionHash as string);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.topics).toStrictEqual(expectedLog.topics);
-					break;
-				case 'BYTES_UINT8ARRAY':
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.blockHash).toBe(
-						new Uint8Array(hexToBytes(expectedLog.blockHash as string)),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.data).toBe(
-						new Uint8Array(hexToBytes(expectedLog.data as string)),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.transactionHash).toBe(
-						new Uint8Array(hexToBytes(expectedLog.transactionHash as string)),
-					);
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result.topics).toStrictEqual(
-						expectedLog.topics?.map(
-							(topic: string) => new Uint8Array(hexToBytes(topic)),
-						),
-					);
-					break;
-				default:
-					throw new Error('Unhandled format');
-			}
+
+		switch (numberFormat) {
+			case 'NUMBER_STR':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockNumber).toBe(
+					hexToNumber(expectedLog.blockNumber as string).toString(),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.logIndex).toBe(
+					hexToNumber(expectedLog.logIndex as string).toString(),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionIndex).toBe(
+					hexToNumber(expectedLog.transactionIndex as string).toString(),
+				);
+				break;
+			case 'NUMBER_BIGINT':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.blockNumber).toBe(BigInt(expectedLog.blockNumber as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.logIndex).toBe(BigInt(expectedLog.logIndex as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.transactionIndex).toBe(
+					BigInt(expectedLog.transactionIndex as string),
+				);
+				break;
+			case 'NUMBER_NUMBER':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.blockNumber).toBe(hexToNumber(expectedLog.blockNumber as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.logIndex).toBe(hexToNumber(expectedLog.logIndex as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.transactionIndex).toBe(
+					hexToNumber(expectedLog.transactionIndex as string),
+				);
+				break;
+			case 'NUMBER_HEX':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.blockNumber).toBe(numberToHex(expectedLog.blockNumber as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.logIndex).toBe(numberToHex(expectedLog.logIndex as string));
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result?.transactionIndex).toBe(
+					numberToHex(expectedLog.transactionIndex as string),
+				);
+				break;
+			default:
+				throw new Error('Unhandled format');
+		}
+		switch (byteFormat) {
+			case 'BYTES_HEX':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockHash).toBe(expectedLog.blockHash as string);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.data).toBe(expectedLog.data as string);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionHash).toBe(expectedLog.transactionHash as string);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.topics).toStrictEqual(expectedLog.topics);
+				break;
+			case 'BYTES_UINT8ARRAY':
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.blockHash).toStrictEqual(
+					new Uint8Array(hexToBytes(expectedLog.blockHash as string)),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.data).toStrictEqual(
+					new Uint8Array(hexToBytes(expectedLog.data as string)),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.transactionHash).toStrictEqual(
+					new Uint8Array(hexToBytes(expectedLog.transactionHash as string)),
+				);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.topics).toStrictEqual(
+					expectedLog.topics?.map((topic: string) => new Uint8Array(hexToBytes(topic))),
+				);
+				break;
+			default:
+				throw new Error('Unhandled format');
 		}
 	});
 });

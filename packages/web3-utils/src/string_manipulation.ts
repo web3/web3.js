@@ -38,8 +38,12 @@ export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): st
 	// To avoid duplicate code and circular dependency we will
 	// use `padLeft` implementation from `web3-validator`
 
-	if (typeof value === 'string' && !isHexStrict(value)) {
-		return value.padStart(characterAmount, sign);
+	if (typeof value === 'string') {
+		if (!isHexStrict(value)) {
+			return value.padStart(characterAmount, sign);
+		}
+		// return, its already hexstrict
+		return value;
 	}
 
 	validator.validate(['int'], [value]);
