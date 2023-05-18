@@ -19,13 +19,14 @@ import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 
 // eslint-disable-next-line no-console
 console.log('ttt_ethereumCryptography', ethereumCryptography);
-const { secp256k1 } = ethereumCryptography;
+// eslint-disable-next-line
+const secp256k1 = ethereumCryptography.secp256k1;
 // eslint-disable-next-line no-console
 console.log('ttt_secp256k1', secp256k1);
 // eslint-disable-next-line no-console
-console.log('ttt_secp256k1.CURVE', secp256k1.CURVE);
+console.log('ttt_secp256k1.CURVE', secp256k1?.CURVE);
 // eslint-disable-next-line no-console
-console.log('ttt_secp256k1.CURVE.n', secp256k1.CURVE.n);
+console.log('ttt_secp256k1.CURVE.n', secp256k1?.CURVE?.n);
 /**
  * 2^64-1
  */
