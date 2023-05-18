@@ -247,21 +247,51 @@ export type AccessListResult = {
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 
 export type Hardfork =
-	| 'arrowGlacier'
-	| 'berlin'
-	| 'byzantium'
 	| 'chainstart'
-	| 'constantinople'
-	| 'dao'
+	| 'frontier'
 	| 'homestead'
-	| 'istanbul'
-	| 'london'
-	| 'merge'
-	| 'muirGlacier'
-	| 'petersburg'
-	| 'shanghai'
+	| 'dao'
+	| 'tangerineWhistle'
 	| 'spuriousDragon'
-	| 'tangerineWhistle';
+	| 'byzantium'
+	| 'constantinople'
+	| 'petersburg'
+	| 'istanbul'
+	| 'muirGlacier'
+	| 'berlin'
+	| 'london'
+	| 'altair'
+	| 'arrowGlacier'
+	| 'grayGlacier'
+	| 'bellatrix'
+	| 'merge'
+	| 'capella'
+	| 'shanghai';
+
+// This list of hardforks is expected to be in order
+// keep this in mind when making changes to it
+export enum HardforksOrdered {
+	chainstart = 'chainstart',
+	frontier = 'frontier',
+	homestead = 'homestead',
+	dao = 'dao',
+	tangerineWhistle = 'tangerineWhistle',
+	spuriousDragon = 'spuriousDragon',
+	byzantium = 'byzantium',
+	constantinople = 'constantinople',
+	petersburg = 'petersburg',
+	istanbul = 'istanbul',
+	muirGlacier = 'muirGlacier',
+	berlin = 'berlin',
+	london = 'london',
+	altair = 'altair',
+	arrowGlacier = 'arrowGlacier',
+	grayGlacier = 'grayGlacier',
+	bellatrix = 'bellatrix',
+	merge = 'merge',
+	capella = 'capella',
+	shanghai = 'shanghai',
+}
 
 export interface LogBase<NumberType, ByteType> {
 	readonly removed?: boolean;
