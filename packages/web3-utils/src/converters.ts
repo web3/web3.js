@@ -365,7 +365,9 @@ export const toHex = (
 		if (isHexStrict(value)) {
 			return returnType ? 'bytes' : value;
 		}
-
+		if (isHex(value) && !/^[0-9]+$/.test(value)) {
+			return returnType ? 'bytes' : value;
+		}
 		if (!Number.isFinite(value)) {
 			return returnType ? 'string' : utf8ToHex(value);
 		}
