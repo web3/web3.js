@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { hexToBytes, numberToHex, hexToNumber } from 'web3-utils';
-
+import { Log } from 'web3-types';
 import Web3, { FMT_BYTES, FMT_NUMBER, LogAPI } from '../../../src';
 import {
 	closeOpenConnection,
@@ -65,7 +65,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 			numberFormat: Object.values(FMT_NUMBER),
 		}),
 	)('should getPastLogs for deployed contract', async ({ byteFormat, numberFormat }) => {
-		const result = await web3.eth.getPastLogs(
+		const result = (await web3.eth.getPastLogs(
 			{
 				fromBlock: 'earliest',
 				toBlock: 'latest',
@@ -75,7 +75,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 				number: numberFormat as FMT_NUMBER.HEX,
 				bytes: byteFormat as FMT_BYTES,
 			},
-		);
+		)) as unknown as Log;
 		if (typeof result !== 'string') {
 			switch (numberFormat) {
 				case 'NUMBER_STR':
