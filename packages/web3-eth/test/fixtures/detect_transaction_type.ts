@@ -30,6 +30,20 @@ export const transactionType0x0: FormatType<Transaction, typeof ETH_DATA_FORMAT>
 		chainId: '0x1',
 		gasLimit: '0x5208',
 	},
+	{
+		to: '0x8f3e9c1Bd65EB267d19B176A73217524DC21A5ca',
+		nonce: '0x3B7',
+		gasPrice: '0x4617EE7C40',
+		from: '0x76D43E68c2aE1084B340f0eDC04C325DD341039B',
+		gas: '0x67B8BF',
+		value: '0x',
+		input: '0x',
+		chain: 'mainnet',
+		hardfork: 'london',
+		chainId: '0x1',
+		networkId: '0x1',
+		gasLimit: '0x67B8BF',
+	},
 ];
 
 export const transactionType0x1: FormatType<Transaction, typeof ETH_DATA_FORMAT>[] = [
