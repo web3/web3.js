@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { hexToBytes, numberToHex, hexToNumber, toBN } from 'web3-utils';
+import { hexToBytes, numberToHex, hexToNumber } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, LogAPI } from '../../../src';
 import {
@@ -95,13 +95,13 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 			case 'NUMBER_BIGINT':
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result.blockNumber).toStrictEqual(
-					toBN(expectedLogs[0].blockNumber as string),
+					BigInt(expectedLogs[0].blockNumber as string),
 				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.logIndex).toStrictEqual(toBN(expectedLogs[0].logIndex as string));
+				expect(result.logIndex).toStrictEqual(BigInt(expectedLogs[0].logIndex as string));
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result.transactionIndex).toStrictEqual(
-					toBN(expectedLogs[0].blockNumber as string),
+					BigInt(expectedLogs[0].blockNumber as string),
 				);
 				break;
 			case 'NUMBER_NUMBER':
@@ -152,7 +152,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 							hexToBytes(expectedLogs[0].transactionHash as string),
 						),
 						topics: expectedLogs[0].topics?.map(
-							topic => newxUint8Array(hexToBytes(topic)),
+							topic => new Uint8Array(hexToBytes(topic)),
 						),
 					},
 				]);

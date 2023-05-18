@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { hexToBytes, numberToHex, hexToNumber, toBN } from 'web3-utils';
+import { hexToBytes, numberToHex, hexToNumber } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, LogAPI } from '../../../src';
 import {
@@ -24,7 +24,7 @@ import {
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { getSystemE2ETestProvider } from '../e2e_utils';
-import { mainnetAddress } from '../fixtures/mainnet'
+import { mainnetAddress } from '../fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -94,12 +94,12 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 				break;
 			case 'NUMBER_BIGINT':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.blockNumber).toStrictEqual(toBN(expectedLog.blockNumber as string));
+				expect(result.blockNumber).toStrictEqual(BigInt(expectedLog.blockNumber as string));
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.logIndex).toStrictEqual(toBN(expectedLog.logIndex as string));
+				expect(result.logIndex).toStrictEqual(BigInt(expectedLog.logIndex as string));
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result.transactionIndex).toStrictEqual(
-					toBN(expectedLog.blockNumber as string),
+					BigInt(expectedLog.blockNumber as string),
 				);
 				break;
 			case 'NUMBER_NUMBER':
@@ -140,18 +140,23 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result.transactionHash).toBe(expectedLog.transactionHash as string);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.topics).toStrictEqual(expectedLog.topics)
+				expect(result.topics).toStrictEqual(expectedLog.topics);
 				break;
 			case 'BYTES_UINT8ARRAY':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.blockHash).toBe(new Uint8Array(hexToBytes(expectedLog.blockHash as string)));
+				expect(result.blockHash).toBe(
+					new Uint8Array(hexToBytes(expectedLog.blockHash as string)),
+				);
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(result.data).toBe(new Uint8Array(hexToBytes(expectedLog.data as string)));
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.transactionHash).toBe(new Uint8Array(hexToBytes(expectedLog.transactionHash as string)));
-				const convertedTopics = expectedLog.topics?.map(topic => new Uint8Array(hexToBytes(topic)))
+				expect(result.transactionHash).toBe(
+					new Uint8Array(hexToBytes(expectedLog.transactionHash as string)),
+				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.topics).toStrictEqual(convertedTopics)
+				expect(result.topics).toStrictEqual(
+					expectedLog.topics?.map((topic: string) => new Uint8Array(hexToBytes(topic))),
+				);
 				break;
 			default:
 				throw new Error('Unhandled format');
