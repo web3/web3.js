@@ -33,7 +33,8 @@ export const MAX_INTEGER = BigInt(
 );
 // eslint-disable-next-line no-console
 console.log('test________secp256k1', secp256k1);
-export const SECP256K1_ORDER = secp256k1?.CURVE?.n;
+export const SECP256K1_ORDER = secp256k1?.CURVE?.n
+	? secp256k1?.CURVE?.n
+	: BigInt('115792089237316195423570985008687907852837564279074904382605163141518161494337');
 
-// eslint-disable-next-line no-unsafe-optional-chaining
-export const SECP256K1_ORDER_DIV_2 = secp256k1?.CURVE?.n / BigInt(2);
+export const SECP256K1_ORDER_DIV_2 = SECP256K1_ORDER / BigInt(2);
