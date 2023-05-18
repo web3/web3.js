@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line import/extensions
-import { secp256k1 } from 'ethereum-cryptography/secp256k1.js';
+import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 import { bytesToUint8Array, hexToBytes, uint8ArrayEquals } from 'web3-utils';
 import {
 	AccessListEIP2930Transaction,
@@ -31,6 +31,8 @@ import eip1559Fixtures from '../../fixtures/json/eip1559txs.json';
 import eip2930Fixtures from '../../fixtures/json/eip2930txs.json';
 
 import legacyFixtures from '../../fixtures/json/txs.json';
+
+const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
 
 const privateToPublic = function (privateKey: Uint8Array): Uint8Array {
 	return secp256k1.getPublicKey(privateKey, false).slice(1);

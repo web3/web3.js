@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Numbers } from 'web3-types';
 // eslint-disable-next-line import/extensions
-import { secp256k1 } from 'ethereum-cryptography/secp256k1.js';
+import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 import { bytesToHex } from 'web3-utils';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from './constants';
 import {
@@ -41,6 +41,8 @@ import type {
 import { Capability, ECDSASignature } from './types';
 import { Address } from './address';
 import { checkMaxInitCodeSize } from './utils';
+
+const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
 
 interface TransactionCache {
 	hash: Uint8Array | undefined;

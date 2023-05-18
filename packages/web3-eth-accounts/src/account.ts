@@ -19,7 +19,7 @@ import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
 // eslint-disable-next-line import/extensions
-import { secp256k1 } from 'ethereum-cryptography/secp256k1.js';
+import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 import {
 	InvalidKdfError,
 	InvalidPasswordError,
@@ -67,6 +67,8 @@ import type {
 	Web3Account,
 	SignResult,
 } from './types';
+
+const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
 
 /**
  * Get the private key Uint8Array after the validation
