@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { format, toHex } from 'web3-utils';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
-import { EthExecutionAPI, Transaction, ETH_DATA_FORMAT } from 'web3-types';
+import { EthExecutionAPI, HardforksOrdered, Transaction, ETH_DATA_FORMAT } from 'web3-types';
 import { isNullish } from 'web3-validator';
 import { InternalTransaction } from '../types';
 
@@ -26,17 +26,35 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 
 	if (!isNullish(tx.type)) return format({ format: 'uint' }, tx.type, ETH_DATA_FORMAT);
 
-	if (
-		!isNullish(tx.maxFeePerGas) ||
-		!isNullish(tx.maxPriorityFeePerGas) ||
-		tx.hardfork === 'london' ||
-		tx.common?.hardfork === 'london'
-	)
-		return '0x2';
+	if (!isNullish(tx.maxFeePerGas) || !isNullish(tx.maxPriorityFeePerGas)) return '0x2';
 
-	if (!isNullish(tx.accessList) || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin')
-		return '0x1';
+	if (!isNullish(tx.accessList)) return '0x1';
 
+	const givenHardfork = tx.hardfork ?? tx.common?.hardfork;
+	// If we don't have a hardfork, then we can't be sure we're post
+	// EIP-2718 (https://eips.ethereum.org/EIPS/eip-2718) where
+	// transaction types are available
+	if (givenHardfork === undefined) return undefined;
+
+	const hardforkIndex = Object.keys(HardforksOrdered).indexOf(givenHardfork);
+
+	// givenHardfork isn't in our HardforksOrdered list, maybe consider
+	// adding it
+	if (hardforkIndex === undefined) return undefined;
+
+	// givenHardfork is London or later,
+	// default to 0x2 (if gasLimit is undefined)
+	// to provide user with potential gas savings
+	if (hardforkIndex >= Object.keys(HardforksOrdered).indexOf('london'))
+		return !isNullish(tx.gasLimit) ? '0x0' : '0x2';
+
+	// givenHardfork is Berlin or earlier,
+	// default to 0x0 since accessList is undefined and EIP-2718
+	// is supported
+	if (hardforkIndex <= Object.keys(HardforksOrdered).indexOf('berlin')) return '0x0';
+
+	// For all other hardforks, return undefined since EIP-2718
+	// isn't supported
 	return undefined;
 };
 
