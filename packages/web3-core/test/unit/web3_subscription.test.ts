@@ -26,7 +26,7 @@ describe('Web3Subscription', () => {
 		requestManager = {
 			send: jest.fn(),
 			on: jest.fn(),
-			provider: { on: jest.fn(), removeListener: jest.fn() },
+			provider: { on: jest.fn(), removeListener: jest.fn(), request: jest.fn() },
 		};
 		sub = new ExampleSubscription({ param1: 'value' }, { requestManager });
 	});

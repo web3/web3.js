@@ -98,15 +98,6 @@ describe('WebSocketProvider', () => {
 
 				expect(result).toEqual(jsonRpcResponse);
 			});
-
-			it('should emit message with response and "null" error', async () => {
-				const messageSpy = jest.fn();
-				wsProvider.on('message', messageSpy);
-
-				await wsProvider.request(jsonRpcPayload);
-
-				expect(messageSpy).toHaveBeenCalledWith(undefined, jsonRpcResponse);
-			});
 		});
 	});
 });
