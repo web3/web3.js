@@ -15,10 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// eslint-disable-next-line import/extensions
-import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
+import * as ethereumCryptography from 'ethereum-cryptography/secp256k1';
 
+// eslint-disable-next-line no-console
+console.log('ttt_ethereumCryptography', ethereumCryptography);
 const { secp256k1 } = ethereumCryptography;
+// eslint-disable-next-line no-console
+console.log('ttt_secp256k1', secp256k1);
+// eslint-disable-next-line no-console
+console.log('ttt_secp256k1.CURVE', secp256k1.CURVE);
+// eslint-disable-next-line no-console
+console.log('ttt_secp256k1.CURVE.n', secp256k1.CURVE.n);
 /**
  * 2^64-1
  */
@@ -30,11 +37,5 @@ export const MAX_UINT64 = BigInt('0xffffffffffffffff');
 export const MAX_INTEGER = BigInt(
 	'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
 );
-// eslint-disable-next-line no-console
-console.log('test________secp256k1', secp256k1);
-// eslint-disable-next-line no-console
-console.log('test________secp256k1.CURVE', secp256k1.CURVE);
-// eslint-disable-next-line no-console
-console.log('test________secp256k1.CURVE.n', secp256k1.CURVE.n);
 export const SECP256K1_ORDER = secp256k1.CURVE.n;
 export const SECP256K1_ORDER_DIV_2 = SECP256K1_ORDER / BigInt(2);
