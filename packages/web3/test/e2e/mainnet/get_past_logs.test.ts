@@ -80,51 +80,57 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 		switch (numberFormat) {
 			case 'NUMBER_STR':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.blockNumber).toStrictEqual(
+				expect(result.blockNumber as string).toStrictEqual(
 					hexToNumber(numberToHex(expectedLog.blockNumber as string).toString()),
 				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.logIndex).toStrictEqual(
+				expect(result.logIndex as string).toStrictEqual(
 					hexToNumber(numberToHex(expectedLog.logIndex as string).toString()),
 				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.transactionIndex).toStrictEqual(
+				expect(result.transactionIndex as string).toStrictEqual(
 					hexToNumber(numberToHex(expectedLog.blockNumber as string).toString()),
 				);
 				break;
 			case 'NUMBER_BIGINT':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.blockNumber).toStrictEqual(BigInt(expectedLog.blockNumber as string));
+				expect(result.blockNumber as bigint).toStrictEqual(
+					BigInt(expectedLog.blockNumber as string),
+				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.logIndex).toStrictEqual(BigInt(expectedLog.logIndex as string));
+				expect(result.logIndex as bigint).toStrictEqual(
+					BigInt(expectedLog.logIndex as string),
+				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.transactionIndex).toStrictEqual(
+				expect(result.transactionIndex as bigint).toStrictEqual(
 					BigInt(expectedLog.blockNumber as string),
 				);
 				break;
 			case 'NUMBER_NUMBER':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.blockNumber).toStrictEqual(
+				expect(result.blockNumber as number).toStrictEqual(
 					hexToNumber(numberToHex(expectedLog.blockNumber as string)),
 				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.logIndex).toStrictEqual(
+				expect(result.logIndex as number).toStrictEqual(
 					hexToNumber(numberToHex(expectedLog.logIndex as string)),
 				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.transactionIndex).toStrictEqual(
+				expect(result.transactionIndex as number).toStrictEqual(
 					hexToNumber(numberToHex(expectedLog.blockNumber as string)),
 				);
 				break;
 			case 'NUMBER_HEX':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.blockNumber).toStrictEqual(
+				expect(result.blockNumber as string).toStrictEqual(
 					numberToHex(expectedLog.blockNumber as string),
 				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.logIndex).toStrictEqual(numberToHex(expectedLog.logIndex as string));
+				expect(result.logIndex as string).toStrictEqual(
+					numberToHex(expectedLog.logIndex as string),
+				);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result.transactionIndex).toStrictEqual(
+				expect(result.transactionIndex as string).toStrictEqual(
 					numberToHex(expectedLog.blockNumber as string),
 				);
 				break;
