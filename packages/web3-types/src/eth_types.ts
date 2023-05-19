@@ -246,28 +246,6 @@ export type AccessListResult = {
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 
-export type Hardfork =
-	| 'chainstart'
-	| 'frontier'
-	| 'homestead'
-	| 'dao'
-	| 'tangerineWhistle'
-	| 'spuriousDragon'
-	| 'byzantium'
-	| 'constantinople'
-	| 'petersburg'
-	| 'istanbul'
-	| 'muirGlacier'
-	| 'berlin'
-	| 'london'
-	| 'altair'
-	| 'arrowGlacier'
-	| 'grayGlacier'
-	| 'bellatrix'
-	| 'merge'
-	| 'capella'
-	| 'shanghai';
-
 // This list of hardforks is expected to be in order
 // keep this in mind when making changes to it
 export enum HardforksOrdered {
@@ -292,6 +270,8 @@ export enum HardforksOrdered {
 	capella = 'capella',
 	shanghai = 'shanghai',
 }
+
+export type Hardfork = `${HardforksOrdered}`;
 
 export interface LogBase<NumberType, ByteType> {
 	readonly removed?: boolean;
