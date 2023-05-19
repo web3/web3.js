@@ -50,12 +50,9 @@ export const getE2ETestAccountAddress = (): string => {
 	throw new Error('Unable to get test account address');
 };
 
-export const getE2ETestContractAddress = (): string => {
-	return getSystemTestBackend() === 'sepolia'
-		? secrets['SEPOLIA']['DEPLOYED_TEST_CONTRACT_ADDRESS']
-		: secrets['MAINNET']['DEPLOYED_TEST_CONTRACT_ADDRESS'];
-};
-
+export const getE2ETestContractAddress = (): string => 
+	process.env[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET']
+	.DEPLOYED_TEST_CONTRACT_ADDRESS;
 export const getAllowedSendTransaction = (): boolean => {
 	if (process.env.ALLOWED_SEND_TRANSACTION !== undefined) {
 		// https://github.com/actions/runner/issues/1483
