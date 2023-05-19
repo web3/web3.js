@@ -840,7 +840,7 @@ describe('defaults', () => {
 				},
 				eth2,
 			);
-			expect(hardforkOverride).toBe('0x0');
+			expect(hardforkOverride).toBe('0x2');
 			const commonOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
@@ -858,7 +858,7 @@ describe('defaults', () => {
 				},
 				eth2,
 			);
-			expect(commonOverride).toBe('0x0');
+			expect(commonOverride).toBe('0x2');
 
 			// override to 0x1 if:
 			// tx.accessList !== undefined || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin'
