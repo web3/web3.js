@@ -23,13 +23,12 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { getSystemE2ETestProvider } from '../e2e_utils';
-import { mainnetAddress } from '../fixtures/mainnet';
+import { getSystemE2ETestProvider, getE2ETestContractAddress } from '../e2e_utils';
 
 describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 	const provider = getSystemE2ETestProvider();
 	const expectedLog: LogAPI = {
-		address: mainnetAddress,
+		address: getE2ETestContractAddress(),
 		blockHash: '0x89515ecc5eda6f038ce612fd7a285dc81ad0fc3cec1a1c2d2166565ac99d48db',
 		blockNumber: '0x103dc29',
 		data: '0x0000000000000000000000000000000000000000000000000000000146ee7540',
@@ -68,7 +67,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 				{
 					fromBlock: '0x103dc29',
 					toBlock: '0x103dc30',
-					address: mainnetAddress,
+					address: getE2ETestContractAddress(),
 				},
 				{
 					number: numberFormat as FMT_NUMBER,

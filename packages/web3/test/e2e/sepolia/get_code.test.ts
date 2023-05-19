@@ -22,8 +22,8 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { getSystemE2ETestProvider } from '../e2e_utils';
-import { sepoliaAddress, sepoliaBlockData } from '../fixtures/sepolia';
+import { getSystemE2ETestProvider, getE2ETestContractAddress } from '../e2e_utils';
+import { sepoliaBlockData } from '../fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getCode`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -49,10 +49,14 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should getCode for deployed contract', async ({ block, format }) => {
-		const result = await web3.eth.getCode(sepoliaAddress, sepoliaBlockData[block], {
-			number: FMT_NUMBER.HEX,
-			bytes: format as FMT_BYTES,
-		});
+		const result = await web3.eth.getCode(
+			getE2ETestContractAddress(),
+			sepoliaBlockData[block],
+			{
+				number: FMT_NUMBER.HEX,
+				bytes: format as FMT_BYTES,
+			},
+		);
 
 		switch (format) {
 			case 'BYTES_HEX':

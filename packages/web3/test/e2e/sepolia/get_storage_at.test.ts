@@ -15,13 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3, { Numbers } from '../../../src';
-import { getSystemE2ETestProvider, getE2ETestAccountAddress } from '../e2e_utils';
+import {
+	getSystemE2ETestProvider,
+	getE2ETestAccountAddress,
+	getE2ETestContractAddress,
+} from '../e2e_utils';
 import {
 	closeOpenConnection,
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { sepoliaAddress, sepoliaBlockData } from '../fixtures/sepolia';
+import { sepoliaBlockData } from '../fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 	const provider = getSystemE2ETestProvider();
@@ -61,7 +65,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
 		const result = await web3.eth.getStorageAt(
-			sepoliaAddress,
+			getE2ETestContractAddress(),
 			storageSlot,
 			sepoliaBlockData[block],
 		);

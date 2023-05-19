@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-export const sepoliaAddress = '0xedfd52255571b4a9a9d4445989e39f5c14ff0447';
 export const sepoliaBlockHydrated = {
 	baseFeePerGas: '0x9',
 	difficulty: '0x0',
@@ -748,5 +747,5 @@ export const sepoliaTransactionFromBlock = {
 	type: BigInt(0),
 	v: BigInt(22310258),
 	value: BigInt('1000000000000000000'),
-	data: '0x'
+	data: '0x',
 };
