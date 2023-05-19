@@ -18,7 +18,7 @@ import { Bytes } from 'web3-types';
 import { bytesToUint8Array, hexToBytes } from 'web3-utils';
 
 import Web3 from '../../../src';
-import { getSystemE2ETestProvider } from '../e2e_utils';
+import { getSystemE2ETestProvider, getE2ETestContractAddress } from '../e2e_utils';
 import {
 	closeOpenConnection,
 	getSystemTestBackend,
@@ -62,14 +62,14 @@ describe(`${getSystemTestBackend()} tests - getTransactionReceipt`, () => {
 		expect(result).toMatchObject({
 			blockHash: '0xdb1cb1fc3867fa28e4ba2297fbb1e65b81a3212beb1b73cbcbfe40c4192ee948',
 			blockNumber: BigInt(3229301),
-			contractAddress: '0xedfd52255571b4a9a9d4445989e39f5c14ff0447',
+			contractAddress: getE2ETestContractAddress(),
 			cumulativeGasUsed: BigInt(579732),
 			effectiveGasPrice: BigInt(2500000008),
 			from: '0xa127c5e6a7e3600ac34a9a9928e52521677e7211',
 			gasUsed: BigInt(347850),
 			logs: [
 				{
-					address: '0xedfd52255571b4a9a9d4445989e39f5c14ff0447',
+					address: getE2ETestContractAddress(),
 					blockHash: '0xdb1cb1fc3867fa28e4ba2297fbb1e65b81a3212beb1b73cbcbfe40c4192ee948',
 					blockNumber: BigInt(3229301),
 					data: '0x',
