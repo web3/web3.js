@@ -17,7 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable max-classes-per-file */
 
-import { Bytes, HexString, Numbers, TransactionReceipt } from 'web3-types';
+import {
+	Bytes,
+	HexString,
+	Numbers,
+	TransactionReceipt,
+	Web3ValidationErrorObject,
+} from 'web3-types';
 import {
 	ERR_RAW_TX_UNDEFINED,
 	ERR_TX,
@@ -58,6 +64,7 @@ import {
 	ERR_TX_UNSUPPORTED_EIP_1559,
 	ERR_TX_UNSUPPORTED_TYPE,
 	ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR,
+	ERR_TX_INVALID_PROPERTIES_FOR_TYPE,
 } from '../error_codes';
 import { InvalidValueError, BaseWeb3Error } from '../web3_error_base';
 
@@ -537,6 +544,29 @@ export class LocalWalletNotAvailableError extends InvalidValueError {
 		super(
 			'LocalWalletNotAvailableError',
 			`Attempted to index account in local wallet, but no wallet is available`,
+		);
+	}
+}
+export class InvalidPropertiesForTransactionTypeError extends BaseWeb3Error {
+	public code = ERR_TX_INVALID_PROPERTIES_FOR_TYPE;
+
+	public constructor(
+		validationError: Web3ValidationErrorObject[],
+		txType: '0x0' | '0x1' | '0x2',
+	) {
+		const invalidPropertyNames: string[] = [];
+		validationError.forEach(error =>
+			invalidPropertyNames.push(
+				// These errors are erroneously reported, error
+				// has type Web3ValidationErrorObject, but eslint doesn't recognize it
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+				(error.keyword.match(/data.(.+)/) as string[])[1],
+			),
+		);
+		super(
+			`The following properties are invalid for the transaction type ${txType}: ${invalidPropertyNames.join(
+				', ',
+			)}`,
 		);
 	}
 }
