@@ -14,13 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// eslint-disable-next-line import/extensions
-import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { bytesToHex, uint8ArrayEquals } from 'web3-utils';
+import { secp256k1 } from './constants';
 import { assertIsUint8Array, zeros } from '../common/utils';
-
-const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
 
 export class Address {
 	public readonly buf: Uint8Array;

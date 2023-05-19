@@ -18,8 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
-// eslint-disable-next-line import/extensions
-import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 import {
 	InvalidKdfError,
 	InvalidPasswordError,
@@ -58,6 +56,7 @@ import {
 } from 'web3-utils';
 
 import { isHexStrict, isNullish, isString, validator } from 'web3-validator';
+import { secp256k1 } from './tx/constants';
 import { keyStoreSchema } from './schemas';
 import { TransactionFactory } from './tx/transactionFactory';
 import type {
@@ -67,8 +66,6 @@ import type {
 	Web3Account,
 	SignResult,
 } from './types';
-
-const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
 
 /**
  * Get the private key Uint8Array after the validation

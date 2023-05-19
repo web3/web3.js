@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line import/extensions
 import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 
-const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
+export const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
 /**
  * 2^64-1
  */

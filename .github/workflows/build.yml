@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node: [18, 16]
-    name: Build Packages
+    name: Build CJS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,9 +31,8 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
-  build-cjs-types:
+  build-esm-types:
       name: Build ESM & Types
-      needs: build
       runs-on: ubuntu-latest
       strategy:
           matrix:
@@ -53,36 +52,30 @@ jobs:
       name: Lint
       needs: build
       runs-on: ubuntu-latest
-      strategy:
-          matrix:
-              node: [ 18 ]
       steps:
           -   uses: actions/setup-node@v3
               with:
-                node-version: ${{ matrix.node }}
+                node-version: 18
           -   uses: actions/download-artifact@v3
               with:
-                name: web3-${{ matrix.node }}.js.tar.gz
+                name: web3-18.js.tar.gz
                 path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
           -   run: yarn lint
 
   build-web:
     name: Build Web
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-        matrix:
-            node: [ 18 ]
     steps:
         -   uses: actions/setup-node@v3
             with:
-              node-version: ${{ matrix.node }}
+              node-version: 18
         -   uses: actions/download-artifact@v3
             with:
-              name: web3-${{ matrix.node }}.js.tar.gz
+              name: web3-18.js.tar.gz
               path: /tmp
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
         -   name: Restore default branch stats
             if: github.event_name != 'push'
             uses: actions/cache/restore@v3
