@@ -18,7 +18,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { format, toHex } from 'web3-utils';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
 import { EthExecutionAPI, HardforksOrdered, Transaction, ETH_DATA_FORMAT } from 'web3-types';
-import { isNullish, validator } from 'web3-validator';
+import { Web3ValidatorError, isNullish, validator } from 'web3-validator';
+import { InvalidPropertiesForTransactionTypeError } from 'web3-errors';
+
 import { InternalTransaction } from '../types';
 
 // undefined is treated as null for JSON schema validator
@@ -56,24 +58,44 @@ const type0x2TransactionSchema = {
 	},
 };
 
+const validateTxTypeAndHandleErrors = (
+	txSchema: object,
+	tx: Transaction,
+	txType: '0x0' | '0x1' | '0x2',
+) => {
+	try {
+		validator.validateJSONSchema(txSchema, tx);
+	} catch (error) {
+		if (error instanceof Web3ValidatorError)
+			// Erroneously reported error
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			throw new InvalidPropertiesForTransactionTypeError(error.errors, txType);
+
+		throw error;
+	}
+};
+
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;
 
 	if (!isNullish(tx.type)) {
+		let txSchema;
 		switch (tx.type) {
 			case '0x0':
-				validator.validateJSONSchema(type0x0TransactionSchema, tx);
+				txSchema = type0x0TransactionSchema;
 				break;
 			case '0x1':
-				validator.validateJSONSchema(type0x1TransactionSchema, tx);
+				txSchema = type0x1TransactionSchema;
 				break;
 			case '0x2':
-				validator.validateJSONSchema(type0x2TransactionSchema, tx);
+				txSchema = type0x2TransactionSchema;
 				break;
 
 			default:
-				break;
+				return format({ format: 'uint' }, tx.type, ETH_DATA_FORMAT);
 		}
+
+		validateTxTypeAndHandleErrors(txSchema, tx, tx.type);
 
 		return format({ format: 'uint' }, tx.type, ETH_DATA_FORMAT);
 	}
@@ -85,12 +107,12 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 	// or type 0x0 for legacy txs post EIP-2718
 
 	if (!isNullish(tx.accessList)) {
-		validator.validateJSONSchema(type0x1TransactionSchema, tx);
+		validateTxTypeAndHandleErrors(type0x1TransactionSchema, tx, '0x1');
 		return '0x1';
 	}
 
 	if (!isNullish(tx.maxFeePerGas) || !isNullish(tx.maxPriorityFeePerGas)) {
-		validator.validateJSONSchema(type0x2TransactionSchema, tx);
+		validateTxTypeAndHandleErrors(type0x2TransactionSchema, tx, '0x2');
 		return '0x2';
 	}
 
