@@ -24,7 +24,7 @@ import { InvalidPropertiesForTransactionTypeError } from 'web3-errors';
 import { InternalTransaction } from '../types';
 
 // undefined is treated as null for JSON schema validator
-const type0x0TransactionSchema = {
+const transactionType0x0Schema = {
 	type: 'object',
 	properties: {
 		accessList: {
@@ -38,7 +38,7 @@ const type0x0TransactionSchema = {
 		},
 	},
 };
-const type0x1TransactionSchema = {
+const transactionType0x1Schema = {
 	type: 'object',
 	properties: {
 		maxFeePerGas: {
@@ -49,7 +49,7 @@ const type0x1TransactionSchema = {
 		},
 	},
 };
-const type0x2TransactionSchema = {
+const transactionType0x2Schema = {
 	type: 'object',
 	properties: {
 		gasPrice: {
@@ -82,13 +82,13 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 		let txSchema;
 		switch (tx.type) {
 			case '0x0':
-				txSchema = type0x0TransactionSchema;
+				txSchema = transactionType0x0Schema;
 				break;
 			case '0x1':
-				txSchema = type0x1TransactionSchema;
+				txSchema = transactionType0x1Schema;
 				break;
 			case '0x2':
-				txSchema = type0x2TransactionSchema;
+				txSchema = transactionType0x2Schema;
 				break;
 
 			default:
@@ -100,20 +100,23 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 		return format({ format: 'uint' }, tx.type, ETH_DATA_FORMAT);
 	}
 
-	// We don't check !isNullish(tx.gasPrice) here, because
-	// if it's not undefined, we still don't know if the network
-	// supports EIP-2718 (https://eips.ethereum.org/EIPS/eip-2718)
-	// and whether we should return undefined for legacy txs,
-	// or type 0x0 for legacy txs post EIP-2718
+	if (!isNullish(tx.maxFeePerGas) || !isNullish(tx.maxPriorityFeePerGas)) {
+		validateTxTypeAndHandleErrors(transactionType0x2Schema, tx, '0x2');
+		return '0x2';
+	}
 
 	if (!isNullish(tx.accessList)) {
-		validateTxTypeAndHandleErrors(type0x1TransactionSchema, tx, '0x1');
+		validateTxTypeAndHandleErrors(transactionType0x1Schema, tx, '0x1');
 		return '0x1';
 	}
 
-	if (!isNullish(tx.maxFeePerGas) || !isNullish(tx.maxPriorityFeePerGas)) {
-		validateTxTypeAndHandleErrors(type0x2TransactionSchema, tx, '0x2');
-		return '0x2';
+	// We don't return 0x0 here, because if gasPrice is not
+	// undefined, we still don't know if the network
+	// supports EIP-2718 (https://eips.ethereum.org/EIPS/eip-2718)
+	// and whether we should return undefined for legacy txs,
+	// or type 0x0 for legacy txs post EIP-2718
+	if (!isNullish(tx.gasPrice)) {
+		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
 	}
 
 	const givenHardfork = tx.hardfork ?? tx.common?.hardfork;
