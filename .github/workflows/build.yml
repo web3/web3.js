@@ -14,8 +14,8 @@ jobs:
   build:
     strategy:
       matrix:
-        node: [14, 16]
-    name: Build Packages
+        node: [18, 16]
+    name: Build CJS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,35 +23,60 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      - run: yarn
+      - run: yarn install --ignore-scripts
+      - run: yarn prebuild
+      - run: yarn build:cjs
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
-
+  build-esm-types:
+      name: Build ESM & Types
+      needs: build
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              node: [ 18, 16 ]
+      steps:
+          -   uses: actions/setup-node@v3
+              with:
+                node-version: ${{ matrix.node }}
+          -   uses: actions/download-artifact@v3
+              with:
+                name: web3-${{ matrix.node }}.js.tar.gz
+                path: /tmp
+          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          -   run: yarn build:esm
+          -   run: yarn build:types
   lint:
-    name: lint
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-14.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
-      - run: yarn lint
+      name: Lint
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+          -   uses: actions/setup-node@v3
+              with:
+                node-version: 18
+          -   uses: actions/download-artifact@v3
+              with:
+                name: web3-18.js.tar.gz
+                path: /tmp
+          -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
+          -   run: yarn lint
 
   build-web:
     name: Build Web
     needs: build
     runs-on: ubuntu-latest
     steps:
+        -   uses: actions/setup-node@v3
+            with:
+              node-version: 18
         -   uses: actions/download-artifact@v3
             with:
-                name: web3-16.js.tar.gz
-                path: /tmp
-        -   run: tar -xf /tmp/web3-16.js.tar.gz -C ./
+              name: web3-18.js.tar.gz
+              path: /tmp
+        -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
         -   name: Restore default branch stats
             if: github.event_name != 'push'
             uses: actions/cache/restore@v3
@@ -82,8 +107,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [14, 16]
+        node: [18, 16]
     steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -95,7 +123,7 @@ jobs:
         with:
           flags: UnitTests
           token: ${{ secrets.CODECOV_TOKEN }}
-        if: ${{ matrix.node == 16 }}
+        if: ${{ matrix.node == 18 }}
 
   integration:
     name: Integration
@@ -107,10 +135,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [14, 16]
+        node: [18, 16]
         backend: ['geth', 'ganache']
         mode: ['http', 'ws']
     steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -129,10 +160,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ 14, 16 ]
+        node: [ 18, 16 ]
         backend: [ 'geth' ]
         mode: [ 'ipc' ]
     steps:
+      -   uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node }}
       -   uses: actions/download-artifact@v3
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
@@ -148,10 +182,13 @@ jobs:
       strategy:
           fail-fast: false
           matrix:
-              node: [ 16 ]
+              node: [ 18 ]
               backend: [ 'geth' ]
               mode: [ 'ws','ipc' ]
       steps:
+          -   uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node }}
           -   uses: actions/download-artifact@v3
               with:
                   name: web3-${{ matrix.node }}.js.tar.gz
@@ -167,9 +204,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [14, 16]
+        node: [18, 16]
         browser: ['electron', 'chrome', 'firefox']
     steps:
+      - uses: actions/setup-node@v3
+        with:
+            node-version: ${{ matrix.node }}
       - uses: browser-actions/setup-firefox@latest
         if: matrix.browser == 'firefox'
       - uses: actions/download-artifact@v3
@@ -191,8 +231,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            node: [ 16 ]
+            node: [ 18 ]
     steps:
+        -   uses: actions/setup-node@v3
+            with:
+                node-version: ${{ matrix.node }}
         -   uses: actions/download-artifact@v3
             with:
                 name: web3-${{ matrix.node }}.js.tar.gz

@@ -18,7 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
-import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import {
 	InvalidKdfError,
 	InvalidPasswordError,
@@ -57,6 +56,7 @@ import {
 } from 'web3-utils';
 
 import { isHexStrict, isNullish, isString, validator } from 'web3-validator';
+import { secp256k1 } from './tx/constants';
 import { keyStoreSchema } from './schemas';
 import { TransactionFactory } from './tx/transactionFactory';
 import type {
