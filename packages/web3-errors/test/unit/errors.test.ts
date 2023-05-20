@@ -51,6 +51,7 @@ describe('errors', () => {
 			...transactionErrors,
 			...utilsErrors,
 		})) {
+			if (ErrorClass === transactionErrors.InvalidPropertiesForTransactionTypeError) break;
 			// To disable error for the abstract class
 
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -186,6 +187,24 @@ describe('errors', () => {
 						attr1: 'attr1',
 					} as any,
 					'data',
+				).toJSON(),
+			).toMatchSnapshot();
+		});
+	});
+
+	describe('InvalidPropertiesForTransactionTypeError', () => {
+		it('should have valid json structure', () => {
+			expect(
+				new transactionErrors.InvalidPropertiesForTransactionTypeError(
+					[
+						{
+							keyword: 'data.property',
+							instancePath: '',
+							schemaPath: '',
+							params: {},
+						},
+					],
+					'0x0',
 				).toJSON(),
 			).toMatchSnapshot();
 		});

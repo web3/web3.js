@@ -92,3 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Replaced Buffer for Uint8Array (#6004)
+
+### Removed
+
+-   `Web3ValidationErrorObject` type is now exported from `web3-types` package (#6102)
