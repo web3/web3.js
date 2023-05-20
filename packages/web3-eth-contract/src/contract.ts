@@ -895,57 +895,14 @@ export class Contract<Abi extends ContractAbi>
 					throw new Web3ValidatorError(errors);
 				}
 			}
-			if (methodAbi.stateMutability === 'payable') {
-				return {
-					arguments: abiParams,
 
-					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
-						this._contractMethodCall(
-							methodAbi,
-							abiParams,
-							internalErrorsAbis,
-							options,
-							block,
-						),
-
-					send: (options?: PayableTxOptions) =>
-						this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
-
-					estimateGas: async <
-						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-					>(
-						options?: PayableCallOptions,
-						returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
-					) =>
-						this._contractMethodEstimateGas({
-							abi: methodAbi,
-							params: abiParams,
-							returnFormat,
-							options,
-						}),
-
-					encodeABI: () => encodeMethodABI(methodAbi, abiParams),
-
-					createAccessList: async (
-						options?: NonPayableCallOptions,
-						block?: BlockNumberOrTag,
-					) =>
-						this._contractMethodCreateAccessList(
-							methodAbi,
-							abiParams,
-							internalErrorsAbis,
-							options,
-							block,
-						),
-				} as unknown as PayableMethodObject<
-					ContractOverloadedMethodInputs<T>,
-					ContractOverloadedMethodOutputs<T>
-				>;
-			}
-			return {
+			const methods = {
 				arguments: abiParams,
 
-				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
+				call: async (
+					options?: PayableCallOptions | NonPayableCallOptions,
+					block?: BlockNumberOrTag,
+				) =>
 					this._contractMethodCall(
 						methodAbi,
 						abiParams,
@@ -954,11 +911,11 @@ export class Contract<Abi extends ContractAbi>
 						block,
 					),
 
-				send: (options?: NonPayableTxOptions) =>
+				send: (options?: PayableTxOptions | NonPayableTxOptions) =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
 
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-					options?: NonPayableCallOptions,
+					options?: PayableCallOptions | NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 				) =>
 					this._contractMethodEstimateGas({
@@ -971,7 +928,7 @@ export class Contract<Abi extends ContractAbi>
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
 
 				createAccessList: async (
-					options?: NonPayableCallOptions,
+					options?: PayableCallOptions | NonPayableCallOptions,
 					block?: BlockNumberOrTag,
 				) =>
 					this._contractMethodCreateAccessList(
@@ -981,7 +938,15 @@ export class Contract<Abi extends ContractAbi>
 						options,
 						block,
 					),
-			} as unknown as NonPayableMethodObject<
+			};
+
+			if (methodAbi.stateMutability === 'payable') {
+				return methods as PayableMethodObject<
+					ContractOverloadedMethodInputs<T>,
+					ContractOverloadedMethodOutputs<T>
+				>;
+			}
+			return methods as NonPayableMethodObject<
 				ContractOverloadedMethodInputs<T>,
 				ContractOverloadedMethodOutputs<T>
 			>;
