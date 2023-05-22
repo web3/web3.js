@@ -3,6 +3,8 @@ sidebar_position: 2
 sidebar_label: Providers
 ---
 
+# Providers
+
 ## Introduction
 
 Web3.js providers are objects responsible for enabling connection with the Ethereum network in numerous ways. Connecting your web application to an Ethereum node is necessary for sending transactions, querying data, and interacting with smart contracts on the network. In this tutorial, we'll explore the different types of providers available in Web3.js version 4, how to set them up, and how to use them in your code.
@@ -19,96 +21,12 @@ Before we get started, make sure you have a basic understanding of JavaScript an
 
 Web3.js supports several types of providers, each with its own unique features or that can be used in certain cases. Here are the main types:
 
-1. Browser Injected Ethereum Provider
-2. HTTP Provider
-3. WebSocket Provider
-4. IPC Provider (for Node.js)
-5. Providers from third parties (Compliant with EIP 1193)
+1. HTTP Provider
+2. WebSocket Provider
+3. IPC Provider (for Node.js)
+4. Third-party Providers (Compliant with EIP 1193)
 
-### Browser Injected Ethereum Provider
-
-Connecting to the Ethereum network with Web3.js and MetaMask, or another similar extensions or Ethereum enabled browser, is easy. MetaMask is a browser extension that injects a Web3 object into the browser's JavaScript context, so you can interact with the Ethereum network directly from your web application.
-
-Actually, the browser injected Ethereum provider is intended to use `window.ethereum` when it is injected by the MetaMask browser extension or another Ethereum enabled browser. However, before using this provider, we need to detect if the user has MetaMask installed and call `enable()` to request access to the user's MetaMask account. In this provider, we can make both read-only and write transactions.
-
-Follow these steps to connect to the Ethereum network with MetaMask and Web3.js. They also includes the steps to create a local web server using Node.js:
-
-1. Ensure that Ganache is running as mentioned in the [Prerequisites](#prerequisites) section.
-2. Install MetaMask extension for your browser. You can download MetaMask from their website: https://metamask.io/.
-3. Create a new HTML file in your code editor.
-4. Copy and paste the following code into your HTML file:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Connecting to the Ethereum network with Web3.js and MetaMask</title>
-	</head>
-	<body>
-		<h1>Connecting to the Ethereum network with Web3.js and MetaMask</h1>
-		<div id="log">
-			You need to approve connecting this website to MetaMask. Click on MetaMask icon in the
-			browser extension if it did not already show a popup.
-		</div>
-
-		<script src="https://cdn.jsdelivr.net/npm/web3@4.0.1-rc.1/dist/web3.min.js"></script>
-		<script>
-			window.addEventListener('load', function () {
-				// Check if web3 is available
-				if (typeof window.ethereum !== 'undefined') {
-					// Use the browser injected Ethereum provider
-					web3 = new Web3(window.ethereum);
-					// Request access to the user's MetaMask account
-					window.ethereum.enable();
-					// Get the user's accounts
-					web3.eth.getAccounts().then(function (accounts) {
-						// Show the first account
-						document.getElementById('log').innerHTML =
-							'Connected with MetaMask account: ' + accounts[0];
-					});
-				} else {
-					// If web3 is not available, give instructions to install MetaMask
-					document.getElementById('log').innerHTML =
-						'Please install MetaMask to connect with the Ethereum network.';
-				}
-			});
-		</script>
-	</body>
-</html>
-```
-
-5. Save the file as `index.html`.
-6. Open a terminal or command prompt window.
-7. Navigate to the directory where your HTML file is located.
-8. Type `npm init -y` and press Enter. This will create a `package.json` file in the current directory.
-9. Type `npm install --save express` and press Enter. This will install the Express module and add it to your project's dependencies.
-10. Create a new file called `server.js` in the same directory as your HTML file.
-11. Copy and paste the following code into `server.js`:
-
-```js
-const express = require('express');
-const app = express();
-const path = require('path');
-
-app.use(express.static(path.join(__dirname, '.')));
-
-app.listen(8000, () => {
-	console.log('Server started on port 8000');
-});
-```
-
-11. Save the file.
-12. Open your command prompt window and navigate to the directory where `server.js` is located.
-13. Type `node server.js` and press Enter. This will start the server on port 8000.
-14. Open your web browser and navigate to `http://localhost:8000/`. MetaMask should ask your approval to connect to your website, follow the steps give your concent.
-15. If everything is set up properly, you should be able to connect to the Ethereum network with MetaMask and see the logged account address.
-
-This code will create a local web server using Node.js and Express, and serve your HTML file from the root directory of your project. You can customize the port number and the root directory if needed.
-
-Now you can start building your Ethereum application with Web3.js and MetaMask!
-
-## HTTP Provider
+### HTTP Provider
 
 HTTP Provider is a way to connect with a publicly available Ethereum node, making it easy and straightforward to communicate with the Ethereum network from your web application. This provider is ideal for hosting tokens and dApps because it is read-only, so you can't make any write transactions to the network with it.
 
@@ -177,7 +95,7 @@ If everything is set up properly, you should see the current block number, a tra
 
 This example demonstrates how to connect to the Ethereum network using HTTP provider, get the current block number, send a transaction, and get the updated block number.
 
-## WebSocket Provider
+### WebSocket Provider
 
 WebSocket Provider allows us to communicate with the Ethereum node via WebSocket protocol, which is useful when we want continuous updates on our subscribed items. This provider is ideal for real-time applications that require constant updates from the Ethereum network.
 
@@ -264,7 +182,7 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 
 If everything is set up properly, you should see the new block headers, transaction hash, and pending transaction printed in the console. The unique feature of WebSocket provider highlighted in this example is that it can subscribe to new block headers and pending transactions in real-time.
 
-**IPC Provider (for Node.js)**
+### IPC Provider (for Node.js)
 
 IPC Provider allows us to interact with the Ethereum network via Inter-Process Communication (IPC), which is useful for Node.js applications that require direct access to local Ethereum node. This provider is ideal for development and testing on a local machine.
 
@@ -352,11 +270,11 @@ If everything is set up properly, you should see the list of accounts and transa
 
 Keep in mind that using IPC Provider with `geth` in development mode in a production environment is not recommended as it can pose a security risk.
 
-### Providers from third parties (Compliant with EIP 1193)
+### Third-party Providers (Compliant with EIP 1193)
 
-web3.js accepts any provider that is in compliance with [EIP-1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md). Actually, the section Browser Injected Ethereum Provider was about using a special case of those third party providers. And web3.js has been tested with @truffle/hdwallet-provider, Ganache provider, Hardhat provider, and Incubed (IN3) as a provider.
+web3.js accepts any provider that is in compliance with [EIP-1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md). And it has tests written to ensure working with @truffle/hdwallet-provider, Ganache provider, Hardhat provider, and Incubed (IN3) as a provider. And, the section [Browser Injected Ethereum Provider](#browser-injected-ethereum-provider), later in this tutorial, is about using a special case of those third party providers.
 
-Here's a step-by-step example and a code snippet to connect your web application to the Ethereum network using `@truffle/hdwallet-provider` as an example of an external provider that is compliant with EIP 1193.
+And here is a step-by-step example and a code snippet to connect your web application to the Ethereum network using `@truffle/hdwallet-provider` as an example of an external provider that is compliant with EIP 1193.
 
 1. Open a command prompt or terminal window in a new folder.
 2. Type `npm init -y` and press Enter. This will create a `package.json` file in the current directory.
@@ -397,9 +315,97 @@ web3.eth
 
 If everything is set up properly, you should see the current block number printed in the console.
 
-This code will connect your web application to the Ethereum network using infura. And you modify it to interact with the network, perform transactions, and read/write data from the Ethereum network.
+This code will connect your web application to the Ethereum network using truffle HD Wallet-enabled Web3 provider. And you can modify it to interact with the network, perform transactions, and read/write data from the Ethereum network.
 
-## Setting Web3 Provider using String URL
+## Practical ways of connecting to a provider
+
+1. Browser Injected Ethereum Provider
+2. Setting Web3 Provider using a string URL
+
+### Browser Injected Ethereum Provider
+
+Connecting to the Ethereum network with Web3.js and MetaMask, or another similar extensions or Ethereum enabled browser, is easy. Because, MetaMask is a browser extension that injects a Web3 object into the browser's JavaScript context, so you can interact with the Ethereum network directly from your web application. And you leave the wallet management to Ethereum browser extensions (like MetaMask) or Ethereum-enabled browsers (like the browser inside TrustWallet).
+
+In technical terms, you use `window.ethereum` when it is injected by the Ethereum browser extension or the Ethereum-enabled browser. However, before using this provider, we need to detect if it is available and then call `enable()` to request access to the user's MetaMask account.
+
+Follow these steps to connect to the Ethereum network with MetaMask and Web3.js. They also includes the steps to create a local web server using Node.js:
+
+1. Ensure that Ganache is running as mentioned in the [Prerequisites](#prerequisites) section.
+2. Install MetaMask extension for your browser. You can download MetaMask from their website: https://metamask.io/.
+3. Create a new HTML file in your code editor.
+4. Copy and paste the following code into your HTML file:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Connecting to the Ethereum network with Web3.js and MetaMask</title>
+	</head>
+	<body>
+		<h1>Connecting to the Ethereum network with Web3.js and MetaMask</h1>
+		<div id="log">
+			You need to approve connecting this website to MetaMask. Click on MetaMask icon in the
+			browser extension if it did not already show a popup.
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/web3@4.0.1-rc.1/dist/web3.min.js"></script>
+		<script>
+			window.addEventListener('load', function () {
+				// Check if web3 is available
+				if (typeof window.ethereum !== 'undefined') {
+					// Use the browser injected Ethereum provider
+					web3 = new Web3(window.ethereum);
+					// Request access to the user's MetaMask account
+					window.ethereum.enable();
+					// Get the user's accounts
+					web3.eth.getAccounts().then(function (accounts) {
+						// Show the first account
+						document.getElementById('log').innerHTML =
+							'Connected with MetaMask account: ' + accounts[0];
+					});
+				} else {
+					// If web3 is not available, give instructions to install MetaMask
+					document.getElementById('log').innerHTML =
+						'Please install MetaMask to connect with the Ethereum network.';
+				}
+			});
+		</script>
+	</body>
+</html>
+```
+
+5. Save the file as `index.html`.
+6. Open a terminal or command prompt window.
+7. Navigate to the directory where your HTML file is located.
+8. Type `npm init -y` and press Enter. This will create a `package.json` file in the current directory.
+9. Type `npm install --save express` and press Enter. This will install the Express module and add it to your project's dependencies.
+10. Create a new file called `server.js` in the same directory as your HTML file.
+11. Copy and paste the following code into `server.js`:
+
+```js
+const express = require('express');
+const app = express();
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, '.')));
+
+app.listen(8000, () => {
+	console.log('Server started on port 8000');
+});
+```
+
+11. Save the file.
+12. Open your command prompt window and navigate to the directory where `server.js` is located.
+13. Type `node server.js` and press Enter. This will start the server on port 8000.
+14. Open your web browser and navigate to `http://localhost:8000/`. MetaMask should ask your approval to connect to your website, follow the steps give your concent.
+15. If everything is set up properly, you should be able to connect to the Ethereum network with MetaMask and see the logged account address.
+
+This code will create a local web server using Node.js and Express, and serve your HTML file from the root directory of your project. You can customize the port number and the root directory if needed.
+
+Now you can start building your Ethereum application with Web3.js and MetaMask!
+
+### Setting Web3 Provider using a string URL
 
 Web3.js allows you to set the Ethereum network provider by passing a string URL containing either `http`, `https`, `ws`, or `wss` protocol. This provider can be used to connect to a remote server or node.
 
