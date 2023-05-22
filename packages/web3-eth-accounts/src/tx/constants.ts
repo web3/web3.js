@@ -14,8 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { secp256k1 } from 'ethereum-cryptography/secp256k1';
+// eslint-disable-next-line import/extensions
+import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 
+export const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
 /**
  * 2^64-1
  */
@@ -29,4 +31,4 @@ export const MAX_INTEGER = BigInt(
 );
 
 export const SECP256K1_ORDER = secp256k1.CURVE.n;
-export const SECP256K1_ORDER_DIV_2 = secp256k1.CURVE.n / BigInt(2);
+export const SECP256K1_ORDER_DIV_2 = SECP256K1_ORDER / BigInt(2);

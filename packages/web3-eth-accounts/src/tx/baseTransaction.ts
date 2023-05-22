@@ -16,9 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Numbers } from 'web3-types';
-import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { bytesToHex } from 'web3-utils';
-import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2 } from './constants';
+import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2, secp256k1 } from './constants';
 import {
 	Chain,
 	Common,

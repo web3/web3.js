@@ -14,12 +14,15 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { InvalidPropertiesForTransactionTypeError } from 'web3-errors';
+
 import { detectTransactionType } from '../../src/utils/detect_transaction_type';
 import {
 	transactionType0x0,
 	transactionType0x1,
 	transactionType0x2,
 	transactionTypeUndefined,
+	transactionTypeValidationError,
 } from '../fixtures/detect_transaction_type';
 
 describe('detectTransactionType', () => {
@@ -52,6 +55,14 @@ describe('detectTransactionType', () => {
 	describe('should not be able to detect transaction type, returning undefined', () => {
 		it.each(transactionTypeUndefined)('%s', transaction => {
 			expect(detectTransactionType(transaction)).toBeUndefined();
+		});
+	});
+
+	describe('should throw validation error', () => {
+		it.each(transactionTypeValidationError)('%s', transaction => {
+			expect(() => detectTransactionType(transaction)).toThrow(
+				InvalidPropertiesForTransactionTypeError,
+			);
 		});
 	});
 });
