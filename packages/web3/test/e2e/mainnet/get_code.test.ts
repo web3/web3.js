@@ -22,7 +22,7 @@ import {
 	getSystemTestBackend,
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
-import { getSystemE2ETestProvider } from '../e2e_utils';
+import { getSystemE2ETestProvider, getE2ETestContractAddress } from '../e2e_utils';
 import { mainnetCode } from '../fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getCode`, () => {
@@ -62,14 +62,10 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should getCode for deployed contract', async ({ block, format }) => {
-		const result = await web3.eth.getCode(
-			'0xdAC17F958D2ee523a2206206994597C13D831ec7',
-			blockData[block],
-			{
-				number: FMT_NUMBER.HEX,
-				bytes: format as FMT_BYTES,
-			},
-		);
+		const result = await web3.eth.getCode(getE2ETestContractAddress(), blockData[block], {
+			number: FMT_NUMBER.HEX,
+			bytes: format as FMT_BYTES,
+		});
 
 		switch (format) {
 			case 'BYTES_HEX':

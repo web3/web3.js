@@ -5,25 +5,23 @@ on:
         - release/**
       tags:
         - v4.*
+
 jobs:
   build:
-    strategy:
-      matrix:
-        node: [14]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
           cache: yarn
       - run: yarn
-      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - run: tar -czf /tmp/web3-16.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          name: web3-16.js.tar.gz
+          path: /tmp/web3-16.js.tar.gz
   e2e:
       name: E2E Network Tests
       needs: build
@@ -38,15 +36,17 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          node: [14]
           mode: ['http']
           network: ['sepolia', 'mainnet']
       steps:
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 16
         - uses: actions/download-artifact@v3
           with:
-            name: web3-${{ matrix.node }}.js.tar.gz
+            name: web3-16.js.tar.gz
             path: /tmp
-        - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        - run: tar -xf /tmp/web3-16.js.tar.gz -C ./
         - run: |
             yarn test:e2e:${{ matrix.network }}:${{ matrix.mode }}
           shell: bash
