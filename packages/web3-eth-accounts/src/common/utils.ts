@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexPrefixed, isHexString } from 'web3-validator';
-import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { bytesToHex, hexToBytes, numberToHex } from 'web3-utils';
+import { secp256k1 } from '../tx/constants';
 import { Hardfork } from './enums';
 import { ToBytesInputTypes, TypeOutput, TypeOutputReturnType } from './types';
 

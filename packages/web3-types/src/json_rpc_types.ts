@@ -42,12 +42,21 @@ export interface SubscriptionParams<T = JsonRpcResult> {
 	readonly subscription: string; // for subscription id
 	readonly result: T;
 }
+
+export interface JsonRpcSubscriptionResultOld<T = JsonRpcResult> {
+	readonly error?: never;
+	readonly params?: never;
+	readonly type: string;
+	readonly data: SubscriptionParams<T>;
+}
+
 export interface JsonRpcNotification<T = JsonRpcResult> {
 	readonly id?: JsonRpcId;
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly method: string; // for subscription
 	readonly params: SubscriptionParams<T>; // for subscription results
 	readonly result: never;
+	readonly data?: never;
 }
 
 export interface JsonRpcSubscriptionResult {
@@ -56,6 +65,7 @@ export interface JsonRpcSubscriptionResult {
 	readonly result: string;
 	readonly method: never;
 	readonly params: never;
+	readonly data?: never;
 }
 
 export interface JsonRpcRequest<T = unknown[]> {

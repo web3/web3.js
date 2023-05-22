@@ -5,19 +5,19 @@ on:
         - release/**
       tags:
         - v4.*
+
 jobs:
   build:
     strategy:
       matrix:
-        node: [14, 16]
+        node: [18, 16]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
-          cache: yarn
+          node-version: ${{ matrix.mode }}
       - run: yarn
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
@@ -36,10 +36,13 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          node: [14, 16]
+          node: [18, 16]
           mode: ['http', 'ws']
           backend: ['geth', 'infura']
       steps:
+        - uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node }}
         - uses: actions/download-artifact@v3
           with:
             name: web3-${{ matrix.node }}.js.tar.gz

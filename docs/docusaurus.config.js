@@ -84,8 +84,8 @@ const config = {
 				},
 			},
 		],
+		'docusaurus-lunr-search',
 	],
-
 	presets: [
 		[
 			'classic',
@@ -128,7 +128,7 @@ const config = {
 						position: 'left',
 					},
 					{
-						to: 'docs/tutorials/providers',
+						to: 'docs/tutorials/deploying_and_interacting_with_smart_contracts',
 						activeBasePath: 'docs/tutorials',
 						label: 'Tutorials',
 						position: 'left',

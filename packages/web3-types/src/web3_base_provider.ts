@@ -58,6 +58,10 @@ export type Web3ProviderEventCallback<T = JsonRpcResult> = (
 	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
 ) => void;
 
+export type Web3ProviderMessageEventCallback<T = JsonRpcResult> = (
+	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
+) => void;
+
 export type Web3Eip1193ProviderEventCallback<T> = (data: T) => void;
 
 export type Web3ProviderRequestCallback<ResultType = unknown> = (
@@ -166,7 +170,16 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	): void;
 	public abstract on<T = JsonRpcResult>(
 		type: 'message' | string,
-		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+		listener:
+			| Web3Eip1193ProviderEventCallback<ProviderMessage>
+			| Web3ProviderMessageEventCallback<T>,
+	): void;
+	// for old providers
+	public abstract on<T = JsonRpcResult>(
+		type: 'data' | string,
+		listener:
+			| Web3Eip1193ProviderEventCallback<ProviderMessage>
+			| Web3ProviderMessageEventCallback<T>,
 	): void;
 	public abstract on(
 		type: 'connect',
