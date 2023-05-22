@@ -367,7 +367,7 @@ export const toHex = (
 			return returnType ? 'bytes' : value;
 		}
 		if (isHex(value) && !isInt(value)) {
-			return returnType ? 'bytes' : value;
+			return returnType ? 'bytes' : `0x${value}`;
 		}
 
 		if (!Number.isFinite(value)) {
