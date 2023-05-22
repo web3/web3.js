@@ -747,4 +747,5 @@ export const sepoliaTransactionFromBlock = {
 	type: BigInt(0),
 	v: BigInt(22310258),
 	value: BigInt('1000000000000000000'),
+	data: '0x',
 };

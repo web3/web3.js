@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Web3ValidationErrorObject } from 'web3-types';
 
 import { Web3ValidatorError } from '../../src/errors';
 import {
@@ -23,7 +24,6 @@ import {
 	errorsWithInstanceNoParamsNoMessage,
 	unspecifiedErrors,
 } from '../fixtures/errors';
-import { Web3ValidationErrorObject } from '../../src/types';
 
 describe('Web3ValidationError', () => {
 	it.each(fullErrors)('errors with message', (error: Web3ValidationErrorObject) => {

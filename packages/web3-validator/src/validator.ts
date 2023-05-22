@@ -14,11 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Web3ValidationErrorObject } from 'web3-types';
+
 import { toHex, utf8ToBytes } from 'ethereum-cryptography/utils';
 import { blake2b } from 'ethereum-cryptography/blake2b';
 import formats from './formats';
 import { Web3ValidatorError } from './errors';
-import { Web3ValidationErrorObject, Validate, Json, Schema, RawValidationError } from './types';
+import { Validate, Json, Schema, RawValidationError } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const validator = require('is-my-json-valid');
