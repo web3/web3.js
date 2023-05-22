@@ -217,6 +217,27 @@ describe('defaultTransactionBuilder', () => {
 				web3Context.defaultBlock,
 			);
 		});
+
+		it('should use web3Eth.getTransactionCount to populate nonce without gas fill', async () => {
+			const input = { ...transaction };
+			delete input.nonce;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
+
+			const result = await defaultTransactionBuilder(
+				{
+					transaction: input,
+					web3Context,
+				},
+				false,
+			);
+			expect(result.nonce).toBe(expectedNonce);
+			expect(getTransactionCountSpy).toHaveBeenCalledWith(
+				web3Context.requestManager,
+				expectedFrom,
+				web3Context.defaultBlock,
+			);
+		});
 	});
 
 	describe('should populate value', () => {
