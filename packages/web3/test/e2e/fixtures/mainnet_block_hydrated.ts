@@ -2179,7 +2179,7 @@ export const mainnetBlockHydrated = {
 			maxPriorityFeePerGas: '0x11e1a300',
 			nonce: '0x14',
 			r: '0x5913f6ba1e292387d9edbd31c42cea5781ef507a54f5f0ff9b24d9e51324ae1b',
-			s: '0x62fb9c767a87c8bc796bf3d813d8a078f6a4a1c34edb566910d0c5b853d16a',
+			s: '0x0062fb9c767a87c8bc796bf3d813d8a078f6a4a1c34edb566910d0c5b853d16a',
 			to: '0x32400084c286cf3e17e7b677ea9583e60a000324',
 			transactionIndex: '0x68',
 			type: '0x2',

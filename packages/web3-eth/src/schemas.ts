@@ -158,10 +158,10 @@ export const transactionSchema = {
 			format: 'uint',
 		},
 		r: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 		s: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 	},
 };
@@ -228,10 +228,10 @@ export const transactionInfoSchema = {
 			format: 'uint',
 		},
 		r: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 		s: {
-			format: 'bytes',
+			format: 'bytes32',
 		},
 	},
 };
@@ -479,6 +479,29 @@ export const transactionReceiptSchema = {
 	},
 };
 
+export const SignatureObjectSchema = {
+	type: 'object',
+	properties: {
+		messageHash: {
+			format: 'bytes',
+		},
+		r: {
+			format: 'bytes32',
+		},
+		s: {
+			format: 'bytes32',
+		},
+		v: {
+			format: 'bytes',
+		},
+		message: {
+			format: 'bytes',
+		},
+		signature: {
+			format: 'bytes',
+		},
+	},
+};
 export const feeHistorySchema = {
 	type: 'object',
 	properties: {

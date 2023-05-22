@@ -899,7 +899,7 @@ describe('defaults', () => {
 				},
 				eth2,
 			);
-			expect(hardforkBerlinOverride).toBe('0x1');
+			expect(hardforkBerlinOverride).toBe('0x0');
 
 			const commonBerlinOverride = getTransactionType(
 				{
@@ -918,7 +918,7 @@ describe('defaults', () => {
 				},
 				eth2,
 			);
-			expect(commonBerlinOverride).toBe('0x1');
+			expect(commonBerlinOverride).toBe('0x0');
 		});
 		it('defaultMaxPriorityFeePerGas', async () => {
 			// default

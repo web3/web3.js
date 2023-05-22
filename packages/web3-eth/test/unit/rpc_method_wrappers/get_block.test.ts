@@ -55,7 +55,6 @@ describe('getBlock', () => {
 			} else {
 				inputBlockFormatted = format({ format: 'uint' }, inputBlock, ETH_DATA_FORMAT);
 			}
-
 			await getBlock(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(
 				inputBlockIsBytes ? ethRpcMethods.getBlockByHash : ethRpcMethods.getBlockByNumber,

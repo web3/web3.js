@@ -84,8 +84,8 @@ const config = {
 				},
 			},
 		],
+		'docusaurus-lunr-search',
 	],
-
 	presets: [
 		[
 			'classic',
@@ -125,6 +125,12 @@ const config = {
 						to: 'docs/guides/web3_migration_guide',
 						activeBasePath: 'docs/guides',
 						label: 'Guides',
+						position: 'left',
+					},
+					{
+						to: 'docs/tutorials/deploying_and_interacting_with_smart_contracts',
+						activeBasePath: 'docs/tutorials',
+						label: 'Tutorials',
 						position: 'left',
 					},
 					{

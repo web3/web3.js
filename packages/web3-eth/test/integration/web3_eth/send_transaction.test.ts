@@ -183,6 +183,7 @@ describe('Web3Eth.sendTransaction', () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				data: greeterContractDeploymentData,
+				input: greeterContractDeploymentData,
 				gas: BigInt('475520'),
 			};
 			const response = await web3Eth.sendTransaction(transaction);
@@ -206,6 +207,7 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: greeterContractAddress,
 				data: contractFunctionCall,
+				input: contractFunctionCall,
 			};
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.status).toBe(BigInt(1));

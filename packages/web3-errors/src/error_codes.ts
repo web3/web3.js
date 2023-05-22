@@ -88,6 +88,7 @@ export const ERR_TX_CHAIN_MISMATCH = 435;
 export const ERR_TX_HARDFORK_MISMATCH = 436;
 export const ERR_TX_INVALID_RECEIVER = 437;
 export const ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR = 438;
+export const ERR_TX_INVALID_PROPERTIES_FOR_TYPE = 439;
 
 // Connection error codes
 export const ERR_CONN = 500;
