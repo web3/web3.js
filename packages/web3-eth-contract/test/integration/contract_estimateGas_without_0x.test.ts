@@ -63,6 +63,6 @@ describe('contract', () => {
 		const gas = await myContract.estimateGas({
 			from: acc.address,
 		});
-		expect(gas).toBe(expect.any(BigInt));
+		expect(gas).toEqual(expect.any(BigInt));
 	});
 });
