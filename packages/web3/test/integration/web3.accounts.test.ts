@@ -77,8 +77,12 @@ describe('web3.accounts', () => {
 					}),
 				).resolves.toBeDefined();
 
+				const txWithGas = {
+					...tx,
+					gasPrice: '0x271000',
+				};
 				// Sign the tx from that account
-				const signedTx = await account.signTransaction(tx);
+				const signedTx = await account.signTransaction(txWithGas);
 
 				expect(signedTx).toEqual(
 					expect.objectContaining({
@@ -108,6 +112,7 @@ describe('web3.accounts', () => {
 					value: web3.utils.toWei('0.1', 'ether'),
 					gas: '0x1',
 					data: '0x1',
+					gasPrice: '0x38562',
 				};
 
 				await expect(account.signTransaction(tx)).rejects.toThrow('gasLimit is too low.');
@@ -141,6 +146,7 @@ describe('web3.accounts', () => {
 				value: web3.utils.toWei('0.1', 'ether'),
 				gas: '0x5218',
 				data: '0x1',
+				gasPrice: '0x48523',
 			};
 
 			// Fund this account with some ether
@@ -181,6 +187,7 @@ describe('web3.accounts', () => {
 				value: web3.utils.toWei('0.1', 'ether'),
 				gas: '0x1',
 				data: '0x1',
+				gasPrice: '0x1',
 			};
 
 			await expect(web3.eth.accounts.signTransaction(tx, account.privateKey)).rejects.toThrow(
