@@ -234,6 +234,7 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 		['0x72fdb1c1ddd4c67804f42b93de95cf6a8c51d2d1', 'address'],
 	],
 	['-0x01', ['-0x1', 'int256']],
+	['123c', ['0x123c', 'bytes']],
 ];
 
 export const toHexInvalidData: [any, string][] = [
