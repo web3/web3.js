@@ -11,7 +11,7 @@ If Eth node have unlocked account in its wallet you can send transaction without
 
 ```ts
 // First step: initialize web3 instance
-import { Web3 } from 'web3';
+import Web3 from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to the Ethereum node and unlock it
@@ -54,7 +54,7 @@ List of references:
 
 ```ts
 // First step: initialize web3 instance
-import { Web3 } from 'web3';
+import Web3 from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to the Ethereum node and unlock it

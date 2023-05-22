@@ -9,7 +9,7 @@ sidebar_label: 'Raw Transaction'
 
 ```ts
 // First step: initialize web3 instance
-import { Web3 } from 'web3';
+import Web3 from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: convert private key to account
@@ -43,7 +43,7 @@ List of references:
 
 ```ts
 // First step: initialize web3 instance
-import { Web3 } from 'web3';
+import Web3 from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: convert private key to account
