@@ -72,7 +72,6 @@ describe('defaults', () => {
 				to: account2.address,
 				gas,
 				value: '0x1',
-				type: '0x1', // TODO should be fixed in https://github.com/web3/web3.js/issues/6065 and removed here
 				// Give a high nonce so the transaction stuck forever.
 				// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
 				nonce: Number.MAX_SAFE_INTEGER,
