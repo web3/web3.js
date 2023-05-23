@@ -570,7 +570,7 @@ Note that in the above steps you had created a local web server using Node.js an
 
 Now you can start building your Ethereum application with web3.js and MetaMask!
 
-## Setting Web3 Provider using a String URL
+### Setting Web3 Provider using a String URL
 
 web3.js allows you to set the Ethereum network provider, easily, by passing a string URL containing either the `http`, `https`, `ws`, or `wss` protocol. This provider can be used to connect to a remote server or node.
 
