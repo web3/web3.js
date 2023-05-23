@@ -36,7 +36,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * To use this package within the `web3` object use:
  * ```ts
- * import { Web3 } from 'web3';
+ * import Web3 from 'web3';
  *
  * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
  * web3.eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1').then(console.log);
