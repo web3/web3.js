@@ -136,3 +136,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Refactored documentation for `rpc_method_wrappers` to point to the previously duplicated documentation found under the `Web3Eth` class documentation (#6054)
 -   Replaced Buffer for Uint8Array (#6004)
 -   Refactored `defaultTransactionTypeParser` to return correct EIP-2718 types, prior implementation was prioritizing `transaction.hardfork` and ignoring the use of `transaction.gasLimit`. `defaultTransactionTypeParser` will now throw `InvalidPropertiesForTransactionTypeError`s for properties are used that are incompatible with `transaction.type` (#6102)
+-   `prepareTransactionForSigning` and `defaultTransactionBuilder` now accepts optional `fillGasPrice` flag (#6071)
