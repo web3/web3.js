@@ -155,60 +155,51 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 
 5. Copy and paste the following code into your `web3-websocket-provider.js` file and save it:
 
-    ```js
-    const { Web3 } = require('web3');
+```js
+const { Web3 } = require('web3');
 
-    // Connect to the Ethereum network using the WebSocket provider
-    const ganacheUrl = 'ws://localhost:7545';
-    const wsProvider = new Web3.providers.WebsocketProvider(ganacheUrl);
-    const web3 = new Web3(wsProvider);
+// Connect to the Ethereum network using WebSocket provider
+const ganacheUrl = 'ws://localhost:8545';
+const wsProvider = new Web3.providers.WebsocketProvider(ganacheUrl);
+const web3 = new Web3(wsProvider);
 
-    async function main() {
-    	try {
-    		console.log(
-    			'Does the provider support subscriptions?:',
-    			wsProvider.supportsSubscriptions(),
-    		);
+async function main() {
+	try {
+		console.log(
+			'Does the provider support subscriptions?:',
+			wsProvider.supportsSubscriptions(),
+		);
 
-    		// Subscribe to new block headers
-    		const subscription = await web3.eth.subscribe('newBlockHeaders', (error, result) => {
-    			if (!error) {
-    				console.log('New block header:', result);
-    			} else {
-    				console.log(error);
-    			}
-    		});
+		// Subscribe to new block headers
+		const subscription = await web3.eth.subscribe('newBlockHeaders');
 
-    		// Wait for 2 seconds, then stop the subscription
-    		setTimeout(() => {
-    			subscription.unsubscribe((error, success) => {
-    				if (success) {
-    					console.log('Unsubscribed from new block headers');
-    				}
-    				if (error) {
-    					console.log(error);
-    				}
-    				wsProvider.disconnect();
-    			});
-    		}, 2000);
+		subscription.on('data', async blockhead => {
+			console.log('New block header: ', blockhead);
 
-    		// Get the list of accounts in the connected node which is in this case: Ganache.
-    		const accounts = await web3.eth.getAccounts();
+			// You do not need the next line if you like to keep notified for every new block
+			await subscription.unsubscribe();
+			console.log('Unsubscribed from new block headers.');
+		});
+		subscription.on('error', error =>
+			console.log('Error when subscribing to New block header: ', error),
+		);
 
-    		// Send a transaction to the network
-    		const transactionReceipt = await web3.eth.sendTransaction({
-    			from: accounts[0],
-    			to: accounts[1],
-    			value: web3.utils.toWei('0.001', 'ether'),
-    		});
-    		console.log('Transaction Receipt:', transactionReceipt);
-    	} catch (error) {
-    		console.error('An error occurred:', error);
-    	}
-    }
+		// Get the list of accounts in the connected node which is in this case: Ganache.
+		const accounts = await web3.eth.getAccounts();
+		// Send a transaction to the network
+		const transactionReceipt = await web3.eth.sendTransaction({
+			from: accounts[0],
+			to: accounts[1],
+			value: web3.utils.toWei('0.001', 'ether'),
+		});
+		console.log('Transaction Receipt:', transactionReceipt);
+	} catch (error) {
+		console.error(error);
+	}
+}
 
-    main();
-    ```
+main();
+```
 
 6. Ensure that Ganache is running as mentioned in the [Prerequisites](#prerequisites) section.
 
@@ -216,13 +207,8 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 
 If everything is set up properly, you should see the new block headers, transaction hash, and pending transaction printed in the console. The unique feature of WebSocket provider highlighted in this example is that it can subscribe to new block headers and pending transactions to get them in real-time. And by running the sample, you will get something similar to this in your console:
 
-:::warning
-The sample will not log the new block header because of a known issue [#6094](https://github.com/web3/web3.js/issues/6094).
-
-However, as soon as this issue has been resolved, the code should work smoothly. And if the git issue was closed but still there is an unexpected behavior, kindly open a new issue at: https://github.com/web3/web3.js/issues/
-:::
-
 ```bash
+Do the provider supports subscription?: true
 New block header: {
   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
   miner: '0x0000000000000000000000000000000000000000',
@@ -244,7 +230,6 @@ New block header: {
   baseFeePerGas: 4959456,
   size: undefined
 }
-Does the provider support subscriptions?: true
 Transaction Receipt: {
   transactionHash: '0x0578672e97d072b4b91773c8bfc710e4f777616398b82b276323408e59d11362',
   transactionIndex: 0n,
@@ -260,7 +245,7 @@ Transaction Receipt: {
   effectiveGasPrice: 2000000000n,
   type: 0n
 }
-Unsubscribed from new block headers
+Unsubscribed from new block headers.
 ```
 
 ### IPC Provider (for Node.js)
