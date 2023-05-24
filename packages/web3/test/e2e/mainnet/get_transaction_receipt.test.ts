@@ -18,7 +18,7 @@ import { Bytes } from 'web3-types';
 import { bytesToUint8Array, hexToBytes } from 'web3-utils';
 
 import Web3 from '../../../src';
-import { getSystemE2ETestProvider } from '../e2e_utils';
+import { getSystemE2ETestProvider, getE2ETestContractAddress } from '../e2e_utils';
 import {
 	closeOpenConnection,
 	getSystemTestBackend,
@@ -85,7 +85,7 @@ describe(`${getSystemTestBackend()} tests - getTransactionReceipt`, () => {
 					transactionIndex: BigInt(91),
 				},
 				{
-					address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+					address: getE2ETestContractAddress(),
 					blockHash: '0xabc81c29235c7962f5a0420644761627bdc064a560c7d1842cdf9517f7d7984e',
 					blockNumber: BigInt(17030310),
 					data: '0x0000000000000000000000000000000000000000000000000000000000015bb2',

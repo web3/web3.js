@@ -69,6 +69,7 @@ import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	Numbers,
+	Web3ValidationErrorObject,
 } from 'web3-types';
 import { format, isDataFormat, toChecksumAddress } from 'web3-utils';
 import {
@@ -77,7 +78,6 @@ import {
 	utils as validatorUtils,
 	ValidationSchemaInput,
 	Web3ValidatorError,
-	Web3ValidationErrorObject,
 } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';

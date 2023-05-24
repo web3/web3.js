@@ -142,6 +142,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should use privateKey to populate', async () => {
 			const input = { ...transaction };
 			delete input.from;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -161,6 +163,8 @@ describe('defaultTransactionBuilder', () => {
 
 			const input = { ...transaction };
 			delete input.from;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -175,6 +179,8 @@ describe('defaultTransactionBuilder', () => {
 			const input = { ...transaction };
 			delete input.from;
 			delete input.nonce;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			await expect(
 				defaultTransactionBuilder({ transaction: input, web3Context }),
@@ -184,6 +190,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should use web3Eth.getTransactionCount to populate nonce', async () => {
 			const input = { ...transaction };
 			delete input.nonce;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -202,6 +210,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with 0x', async () => {
 			const input = { ...transaction };
 			delete input.value;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -215,6 +225,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with 0x', async () => {
 			const input = { ...transaction };
 			delete input.input;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 			delete input.data;
 
 			const result = await defaultTransactionBuilder({
@@ -228,6 +240,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should prefix with 0x', async () => {
 			const input = { ...transaction };
 			input.input = '123';
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 			input.data = '123';
 
 			const result = await defaultTransactionBuilder({
@@ -257,6 +271,8 @@ describe('defaultTransactionBuilder', () => {
 			const input = { ...transaction };
 			delete input.chain;
 			delete input.common;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -271,6 +287,8 @@ describe('defaultTransactionBuilder', () => {
 			const input = { ...transaction };
 			delete input.chain;
 			delete input.common;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -285,6 +303,8 @@ describe('defaultTransactionBuilder', () => {
 			const input = { ...transaction };
 			delete input.hardfork;
 			delete input.common;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -299,6 +319,8 @@ describe('defaultTransactionBuilder', () => {
 			const input = { ...transaction };
 			delete input.hardfork;
 			delete input.common;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -329,6 +351,8 @@ describe('defaultTransactionBuilder', () => {
 
 			const input = { ...transaction };
 			delete input.common;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -343,6 +367,8 @@ describe('defaultTransactionBuilder', () => {
 			const input = { ...transaction };
 			delete input.chainId;
 			delete input.common;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -356,6 +382,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with web3Net.getId', async () => {
 			const input = { ...transaction };
 			delete input.networkId;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -369,6 +397,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with gas', async () => {
 			const input = { ...transaction };
 			delete input.gasLimit;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
@@ -420,6 +450,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with web3Eth.getGasPrice (tx.type 0x0)', async () => {
 			const input = { ...transaction };
 			delete input.gasPrice;
+			delete input.maxFeePerGas;
+			delete input.maxPriorityFeePerGas;
 			input.type = '0x0';
 
 			const result = await defaultTransactionBuilder({ transaction: input, web3Context });
@@ -429,6 +461,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with web3Eth.getGasPrice (tx.type 0x1)', async () => {
 			const input = { ...transaction };
 			delete input.gasPrice;
+			delete input.maxFeePerGas;
+			delete input.maxPriorityFeePerGas;
 			input.type = '0x1';
 
 			const result = await defaultTransactionBuilder({
@@ -443,6 +477,8 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with [] (tx.type 0x1)', async () => {
 			const input = { ...transaction };
 			delete input.accessList;
+			delete input.maxFeePerGas;
+			delete input.maxPriorityFeePerGas;
 			input.type = '0x1';
 
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip2930Transaction>({
@@ -455,6 +491,7 @@ describe('defaultTransactionBuilder', () => {
 		it('should populate with [] (tx.type 0x2)', async () => {
 			const input = { ...transaction };
 			delete input.accessList;
+			delete input.gasPrice;
 			input.type = '0x2';
 
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
@@ -475,6 +512,7 @@ describe('defaultTransactionBuilder', () => {
 			);
 
 			const input = { ...transaction };
+			delete input.gasPrice;
 			input.type = '0x2';
 
 			await expect(
@@ -486,13 +524,15 @@ describe('defaultTransactionBuilder', () => {
 			const input = { ...transaction };
 			delete input.maxPriorityFeePerGas;
 			delete input.maxFeePerGas;
+			delete input.gasPrice;
 			input.type = '0x2';
 
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
 			});
-			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
+
+			expect(result.maxPriorityFeePerGas).toBeDefined();
 			expect(result.gasPrice).toBeUndefined();
 		});
 

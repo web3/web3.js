@@ -94,17 +94,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
--   Removed chainId, to, data & input properties from NonPayableCallOptions
-
 ### Added
 
 -   Added `filters` param to the `Filter` type (#6010)
 -   Added types `JsonRpcSubscriptionResultOld`, `Web3ProviderMessageEventCallback`. Added `.on('data')` type support for old providers (#6082)
+-   Export for `HardforksOrdered` enum (#6102)
+-   Export for `Web3ValidationErrorObject` type (#6102)
 
 ### Changed
 
+-   Removed chainId, to, data & input properties from NonPayableCallOptions
 -   Replaced Buffer for Uint8Array (#6004)
 -   types `FMT_BYTES.BUFFER`, `Bytes` and `FormatType` and encryption option types for `salt` and `iv` has replaced support for `Buffer` for `Uint8Array` (#6004)
 -   Added `internalType` property to the `AbiParameter` type.

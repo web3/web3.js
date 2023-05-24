@@ -166,6 +166,15 @@ Object {
 }
 `;
 
+exports[`errors InvalidPropertiesForTransactionTypeError should have valid json structure 1`] = `
+Object {
+  "code": 439,
+  "innerError": undefined,
+  "message": "The following properties are invalid for the transaction type 0x0: property",
+  "name": "InvalidPropertiesForTransactionTypeError",
+}
+`;
+
 exports[`errors InvalidProviderError should have valid json structure 1`] = `
 Object {
   "code": 601,
