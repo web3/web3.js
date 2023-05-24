@@ -126,14 +126,12 @@ export const prepareTransactionForSigning = async (
 	privateKey?: HexString | Uint8Array,
 	fillGasPrice = false,
 ) => {
-	const populatedTransaction = (await transactionBuilder(
-		{
-			transaction,
-			web3Context,
-			privateKey,
-		},
+	const populatedTransaction = (await transactionBuilder({
+		transaction,
+		web3Context,
+		privateKey,
 		fillGasPrice,
-	)) as unknown as PopulatedUnsignedTransaction;
+	})) as unknown as PopulatedUnsignedTransaction;
 
 	const formattedTransaction = formatTransaction(
 		populatedTransaction,

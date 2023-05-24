@@ -124,14 +124,12 @@ export const getTransactionType = (
 
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
-export async function defaultTransactionBuilder<ReturnType = Transaction>(
-	options: {
-		transaction: Transaction;
-		web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
-		privateKey?: HexString | Uint8Array;
-	},
-	fillGasPrice = false,
-): Promise<ReturnType> {
+export async function defaultTransactionBuilder<ReturnType = Transaction>(options: {
+	transaction: Transaction;
+	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
+	privateKey?: HexString | Uint8Array;
+	fillGasPrice?: boolean;
+}): Promise<ReturnType> {
 	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 	let populatedTransaction = format(
 		transactionSchema,
@@ -231,7 +229,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(
 		populatedTransaction.accessList = [];
 	}
 
-	if (fillGasPrice)
+	if (options.fillGasPrice)
 		populatedTransaction = {
 			...populatedTransaction,
 			...(await getTransactionGasPricing(
@@ -249,14 +247,11 @@ export const transactionBuilder = async <ReturnType = Transaction>(
 		transaction: Transaction;
 		web3Context: Web3Context<EthExecutionAPI>;
 		privateKey?: HexString | Uint8Array;
+		fillGasPrice?: boolean;
 	},
-	fillGasPrice = false,
 	// eslint-disable-next-line @typescript-eslint/require-await
 ) =>
-	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)(
-		{
-			...options,
-			transaction: options.transaction,
-		},
-		fillGasPrice,
-	) as unknown as ReturnType;
+	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
+		...options,
+		transaction: options.transaction,
+	}) as unknown as ReturnType;

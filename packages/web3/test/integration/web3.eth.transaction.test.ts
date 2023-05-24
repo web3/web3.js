@@ -28,7 +28,7 @@ describe('signTransaction', () => {
 	it.each(testsData)(
 		'Integration test of transaction %s with Web3, Web3.Eth, Web3.Accounts and Provider should pass',
 		async txObj => {
-			const web3: Web3 = new Web3(new httpProvider.HttpProvider('http://127.0.0.1:8080'));
+			const web3: Web3 = new Web3('http://127.0.0.1:8080');
 
 			const account: Web3Account = web3.eth.accounts.privateKeyToAccount(txObj.privateKey);
 
