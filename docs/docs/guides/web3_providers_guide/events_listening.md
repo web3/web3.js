@@ -21,7 +21,7 @@ Actually, the events can be categorized as follows ([according to EIP 1193](http
 Below a sample code for listening and remove listening to EIP 1193 events:
 
 ```ts
-import { Web3 } from 'web3'
+import Web3 from 'web3'
 
 const web3 = new Web3(/* PROVIDER*/);
 

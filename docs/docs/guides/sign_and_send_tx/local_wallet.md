@@ -11,7 +11,7 @@ The simplest way to sign and send transactions is using a local wallet:
 
 ```ts
 // First step: initialize `web3` instance
-import { Web3 } from 'web3';
+import Web3 from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
@@ -45,7 +45,7 @@ List of references:
 
 ```ts
 // First step: initialize `web3` instance
-import { Web3 } from 'web3';
+import Web3 from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet

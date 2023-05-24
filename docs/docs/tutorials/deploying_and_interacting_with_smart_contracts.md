@@ -179,7 +179,7 @@ Note that we are installing the latest version of 4.x, at the time of this tutor
 Next, create a new file called `index.js` in your project directory and add the following code to it:
 
 ```javascript
-const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import { Web3 } from 'web3'`)
+const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
 
 // Set up a connection to the Ganache network
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
@@ -214,7 +214,7 @@ Create a file named `deploy.js` and fill it with the following code:
 ```javascript
 // For simplicity we use `web3` package here. However, if you are concerned with the size,
 //	you may import individual packages like 'web3-eth', 'web3-eth-contract' and 'web3-providers-http'.
-const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import { Web3 } from 'web3'`)
+const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
 const fs = require('fs');
 const path = require('path');
 
@@ -289,7 +289,7 @@ In this step, we will use web3.js to interact with the smart contract on the Gan
 Create a file named `interact.js` and fill it with the following code:
 
 ```javascript
-const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import { Web3 } from 'web3'`)
+const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
 const fs = require('fs');
 const path = require('path');
 
