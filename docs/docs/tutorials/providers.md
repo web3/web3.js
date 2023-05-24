@@ -28,7 +28,8 @@ Before we get started, make sure you have a basic understanding of JavaScript an
     Alternatively, you can use **yarn** instead of **npm** by following the instructions here: [https://classic.yarnpkg.com/lang/en/docs/getting-started/](https://classic.yarnpkg.com/lang/en/docs/getting-started/).
 
 4. **Geth** (Optional, used only at the IPC provider example)
-   Geth (go-ethereum) is an Ethereum execution client meaning it handles transactions, deployment and execution of smart contracts and contains an embedded computer known as the Ethereum Virtual Machine. You can install it by following the instructions here: [https://geth.ethereum.org/docs/getting-started/installing-geth](https://geth.ethereum.org/docs/getting-started/installing-geth)
+
+    Geth (go-ethereum) is an Ethereum execution client meaning it handles transactions, deployment and execution of smart contracts and contains an embedded computer known as the Ethereum Virtual Machine. You can install it by following the instructions here: [https://geth.ethereum.org/docs/getting-started/installing-geth](https://geth.ethereum.org/docs/getting-started/installing-geth)
 
 ## Types of Providers
 
@@ -346,8 +347,6 @@ INFO [12-10|15:10:37.127] Mapped network port		  	proto=udp extport=0 intport=30
     ```
 
 7. replace `<path>` with the `ipcPath` that you had specified, when starting the `geth` node, in the first step.
-
-    **Note**: replace `<path>` with the `ipcPath` specified when starting the `geth` node.
 
 8. Type `node web3-ipc-provider.js` in the command prompt or terminal window and press Enter. This will run your JavaScript file.
 
