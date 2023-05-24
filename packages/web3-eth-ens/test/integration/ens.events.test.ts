@@ -58,6 +58,7 @@ describeIf(isSocket)('ens events', () => {
 	let sendOptions: PayableTxOptions;
 
 	const domain = 'test';
+	const domainNode = namehash(domain);
 	const node = namehash('resolver');
 	const label = sha3('resolver') as string;
 
@@ -181,7 +182,7 @@ describeIf(isSocket)('ens events', () => {
 				resolve();
 			});
 
-			await registry.methods.setTTL(web3jsName, ttl).send(sendOptions);
+			await registry.methods.setTTL(namehash(web3jsName), ttl).send(sendOptions);
 		});
 	});
 
@@ -197,7 +198,7 @@ describeIf(isSocket)('ens events', () => {
 			});
 
 			await registry.methods
-				.setResolver(domain, resolver.options.address as string)
+				.setResolver(domainNode, resolver.options.address as string)
 				.send(sendOptions);
 		});
 	});
