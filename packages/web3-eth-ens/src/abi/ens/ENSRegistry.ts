@@ -224,22 +224,4 @@ export const ENSRegistryAbi = [
 		stateMutability: 'view',
 		type: 'function',
 	},
-	{
-		inputs: [
-			{
-				internalType: 'bytes32',
-				name: 'node',
-				type: 'bytes32',
-			},
-			{
-				internalType: 'uint64',
-				name: 'ttl',
-				type: 'uint64',
-			},
-		],
-		name: 'setTTL',
-		outputs: [],
-		stateMutability: 'nonpayable',
-		type: 'function',
-	},
 ] as const;
