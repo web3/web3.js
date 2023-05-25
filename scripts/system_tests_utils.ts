@@ -335,15 +335,16 @@ export const signTxAndSendEIP1559 = async (
 ) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
-	const signedTx = await acc.signTransaction({
+	web3.eth.wallet?.add(privateKey);
+
+	const txObj = {
 		...tx,
 		type: '0x2',
 		gas: tx.gas ?? '1000000',
 		from: acc.address,
-	});
-	return web3.eth.sendSignedTransaction(signedTx.rawTransaction, undefined, {
-		checkRevertBeforeSending: false,
-	});
+	};
+
+	return web3.eth.sendTransaction(txObj, undefined, { checkRevertBeforeSending: false });
 };
 
 export const signTxAndSendEIP2930 = async (
@@ -353,15 +354,15 @@ export const signTxAndSendEIP2930 = async (
 ) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
-	const signedTx = await acc.signTransaction({
+	web3.eth.wallet?.add(privateKey);
+	const txObj = {
 		...tx,
 		type: '0x1',
 		gas: tx.gas ?? '1000000',
 		from: acc.address,
-	});
-	return web3.eth.sendSignedTransaction(signedTx.rawTransaction, undefined, {
-		checkRevertBeforeSending: false,
-	});
+	};
+
+	return web3.eth.sendTransaction(txObj, undefined, { checkRevertBeforeSending: false });
 };
 
 export const signAndSendContractMethodEIP1559 = async (
