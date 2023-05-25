@@ -123,6 +123,31 @@ describe('ens', () => {
 			expect(addrMock).toHaveBeenCalledWith(ENS_NAME, 60);
 		});
 	});
+
+	describe('events', () => {
+		it('get events', async () => {
+			const { events } = ens;
+			expect(typeof events.NewOwner).toBe('function');
+			expect(typeof events.allEvents).toBe('function');
+			expect(typeof events.NewResolver).toBe('function');
+			expect(typeof events.Transfer).toBe('function');
+		});
+	});
+
+	describe('constructor', () => {
+		it('default params', async () => {
+			const localEns = new ENS();
+			expect(localEns.provider).toBeUndefined();
+			expect(localEns.registryAddress).toBe(registryAddresses.main);
+		});
+		it('set params', async () => {
+			const localEns = new ENS(registryAddresses.goerli, 'http://127.0.0.1:8545');
+			// @ts-expect-error check clientUrl field
+			expect(localEns.provider?.clientUrl).toBe('http://127.0.0.1:8545');
+			expect(localEns.registryAddress).toBe(registryAddresses.goerli);
+		});
+	});
+
 	describe('pubkey', () => {
 		it('getPubkey', async () => {
 			const pubkeyMock = jest.spyOn(ens['_resolver'], 'getPubkey').mockReturnValue({

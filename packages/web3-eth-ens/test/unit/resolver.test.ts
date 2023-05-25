@@ -49,6 +49,13 @@ describe('resolver', () => {
 				new ResolverMethodMissingError(mockAddress, methodName),
 			);
 		});
+		it('isNullish interface with no address', async () => {
+			const methodName = 'nullish';
+			const localContract = new Contract(PublicResolverAbi);
+			await expect(resolver.checkInterfaceSupport(localContract, methodName)).rejects.toThrow(
+				new ResolverMethodMissingError('', methodName),
+			);
+		});
 
 		it('Doesn"t support interface', async () => {
 			const methodName = methodsInInterface.setAddr; // Just a method to pass first check
@@ -63,6 +70,20 @@ describe('resolver', () => {
 				new ResolverMethodMissingError(mockAddress, methodName),
 			);
 
+			expect(supportsInterfaceMock).toHaveBeenCalledWith(interfaceIds[methodName]);
+		});
+		it('Doesn"t support interface with no address', async () => {
+			const methodName = methodsInInterface.setAddr; // Just a method to pass first check
+			const localContract = new Contract(PublicResolverAbi);
+			const supportsInterfaceMock = jest
+				.spyOn(localContract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: jest.fn().mockReturnValue(false),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await expect(resolver.checkInterfaceSupport(localContract, methodName)).rejects.toThrow(
+				new ResolverMethodMissingError('', methodName),
+			);
 			expect(supportsInterfaceMock).toHaveBeenCalledWith(interfaceIds[methodName]);
 		});
 
