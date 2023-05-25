@@ -1502,9 +1502,3 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-validator
 
 -   `Web3ValidationErrorObject` type is now exported from `web3-types` package (#6102)
-
-#### web3-eth-ens
-
-### Changed
-
--   Removed non read-only methods
