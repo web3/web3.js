@@ -49,10 +49,10 @@ import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
 import { detectTransactionType } from './detect_transaction_type';
-// eslint-disable-next-line import/no-cycle
-import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 import { transactionSchema } from '../schemas';
 import { InternalTransaction } from '../types';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 
 export const getTransactionFromOrToAttr = (
 	attr: 'from' | 'to',
@@ -128,6 +128,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Uint8Array;
+	fillGasPrice?: boolean;
 }): Promise<ReturnType> {
 	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 	let populatedTransaction = format(
@@ -228,24 +229,28 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 		populatedTransaction.accessList = [];
 	}
 
-	populatedTransaction = {
-		...populatedTransaction,
-		...(await getTransactionGasPricing(
-			populatedTransaction,
-			options.web3Context,
-			ETH_DATA_FORMAT,
-		)),
-	};
+	if (options.fillGasPrice)
+		populatedTransaction = {
+			...populatedTransaction,
+			...(await getTransactionGasPricing(
+				populatedTransaction,
+				options.web3Context,
+				ETH_DATA_FORMAT,
+			)),
+		};
 
 	return populatedTransaction as ReturnType;
 }
 
-export const transactionBuilder = async <ReturnType = Transaction>(options: {
-	transaction: Transaction;
-	web3Context: Web3Context<EthExecutionAPI>;
-	privateKey?: HexString | Uint8Array;
+export const transactionBuilder = async <ReturnType = Transaction>(
+	options: {
+		transaction: Transaction;
+		web3Context: Web3Context<EthExecutionAPI>;
+		privateKey?: HexString | Uint8Array;
+		fillGasPrice?: boolean;
+	},
 	// eslint-disable-next-line @typescript-eslint/require-await
-}) =>
+) =>
 	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
 		...options,
 		transaction: options.transaction,
