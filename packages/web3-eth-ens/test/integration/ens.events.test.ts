@@ -62,10 +62,6 @@ describeIf(isSocket)('ens events', () => {
 	const node = namehash('resolver');
 	const label = sha3('resolver') as string;
 
-	const web3jsName = 'web3js.test';
-
-	const ttl = 3600;
-
 	let accounts: string[];
 	let ens: ENS;
 	let defaultAccount: string;
@@ -151,39 +147,6 @@ describeIf(isSocket)('ens events', () => {
 		await registry.methods
 			.setSubnodeOwner(namehash(domain), sha3('web3js') as string, defaultAccount)
 			.send(sendOptions);
-	});
-
-	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
-	it('ApprovalForAll event', async () => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
-		await new Promise<void>(async resolve => {
-			const event = ens.events.ApprovalForAll();
-
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			event.on('data', () => {
-				resolve();
-			});
-
-			await registry.methods.setApprovalForAll(accountOne, true).send(sendOptions);
-		});
-	});
-
-	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
-	it('NewTTL event', async () => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
-		await new Promise<void>(async resolve => {
-			const event = ens.events.NewTTL();
-
-			event.on('data', () => {
-				resolve();
-			});
-
-			event.on('error', () => {
-				resolve();
-			});
-
-			await registry.methods.setTTL(namehash(web3jsName), ttl).send(sendOptions);
-		});
 	});
 
 	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it

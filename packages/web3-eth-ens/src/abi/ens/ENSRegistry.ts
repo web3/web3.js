@@ -66,50 +66,6 @@ export const ENSRegistryAbi = [
 		inputs: [
 			{
 				indexed: true,
-				internalType: 'address',
-				name: 'owner',
-				type: 'address',
-			},
-			{
-				indexed: true,
-				internalType: 'address',
-				name: 'operator',
-				type: 'address',
-			},
-			{
-				indexed: false,
-				internalType: 'bool',
-				name: 'approved',
-				type: 'bool',
-			},
-		],
-		name: 'ApprovalForAll',
-		type: 'event',
-	},
-	{
-		anonymous: false,
-		inputs: [
-			{
-				indexed: true,
-				internalType: 'bytes32',
-				name: 'node',
-				type: 'bytes32',
-			},
-			{
-				indexed: false,
-				internalType: 'uint64',
-				name: 'ttl',
-				type: 'uint64',
-			},
-		],
-		name: 'NewTTL',
-		type: 'event',
-	},
-	{
-		anonymous: false,
-		inputs: [
-			{
-				indexed: true,
 				internalType: 'bytes32',
 				name: 'node',
 				type: 'bytes32',
