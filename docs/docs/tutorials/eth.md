@@ -32,7 +32,7 @@ First, create a new project directory for your project and navigate into it:
 
 ```
 mkdir web3-eth-tutorial
-cd web3-eth-turorial
+cd web3-eth-tutorial
 ```
 
 Next, initialize a new Node.js project using npm:
@@ -106,18 +106,6 @@ const path = require('path');
 // Set up a connection to the Ethereum network
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 web3.eth.Contract.handleRevert = true;
-
-// send a transaction
-const deployedAddressPath = path.join(__dirname, 'MyContractAddress.bin');
-const deployedAddress = fs.readFileSync(deployedAddressPath, 'utf8');
-
-// Read the bytecode from the file system
-const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin');
-const bytecode = fs.readFileSync(bytecodePath, 'utf8');
-
-// Create a new contract object using the ABI and bytecode
-const abi = require('./MyContractAbi.json');
-const MyContract = new web3.eth.Contract(abi, deployedAddress);
 
 async function interact() {
 	//fetch all the available accounts
@@ -201,6 +189,8 @@ transactionHash {
 
 98999580000000000000n 101000000000000000000n
 
+20000000000n
+
 ```
 
 :::note
@@ -209,7 +199,7 @@ transactionHash {
 98999580000000000000 + 1000000000000000000 + (20000000000\*21000) = 100 Ether
 :::
 
-In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding turotial). Create a file named `estimate.ts` and fill it with the following code:
+In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding tutotial). Create a file named `estimate.ts` and fill it with the following code:
 
 ```typescript
 import Web3, { ETH_DATA_FORMAT } from 'web3';
@@ -237,6 +227,8 @@ async function estimate() {
 			type: 'function',
 		},
 	];
+
+	const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
 	//get the available accounts
 	const accounts = await web3.eth.getAccounts();
