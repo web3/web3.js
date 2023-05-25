@@ -62,7 +62,7 @@ npm install web3@4.0.1-rc.1
 
 Note that we are installing the latest version of 4.x, at the time of this tutorial writing. You can check the latest version at https://www.npmjs.com/package/web3?activeTab=versions
 
-Next, create a new file called `index.js` in your project directory and add the following code to it:
+Next, create a new file called `index.ts` in your project directory and add the following code to it:
 
 ```javascript
 const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
@@ -86,7 +86,7 @@ This code sets up a connection to the Ganache network and logs the current block
 Run the following command to test the connection:
 
 ```
-node index.js
+npx ts-node index.ts
 ```
 
 If everything is working correctly, you should see the current block number logged to the console. However, if you got an error with the reason `connect ECONNREFUSED 127.0.0.1:7545` then double check that you are running Ganache locally on port `7545`.
