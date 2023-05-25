@@ -258,3 +258,4 @@ const transactionHash = receipt.transactionHash;
 ### Added
 
 -   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
+-   Added `maxPriorityFeePerGas` and `maxFeePerGas` in `ContractOptions` type and updated function using it in utils (#6118)

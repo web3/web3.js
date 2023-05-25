@@ -63,6 +63,8 @@ export const getSendTxParams = ({
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
 			input: contractOptions.input,
+			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
+			maxFeePerGas: contractOptions.maxFeePerGas,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
@@ -99,6 +101,8 @@ export const getEthTxCallParams = ({
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
 			input: contractOptions.input,
+			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
+			maxFeePerGas: contractOptions.maxFeePerGas,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
@@ -185,6 +189,8 @@ export const getCreateAccessListParams = ({
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
 			input: contractOptions.input,
+			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
+			maxFeePerGas: contractOptions.maxFeePerGas,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
