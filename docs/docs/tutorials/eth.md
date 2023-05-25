@@ -338,9 +338,9 @@ Transaction receipt: {
 
 ## Conclusion
 
-In this tutorial, we learned how to generate the ABI and the Bytecode of a smart contract, deploy it to the Ethereum network, and interact with it using web3.js version 4.x.
+In this tutorial, we learned how to use different methods provied by the `web3-eth` package.
 
-With this knowledge, you can start experimenting with writing smart contract in order for building your decentralized applications (dApps) on the Ethereum network using web3.js. Keep in mind that this is just the beginning, and there is a lot more to learn about Ethereum and web3.js. So keep exploring and building, and have fun!
+With this knowledge, you can start experimenting with the Ethereum blockchain. Keep in mind that this is just the beginning, and there is a lot more to learn about Ethereum and web3.js. So keep exploring and building, and have fun!
 
 ## Additional Resources
 
