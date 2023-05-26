@@ -91,8 +91,10 @@ export class Validator {
 
 				const { field } = error;
 				const _instancePath =
+					schemaPath ??
 					// eslint-disable-next-line no-useless-escape
-					field?.length >= 4 ? `${field.slice(4).replace(/\"|\[|\]/g, '')}` : '/';
+					(field?.length >= 4 ? `${field.slice(4).replace(/\"|\[|\]/g, '')}` : '/');
+
 				const instancePath = _instancePath ? `/${_instancePath}` : '';
 				if (error?.message === 'has less items than allowed') {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
