@@ -91,7 +91,7 @@ export class Validator {
 
 				const { field } = error;
 				const _instancePath =
-					schemaPath ??
+					schemaPath ||
 					// eslint-disable-next-line no-useless-escape
 					(field?.length >= 4 ? `${field.slice(4).replace(/\"|\[|\]/g, '')}` : '/');
 

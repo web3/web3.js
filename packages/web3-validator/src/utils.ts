@@ -155,7 +155,7 @@ export const abiSchemaToJsonSchema = (
 			if (
 				abi[0] &&
 				typeof abi[0] === 'string' &&
-				abi[0].includes('[') &&
+				String(abi[0]).startsWith('tuple') &&
 				!Array.isArray(abi[0]) &&
 				abi[1] &&
 				Array.isArray(abi[1])
