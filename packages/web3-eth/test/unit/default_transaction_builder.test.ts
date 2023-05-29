@@ -134,6 +134,7 @@ describe('defaultTransactionBuilder', () => {
 			// VALID_ETH_BASE_TYPES.HexString,
 			// '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
 			// overrideFunction,
+			fillGasPrice: true,
 		});
 		expect(overrideFunction).toHaveBeenCalledWith(input);
 	});
@@ -149,6 +150,7 @@ describe('defaultTransactionBuilder', () => {
 				transaction: input,
 				web3Context,
 				privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+				fillGasPrice: true,
 			});
 			expect(result.from).toBe(expectedFrom);
 		});
@@ -169,6 +171,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.from).toBe(expectedFrom);
 		});
@@ -183,7 +186,7 @@ describe('defaultTransactionBuilder', () => {
 			delete input.maxFeePerGas;
 
 			await expect(
-				defaultTransactionBuilder({ transaction: input, web3Context }),
+				defaultTransactionBuilder({ transaction: input, web3Context, fillGasPrice: true }),
 			).rejects.toThrow(new UnableToPopulateNonceError());
 		});
 
@@ -196,6 +199,26 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
+			});
+			expect(result.nonce).toBe(expectedNonce);
+			expect(getTransactionCountSpy).toHaveBeenCalledWith(
+				web3Context.requestManager,
+				expectedFrom,
+				web3Context.defaultBlock,
+			);
+		});
+
+		it('should use web3Eth.getTransactionCount to populate nonce without gas fill', async () => {
+			const input = { ...transaction };
+			delete input.nonce;
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+				fillGasPrice: false,
 			});
 			expect(result.nonce).toBe(expectedNonce);
 			expect(getTransactionCountSpy).toHaveBeenCalledWith(
@@ -216,6 +239,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.value).toBe('0x');
 		});
@@ -232,6 +256,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.input).toBe('0x');
 			expect(result.data).toBe('0x');
@@ -247,6 +272,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.input).toBe('0x123');
 			expect(result.data).toBe('0x123');
@@ -277,6 +303,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.chain).toBe('mainnet');
 		});
@@ -293,6 +320,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.chain).toBe(web3Context.defaultChain);
 		});
@@ -309,6 +337,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.hardfork).toBe('london');
 		});
@@ -325,6 +354,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.hardfork).toBe(web3Context.defaultHardfork);
 		});
@@ -357,6 +387,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.common).toStrictEqual(customCommon);
 		});
@@ -373,6 +404,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.chainId).toBe(expectedChainId);
 		});
@@ -388,6 +420,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.networkId).toBe(expectedNetworkId);
 		});
@@ -403,6 +436,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.gasLimit).toBe(expectedGasLimit);
 		});
@@ -414,7 +448,7 @@ describe('defaultTransactionBuilder', () => {
 			input.type = '0x8'; // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 
 			await expect(
-				defaultTransactionBuilder({ transaction: input, web3Context }),
+				defaultTransactionBuilder({ transaction: input, web3Context, fillGasPrice: true }),
 			).rejects.toThrow(new UnsupportedTransactionTypeError(input.type));
 		});
 
@@ -441,6 +475,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.type).toBe(web3Context.defaultTransactionType);
 		});
@@ -454,7 +489,11 @@ describe('defaultTransactionBuilder', () => {
 			delete input.maxPriorityFeePerGas;
 			input.type = '0x0';
 
-			const result = await defaultTransactionBuilder({ transaction: input, web3Context });
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+				fillGasPrice: true,
+			});
 			expect(result.gasPrice).toBe(expectedGasPrice);
 		});
 
@@ -468,6 +507,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.gasPrice).toBe(expectedGasPrice);
 		});
@@ -484,6 +524,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip2930Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.accessList).toStrictEqual([]);
 		});
@@ -497,6 +538,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.accessList).toStrictEqual([]);
 		});
@@ -516,7 +558,7 @@ describe('defaultTransactionBuilder', () => {
 			input.type = '0x2';
 
 			await expect(
-				defaultTransactionBuilder({ transaction: input, web3Context }),
+				defaultTransactionBuilder({ transaction: input, web3Context, fillGasPrice: true }),
 			).rejects.toThrow(new Eip1559NotSupportedError());
 		});
 
@@ -530,6 +572,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 
 			expect(result.maxPriorityFeePerGas).toBeDefined();
@@ -546,6 +589,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.maxPriorityFeePerGas).toBe(expectedMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
 			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
@@ -560,6 +604,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.maxPriorityFeePerGas).toBe(expectedMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
 			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
@@ -574,6 +619,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.maxPriorityFeePerGas).toBe(expectedMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
 			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
@@ -596,6 +642,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.maxPriorityFeePerGas).toBe(web3Context.defaultMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
 			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
@@ -617,6 +664,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.maxPriorityFeePerGas).toBe(web3Context.defaultMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
 			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
@@ -638,6 +686,7 @@ describe('defaultTransactionBuilder', () => {
 			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
 				transaction: input,
 				web3Context,
+				fillGasPrice: true,
 			});
 			expect(result.maxPriorityFeePerGas).toBe(web3Context.defaultMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
 			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);

@@ -59,6 +59,7 @@ describe('prepareTransactionForSigning', () => {
 					expectedTransaction,
 					web3Context,
 					expectedPrivateKey,
+					true,
 				);
 
 				// should produce an web3-utils/tx instance

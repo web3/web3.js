@@ -374,6 +374,7 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
 	transaction: Transaction;
 	web3Context: Web3Context<API>;
 	privateKey?: HexString | Uint8Array;
+	fillGasPrice?: boolean;
 }) => Promise<ReturnType>;
 
 /**
