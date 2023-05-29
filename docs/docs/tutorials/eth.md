@@ -202,7 +202,7 @@ transactionHash {
 In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding tutotial). Create a file named `estimate.ts` and fill it with the following code:
 
 ```typescript
-import Web3, { ETH_DATA_FORMAT } from 'web3';
+import Web3, { ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from 'web3';
 
 async function estimate() {
 	// abi of our contract
@@ -241,12 +241,20 @@ async function estimate() {
 		// @ts-expect-error
 		arguments: [1],
 	});
-
-	const estimatedGas = await deployment.estimateGas(
+	estimatedGas = await deployment.estimateGas(
 		{
 			from: acc,
 		},
-		ETH_DATA_FORMAT,
+		DEFAULT_RETURN_FORMAT, // the returned data will be formatted as a bigint
+	);
+
+	console.log(estimatedGas);
+
+	let estimatedGas = await deployment.estimateGas(
+		{
+			from: acc,
+		},
+		ETH_DATA_FORMAT, // the returned data will be formatted as a hexstring
 	);
 
 	console.log(estimatedGas);
