@@ -30,7 +30,18 @@ web3.eth.clearSubscriptions(function (error, success) {
 
 // in 4.x
 const subscription = await web3.eth.subscribe('newHeads');
-subscription.unsubscribe().then(
-	console.log(), // [...] Array of subsription ids
+
+// note that in version 4.x the way you get notified for `data` and `error` has changed
+newBlocksSubscription.on('data', async blockhead => {
+	console.log('New block header: ', blockhead);
+});
+newBlocksSubscription.on('error', error =>
+	console.log('Error when subscribing to New block header: ', error),
 );
+
+const ids = await web3.eth.clearSubscriptions(function (error, success);
+console.log(ids); // [...] An array of subscription ids that were cleared
+
+// note that you can unsubscribe from a specific subscription by calling unsubscribe()
+//	on that subscription object: `await subscription.unsubscribe();` and this would return void if succeeded.
 ```
