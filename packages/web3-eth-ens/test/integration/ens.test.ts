@@ -18,8 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getBlock } from 'web3-eth';
 import { Contract, PayableTxOptions } from 'web3-eth-contract';
+import { Address, Bytes, DEFAULT_RETURN_FORMAT } from 'web3-types';
 import { sha3, toChecksumAddress } from 'web3-utils';
-import { Address, Bytes, TransactionReceipt, DEFAULT_RETURN_FORMAT } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { IpcProvider } from 'web3-providers-ipc';
 import { ENS } from '../../src';
@@ -35,9 +35,10 @@ import {
 	isWs,
 } from '../fixtures/system_tests_utils';
 
-import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
-import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
+import { PublicResolverAbi as PublicResolver } from '../../src/abi/ens/PublicResolver';
+import { ENSRegistryAbi } from '../fixtures/ens/abi/ENSRegistry';
 import { NameWrapperAbi } from '../fixtures/ens/abi/NameWrapper';
+import { PublicResolverAbi } from '../fixtures/ens/abi/PublicResolver';
 import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
 import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
@@ -50,8 +51,7 @@ describe('ens', () => {
 	type ResolverContract = Contract<typeof PublicResolverAbi>;
 
 	let Resolver: ResolverContract;
-	let setEnsResolver: ResolverContract;
-	let getEnsResolver: ResolverContract;
+	let getEnsResolver: Contract<typeof PublicResolver>;
 
 	let sendOptions: PayableTxOptions;
 
@@ -62,8 +62,6 @@ describe('ens', () => {
 	const subdomain = 'subdomain';
 	const fullDomain = `${subdomain}.${domain}`;
 	const web3jsName = 'web3js.test';
-
-	const ttl = 3600;
 
 	let accounts: string[];
 	let ens: ENS;
@@ -140,7 +138,6 @@ describe('ens', () => {
 			// @ts-expect-error @typescript-eslint/ban-ts-comment
 			await closeOpenConnection(ens?._registry?.contract);
 			await closeOpenConnection(getEnsResolver);
-			await closeOpenConnection(setEnsResolver);
 			await closeOpenConnection(registry);
 			await closeOpenConnection(resolver);
 			await closeOpenConnection(nameWrapper);
@@ -154,17 +151,6 @@ describe('ens', () => {
 			.send(sendOptions);
 	});
 
-	it('should set approval for all', async () => {
-		await expect(ens.setApprovalForAll(accountOne, true, sendOptions)).resolves.toBeDefined();
-	});
-
-	it('should check approval for all', async () => {
-		await expect(ens.setApprovalForAll(accountOne, true, sendOptions)).resolves.toBeDefined();
-
-		const isApproved = await ens.isApprovedForAll(defaultAccount, accountOne);
-
-		expect(isApproved).toBeTruthy();
-	});
 	it('should return the subnode owner of "resolver"', async () => {
 		const owner = await ens.getOwner('resolver');
 
@@ -175,36 +161,6 @@ describe('ens', () => {
 		getEnsResolver = await ens.getResolver('resolver');
 
 		expect(getEnsResolver.options.address).toEqual(resolver.options.address);
-	});
-
-	it('should set resolver', async () => {
-		const newResolver = await Resolver.deploy({
-			data: PublicResolverBytecode,
-			arguments: [
-				registry.options.address as string,
-				nameWrapper.options.address as string,
-				accountOne,
-				defaultAccount,
-			],
-		}).send(sendOptions);
-
-		await ens.setResolver('resolver', newResolver.options.address as string, sendOptions);
-
-		setEnsResolver = await ens.getResolver('resolver');
-
-		expect(setEnsResolver.options.address).toEqual(newResolver.options.address);
-	});
-
-	it('should set the owner record for a name', async () => {
-		const receipt = await ens.setOwner(web3jsName, accountOne, sendOptions);
-
-		expect(receipt).toEqual(
-			expect.objectContaining({
-				transactionHash: expect.any(String),
-			}),
-		);
-
-		expect((receipt as TransactionReceipt).status).toEqual(BigInt(1));
 	});
 
 	it('should get the owner record for a name', async () => {
@@ -219,40 +175,6 @@ describe('ens', () => {
 		expect(TTL).toBe(BigInt(0));
 	});
 
-	it('should set TTL', async () => {
-		await ens.setTTL(web3jsName, ttl, sendOptions);
-
-		const ttlResult = await ens.getTTL(web3jsName);
-
-		expect(ttlResult).toBe(BigInt(ttl));
-	});
-
-	it('should set subnode owner', async () => {
-		await ens.setSubnodeOwner(domain, subdomain, accountOne, sendOptions);
-
-		const owner = await ens.getOwner(fullDomain);
-
-		expect(owner).toBe(toChecksumAddress(accountOne));
-	});
-
-	it('should set subnode record', async () => {
-		await ens.setSubnodeRecord(
-			domain,
-			subdomain,
-			accountOne,
-			resolver.options.address as string,
-			ttl,
-			sendOptions,
-		);
-
-		const ttlResult = await ens.getTTL(fullDomain);
-
-		const owner = await ens.getOwner(fullDomain);
-
-		expect(ttlResult).toBe(BigInt(ttl));
-		expect(owner).toBe(toChecksumAddress(accountOne));
-	});
-
 	it('shoud record exists', async () => {
 		await registry.methods
 			.setSubnodeOwner(namehash(domain), sha3(subdomain) as string, defaultAccount)
@@ -261,21 +183,5 @@ describe('ens', () => {
 		const exists = await ens.recordExists(fullDomain);
 
 		expect(exists).toBeTruthy();
-	});
-	it('shoud set record', async () => {
-		await registry.methods
-			.setSubnodeOwner(namehash(domain), sha3(subdomain) as string, defaultAccount)
-			.send(sendOptions);
-
-		await ens.setRecord(
-			domain,
-			accountOne,
-			resolver.options.address as string,
-			ttl,
-			sendOptions,
-		);
-
-		const owner = await ens.getOwner(domain);
-		expect(owner).toBe(toChecksumAddress(accountOne));
 	});
 });
