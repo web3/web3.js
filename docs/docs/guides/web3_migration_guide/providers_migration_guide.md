@@ -245,7 +245,7 @@ You can use it by installing `web3-providers-ipc` and creating a new instance. S
 you can pass it on to the Web3 instance.
 
 ```ts
-import IpcProvider from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers-ipc';
 
 const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc');
 ```

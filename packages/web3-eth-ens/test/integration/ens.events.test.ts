@@ -22,7 +22,7 @@ import { getBlock } from 'web3-eth';
 
 import { Address, Bytes, DEFAULT_RETURN_FORMAT } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
+import { IpcProvider } from 'web3-providers-ipc';
 import { ENS } from '../../src';
 import { namehash } from '../../src/utils';
 

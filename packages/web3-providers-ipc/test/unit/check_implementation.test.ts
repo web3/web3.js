@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import * as fs from 'fs';
 import net from 'net';
-import IpcProvider from '../../src/index';
+import { IpcProvider } from '../../src/index';
 
 jest.mock('net');
 jest.mock('fs');

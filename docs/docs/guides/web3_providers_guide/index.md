@@ -61,7 +61,7 @@ The key rule for setting provider is as follows:
 ### Local Geth Node
 
 ```ts
-const Web3 = require('web3');
+const { Web3 } = require('web3');
 const web3 = new Web3('http://localhost:8545');
 // or
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -86,7 +86,7 @@ const web3 = new Web3(
 
 ```ts
 // Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
-const Web3 = require('web3');
+const { Web3 } = require('web3');
 const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 ```
 
@@ -96,16 +96,32 @@ As stated above, the injected provider should be in compliance with [EIP-1193](h
 
 The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
 
-```ts
-const Web3 = require('web3');
-// Using an EIP1193 provider like MetaMask can be injected
-
-if (window.ethereum) {
-	// Check if ethereum object exists
-	await window.ethereum.request();
-	window.web3 = new Web3(window.ethereum); // inject provider
-}
+```html
+<script src="https://cdn.jsdelivr.net/npm/web3@4.0.1-rc.1/dist/web3.min.js"></script>
+<script>
+	window.addEventListener('load', function () {
+		// Check if web3 is available
+		if (typeof window.ethereum !== 'undefined') {
+			// Use the browser injected Ethereum provider
+			web3 = new Web3(window.ethereum);
+			// Request access to the user's MetaMask account
+			window.ethereum.enable();
+			// Get the user's accounts
+			web3.eth.getAccounts().then(function (accounts) {
+				// Show the first account
+				document.getElementById('log').innerHTML =
+					'Connected with MetaMask account: ' + accounts[0];
+			});
+		} else {
+			// If web3 is not available, give instructions to install MetaMask
+			document.getElementById('log').innerHTML =
+				'Please install MetaMask to connect with the Ethereum network';
+		}
+	});
+</script>
 ```
+
+Note that the above code should be hosted in a web server (that could be a simple local web server), because many browser does not support this feature for static files located on your machine.
 
 ### Provider Options
 
