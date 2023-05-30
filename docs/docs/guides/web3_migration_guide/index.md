@@ -32,6 +32,8 @@ const web3 = new Web3();
 
 Passing callbacks to functions is no longer supported, except for event listeners.
 
+For that, for example, the way to subscribe and do event listening on blockchain events had changed in 4.x as you can find inside [**`web3.eth.subscribe` Migration Guide**](/docs/guides/web3_migration_guide/subscribe_migration_guide#subscribing-to-events).
+
 ### Not Implemented or Exported
 
 -   [extend](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) Extending web3 modules functionality is not implemented
