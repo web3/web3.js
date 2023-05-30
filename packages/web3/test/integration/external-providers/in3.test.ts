@@ -24,7 +24,7 @@ import Web3 from '../../../src/index';
 // Actually it could take long time to get something from `in3` because of its decentralized nature.
 // 	And because of that, this test only try to get the last block number. And this also simplifies the configuration needed.
 describe('compatibility with `in3` provider', () => {
-	it('should get last block number', async () => {
+	it.skip('should get last block number', async () => {
 		// use the In3Client as Http-Provider for web3.js
 		const web3 = new Web3(
 			new In3Client({

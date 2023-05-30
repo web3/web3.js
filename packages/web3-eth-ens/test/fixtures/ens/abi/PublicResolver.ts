@@ -18,6 +18,51 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // https://github.com/ensdomains/ens-contracts/blob/master/contracts/resolvers/PublicResolver.sol
 export const PublicResolverAbi = [
 	{
+		inputs: [
+			{
+				internalType: 'contract ENS',
+				name: '_ens',
+				type: 'address',
+			},
+			{
+				internalType: 'contract INameWrapper',
+				name: 'wrapperAddress',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: '_trustedETHController',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: '_trustedReverseRegistrar',
+				type: 'address',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'constructor',
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				indexed: true,
+				internalType: 'uint256',
+				name: 'contentType',
+				type: 'uint256',
+			},
+		],
+		name: 'ABIChanged',
+		type: 'event',
+	},
+	{
 		anonymous: false,
 		inputs: [
 			{
@@ -373,6 +418,19 @@ export const PublicResolverAbi = [
 				type: 'bytes32',
 			},
 		],
+		name: 'clearDNSZone',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+		],
 		name: 'contenthash',
 		outputs: [
 			{
@@ -488,6 +546,25 @@ export const PublicResolverAbi = [
 	{
 		inputs: [
 			{
+				internalType: 'bytes[]',
+				name: 'data',
+				type: 'bytes[]',
+			},
+		],
+		name: 'multicall',
+		outputs: [
+			{
+				internalType: 'bytes[]',
+				name: 'results',
+				type: 'bytes[]',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
 				internalType: 'bytes32',
 				name: 'node',
 				type: 'bytes32',
@@ -526,6 +603,229 @@ export const PublicResolverAbi = [
 			},
 		],
 		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'uint256',
+				name: 'contentType',
+				type: 'uint256',
+			},
+			{
+				internalType: 'bytes',
+				name: 'data',
+				type: 'bytes',
+			},
+		],
+		name: 'setABI',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'uint256',
+				name: 'coinType',
+				type: 'uint256',
+			},
+			{
+				internalType: 'bytes',
+				name: 'a',
+				type: 'bytes',
+			},
+		],
+		name: 'setAddr',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'address',
+				name: 'a',
+				type: 'address',
+			},
+		],
+		name: 'setAddr',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'operator',
+				type: 'address',
+			},
+			{
+				internalType: 'bool',
+				name: 'approved',
+				type: 'bool',
+			},
+		],
+		name: 'setApprovalForAll',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'bytes',
+				name: 'hash',
+				type: 'bytes',
+			},
+		],
+		name: 'setContenthash',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'bytes',
+				name: 'data',
+				type: 'bytes',
+			},
+		],
+		name: 'setDNSRecords',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'bytes4',
+				name: 'interfaceID',
+				type: 'bytes4',
+			},
+			{
+				internalType: 'address',
+				name: 'implementer',
+				type: 'address',
+			},
+		],
+		name: 'setInterface',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'string',
+				name: 'newName',
+				type: 'string',
+			},
+		],
+		name: 'setName',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'bytes32',
+				name: 'x',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'bytes32',
+				name: 'y',
+				type: 'bytes32',
+			},
+		],
+		name: 'setPubkey',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'string',
+				name: 'key',
+				type: 'string',
+			},
+			{
+				internalType: 'string',
+				name: 'value',
+				type: 'string',
+			},
+		],
+		name: 'setText',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'bytes',
+				name: 'hash',
+				type: 'bytes',
+			},
+		],
+		name: 'setZonehash',
+		outputs: [],
+		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{

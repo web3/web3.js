@@ -16,12 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3ContextObject, Web3PromiEvent } from 'web3-core';
-import { Contract } from 'web3-eth-contract';
 import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError } from 'web3-errors';
-import { sha3Raw } from 'web3-utils';
-import { DEFAULT_RETURN_FORMAT } from 'web3-types';
-import { registryAddresses } from '../../src/config';
+import { Contract } from 'web3-eth-contract';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
+import { registryAddresses } from '../../src/config';
 
 import { ENS } from '../../src/ens';
 
@@ -43,13 +41,10 @@ jest.mock('web3-net', () => ({
 const { getId } = require('web3-net');
 
 describe('ens', () => {
-	const TTL = 3600;
 	let object: Web3ContextObject;
 	let resolverContract: Contract<typeof PublicResolverAbi>;
 	const mockAddress = '0x0000000000000000000000000000000000000000';
 	const ENS_NAME = 'web3js.eth';
-	const x = '0x1000000000000000000000000000000000000000000000000000000000000000';
-	const y = '0x2000000000000000000000000000000000000000000000000000000000000000';
 	let ens: ENS;
 
 	beforeAll(() => {
@@ -61,25 +56,6 @@ describe('ens', () => {
 	});
 
 	describe('Resolver', () => {
-		it('setResolver', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setResolverMock = jest.spyOn(ens['_registry'], 'setResolver').mockReturnValue({
-				send,
-			} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setResolver(ENS_NAME, mockAddress, sendOptions);
-
-			expect(setResolverMock).toHaveBeenCalledWith(
-				ENS_NAME,
-				mockAddress,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
-		});
-
 		it('getResolver', async () => {
 			const getResolverMock = jest
 				.spyOn(ens['_registry'], 'getResolver')
@@ -91,118 +67,7 @@ describe('ens', () => {
 		});
 	});
 
-	describe('Subnode', () => {
-		it('setSubnodeRecord', async () => {
-			const label = sha3Raw(ENS_NAME);
-
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setSubnodeRecordMock = jest
-				.spyOn(ens['_registry'], 'setSubnodeRecord')
-				.mockReturnValue({
-					send,
-				} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setSubnodeRecord(ENS_NAME, label, mockAddress, mockAddress, TTL, sendOptions);
-
-			expect(setSubnodeRecordMock).toHaveBeenCalledWith(
-				ENS_NAME,
-				label,
-				mockAddress,
-				mockAddress,
-				TTL,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
-		});
-		it('setSubnodeOwner', async () => {
-			const label = sha3Raw(ENS_NAME);
-
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setSubnodeOwnerMock = jest
-				.spyOn(ens['_registry'], 'setSubnodeOwner')
-				.mockReturnValue({
-					send,
-				} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setSubnodeOwner(
-				ENS_NAME,
-				label,
-				mockAddress,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
-
-			expect(setSubnodeOwnerMock).toHaveBeenCalledWith(
-				ENS_NAME,
-				label,
-				mockAddress,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
-		});
-	});
-
-	describe('ApprovalForAll', () => {
-		it('setApprovalForAll', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setApprovalForAllMock = jest
-				.spyOn(ens['_registry'], 'setApprovalForAll')
-				.mockReturnValue({
-					send,
-				} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setApprovalForAll(ENS_NAME, true, sendOptions);
-			expect(setApprovalForAllMock).toHaveBeenCalledWith(ENS_NAME, true, sendOptions);
-		});
-
-		it('isApprovedForAll', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const isApprovedForAllMock = jest
-				.spyOn(ens['_registry'], 'isApprovedForAll')
-				.mockReturnValue({
-					send,
-				} as unknown as Web3PromiEvent<any, any>);
-			await ens.isApprovedForAll(mockAddress, mockAddress, DEFAULT_RETURN_FORMAT);
-
-			expect(isApprovedForAllMock).toHaveBeenCalledWith(
-				mockAddress,
-				mockAddress,
-				DEFAULT_RETURN_FORMAT,
-			);
-		});
-	});
-
 	describe('Record', () => {
-		it('setRecord', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setRecordMock = jest.spyOn(ens['_registry'], 'setRecord').mockReturnValue({
-				send,
-			} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setRecord(ENS_NAME, mockAddress, mockAddress, TTL, sendOptions);
-			expect(setRecordMock).toHaveBeenCalledWith(
-				ENS_NAME,
-				mockAddress,
-				mockAddress,
-				TTL,
-				sendOptions,
-			);
-		});
-
 		it('recordExists', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const call = jest.spyOn({ call: () => {} }, 'call');
@@ -217,19 +82,6 @@ describe('ens', () => {
 	});
 
 	describe('ttl', () => {
-		it('setTTL', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setTTLMock = jest.spyOn(ens['_registry'], 'setTTL').mockReturnValue({
-				send,
-			} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setTTL(ENS_NAME, TTL, sendOptions);
-			expect(setTTLMock).toHaveBeenCalledWith(ENS_NAME, TTL, sendOptions);
-		});
-
 		it('getTTL', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const call = jest.spyOn({ call: () => {} }, 'call');
@@ -244,24 +96,6 @@ describe('ens', () => {
 	});
 
 	describe('owner', () => {
-		it('setOwner', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setOwnerMock = jest.spyOn(ens['_registry'], 'setOwner').mockReturnValue({
-				send,
-			} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setOwner(ENS_NAME, mockAddress, sendOptions);
-			expect(setOwnerMock).toHaveBeenCalledWith(
-				ENS_NAME,
-				mockAddress,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
-		});
-
 		it('getOwner', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const call = jest.spyOn({ call: () => {} }, 'call');
@@ -276,24 +110,6 @@ describe('ens', () => {
 	});
 
 	describe('addr', () => {
-		it('setAddr valid', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
-
-			const setAddressMock = jest.spyOn(ens['_resolver'], 'setAddress').mockReturnValue({
-				send,
-			} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await ens.setAddress(ENS_NAME, mockAddress, sendOptions);
-			expect(setAddressMock).toHaveBeenCalledWith(
-				ENS_NAME,
-				mockAddress,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
-		});
-
 		it('getAddress', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const call = jest.spyOn({ call: () => {} }, 'call');
@@ -307,21 +123,32 @@ describe('ens', () => {
 			expect(addrMock).toHaveBeenCalledWith(ENS_NAME, 60);
 		});
 	});
-	describe('pubkey', () => {
-		it('setPubkey', async () => {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			const send = jest.spyOn({ send: () => {} }, 'send');
 
-			const setPubKeyMock = jest.spyOn(ens['_resolver'], 'setPubkey').mockReturnValue({
-				send,
-			} as unknown as Web3PromiEvent<any, any>);
-
-			const sendOptions = { from: mockAddress };
-			await expect(ens.setPubkey(ENS_NAME, x, y, sendOptions)).resolves.not.toThrow();
-
-			expect(setPubKeyMock).toHaveBeenCalledWith(ENS_NAME, x, y, sendOptions);
+	describe('events', () => {
+		it('get events', async () => {
+			const { events } = ens;
+			expect(typeof events.NewOwner).toBe('function');
+			expect(typeof events.allEvents).toBe('function');
+			expect(typeof events.NewResolver).toBe('function');
+			expect(typeof events.Transfer).toBe('function');
 		});
+	});
 
+	describe('constructor', () => {
+		it('default params', async () => {
+			const localEns = new ENS();
+			expect(localEns.provider).toBeUndefined();
+			expect(localEns.registryAddress).toBe(registryAddresses.main);
+		});
+		it('set params', async () => {
+			const localEns = new ENS(registryAddresses.goerli, 'http://127.0.0.1:8545');
+			// @ts-expect-error check clientUrl field
+			expect(localEns.provider?.clientUrl).toBe('http://127.0.0.1:8545');
+			expect(localEns.registryAddress).toBe(registryAddresses.goerli);
+		});
+	});
+
+	describe('pubkey', () => {
 		it('getPubkey', async () => {
 			const pubkeyMock = jest.spyOn(ens['_resolver'], 'getPubkey').mockReturnValue({
 				call: jest.fn(),
@@ -332,23 +159,6 @@ describe('ens', () => {
 		});
 
 		describe('Contenthash', () => {
-			it('setContenthash', async () => {
-				const hash = sha3Raw('justToHash');
-
-				// eslint-disable-next-line @typescript-eslint/no-empty-function
-				const send = jest.spyOn({ send: () => {} }, 'send');
-
-				const setContenthashMock = jest
-					.spyOn(ens['_resolver'], 'setContenthash')
-					.mockReturnValue({
-						send,
-					} as unknown as Web3PromiEvent<any, any>);
-
-				const sendOptions = { from: mockAddress };
-				await ens.setContenthash(ENS_NAME, hash, sendOptions);
-				expect(setContenthashMock).toHaveBeenCalledWith(ENS_NAME, hash, sendOptions);
-			});
-
 			it('getContenthash', async () => {
 				const contenthashMock = jest
 					.spyOn(ens['_resolver'], 'getContenthash')

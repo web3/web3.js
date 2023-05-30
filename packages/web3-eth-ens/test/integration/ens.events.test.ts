@@ -37,11 +37,11 @@ import {
 	getSystemTestProviderUrl,
 } from '../fixtures/system_tests_utils';
 
-import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
+import { ENSRegistryAbi } from '../fixtures/ens/abi/ENSRegistry';
 import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
 import { NameWrapperAbi } from '../fixtures/ens/abi/NameWrapper';
 import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
-import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
+import { PublicResolverAbi } from '../fixtures/ens/abi/PublicResolver';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
 describeIf(isSocket)('ens events', () => {
@@ -58,12 +58,9 @@ describeIf(isSocket)('ens events', () => {
 	let sendOptions: PayableTxOptions;
 
 	const domain = 'test';
+	const domainNode = namehash(domain);
 	const node = namehash('resolver');
 	const label = sha3('resolver') as string;
-
-	const web3jsName = 'web3js.test';
-
-	const ttl = 3600;
 
 	let accounts: string[];
 	let ens: ENS;
@@ -153,39 +150,6 @@ describeIf(isSocket)('ens events', () => {
 	});
 
 	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
-	it('ApprovalForAll event', async () => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
-		await new Promise<void>(async resolve => {
-			const event = ens.events.ApprovalForAll();
-
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			event.on('data', () => {
-				resolve();
-			});
-
-			await ens.setApprovalForAll(accountOne, true, sendOptions);
-		});
-	});
-
-	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
-	it('NewTTL event', async () => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
-		await new Promise<void>(async resolve => {
-			const event = ens.events.NewTTL();
-
-			event.on('data', () => {
-				resolve();
-			});
-
-			event.on('error', () => {
-				resolve();
-			});
-
-			await ens.setTTL(web3jsName, ttl, sendOptions);
-		});
-	});
-
-	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
 	it('NewResolver event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
@@ -196,12 +160,9 @@ describeIf(isSocket)('ens events', () => {
 				resolve();
 			});
 
-			await ens.setResolver(
-				domain,
-				resolver.options.address as string,
-				sendOptions,
-				DEFAULT_RETURN_FORMAT,
-			);
+			await registry.methods
+				.setResolver(domainNode, resolver.options.address as string)
+				.send(sendOptions);
 		});
 	});
 });

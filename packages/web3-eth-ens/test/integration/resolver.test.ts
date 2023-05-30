@@ -37,8 +37,8 @@ import {
 	itIf,
 } from '../fixtures/system_tests_utils';
 
-import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
-import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
+import { ENSRegistryAbi } from '../fixtures/ens/abi/ENSRegistry';
+import { PublicResolverAbi } from '../fixtures/ens/abi/PublicResolver';
 import { NameWrapperAbi } from '../fixtures/ens/abi/NameWrapper';
 import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
 import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
@@ -169,15 +169,11 @@ describe('ens', () => {
 	});
 
 	it('fetch pubkey', async () => {
-		await ens.setResolver(
-			domain,
-			resolver.options.address as string,
-			sendOptions,
-			DEFAULT_RETURN_FORMAT,
-		);
+		await registry.methods
+			.setResolver(domainNode, resolver.options.address as string)
+			.send(sendOptions);
 
 		const res = await ens.getPubkey(domain);
-
 		expect(res.x).toBe('0x0000000000000000000000000000000000000000000000000000000000000000');
 		expect(res.y).toBe('0x0000000000000000000000000000000000000000000000000000000000000000');
 	});
@@ -186,16 +182,16 @@ describe('ens', () => {
 		const x = '0x1000000000000000000000000000000000000000000000000000000000000000';
 		const y = '0x2000000000000000000000000000000000000000000000000000000000000000';
 
-		await ens.setPubkey(domain, x, y, sendOptions);
+		await resolver.methods.setPubkey(domainNode, x, y).send(sendOptions);
 
 		const result = await ens.getPubkey(domain);
 
-		expect(result[0]).toBe(namehash(x));
-		expect(result[1]).toBe(namehash(y));
+		expect(result[0]).toBe(x);
+		expect(result[1]).toBe(y);
 	});
 
 	it('sets contenthash', async () => {
-		await ens.setContenthash(domain, contentHash, sendOptions);
+		await resolver.methods.setContenthash(domainNode, contentHash).send(sendOptions);
 
 		const res = await resolver.methods.contenthash(domainNode).call(sendOptions);
 		expect(res).toBe(contentHash);
@@ -211,7 +207,7 @@ describe('ens', () => {
 			event.on('data', () => {
 				resolve();
 			});
-			await ens.setContenthash(domain, contentHash, sendOptions);
+			await resolver.methods.setContenthash(domainNode, contentHash).send(sendOptions);
 		});
 	});
 
@@ -227,7 +223,7 @@ describe('ens', () => {
 			.setResolver(domainNode, resolver.options.address as string)
 			.send(sendOptions);
 
-		await ens.setAddress(domain, accounts[1], sendOptions, DEFAULT_RETURN_FORMAT);
+		await resolver.methods.setAddr(domainNode, accounts[1]).send(sendOptions);
 
 		const res = await resolver.methods.addr(domainNode, DEFAULT_COIN_TYPE).call(sendOptions);
 		expect(res).toBe(accounts[1]);
