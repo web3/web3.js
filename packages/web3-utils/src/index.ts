@@ -15,19 +15,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './converters';
-export * from './validation';
-export * from './formatter';
-export * from './hash';
-export * from './random';
-export * from './string_manipulation';
-export * from './objects';
-export * from './promise_helpers';
-export * from './json_rpc';
-export * as jsonRpc from './json_rpc';
-export * from './web3_deferred_promise';
-export * from './chunk_response_parser';
-export * from './uuid';
-export * from './web3_eip1193_provider';
-export * from './socket_provider';
-export * from './uint8array';
+export * from './converters.js';
+export * from './validation.js';
+export * from './formatter.js';
+export * from './hash.js';
+export * from './random.js';
+export * from './string_manipulation.js';
+export * from './objects.js';
+export * from './promise_helpers.js';
+export * from './json_rpc.js';
+export * as jsonRpc from './json_rpc.js';
+export * from './web3_deferred_promise.js';
+export * from './chunk_response_parser.js';
+export * from './uuid.js';
+export * from './web3_eip1193_provider.js';
+export * from './socket_provider.js';
+export * from './uint8array.js';

@@ -27,7 +27,7 @@ import {
 	LogsOutput,
 } from 'web3-types';
 import { Web3Subscription } from 'web3-core';
-import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
+import { blockHeaderSchema, logSchema, syncSchema } from './schemas.js';
 
 type CommonSubscriptionEvents = {
 	error: Error;

@@ -21,7 +21,7 @@ import { EthExecutionAPI, HardforksOrdered, Transaction, ETH_DATA_FORMAT } from 
 import { Web3ValidatorError, isNullish, validator } from 'web3-validator';
 import { InvalidPropertiesForTransactionTypeError } from 'web3-errors';
 
-import { InternalTransaction } from '../types';
+import { InternalTransaction } from '../types.js';
 
 // undefined is treated as null for JSON schema validator
 const transactionType0x0Schema = {

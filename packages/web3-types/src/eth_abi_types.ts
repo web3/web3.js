@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Address } from './eth_types';
-import { Bytes, Numbers } from './primitives_types';
-import { FixedSizeArray } from './utility_types';
+import { Address } from './eth_types.js';
+import { Bytes, Numbers } from './primitives_types.js';
+import { FixedSizeArray } from './utility_types.js';
 
 type _SolidityIndexRange =
 	| 1

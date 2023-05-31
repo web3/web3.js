@@ -33,8 +33,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * This comment _supports3_ [Markdown](https://marked.js.org/)
  */
-import { Personal } from './personal';
+import { Personal } from './personal.js';
 
-export * from './personal';
+export * from './personal.js';
 
 export default Personal;

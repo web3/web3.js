@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { parseBaseType } from '../utils';
+import { parseBaseType } from '../utils.js';
 
 export const isValidEthBaseType = (type: string): boolean => {
 	const { baseType, baseTypeSize } = parseBaseType(type);

@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Numbers } from 'web3-types';
 import { bytesToHex } from 'web3-utils';
-import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2, secp256k1 } from './constants';
+import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2, secp256k1 } from './constants.js';
 import {
 	Chain,
 	Common,
@@ -25,7 +25,7 @@ import {
 	toUint8Array,
 	uint8ArrayToBigInt,
 	unpadUint8Array,
-} from '../common';
+} from '../common/index.js';
 import type {
 	AccessListEIP2930TxData,
 	AccessListEIP2930ValuesArray,
@@ -35,10 +35,10 @@ import type {
 	TxData,
 	TxOptions,
 	TxValuesArray,
-} from './types';
-import { Capability, ECDSASignature } from './types';
-import { Address } from './address';
-import { checkMaxInitCodeSize } from './utils';
+} from './types.js';
+import { Capability, ECDSASignature } from './types.js';
+import { Address } from './address.js';
+import { checkMaxInitCodeSize } from './utils.js';
 
 interface TransactionCache {
 	hash: Uint8Array | undefined;

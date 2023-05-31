@@ -19,10 +19,10 @@ import { Web3Context } from 'web3-core';
 import { rejectIfConditionAtInterval } from 'web3-utils';
 
 import { TransactionBlockTimeoutError } from 'web3-errors';
-import { NUMBER_DATA_FORMAT } from '../constants';
+import { NUMBER_DATA_FORMAT } from '../constants.js';
 // eslint-disable-next-line import/no-cycle
-import { getBlockNumber } from '../rpc_method_wrappers';
-import { NewHeadsSubscription } from '../web3_subscriptions';
+import { getBlockNumber } from '../rpc_method_wrappers.js';
+import { NewHeadsSubscription } from '../web3_subscriptions.js';
 
 export interface ResourceCleaner {
 	clean: () => void;

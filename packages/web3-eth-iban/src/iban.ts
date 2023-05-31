@@ -19,7 +19,7 @@ import { HexString } from 'web3-types';
 import { toChecksumAddress, leftPad, hexToNumber } from 'web3-utils';
 import { isAddress } from 'web3-validator';
 import { InvalidAddressError } from 'web3-errors';
-import { IbanOptions } from './types';
+import { IbanOptions } from './types.js';
 
 /**
  * Converts Ethereum addresses to IBAN or BBAN addresses and vice versa.

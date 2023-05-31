@@ -14,23 +14,23 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import chainstart from './chainstart';
-import dao from './dao';
-import homestead from './homestead';
-import tangerineWhistle from './tangerineWhistle';
-import spuriousDragon from './spuriousDragon';
-import byzantium from './byzantium';
-import constantinople from './constantinople';
-import petersburg from './petersburg';
-import istanbul from './istanbul';
-import muirGlacier from './muirGlacier';
-import berlin from './berlin';
-import london from './london';
-import shanghai from './shanghai';
-import arrowGlacier from './arrowGlacier';
-import grayGlacier from './grayGlacier';
-import mergeForkIdTransition from './mergeForkIdTransition';
-import merge from './merge';
+import chainstart from './chainstart.js';
+import dao from './dao.js';
+import homestead from './homestead.js';
+import tangerineWhistle from './tangerineWhistle.js';
+import spuriousDragon from './spuriousDragon.js';
+import byzantium from './byzantium.js';
+import constantinople from './constantinople.js';
+import petersburg from './petersburg.js';
+import istanbul from './istanbul.js';
+import muirGlacier from './muirGlacier.js';
+import berlin from './berlin.js';
+import london from './london.js';
+import shanghai from './shanghai.js';
+import arrowGlacier from './arrowGlacier.js';
+import grayGlacier from './grayGlacier.js';
+import mergeForkIdTransition from './mergeForkIdTransition.js';
+import merge from './merge.js';
 
 export const hardforks: { [key: string]: any } = {
 	chainstart,

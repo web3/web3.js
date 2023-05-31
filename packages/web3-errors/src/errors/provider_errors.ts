@@ -23,8 +23,8 @@ import {
 	ERR_INVALID_CLIENT,
 	ERR_SUBSCRIPTION,
 	ERR_WS_PROVIDER,
-} from '../error_codes';
-import { BaseWeb3Error } from '../web3_error_base';
+} from '../error_codes.js';
+import { BaseWeb3Error } from '../web3_error_base.js';
 
 export class ProviderError extends BaseWeb3Error {
 	public code = ERR_PROVIDER;

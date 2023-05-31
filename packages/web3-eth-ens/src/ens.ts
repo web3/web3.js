@@ -27,10 +27,10 @@ import {
 	SupportedProviders,
 	Web3NetAPI,
 } from 'web3-types';
-import { PublicResolverAbi } from './abi/ens/PublicResolver';
-import { networkIds, registryAddresses } from './config';
-import { Registry } from './registry';
-import { Resolver } from './resolver';
+import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
+import { networkIds, registryAddresses } from './config.js';
+import { Registry } from './registry.js';
+import { Resolver } from './resolver.js';
 
 /**
  * This class is designed to interact with the ENS system on the Ethereum blockchain.

@@ -28,9 +28,9 @@ import {
 	TransactionCall,
 	TransactionReceipt,
 } from 'web3-types';
-import { RevertReason, RevertReasonWithCustomError } from '../types';
+import { RevertReason, RevertReasonWithCustomError } from '../types.js';
 // eslint-disable-next-line import/no-cycle
-import { getRevertReason, parseTransactionError } from './get_revert_reason';
+import { getRevertReason, parseTransactionError } from './get_revert_reason.js';
 
 export async function getTransactionError<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context,

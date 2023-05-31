@@ -31,8 +31,8 @@ import {
 	TransactionReceiptBase,
 	BlockBase,
 	LogBase,
-} from '../eth_types';
-import { HexString } from '../primitives_types';
+} from '../eth_types.js';
+import { HexString } from '../primitives_types.js';
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis

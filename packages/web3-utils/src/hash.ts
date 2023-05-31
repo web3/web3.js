@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { keccak256 } from 'ethereum-cryptography/keccak';
-import { utf8ToBytes } from 'ethereum-cryptography/utils';
+import { keccak256 } from 'ethereum-cryptography/keccak.js';
+import { utf8ToBytes } from 'ethereum-cryptography/utils.js';
 import {
 	InvalidAddressError,
 	InvalidBooleanError,
@@ -43,8 +43,8 @@ import {
 	toHex,
 	toNumber,
 	utf8ToHex,
-} from './converters';
-import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
+} from './converters.js';
+import { leftPad, rightPad, toTwosComplement } from './string_manipulation.js';
 
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 

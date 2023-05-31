@@ -14,28 +14,28 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import e1153 from './1153';
-import e1559 from './1559';
-import e2315 from './2315';
-import e2537 from './2537';
-import e2565 from './2565';
-import e2718 from './2718';
-import e2929 from './2929';
-import e2930 from './2930';
-import e3198 from './3198';
-import e3529 from './3529';
-import e3540 from './3540';
-import e3541 from './3541';
-import e3554 from './3554';
-import e3607 from './3607';
-import e3651 from './3651';
-import e3670 from './3670';
-import e3675 from './3675';
-import e3855 from './3855';
-import e3860 from './3860';
-import e4345 from './4345';
-import e4399 from './4399';
-import e5133 from './5133';
+import e1153 from './1153.js';
+import e1559 from './1559.js';
+import e2315 from './2315.js';
+import e2537 from './2537.js';
+import e2565 from './2565.js';
+import e2718 from './2718.js';
+import e2929 from './2929.js';
+import e2930 from './2930.js';
+import e3198 from './3198.js';
+import e3529 from './3529.js';
+import e3540 from './3540.js';
+import e3541 from './3541.js';
+import e3554 from './3554.js';
+import e3607 from './3607.js';
+import e3651 from './3651.js';
+import e3670 from './3670.js';
+import e3675 from './3675.js';
+import e3855 from './3855.js';
+import e3860 from './3860.js';
+import e4345 from './4345.js';
+import e4399 from './4399.js';
+import e5133 from './5133.js';
 
 export const EIPs: { [key: number]: any } = {
 	1153: e1153,

@@ -18,8 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiError } from 'web3-errors';
 import { sha3Raw } from 'web3-utils';
 import { AbiFunctionFragment } from 'web3-types';
-import { isAbiFunctionFragment, jsonInterfaceMethodToString } from '../utils';
-import { encodeParameters } from './parameters_api';
+import { isAbiFunctionFragment, jsonInterfaceMethodToString } from '../utils.js';
+import { encodeParameters } from './parameters_api.js';
 
 // todo Add link to JSON interface documentation
 /**

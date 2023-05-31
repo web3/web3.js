@@ -11,4 +11,9 @@ module.exports = {
 		sourceType: 'module',
 	},
 	extends: ['web3-base/ts'],
+	settings: {
+		'import/resolver': {
+			typescript: {}, // this loads tsconfig.json to eslint
+		},
+	},
 };

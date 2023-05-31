@@ -16,10 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3ValidationErrorObject } from 'web3-types';
 
-import { Validator } from './validator';
-import { ethAbiToJsonSchema } from './utils';
-import { Json, ValidationSchemaInput, Web3ValidationOptions } from './types';
-import { Web3ValidatorError } from './errors';
+import { Validator } from './validator.js';
+import { ethAbiToJsonSchema } from './utils.js';
+import { Json, ValidationSchemaInput, Web3ValidationOptions } from './types.js';
+import { Web3ValidatorError } from './errors.js';
 
 export class Web3Validator {
 	private readonly _validator: Validator;

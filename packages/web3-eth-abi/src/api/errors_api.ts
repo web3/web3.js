@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { sha3Raw } from 'web3-utils';
 import { AbiError } from 'web3-errors';
 import { AbiErrorFragment } from 'web3-types';
-import { jsonInterfaceMethodToString, isAbiErrorFragment } from '../utils';
+import { jsonInterfaceMethodToString, isAbiErrorFragment } from '../utils.js';
 
 /**
  * Encodes the error name to its ABI signature, which are the sha3 hash of the error name including input types.
