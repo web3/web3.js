@@ -33,18 +33,20 @@ jobs:
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
   build-esm:
       name: Build ESM
+      needs: build
       runs-on: ubuntu-latest
       strategy:
           matrix:
               node: [ 18, 16 ]
       steps:
-          -   uses: actions/checkout@v3
           -   uses: actions/setup-node@v3
               with:
-                  node-version: ${{ matrix.node }}
-                  cache: yarn
-          -   run: yarn install --ignore-scripts
-          -   run: yarn prebuild
+                node-version: ${{ matrix.node }}
+          -   uses: actions/download-artifact@v3
+              with:
+                name: web3-${{ matrix.node }}.js.tar.gz
+                path: /tmp
+          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn build:esm
   build-types:
       name: Build Types
