@@ -45,9 +45,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /**
  *
  */
-import { Net } from './net';
+import { Net } from './net.js';
 
-export * from './net';
-export * from './rpc_method_wrappers';
+export * from './net.js';
+export * from './rpc_method_wrappers.js';
 
 export default Net;
