@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ERR_SIGNATURE_FAILED } from '../error_codes';
-import { InvalidValueError } from '../web3_error_base';
+import { ERR_SIGNATURE_FAILED } from '../error_codes.js';
+import { InvalidValueError } from '../web3_error_base.js';
 
 export class SignatureError extends InvalidValueError {
 	public code = ERR_SIGNATURE_FAILED;

@@ -65,8 +65,8 @@ import {
 	ERR_TX_UNSUPPORTED_TYPE,
 	ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR,
 	ERR_TX_INVALID_PROPERTIES_FOR_TYPE,
-} from '../error_codes';
-import { InvalidValueError, BaseWeb3Error } from '../web3_error_base';
+} from '../error_codes.js';
+import { InvalidValueError, BaseWeb3Error } from '../web3_error_base.js';
 
 export class TransactionError<ReceiptType = TransactionReceipt> extends BaseWeb3Error {
 	public code = ERR_TX;

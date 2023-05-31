@@ -32,7 +32,7 @@ import {
 	EIP1193Provider,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
-import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
+import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
 
 import { Web3RequestManager } from './web3_request_manager';
 
