@@ -78,7 +78,7 @@ newBlocksSubscription.on('error', error =>
 	console.log('Error when subscribing to New block header: ', error),
 );
 
-const ids = await web3.eth.clearSubscriptions(function (error, success);
+const ids = await web3.eth.clearSubscriptions();
 console.log(ids); // [...] An array of subscription ids that were cleared
 
 // note that you can unsubscribe from a specific subscription by calling unsubscribe()
