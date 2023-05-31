@@ -17,10 +17,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { FormatterError } from 'web3-errors';
 import { Bytes, DataFormat, FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-types';
 import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
-import { bytesToUint8Array, bytesToHex, numberToHex, toBigInt } from './converters';
-import { mergeDeep } from './objects';
-import { padLeft } from './string_manipulation';
-import { uint8ArrayConcat } from './uint8array';
+import { bytesToUint8Array, bytesToHex, numberToHex, toBigInt } from './converters.js';
+import { mergeDeep } from './objects.js';
+import { padLeft } from './string_manipulation.js';
+import { uint8ArrayConcat } from './uint8array.js';
 
 const { parseBaseType } = utils;
 

@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { InvalidBytesError, InvalidNumberError } from 'web3-errors';
-import { VALID_ETH_BASE_TYPES } from './constants';
+import { VALID_ETH_BASE_TYPES } from './constants.js';
 import {
 	FullValidationSchema,
 	JsonSchema,
@@ -24,10 +24,10 @@ import {
 	ShortValidationSchema,
 	ValidationSchemaInput,
 	ValidInputTypes,
-} from './types';
-import { isAbiParameterSchema } from './validation/abi';
-import { isHexStrict } from './validation/string';
-import { Web3ValidatorError } from './errors';
+} from './types.js';
+import { isAbiParameterSchema } from './validation/abi.js';
+import { isHexStrict } from './validation/string.js';
+import { Web3ValidatorError } from './errors.js';
 
 const extraTypes = ['hex', 'number', 'blockNumber', 'blockNumberOrTag', 'filter', 'bloom'];
 

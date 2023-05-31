@@ -16,10 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Filter } from 'web3-types';
-import { isAddress } from './address';
-import { isBlockNumberOrTag } from './block';
-import { isNullish } from './object';
-import { isTopic } from './topic';
+import { isAddress } from './address.js';
+import { isBlockNumberOrTag } from './block.js';
+import { isNullish } from './object.js';
+import { isTopic } from './topic.js';
 
 /**
  * First we check if all properties in the provided value are expected,

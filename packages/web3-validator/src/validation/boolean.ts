@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ValidInputTypes } from '../types';
-import { isHexStrict } from './string';
+import { ValidInputTypes } from '../types.js';
+import { isHexStrict } from './string.js';
 
 export const isBoolean = (value: ValidInputTypes) => {
 	if (!['number', 'string', 'boolean'].includes(typeof value)) {

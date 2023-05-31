@@ -29,7 +29,7 @@ import {
 	JsonRpcSubscriptionResult,
 } from 'web3-types';
 import { rpcErrorsMap } from 'web3-errors';
-import { uuidV4 } from './uuid';
+import { uuidV4 } from './uuid.js';
 
 // check if code is a valid rpc server error code
 export const isResponseRpcError = (rpcError: JsonRpcResponseWithError) => {
