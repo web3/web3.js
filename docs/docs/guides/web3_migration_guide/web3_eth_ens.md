@@ -10,6 +10,7 @@ sidebar_label: web3.eth.ens
 -   All the API level interfaces returning or accepting `null` in 1.x, use `undefined` in 4.x.
 -   Functions don't accept a callback anymore.
 -   Functions that accepted an optional `TransactionConfig` as the last argument, now accept an optional `NonPayableCallOptions`. See `web3-eth-contract` package for more details.
+-   List of web3-eth-ens set functions are removed in 4.x
 
 #### receipt
 
@@ -43,8 +44,18 @@ sidebar_label: web3.eth.ens
 
 -   In 4.x a `bigint` is returned instead of a `number`.
 
-### Not implemented (yet)
+### Removed functions
 
--   The following functions are implemented yet:
-    -   `getMultihash`
-    -   `setMultihash`
+    -   `getMultihash` is not supported in web3-eth-ens 4.x as it's deprecated in ENS public resolver
+    -   Following functions are not supported in web3-eth-ens 4.x :
+            `setResolver`
+            `setSubnodeRecord`
+            `setApprovalForAll`
+            `isApprovedForAll`
+            `setSubnodeOwner`
+            `setTTL`
+            `setOwner`
+            `setRecord`
+            `setAddress`
+            `setPubkey`
+            `setContenthash`
