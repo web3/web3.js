@@ -11,7 +11,7 @@
 			"require": "./lib/commonjs/index.js"
 		}
 	},
-	"browser": "./dist/web3.min.js",
+	"browser": "./dist/web3-validator.min.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
@@ -21,7 +21,8 @@
 	},
 	"files": [
 		"lib/**/*",
-		"src/**/*"
+		"src/**/*",
+		"dist/**/*"
 	],
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
