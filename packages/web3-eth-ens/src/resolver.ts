@@ -15,14 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { sha3, isNullish, format } from 'web3-utils';
-import { Contract } from 'web3-eth-contract';
 import { ResolverMethodMissingError } from 'web3-errors';
+import { Contract } from 'web3-eth-contract';
+import { isNullish, sha3 } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
-import { Address, DataFormat, DEFAULT_RETURN_FORMAT, NonPayableCallOptions } from 'web3-types';
+import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { interfaceIds, methodsInInterface } from './config';
 import { Registry } from './registry';
-import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { namehash } from './utils';
 
 //  Default public resolver
@@ -61,37 +60,6 @@ export class Resolver {
 				resolverContract.options.address ?? '',
 				methodName,
 			);
-	}
-
-	public async setAddress(
-		ENSName: string,
-		address: Address,
-		txConfig: NonPayableCallOptions,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-	) {
-		const resolverContract = await this.getResolverContractAdapter(ENSName);
-		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setAddr);
-
-		return resolverContract.methods
-			.setAddr(namehash(ENSName), format({ format: 'address' }, address, returnFormat))
-			.send(txConfig);
-	}
-
-	public async setPubkey(ENSName: string, x: string, y: string, txConfig: NonPayableCallOptions) {
-		const resolverContract = await this.getResolverContractAdapter(ENSName);
-		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setPubkey);
-
-		//  TODO: verify that X and Y coordinates of pub key are normalized?
-		return resolverContract.methods
-			.setPubkey(namehash(ENSName), namehash(x), namehash(y))
-			.send(txConfig);
-	}
-
-	public async setContenthash(ENSName: string, hash: string, txConfig: NonPayableCallOptions) {
-		const resolverContract = await this.getResolverContractAdapter(ENSName);
-		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setContenthash);
-
-		return resolverContract.methods.setContenthash(namehash(ENSName), hash).send(txConfig);
 	}
 
 	public async supportsInterface(ENSName: string, interfaceId: string) {

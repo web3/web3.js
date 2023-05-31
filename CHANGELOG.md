@@ -1465,6 +1465,7 @@ should use 4.0.1-alpha.0 for testing.
 ### Breaking Changes
 
 -   dropped support for NodeJs@14
+-   removed non read-only methods from ens package
 
 ### Added
 

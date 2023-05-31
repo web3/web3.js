@@ -16,11 +16,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { HexString } from 'web3-types';
 import { bytesToHex } from 'web3-utils';
-import { setLengthLeft, toUint8Array } from '../common/utils';
-import type { AccessList, AccessListUint8Array, AccessListItem } from './types';
-import { isAccessList } from './types';
+import { setLengthLeft, toUint8Array } from '../common/utils.js';
+import type { AccessList, AccessListUint8Array, AccessListItem } from './types.js';
+import { isAccessList } from './types.js';
 
-import type { Common } from '../common/common';
+import type { Common } from '../common/common.js';
 
 export const checkMaxInitCodeSize = (common: Common, length: number) => {
 	const maxInitCodeSize = common.param('vm', 'maxInitCodeSize');

@@ -28,10 +28,10 @@ import { isNullish } from 'web3-validator';
 import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from 'web3-errors';
 import { format } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
-import { getBlock, getGasPrice } from '../rpc_method_wrappers';
-import { InternalTransaction } from '../types';
+import { getBlock, getGasPrice } from '../rpc_method_wrappers.js';
+import { InternalTransaction } from '../types.js';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionType } from './transaction_builder';
+import { getTransactionType } from './transaction_builder.js';
 
 async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,

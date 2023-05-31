@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { bytesToHex, uint8ArrayEquals } from 'web3-utils';
-import { secp256k1 } from './constants';
-import { assertIsUint8Array, zeros } from '../common/utils';
+import { secp256k1 } from './constants.js';
+import { assertIsUint8Array, zeros } from '../common/utils.js';
 
 export class Address {
 	public readonly buf: Uint8Array;

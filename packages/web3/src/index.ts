@@ -322,9 +322,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * This comment _supports3_ [Markdown](https://marked.js.org/)
  */
 
-import Web3 from './web3';
+import Web3 from './web3.js';
 
-export * from './types';
+export * from './types.js';
 export default Web3;
 
 /**
@@ -344,9 +344,9 @@ export { WebSocketProvider } from 'web3-providers-ws';
  */
 export * as core from 'web3-core';
 export * as errors from 'web3-errors';
-export * as eth from './eth.exports';
+export * as eth from './eth.exports.js';
 export * as net from 'web3-net';
-export * as providers from './providers.exports';
+export * as providers from './providers.exports.js';
 export * as rpcMethods from 'web3-rpc-methods';
 export * as types from 'web3-types';
 export * as utils from 'web3-utils';

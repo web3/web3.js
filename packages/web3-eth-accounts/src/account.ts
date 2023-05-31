@@ -56,16 +56,16 @@ import {
 } from 'web3-utils';
 
 import { isHexStrict, isNullish, isString, validator } from 'web3-validator';
-import { secp256k1 } from './tx/constants';
-import { keyStoreSchema } from './schemas';
-import { TransactionFactory } from './tx/transactionFactory';
+import { secp256k1 } from './tx/constants.js';
+import { keyStoreSchema } from './schemas.js';
+import { TransactionFactory } from './tx/transactionFactory.js';
 import type {
 	SignatureObject,
 	SignTransactionResult,
 	TypedTransaction,
 	Web3Account,
 	SignResult,
-} from './types';
+} from './types.js';
 
 /**
  * Get the private key Uint8Array after the validation

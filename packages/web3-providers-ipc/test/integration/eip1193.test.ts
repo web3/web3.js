@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { hexToNumber } from 'web3-utils';
 import { HexString, ProviderRpcError, ProviderConnectInfo } from 'web3-types';
-import IpcProvider from '../../src/index';
+import { IpcProvider } from '../../src/index';
 
 import {
 	describeIf,

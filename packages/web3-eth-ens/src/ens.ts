@@ -15,31 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { isSyncing } from 'web3-eth';
-import {
-	RevertInstructionError,
-	ENSNetworkNotSyncedError,
-	ENSUnsupportedNetworkError,
-} from 'web3-errors';
 import { Web3Context, Web3ContextObject } from 'web3-core';
+import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError } from 'web3-errors';
+import { isSyncing } from 'web3-eth';
+import { Contract } from 'web3-eth-contract';
 import { getId } from 'web3-net';
 import {
-	Address,
-	SupportedProviders,
-	EthExecutionAPI,
-	TransactionReceipt,
-	Web3NetAPI,
-	NonPayableCallOptions,
 	DEFAULT_RETURN_FORMAT,
-	FormatType,
+	EthExecutionAPI,
 	FMT_NUMBER,
-	DataFormat,
+	SupportedProviders,
+	Web3NetAPI,
 } from 'web3-types';
-import { Contract } from 'web3-eth-contract';
-
 import { PublicResolverAbi } from './abi/ens/PublicResolver';
-import { Registry } from './registry';
 import { networkIds, registryAddresses } from './config';
+import { Registry } from './registry';
 import { Resolver } from './resolver';
 
 /**
@@ -102,103 +92,6 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	}
 
 	/**
-	 * set the resolver of the given name
-	 * @param name - The name of the ENS domain
-	 * @param address - The address of the resolver
-	 * @param txConfig - The transaction config
-	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = await ens.setResolver('resolver', '0x1234567890123456789012345678901234567890', {from: '0x1234567890123456789012345678901234567890'});
-	 * ```
-	 */
-	public async setResolver(
-		name: string,
-		address: Address,
-		txConfig: NonPayableCallOptions,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-	): Promise<
-		| FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>
-		| FormatType<RevertInstructionError, typeof DEFAULT_RETURN_FORMAT>
-	> {
-		return this._registry.setResolver(name, address, txConfig, returnFormat);
-	}
-
-	/**
-	 * Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
-	 * @param name - The ENS name
-	 * @param label - The name of the sub-domain or sha3 hash of it
-	 * @param owner - The owner of the name record
-	 * @param resolver - The resolver address of the name record
-	 * @param ttl - Time to live value
-	 * @param txConfig - (Optional) The transaction config
-	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns - The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = await web3.eth.ens.setSubnodeRecord('ethereum.eth', 'web3', '0x1234567890123456789012345678901234567890','0xAA9133EeC3ae5f9440C1a1E61E2D2Cc571675527', 1000000);
-	 * ```
-	 */
-	public async setSubnodeRecord(
-		name: string,
-		label: string,
-		owner: Address,
-		resolver: Address,
-		ttl: number,
-		txConfig: NonPayableCallOptions,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setSubnodeRecord(
-			name,
-			label,
-			owner,
-			resolver,
-			ttl,
-			txConfig,
-			returnFormat,
-		);
-	}
-
-	/**
-	 * Sets or clears an approval by the given operator.
-	 * @param operator - The operator address
-	 * @param approved - `true` to set the approval, `false` to clear it
-	 * @param txConfig - (Optional) The transaction config
-	 * @returns - The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = web3.eth.ens.setApprovalForAll('0x1234567890123456789012345678901234567890', true )
-	 * ```
-	 */
-	public async setApprovalForAll(
-		operator: Address,
-		approved: boolean,
-		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setApprovalForAll(operator, approved, txConfig);
-	}
-
-	/**
-	 * Returns true if the operator is approved to make ENS registry operations on behalf of the owner.
-	 * @param owner - The owner address
-	 * @param operator - The operator address
-	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns - `true` if the operator is approved, `false` otherwise
-	 * @example
-	 * ```ts
-	 * const approved = await web3.eth.ens.isApprovedForAll('0x1234567890123456789012345678901234567890', '0x690B9A9E9aa1C9dB991C7721a92d351Db4FaC990');
-	 * ```
-	 */
-	public async isApprovedForAll(
-		owner: Address,
-		operator: Address,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-	): Promise<unknown> {
-		return this._registry.isApprovedForAll(owner, operator, returnFormat);
-	}
-
-	/**
 	 * Returns true if the record exists
 	 * @param name - The ENS name
 	 * @returns - Returns `true` if node exists in this ENS registry. This will return `false` for records that are in the legacy ENS registry but have not yet been migrated to the new one.
@@ -212,58 +105,16 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	}
 
 	/**
-	 * Creates a new subdomain of the given node, assigning ownership of it to the specified owner.
-	 * @param node - The ENS name
-	 * @param label - The name of the sub-domain or the sha3 hash of it
-	 * @param address - The registrar of this sub-domain
-	 * @param txConfig - (Optional) The transaction config
-	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns - The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = await ens.setSubnodeOwner('ethereum.eth', 'web3', '0x1234567890123456789012345678901234567890', {from: '0x1234567890123456789012345678901234567890'});
-	 * ```
-	 */
-	public async setSubnodeOwner(
-		node: string,
-		label: string,
-		address: Address,
-		txConfig: NonPayableCallOptions,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setSubnodeOwner(node, label, address, txConfig, returnFormat);
-	}
-
-	/**
-	 * Returns the address of the owner of an ENS name.
+	 * Returns the caching TTL (time-to-live) of an ENS name.
 	 * @param name - The ENS name
 	 * @returns - Returns the caching TTL (time-to-live) of a name.
 	 * @example
 	 * ```ts
-	 * const owner = await web3.eth.ens.getOwner('ethereum.eth');
+	 * const owner = await web3.eth.ens.getTTL('ethereum.eth');
 	 * ```
 	 */
 	public async getTTL(name: string): Promise<unknown> {
 		return this._registry.getTTL(name);
-	}
-
-	/**
-	 * Sets the TTL of a name. Emits a NewTTL event.
-	 * @param name - THe ENS name
-	 * @param ttl - The TTL value
-	 * @param txConfig - (Optional) The transaction config
-	 * @returns - The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = await web3.eth.ens.setTTL('ethereum.eth', 1000);
-	 * ```
-	 */
-	public async setTTL(
-		name: string,
-		ttl: number,
-		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setTTL(name, ttl, txConfig);
 	}
 
 	/**
@@ -277,117 +128,6 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 */
 	public async getOwner(name: string): Promise<unknown> {
 		return this._registry.getOwner(name);
-	}
-
-	/**
-	 * Sets the address of the owner of an ENS name.
-	 * @param name - The ENS name
-	 * @param address - The address of the new owner
-	 * @param txConfig - (Optional) The transaction config
-	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns - The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = await ens.setOwner('ethereum.eth', , sendOptions);
-	 * ```
-	 */
-	public async setOwner(
-		name: string,
-		address: Address,
-		txConfig: NonPayableCallOptions,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setOwner(name, address, txConfig, returnFormat);
-	}
-
-	/**
-	 * Returns the address of the owner of an ENS name.
-	 * @param name - The ENS name
-	 * @param owner  - The owner of the name record.
-	 * @param resolver  - The resolver of the name record.
-	 * @param ttl  - Time to live value
-	 * @param txConfig  - (Optional) The transaction config
-	 * @returns - The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = await ens.setRecord( 'web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e', '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', 1000);
-	 * ```
-	 */
-	public async setRecord(
-		name: string,
-		owner: Address,
-		resolver: Address,
-		ttl: number,
-		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setRecord(name, owner, resolver, ttl, txConfig);
-	}
-
-	/**
-	 * Sets the address of an ENS name in his resolver.
-	 * @param name - The ENS name
-	 * @param address - The address to set
-	 * @param txConfig - (Optional) The transaction config
-	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
-	 * @returns - The transaction receipt
-	 * ```ts
-	 * const receipt = await ens.setAddress('web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e');
-	 *```
-	 */
-	public async setAddress(
-		name: string,
-		address: Address,
-		txConfig: NonPayableCallOptions,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._resolver.setAddress(name, address, txConfig, returnFormat);
-	}
-
-	/**
-	 * Sets the SECP256k1 public key associated with an ENS node. (Emits a `PublicKeyChanged` event)
-	 * @param name - The ENS name
-	 * @param x - The X coordinate of the public key
-	 * @param y - The Y coordinate of the public key
-	 * @param txConfig - (Optional) The transaction config
-	 * @returns - The transaction receipt
-	 * ```ts
-	 * const receipt = await web3.eth.ens.setPubkey(
-	 * 'ethereum.eth',
-	 * '0x0000000000000000000000000000000000000000000000000000000000000000',
-	 * '0x0000000000000000000000000000000000000000000000000000000000000000',
-	 * { from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c' });
-	 * ```
-	 */
-	public async setPubkey(
-		name: string,
-		x: string,
-		y: string,
-		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._resolver.setPubkey(name, x, y, txConfig);
-	}
-
-	// todo do we support ipfs, onion, ...
-	/**
-	 * Sets the content hash associated with an ENS node. Emits a `ContenthashChanged` event.
-	 * @param name - The ENS name
-	 * @param hash - The content hash to set
-	 * @param txConfig - (Optional) The transaction config
-	 * @returns - The transaction receipt
-	 * @example
-	 * ```ts
-	 * const receipt = web3.eth.ens.setContenthash(
-	 * 	'ethereum.eth',
-	 * 	'ipfs://QmaEBknbGT4bTQiQoe2VNgBJbRfygQGktnaW5TbuKixjYL',
-	 * )
-	 * ```
-	 */
-	public async setContenthash(
-		name: string,
-		hash: string,
-		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._resolver.setContenthash(name, hash, txConfig);
 	}
 
 	/**

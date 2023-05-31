@@ -30,9 +30,9 @@ import { Web3Context } from 'web3-core';
 import { toNumber } from 'web3-utils';
 import { TransactionFactory, TxOptions, Common } from 'web3-eth-accounts';
 import { isNullish } from 'web3-validator';
-import { validateTransactionForSigning } from '../validation';
-import { formatTransaction } from './format_transaction';
-import { transactionBuilder } from './transaction_builder';
+import { validateTransactionForSigning } from '../validation.js';
+import { formatTransaction } from './format_transaction.js';
+import { transactionBuilder } from './transaction_builder.js';
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,

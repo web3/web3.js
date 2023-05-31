@@ -138,7 +138,7 @@ export const abiSchemaToJsonSchema = (
 		let abiName!: string;
 		let abiComponents: ShortValidationSchema | FullValidationSchema | undefined = [];
 
-		// If its a complete Abi Parameter
+		// If it's a complete Abi Parameter
 		// e.g. {name: 'a', type: 'uint'}
 		if (isAbiParameterSchema(abi)) {
 			abiType = abi.type;
@@ -149,11 +149,19 @@ export const abiSchemaToJsonSchema = (
 			abiType = abi;
 			abiName = `${level}/${index}`;
 
-			// If its provided in short form of tuple e.g. [['uint', 'string']]
+			// If it's provided in short form of tuple e.g. [['uint', 'string']]
 		} else if (Array.isArray(abi)) {
 			// If its custom tuple e.g. ['tuple[2]', ['uint', 'string']]
-			if (abi[1] && Array.isArray(abi[1])) {
-				abiType = abi[0] as string;
+			if (
+				abi[0] &&
+				typeof abi[0] === 'string' &&
+				abi[0].startsWith('tuple') &&
+				!Array.isArray(abi[0]) &&
+				abi[1] &&
+				Array.isArray(abi[1])
+			) {
+				// eslint-disable-next-line prefer-destructuring
+				abiType = abi[0];
 				abiName = `${level}/${index}`;
 				abiComponents = abi[1] as ReadonlyArray<ShortValidationSchema>;
 			} else {
@@ -258,7 +266,7 @@ export const transformJsonDataToAbiFormat = (
 		let abiName!: string;
 		let abiComponents: ShortValidationSchema | FullValidationSchema | undefined = [];
 
-		// If its a complete Abi Parameter
+		// If it's a complete Abi Parameter
 		// e.g. {name: 'a', type: 'uint'}
 		if (isAbiParameterSchema(abi)) {
 			abiType = abi.type;
@@ -268,7 +276,7 @@ export const transformJsonDataToAbiFormat = (
 		} else if (typeof abi === 'string') {
 			abiType = abi;
 
-			// If its provided in short form of tuple e.g. [['uint', 'string']]
+			// If it's provided in short form of tuple e.g. [['uint', 'string']]
 		} else if (Array.isArray(abi)) {
 			// If its custom tuple e.g. ['tuple[2]', ['uint', 'string']]
 			if (abi[1] && Array.isArray(abi[1])) {

@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Socket } from 'net';
 import * as fs from 'fs';
 import { ConnectionError, InvalidClientError } from 'web3-errors';
-import IpcProvider from '../../src/index';
+import { IpcProvider } from '../../src/index';
 
 jest.mock('net');
 jest.mock('fs');
