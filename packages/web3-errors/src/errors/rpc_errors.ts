@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable max-classes-per-file */
 
 import { JsonRpcResponseWithError, JsonRpcId, JsonRpcError } from 'web3-types';
-import { BaseWeb3Error } from '../web3_error_base';
+import { BaseWeb3Error } from '../web3_error_base.js';
 import {
 	ERR_RPC_INTERNAL_ERROR,
 	ERR_RPC_INVALID_INPUT,
@@ -32,7 +32,7 @@ import {
 	ERR_RPC_TRANSACTION_REJECTED,
 	ERR_RPC_UNAVAILABLE_RESOURCE,
 	ERR_RPC_UNSUPPORTED_METHOD,
-} from '../error_codes';
+} from '../error_codes.js';
 
 export class RpcError extends BaseWeb3Error {
 	public code: number;

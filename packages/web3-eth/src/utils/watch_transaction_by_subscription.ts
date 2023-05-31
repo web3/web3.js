@@ -18,9 +18,9 @@ import { Bytes, Numbers, BlockHeaderOutput, TransactionReceipt } from 'web3-type
 import { format } from 'web3-utils';
 
 import { DataFormat } from 'web3-types';
-import { NewHeadsSubscription } from '../web3_subscriptions';
-import { transactionReceiptSchema } from '../schemas';
-import { WaitProps, watchTransactionByPolling } from './watch_transaction_by_pooling';
+import { NewHeadsSubscription } from '../web3_subscriptions.js';
+import { transactionReceiptSchema } from '../schemas.js';
+import { WaitProps, watchTransactionByPolling } from './watch_transaction_by_pooling.js';
 
 /**
  * This function watches a Transaction by subscribing to new heads.

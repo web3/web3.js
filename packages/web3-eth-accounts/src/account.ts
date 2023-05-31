@@ -15,9 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
-import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
-import { scryptSync } from 'ethereum-cryptography/scrypt';
+import {
+	decrypt as createDecipheriv,
+	encrypt as createCipheriv,
+} from 'ethereum-cryptography/aes.js';
+import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2.js';
+import { scryptSync } from 'ethereum-cryptography/scrypt.js';
 import {
 	InvalidKdfError,
 	InvalidPasswordError,
@@ -56,16 +59,16 @@ import {
 } from 'web3-utils';
 
 import { isHexStrict, isNullish, isString, validator } from 'web3-validator';
-import { secp256k1 } from './tx/constants';
-import { keyStoreSchema } from './schemas';
-import { TransactionFactory } from './tx/transactionFactory';
+import { secp256k1 } from './tx/constants.js';
+import { keyStoreSchema } from './schemas.js';
+import { TransactionFactory } from './tx/transactionFactory.js';
 import type {
 	SignatureObject,
 	SignTransactionResult,
 	TypedTransaction,
 	Web3Account,
 	SignResult,
-} from './types';
+} from './types.js';
 
 /**
  * Get the private key Uint8Array after the validation

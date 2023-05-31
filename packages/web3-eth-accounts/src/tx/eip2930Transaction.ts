@@ -14,20 +14,25 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { keccak256 } from 'ethereum-cryptography/keccak';
+import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '@ethereumjs/rlp';
 import { bytesToHex, hexToBytes, uint8ArrayConcat, uint8ArrayEquals } from 'web3-utils';
-import { MAX_INTEGER } from './constants';
-import { getAccessListData, verifyAccessList, getAccessListJSON, getDataFeeEIP2930 } from './utils';
+import { MAX_INTEGER } from './constants.js';
+import {
+	getAccessListData,
+	verifyAccessList,
+	getAccessListJSON,
+	getDataFeeEIP2930,
+} from './utils.js';
 import {
 	bigIntToHex,
 	toUint8Array,
 	ecrecover,
 	uint8ArrayToBigInt,
 	bigIntToUnpaddedUint8Array,
-} from '../common/utils';
-import { BaseTransaction } from './baseTransaction';
+} from '../common/utils.js';
+import { BaseTransaction } from './baseTransaction.js';
 import type {
 	AccessList,
 	AccessListUint8Array,
@@ -35,8 +40,8 @@ import type {
 	AccessListEIP2930ValuesArray,
 	JsonTx,
 	TxOptions,
-} from './types';
-import type { Common } from '../common';
+} from './types.js';
+import type { Common } from '../common/common.js';
 
 const TRANSACTION_TYPE = 1;
 const TRANSACTION_TYPE_UINT8ARRAY = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));

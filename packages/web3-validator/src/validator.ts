@@ -16,12 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3ValidationErrorObject } from 'web3-types';
 
-import { toHex, utf8ToBytes } from 'ethereum-cryptography/utils';
-import { blake2b } from 'ethereum-cryptography/blake2b';
+import { toHex, utf8ToBytes } from 'ethereum-cryptography/utils.js';
+import { blake2b } from 'ethereum-cryptography/blake2b.js';
 import validator from 'is-my-json-valid';
-import formats from './formats';
-import { Web3ValidatorError } from './errors';
-import { Validate, Json, Schema, RawValidationError } from './types';
+import formats from './formats.js';
+import { Web3ValidatorError } from './errors.js';
+import { Validate, Json, Schema, RawValidationError } from './types.js';
 
 export class Validator {
 	// eslint-disable-next-line no-use-before-define

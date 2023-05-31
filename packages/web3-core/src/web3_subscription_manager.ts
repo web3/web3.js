@@ -18,9 +18,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { DataFormat, DEFAULT_RETURN_FORMAT, Web3APISpec } from 'web3-types';
 import { ProviderError, SubscriptionError } from 'web3-errors';
 import { isNullish } from 'web3-utils';
-import { isSupportSubscriptions } from './utils';
-import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager';
-import { Web3SubscriptionConstructor } from './web3_subscriptions';
+import { isSupportSubscriptions } from './utils.js';
+import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager.js';
+import { Web3SubscriptionConstructor } from './web3_subscriptions.js';
 
 type ShouldUnsubscribeCondition = ({
 	id,

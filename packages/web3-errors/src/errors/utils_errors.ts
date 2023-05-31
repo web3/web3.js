@@ -32,8 +32,8 @@ import {
 	ERR_INVALID_TYPE_ABI,
 	ERR_INVALID_UNIT,
 	ERR_INVALID_UNSIGNED_INTEGER,
-} from '../error_codes';
-import { InvalidValueError } from '../web3_error_base';
+} from '../error_codes.js';
+import { InvalidValueError } from '../web3_error_base.js';
 
 export class InvalidBytesError extends InvalidValueError {
 	public code = ERR_INVALID_BYTES;

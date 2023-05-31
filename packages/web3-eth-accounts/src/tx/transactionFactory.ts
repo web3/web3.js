@@ -14,13 +14,18 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { toUint8Array, uint8ArrayToBigInt } from '../common/utils';
-import { FeeMarketEIP1559Transaction } from './eip1559Transaction';
-import { AccessListEIP2930Transaction } from './eip2930Transaction';
-import { Transaction } from './legacyTransaction';
-import type { TypedTransaction } from '../types';
+import { toUint8Array, uint8ArrayToBigInt } from '../common/utils.js';
+import { FeeMarketEIP1559Transaction } from './eip1559Transaction.js';
+import { AccessListEIP2930Transaction } from './eip2930Transaction.js';
+import { Transaction } from './legacyTransaction.js';
+import type { TypedTransaction } from '../types.js';
 
-import type { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData, TxOptions } from './types';
+import type {
+	AccessListEIP2930TxData,
+	FeeMarketEIP1559TxData,
+	TxData,
+	TxOptions,
+} from './types.js';
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TransactionFactory {

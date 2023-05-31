@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { HexString, AbiParameter, DecodedParams } from 'web3-types';
-import { decodeParameter, decodeParametersWith } from './parameters_api';
+import { decodeParameter, decodeParametersWith } from './parameters_api.js';
 
 const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufixed'];
 

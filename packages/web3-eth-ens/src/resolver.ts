@@ -19,10 +19,10 @@ import { ResolverMethodMissingError } from 'web3-errors';
 import { Contract } from 'web3-eth-contract';
 import { isNullish, sha3 } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
-import { PublicResolverAbi } from './abi/ens/PublicResolver';
-import { interfaceIds, methodsInInterface } from './config';
-import { Registry } from './registry';
-import { namehash } from './utils';
+import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
+import { interfaceIds, methodsInInterface } from './config.js';
+import { Registry } from './registry.js';
+import { namehash } from './utils.js';
 
 //  Default public resolver
 //  https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol

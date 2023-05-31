@@ -26,8 +26,8 @@ import {
 	ERR_PARAM,
 	ERR_EXISTING_PLUGIN_NAMESPACE,
 	ERR_INVALID_METHOD_PARAMS,
-} from '../error_codes';
-import { BaseWeb3Error } from '../web3_error_base';
+} from '../error_codes.js';
+import { BaseWeb3Error } from '../web3_error_base.js';
 
 export class InvalidNumberOfParamsError extends BaseWeb3Error {
 	public code = ERR_PARAM;

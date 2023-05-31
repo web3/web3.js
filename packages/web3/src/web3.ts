@@ -32,10 +32,10 @@ import {
 	SupportedProviders,
 } from 'web3-types';
 import { InvalidMethodParamsError } from 'web3-errors';
-import abi from './abi';
-import { initAccountsForContext } from './accounts';
-import { Web3EthInterface } from './types';
-import { Web3PkgInfo } from './version';
+import abi from './abi.js';
+import { initAccountsForContext } from './accounts.js';
+import { Web3EthInterface } from './types.js';
+import { Web3PkgInfo } from './version.js';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = Web3PkgInfo.version;
