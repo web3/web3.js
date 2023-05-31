@@ -51,10 +51,8 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 			fallback: {
 				stream: require.resolve('readable-stream'),
 			},
-			alias: {
-				// To avoid blotting up the `bn.js` library all over the packages
-				// use single library instance.
-				'bn.js': path.resolve(__dirname, 'node_modules/bn.js'),
+			extensionAlias: {
+				'.js': ['.js', '.ts'],
 			},
 		},
 		devtool: 'source-map',

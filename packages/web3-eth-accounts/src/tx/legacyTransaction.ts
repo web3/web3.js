@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { RLP } from '@ethereumjs/rlp';
-import { keccak256 } from 'ethereum-cryptography/keccak';
+import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { bytesToHex } from 'web3-utils';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import {
@@ -25,14 +25,14 @@ import {
 	toUint8Array,
 	uint8ArrayToBigInt,
 	unpadUint8Array,
-} from '../common/utils';
-import { MAX_INTEGER } from './constants';
+} from '../common/utils.js';
+import { MAX_INTEGER } from './constants.js';
 
-import { BaseTransaction } from './baseTransaction';
+import { BaseTransaction } from './baseTransaction.js';
 
-import type { Common } from '../common';
-import type { JsonTx, TxData, TxOptions, TxValuesArray } from './types';
-import { Capability } from './types';
+import type { Common } from '../common/common.js';
+import type { JsonTx, TxData, TxOptions, TxValuesArray } from './types.js';
+import { Capability } from './types.js';
 
 const TRANSACTION_TYPE = 0;
 

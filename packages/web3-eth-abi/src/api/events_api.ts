@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { sha3Raw } from 'web3-utils';
 import { AbiError } from 'web3-errors';
 import { AbiEventFragment } from 'web3-types';
-import { jsonInterfaceMethodToString, isAbiEventFragment } from '../utils';
+import { jsonInterfaceMethodToString, isAbiEventFragment } from '../utils.js';
 
 /**
  * Encodes the event name to its ABI signature, which are the sha3 hash of the event name including input types.

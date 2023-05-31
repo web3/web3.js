@@ -24,7 +24,7 @@ import {
 	Web3BaseProvider,
 } from 'web3-types';
 import { EventEmitter } from 'events';
-import { toPayload } from './json_rpc';
+import { toPayload } from './json_rpc.js';
 
 /**
  * This is an abstract class, which extends {@link Web3BaseProvider} class. This class is used to implement a provider that adheres to the EIP-1193 standard for Ethereum providers.

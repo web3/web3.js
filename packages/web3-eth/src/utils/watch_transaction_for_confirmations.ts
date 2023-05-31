@@ -24,12 +24,12 @@ import {
 	TransactionReceiptMissingBlockNumberError,
 } from 'web3-errors';
 import { DataFormat } from 'web3-types';
-import { transactionReceiptSchema } from '../schemas';
+import { transactionReceiptSchema } from '../schemas.js';
 import {
 	watchTransactionByPolling,
 	Web3PromiEventEventTypeBase,
-} from './watch_transaction_by_pooling';
-import { watchTransactionBySubscription } from './watch_transaction_by_subscription';
+} from './watch_transaction_by_pooling.js';
+import { watchTransactionBySubscription } from './watch_transaction_by_subscription.js';
 
 export function watchTransactionForConfirmations<
 	ReturnFormat extends DataFormat,

@@ -79,9 +79,9 @@ import {
 	ValidationSchemaInput,
 	Web3ValidatorError,
 } from 'web3-validator';
-import { ALL_EVENTS_ABI } from './constants';
-import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
-import { LogsSubscription } from './log_subscription';
+import { ALL_EVENTS_ABI } from './constants.js';
+import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding.js';
+import { LogsSubscription } from './log_subscription.js';
 import {
 	ContractAbiWithSignature,
 	ContractEventOptions,
@@ -92,7 +92,7 @@ import {
 	PayableMethodObject,
 	PayableTxOptions,
 	Web3ContractContext,
-} from './types';
+} from './types.js';
 import {
 	getCreateAccessListParams,
 	getEstimateGasParams,
@@ -100,7 +100,7 @@ import {
 	getSendTxParams,
 	isContractInitOptions,
 	isWeb3ContractContext,
-} from './utils';
+} from './utils.js';
 
 type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,

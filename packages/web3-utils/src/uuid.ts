@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { bytesToHex } from './converters';
-import { randomBytes } from './random';
+import { bytesToHex } from './converters.js';
+import { randomBytes } from './random.js';
 
 /**
  * Generate a version 4 (random) uuid

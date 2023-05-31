@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './detect_transaction_type';
-export * from './format_transaction';
-export * from './prepare_transaction_for_signing';
-export * from './transaction_builder';
+export * from './detect_transaction_type.js';
+export * from './format_transaction.js';
+export * from './prepare_transaction_for_signing.js';
+export * from './transaction_builder.js';

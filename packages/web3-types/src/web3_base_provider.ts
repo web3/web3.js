@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Socket } from 'net';
 
-import { Web3Error } from './error_types';
-import { EthExecutionAPI } from './apis/eth_execution_api';
+import { Web3Error } from './error_types.js';
+import { EthExecutionAPI } from './apis/eth_execution_api.js';
 import {
 	JsonRpcNotification,
 	JsonRpcPayload,

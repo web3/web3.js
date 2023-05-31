@@ -29,13 +29,13 @@ import {
 import { isNullish } from 'web3-utils';
 import { ExistingPluginNamespaceError } from 'web3-errors';
 
-import { isSupportedProvider } from './utils';
+import { isSupportedProvider } from './utils.js';
 // eslint-disable-next-line import/no-cycle
-import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
-import { Web3RequestManager } from './web3_request_manager';
-import { Web3SubscriptionConstructor } from './web3_subscriptions';
-import { Web3SubscriptionManager } from './web3_subscription_manager';
-import { Web3BatchRequest } from './web3_batch_request';
+import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config.js';
+import { Web3RequestManager } from './web3_request_manager.js';
+import { Web3SubscriptionConstructor } from './web3_subscriptions.js';
+import { Web3SubscriptionManager } from './web3_subscription_manager.js';
+import { Web3BatchRequest } from './web3_batch_request.js';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<

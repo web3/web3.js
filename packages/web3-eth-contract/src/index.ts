@@ -40,12 +40,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * This comment _supports3_ [Markdown](https://marked.js.org/)
  */
-import { Contract } from './contract';
+import { Contract } from './contract.js';
 
-export * from './encoding';
+export * from './encoding.js';
 
-export * from './contract';
-export * from './log_subscription';
-export * from './types';
+export * from './contract.js';
+export * from './log_subscription.js';
+export * from './types.js';
 
 export default Contract;

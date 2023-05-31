@@ -17,8 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable max-classes-per-file */
 
-import { BaseWeb3Error } from '../web3_error_base';
-import { ERR_CORE_HARDFORK_MISMATCH } from '../error_codes';
+import { BaseWeb3Error } from '../web3_error_base.js';
+import { ERR_CORE_HARDFORK_MISMATCH } from '../error_codes.js';
 
 export class ConfigHardforkMismatchError extends BaseWeb3Error {
 	public code = ERR_CORE_HARDFORK_MISMATCH;

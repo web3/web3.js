@@ -18,9 +18,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiEventFragment, LogsInput, HexString, Topic, DataFormat } from 'web3-types';
 import { Web3RequestManager, Web3Subscription } from 'web3-core';
 // eslint-disable-next-line import/no-cycle
-import { decodeEventABI } from './encoding';
+import { decodeEventABI } from './encoding.js';
 // eslint-disable-next-line import/no-cycle
-import { EventLog, ContractAbiWithSignature } from './types';
+import { EventLog, ContractAbiWithSignature } from './types.js';
 
 /**
  * LogSubscription to be used to subscribe to events logs.

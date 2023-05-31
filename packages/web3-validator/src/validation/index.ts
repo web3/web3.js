@@ -15,14 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './address';
-export * from './block';
-export * from './bloom';
-export * from './boolean';
-export * from './bytes';
-export * from './eth';
-export * from './filter';
-export * from './numbers';
-export * from './string';
-export * from './topic';
-export * from './object';
+export * from './address.js';
+export * from './block.js';
+export * from './bloom.js';
+export * from './boolean.js';
+export * from './bytes.js';
+export * from './eth.js';
+export * from './filter.js';
+export * from './numbers.js';
+export * from './string.js';
+export * from './topic.js';
+export * from './object.js';

@@ -106,6 +106,7 @@
 		"cypress-jest-adapter": "^0.1.1",
 		"declaration-bundler-webpack-plugin": "^1.0.3",
 		"eslint": "^8.20.0",
+		"eslint-import-resolver-typescript": "^3.5.5",
 		"http-browserify": "^1.7.0",
 		"https-browserify": "^1.0.0",
 		"husky": "^8.0.1",

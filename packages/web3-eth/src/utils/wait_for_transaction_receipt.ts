@@ -22,9 +22,9 @@ import { EthExecutionAPI, Bytes, TransactionReceipt, DataFormat } from 'web3-typ
 // eslint-disable-next-line import/no-cycle
 import { pollTillDefined, rejectIfTimeout } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
-import { rejectIfBlockTimeout } from './reject_if_block_timeout';
+import { rejectIfBlockTimeout } from './reject_if_block_timeout.js';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionReceipt } from '../rpc_method_wrappers';
+import { getTransactionReceipt } from '../rpc_method_wrappers.js';
 
 export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,

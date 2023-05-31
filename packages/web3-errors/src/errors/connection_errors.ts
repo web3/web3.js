@@ -27,8 +27,8 @@ import {
 	ERR_CONN_MAX_ATTEMPTS,
 	ERR_CONN_PENDING_REQUESTS,
 	ERR_REQ_ALREADY_SENT,
-} from '../error_codes';
-import { BaseWeb3Error } from '../web3_error_base';
+} from '../error_codes.js';
+import { BaseWeb3Error } from '../web3_error_base.js';
 
 export class ConnectionError extends BaseWeb3Error {
 	public code = ERR_CONN;

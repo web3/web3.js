@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3BaseWallet, Web3BaseWalletAccount, KeyStore } from 'web3-types';
 import { isNullish } from 'web3-validator';
-import { WebStorage } from './types';
+import { WebStorage } from './types.js';
 
 type BrowserError = { code: number; name: string };
 

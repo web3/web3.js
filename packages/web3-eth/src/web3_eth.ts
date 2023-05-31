@@ -43,14 +43,14 @@ import { TransactionNotFound } from 'web3-errors';
 import { toChecksumAddress, isNullish } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
-import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { SendTransactionOptions } from './types';
+import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
+import { SendTransactionOptions } from './types.js';
 import {
 	LogsSubscription,
 	NewPendingTransactionsSubscription,
 	NewHeadsSubscription,
 	SyncingSubscription,
-} from './web3_subscriptions';
+} from './web3_subscriptions.js';
 
 type RegisteredSubscription = {
 	logs: typeof LogsSubscription;

@@ -16,9 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexPrefixed, isHexString } from 'web3-validator';
 import { bytesToHex, hexToBytes, numberToHex } from 'web3-utils';
-import { secp256k1 } from '../tx/constants';
-import { Hardfork } from './enums';
-import { ToBytesInputTypes, TypeOutput, TypeOutputReturnType } from './types';
+import { secp256k1 } from '../tx/constants.js';
+import { Hardfork } from './enums.js';
+import { ToBytesInputTypes, TypeOutput, TypeOutputReturnType } from './types.js';
 
 type ConfigHardfork =
 	// eslint-disable-next-line @typescript-eslint/ban-types

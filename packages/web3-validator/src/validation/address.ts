@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { keccak256 } from 'ethereum-cryptography/keccak';
-import { utf8ToBytes } from 'ethereum-cryptography/utils';
-import { ValidInputTypes } from '../types';
-import { uint8ArrayToHexString } from '../utils';
-import { isHexStrict } from './string';
+import { keccak256 } from 'ethereum-cryptography/keccak.js';
+import { utf8ToBytes } from 'ethereum-cryptography/utils.js';
+import { ValidInputTypes } from '../types.js';
+import { uint8ArrayToHexString } from '../utils.js';
+import { isHexStrict } from './string.js';
 
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.

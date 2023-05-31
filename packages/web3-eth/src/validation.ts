@@ -47,8 +47,8 @@ import {
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
 } from 'web3-errors';
-import { formatTransaction } from './utils/format_transaction';
-import { InternalTransaction } from './types';
+import { formatTransaction } from './utils/format_transaction.js';
+import { InternalTransaction } from './types.js';
 
 export function isBaseTransaction(value: BaseTransactionAPI): boolean {
 	if (!isNullish(value.to) && !isAddress(value.to)) return false;

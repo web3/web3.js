@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { DataFormat, DEFAULT_RETURN_FORMAT, Web3NetAPI } from 'web3-types';
 
-import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
 
 export class Net extends Web3Context<Web3NetAPI> {
 	/**

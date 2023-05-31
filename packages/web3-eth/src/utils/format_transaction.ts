@@ -19,7 +19,7 @@ import { Transaction, DataFormat, DEFAULT_RETURN_FORMAT, FormatType } from 'web3
 import { isNullish, ValidationSchemaInput } from 'web3-validator';
 import { TransactionDataAndInputError } from 'web3-errors';
 import { mergeDeep, bytesToHex, format } from 'web3-utils';
-import { transactionSchema } from '../schemas';
+import { transactionSchema } from '../schemas.js';
 
 export function formatTransaction<
 	ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,

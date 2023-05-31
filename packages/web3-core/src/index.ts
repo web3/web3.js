@@ -15,17 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './web3_config';
-export * from './web3_request_manager';
-export * from './web3_subscription_manager';
-export * from './web3_subscriptions';
-export * from './web3_context';
-export * from './web3_batch_request';
-export * from './utils';
-export * from './types';
-export * from './formatters';
-export * from './web3_promi_event';
-export * from './web3_event_emitter';
+export * from './web3_config.js';
+export * from './web3_request_manager.js';
+export * from './web3_subscription_manager.js';
+export * from './web3_subscriptions.js';
+export * from './web3_context.js';
+export * from './web3_batch_request.js';
+export * from './utils.js';
+export * from './types.js';
+export * from './formatters.js';
+export * from './web3_promi_event.js';
+export * from './web3_event_emitter.js';
 
 // For backward usability export as namespace
-export * as formatters from './formatters';
+export * as formatters from './formatters.js';

@@ -62,7 +62,7 @@ import {
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { decodeSignedTransaction } from './utils/decode_signed_transaction';
+import { decodeSignedTransaction } from './utils/decode_signed_transaction.js';
 import {
 	accountSchema,
 	blockSchema,
@@ -72,28 +72,28 @@ import {
 	transactionInfoSchema,
 	accessListResultSchema,
 	SignatureObjectSchema,
-} from './schemas';
+} from './schemas.js';
 import {
 	SendSignedTransactionEvents,
 	SendSignedTransactionOptions,
 	SendTransactionEvents,
 	SendTransactionOptions,
-} from './types';
+} from './types.js';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionFromOrToAttr } from './utils/transaction_builder';
-import { formatTransaction } from './utils/format_transaction';
+import { getTransactionFromOrToAttr } from './utils/transaction_builder.js';
+import { formatTransaction } from './utils/format_transaction.js';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
+import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing.js';
 // eslint-disable-next-line import/no-cycle
-import { trySendTransaction } from './utils/try_send_transaction';
+import { trySendTransaction } from './utils/try_send_transaction.js';
 // eslint-disable-next-line import/no-cycle
-import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
-import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
-import { NUMBER_DATA_FORMAT } from './constants';
+import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt.js';
+import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations.js';
+import { NUMBER_DATA_FORMAT } from './constants.js';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionError } from './utils/get_transaction_error';
+import { getTransactionError } from './utils/get_transaction_error.js';
 // eslint-disable-next-line import/no-cycle
-import { getRevertReason } from './utils/get_revert_reason';
+import { getRevertReason } from './utils/get_revert_reason.js';
 
 /**
  * View additional documentations here: {@link Web3Eth.getProtocolVersion}
