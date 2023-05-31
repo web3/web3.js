@@ -18,12 +18,10 @@ import { Web3ValidationErrorObject } from 'web3-types';
 
 import { toHex, utf8ToBytes } from 'ethereum-cryptography/utils';
 import { blake2b } from 'ethereum-cryptography/blake2b';
+import validator from 'is-my-json-valid';
 import formats from './formats';
 import { Web3ValidatorError } from './errors';
 import { Validate, Json, Schema, RawValidationError } from './types';
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const validator = require('is-my-json-valid');
 
 export class Validator {
 	// eslint-disable-next-line no-use-before-define
@@ -48,6 +46,7 @@ export class Validator {
 	// eslint-disable-next-line  class-methods-use-this
 	private createValidator(schema: Schema): Validate {
 		// eslint-disable-next-line  @typescript-eslint/no-unsafe-call
+		// @ts-expect-error validator params correction
 		return validator(schema, {
 			formats,
 			greedy: true,
@@ -91,8 +90,10 @@ export class Validator {
 
 				const { field } = error;
 				const _instancePath =
+					schemaPath ||
 					// eslint-disable-next-line no-useless-escape
-					field?.length >= 4 ? `${field.slice(4).replace(/\"|\[|\]/g, '')}` : '/';
+					(field?.length >= 4 ? `${field.slice(4).replace(/\"|\[|\]/g, '')}` : '/');
+
 				const instancePath = _instancePath ? `/${_instancePath}` : '';
 				if (error?.message === 'has less items than allowed') {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
