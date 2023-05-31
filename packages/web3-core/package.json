@@ -9,26 +9,6 @@
 			"types": "./lib/types/index.d.ts",
 			"import": "./lib/esm/index.js",
 			"require": "./lib/commonjs/index.js"
-		},
-		"./web3_config": {
-			"types": "./lib/types/web3_config.d.ts",
-			"import": "./lib/esm/web3_config.js",
-			"require": "./lib/commonjs/web3_config.js"
-		},
-		"./web3_subscriptions": {
-			"types": "./lib/types/web3_subscriptions.d.ts",
-			"import": "./lib/esm/web3_subscriptions.js",
-			"require": "./lib/commonjs/web3_subscriptions.js"
-		},
-		"./web3_subscription_manager": {
-			"types": "./lib/types/web3_subscription_manager.d.ts",
-			"import": "./lib/esm/web3_subscription_manager.js",
-			"require": "./lib/commonjs/web3_subscription_manager.js"
-		},
-		"./web3_request_manager": {
-			"types": "./lib/types/web3_request_manager.d.ts",
-			"import": "./lib/esm/web3_request_manager.js",
-			"require": "./lib/commonjs/web3_request_manager.js"
 		}
 	},
 	"repository": "https://github.com/ChainSafe/web3.js",
