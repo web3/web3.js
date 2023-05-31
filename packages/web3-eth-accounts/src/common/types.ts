@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import type { Chain, ConsensusAlgorithm, ConsensusType, Hardfork } from './enums';
+import type { Chain, ConsensusAlgorithm, ConsensusType, Hardfork } from './enums.js';
 
 export interface ChainName {
 	[chainId: string]: string;

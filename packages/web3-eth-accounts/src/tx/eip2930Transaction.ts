@@ -41,7 +41,7 @@ import type {
 	JsonTx,
 	TxOptions,
 } from './types.js';
-import type { Common } from '../common';
+import type { Common } from '../common/common.js';
 
 const TRANSACTION_TYPE = 1;
 const TRANSACTION_TYPE_UINT8ARRAY = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));

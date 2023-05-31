@@ -25,7 +25,7 @@ import {
 	toUint8Array,
 	uint8ArrayToBigInt,
 	unpadUint8Array,
-} from '../common';
+} from '../common/index.js';
 import type {
 	AccessListEIP2930TxData,
 	AccessListEIP2930ValuesArray,

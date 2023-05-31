@@ -30,7 +30,7 @@ import { MAX_INTEGER } from './constants.js';
 
 import { BaseTransaction } from './baseTransaction.js';
 
-import type { Common } from '../common';
+import type { Common } from '../common/common.js';
 import type { JsonTx, TxData, TxOptions, TxValuesArray } from './types.js';
 import { Capability } from './types.js';
 
