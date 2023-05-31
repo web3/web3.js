@@ -1462,28 +1462,34 @@ should use 4.0.1-alpha.0 for testing.
 
 ## [Unreleased]
 
-### Breaking Changes
-
--   dropped support for NodeJs@14
--   removed non read-only methods from ens package
-
 ### Added
-
-#### web3-eth-contract
-
--   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
-
-#### web3-types
-
--   Added `filters` param to the `Filter` type (#6010)
--   Export for `HardforksOrdered` enum (#6102)
--   Export for `Web3ValidationErrorObject` type (#6102)
 
 #### web3-errors
 
 -   `InvalidPropertiesForTransactionTypeError` with error code `429` (#6102)
 
+#### web3-eth-contract
+
+-   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
+-   Added `maxPriorityFeePerGas` and `maxFeePerGas` in `ContractOptions` type and updated function using it in utils (#6118)
+-   Added method's type autodetection by ABI param (#6137)
+
+#### web3-types
+
+-   Added `filters` param to the `Filter` type (#6010)
+-   Added types `JsonRpcSubscriptionResultOld`, `Web3ProviderMessageEventCallback`. Added `.on('data')` type support for old providers (#6082)
+-   Export for `HardforksOrdered` enum (#6102)
+-   Export for `Web3ValidationErrorObject` type (#6102)
+
+#### web3-utils
+
+-   Optional `hexstrict` parameter added to numberToHex (#6004)
+
 ### Fixed
+
+#### web3-eth
+
+-   Fixed `ignoreGasPricing` bug with wallet in context (#6071)
 
 #### web3-eth-accounts
 
@@ -1492,13 +1498,59 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Changed
 
+#### web3-core
+
+-   Replaced Buffer for Uint8Array (#6004)
+
+#### web3-errors
+
+-   Nested Smart Contract error data is extracted at `Eip838ExecutionError` constructor and the nested error is set at `innerError` (#6045)
+
 #### web3-eth
 
 -   `formatTransaction` no longer throws a `TransactionDataAndInputError` if it's passed a transaction object with both `data` and `input` properties set (as long as they are the same value) (#6064)
 -   Refactored documentation for `rpc_method_wrappers` to point to the previously duplicated documentation found under the `Web3Eth` class documentation (#6054)
+-   Replaced Buffer for Uint8Array (#6004)
 -   Refactored `defaultTransactionTypeParser` to return correct EIP-2718 types, prior implementation was prioritizing `transaction.hardfork` and ignoring the use of `transaction.gasLimit`. `defaultTransactionTypeParser` will now throw `InvalidPropertiesForTransactionTypeError`s for properties are used that are incompatible with `transaction.type` (#6102)
+-   `prepareTransactionForSigning` and `defaultTransactionBuilder` now accepts optional `fillGasPrice` flag and by default will not fill gas(#6071)
+
+#### web3-eth-abi
+
+-   Nested Smart Contract error data hex string is decoded when the error contains the data as object (when the data hex string is inside data.originalError.data or data.data) (#6045)
+
+#### web3-eth-accounts
+
+-   Replaced `Buffer` for `Uint8Array` (#6004)
+-   The methods `recover`, `encrypt`, `privateKeyToAddress` does not support type `Buffer` but supports type `Uint8Array` (#6004)
+-   The method `parseAndValidatePrivateKey` returns a type `Uint8Array` instead of type `Buffer` (#6004)
+
+#### web3-providers-ipc
+
+-   Replaced Buffer for Uint8Array (#6004)
+
+#### web3-types
+
+-   Removed chainId, to, data & input properties from NonPayableCallOptions
+-   Replaced Buffer for Uint8Array (#6004)
+-   types `FMT_BYTES.BUFFER`, `Bytes` and `FormatType` and encryption option types for `salt` and `iv` has replaced support for `Buffer` for `Uint8Array` (#6004)
+-   Added `internalType` property to the `AbiParameter` type.
+
+#### web3-utils
+
+-   Replaced Buffer for Uint8Array (#6004)
+-   The methods `hexToBytes`, `randomBytes` does not return type `Buffer` but type `Uint8Array` (#6004)
+-   The methods `sha3` and `keccak256Wrapper` does not accept type `Buffer` but type `Uint8Array` (#6004)
+-   The method `bytesToBuffer` has been removed for the usage of `bytesToUint8Array` (#6004)
+
+#### web3-validator
+
+-   Replaced Buffer for Uint8Array (#6004)
 
 ### Removed
+
+#### web3-eth-ens
+
+-   Removed non read-only methods (#6084)
 
 #### web3-validator
 

@@ -797,11 +797,11 @@ export class Contract<Abi extends ContractAbi>
 					...(this._overloadedMethodAbis.get(abi.name) ?? []),
 					abi,
 				]);
-
-				const contractMethod = this._createContractMethod(
-					this._overloadedMethodAbis.get(abi.name) ?? [],
-					errorsAbi,
-				);
+				const abiFragment = this._overloadedMethodAbis.get(abi.name) ?? [];
+				const contractMethod = this._createContractMethod<
+					typeof abiFragment,
+					AbiErrorFragment
+				>(abiFragment, errorsAbi);
 
 				this._functions[methodName] = {
 					signature: methodSignature,

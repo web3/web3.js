@@ -18,11 +18,47 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable jest/expect-expect */
 
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
+import { Numbers } from 'web3-types';
 import { Contract } from '../../src/contract';
 import { erc20Abi, Erc20Interface } from '../fixtures/erc20';
 import { erc721Abi, Erc721Interface } from '../fixtures/erc721';
+import { NonPayableMethodObject, PayableMethodObject } from '../../src';
 
 describe('contract typing', () => {
+	describe('custom abi', () => {
+		const abi = [
+			{
+				inputs: [
+					{
+						internalType: 'string',
+						name: 'tokenId',
+						type: 'string',
+					},
+				],
+				name: 'tokenURI',
+				outputs: [{ internalType: 'string', name: '', type: 'string' }],
+				stateMutability: 'view',
+				type: 'function',
+			},
+		] as const;
+		const contractInstance = new Contract(abi);
+		interface CustomInterface {
+			methods: {
+				[key: string]: (
+					...args: ReadonlyArray<any>
+				) =>
+					| PayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>
+					| NonPayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>;
+				tokenURI: (tokenId: Numbers) => NonPayableMethodObject<[Numbers], [string]>;
+			};
+		}
+
+		typecheck('should contain all methods', () =>
+			expectTypeOf<keyof typeof contractInstance.methods>().toBe<
+				keyof CustomInterface['methods']
+			>(),
+		);
+	});
 	describe('erc20', () => {
 		const contract = new Contract(erc20Abi);
 
