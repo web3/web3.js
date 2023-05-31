@@ -1625,7 +1625,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * Resets subscriptions.
 	 *
 	 * @param notClearSyncing If `true` it keeps the `syncing` subscription.
-	 * @returns An array of subscription ids that were cleared.
+	 * @returns A promise to an array of subscription ids that were cleared.
 	 *
 	 * ```ts
 	 * web3.eth.clearSubscriptions().then(console.log);
