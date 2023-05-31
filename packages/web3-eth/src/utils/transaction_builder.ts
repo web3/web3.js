@@ -45,14 +45,14 @@ import {
 	UnableToPopulateNonceError,
 } from 'web3-errors';
 import { bytesToHex, format } from 'web3-utils';
-import { NUMBER_DATA_FORMAT } from '../constants';
+import { NUMBER_DATA_FORMAT } from '../constants.js';
 // eslint-disable-next-line import/no-cycle
-import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
-import { detectTransactionType } from './detect_transaction_type';
-import { transactionSchema } from '../schemas';
-import { InternalTransaction } from '../types';
+import { getChainId, getTransactionCount } from '../rpc_method_wrappers.js';
+import { detectTransactionType } from './detect_transaction_type.js';
+import { transactionSchema } from '../schemas.js';
+import { InternalTransaction } from '../types.js';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionGasPricing } from './get_transaction_gas_pricing';
+import { getTransactionGasPricing } from './get_transaction_gas_pricing.js';
 
 export const getTransactionFromOrToAttr = (
 	attr: 'from' | 'to',

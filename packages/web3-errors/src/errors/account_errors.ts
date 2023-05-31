@@ -27,8 +27,8 @@ import {
 	ERR_INVALID_PASSWORD,
 	ERR_IV_LENGTH,
 	ERR_PBKDF2_ITERATIONS,
-} from '../error_codes';
-import { BaseWeb3Error } from '../web3_error_base';
+} from '../error_codes.js';
+import { BaseWeb3Error } from '../web3_error_base.js';
 
 export class PrivateKeyLengthError extends BaseWeb3Error {
 	public code = ERR_PRIVATE_KEY_LENGTH;

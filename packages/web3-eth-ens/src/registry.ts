@@ -18,10 +18,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3ContextObject } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import { Address } from 'web3-types';
-import { ENSRegistryAbi } from './abi/ens/ENSRegistry';
-import { PublicResolverAbi } from './abi/ens/PublicResolver';
-import { registryAddresses } from './config';
-import { namehash } from './utils';
+import { ENSRegistryAbi } from './abi/ens/ENSRegistry.js';
+import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
+import { registryAddresses } from './config.js';
+import { namehash } from './utils.js';
 
 export class Registry {
 	private readonly contract: Contract<typeof ENSRegistryAbi>;

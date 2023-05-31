@@ -15,22 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Filter } from 'web3-types';
-import { ValidInputTypes } from './types';
-import {
-	isAddress,
-	isBlockNumber,
-	isBlockNumberOrTag,
-	isBlockTag,
-	isBloom,
-	isBoolean,
-	isBytes,
-	isFilterObject,
-	isHexStrict,
-	isInt,
-	isNumber,
-	isString,
-	isUInt,
-} from './validation';
+import { ValidInputTypes } from './types.js';
+import { isAddress } from './validation/address.js';
+import { isBlockNumber,isBlockNumberOrTag,
+	isBlockTag, } from './validation/block.js';
+import { isBloom } from './validation/bloom.js';
+import { isBoolean } from './validation/boolean.js';
+import { isBytes } from './validation/bytes.js';
+import { isFilterObject } from './validation/filter.js';
+import { isHexStrict, isString } from './validation/string.js';
+import { isNumber, isInt, isUInt } from './validation/numbers.js';
 
 const formats: { [key: string]: (data: unknown) => boolean } = {
 	address: (data: unknown) => isAddress(data as ValidInputTypes),

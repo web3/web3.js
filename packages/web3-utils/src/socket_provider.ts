@@ -47,11 +47,11 @@ import {
 	RequestAlreadySentError,
 	Web3WSProviderError,
 } from 'web3-errors';
-import { Eip1193Provider } from './web3_eip1193_provider';
-import { ChunkResponseParser } from './chunk_response_parser';
-import { isNullish } from './validation';
-import { Web3DeferredPromise } from './web3_deferred_promise';
-import * as jsonRpc from './json_rpc';
+import { Eip1193Provider } from './web3_eip1193_provider.js';
+import { ChunkResponseParser } from './chunk_response_parser.js';
+import { isNullish } from './validation.js';
+import { Web3DeferredPromise } from './web3_deferred_promise.js';
+import * as jsonRpc from './json_rpc.js';
 
 export type ReconnectOptions = {
 	autoReconnect: boolean;

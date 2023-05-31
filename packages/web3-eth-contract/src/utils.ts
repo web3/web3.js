@@ -28,8 +28,8 @@ import {
 	ContractInitOptions,
 } from 'web3-types';
 import { isNullish, mergeDeep, toHex } from 'web3-utils';
-import { encodeMethodABI } from './encoding';
-import { ContractOptions, Web3ContractContext } from './types';
+import { encodeMethodABI } from './encoding.js';
+import { ContractOptions, Web3ContractContext } from './types.js';
 
 export const getSendTxParams = ({
 	abi,

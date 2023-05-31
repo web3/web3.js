@@ -18,15 +18,15 @@ import pkg from 'crc-32';
 import { EventEmitter } from 'events';
 import type { Numbers } from 'web3-types';
 import { bytesToHex, hexToBytes, uint8ArrayConcat } from 'web3-utils';
-import { TypeOutput } from './types';
-import { intToUint8Array, toType, parseGethGenesis } from './utils';
-import goerli from './chains/goerli';
-import mainnet from './chains/mainnet';
-import sepolia from './chains/sepolia';
-import { EIPs } from './eips';
-import type { ConsensusAlgorithm, ConsensusType } from './enums';
-import { Chain, CustomChain, Hardfork } from './enums';
-import { hardforks as HARDFORK_SPECS } from './hardforks';
+import { TypeOutput } from './types.js';
+import { intToUint8Array, toType, parseGethGenesis } from './utils.js';
+import goerli from './chains/goerli.js';
+import mainnet from './chains/mainnet.js';
+import sepolia from './chains/sepolia.js';
+import { EIPs } from './eips/index.js';
+import type { ConsensusAlgorithm, ConsensusType } from './enums.js';
+import { Chain, CustomChain, Hardfork } from './enums.js';
+import { hardforks as HARDFORK_SPECS } from './hardforks/index.js';
 
 import type {
 	BootstrapNodeConfig,
@@ -41,7 +41,7 @@ import type {
 	GenesisBlockConfig,
 	GethConfigOpts,
 	HardforkConfig,
-} from './types';
+} from './types.js';
 
 const { buf: crc32Uint8Array } = pkg;
 

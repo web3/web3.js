@@ -1488,6 +1488,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-accounts
 
 -   Fixed ESM import bugs reported in (#6032) and (#6034)
+-   ESM projects will not need to run --experimental-specifier-resolution=node (#6127)
 
 ### Changed
 

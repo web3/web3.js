@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { BaseWeb3Error, ERR_VALIDATION } from 'web3-errors';
 import { Web3ValidationErrorObject } from 'web3-types';
 
-import { isNullish } from './validation/object';
+import { isNullish } from './validation/object.js';
 
 const errorFormatter = (error: Web3ValidationErrorObject): string => {
 	if (error.message && error.instancePath && error.params && !isNullish(error.params.value)) {

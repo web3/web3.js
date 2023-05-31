@@ -20,8 +20,8 @@ import { format, numberToHex } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { DataFormat } from 'web3-types';
-import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
-import { transactionReceiptSchema } from '../schemas';
+import { SendSignedTransactionEvents, SendTransactionEvents } from '../types.js';
+import { transactionReceiptSchema } from '../schemas.js';
 
 export type Web3PromiEventEventTypeBase<ReturnFormat extends DataFormat> =
 	| SendTransactionEvents<ReturnFormat>

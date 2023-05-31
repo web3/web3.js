@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Numbers } from './primitives_types';
+import { Numbers } from './primitives_types.js';
 
 // Make each attribute mutable by removing `readonly`
 export type Mutable<T> = {

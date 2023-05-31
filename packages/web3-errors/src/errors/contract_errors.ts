@@ -31,8 +31,8 @@ import {
 	ERR_CONTRACT_RESERVED_EVENT,
 	ERR_CONTRACT_RESOLVER_MISSING,
 	ERR_CONTRACT_TX_DATA_AND_INPUT,
-} from '../error_codes';
-import { BaseWeb3Error, InvalidValueError } from '../web3_error_base';
+} from '../error_codes.js';
+import { BaseWeb3Error, InvalidValueError } from '../web3_error_base.js';
 
 export class Web3ContractError extends BaseWeb3Error {
 	public code = ERR_CONTRACT;

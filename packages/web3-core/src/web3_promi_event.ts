@@ -20,7 +20,7 @@ import {
 	Web3EventEmitter,
 	Web3EventKey,
 	Web3EventMap,
-} from './web3_event_emitter';
+} from './web3_event_emitter.js';
 
 export type PromiseExecutor<T> = (
 	resolve: (data: T) => void,

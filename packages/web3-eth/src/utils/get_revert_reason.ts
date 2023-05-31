@@ -28,8 +28,8 @@ import {
 } from 'web3-types';
 
 // eslint-disable-next-line import/no-cycle
-import { call } from '../rpc_method_wrappers';
-import { RevertReason, RevertReasonWithCustomError } from '../types';
+import { call } from '../rpc_method_wrappers.js';
+import { RevertReason, RevertReasonWithCustomError } from '../types.js';
 
 export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi) => {
 	if (

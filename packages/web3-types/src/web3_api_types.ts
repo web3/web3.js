@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { JsonRpcId, JsonRpcIdentifier } from './json_rpc_types';
+import { JsonRpcId, JsonRpcIdentifier } from './json_rpc_types.js';
 
 export interface ProviderMessage {
 	readonly type: string;

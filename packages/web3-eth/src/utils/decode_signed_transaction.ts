@@ -22,8 +22,8 @@ import {
 } from 'web3-types';
 import { bytesToHex, format, hexToBytes, keccak256 } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
-import { detectRawTransactionType } from './detect_transaction_type';
-import { formatTransaction } from './format_transaction';
+import { detectRawTransactionType } from './detect_transaction_type.js';
+import { formatTransaction } from './format_transaction.js';
 
 /**
  * Decodes an [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded transaction.

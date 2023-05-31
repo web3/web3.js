@@ -50,17 +50,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 import 'setimmediate';
 
-import { Web3Eth } from './web3_eth';
+import { Web3Eth } from './web3_eth.js';
 
-export * from './web3_eth';
-export * from './schemas';
-export * from './types';
-export * from './validation';
-export * from './rpc_method_wrappers';
-export * from './utils/format_transaction';
-export * from './utils/prepare_transaction_for_signing';
-export * from './web3_subscriptions';
-export { detectTransactionType } from './utils/detect_transaction_type';
-export { transactionBuilder } from './utils/transaction_builder';
+export * from './web3_eth.js';
+export * from './schemas.js';
+export * from './types.js';
+export * from './validation.js';
+export * from './rpc_method_wrappers.js';
+export * from './utils/format_transaction.js';
+export * from './utils/prepare_transaction_for_signing.js';
+export * from './web3_subscriptions.js';
+export { detectTransactionType } from './utils/detect_transaction_type.js';
+export { transactionBuilder } from './utils/transaction_builder.js';
 
 export default Web3Eth;

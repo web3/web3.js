@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { keccak256 } from 'ethereum-cryptography/keccak';
-import { ValidInputTypes } from '../types';
-import { codePointToInt, hexToUint8Array, padLeft, uint8ArrayToHexString } from '../utils';
-import { isAddress } from './address';
-import { isHexStrict } from './string';
+import { keccak256 } from 'ethereum-cryptography/keccak.js';
+import { ValidInputTypes } from '../types.js';
+import { codePointToInt, hexToUint8Array, padLeft, uint8ArrayToHexString } from '../utils.js';
+import { isAddress } from './address.js';
+import { isHexStrict } from './string.js';
 
 /**
  * Returns true if the bloom is a valid bloom

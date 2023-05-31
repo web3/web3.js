@@ -15,19 +15,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './error_types';
-export * from './apis/eth_execution_api';
-export * from './apis/web3_eth_execution_api';
-export * from './apis/web3_net_api';
-export * from './apis/eth_personal_api';
-export * from './data_format_types';
-export * from './eth_types';
-export * from './eth_abi_types';
-export * from './eth_contract_types';
-export * from './json_rpc_types';
-export * from './primitives_types';
-export * from './utility_types';
-export * from './web3_api_types';
-export * from './web3_base_provider';
-export * from './web3_base_wallet';
-export * from './web3_deferred_promise_type';
+export * from './error_types.js';
+export * from './apis/eth_execution_api.js';
+export * from './apis/web3_eth_execution_api.js';
+export * from './apis/web3_net_api.js';
+export * from './apis/eth_personal_api.js';
+export * from './data_format_types.js';
+export * from './eth_types.js';
+export * from './eth_abi_types.js';
+export * from './eth_contract_types.js';
+export * from './json_rpc_types.js';
+export * from './primitives_types.js';
+export * from './utility_types.js';
+export * from './web3_api_types.js';
+export * from './web3_base_provider.js';
+export * from './web3_base_wallet.js';
+export * from './web3_deferred_promise_type.js';

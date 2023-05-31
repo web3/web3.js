@@ -26,6 +26,9 @@ module.exports = {
 			https: require.resolve('https-browserify'),
 			stream: require.resolve('readable-stream'),
 		},
+		extensionAlias: {
+			'.js': ['.js', '.ts'],
+		},
 	},
 	plugins: [
 		new webpack.ProvidePlugin({

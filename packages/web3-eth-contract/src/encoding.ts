@@ -47,7 +47,7 @@ import { blockSchema, logSchema } from 'web3-eth';
 import { Web3ContractError } from 'web3-errors';
 
 // eslint-disable-next-line import/no-cycle
-import { ContractOptions, ContractAbiWithSignature, EventLog } from './types';
+import { ContractOptions, ContractAbiWithSignature, EventLog } from './types.js';
 
 type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 export const encodeEventABI = (

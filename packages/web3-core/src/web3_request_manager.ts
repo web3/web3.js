@@ -50,8 +50,8 @@ import {
 	isLegacySendAsyncProvider,
 	isLegacySendProvider,
 	isWeb3Provider,
-} from './utils';
-import { Web3EventEmitter } from './web3_event_emitter';
+} from './utils.js';
+import { Web3EventEmitter } from './web3_event_emitter.js';
 
 export enum Web3RequestManagerEvent {
 	PROVIDER_CHANGED = 'PROVIDER_CHANGED',
