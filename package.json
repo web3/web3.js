@@ -91,7 +91,8 @@
 		"test:blackbox:infura:ws": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream && yarn post-blackbox",
 		"prepare": "husky install",
 		"postinstall": "yarn build",
-		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
+		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix",
+		"publish:canary": "lerna --canary --dist-tag dev --graph-type all --no-verify-access --yes"
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.12.0",
