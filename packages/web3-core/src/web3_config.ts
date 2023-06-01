@@ -282,7 +282,7 @@ export abstract class Web3Config
 	}
 
 	/**
-	 * The blockHeaderTimeout is used over socket-based connections. This option defines the amount seconds it should wait for “newBlockHeaders” event before falling back to polling to fetch transaction receipt.
+	 * The blockHeaderTimeout is used over socket-based connections. This option defines the amount seconds it should wait for `'newBlockHeaders'` event before falling back to polling to fetch transaction receipt.
 	 * Default is `10` seconds.
 	 */
 	public get blockHeaderTimeout() {

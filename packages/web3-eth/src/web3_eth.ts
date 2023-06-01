@@ -1244,13 +1244,13 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	/**
-	 * Gets work for miners to mine on. Returns the hash of the current block, the seedHash, and the boundary condition to be met (“target”).
+	 * Gets work for miners to mine on. Returns the hash of the current block, the seedHash, and the boundary condition to be met ('target').
 	 *
 	 * @returns The mining work as an array of strings with the following structure:
 	 *
 	 * String 32 Bytes - at index 0: current block header pow-hash
 	 * String 32 Bytes - at index 1: the seed hash used for the DAG.
-	 * String 32 Bytes - at index 2: the boundary condition (“target”), 2^256 / difficulty.
+	 * String 32 Bytes - at index 2: the boundary condition ('target'), 2^256 / difficulty.
 	 *
 	 * ```ts
 	 * web3.eth.getWork().then(console.log);
@@ -1424,7 +1424,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	/**
 	 * @param blockCount Number of blocks in the requested range. Between `1` and `1024` blocks can be requested in a single query. Less than requested may be returned if not all blocks are available.
 	 * @param newestBlock Highest number block of the requested range.
-	 * @param rewardPercentiles A monotonically increasing list of percentile values to sample from each block’s effective priority fees per gas in ascending order, weighted by gas used. Example: `[“0”, “25”, “50”, “75”, “100”]` or `[“0”, “0.5”, “1”, “1.5”, “3”, “80”]`
+	 * @param rewardPercentiles A monotonically increasing list of percentile values to sample from each block’s effective priority fees per gas in ascending order, weighted by gas used. Example: `['0', '25', '50', '75', '100']` or `['0', '0.5', '1', '1.5', '3', '80']`
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
 	 * @returns `baseFeePerGas` and transaction effective `priorityFeePerGas` history for the requested block range if available.
 	 * The range between `headBlock - 4` and `headBlock` is guaranteed to be available while retrieving data from the `pending` block and older history are optional to support.
@@ -1553,22 +1553,33 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * - on("error") - Fires when an error in the subscription occurs.
 	 * - on("connected") - Fires once after the subscription successfully connected. Returns the subscription id.
 	 *
-	 * @example
+	 * @example **Subscribe to Smart Contract events**
 	 * ```ts
-	 * const subscription = web3.eth.subscribe('logs', {
+	 * // Subscribe to `logs`
+	 * const logSubscription = web3.eth.subscribe('logs', {
 	 *     address: '0x1234567890123456789012345678901234567890',
 	 *     topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
-	 * }, function(error, result){
-	 *     if (!error)
-	 *         console.log(result);
 	 * });
+	 * logSubscription.on('data', (data: any) => console.log(data));
+	 * logSubscription.on('error', (error: any) => console.log(error));
 	 *
-	 * const subscription = web3.eth.subscribe('logs', {
-	 *     address: '0x1234567890123456789012345678901234567890',
-	 *     topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
-	 * })
-	 * .then(logs => console.log(logs))
-	 * .catch(error => console.log(error));
+	 * ```
+	 *
+	 * @example **Subscribe to new block headers**
+	 * ```ts
+	 * // Subscribe to `newBlockHeaders`
+	 * const newBlocksSubscription = await web3.eth.subscribe('newBlockHeaders');
+	 *
+	 * newBlocksSubscription.on('data', async blockhead => {
+	 * 	console.log('New block header: ', blockhead);
+	 *
+	 * 	// You do not need the next line, if you like to keep notified for every new block
+	 * 	await newBlocksSubscription.unsubscribe();
+	 * 	console.log('Unsubscribed from new block headers.');
+	 * });
+	 * newBlocksSubscription.on('error', error =>
+	 * 	console.log('Error when subscribing to New block header: ', error),
+	 * );
 	 * ```
 	 */
 	public async subscribe<
@@ -1614,11 +1625,11 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * Resets subscriptions.
 	 *
 	 * @param notClearSyncing If `true` it keeps the `syncing` subscription.
-	 * @returns `true` if successful, otherwise `false`.
+	 * @returns A promise to an array of subscription ids that were cleared.
 	 *
 	 * ```ts
 	 * web3.eth.clearSubscriptions().then(console.log);
-	 * > true
+	 * > [...] An array of subscription ids that were cleared
 	 * ```
 	 */
 	public clearSubscriptions(notClearSyncing = false): Promise<string[]> | undefined {

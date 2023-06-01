@@ -34,13 +34,13 @@ type CommonSubscriptionEvents = {
 	connected: number;
 };
 /**
- * ## subscribe(“logs”)
+ * ## subscribe('logs')
  * Subscribes to incoming logs, filtered by the given options. If a valid numerical fromBlock options property is set, web3.js will retrieve logs beginning from this point, backfilling the response as necessary.
  *
  * You can subscribe to logs matching a given filter object, which can take the following parameters:
- * - `fromBlock`: (optional, default: “latest”) Integer block number, or “latest” for the last mined block or “pending”, “earliest” for not yet mined transactions.
+ * - `fromBlock`: (optional, default: 'latest') Integer block number, or `'latest'` for the last mined block or `'pending'`, `'earliest'` for not yet mined transactions.
  * - `address`: (optional) Contract address or a list of addresses from which logs should originate.
- * - `topics`: (optional) Array of 32 Bytes DATA topics. Topics are order-dependent. Each topic can also be an array of DATA with “or” options.
+ * - `topics`: (optional) Array of 32 Bytes DATA topics. Topics are order-dependent. Each topic can also be an array of DATA with `or` options.
  *
  */
 export class LogsSubscription extends Web3Subscription<
@@ -68,13 +68,13 @@ export class LogsSubscription extends Web3Subscription<
 }
 
 /**
- * ## subscribe(“pendingTransactions”)
+ * ## subscribe('pendingTransactions')
  * Subscribes to incoming pending transactions.
  *
- * You can subscribe to pending transactions by calling web3.eth.subscribe(“pendingTransactions”).
+ * You can subscribe to pending transactions by calling web3.eth.subscribe('pendingTransactions').
  * @example
  * ```ts
- *  web3.eth.subscribe('pendingTransactions').on("data", console.log(transaction);
+ * (await web3.eth.subscribe('pendingTransactions')).on('data', console.log);
  * ```
  */
 export class NewPendingTransactionsSubscription extends Web3Subscription<
@@ -97,15 +97,15 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 }
 
 /**
- * ## subscribe(“newHeads”) ( same as subscribe("newBlockHeaders"))
+ * ## subscribe('newHeads') ( same as subscribe('newBlockHeaders'))
  *
  * Subscribes to incoming block headers. This can be used as timer to check for changes on the blockchain.
  *
  * The structure of a returned block header is {@link BlockHeaderOutput}:
  * @example
  * ```ts
- * (await web3.eth.subscribe("newHeads")).on( // "newBlockHeaders" would work as well
- *  "data",
+ * (await web3.eth.subscribe('newHeads')).on( // 'newBlockHeaders' would work as well
+ *  'data',
  * console.log
  * );
  * >{
@@ -145,15 +145,15 @@ export class NewHeadsSubscription extends Web3Subscription<
 }
 
 /**
- * ## subscribe(“syncing”)
+ * ## subscribe('syncing')
  *
  * Subscribe to syncing events. This will return `true` when the node is syncing and when it’s finished syncing will return `false`, for the `changed` event.
  * @example
  * ```ts
- * (await web3.eth.subscribe("syncing")).on("changed", console.log);
+ * (await web3.eth.subscribe('syncing')).on('changed', console.log);
  * > `true` // when syncing
  *
- * (await web3.eth.subscribe("syncing")).on("data", console.log);
+ * (await web3.eth.subscribe('syncing')).on('data', console.log);
  * > {
  *      startingBlock: 0,
  *      currentBlock: 0,
