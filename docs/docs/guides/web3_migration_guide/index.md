@@ -32,7 +32,9 @@ const web3 = new Web3();
 
 Passing callbacks to functions is no longer supported, except for event listeners.
 
-For that, for example, the way to subscribe and do event listening on blockchain events had changed in 4.x as you can find inside [**`web3.eth.subscribe` Migration Guide**](/docs/guides/web3_migration_guide/subscribe_migration_guide#subscribing-to-events).
+For example, the approach to subscribing-to and listening-for blockchain events has changed in version 4.x. Detailed instructions can be found in the [**`web3.eth.subscribe` Migration Guide**](/docs/guides/web3_migration_guide/subscribe_migration_guide#subscribing-to-events).
+
+However, the approach to subscribing to Provider events remains the same, utilizing callbacks as explained in the [Providers Events Listening guide](/docs/guides/web3_providers_guide/events_listening). It is important to note that Providers have undergone some breaking changes, including the renaming of the `on('close', ...)` to `on('disconnect', ...)`.
 
 ### Not Implemented or Exported
 
