@@ -1369,7 +1369,7 @@
     utility-types "^3.10.0"
     webpack "^5.73.0"
 
-"@docusaurus/plugin-content-docs@2.4.1", "@docusaurus/plugin-content-docs@^2.2.0":
+"@docusaurus/plugin-content-docs@2.4.1", "@docusaurus/plugin-content-docs@^2.4.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/plugin-content-docs/-/plugin-content-docs-2.4.1.tgz#ed94d9721b5ce7a956fb01cc06c40d8eee8dfca7"
   integrity sha512-Lo7lSIcpswa2Kv4HEeUcGYqaasMUQNpjTXpV0N8G6jXgZaQurqp7E8NGYeGbDXnb48czmHWbzDL4S3+BbK0VzA==
@@ -1587,7 +1587,7 @@
     fs-extra "^10.1.0"
     tslib "^2.4.0"
 
-"@docusaurus/types@2.4.1", "@docusaurus/types@^2.2.0":
+"@docusaurus/types@2.4.1", "@docusaurus/types@^2.4.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/types/-/types-2.4.1.tgz#d8e82f9e0f704984f98df1f93d6b4554d5458705"
   integrity sha512-0R+cbhpMkhbRXX138UOc/2XZFF8hiZa6ooZAEEJFp5scytzCw4tC1gChMFXrpa3d2tYE6AX8IrOEpSonLmfQuQ==
@@ -1619,7 +1619,7 @@
     js-yaml "^4.1.0"
     tslib "^2.4.0"
 
-"@docusaurus/utils@2.4.1", "@docusaurus/utils@^2.2.0":
+"@docusaurus/utils@2.4.1", "@docusaurus/utils@^2.4.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/utils/-/utils-2.4.1.tgz#9c5f76eae37b71f3819c1c1f0e26e6807c99a4fc"
   integrity sha512-1lvEZdAQhKNht9aPXPoh69eeKnV0/62ROhQeFKKxmzd0zkcuE/Oc5Gpnt00y/f5bIsmOsYMY7Pqfm/5rteT5GA==
@@ -1756,6 +1756,18 @@
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/@mdx-js/util/-/util-1.6.22.tgz#219dfd89ae5b97a8801f015323ffa4b62f45718b"
   integrity sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==
+
+"@mpetrunic/docusaurus-plugin-typedoc-api@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@mpetrunic/docusaurus-plugin-typedoc-api/-/docusaurus-plugin-typedoc-api-3.0.0.tgz#fd93c8f7e1a38b1a050b4fd170c9a05c9c55d18e"
+  integrity sha512-ma7iYojh6DT7VHkM6EQKVPCmN6FBHGMGU3IsF//O3+Ls6/QdGHALAPfVdt0K+cm6cdJv+GOKAkfr5e+qAnRNZg==
+  dependencies:
+    "@docusaurus/plugin-content-docs" "^2.4.0"
+    "@docusaurus/types" "^2.4.0"
+    "@docusaurus/utils" "^2.4.0"
+    "@vscode/codicons" "^0.0.32"
+    marked "^4.3.0"
+    typedoc "^0.23.28"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -3619,18 +3631,6 @@ docusaurus-lunr-search@^2.3.2:
     unified "^9.0.0"
     unist-util-is "^4.0.2"
 
-docusaurus-plugin-typedoc-api@^2.4.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/docusaurus-plugin-typedoc-api/-/docusaurus-plugin-typedoc-api-2.5.1.tgz#488fc5da7d0d9c2aead7761f20577368f3a03ccb"
-  integrity sha512-PIgxhYaJs7YjJg65L7s4UL1V52EjNfA4GhXEOgTcdf3lRkk3AaedOC+OtCC6LdMK+x5X7c5HqfvAR1Y0wqL0LQ==
-  dependencies:
-    "@docusaurus/plugin-content-docs" "^2.2.0"
-    "@docusaurus/types" "^2.2.0"
-    "@docusaurus/utils" "^2.2.0"
-    "@vscode/codicons" "^0.0.32"
-    marked "^4.2.4"
-    typedoc "^0.23.22"
-
 dom-converter@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/dom-converter/-/dom-converter-0.2.0.tgz#6721a9daee2e293682955b6afe416771627bb768"
@@ -5309,9 +5309,9 @@ markdown-escapes@^1.0.0:
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
 
-marked@^4.2.12, marked@^4.2.4:
+marked@^4.2.12, marked@^4.3.0:
   version "4.3.0"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
+  resolved "http://localhost:4873/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
   integrity sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==
 
 mdast-squeeze-paragraphs@^4.0.0:
@@ -7472,9 +7472,9 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typedoc@^0.23.22:
+typedoc@^0.23.28:
   version "0.23.28"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.28.tgz#3ce9c36ef1c273fa849d2dea18651855100d3ccd"
+  resolved "http://localhost:4873/typedoc/-/typedoc-0.23.28.tgz#3ce9c36ef1c273fa849d2dea18651855100d3ccd"
   integrity sha512-9x1+hZWTHEQcGoP7qFmlo4unUoVJLB0H/8vfO/7wqTnZxg4kPuji9y3uRzEu0ZKez63OJAUmiGhUrtukC6Uj3w==
   dependencies:
     lunr "^2.3.9"
