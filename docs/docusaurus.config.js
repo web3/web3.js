@@ -65,7 +65,7 @@ const config = {
 	plugins: [
 		'@docusaurus/theme-live-codeblock',
 		[
-			'docusaurus-plugin-typedoc-api',
+			'@mpetrunic/docusaurus-plugin-typedoc-api',
 			{
 				projectRoot: join(__dirname, '..'),
 				// Monorepo
