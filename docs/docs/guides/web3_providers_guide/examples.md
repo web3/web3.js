@@ -1,13 +1,8 @@
 ---
-sidebar_position: 2
-sidebar_label: Providers
+sidebar_label: Examples
 ---
 
-# Providers
-
-## Introduction
-
-web3.js providers are objects responsible for enabling connectivity with the Ethereum network in various ways. Connecting your web application to an Ethereum node is necessary for sending transactions, querying data, and interacting with smart contracts on the network. In this tutorial, we will explore the different types of providers available in web3.js version 4, how to set them up, and how to use them in your code.
+# Example usage
 
 ## Prerequisites
 
@@ -593,5 +588,3 @@ A few points to consider:
 ## Conclusion
 
 In this tutorial, we explored different types of providers available in web3.js and learned how to set them up and use them in our code. Depending on your application's needs, you can choose the provider that best suits your requirements. The HTTP Provider is the simplest and most widely used provider, while the Websocket Provider and IPC Provider offer real-time communication and faster performance, respectively. With these providers, you can connect your web application to the Ethereum network and start building decentralized applications.
-
-To get more about providers like more about their priorities and options, check the [web3.js Providers Guide](/docs/guides/web3_providers_guide/) and [Providers Events Listening Guide](/docs/guides/web3_providers_guide/events_listening)

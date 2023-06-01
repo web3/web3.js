@@ -1,9 +1,9 @@
 ---
-sidebar_position: 0
-sidebar_label: 'Plugin Authors'
+sidebar_position: 1
+sidebar_label: 'For Plugin Developers'
 ---
 
-# web3.js Plugin Author's Guide
+# web3.js Plugin Developer Guide
 
 This guide intends to provide the necessary context for developing plugins for web3.js.
 

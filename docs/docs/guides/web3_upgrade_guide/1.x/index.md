@@ -1,11 +1,11 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Migration from 1.x'
+sidebar_label: 'Upgrade from 1.x'
 ---
 
-# Migration from 1.x
+# Upgrade from 1.x
 
-This migration guide is for migration from web3.js 1.x to web3.js 4.x.
+This upgrade guide is for upgrading from web3.js 1.x to web3.js 4.x.
 
 ## Breaking Changes
 
