@@ -91,7 +91,8 @@
 		"test:blackbox:infura:ws": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream && yarn post-blackbox",
 		"prepare": "husky install",
 		"postinstall": "yarn build",
-		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
+		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix",
+		"publish:canary": "lerna publish --canary --dist-tag dev --graph-type all --force-publish \"*\" --no-verify-access --yes"
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.12.0",
@@ -111,7 +112,7 @@
 		"https-browserify": "^1.0.0",
 		"husky": "^8.0.1",
 		"jest": "^28.1.3",
-		"lerna": "^5.1.8",
+		"lerna": "^6.6.2",
 		"lint-staged": "^13.0.3",
 		"npm-auth-to-token": "^1.0.0",
 		"prettier": "^2.7.1",
