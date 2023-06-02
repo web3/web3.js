@@ -253,10 +253,12 @@ const transactionHash = receipt.transactionHash;
 
 -   `data` was removed as a property of `ContractOptions` type (#5915)
 
-## [Unreleased]
+## [4.0.1-rc.2]
 
 ### Added
 
 -   Added support for `getPastEvents` method to filter `allEvents` and specific event (#6010)
 -   Added `maxPriorityFeePerGas` and `maxFeePerGas` in `ContractOptions` type and updated function using it in utils (#6118)
 -   Added method's type autodetection by ABI param (#6137)
+
+## [Unreleased]
