@@ -46,6 +46,7 @@ const skipSection = (section: string, unreleasedSection: string[]): string[] => 
 	}
 	return unreleasedSection;
 };
+
 export const getRootGroupedUnreleasedEntries = (unreleasedSection: string[]) => {
 	const groupedUnreleasedEntries: GroupedUnreleasedEntries = {};
 
