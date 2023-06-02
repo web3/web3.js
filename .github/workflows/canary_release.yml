@@ -14,11 +14,7 @@ jobs:
         with:
           node-version: 16
           cache: yarn
-      - run: yarn install --ignore-scripts
-      - run: yarn prebuild
-      - run: yarn build:cjs      
-      - run: yarn build:esm
-      - run: yarn build:types
+      - run: yarn install
       - run: yarn publish:canary
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
