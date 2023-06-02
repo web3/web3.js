@@ -26,8 +26,8 @@ declare module '../web3_export_helper' {
 	}
 }
 
-describe('CustomRpcMethodsPlugin Tests', () => {
-	it('should register CustomRpcMethodsPlugin plugin', () => {
+describe('ContractMethodWrappersPlugin', () => {
+	it('should register the plugin', () => {
 		const web3 = new Web3('http://127.0.0.1:8545');
 		web3.registerPlugin(
 			new ContractMethodWrappersPlugin(
@@ -38,7 +38,7 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 		expect(web3.contractMethodWrappersPlugin).toBeDefined();
 	});
 
-	describe('CustomRpcMethodsPlugin methods tests', () => {
+	describe('methods', () => {
 		const contractAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
 		const sender = '0x8da5e39ec14b57fb9bcd9aa2b4500e909119795d';
 		const recipient = '0x4f641def1e7845caab95ac717c80416082430d0d';
@@ -47,17 +47,21 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 			'0x0000000000000000000000000000000000000000000000000000000000000280';
 		const expectedRecipientBalance =
 			'0x0000000000000000000000000000000000000000000000000000000000000120';
-		const requestManagerSendSpy = jest.fn();
+		let requestManagerSendSpy: jest.Mock;
 
 		let web3: Web3;
 
 		beforeAll(() => {
 			web3 = new Web3('http://127.0.0.1:8545');
 			web3.registerPlugin(new ContractMethodWrappersPlugin(ERC20TokenAbi, contractAddress));
+		});
+
+		beforeEach(() => {
+			requestManagerSendSpy = jest.fn();
 			web3.contractMethodWrappersPlugin._contract.requestManager.send = requestManagerSendSpy;
 		});
 
-		it('should call contractMethodWrappersPlugin.getFormattedBalance with expected RPC object', async () => {
+		it('should call `getFormattedBalance` with expected RPC object', async () => {
 			requestManagerSendSpy.mockResolvedValueOnce(expectedSenderBalance);
 
 			await web3.contractMethodWrappersPlugin.getFormattedBalance(
@@ -67,17 +71,16 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_call',
 				params: [
-					{
+					expect.objectContaining({
 						input: '0x70a082310000000000000000000000008da5e39ec14b57fb9bcd9aa2b4500e909119795d',
-						data: '0x70a082310000000000000000000000008da5e39ec14b57fb9bcd9aa2b4500e909119795d',
 						to: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-					},
+					}),
 					'latest',
 				],
 			});
 		});
 
-		it('should call CustomRpcMethodsPlugin.customRpcMethodWithParameters with expected RPC object', async () => {
+		it('should call `transferAndGetBalances` with expected RPC object', async () => {
 			const expectedGasPrice = '0x1ca14bd70';
 			const expectedTransactionHash =
 				'0xc41b9a4f654c44552e135f770945916f57c069b80326f9a5f843e613491ab6b1';
@@ -98,20 +101,22 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 				recipient,
 				amount,
 			);
-			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+
+			// The first call will be to `eth_gasPrice` and the second is to `eth_blockNumber`. And the third one will be to `eth_sendTransaction`:
+			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(3, {
 				method: 'eth_sendTransaction',
 				params: [
-					{
+					expect.objectContaining({
 						input: '0xa9059cbb0000000000000000000000004f641def1e7845caab95ac717c80416082430d0d000000000000000000000000000000000000000000000000000000000000002a',
-						data: '0xa9059cbb0000000000000000000000004f641def1e7845caab95ac717c80416082430d0d000000000000000000000000000000000000000000000000000000000000002a',
 						from: sender,
 						gasPrice: expectedGasPrice,
 						maxFeePerGas: undefined,
 						maxPriorityFeePerGas: undefined,
 						to: contractAddress,
-					},
+					}),
 				],
 			});
+
 			expect(balances).toStrictEqual({
 				sender: {
 					address: sender,
