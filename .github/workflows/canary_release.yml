@@ -18,6 +18,7 @@ jobs:
       - run: yarn prebuild
       - run: yarn build:cjs      
       - run: yarn build:esm
+      - run: yarn build:types
       - run: yarn publish:canary
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
