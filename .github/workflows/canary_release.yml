@@ -1,0 +1,22 @@
+name: 'Release Canary'
+on:
+  push:
+    branches:
+      - '4.x'
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn build:web
+      - run: yarn publish:canary
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
