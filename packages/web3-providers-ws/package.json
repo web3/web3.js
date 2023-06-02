@@ -1,6 +1,6 @@
 {
 	"name": "web3-providers-ws",
-	"version": "4.0.1-rc.1",
+	"version": "4.0.1-rc.2",
 	"description": "Websocket provider for Web3 4.x.x",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -63,9 +63,9 @@
 	},
 	"dependencies": {
 		"isomorphic-ws": "^5.0.0",
-		"web3-errors": "^1.0.0-rc.1",
-		"web3-types": "^1.0.0-rc.1",
-		"web3-utils": "^4.0.1-rc.1",
+		"web3-errors": "^1.0.0-rc.2",
+		"web3-types": "^1.0.0-rc.2",
+		"web3-utils": "^4.0.1-rc.2",
 		"ws": "^8.8.1"
 	}
 }
