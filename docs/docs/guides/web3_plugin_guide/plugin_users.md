@@ -1,9 +1,9 @@
 ---
-sidebar_position: 1
-sidebar_label: 'Plugin Users'
+sidebar_position: 0
+sidebar_label: 'For Plugin Users'
 ---
 
-# web3.js Plugin User's Guide
+# Plugin User Guide
 
 This guide intends to provide the necessary context for registering plugins with web3.js packages.
 

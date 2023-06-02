@@ -1,9 +1,9 @@
 ---
 sidebar_position: 4
-sidebar_label: web3 Tree Shaking Guide
+sidebar_label: Tree Shaking Guide
 ---
 
-# web3 Tree shaking Support Guide
+# Tree shaking Support Guide
 
 1. Use the `production` mode configuration option to enable various optimizations including minification and tree shaking. Set your webpack.config:
 

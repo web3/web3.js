@@ -23,6 +23,7 @@ import {
 	ENTRY_SECTION_HEADERS,
 	GroupedUnreleasedEntries,
 } from './types';
+// eslint-disable-next-line import/no-cycle
 import { getListOfPackageNames } from './helpers';
 
 export const getUnreleasedSection = (parsedChangelog: string[]) => {
@@ -33,11 +34,28 @@ export const getUnreleasedSection = (parsedChangelog: string[]) => {
 	return unreleasedSection;
 };
 
+const skipSection = (section: string, unreleasedSection: string[]): string[] => {
+	const index = unreleasedSection.indexOf(section);
+	if (index !== -1) {
+		const nextSectionIndex = unreleasedSection.findIndex(
+			(el, i) => el.startsWith('###') && i > index,
+		);
+		if (nextSectionIndex !== -1) {
+			unreleasedSection.splice(index, nextSectionIndex - index);
+		}
+	}
+	return unreleasedSection;
+};
+
 export const getRootGroupedUnreleasedEntries = (unreleasedSection: string[]) => {
 	const groupedUnreleasedEntries: GroupedUnreleasedEntries = {};
 
 	let lastPackageHeaderIndex = 0;
 	let lastEntryHeaderIndex = 0;
+	// skip '### Breaking Changes' section from unreleasedSection array
+	// eslint-disable-next-line no-param-reassign
+	unreleasedSection = skipSection('### Breaking Changes', unreleasedSection);
+
 	for (const [index, item] of unreleasedSection.entries()) {
 		// substring(4) removes "### " from entry headers (e.g. "### Changed" -> "Changed")
 		if (ENTRY_SECTION_HEADERS.includes(item.substring(4))) {

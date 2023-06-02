@@ -18,14 +18,14 @@ import { Web3Context } from 'web3-core';
 
 import { CustomRpcMethodsPlugin } from '../../src/custom_rpc_methods';
 
-describe('CustomRpcMethodsPlugin Tests', () => {
-	it('should register CustomRpcMethodsPlugin plugin', () => {
+describe('CustomRpcMethodsPlugin', () => {
+	it('should register the plugin', () => {
 		const web3Context = new Web3Context('http://127.0.0.1:8545');
 		web3Context.registerPlugin(new CustomRpcMethodsPlugin());
 		expect(web3Context.customRpcMethods).toBeDefined();
 	});
 
-	describe('CustomRpcMethodsPlugin methods tests', () => {
+	describe('methods', () => {
 		const requestManagerSendSpy = jest.fn();
 
 		let web3Context: Web3Context;
@@ -36,7 +36,7 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 			web3Context.requestManager.send = requestManagerSendSpy;
 		});
 
-		it('should call CustomRpcMethodsPlugin.customRpcMethod with expected RPC object', async () => {
+		it('should call `customRpcMethod` with expected RPC object', async () => {
 			await web3Context.customRpcMethods.customRpcMethod();
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'custom_rpc_method',
@@ -44,7 +44,7 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 			});
 		});
 
-		it('should call CustomRpcMethodsPlugin.customRpcMethodWithParameters with expected RPC object', async () => {
+		it('should call `customRpcMethodWithParameters` with expected RPC object', async () => {
 			const parameter1 = 'myString';
 			const parameter2 = 42;
 			await web3Context.customRpcMethods.customRpcMethodWithParameters(

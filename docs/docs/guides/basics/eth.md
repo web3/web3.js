@@ -1,6 +1,6 @@
 ---
-sidebar_position: 3
-sidebar_label: 'Using web3-eth package'
+sidebar_position: 2
+sidebar_label: 'Eth Package Usage Example'
 ---
 
 # Getting Started with `eth` Package
