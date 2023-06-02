@@ -14,6 +14,7 @@ jobs:
         with:
           node-version: 16
           cache: yarn
+          registry-url: 'https://registry.npmjs.org'
       - run: yarn install --frozen-lockfile
       - run: yarn build:web
       - run: yarn publish:canary
