@@ -65,7 +65,7 @@ const config = {
 	plugins: [
 		'@docusaurus/theme-live-codeblock',
 		[
-			'docusaurus-plugin-typedoc-api',
+			'@mpetrunic/docusaurus-plugin-typedoc-api',
 			{
 				projectRoot: join(__dirname, '..'),
 				// Monorepo
@@ -93,9 +93,10 @@ const config = {
 			({
 				docs: {
 					sidebarPath: require.resolve('./sidebars.js'),
+					routeBasePath: '/', // Serve the docs at the site's root
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
-					editUrl: 'https://github.com/ChainSafe/web3.js/tree/4.x/docs',
+					editUrl: 'https://github.com/web3/web3.js/tree/4.x/docs',
 				},
 				theme: {
 					customCss: require.resolve('./src/css/custom.css'),
@@ -108,29 +109,15 @@ const config = {
 		/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
 		({
 			navbar: {
-				title: 'web3.js',
+				title: 'Web3.js Docs',
 				logo: {
-					alt: 'web3.js',
 					src: 'img/web3js.svg',
-					href: 'https://web3js.org/',
 				},
 				items: [
 					{
 						to: '/',
-						activeBasePath: '/home',
-						label: 'Home',
-						position: 'left',
-					},
-					{
-						to: 'docs/guides/web3_migration_guide',
-						activeBasePath: 'docs/guides',
-						label: 'Guides',
-						position: 'left',
-					},
-					{
-						to: 'docs/tutorials/deploying_and_interacting_with_smart_contracts',
-						activeBasePath: 'docs/tutorials',
-						label: 'Tutorials',
+						activeBasePath: '/',
+						label: 'Documentation',
 						position: 'left',
 					},
 					{
@@ -139,14 +126,19 @@ const config = {
 						position: 'left',
 					},
 					{
-						to: 'docs/glossary/json_interface',
-						activeBasePath: 'docs/glossary/',
+						to: '/glossary/json_interface',
+						activeBasePath: '/glossary/',
 						label: 'Glossary',
 						position: 'left',
 					},
 					{
 						href: 'https://github.com/ChainSafe/web3.js/tree/4.x/',
 						label: 'GitHub',
+						position: 'right',
+					},
+					{
+						href: 'https://web3js.org/#/',
+						label: 'Web3js.org',
 						position: 'right',
 					},
 				],

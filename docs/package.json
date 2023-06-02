@@ -28,7 +28,7 @@
 	"devDependencies": {
 		"@docusaurus/module-type-aliases": "^2.4.1",
 		"@tsconfig/docusaurus": "^1.0.7",
-		"docusaurus-plugin-typedoc-api": "^2.4.1",
+		"@mpetrunic/docusaurus-plugin-typedoc-api": "^3.0.0",
 		"typescript": "^4.6.4"
 	},
 	"browserslist": {

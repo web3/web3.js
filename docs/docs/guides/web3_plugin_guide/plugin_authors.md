@@ -1,14 +1,14 @@
 ---
-sidebar_position: 0
-sidebar_label: 'Plugin Authors'
+sidebar_position: 1
+sidebar_label: 'For Plugin Developers'
 ---
 
-# web3.js Plugin Author's Guide
+# web3.js Plugin Developer Guide
 
 This guide intends to provide the necessary context for developing plugins for web3.js.
 
 :::caution
-To provide type safety and IntelliSense for your plugin users, please refer to the [Setting Up Module Augmentation](/docs/guides/web3_plugin_guide/plugin_authors#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
+To provide type safety and IntelliSense for your plugin users, please refer to the [Setting Up Module Augmentation](#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
 :::
 
 ## Plugin Dependencies

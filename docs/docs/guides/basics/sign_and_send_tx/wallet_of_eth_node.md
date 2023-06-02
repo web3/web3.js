@@ -1,13 +1,13 @@
 ---
-sidebar_position: 2
-sidebar_label: 'Wallet of Eth Node'
+sidebar_position: 1
+sidebar_label: 'Node Wallet'
 ---
 
-# Using Wallet of Eth Node
+# Using Node Wallet
 
-If Eth node have unlocked account in its wallet you can send transaction without need of signing locally in web3.js
+If Ethereum node has unlocked account in its wallet you can send transaction without need of signing locally in web3.js
 
-## Eth Transaction
+## Transaction
 
 ```ts
 // First step: initialize web3 instance

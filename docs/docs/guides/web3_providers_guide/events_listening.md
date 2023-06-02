@@ -1,6 +1,6 @@
 ---
-sidebar_position: 0
-sidebar_label: 'Providers Events Listening'
+sidebar_position: 1
+sidebar_label: 'Event Listening'
 ---
 
 # Providers Events Listening

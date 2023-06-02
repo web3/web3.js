@@ -4,7 +4,7 @@ sidebar_position: 2
 sidebar_label: web3.providers
 ---
 
-For full description about the providers, their priorities and their types, you can check [web3.js Providers Guide](/docs/guides/web3_providers_guide/).
+For full description about the providers, their priorities and their types, you can check [web3.js Providers Guide](../../web3_providers_guide/).
 
 ### Provider Options Changes
 

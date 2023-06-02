@@ -1,6 +1,6 @@
 ---
-sidebar_position: 3
-sidebar_label: 'web3 Plugins'
+sidebar_position: 6
+sidebar_label: 'Plugins'
 ---
 
 # web3.js Plugins Guide
