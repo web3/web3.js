@@ -82,8 +82,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Bug fix of `checkNetwork` in ENS (#5988)
 
-## [Unreleased]
+## [4.0.1-rc.2]
 
 ### Removed
 
 -   Removed non read-only methods (#6084)
+
+## [Unreleased]

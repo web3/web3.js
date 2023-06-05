@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-accounts",
-	"version": "4.0.1-rc.1",
+	"version": "4.0.1-rc.2",
 	"description": "Package for managing Ethereum accounts and signing",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -55,15 +55,15 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-providers-ipc": "^4.0.1-rc.1"
+		"web3-providers-ipc": "^4.0.1-rc.2"
 	},
 	"dependencies": {
 		"@ethereumjs/rlp": "^4.0.1",
 		"crc-32": "^1.2.2",
 		"ethereum-cryptography": "^2.0.0",
-		"web3-errors": "^1.0.0-rc.1",
-		"web3-types": "^1.0.0-rc.1",
-		"web3-utils": "^4.0.1-rc.1",
-		"web3-validator": "^1.0.0-rc.1"
+		"web3-errors": "^1.0.0-rc.2",
+		"web3-types": "^1.0.0-rc.2",
+		"web3-utils": "^4.0.1-rc.2",
+		"web3-validator": "^1.0.0-rc.2"
 	}
 }

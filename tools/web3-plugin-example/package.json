@@ -45,12 +45,12 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3": "^4.0.1-rc.1",
-		"web3-core": "^4.0.1-rc.1",
-		"web3-eth-abi": "^4.0.1-rc.1",
-		"web3-eth-contract": "^4.0.1-rc.1",
-		"web3-types": "^1.0.0-rc.1",
-		"web3-utils": "^4.0.1-rc.1"
+		"web3": "^4.0.1-rc.2",
+		"web3-core": "^4.0.1-rc.2",
+		"web3-eth-abi": "^4.0.1-rc.2",
+		"web3-eth-contract": "^4.0.1-rc.2",
+		"web3-types": "^1.0.0-rc.2",
+		"web3-utils": "^4.0.1-rc.2"
 	},
 	"peerDependencies": {
 		"web3-core": ">= 4.0.1-rc.1 < 5",

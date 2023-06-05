@@ -83,7 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Moved @ethereumjs/tx, @ethereumjs/common code to our source code (#5963)
 -   The method `signTransaction` returned by `privateKeyToAccount` is now accepting the type `Transaction` for its argument. (#5993)
 
-## [Unreleased]
+## [4.0.1-rc.2]
 
 ### Fixed
 
@@ -94,3 +94,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Replaced `Buffer` for `Uint8Array` (#6004)
 -   The methods `recover`, `encrypt`, `privateKeyToAddress` does not support type `Buffer` but supports type `Uint8Array` (#6004)
 -   The method `parseAndValidatePrivateKey` returns a type `Uint8Array` instead of type `Buffer` (#6004)
+
+## [Unreleased]
