@@ -45,6 +45,7 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
+		"util": "^0.12.5",
 		"ethereum-cryptography": "^2.0.0",
 		"is-my-json-valid": "^2.20.6",
 		"web3-errors": "^1.0.0-rc.2",
