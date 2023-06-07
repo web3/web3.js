@@ -1,6 +1,6 @@
 {
 	"name": "web3-validator",
-	"version": "1.0.0-rc.2",
+	"version": "1.0.0",
 	"description": "JSON-Schema compatible validator for web3",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -45,11 +45,11 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"util": "^0.12.5",
 		"ethereum-cryptography": "^2.0.0",
 		"is-my-json-valid": "^2.20.6",
-		"web3-errors": "^1.0.0-rc.2",
-		"web3-types": "^1.0.0-rc.2"
+		"util": "^0.12.5",
+		"web3-errors": "^1.0.0",
+		"web3-types": "^1.0.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",

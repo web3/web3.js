@@ -1,6 +1,6 @@
 {
 	"name": "web3-core",
-	"version": "4.0.1-rc.2",
+	"version": "4.0.1",
 	"description": "Web3 core tools for sub-packages. This is an internal package.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -42,16 +42,16 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"web3-errors": "^1.0.0-rc.2",
-		"web3-eth-iban": "^4.0.1-rc.2",
-		"web3-providers-http": "^4.0.1-rc.2",
-		"web3-providers-ws": "^4.0.1-rc.2",
-		"web3-types": "^1.0.0-rc.2",
-		"web3-utils": "^4.0.1-rc.2",
-		"web3-validator": "^1.0.0-rc.2"
+		"web3-errors": "^1.0.0",
+		"web3-eth-iban": "^4.0.1",
+		"web3-providers-http": "^4.0.1",
+		"web3-providers-ws": "^4.0.1",
+		"web3-types": "^1.0.0",
+		"web3-utils": "^4.0.1",
+		"web3-validator": "^1.0.0"
 	},
 	"optionalDependencies": {
-		"web3-providers-ipc": "^4.0.1-rc.2"
+		"web3-providers-ipc": "^4.0.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",

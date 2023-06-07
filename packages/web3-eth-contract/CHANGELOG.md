@@ -261,4 +261,15 @@ const transactionHash = receipt.transactionHash;
 -   Added `maxPriorityFeePerGas` and `maxFeePerGas` in `ContractOptions` type and updated function using it in utils (#6118)
 -   Added method's type autodetection by ABI param (#6137)
 
+## [4.0.1]
+
+Release Notes:
+
+Detailed List of change logs are mentioned under previous 4.x alpha and RC releases.
+
+Documentation:
+[Web3.js documentation](https://docs.web3js.org/)
+[Web3 API](https://docs.web3js.org/api)
+[Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
+
 ## [Unreleased]
