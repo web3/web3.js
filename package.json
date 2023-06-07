@@ -92,7 +92,7 @@
 		"prepare": "husky install",
 		"postinstall": "yarn build",
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix",
-		"publish:canary": "lerna publish --canary --dist-tag dev --preid dev --graph-type all --force-publish \"*\" --no-verify-access --yes"
+		"publish:canary": "lerna publish --canary --dist-tag dev --preid dev.$(git rev-parse --short HEAD) --exact --graph-type all --force-publish \"*\" --no-verify-access --yes"
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.12.0",
