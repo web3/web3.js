@@ -102,3 +102,7 @@ web3.currentProvider.disconnect();
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Added
+
+-   Exported `Web3Context`, `Web3PluginBase`, `Web3EthPluginBase` from `'web3-core'`, and `Web3Validator` from `'web3-validator'` (#6165)
