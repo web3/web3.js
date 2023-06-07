@@ -107,4 +107,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Nested Smart Contract error data is extracted at `Eip838ExecutionError` constructor and the nested error is set at `innerError` (#6045)
 
+## [1.0.0]
+
+Release Notes:
+
+Detailed List of change logs are mentioned under previous 1.x alpha and RC releases.
+
+Documentation:
+[Web3.js documentation](https://docs.web3js.org/)
+[Web3 API](https://docs.web3js.org/api)
+[Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
+
 ## [Unreleased]
