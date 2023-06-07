@@ -1,6 +1,6 @@
 {
 	"name": "web3-net",
-	"version": "4.0.1-rc.2",
+	"version": "4.0.1",
 	"description": "Web3 module to interact with the Ethereum nodes networking properties.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -56,9 +56,9 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"web3-core": "^4.0.1-rc.2",
-		"web3-rpc-methods": "^1.0.0-rc.2",
-		"web3-types": "^1.0.0-rc.2",
-		"web3-utils": "^4.0.1-rc.2"
+		"web3-core": "^4.0.1",
+		"web3-rpc-methods": "^1.0.0",
+		"web3-types": "^1.0.0",
+		"web3-utils": "^4.0.1"
 	}
 }

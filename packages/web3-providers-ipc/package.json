@@ -1,6 +1,6 @@
 {
 	"name": "web3-providers-ipc",
-	"version": "4.0.1-rc.2",
+	"version": "4.0.1",
 	"description": "IPC provider for Web3 4.x.x",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -56,8 +56,8 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"web3-errors": "^1.0.0-rc.2",
-		"web3-types": "^1.0.0-rc.2",
-		"web3-utils": "^4.0.1-rc.2"
+		"web3-errors": "^1.0.0",
+		"web3-types": "^1.0.0",
+		"web3-utils": "^4.0.1"
 	}
 }

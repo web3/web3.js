@@ -1556,4 +1556,40 @@ should use 4.0.1-alpha.0 for testing.
 
 -   `Web3ValidationErrorObject` type is now exported from `web3-types` package (#6102)
 
+## [4.0.1]
+
+Release Notes:
+
+Web3.js 4.0.1 is written in TypeScript and has many exciting features such as:
+Easy extensibility ( with web3 Plugins feature )
+In compliance with ETH EL Specification
+Dynamic Contract Typing
+Native typescript
+ESM CJS native builds
+85%+ test coverage
+Custom data formatting feature
+Reduced package size
+New packages ( web3-types, web3-errors, web3-validator, web3-rpc-methods )
+Validation functionality using schema
+
+Documentation:
+[Web3.js documentation](https://docs.web3js.org/)
+[Web3 API](https://docs.web3js.org/api)
+[Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
+[Plugin Developers](https://docs.web3js.org/guides/web3_plugin_guide/plugin_authors)
+[Plugin Users](https://docs.web3js.org/guides/web3_plugin_guide/plugin_users)
+
+Detailed List of changes are mentioned under:
+4.0.0-alpha.0
+4.0.1-alpha.1
+4.0.1-alpha.2
+4.0.1-alpha.3
+4.0.1-alpha.4
+4.0.1-alpha.5
+4.0.1-rc.0
+4.0.1-rc.1
+4.0.1-rc.2
+
+If there are any bugs, improvements, optimizations or any new feature proposal feel free to create github issue, or post a pull request for contributions.
+
 ## [Unreleased]
