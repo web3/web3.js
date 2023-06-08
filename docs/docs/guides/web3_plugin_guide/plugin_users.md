@@ -28,7 +28,7 @@ To add a plugin to an instance of a class sourced from web3.js' modules (such as
 For illustration purposes, let's assume a plugin developer has the following code for their plugin. Please note that this code should not be touched by the plugin user:
 
 ```typescript
-// code written by the plugin developer
+// code written by the plugin **developer**
 
 import { Web3PluginBase } from 'web3';
 
@@ -51,7 +51,7 @@ declare module 'web3' {
 Here is an example of how to register the `SamplePlugin` onto an instance of `Web3`:
 
 ```typescript
-// code written by the plugin user
+// code written by the plugin **user**
 
 import Web3 from 'web3';
 import SamplePlugin from 'web3-sample-plugin';

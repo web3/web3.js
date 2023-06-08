@@ -245,48 +245,56 @@ declare module 'web3' {
 1. By augmenting `Web3Context` (and, by extension, all the classes that extend it), your plugin's interface will show up in things like IntelliSense for **all** Web3 modules that extend `Web3Context`, even if your plugin isn't registered.
    This is something worth making your users aware of, as they'll only be able to use your plugin if they register it with a Web3 class instance using `.registerPlugin`.
 
-:::warning
+    :::warning
 
-The following represent what your plugin users would see, when they use the plugin `CustomRpcMethodsPlugin`, without calling `.registerPlugin`:
+    The following represent what your **plugin users** would see, when they use the plugin `CustomRpcMethodsPlugin`, without calling `.registerPlugin`:
 
-![web3 context augmentation](./assets/web3_context_augmentation.png 'Web3Context augmentation')
+    ![web3 context augmentation](./assets/web3_context_augmentation.png 'Web3Context augmentation')
 
-The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, regardless if the plugin user registered or did not register `CustomRpcMethodsPlugin`.
-But, the user who does not call `.registerPlugin`, before accessing your plugin, would face an error. And you need to make it clear for them that they need to call `.registerPlugin`, before they can access any plugin functionality.
+    The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, regardless if the plugin user registered or did not register `CustomRpcMethodsPlugin`.
+    But, the user who does not call `.registerPlugin`, before accessing your plugin, would face an error. And you need to make it clear for them that they need to call `.registerPlugin`, before they can access any plugin functionality.
 
-:::
+    :::
 
 2. The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends Web3Context` has the ability to add your plugin's additional functionality to its interface. So, by augmenting `Web3Context` to include your plugin's interface, you're essentially providing a blanket augmentation that adds your plugin's interface to **all** Web3 modules that extend `Web3Context` (i.e. `web3`, `web3-eth`, `web3-eth-contract`, etc.).
 
-3. The value of the `pluginNamespace`, that we used `customRpcMethods` for it in our sample code, **MUST** have the exact same name at 2 places: The first place is in the augmentation. And the second is the value of the public `pluginNamespace` inside your plugin class. So kindly notice using `customRpcMethods` in the next 2 snippets:
+3. The value of the `pluginNamespace`, that we used `customRpcMethods` for it in our sample code, **MUST** have the exact same name at 2 places: The first place is in the augmentation. And the second is the value of the public `pluginNamespace` inside your plugin class.
 
-Module Augmentation:
+    So, for example, kindly notice using `customRpcMethods` in the next 2 snippets:
 
-```typescript
-declare module 'web3' {
-	// Here is where you're adding your plugin inside Web3Context
-	interface Web3Context {
-		customRpcMethods: CustomRpcMethodsPlugin;
-	}
-}
-```
+    Module Augmentation:
 
-Your the plugin class:
+    ```typescript
+    // code written by the plugin **developer**
 
-```typescript
-export class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods';
+    declare module 'web3' {
+    	// Here is where you're adding your plugin inside Web3Context
+    	interface Web3Context {
+    		customRpcMethods: CustomRpcMethodsPlugin;
+    	}
+    }
+    ```
 
-	...
-}
-```
+    Your the plugin class:
 
-This is because `.registerPlugin` will use the `pluginNamespace` property provided by the plugin as the property name when it registers the plugin with the class instance you call `.registerPlugin` on:
+    ```typescript
+    // code written by the plugin **developer**
 
-```typescript
-const web3 = new Web3('http://127.0.0.1:8545');
-web3.registerPlugin(new CustomRpcMethodsPlugin());
-// Now customRpcMethods (i.e. the pluginNamespace) is available
-// on the instance of Web3
-web3.customRpcMethods;
-```
+    export class CustomRpcMethodsPlugin extends Web3PluginBase {
+    	public pluginNamespace = 'customRpcMethods';
+
+    	...
+    }
+    ```
+
+    This is because `.registerPlugin` will use the `pluginNamespace` property provided by the plugin as the property name when it registers the plugin with the class instance that the **plugin user** will call `.registerPlugin` on:
+
+    ```typescript
+    // code written by the plugin **user**
+
+    const web3 = new Web3('http://127.0.0.1:8545');
+    web3.registerPlugin(new CustomRpcMethodsPlugin());
+    // Now customRpcMethods (i.e. the pluginNamespace) is available
+    // on the instance of Web3
+    web3.customRpcMethods;
+    ```
