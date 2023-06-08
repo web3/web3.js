@@ -764,23 +764,6 @@ export class Contract<Abi extends ContractAbi>
 		}
 
 		return decodedLogs;
-
-		// return filterKeys.length > 0
-		// 	? decodedLogs.filter(log =>
-		// 			typeof log === 'string'
-		// 				? true
-		// 				: filterKeys.every((k: string) =>
-		// 						Array.isArray(filter[k])
-		// 							? (filter[k] as Numbers[]).some(
-		// 									(v: Numbers) =>
-		// 										String(log.returnValues[k]).toUpperCase() ===
-		// 										String(v).toUpperCase(),
-		// 							  )
-		// 							: String(log.returnValues[k]).toUpperCase() ===
-		// 							  String(filter[k]).toUpperCase(),
-		// 				  ),
-		// 	  )
-		// 	: decodedLogs;
 	}
 
 	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
