@@ -210,7 +210,9 @@ public link(parentContext: Web3Context) {
 
 ## Setting Up Module Augmentation
 
-In order to provide type safety and IntelliSense for your plugin when it's registered by the user, you must [augment](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) the `Web3Context` class that is inside `web3` module. In simpler terms, you will be making TypeScript aware that you are modifying the `Web3Context` class, and any class that inherit from, in order to make your plugin functionality accessible inside a namespace (i.e. your plugin's added methods, properties, etc.). A good tutorial that further explains the topic can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
+To ensure type safety and enable IntelliSense for your plugin (which still needs to be registered by the user), you must augment the `Web3Context` class inside the `web3` module. In simpler terms, this is to modify the `Web3Context` class, and any inheriting classes, to make your plugin's functionality accessible from within. As a result, your plugin object will be accessible within a namespace of your choice, which will be available within any `Web3Context` object.
+
+For a general understanding of Module Augmentation, you can refer to [this tutorial](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
 
 ### Module Augmentation
 

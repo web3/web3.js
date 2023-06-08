@@ -23,11 +23,36 @@ Unless otherwise mentioned by the plugin author, installing a plugin should be a
 
 ## Registering the Plugin
 
-The `.registerPlugin` method is what you're going to be using to add a plugin to an instance of a class sourced from web3.js' modules (i.e. `Web3` or `Web3Eth`). This method only exists on classes that extend `Web3Context`, so it may not be available on every class you import from a Web3.js package.
+To add a plugin to an instance of a class sourced from web3.js' modules (such as `Web3` or `Web3Eth`), you will use the `.registerPlugin` method. It's important to note that this method is only available on classes that extend `Web3Context`, so it may not be available on every class you import from a Web3.js package.
 
-The following is an example of registering a plugin named `SamplePlugin` onto an instance of `Web3`:
+For illustration purposes, let's assume a plugin developer has the following code for their plugin. Please note that this code should not be touched by the plugin user:
 
 ```typescript
+// code written by the plugin developer
+
+import { Web3PluginBase } from 'web3';
+
+export class SamplePlugin extends Web3PluginBase {
+	public pluginNamespace = 'samplePlugin';
+
+	public sampleMethod() {
+		return 'simpleValue';
+	}
+}
+
+// Module Augmentation
+declare module 'web3' {
+	interface Web3Context {
+		samplePlugin: SamplePlugin;
+	}
+}
+```
+
+Here is an example of how to register the `SamplePlugin` onto an instance of `Web3`:
+
+```typescript
+// code written by the plugin user
+
 import Web3 from 'web3';
 import SamplePlugin from 'web3-sample-plugin';
 
