@@ -1557,3 +1557,13 @@ should use 4.0.1-alpha.0 for testing.
 -   `Web3ValidationErrorObject` type is now exported from `web3-types` package (#6102)
 
 ## [Unreleased]
+
+### Fixed
+
+#### web3-eth-abi
+
+-   Support for "decoding" indexed string event arguments (returns the keccak256 hash of the string value instead of the actual string value) (#6167)
+
+#### web3-eth-contract
+
+-   Event filtering using non-indexed and indexed string event arguments (#6167)

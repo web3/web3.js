@@ -102,3 +102,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Nested Smart Contract error data hex string is decoded when the error contains the data as object (when the data hex string is inside data.originalError.data or data.data) (#6045)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Support for "decoding" indexed string event arguments (returns the keccak256 hash of the string value instead of the actual string value) (#6167)

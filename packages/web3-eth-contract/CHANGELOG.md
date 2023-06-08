@@ -262,3 +262,7 @@ const transactionHash = receipt.transactionHash;
 -   Added method's type autodetection by ABI param (#6137)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Event filtering using non-indexed and indexed string event arguments (#6167)
