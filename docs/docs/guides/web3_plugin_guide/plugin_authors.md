@@ -13,14 +13,18 @@ To provide type safety and IntelliSense for your plugin users, please refer to t
 
 ## Plugin Dependencies
 
-At the minimum, your plugin should depend on the `4.x` version of `web3`. This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/):
+At the minimum, your plugin should depend `web3` package version `4.0.2`. This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/).
+
+:::important
+If the version `web3@4.0.2`, was not available yet. You can use the version `web3@4.0.2-dev.af57eae.0`.
+:::
 
 ```json
 {
 	"name": "web3-plugin-custom-rpc-methods",
 	"version": "0.1.0",
 	"peerDependencies": {
-		"web3": ">= 4.0.1 < 5"
+		"web3": ">= 4.0.2 < 5"
 	}
 }
 ```
@@ -298,3 +302,7 @@ declare module 'web3' {
     // on the instance of Web3
     web3.customRpcMethods;
     ```
+
+## Complete Example
+
+You may find it helpful to reference a complete example for developing and using a web3 plugin. The [Web3.js Chainlink Plugin](https://github.com/ChainSafe/web3.js-plugin-chainlink/) repository provides an excellent example which you can check out.

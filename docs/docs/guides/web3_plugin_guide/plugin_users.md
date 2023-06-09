@@ -9,14 +9,14 @@ This guide intends to provide the necessary context for registering plugins with
 
 ## Installing the Plugin
 
-Unless otherwise mentioned by the plugin author, installing a plugin should be as simple as `yarn add web3-sample-plugin`. This should add the plugin as a dependency within your `package.json` and the plugin should be available to import within your code.
+Unless otherwise mentioned by the plugin author, installing a plugin should be as simple as `yarn add web3-plugin-example`. This should add the plugin as a dependency within your `package.json` and the plugin should be available to import within your code.
 
 ```json
 # package.json
 {
 	...
 	"dependencies": {
-		"web3-sample-plugin": "0.1.0"
+		"web3-plugin-example": "0.1.0"
 	}
 }
 ```
@@ -32,8 +32,8 @@ For illustration purposes, let's assume a plugin developer has the following cod
 
 import { Web3PluginBase } from 'web3';
 
-export class SamplePlugin extends Web3PluginBase {
-	public pluginNamespace = 'samplePlugin';
+export class PluginExample extends Web3PluginBase {
+	public pluginNamespace = 'pluginExample';
 
 	public sampleMethod() {
 		return 'simpleValue';
@@ -43,21 +43,21 @@ export class SamplePlugin extends Web3PluginBase {
 // Module Augmentation
 declare module 'web3' {
 	interface Web3Context {
-		samplePlugin: SamplePlugin;
+		pluginExample: PluginExample;
 	}
 }
 ```
 
-Here is an example of how to register the `SamplePlugin` onto an instance of `Web3`:
+Here is an example of how to register the `PluginExample` onto an instance of `Web3`:
 
 ```typescript
 // code written by the plugin **user**
 
 import Web3 from 'web3';
-import SamplePlugin from 'web3-sample-plugin';
+import PluginExample from 'web3-plugin-example';
 
 const web3 = new Web3('http://127.0.0.1:8545');
-web3.registerPlugin(new SamplePlugin(any_parameters, if_needed));
+web3.registerPlugin(new PluginExample(any_parameters, if_needed));
 
-web3.samplePlugin.sampleMethod();
+web3.pluginExample.sampleMethod();
 ```
