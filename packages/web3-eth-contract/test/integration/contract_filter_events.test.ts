@@ -183,6 +183,9 @@ describe('contract getPastEvent filter', () => {
 			await contractDeployed.methods
 				.firesMultiValueIndexedEvent('str3', 3, true)
 				.send(sendOptions);
+			await contractDeployed.methods
+				.firesMultiValueIndexedEventWithStringIndexed('str4', 4, true)
+				.send(sendOptions);
 		});
 
 		it('should filter one event by address with event name and filter param', async () => {
@@ -237,6 +240,46 @@ describe('contract getPastEvent filter', () => {
 			expect(event3).toBeDefined();
 			expect(event1?.returnValues?.val).toBe(toBigInt(1));
 			expect(event3?.returnValues?.val).toBe(toBigInt(3));
+		});
+
+		it('should filter events using non-indexed string', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents(
+				'MultiValueIndexedEvent',
+				{
+					fromBlock: 'earliest',
+					filter: {
+						str: 'str2',
+					},
+				},
+			)) as unknown as EventLog[];
+			expect(res).toHaveLength(1);
+
+			const event = res[0];
+			expect(event).toBeDefined();
+			expect(event.returnValues.str).toBe('str2');
+			expect(event.returnValues.val).toBe(BigInt(2));
+			expect(event.returnValues.flag).toBeFalsy();
+		});
+
+		it('should filter events using indexed string', async () => {
+			const res: EventLog[] = (await contractDeployed.getPastEvents(
+				'MultiValueIndexedEventWithStringIndexed',
+				{
+					fromBlock: 'earliest',
+					filter: {
+						str: 'str4',
+					},
+				},
+			)) as unknown as EventLog[];
+			expect(res).toHaveLength(1);
+
+			const event = res[0];
+			expect(event).toBeDefined();
+			expect(event.returnValues.str).toBe(
+				'0x3f6d5d7b72c0059e2ecac56fd4adeefb2cff23aa41d13170f78ea6bf81e6e0ca',
+			);
+			expect(event.returnValues.val).toBe(BigInt(4));
+			expect(event.returnValues.flag).toBeTruthy();
 		});
 	});
 });

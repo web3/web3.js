@@ -273,3 +273,7 @@ Documentation:
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Event filtering using non-indexed and indexed string event arguments (#6167)
