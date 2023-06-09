@@ -1,6 +1,6 @@
 {
 	"name": "web3",
-	"version": "4.0.1",
+	"version": "4.0.2",
 	"description": "Ethereum JavaScript API",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -77,24 +77,24 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-providers-ipc": "^4.0.1"
+		"web3-providers-ipc": "^4.0.2"
 	},
 	"dependencies": {
-		"web3-core": "^4.0.1",
-		"web3-errors": "^1.0.0",
-		"web3-eth": "^4.0.1",
-		"web3-eth-abi": "^4.0.1",
-		"web3-eth-accounts": "^4.0.1",
-		"web3-eth-contract": "^4.0.1",
-		"web3-eth-ens": "^4.0.1",
-		"web3-eth-iban": "^4.0.1",
-		"web3-eth-personal": "^4.0.1",
-		"web3-net": "^4.0.1",
-		"web3-providers-http": "^4.0.1",
-		"web3-providers-ws": "^4.0.1",
-		"web3-rpc-methods": "^1.0.0",
-		"web3-types": "^1.0.0",
-		"web3-utils": "^4.0.1",
-		"web3-validator": "^1.0.0"
+		"web3-core": "^4.0.2",
+		"web3-errors": "^1.0.1",
+		"web3-eth": "^4.0.2",
+		"web3-eth-abi": "^4.0.2",
+		"web3-eth-accounts": "^4.0.2",
+		"web3-eth-contract": "^4.0.2",
+		"web3-eth-ens": "^4.0.2",
+		"web3-eth-iban": "^4.0.2",
+		"web3-eth-personal": "^4.0.2",
+		"web3-net": "^4.0.2",
+		"web3-providers-http": "^4.0.2",
+		"web3-providers-ws": "^4.0.2",
+		"web3-rpc-methods": "^1.0.1",
+		"web3-types": "^1.0.1",
+		"web3-utils": "^4.0.2",
+		"web3-validator": "^1.0.1"
 	}
 }
