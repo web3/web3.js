@@ -64,12 +64,10 @@ describe('web3-validator', () => {
 				expect(validator.validate(['uint'], [-1], { silent: true })).toEqual([
 					{
 						instancePath: '/0',
-						keyword: 'data["0"]',
-						// keyword: 'eth',
+						keyword: 'data[0]',
 						message: 'must pass "uint" validation',
 						params: { value: -1 },
-						schemaPath: '#',
-						// schemaPath: '#/items/0/eth',
+						schemaPath: '#0',
 					},
 				]);
 			});

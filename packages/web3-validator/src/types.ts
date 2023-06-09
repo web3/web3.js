@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter } from 'web3-types';
-import { ValidationError } from 'is-my-json-valid';
+import { ValidationError } from 'jsonschema';
 
 export type ValidInputTypes = Uint8Array | bigint | string | number | boolean;
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
@@ -145,8 +145,5 @@ export interface Validate {
 	(value: Json): boolean;
 	errors?: ValidationError[];
 }
-export type RawValidationError = ValidationError & {
-	schemaPath: string[];
-};
 
 export type JsonSchema = Schema;
