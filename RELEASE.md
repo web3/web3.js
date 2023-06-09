@@ -38,7 +38,7 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 4. Bump packages version numbers using `lerna version --no-push --no-private --no-git-tag-version` . This will update package versions and also run lifecycle scripts.
     - It will prompt for new version , modify package metadata and run life cycle scripts (in our case `version`), for bootstrapping lerna will use underlying yarn.
 5. Update the root and each package's `CHANGELOG.md`: Replace the `## [Unreleased]` header with new package version, and move `## [Unreleased]` header below listed changes
-    - For root `CHANGELOG.md` copy over all the listed changes for each package
+    - For root `CHANGELOG.md` run `yarn changelog sync` to copy over all the listed changes from each package
 6. Run `yarn build:web` after lerna updates version and builds lib . This will bundle minified builds.
 7. Commit the version bump changes and builds in release branch created in step 2
 8. `git tag bumped-version`: Tag the commit with bumped version having prefix `v` , e.g. `git tag v4.0.1-alpha.0`
