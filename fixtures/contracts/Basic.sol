@@ -10,6 +10,7 @@ contract Basic {
 	event StringEvent(string str);
 	event MultiValueEvent(string str, uint256 val, bool flag);
 	event MultiValueIndexedEvent(string str, uint256 indexed val, bool indexed flag);
+	event MultiValueIndexedEventWithStringIndexed(string indexed str, uint256 indexed val, bool indexed flag);
 
 	constructor(uint256 _val, string memory _stringValue) {
 		intValue = _val;
@@ -60,5 +61,9 @@ contract Basic {
 
 	function firesStringEvent(string memory _str) public {
 		emit StringEvent(_str);
+	}
+
+	function firesMultiValueIndexedEventWithStringIndexed(string calldata str, uint256 val, bool flag) public {
+		emit MultiValueIndexedEventWithStringIndexed(str, val, flag);
 	}
 }

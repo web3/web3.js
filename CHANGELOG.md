@@ -1593,3 +1593,13 @@ Detailed List of changes are mentioned under:
 If there are any bugs, improvements, optimizations or any new feature proposal feel free to create github issue, or post a pull request for contributions.
 
 ## [Unreleased]
+
+### Fixed
+
+#### web3-eth-abi
+
+-   Support for "decoding" indexed string event arguments (returns the keccak256 hash of the string value instead of the actual string value) (#6167)
+
+#### web3-eth-contract
+
+-   Event filtering using non-indexed and indexed string event arguments (#6167)

@@ -20,6 +20,9 @@ import { decodeParameter, decodeParametersWith } from './parameters_api.js';
 
 const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufixed'];
 
+const _decodeParameter = (inputType: string, clonedTopic: string) =>
+	inputType === 'string' ? clonedTopic : decodeParameter(inputType, clonedTopic);
+
 /**
  * Decodes ABI-encoded log data and indexed topic data.
  * @param inputs - A {@link AbiParameter} input array. See the [Solidity documentation](https://docs.soliditylang.org/en/develop/types.html) for a list of types.
@@ -90,7 +93,7 @@ export const decodeLog = <ReturnType extends DecodedParams>(
 
 	const decodedIndexedInputs = Object.values(indexedInputs).map((input, index) =>
 		STATIC_TYPES.some(s => input.type.startsWith(s))
-			? decodeParameter(input.type, clonedTopics[index + offset])
+			? _decodeParameter(input.type, clonedTopics[index + offset])
 			: clonedTopics[index + offset],
 	);
 

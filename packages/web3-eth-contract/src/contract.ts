@@ -71,7 +71,7 @@ import {
 	Numbers,
 	Web3ValidationErrorObject,
 } from 'web3-types';
-import { format, isDataFormat, toChecksumAddress } from 'web3-utils';
+import { format, isDataFormat, keccak256, toChecksumAddress } from 'web3-utils';
 import {
 	isNullish,
 	validator,
@@ -735,22 +735,35 @@ export class Contract<Abi extends ContractAbi>
 
 		const filter = options?.filter ?? {};
 		const filterKeys = Object.keys(filter);
-		return eventName === 'allEvents' && filterKeys.length > 0
-			? decodedLogs.filter(log =>
-					typeof log === 'string'
-						? true
-						: filterKeys.every((k: string) =>
-								Array.isArray(filter[k])
-									? (filter[k] as Numbers[]).some(
-											(v: Numbers) =>
-												String(log.returnValues[k]).toUpperCase() ===
-												String(v).toUpperCase(),
-									  )
-									: String(log.returnValues[k]).toUpperCase() ===
-									  String(filter[k]).toUpperCase(),
-						  ),
-			  )
-			: decodedLogs;
+
+		if (filterKeys.length > 0) {
+			return decodedLogs.filter(log => {
+				if (typeof log === 'string') return true;
+
+				return filterKeys.every((key: string) => {
+					if (Array.isArray(filter[key])) {
+						return (filter[key] as Numbers[]).some(
+							(v: Numbers) =>
+								String(log.returnValues[key]).toUpperCase() ===
+								String(v).toUpperCase(),
+						);
+					}
+
+					const inputAbi = abi.inputs?.filter(input => input.name === key)[0];
+					if (inputAbi?.indexed && inputAbi.type === 'string') {
+						const hashedIndexedString = keccak256(filter[key] as string);
+						if (hashedIndexedString === String(log.returnValues[key])) return true;
+					}
+
+					return (
+						String(log.returnValues[key]).toUpperCase() ===
+						String(filter[key]).toUpperCase()
+					);
+				});
+			});
+		}
+
+		return decodedLogs;
 	}
 
 	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {

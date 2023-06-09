@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { format, isNullish } from 'web3-utils';
+import { format, isNullish, keccak256 } from 'web3-utils';
 
 import {
 	AbiConstructorFragment,
@@ -101,6 +101,8 @@ export const encodeEventABI = (
 				// TODO: deal properly with components
 				if (Array.isArray(value)) {
 					opts.topics.push(value.map(v => encodeParameter(input.type, v)));
+				} else if (input.type === 'string') {
+					opts.topics.push(keccak256(value as string));
 				} else {
 					opts.topics.push(encodeParameter(input.type, value));
 				}
