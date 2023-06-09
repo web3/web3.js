@@ -249,16 +249,16 @@ declare module 'web3' {
 1. By augmenting `Web3Context` (and, by extension, all the classes that extend it), your plugin's interface will show up in things like IntelliSense for **all** Web3 modules that extend `Web3Context`, even if your plugin isn't registered.
    This is something worth making your users aware of, as they'll only be able to use your plugin if they register it with a Web3 class instance using `.registerPlugin`.
 
-    :::warning
+:::danger
 
-    The following represent what your **plugin users** would see, when they use the plugin `CustomRpcMethodsPlugin`, without calling `.registerPlugin`:
+The following represent what your **plugin users** would see, when they use the plugin `CustomRpcMethodsPlugin`, without calling `.registerPlugin`:
 
-    ![web3 context augmentation](./assets/web3_context_augmentation.png 'Web3Context augmentation')
+![web3 context augmentation](./assets/web3_context_augmentation.png 'Web3Context augmentation')
 
-    The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, regardless if the plugin user registered or did not register `CustomRpcMethodsPlugin`.
-    But, the user who does not call `.registerPlugin`, before accessing your plugin, would face an error. And you need to make it clear for them that they need to call `.registerPlugin`, before they can access any plugin functionality.
+The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, regardless if the plugin user registered or did not register `CustomRpcMethodsPlugin`.
+But, the user who does not call `.registerPlugin`, before accessing your plugin, would face an error. And you need to make it clear for them that they need to call `.registerPlugin`, before they can access any plugin functionality.
 
-    :::
+:::
 
 2. The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends Web3Context` has the ability to add your plugin's additional functionality to its interface. So, by augmenting `Web3Context` to include your plugin's interface, you're essentially providing a blanket augmentation that adds your plugin's interface to **all** Web3 modules that extend `Web3Context` (i.e. `web3`, `web3-eth`, `web3-eth-contract`, etc.).
 
