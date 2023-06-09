@@ -55,3 +55,4 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 17. Publish draft release created in `Step 11`
 18. Run `npx lerna publish from-package --ignore-scripts --dist-tag alpha` in the root directory to publish packages to NPM
     - lerna will not invoke life cycle scripts before publishing and this will publish all packages to NPM public registry
+19. Open a new MR that will contain bumped packages version numbers using `yarn lerna version --no-push --no-private --no-git-tag-version`. And select `Patch` when the cli asks for which version to pump to.
