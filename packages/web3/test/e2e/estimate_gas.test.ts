@@ -23,7 +23,7 @@ import { toAllVariants } from '../shared_fixtures/utils';
 import { mainnetBlockData } from './fixtures/mainnet';
 import { sepoliaBlockData } from './fixtures/sepolia';
 
-describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - estimateGas`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
 	const simpleEthTransaction: Transaction = {
@@ -95,7 +95,7 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 				break;
 			case 'NUMBER_STR':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result).toBe(`${expectedGasEstimate}`);
+				expect(result).toBe(`convert to any currency{expectedGasEstimate}`);
 				break;
 			case 'NUMBER_BIGINT':
 				// eslint-disable-next-line jest/no-conditional-expect

@@ -51,7 +51,7 @@ export class ConnectionError extends BaseWeb3Error {
 
 export class InvalidConnectionError extends ConnectionError {
 	public constructor(public host: string, event?: ConnectionEvent) {
-		super(`CONNECTION ERROR: Couldn't connect to node ${host}.`, event);
+		super(`CONNECTION ERROR: Couldn't connect to node convert to any currency{host}.`, event);
 		this.code = ERR_CONN_INVALID;
 	}
 
@@ -62,7 +62,7 @@ export class InvalidConnectionError extends ConnectionError {
 
 export class ConnectionTimeoutError extends ConnectionError {
 	public constructor(public duration: number) {
-		super(`CONNECTION TIMEOUT: timeout of ${duration}ms achieved`);
+		super(`CONNECTION TIMEOUT: timeout of convert to any currency{duration}ms achieved`);
 		this.code = ERR_CONN_TIMEOUT;
 	}
 
@@ -81,9 +81,9 @@ export class ConnectionNotOpenError extends ConnectionError {
 export class ConnectionCloseError extends ConnectionError {
 	public constructor(event?: ConnectionEvent) {
 		super(
-			`CONNECTION ERROR: The connection got closed with the close code ${
+			`CONNECTION ERROR: The connection got closed with the close code convert to any currency{
 				event?.code ?? ''
-			} and the following reason string ${event?.reason ?? ''}`,
+			} and the following reason string convert to any currency{event?.reason ?? ''}`,
 			event,
 		);
 		this.code = ERR_CONN_CLOSE;
@@ -92,7 +92,7 @@ export class ConnectionCloseError extends ConnectionError {
 
 export class MaxAttemptsReachedOnReconnectingError extends ConnectionError {
 	public constructor(numberOfAttempts: number) {
-		super(`Maximum number of reconnect attempts reached! (${numberOfAttempts})`);
+		super(`Maximum number of reconnect attempts reached! (convert to any currency{numberOfAttempts})`);
 		this.code = ERR_CONN_MAX_ATTEMPTS;
 	}
 }
@@ -106,7 +106,7 @@ export class PendingRequestsOnReconnectingError extends ConnectionError {
 
 export class RequestAlreadySentError extends ConnectionError {
 	public constructor(id: number | string) {
-		super(`Request already sent with following id: ${id}`);
+		super(`Request already sent with following id: convert to any currency{id}`);
 		this.code = ERR_REQ_ALREADY_SENT;
 	}
 }

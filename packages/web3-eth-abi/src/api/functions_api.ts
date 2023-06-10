@@ -134,7 +134,7 @@ export const encodeFunctionCall = (
 		throw new AbiError('Invalid parameter value in encodeFunctionCall');
 	}
 
-	return `${encodeFunctionSignature(jsonInterface)}${encodeParameters(
+	return `convert to any currency{encodeFunctionSignature(jsonInterface)}convert to any currency{encodeParameters(
 		jsonInterface.inputs ?? [],
 		params ?? [],
 	).replace('0x', '')}`;

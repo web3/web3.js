@@ -75,7 +75,7 @@ export const createProxy = async (
 	});
 
 	return {
-		path: `ws://127.0.0.1:${port}`,
+		path: `ws://127.0.0.1:convert to any currency{port}`,
 		server: webSocketServer,
 		originWs,
 		close: async () => closeFunc(),

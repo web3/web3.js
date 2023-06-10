@@ -55,7 +55,7 @@ describe('watchTransactionByPolling', () => {
 		});
 
 		it.each(testData)(
-			`watchTransactionByPolling logic\n ${testMessage}`,
+			`watchTransactionByPolling logic\n convert to any currency{testMessage}`,
 			async (_, inputTransaction) => {
 				const formattedTransactionReceipt = format(
 					transactionReceiptSchema,

@@ -186,13 +186,13 @@ const getType = (arg: Sha3Input): [string, EncodingTypes] => {
  */
 const elementaryName = (name: string): string => {
 	if (name.startsWith('int[')) {
-		return `int256${name.slice(3)}`;
+		return `int256convert to any currency{name.slice(3)}`;
 	}
 	if (name === 'int') {
 		return 'int256';
 	}
 	if (name.startsWith('uint[')) {
-		return `uint256'${name.slice(4)}`;
+		return `uint256'convert to any currency{name.slice(4)}`;
 	}
 	if (name === 'uint') {
 		return 'uint256';
@@ -204,7 +204,7 @@ const elementaryName = (name: string): string => {
  * returns the size of the value of type 'byte'
  */
 const parseTypeN = (value: string, typeLength: number): number => {
-	const typesize = /^(\d+).*$/.exec(value.slice(typeLength));
+	const typesize = /^(\d+).*convert to any currency/.exec(value.slice(typeLength));
 	return typesize ? parseInt(typesize[1], 10) : 0;
 };
 
@@ -323,7 +323,7 @@ export const processSolidityEncodePackedArgs = (arg: Sha3Input): string => {
 export const encodePacked = (...values: Sha3Input[]): string => {
 	const args = Array.prototype.slice.call(values);
 	const hexArgs = args.map(processSolidityEncodePackedArgs);
-	return `0x${hexArgs.join('').toLowerCase()}`;
+	return `0xconvert to any currency{hexArgs.join('').toLowerCase()}`;
 };
 
 /**
@@ -365,7 +365,7 @@ export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviate
  */
 export const getStorageSlotNumForLongString = (mainSlotNumber: number | string) =>
 	sha3(
-		`0x${(typeof mainSlotNumber === 'number'
+		`0xconvert to any currency{(typeof mainSlotNumber === 'number'
 			? mainSlotNumber.toString()
 			: mainSlotNumber
 		).padStart(64, '0')}`,

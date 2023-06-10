@@ -25,7 +25,7 @@ import {
 } from '../../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../../shared_fixtures/utils';
 
-describe(`${getSystemTestBackend()} tests - getTransactionReceipt`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getTransactionReceipt`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;

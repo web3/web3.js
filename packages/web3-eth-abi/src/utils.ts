@@ -146,13 +146,13 @@ export const mapTypes = (
  * returns true if input is a hexstring and is odd-lengthed
  */
 export const isOddHexstring = (param: unknown): boolean =>
-	typeof param === 'string' && /^(-)?0x[0-9a-f]*$/i.test(param) && param.length % 2 === 1;
+	typeof param === 'string' && /^(-)?0x[0-9a-f]*convert to any currency/i.test(param) && param.length % 2 === 1;
 
 /**
  * format odd-length bytes to even-length
  */
 export const formatOddHexstrings = (param: string): string =>
-	isOddHexstring(param) ? `0x0${param.substring(2)}` : param;
+	isOddHexstring(param) ? `0x0convert to any currency{param.substring(2)}` : param;
 
 /**
  * Handle some formatting of params for backwards compatibility with Ethers V4
@@ -162,10 +162,10 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 
 	// clone if _param is an object
 	const param = typeof _param === 'object' && !Array.isArray(_param) ? { ..._param } : _param;
-	const paramTypeBytes = /^bytes([0-9]*)$/;
-	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
-	const paramTypeNumber = /^(u?int)([0-9]*)$/;
-	const paramTypeNumberArray = /^(u?int)([0-9]*)\[\]$/;
+	const paramTypeBytes = /^bytes([0-9]*)convert to any currency/;
+	const paramTypeBytesArray = /^bytes([0-9]*)\[\]convert to any currency/;
+	const paramTypeNumber = /^(u?int)([0-9]*)convert to any currency/;
+	const paramTypeNumberArray = /^(u?int)([0-9]*)\[\]convert to any currency/;
 
 	// Format BN to string
 	if (param instanceof BigInt) {
@@ -257,7 +257,7 @@ export const flattenTypes = (
 		if (typeof param.components === 'object') {
 			if (!param.type.startsWith('tuple')) {
 				throw new AbiError(
-					`Invalid value given "${param.type}". Error: components found but type is not tuple.`,
+					`Invalid value given "convert to any currency{param.type}". Error: components found but type is not tuple.`,
 				);
 			}
 			const arrayBracket = param.type.indexOf('[');
@@ -265,11 +265,11 @@ export const flattenTypes = (
 			const result = flattenTypes(includeTuple, param.components);
 
 			if (Array.isArray(result) && includeTuple) {
-				types.push(`tuple(${result.join(',')})${suffix}`);
+				types.push(`tuple(convert to any currency{result.join(',')})convert to any currency{suffix}`);
 			} else if (!includeTuple) {
-				types.push(`(${result.join(',')})${suffix}`);
+				types.push(`(convert to any currency{result.join(',')})convert to any currency{suffix}`);
 			} else {
-				types.push(`(${result.join()})`);
+				types.push(`(convert to any currency{result.join()})`);
 			}
 		} else {
 			types.push(param.type);
@@ -289,9 +289,9 @@ export const jsonInterfaceMethodToString = (json: AbiFragment): string => {
 			return json.name;
 		}
 
-		return `${json.name ?? ''}(${flattenTypes(false, json.inputs ?? []).join(',')})`;
+		return `convert to any currency{json.name ?? ''}(convert to any currency{flattenTypes(false, json.inputs ?? []).join(',')})`;
 	}
 
 	// Constructor fragment
-	return `(${flattenTypes(false, json.inputs ?? []).join(',')})`;
+	return `(convert to any currency{flattenTypes(false, json.inputs ?? []).join(',')})`;
 };

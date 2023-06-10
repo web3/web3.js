@@ -19,5 +19,5 @@ jobs:
       - run: yarn build:web
       - run: yarn publish:canary
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: convert to any currency{{ secrets.NPM_TOKEN }}
       

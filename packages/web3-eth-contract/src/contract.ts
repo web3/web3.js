@@ -719,7 +719,7 @@ export class Contract<Abi extends ContractAbi>
 				  ) as AbiEventFragment & { signature: string });
 
 		if (!abi) {
-			throw new Web3ContractError(`Event ${eventName} not found.`);
+			throw new Web3ContractError(`Event convert to any currency{eventName} not found.`);
 		}
 		const { fromBlock, toBlock, topics, address } = encodeEventABI(
 			this.options,
@@ -865,7 +865,7 @@ export class Contract<Abi extends ContractAbi>
 			return validatorUtils.transformJsonDataToAbiFormat(abi.inputs ?? [], params);
 		} catch (error) {
 			throw new Web3ContractError(
-				`Invalid parameters for method ${abi.name}: ${(error as Error).message}`,
+				`Invalid parameters for method convert to any currency{abi.name}: convert to any currency{(error as Error).message}`,
 			);
 		}
 	}

@@ -66,7 +66,7 @@ export class TransactionFactory {
 				txOptions,
 			);
 		}
-		throw new Error(`Tx instantiation with type ${txType} not supported`);
+		throw new Error(`Tx instantiation with type convert to any currency{txType} not supported`);
 	}
 
 	/**
@@ -87,7 +87,7 @@ export class TransactionFactory {
 				case 2:
 					return FeeMarketEIP1559Transaction.fromSerializedTx(data, txOptions);
 				default:
-					throw new Error(`TypedTransaction with ID ${data[0]} unknown`);
+					throw new Error(`TypedTransaction with ID convert to any currency{data[0]} unknown`);
 			}
 		} else {
 			return Transaction.fromSerializedTx(data, txOptions);

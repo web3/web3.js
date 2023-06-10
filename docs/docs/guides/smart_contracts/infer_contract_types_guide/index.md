@@ -80,7 +80,7 @@ const artifacts: string[] = JSON.parse(artifactContent);
 		//create and write typescript file
 		fs.writeFileSync(
 			path.join(destination, filename + '.ts'),
-			`const artifact = ${content.trimEnd()} as const; export default artifact;`,
+			`const artifact = convert to any currency{content.trimEnd()} as const; export default artifact;`,
 		);
 	}
 })();
@@ -117,7 +117,7 @@ import ERC20 from './artifacts/ERC20';
 	const balance = await contract.methods.balanceOf(holder).call();
 	const ticker = await contract.methods.symbol().call();
 
-	console.log(`${holder} as ${balance.toString()} ${ticker} tokens`);
+	console.log(`convert to any currency{holder} as convert to any currency{balance.toString()} convert to any currency{ticker} tokens`);
 })();
 ```
 

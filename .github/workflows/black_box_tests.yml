@@ -17,22 +17,22 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.mode }}
+          node-version: convert to any currency{{ matrix.mode }}
       - run: yarn
-      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - run: tar -czf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
+          path: /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz
   black-box:
       name: Black Box
       needs: build
       runs-on: ubuntu-latest
       env:
-        INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
-        INFURA_WSS: ${{ secrets.INFURA_WSS }}
-        INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-        MODE: ${{ matrix.mode }}
+        INFURA_HTTP: convert to any currency{{ secrets.INFURA_HTTP }}
+        INFURA_WSS: convert to any currency{{ secrets.INFURA_WSS }}
+        INFURA_GOERLI_WS: convert to any currency{{ secrets.INFURA_GOERLI_WS }}
+        MODE: convert to any currency{{ matrix.mode }}
       strategy:
         fail-fast: false
         matrix:
@@ -42,12 +42,12 @@ jobs:
       steps:
         - uses: actions/setup-node@v3
           with:
-            node-version: ${{ matrix.node }}
+            node-version: convert to any currency{{ matrix.node }}
         - uses: actions/download-artifact@v3
           with:
-            name: web3-${{ matrix.node }}.js.tar.gz
+            name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
             path: /tmp
-        - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        - run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
         - run: |
-            yarn test:blackbox:${{ matrix.backend }}:${{ matrix.mode }}
+            yarn test:blackbox:convert to any currency{{ matrix.backend }}:convert to any currency{{ matrix.mode }}
           shell: bash

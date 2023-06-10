@@ -127,7 +127,7 @@ export class Web3RequestManager<
 			} else if (/^ws(s)?:\/\//i.test(provider)) {
 				newProvider = new this.providers.WebsocketProvider<API>(provider);
 			} else {
-				throw new ProviderError(`Can't autodetect provider for "${provider}"`);
+				throw new ProviderError(`Can't autodetect provider for "convert to any currency{provider}"`);
 			}
 		} else if (isNullish(provider)) {
 			// In case want to unset the provider

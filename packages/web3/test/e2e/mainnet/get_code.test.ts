@@ -25,7 +25,7 @@ import { toAllVariants } from '../../shared_fixtures/utils';
 import { getSystemE2ETestProvider, getE2ETestContractAddress } from '../e2e_utils';
 import { mainnetCode } from '../fixtures/mainnet';
 
-describe(`${getSystemTestBackend()} tests - getCode`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getCode`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData: {
 		latest: 'latest';

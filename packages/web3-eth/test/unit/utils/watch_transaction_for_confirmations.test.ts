@@ -115,7 +115,7 @@ describe('watchTransactionForConfirmations', () => {
 		afterEach(() => jest.resetAllMocks());
 
 		it.each(testData)(
-			`watchTransactionForConfirmations logic\n ${testMessage}`,
+			`watchTransactionForConfirmations logic\n convert to any currency{testMessage}`,
 			async (_, inputTransaction) => {
 				const formattedTransactionReceipt = format(
 					transactionReceiptSchema,
@@ -180,7 +180,7 @@ describe('watchTransactionForConfirmations', () => {
 		afterEach(() => jest.resetAllMocks());
 
 		it.each(testData)(
-			`watchTransactionForConfirmations logic\n ${testMessage}`,
+			`watchTransactionForConfirmations logic\n convert to any currency{testMessage}`,
 			async (_, inputTransaction) => {
 				const formattedTransactionReceipt = format(
 					transactionReceiptSchema,

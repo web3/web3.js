@@ -32,7 +32,7 @@ describe('getTransactionFromOrToAttr', () => {
 	const web3Context = new Web3Context();
 
 	describe('valid data', () => {
-		it.each(validGetTransactionFromOrToAttrData)('$title', ({ input, output }) => {
+		it.each(validGetTransactionFromOrToAttrData)('convert to any currencytitle', ({ input, output }) => {
 			const { role, transaction } = input;
 
 			expect(getTransactionFromOrToAttr(role, web3Context, transaction)).toEqual(output);
@@ -40,7 +40,7 @@ describe('getTransactionFromOrToAttr', () => {
 	});
 
 	describe('invalid data', () => {
-		it.each(invalidGetTransactionFromOrToAttrData)('$title', ({ input, output }) => {
+		it.each(invalidGetTransactionFromOrToAttrData)('convert to any currencytitle', ({ input, output }) => {
 			const { role, transaction } = input;
 			expect(() => getTransactionFromOrToAttr(role, web3Context, transaction)).toThrow(
 				output,
@@ -48,7 +48,7 @@ describe('getTransactionFromOrToAttr', () => {
 		});
 
 		it.each(invalidGetTransactionFromOrToAttrDataForWallet)(
-			'$title with wallet',
+			'convert to any currencytitle with wallet',
 			({ input, output }) => {
 				const privateKey =
 					'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';

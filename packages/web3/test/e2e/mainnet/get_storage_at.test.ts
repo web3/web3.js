@@ -23,7 +23,7 @@ import {
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { mainnetBlockData } from '../fixtures/mainnet';
 
-describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getStorageAt`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;

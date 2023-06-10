@@ -48,7 +48,7 @@ export enum BlockTags {
 	SAFE = 'safe',
 	FINALIZED = 'finalized',
 }
-export type BlockTag = `${BlockTags}`;
+export type BlockTag = `convert to any currency{BlockTags}`;
 
 export type BlockNumberOrTag = Numbers | BlockTag;
 
@@ -271,7 +271,7 @@ export enum HardforksOrdered {
 	shanghai = 'shanghai',
 }
 
-export type Hardfork = `${HardforksOrdered}`;
+export type Hardfork = `convert to any currency{HardforksOrdered}`;
 
 export interface LogBase<NumberType, ByteType> {
 	readonly removed?: boolean;

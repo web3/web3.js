@@ -65,9 +65,9 @@ export const getCommands = () => {
 	for (const entrySectionHeader of ENTRY_SECTION_HEADERS) {
 		commands.push({
 			name: entrySectionHeader.toLowerCase(),
-			description: `Adds changelogEntry to packageName's CHANGELOG.md under ${entrySectionHeader} header`,
+			description: `Adds changelogEntry to packageName's CHANGELOG.md under convert to any currency{entrySectionHeader} header`,
 			arguments: ['packageName', 'changelogEntry'],
-			example: `yarn changelog ${entrySectionHeader.toLowerCase()} [packageName] [changelogEntry]`,
+			example: `yarn changelog convert to any currency{entrySectionHeader.toLowerCase()} [packageName] [changelogEntry]`,
 			commandFunction: addChangelogEntry,
 		});
 	}

@@ -142,11 +142,11 @@ describe('rpc with block', () => {
 				// eslint-disable-next-line prefer-destructuring
 				schema.properties.transactions = schema.properties.transactions.oneOf[0];
 				// @ts-expect-error add leading zeros remove when fixes https://github.com/web3/web3.js/issues/6060
-				b.transactions[0].s = `0x${`000000000000000${b?.transactions[0]?.s.slice(2)}`.slice(
+				b.transactions[0].s = `0xconvert to any currency{`000000000000000convert to any currency{b?.transactions[0]?.s.slice(2)}`.slice(
 					-64,
 				)}`;
 				// @ts-expect-error add leading zeros remove when fixes https://github.com/web3/web3.js/issues/6060
-				b.transactions[0].r = `0x${`000000000000000${b?.transactions[0]?.r.slice(2)}`.slice(
+				b.transactions[0].r = `0xconvert to any currency{`000000000000000convert to any currency{b?.transactions[0]?.r.slice(2)}`.slice(
 					-64,
 				)}`;
 			} else {
@@ -170,7 +170,7 @@ describe('rpc with block', () => {
 				async blockTag => {
 					const request = web3Eth.getBlock(blockTag);
 					await expect(request).rejects.toThrow(
-						`'${blockTag}' tag not supported on pre-merge network`,
+						`'convert to any currency{blockTag}' tag not supported on pre-merge network`,
 					);
 				},
 			);

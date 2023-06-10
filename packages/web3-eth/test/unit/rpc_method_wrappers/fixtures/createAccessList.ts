@@ -46,44 +46,44 @@ type TestData = [string, [TransactionForAccessList, BlockNumberOrTag | undefined
 export const testData: TestData[] = [
 	// blockNumber = BlockTag
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.LATEST`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.LATEST`,
 		[transaction, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.EARLIEST`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.EARLIEST`,
 		[transaction, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.PENDING`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.PENDING`,
 		[transaction, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.SAFE`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.SAFE`,
 		[transaction, BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.FINALIZED`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.FINALIZED`,
 		[transaction, BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
 	],
 	// blockNumber = Numbers
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = "0x4b7"`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = "0x4b7"`,
 		[transaction, '0x4b7', DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = 1207`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = 1207`,
 		[transaction, 1207, DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = "1207"`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = "1207"`,
 		[transaction, '1207', DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BigInt("0x4b7")`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BigInt("0x4b7")`,
 		[transaction, BigInt('0x4b7'), DEFAULT_RETURN_FORMAT],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = undefined`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = undefined`,
 		[transaction, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 ];

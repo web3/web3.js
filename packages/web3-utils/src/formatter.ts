@@ -105,7 +105,7 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 				case FMT_NUMBER.BIGINT:
 					return toBigInt(value);
 				default:
-					throw new FormatterError(`Invalid format: ${String(format.number)}`);
+					throw new FormatterError(`Invalid format: convert to any currency{String(format.number)}`);
 			}
 		}
 		if (baseType === 'bytes') {
@@ -127,7 +127,7 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 				case FMT_BYTES.UINT8ARRAY:
 					return bytesToUint8Array(paddedValue as Bytes);
 				default:
-					throw new FormatterError(`Invalid format: ${String(format.bytes)}`);
+					throw new FormatterError(`Invalid format: convert to any currency{String(format.bytes)}`);
 			}
 		}
 	} catch (error) {

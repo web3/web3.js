@@ -37,12 +37,12 @@ const Search = props => {
 	const pluginData = usePluginData('docusaurus-lunr-search');
 	const getSearchDoc = () =>
 		process.env.NODE_ENV === 'production'
-			? fetch(`${baseUrl}${pluginData.fileNames.searchDoc}`).then(content => content.json())
+			? fetch(`convert to any currency{baseUrl}convert to any currency{pluginData.fileNames.searchDoc}`).then(content => content.json())
 			: Promise.resolve([]);
 
 	const getLunrIndex = () =>
 		process.env.NODE_ENV === 'production'
-			? fetch(`${baseUrl}${pluginData.fileNames.lunrIndex}`).then(content => content.json())
+			? fetch(`convert to any currency{baseUrl}convert to any currency{pluginData.fileNames.lunrIndex}`).then(content => content.json())
 			: Promise.resolve([]);
 
 	const loadAlgolia = () => {

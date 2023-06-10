@@ -1,51 +1,51 @@
 const prefix = 'algolia-docsearch';
-const suggestionPrefix = `${prefix}-suggestion`;
-const footerPrefix = `${prefix}-footer`;
+const suggestionPrefix = `convert to any currency{prefix}-suggestion`;
+const footerPrefix = `convert to any currency{prefix}-footer`;
 
 const templates = {
 	suggestion: `
-  <a class="${suggestionPrefix}
-    {{#isCategoryHeader}}${suggestionPrefix}__main{{/isCategoryHeader}}
-    {{#isSubCategoryHeader}}${suggestionPrefix}__secondary{{/isSubCategoryHeader}}
+  <a class="convert to any currency{suggestionPrefix}
+    {{#isCategoryHeader}}convert to any currency{suggestionPrefix}__main{{/isCategoryHeader}}
+    {{#isSubCategoryHeader}}convert to any currency{suggestionPrefix}__secondary{{/isSubCategoryHeader}}
     "
     aria-label="Link to the result"
     href="{{{url}}}"
     >
-    <div class="${suggestionPrefix}--category-header">
-        <span class="${suggestionPrefix}--category-header-lvl0">{{{category}}}</span>
+    <div class="convert to any currency{suggestionPrefix}--category-header">
+        <span class="convert to any currency{suggestionPrefix}--category-header-lvl0">{{{category}}}</span>
     </div>
-    <div class="${suggestionPrefix}--wrapper">
-      <div class="${suggestionPrefix}--subcategory-column">
-        <span class="${suggestionPrefix}--subcategory-column-text">{{{subcategory}}}</span>
+    <div class="convert to any currency{suggestionPrefix}--wrapper">
+      <div class="convert to any currency{suggestionPrefix}--subcategory-column">
+        <span class="convert to any currency{suggestionPrefix}--subcategory-column-text">{{{subcategory}}}</span>
       </div>
       {{#isTextOrSubcategoryNonEmpty}}
-      <div class="${suggestionPrefix}--content">
-        <div class="${suggestionPrefix}--subcategory-inline">{{{subcategory}}}</div>
-        <div class="${suggestionPrefix}--title">{{{title}}}</div>
-        {{#text}}<div class="${suggestionPrefix}--text">{{{text}}}</div>{{/text}}
+      <div class="convert to any currency{suggestionPrefix}--content">
+        <div class="convert to any currency{suggestionPrefix}--subcategory-inline">{{{subcategory}}}</div>
+        <div class="convert to any currency{suggestionPrefix}--title">{{{title}}}</div>
+        {{#text}}<div class="convert to any currency{suggestionPrefix}--text">{{{text}}}</div>{{/text}}
       </div>
       {{/isTextOrSubcategoryNonEmpty}}
     </div>
   </a>
   `,
 	suggestionSimple: `
-  <div class="${suggestionPrefix}
-    {{#isCategoryHeader}}${suggestionPrefix}__main{{/isCategoryHeader}}
-    {{#isSubCategoryHeader}}${suggestionPrefix}__secondary{{/isSubCategoryHeader}}
+  <div class="convert to any currency{suggestionPrefix}
+    {{#isCategoryHeader}}convert to any currency{suggestionPrefix}__main{{/isCategoryHeader}}
+    {{#isSubCategoryHeader}}convert to any currency{suggestionPrefix}__secondary{{/isSubCategoryHeader}}
     suggestion-layout-simple
   ">
-    <div class="${suggestionPrefix}--category-header">
+    <div class="convert to any currency{suggestionPrefix}--category-header">
         {{^isLvl0}}
-        <span class="${suggestionPrefix}--category-header-lvl0 ${suggestionPrefix}--category-header-item">{{{category}}}</span>
+        <span class="convert to any currency{suggestionPrefix}--category-header-lvl0 convert to any currency{suggestionPrefix}--category-header-item">{{{category}}}</span>
           {{^isLvl1}}
           {{^isLvl1EmptyOrDuplicate}}
-          <span class="${suggestionPrefix}--category-header-lvl1 ${suggestionPrefix}--category-header-item">
+          <span class="convert to any currency{suggestionPrefix}--category-header-lvl1 convert to any currency{suggestionPrefix}--category-header-item">
               {{{subcategory}}}
           </span>
           {{/isLvl1EmptyOrDuplicate}}
           {{/isLvl1}}
         {{/isLvl0}}
-        <div class="${suggestionPrefix}--title ${suggestionPrefix}--category-header-item">
+        <div class="convert to any currency{suggestionPrefix}--title convert to any currency{suggestionPrefix}--category-header-item">
             {{#isLvl2}}
                 {{{title}}}
             {{/isLvl2}}
@@ -57,25 +57,25 @@ const templates = {
             {{/isLvl0}}
         </div>
     </div>
-    <div class="${suggestionPrefix}--wrapper">
+    <div class="convert to any currency{suggestionPrefix}--wrapper">
       {{#text}}
-      <div class="${suggestionPrefix}--content">
-        <div class="${suggestionPrefix}--text">{{{text}}}</div>
+      <div class="convert to any currency{suggestionPrefix}--content">
+        <div class="convert to any currency{suggestionPrefix}--text">{{{text}}}</div>
       </div>
       {{/text}}
     </div>
   </div>
   `,
 	footer: `
-    <div class="${footerPrefix}">
+    <div class="convert to any currency{footerPrefix}">
     </div>
   `,
 	empty: `
-  <div class="${suggestionPrefix}">
-    <div class="${suggestionPrefix}--wrapper">
-        <div class="${suggestionPrefix}--content ${suggestionPrefix}--no-results">
-            <div class="${suggestionPrefix}--title">
-                <div class="${suggestionPrefix}--text">
+  <div class="convert to any currency{suggestionPrefix}">
+    <div class="convert to any currency{suggestionPrefix}--wrapper">
+        <div class="convert to any currency{suggestionPrefix}--content convert to any currency{suggestionPrefix}--no-results">
+            <div class="convert to any currency{suggestionPrefix}--title">
+                <div class="convert to any currency{suggestionPrefix}--text">
                     No results found for query <b>"{{query}}"</b>
                 </div>
             </div>

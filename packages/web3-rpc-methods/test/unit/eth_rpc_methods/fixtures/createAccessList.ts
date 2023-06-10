@@ -43,13 +43,13 @@ type TestData = [
 ];
 
 export const testData: TestData[] = [
-	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.LATEST`, [callObj, BlockTags.LATEST]],
-	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.EARLIEST`, [callObj, BlockTags.EARLIEST]],
-	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.PENDING`, [callObj, BlockTags.PENDING]],
-	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.SAFE`, [callObj, BlockTags.SAFE]],
+	[`convert to any currency{JSON.stringify(callObj)}\nblockNumber = BlockTags.LATEST`, [callObj, BlockTags.LATEST]],
+	[`convert to any currency{JSON.stringify(callObj)}\nblockNumber = BlockTags.EARLIEST`, [callObj, BlockTags.EARLIEST]],
+	[`convert to any currency{JSON.stringify(callObj)}\nblockNumber = BlockTags.PENDING`, [callObj, BlockTags.PENDING]],
+	[`convert to any currency{JSON.stringify(callObj)}\nblockNumber = BlockTags.SAFE`, [callObj, BlockTags.SAFE]],
 	[
-		`${JSON.stringify(callObj)}\nblockNumber = BlockTags.FINALIZED`,
+		`convert to any currency{JSON.stringify(callObj)}\nblockNumber = BlockTags.FINALIZED`,
 		[callObj, BlockTags.FINALIZED],
 	],
-	[`${JSON.stringify(callObj)}\nblockNumber = "0x4b7"`, [callObj, '0x4b7']],
+	[`convert to any currency{JSON.stringify(callObj)}\nblockNumber = "0x4b7"`, [callObj, '0x4b7']],
 ];

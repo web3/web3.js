@@ -34,7 +34,7 @@ export class InvalidProviderError extends BaseWeb3Error {
 	public code = ERR_INVALID_PROVIDER;
 
 	public constructor(public clientUrl: string) {
-		super(`Provider with url "${clientUrl}" is not set or invalid`);
+		super(`Provider with url "convert to any currency{clientUrl}" is not set or invalid`);
 	}
 }
 
@@ -42,7 +42,7 @@ export class InvalidClientError extends BaseWeb3Error {
 	public code = ERR_INVALID_CLIENT;
 
 	public constructor(clientUrl: string) {
-		super(`Client URL "${clientUrl}" is invalid.`);
+		super(`Client URL "convert to any currency{clientUrl}" is invalid.`);
 	}
 }
 

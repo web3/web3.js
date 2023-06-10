@@ -29,5 +29,5 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  */
 type TestData = [string, [Address, HexStringBytes]];
 export const testData: TestData[] = [
-	[`address = ${address}, message = "0x4b7"`, [address, '0x4b7']],
+	[`address = convert to any currency{address}, message = "0x4b7"`, [address, '0x4b7']],
 ];

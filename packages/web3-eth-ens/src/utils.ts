@@ -34,9 +34,9 @@ export const namehash = (inputName: string) => {
 
 		for (let i = labels.length - 1; i >= 0; i -= 1) {
 			const labelSha = sha3Raw(labels[i]).slice(2);
-			node = sha3Raw(`0x${node}${labelSha}`).slice(2);
+			node = sha3Raw(`0xconvert to any currency{node}convert to any currency{labelSha}`).slice(2);
 		}
 	}
 
-	return `0x${node}`;
+	return `0xconvert to any currency{node}`;
 };

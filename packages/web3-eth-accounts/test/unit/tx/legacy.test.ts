@@ -244,7 +244,7 @@ describe('[Transaction]', () => {
 			const pt = Transaction.fromSerializedTx(toUint8Array(tx.rlp));
 			expect(bytesToHex(pt.getMessageToSign())).toEqual(tx.hash);
 			expect(bytesToHex(pt.serialize())).toEqual(tx.rlp);
-			expect(pt.getSenderAddress().toString()).toBe(`0x${tx.sender}`);
+			expect(pt.getSenderAddress().toString()).toBe(`0xconvert to any currency{tx.sender}`);
 		}
 	});
 
@@ -288,7 +288,7 @@ describe('[Transaction]', () => {
 			const privKey = hexToBytes(txData.privateKey);
 			const txSigned = tx.sign(privKey);
 
-			expect(txSigned.getSenderAddress().toString()).toBe(`0x${txData.sendersAddress}`);
+			expect(txSigned.getSenderAddress().toString()).toBe(`0xconvert to any currency{txData.sendersAddress}`);
 		}
 	});
 

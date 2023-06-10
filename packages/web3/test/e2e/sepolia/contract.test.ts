@@ -28,7 +28,7 @@ import {
 	getSystemE2ETestProvider,
 } from '../e2e_utils';
 
-describe(`${getSystemTestBackend()} tests - contract`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - contract`, () => {
 	const provider = getSystemE2ETestProvider();
 	const initialGreet = 'Soylent green is people';
 

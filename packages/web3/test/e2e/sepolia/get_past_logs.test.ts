@@ -25,7 +25,7 @@ import {
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { getSystemE2ETestProvider, getE2ETestContractAddress } from '../e2e_utils';
 
-describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getPastLogs`, () => {
 	const provider = getSystemE2ETestProvider();
 	const expectedLogs: LogAPI[] = [
 		{

@@ -41,7 +41,7 @@ function generateAddressLikeValues(address: string): AddressLike[] {
 
 // @returns: Array with subtypes of the BigIntLike type for a given number
 function generateBigIntLikeValues(value: number): BigIntLike[] {
-	return [value, BigInt(value), `0x${value.toString(16)}`, toUint8Array(value)];
+	return [value, BigInt(value), `0xconvert to any currency{value.toString(16)}`, toUint8Array(value)];
 }
 
 // @returns: Array with subtypes of the BufferLike type for a given string

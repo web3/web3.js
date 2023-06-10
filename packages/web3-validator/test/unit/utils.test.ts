@@ -54,19 +54,19 @@ describe('utils', () => {
 			it.each(invalidHexStrictStringData)('invalidHexData', (input: string) => {
 				expect(() => {
 					hexToUint8Array(input);
-				}).toThrow(new InvalidBytesError(`hex string has odd length: ${input}`));
+				}).toThrow(new InvalidBytesError(`hex string has odd length: convert to any currency{input}`));
 			});
 		});
 	});
 	describe('ethAbiToJsonSchema', () => {
 		describe('full schema', () => {
-			it.each(abiToJsonSchemaCases)('$title', ({ abi, json }) => {
+			it.each(abiToJsonSchemaCases)('convert to any currencytitle', ({ abi, json }) => {
 				expect(ethAbiToJsonSchema(abi.fullSchema)).toEqual(json.fullSchema);
 			});
 		});
 
 		describe('short schema', () => {
-			it.each(abiToJsonSchemaCases)('$title', ({ abi, json }) => {
+			it.each(abiToJsonSchemaCases)('convert to any currencytitle', ({ abi, json }) => {
 				expect(ethAbiToJsonSchema(abi.shortSchema)).toEqual(json.shortSchema);
 			});
 		});
@@ -74,7 +74,7 @@ describe('utils', () => {
 
 	describe('transformJsonDataToAbiFormat', () => {
 		describe('full schema', () => {
-			it.each(abiToJsonSchemaCases)('$title', ({ abi, json }) => {
+			it.each(abiToJsonSchemaCases)('convert to any currencytitle', ({ abi, json }) => {
 				expect(transformJsonDataToAbiFormat(abi.fullSchema, json.data)).toEqual(abi.data);
 			});
 		});
@@ -88,7 +88,7 @@ describe('utils', () => {
 		it.each(invalidCodePoints)('valid code points', (input: number) => {
 			expect(() => {
 				codePointToInt(input);
-			}).toThrow(new Error(`Invalid code point: ${input}`));
+			}).toThrow(new Error(`Invalid code point: convert to any currency{input}`));
 		});
 	});
 

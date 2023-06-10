@@ -174,12 +174,12 @@ export const decodeParametersWith = (
 		}
 		const res = ethersAbiCoder.decode(
 			mapTypes(abis).map(p => ParamType.from(p)),
-			`0x${bytes.replace(/0x/i, '')}`,
+			`0xconvert to any currency{bytes.replace(/0x/i, '')}`,
 			loose,
 		);
 		return formatArrayResToObject(res);
 	} catch (err) {
-		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
+		throw new AbiError(`Parameter decoding error: convert to any currency{(err as Error).message}`);
 	}
 };
 

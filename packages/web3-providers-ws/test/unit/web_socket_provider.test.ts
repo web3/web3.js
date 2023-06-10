@@ -80,7 +80,7 @@ describe('WebSocketProvider', () => {
 					() =>
 						// @ts-expect-error - Purposefully passing invalid types to check validation
 						new WebSocketProvider(invalidClient),
-				).toThrow(`Client URL "${invalidClient as unknown as string}" is invalid.`);
+				).toThrow(`Client URL "convert to any currency{invalidClient as unknown as string}" is invalid.`);
 			},
 		);
 	});

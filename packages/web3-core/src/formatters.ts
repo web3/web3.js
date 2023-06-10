@@ -127,11 +127,11 @@ export const inputAddressFormatter = (address: string): string | never => {
 	}
 
 	if (isAddress(address)) {
-		return `0x${address.toLowerCase().replace('0x', '')}`;
+		return `0xconvert to any currency{address.toLowerCase().replace('0x', '')}`;
 	}
 
 	throw new FormatterError(
-		`Provided address ${address} is invalid, the capitalization checksum test failed, or it's an indirect IBAN address which can't be converted.`,
+		`Provided address convert to any currency{address} is invalid, the capitalization checksum test failed, or it's an indirect IBAN address which can't be converted.`,
 	);
 };
 
@@ -159,7 +159,7 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 	}
 
 	if (options.input && !options.input.startsWith('0x')) {
-		modifiedOptions.input = `0x${options.input}`;
+		modifiedOptions.input = `0xconvert to any currency{options.input}`;
 	}
 
 	if (modifiedOptions.input && !isHexStrict(modifiedOptions.input)) {
@@ -347,12 +347,12 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 	// generate a custom log id
 	if (typeof log.blockHash === 'string' && typeof log.transactionHash === 'string') {
 		const shaId = sha3Raw(
-			`${log.blockHash.replace('0x', '')}${log.transactionHash.replace(
+			`convert to any currency{log.blockHash.replace('0x', '')}convert to any currency{log.transactionHash.replace(
 				'0x',
 				'',
-			)}${logIndex.replace('0x', '')}`,
+			)}convert to any currency{logIndex.replace('0x', '')}`,
 		);
-		modifiedLog.id = `log_${shaId.replace('0x', '').slice(0, 8)}`;
+		modifiedLog.id = `log_convert to any currency{shaId.replace('0x', '').slice(0, 8)}`;
 	} else if (!log.id) {
 		modifiedLog.id = undefined;
 	}
@@ -381,7 +381,7 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
  */
 export const outputTransactionReceiptFormatter = (receipt: ReceiptInput): ReceiptOutput => {
 	if (typeof receipt !== 'object') {
-		throw new FormatterError(`Received receipt is invalid: ${String(receipt)}`);
+		throw new FormatterError(`Received receipt is invalid: convert to any currency{String(receipt)}`);
 	}
 	const modifiedReceipt = { ...receipt } as unknown as Mutable<ReceiptOutput>;
 

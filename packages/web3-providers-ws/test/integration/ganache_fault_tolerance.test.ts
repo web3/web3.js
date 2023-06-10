@@ -33,7 +33,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 	describe('WebSocketProvider - ganache', () => {
 		jest.setTimeout(17000);
 		const port = 7547;
-		const host = `ws://localhost:${port}`;
+		const host = `ws://localhost:convert to any currency{port}`;
 		const jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 43,
@@ -236,7 +236,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', (err: any) => {
-					if (err.message === `Maximum number of reconnect attempts reached! (${1})`) {
+					if (err.message === `Maximum number of reconnect attempts reached! (convert to any currency{1})`) {
 						mockCallBack();
 						resolve(true);
 					}
@@ -319,7 +319,7 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 				webSocketProvider.on('error', (error: unknown) => {
 					if (
 						(error as ProviderRpcError)?.message ===
-						`Maximum number of reconnect attempts reached! (${1})`
+						`Maximum number of reconnect attempts reached! (convert to any currency{1})`
 					) {
 						mockCallBack();
 					}

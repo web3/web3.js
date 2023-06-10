@@ -18,12 +18,12 @@ uplinks:
 packages:
   '@*/*':
     # scoped packages
-    access: $all
-    publish: $all
+    access: convert to any currencyall
+    publish: convert to any currencyall
     proxy: npmjs yarn
   '**':
-    access: $all
-    publish: $all
+    access: convert to any currencyall
+    publish: convert to any currencyall
     proxy: npmjs yarn
 logs:
   - {type: stdout, format: pretty, level: warn}

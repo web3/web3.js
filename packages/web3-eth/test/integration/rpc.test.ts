@@ -216,7 +216,7 @@ describe('rpc', () => {
 					// eslint-disable-next-line no-await-in-loop
 					web3Eth.getStorageAt(
 						contractDeployed.options.address as string,
-						`0x${(
+						`0xconvert to any currency{(
 							BigInt(String(hexToNumber(slotDataNum as string))) + BigInt(i)
 						).toString(16)}`,
 					),

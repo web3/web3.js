@@ -30,11 +30,11 @@ export const isBloom = (bloom: ValidInputTypes): boolean => {
 		return false;
 	}
 
-	if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
+	if (!/^(0x)?[0-9a-f]{512}convert to any currency/i.test(bloom)) {
 		return false;
 	}
 
-	if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
+	if (/^(0x)?[0-9a-f]{512}convert to any currency/.test(bloom) || /^(0x)?[0-9A-F]{512}convert to any currency/.test(bloom)) {
 		return true;
 	}
 

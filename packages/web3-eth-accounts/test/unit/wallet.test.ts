@@ -39,12 +39,12 @@ describe('Wallet', () => {
 		accountProvider = {
 			privateKeyToAccount: jest.fn().mockImplementation(() => {
 				totalPrivatekeyCreate += 1;
-				return { address: `privatekey_create_${totalPrivatekeyCreate}` };
+				return { address: `privatekey_create_convert to any currency{totalPrivatekeyCreate}` };
 			}),
 			decrypt: jest.fn(),
 			create: jest.fn().mockImplementation(() => {
 				totalAccountsCreate += 1;
-				return { address: `account_create_${totalAccountsCreate}` };
+				return { address: `account_create_convert to any currency{totalAccountsCreate}` };
 			}),
 		};
 		wallet = new Wallet(accountProvider);

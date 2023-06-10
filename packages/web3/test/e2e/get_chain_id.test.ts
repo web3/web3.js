@@ -21,7 +21,7 @@ import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
-describe(`${getSystemTestBackend()} tests - getChainId`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getChainId`, () => {
 	const provider = getSystemE2ETestProvider();
 	const expectedChainId = getSystemTestBackend() === 'sepolia' ? 11155111 : 1;
 
@@ -58,7 +58,7 @@ describe(`${getSystemTestBackend()} tests - getChainId`, () => {
 				break;
 			case 'NUMBER_STR':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result).toBe(`${expectedChainId}`);
+				expect(result).toBe(`convert to any currency{expectedChainId}`);
 				break;
 			case 'NUMBER_BIGINT':
 				// eslint-disable-next-line jest/no-conditional-expect

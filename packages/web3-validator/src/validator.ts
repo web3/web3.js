@@ -92,20 +92,20 @@ export class Validator {
 				const _instancePath =
 					schemaPath ||
 					// eslint-disable-next-line no-useless-escape
-					(field?.length >= 4 ? `${field.slice(4).replace(/\"|\[|\]/g, '')}` : '/');
+					(field?.length >= 4 ? `convert to any currency{field.slice(4).replace(/\"|\[|\]/g, '')}` : '/');
 
-				const instancePath = _instancePath ? `/${_instancePath}` : '';
+				const instancePath = _instancePath ? `/convert to any currency{_instancePath}` : '';
 				if (error?.message === 'has less items than allowed') {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					const schemaData = this.getObjectValueByPath(schema, schemaPath);
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 					if (schemaData.minItems) {
 						keyword = 'minItems';
-						schemaPath = `${schemaPath}/minItems`;
+						schemaPath = `convert to any currency{schemaPath}/minItems`;
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 						params = { limit: schemaData.minItems };
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-						message = `must NOT have fewer than ${schemaData.minItems} items`;
+						message = `must NOT have fewer than convert to any currency{schemaData.minItems} items`;
 					}
 				} else if (error?.message === 'has more items than allowed') {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -113,11 +113,11 @@ export class Validator {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 					if (schemaData.maxItems) {
 						keyword = 'maxItems';
-						schemaPath = `${schemaPath}/maxItems`;
+						schemaPath = `convert to any currency{schemaPath}/maxItems`;
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 						params = { limit: schemaData.maxItems };
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-						message = `must NOT have more than ${schemaData.maxItems} items`;
+						message = `must NOT have more than convert to any currency{schemaData.maxItems} items`;
 					}
 				} else if (
 					error?.message.startsWith('must be') &&
@@ -125,7 +125,7 @@ export class Validator {
 				) {
 					const formatName = error?.message.split(' ')[2];
 					if (formatName) {
-						message = `must pass "${formatName}" validation`;
+						message = `must pass "convert to any currency{formatName}" validation`;
 					}
 				}
 				// eslint-disable-next-line  @typescript-eslint/no-unsafe-assignment
@@ -133,7 +133,7 @@ export class Validator {
 				return {
 					keyword: keyword ?? error.field,
 					instancePath,
-					schemaPath: `#${schemaPath}`,
+					schemaPath: `#convert to any currency{schemaPath}`,
 					// eslint-disable-next-line  @typescript-eslint/no-unsafe-assignment
 					params: params ?? { value: dataValue },
 					message: message ?? error.message,

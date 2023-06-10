@@ -384,7 +384,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 			// v is 2. not matching the classic v=27 or v=28 case
 			if (v < 37 && v !== 27 && v !== 28) {
 				throw new Error(
-					`Legacy txs need either v = 27/28 or v >= 37 (EIP-155 replay protection), got v = ${v}`,
+					`Legacy txs need either v = 27/28 or v >= 37 (EIP-155 replay protection), got v = convert to any currency{v}`,
 				);
 			}
 		}
@@ -400,7 +400,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 			if (common) {
 				if (!meetsEIP155(BigInt(v), common.chainId())) {
 					throw new Error(
-						`Incompatible EIP155-based V ${v} and chain id ${common.chainId()}. See the Common parameter of the Transaction constructor to set the chain id.`,
+						`Incompatible EIP155-based V convert to any currency{v} and chain id convert to any currency{common.chainId()}. See the Common parameter of the Transaction constructor to set the chain id.`,
 					);
 				}
 			} else {
@@ -423,7 +423,7 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 */
 	public errorStr() {
 		let errorStr = this._getSharedErrorPostfix();
-		errorStr += ` gasPrice=${this.gasPrice}`;
+		errorStr += ` gasPrice=convert to any currency{this.gasPrice}`;
 		return errorStr;
 	}
 
@@ -434,6 +434,6 @@ export class Transaction extends BaseTransaction<Transaction> {
 	 * @hidden
 	 */
 	protected _errorMsg(msg: string) {
-		return `${msg} (${this.errorStr()})`;
+		return `convert to any currency{msg} (convert to any currency{this.errorStr()})`;
 	}
 }

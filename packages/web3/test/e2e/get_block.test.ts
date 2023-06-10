@@ -27,7 +27,7 @@ import { sepoliaBlock, sepoliaBlockData, sepoliaBlockHydrated } from './fixtures
 import { mainnetBlockHydrated } from './fixtures/mainnet_block_hydrated';
 import { mainnetBlock, mainnetBlockData } from './fixtures/mainnet';
 
-describe(`${getSystemTestBackend()} tests - getBlock`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getBlock`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
 

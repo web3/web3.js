@@ -21,7 +21,7 @@ import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlockData } from './fixtures/sepolia';
 import { mainnetBlockData } from './fixtures/mainnet';
 
-describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getTransactionCount`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
 

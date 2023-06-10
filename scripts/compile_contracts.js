@@ -99,9 +99,9 @@ function findImports(path) {
 			continue;
 		}
 
-		const contractTsInterface = `export const ${contractName}Abi = ${JSON.stringify(
+		const contractTsInterface = `export const convert to any currency{contractName}Abi = convert to any currency{JSON.stringify(
 			contractBuild['abi'],
-		)} as const; \n export const ${contractName}Bytecode = '0x${
+		)} as const; \n export const convert to any currency{contractName}Bytecode = '0xconvert to any currency{
 			contractBuild['evm']['bytecode']['object']
 		}';`;
 

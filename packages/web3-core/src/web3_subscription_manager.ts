@@ -116,7 +116,7 @@ export class Web3SubscriptionManager<
 		}
 
 		if (sub.id && this._subscriptions.has(sub.id)) {
-			throw new SubscriptionError(`Subscription with id "${sub.id}" already exists`);
+			throw new SubscriptionError(`Subscription with id "convert to any currency{sub.id}" already exists`);
 		}
 
 		await sub.subscribe();
@@ -142,7 +142,7 @@ export class Web3SubscriptionManager<
 
 		if (!this._subscriptions.has(sub.id)) {
 			throw new SubscriptionError(
-				`Subscription with id "${sub.id.toString()}" does not exists`,
+				`Subscription with id "convert to any currency{sub.id.toString()}" does not exists`,
 			);
 		}
 		const { id } = sub;

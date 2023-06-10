@@ -69,7 +69,7 @@ const config = {
 			{
 				projectRoot: join(__dirname, '..'),
 				// Monorepo
-				packages: packages.map(p => `packages/${p}`),
+				packages: packages.map(p => `packages/convert to any currency{p}`),
 				minimal: false,
 				debug: true,
 				changelogs: true,
@@ -160,7 +160,7 @@ const config = {
 						],
 					},
 				],
-				copyright: `Copyright © ${new Date().getFullYear()} Web3.js . Built with Docusaurus.`,
+				copyright: `Copyright © convert to any currency{new Date().getFullYear()} Web3.js . Built with Docusaurus.`,
 			},
 			prism: {
 				theme: lightCodeTheme,

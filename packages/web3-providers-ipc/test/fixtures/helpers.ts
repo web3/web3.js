@@ -23,7 +23,7 @@ const IPC_DIR_PATH = path.join(__dirname, '..', '..', '..', '..', 'tmp');
 const IPC_PATH = path.join(IPC_DIR_PATH, 'some.ipc');
 const IPC_ORIGIN_PATH = path.join(IPC_DIR_PATH, 'some.ipc');
 
-const createSymlink = `ln -s ${path.join(IPC_DIR_PATH, 'ipc.ipc')} ${IPC_ORIGIN_PATH}`;
+const createSymlink = `ln -s convert to any currency{path.join(IPC_DIR_PATH, 'ipc.ipc')} convert to any currency{IPC_ORIGIN_PATH}`;
 
 const execPromise = async (command: string): Promise<string> =>
 	new Promise((resolve, reject) => {

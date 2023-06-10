@@ -84,7 +84,7 @@ export class Web3BatchRequest {
 
 			throw new ResponseError(
 				response,
-				`Batch request size mismatch the results size. Requests: ${this._requests.size}, Responses: ${response.length}`,
+				`Batch request size mismatch the results size. Requests: convert to any currency{this._requests.size}, Responses: convert to any currency{response.length}`,
 			);
 		}
 
@@ -103,7 +103,7 @@ export class Web3BatchRequest {
 
 			throw new ResponseError(
 				response,
-				`Batch request mismatch the results. Requests: [${requestIds.join()}], Responses: [${responseIds.join()}]`,
+				`Batch request mismatch the results. Requests: [convert to any currency{requestIds.join()}], Responses: [convert to any currency{responseIds.join()}]`,
 			);
 		}
 

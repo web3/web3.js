@@ -27,7 +27,7 @@ import {
 	getSystemE2ETestProvider,
 } from '../e2e_utils';
 
-describe(`${getSystemTestBackend()} tests - sendSignedTransaction`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - sendSignedTransaction`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;

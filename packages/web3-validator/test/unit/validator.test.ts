@@ -68,7 +68,7 @@ describe('instance of validator', () => {
 	});
 	it('getObjectValueByPath', () => {
 		// @ts-expect-error-next-line
-		expect(validator.getObjectValueByPath({}, '$')).toBe('');
+		expect(validator.getObjectValueByPath({}, 'convert to any currency')).toBe('');
 	});
 	it('untilde', () => {
 		// @ts-expect-error-next-line
@@ -84,19 +84,19 @@ describe('instance of validator', () => {
 		}
 		for (let i = 3; i <= 8; i += 1) {
 			const bitSize = 2 ** i;
-			expect(typeof formats[`int${bitSize}`]).toBe('function');
-			expect(typeof formats[`uint${bitSize}`]).toBe('function');
+			expect(typeof formats[`intconvert to any currency{bitSize}`]).toBe('function');
+			expect(typeof formats[`uintconvert to any currency{bitSize}`]).toBe('function');
 		}
 		for (let size = 1; size <= 32; size += 1) {
-			expect(typeof formats[`bytes${size}`]).toBe('function');
+			expect(typeof formats[`bytesconvert to any currency{size}`]).toBe('function');
 		}
 	});
 	it('formats call', () => {
 		expect(formats.address('0x7ab80aeb6bb488b7f6c41c58e83ef248eb39c882')).toBe(true);
 		expect(formats.address('0x7ab80aeb6bb488b7f6c41c58e83ef248eb39c88')).toBe(false);
 
-		expect(formats.bloom(`0x${'0'.repeat(512)}`)).toBe(true);
-		expect(formats.bloom(`0x${'0'.repeat(511)}`)).toBe(false);
+		expect(formats.bloom(`0xconvert to any currency{'0'.repeat(512)}`)).toBe(true);
+		expect(formats.bloom(`0xconvert to any currency{'0'.repeat(511)}`)).toBe(false);
 
 		expect(formats.blockNumber(1)).toBe(true);
 		expect(formats.blockNumber(-1)).toBe(false);
@@ -137,15 +137,15 @@ describe('instance of validator', () => {
 
 		for (let i = 3; i <= 8; i += 1) {
 			const bitSize = 2 ** i;
-			expect(formats[`int${bitSize}`](1)).toBe(true);
-			expect(formats[`int${bitSize}`](1.1)).toBe(false);
-			expect(formats[`uint${bitSize}`](1)).toBe(true);
-			expect(formats[`uint${bitSize}`](-1)).toBe(false);
+			expect(formats[`intconvert to any currency{bitSize}`](1)).toBe(true);
+			expect(formats[`intconvert to any currency{bitSize}`](1.1)).toBe(false);
+			expect(formats[`uintconvert to any currency{bitSize}`](1)).toBe(true);
+			expect(formats[`uintconvert to any currency{bitSize}`](-1)).toBe(false);
 		}
 		for (let size = 1; size <= 32; size += 1) {
-			const value = `0x${'aa'.repeat(size)}`;
-			expect(formats[`bytes${size}`](value)).toBe(true);
-			expect(formats[`bytes${size}`](-1)).toBe(false);
+			const value = `0xconvert to any currency{'aa'.repeat(size)}`;
+			expect(formats[`bytesconvert to any currency{size}`](value)).toBe(true);
+			expect(formats[`bytesconvert to any currency{size}`](-1)).toBe(false);
 		}
 	});
 });

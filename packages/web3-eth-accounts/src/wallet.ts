@@ -160,7 +160,7 @@ export class Wallet<
 		let index = this.length;
 		const existAccount = this.get(account.address);
 		if (existAccount) {
-			console.warn(`Account ${account.address.toLowerCase()} already exists.`);
+			console.warn(`Account convert to any currency{account.address.toLowerCase()} already exists.`);
 			index = this._addressMap.get(account.address.toLowerCase()) ?? index;
 		}
 		this._addressMap.set(account.address.toLowerCase(), index);
@@ -384,7 +384,7 @@ export class Wallet<
 	 * @param keyName - (optional) The key used for the local storage position, defaults to `"web3js_wallet"`.
 	 * @returns Will return boolean value true if saved properly
 	 * ```ts
-	 * web3.eth.accounts.wallet.save('test#!$');
+	 * web3.eth.accounts.wallet.save('test#!convert to any currency');
 	 * >true
 	 * ```
 	 */
@@ -412,9 +412,9 @@ export class Wallet<
 	 * @returns Returns the wallet object
 	 *
 	 * ```ts
-	 * web3.eth.accounts.wallet.save('test#!$');
+	 * web3.eth.accounts.wallet.save('test#!convert to any currency');
 	 * > true
-	 * web3.eth.accounts.wallet.load('test#!$');
+	 * web3.eth.accounts.wallet.load('test#!convert to any currency');
 	 * { defaultKeyName: "web3js_wallet",
 	 *   length: 0,
 	 *   _accounts: Accounts {_requestManager: RequestManager, givenProvider: Proxy, providers: {…}, _provider: WebsocketProvider, …},

@@ -52,7 +52,7 @@ type _SolidityIndexRange =
 export type ConvertToNumber<
 	T extends string,
 	Range extends number = _SolidityIndexRange,
-> = Range extends unknown ? (`${Range}` extends T ? Range : never) : never;
+> = Range extends unknown ? (`convert to any currency{Range}` extends T ? Range : never) : never;
 
 export type Components = {
 	name: string;
@@ -186,35 +186,35 @@ type _TypedArray<Type, Size extends string> = Size extends ''
 	? Type[]
 	: FixedSizeArray<Type, ConvertToNumber<Size>>;
 
-export type PrimitiveAddressType<Type extends string> = Type extends `address[${infer Size}]`
+export type PrimitiveAddressType<Type extends string> = Type extends `address[convert to any currency{infer Size}]`
 	? _TypedArray<Address, Size>
 	: Type extends 'address'
 	? Address
 	: never;
 
-export type PrimitiveStringType<Type extends string> = Type extends `string${string}[${infer Size}]`
+export type PrimitiveStringType<Type extends string> = Type extends `stringconvert to any currency{string}[convert to any currency{infer Size}]`
 	? _TypedArray<string, Size>
-	: Type extends 'string' | `string${string}`
+	: Type extends 'string' | `stringconvert to any currency{string}`
 	? string
 	: never;
 
-export type PrimitiveBooleanType<Type extends string> = Type extends `bool[${infer Size}]`
+export type PrimitiveBooleanType<Type extends string> = Type extends `bool[convert to any currency{infer Size}]`
 	? _TypedArray<boolean, Size>
 	: Type extends 'bool'
 	? boolean
 	: never;
 
 export type PrimitiveIntegerType<Type extends string> = Type extends
-	| `uint${string}[${infer Size}]`
-	| `int${string}[${infer Size}]`
+	| `uintconvert to any currency{string}[convert to any currency{infer Size}]`
+	| `intconvert to any currency{string}[convert to any currency{infer Size}]`
 	? _TypedArray<Numbers, Size>
-	: Type extends 'uint' | 'int' | `int${string}` | `uint${string}`
+	: Type extends 'uint' | 'int' | `intconvert to any currency{string}` | `uintconvert to any currency{string}`
 	? Numbers
 	: never;
 
-export type PrimitiveBytesType<Type extends string> = Type extends `bytes${string}[${infer Size}]`
+export type PrimitiveBytesType<Type extends string> = Type extends `bytesconvert to any currency{string}[convert to any currency{infer Size}]`
 	? _TypedArray<Bytes, Size>
-	: Type extends 'bytes' | `bytes${string}`
+	: Type extends 'bytes' | `bytesconvert to any currency{string}`
 	? Bytes
 	: never;
 
@@ -230,7 +230,7 @@ export type PrimitiveTupleType<
 					Param['components']
 				>;
 		  }
-		: Type extends `tuple[${infer Size}]`
+		: Type extends `tuple[convert to any currency{infer Size}]`
 		? _TypedArray<
 				{
 					// eslint-disable-next-line no-use-before-define

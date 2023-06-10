@@ -20,7 +20,7 @@ import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 
-describe(`${getSystemTestBackend()} tests - getProtocolVersion`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getProtocolVersion`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;

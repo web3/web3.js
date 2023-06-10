@@ -40,7 +40,7 @@ export class RpcError extends BaseWeb3Error {
 	public jsonrpc: string;
 	public jsonRpcError: JsonRpcError;
 	public constructor(rpcError: JsonRpcResponseWithError, message?: string) {
-		super(message ?? `An Rpc error has occured with a code of ${rpcError.error.code}`);
+		super(message ?? `An Rpc error has occured with a code of convert to any currency{rpcError.error.code}`);
 		this.code = rpcError.error.code;
 		this.id = rpcError.id;
 		this.jsonrpc = rpcError.jsonrpc;

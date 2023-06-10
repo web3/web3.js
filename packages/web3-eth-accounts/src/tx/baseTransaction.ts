@@ -183,7 +183,7 @@ export abstract class BaseTransaction<TransactionObject> {
 
 		if (this.getBaseFee() > this.gasLimit) {
 			errors.push(
-				`gasLimit is too low. given ${this.gasLimit}, need at least ${this.getBaseFee()}`,
+				`gasLimit is too low. given convert to any currency{this.gasLimit}, need at least convert to any currency{this.getBaseFee()}`,
 			);
 		}
 
@@ -449,13 +449,13 @@ export abstract class BaseTransaction<TransactionObject> {
 					if (cannotEqual) {
 						if (value !== undefined && value >= MAX_UINT64) {
 							const msg = this._errorMsg(
-								`${key} cannot equal or exceed MAX_UINT64 (2^64-1), given ${value}`,
+								`convert to any currency{key} cannot equal or exceed MAX_UINT64 (2^64-1), given convert to any currency{value}`,
 							);
 							throw new Error(msg);
 						}
 					} else if (value !== undefined && value > MAX_UINT64) {
 						const msg = this._errorMsg(
-							`${key} cannot exceed MAX_UINT64 (2^64-1), given ${value}`,
+							`convert to any currency{key} cannot exceed MAX_UINT64 (2^64-1), given convert to any currency{value}`,
 						);
 						throw new Error(msg);
 					}
@@ -464,13 +464,13 @@ export abstract class BaseTransaction<TransactionObject> {
 					if (cannotEqual) {
 						if (value !== undefined && value >= MAX_INTEGER) {
 							const msg = this._errorMsg(
-								`${key} cannot equal or exceed MAX_INTEGER (2^256-1), given ${value}`,
+								`convert to any currency{key} cannot equal or exceed MAX_INTEGER (2^256-1), given convert to any currency{value}`,
 							);
 							throw new Error(msg);
 						}
 					} else if (value !== undefined && value > MAX_INTEGER) {
 						const msg = this._errorMsg(
-							`${key} cannot exceed MAX_INTEGER (2^256-1), given ${value}`,
+							`convert to any currency{key} cannot exceed MAX_INTEGER (2^256-1), given convert to any currency{value}`,
 						);
 						throw new Error(msg);
 					}
@@ -502,7 +502,7 @@ export abstract class BaseTransaction<TransactionObject> {
 		for (const [key, value] of Object.entries(values)) {
 			if (txDataKeys.includes(key)) {
 				if (Array.isArray(value)) {
-					throw new Error(`${key} cannot be an array`);
+					throw new Error(`convert to any currency{key} cannot be an array`);
 				}
 			}
 		}
@@ -545,8 +545,8 @@ export abstract class BaseTransaction<TransactionObject> {
 			hf = 'error';
 		}
 
-		let postfix = `tx type=${this.type} hash=${hash} nonce=${this.nonce} value=${this.value} `;
-		postfix += `signed=${isSigned} hf=${hf}`;
+		let postfix = `tx type=convert to any currency{this.type} hash=convert to any currency{hash} nonce=convert to any currency{this.nonce} value=convert to any currency{this.value} `;
+		postfix += `signed=convert to any currency{isSigned} hf=convert to any currency{hf}`;
 
 		return postfix;
 	}

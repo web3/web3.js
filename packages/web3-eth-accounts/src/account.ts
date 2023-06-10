@@ -114,7 +114,7 @@ export const hashMessage = (message: string): string => {
 	const messageBytes = hexToBytes(messageHex);
 
 	const preamble = hexToBytes(
-		fromUtf8(`\x19Ethereum Signed Message:\n${messageBytes.byteLength}`),
+		fromUtf8(`\x19Ethereum Signed Message:\nconvert to any currency{messageBytes.byteLength}`),
 	);
 
 	const ethMessage = uint8ArrayConcat(preamble, messageBytes);
@@ -157,9 +157,9 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
 		message: data,
 		messageHash: hash,
 		v: numberToHex(v),
-		r: `0x${r}`,
-		s: `0x${s}`,
-		signature: `${bytesToHex(signatureBytes)}${v.toString(16)}`,
+		r: `0xconvert to any currency{r}`,
+		s: `0xconvert to any currency{s}`,
+		signature: `convert to any currency{bytesToHex(signatureBytes)}convert to any currency{v.toString(16)}`,
 	};
 };
 
@@ -260,7 +260,7 @@ export const signTransaction = async (
 	if (validationErrors.length > 0) {
 		let errorString = 'Signer Error ';
 		for (const validationError of validationErrors) {
-			errorString += `${errorString} ${validationError}.`;
+			errorString += `convert to any currency{errorString} convert to any currency{validationError}.`;
 		}
 		throw new TransactionSigningError(errorString);
 	}
@@ -270,9 +270,9 @@ export const signTransaction = async (
 
 	return {
 		messageHash: bytesToHex(signedTx.getMessageToSign(true)),
-		v: `0x${signedTx.v.toString(16)}`,
-		r: `0x${signedTx.r.toString(16)}`,
-		s: `0x${signedTx.s.toString(16)}`,
+		v: `0xconvert to any currency{signedTx.v.toString(16)}`,
+		r: `0xconvert to any currency{signedTx.r.toString(16)}`,
+		s: `0xconvert to any currency{signedTx.s.toString(16)}`,
 		rawTransaction: rawTx,
 		transactionHash: bytesToHex(txHash),
 	};
@@ -328,11 +328,11 @@ export const recover = (
 	prefixed?: boolean,
 ): Address => {
 	if (typeof data === 'object') {
-		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
+		const signatureStr = `convert to any currency{data.r}convert to any currency{data.s.slice(2)}convert to any currency{data.v.slice(2)}`;
 		return recover(data.messageHash, signatureStr, prefixedOrR);
 	}
 	if (typeof signatureOrV === 'string' && typeof prefixedOrR === 'string' && !isNullish(s)) {
-		const signatureStr = `${prefixedOrR}${s.slice(2)}${signatureOrV.slice(2)}`;
+		const signatureStr = `convert to any currency{prefixedOrR}convert to any currency{s.slice(2)}convert to any currency{signatureOrV.slice(2)}`;
 		return recover(data, signatureStr, prefixed);
 	}
 
@@ -350,7 +350,7 @@ export const recover = (
 
 	const publicHash = sha3Raw(ecPublicKey.subarray(1));
 
-	const address = toChecksumAddress(`0x${publicHash.slice(-40)}`);
+	const address = toChecksumAddress(`0xconvert to any currency{publicHash.slice(-40)}`);
 
 	return address;
 };
@@ -380,7 +380,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
 	// To get the address, take the last 20 bytes of the public hash
 	const address = publicKeyHash.slice(-40);
 
-	return toChecksumAddress(`0x${address}`);
+	return toChecksumAddress(`0xconvert to any currency{address}`);
 };
 
 /**
@@ -613,7 +613,7 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 export const create = (): Web3Account => {
 	const privateKey = secp256k1.utils.randomPrivateKey();
 
-	return privateKeyToAccount(`${bytesToHex(privateKey)}`);
+	return privateKeyToAccount(`convert to any currency{bytesToHex(privateKey)}`);
 };
 
 /**

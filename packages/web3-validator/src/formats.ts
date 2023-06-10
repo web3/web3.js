@@ -44,12 +44,12 @@ const formats: { [key: string]: (data: unknown) => boolean } = {
 // generate formats for all numbers types
 for (let i = 3; i <= 8; i += 1) {
 	const bitSize = 2 ** i;
-	formats[`int${bitSize}`] = data => isInt(data as ValidInputTypes, { bitSize });
-	formats[`uint${bitSize}`] = data => isUInt(data as ValidInputTypes, { bitSize });
+	formats[`intconvert to any currency{bitSize}`] = data => isInt(data as ValidInputTypes, { bitSize });
+	formats[`uintconvert to any currency{bitSize}`] = data => isUInt(data as ValidInputTypes, { bitSize });
 }
 // generate bytes
 for (let size = 1; size <= 32; size += 1) {
-	formats[`bytes${size}`] = data =>
+	formats[`bytesconvert to any currency{size}`] = data =>
 		isBytes(data as ValidInputTypes | Uint8Array | number[], { size });
 }
 

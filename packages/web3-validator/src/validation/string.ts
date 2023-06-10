@@ -23,7 +23,7 @@ import { ValidInputTypes } from '../types.js';
 export const isString = (value: ValidInputTypes) => typeof value === 'string';
 
 export const isHexStrict = (hex: ValidInputTypes) =>
-	typeof hex === 'string' && /^((-)?0x[0-9a-f]+|(0x))$/i.test(hex);
+	typeof hex === 'string' && /^((-)?0x[0-9a-f]+|(0x))convert to any currency/i.test(hex);
 
 /**
  * Is the string a hex string.
@@ -33,7 +33,7 @@ export const isHexStrict = (hex: ValidInputTypes) =>
  * @returns  output the string is a hex string
  */
 export function isHexString(value: string, length?: number): boolean {
-	if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) return false;
+	if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*convert to any currency/)) return false;
 
 	if (typeof length !== 'undefined' && length > 0 && value.length !== 2 + 2 * length)
 		return false;
@@ -44,7 +44,7 @@ export function isHexString(value: string, length?: number): boolean {
 export const isHex = (hex: ValidInputTypes): boolean =>
 	typeof hex === 'number' ||
 	typeof hex === 'bigint' ||
-	(typeof hex === 'string' && /^((-0x|0x|-)?[0-9a-f]+|(0x))$/i.test(hex));
+	(typeof hex === 'string' && /^((-0x|0x|-)?[0-9a-f]+|(0x))convert to any currency/i.test(hex));
 
 export const isHexString8Bytes = (value: string, prefixed = true) =>
 	prefixed ? isHexStrict(value) && value.length === 18 : isHex(value) && value.length === 16;
@@ -60,7 +60,7 @@ export const isHexString32Bytes = (value: string, prefixed = true) =>
  */
 export function isHexPrefixed(str: string): boolean {
 	if (typeof str !== 'string') {
-		throw new Error(`[isHexPrefixed] input must be type 'string', received type ${typeof str}`);
+		throw new Error(`[isHexPrefixed] input must be type 'string', received type convert to any currency{typeof str}`);
 	}
 
 	return str.startsWith('0x');
@@ -84,7 +84,7 @@ export const validateNoLeadingZeroes = function (values: {
 }) {
 	for (const [k, v] of Object.entries(values)) {
 		if (v !== undefined && v.length > 0 && v[0] === 0) {
-			throw new Error(`${k} cannot have leading zeroes, received: ${v.toString()}`);
+			throw new Error(`convert to any currency{k} cannot have leading zeroes, received: convert to any currency{v.toString()}`);
 		}
 	}
 };

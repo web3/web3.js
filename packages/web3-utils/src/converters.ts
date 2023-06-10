@@ -133,7 +133,7 @@ export const bytesToHex = (bytes: Bytes): HexString =>
  */
 export const hexToBytes = (bytes: HexString): Uint8Array => {
 	if (typeof bytes === 'string' && bytes.slice(0, 2).toLowerCase() !== '0x') {
-		return bytesToUint8Array(`0x${bytes}`);
+		return bytesToUint8Array(`0xconvert to any currency{bytes}`);
 	}
 	return bytesToUint8Array(bytes);
 };
@@ -226,7 +226,7 @@ export const utf8ToHex = (str: string): HexString => {
 	// eslint-disable-next-line no-control-regex
 	let strWithoutNullCharacter = str.replace(/^(?:\u0000)/, '');
 	// eslint-disable-next-line no-control-regex
-	strWithoutNullCharacter = strWithoutNullCharacter.replace(/(?:\u0000)$/, '');
+	strWithoutNullCharacter = strWithoutNullCharacter.replace(/(?:\u0000)convert to any currency/, '');
 
 	return bytesToHex(new TextEncoder().encode(strWithoutNullCharacter));
 };
@@ -287,9 +287,9 @@ export const asciiToHex = (str: string): HexString => {
 	for (let i = 0; i < str.length; i += 1) {
 		const hexCharCode = str.charCodeAt(i).toString(16);
 		// might need a leading 0
-		hexString += hexCharCode.length % 2 !== 0 ? `0${hexCharCode}` : hexCharCode;
+		hexString += hexCharCode.length % 2 !== 0 ? `0convert to any currency{hexCharCode}` : hexCharCode;
 	}
-	return `0x${hexString}`;
+	return `0xconvert to any currency{hexString}`;
 };
 
 /**
@@ -337,7 +337,7 @@ export const toHex = (
 	returnType?: boolean,
 ): HexString | ValueTypes => {
 	if (typeof value === 'string' && isAddress(value)) {
-		return returnType ? 'address' : `0x${value.toLowerCase().replace(/^0x/i, '')}`;
+		return returnType ? 'address' : `0xconvert to any currency{value.toLowerCase().replace(/^0x/i, '')}`;
 	}
 
 	if (typeof value === 'boolean') {
@@ -367,7 +367,7 @@ export const toHex = (
 			return returnType ? 'bytes' : value;
 		}
 		if (isHex(value) && !isInt(value)) {
-			return returnType ? 'bytes' : `0x${value}`;
+			return returnType ? 'bytes' : `0xconvert to any currency{value}`;
 		}
 
 		if (!Number.isFinite(value)) {
@@ -495,17 +495,17 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 	// get the fraction part of value by counting number of zeros backward
 	// 13456789 -> '456789'
 	// 001234 -> '001234'
-	const fraction = zeroPaddedValue.slice(-numberOfZerosInDenomination).replace(/\.?0+$/, '');
+	const fraction = zeroPaddedValue.slice(-numberOfZerosInDenomination).replace(/\.?0+convert to any currency/, '');
 
 	if (integer === '') {
-		return `0.${fraction}`;
+		return `0.convert to any currency{fraction}`;
 	}
 
 	if (fraction === '') {
 		return integer;
 	}
 
-	return `${integer}.${fraction}`;
+	return `convert to any currency{integer}.convert to any currency{fraction}`;
 };
 
 /**
@@ -541,7 +541,7 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 
 	// join the value removing `.` from
 	// 24.56 -> 2456
-	const value = BigInt(`${integer}${fraction}`);
+	const value = BigInt(`convert to any currency{integer}convert to any currency{fraction}`);
 
 	// multiply value with denomination
 	// 2456 * 1000000 -> 2456000000

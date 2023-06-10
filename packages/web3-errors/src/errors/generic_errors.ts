@@ -33,7 +33,7 @@ export class InvalidNumberOfParamsError extends BaseWeb3Error {
 	public code = ERR_PARAM;
 
 	public constructor(public got: number, public expected: number, public method: string) {
-		super(`Invalid number of parameters for "${method}". Got "${got}" expected "${expected}"!`);
+		super(`Invalid number of parameters for "convert to any currency{method}". Got "convert to any currency{got}" expected "convert to any currency{expected}"!`);
 	}
 
 	public toJSON() {
@@ -50,7 +50,7 @@ export class InvalidMethodParamsError extends BaseWeb3Error {
 	public code = ERR_INVALID_METHOD_PARAMS;
 
 	public constructor(public hint?: string) {
-		super(`Invalid parameters passed. "${typeof hint !== 'undefined' ? hint : ''}"`);
+		super(`Invalid parameters passed. "convert to any currency{typeof hint !== 'undefined' ? hint : ''}"`);
 	}
 
 	public toJSON() {
@@ -89,6 +89,6 @@ export class ExistingPluginNamespaceError extends BaseWeb3Error {
 	public code = ERR_EXISTING_PLUGIN_NAMESPACE;
 
 	public constructor(pluginNamespace: string) {
-		super(`A plugin with the namespace: ${pluginNamespace} has already been registered.`);
+		super(`A plugin with the namespace: convert to any currency{pluginNamespace} has already been registered.`);
 	}
 }

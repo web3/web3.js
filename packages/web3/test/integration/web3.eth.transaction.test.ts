@@ -66,14 +66,14 @@ describe('signTransaction', () => {
 
 						case 'eth_blockNumber':
 							blockNum += 10;
-							response.result = `0x${blockNum.toString(16)}`;
+							response.result = `0xconvert to any currency{blockNum.toString(16)}`;
 							break;
 
 						case 'eth_getTransactionReceipt':
 							response.result = {
 								blockHash:
 									'0xa957d47df264a31badc3ae823e10ac1d444b098d9b73d204c40426e57f47e8c3',
-								blockNumber: `0x${blockNum.toString(16)}`,
+								blockNumber: `0xconvert to any currency{blockNum.toString(16)}`,
 								cumulativeGasUsed: '0xa12515',
 								// "effectiveGasPrice": payload.effectiveGasPrice,
 								from: payload.from,
@@ -102,7 +102,7 @@ describe('signTransaction', () => {
 							break;
 
 						default:
-							throw new Error(`Unknown payload ${payload}`);
+							throw new Error(`Unknown payload convert to any currency{payload}`);
 					}
 
 					return new Promise(resolve => {

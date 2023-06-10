@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/stale@v3
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: convert to any currency{{ secrets.GITHUB_TOKEN }}
         stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed in 7 days if no further activity occurs. Thank you for your contributions. If you believe this was a mistake, please comment.'
         stale-pr-message: 'This PR has been automatically marked as stale because it has not had recent activity. It will be closed in 7 days if no further activity occurs. Thank you for your contributions. If you believe this was a mistake, please comment.'
         days-before-stale: 60

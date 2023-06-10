@@ -92,7 +92,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	public static fromSerializedTx(serialized: Uint8Array, opts: TxOptions = {}) {
 		if (!uint8ArrayEquals(serialized.subarray(0, 1), TRANSACTION_TYPE_UINT8ARRAY)) {
 			throw new Error(
-				`Invalid serialized tx input: not an EIP-2930 transaction (wrong tx type, expected: ${TRANSACTION_TYPE}, received: ${bytesToHex(
+				`Invalid serialized tx input: not an EIP-2930 transaction (wrong tx type, expected: convert to any currency{TRANSACTION_TYPE}, received: convert to any currency{bytesToHex(
 					serialized.subarray(0, 1),
 				)}`,
 			);
@@ -391,7 +391,7 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	public errorStr() {
 		let errorStr = this._getSharedErrorPostfix();
 		// Keep ? for this.accessList since this otherwise causes Hardhat E2E tests to fail
-		errorStr += ` gasPrice=${this.gasPrice} accessListCount=${this.accessList?.length ?? 0}`;
+		errorStr += ` gasPrice=convert to any currency{this.gasPrice} accessListCount=convert to any currency{this.accessList?.length ?? 0}`;
 		return errorStr;
 	}
 
@@ -402,6 +402,6 @@ export class AccessListEIP2930Transaction extends BaseTransaction<AccessListEIP2
 	 * @hidden
 	 */
 	protected _errorMsg(msg: string) {
-		return `${msg} (${this.errorStr()})`;
+		return `convert to any currency{msg} (convert to any currency{this.errorStr()})`;
 	}
 }

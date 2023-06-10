@@ -262,7 +262,7 @@ describe('[BaseTransaction]', () => {
 					continue;
 				}
 				const signedTx = tx.sign(hexToBytes(privateKey));
-				expect(signedTx.getSenderAddress().toString()).toBe(`0x${sendersAddress}`);
+				expect(signedTx.getSenderAddress().toString()).toBe(`0xconvert to any currency{sendersAddress}`);
 			}
 		}
 	});

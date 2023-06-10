@@ -37,4 +37,4 @@ const transaction: Partial<TransactionWithSenderAPI> = {
  * 	   - transaction
  */
 type TestData = [string, [TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>]];
-export const testData: TestData[] = [[`${JSON.stringify(transaction)}`, [transaction]]];
+export const testData: TestData[] = [[`convert to any currency{JSON.stringify(transaction)}`, [transaction]]];

@@ -74,7 +74,7 @@ describe('Web3Eth.getRevertReason', () => {
 				break;
 			default:
 				throw new Error(
-					`Unable to finish test, unknown backend: ${getSystemTestBackend()}`,
+					`Unable to finish test, unknown backend: convert to any currency{getSystemTestBackend()}`,
 				);
 		}
 	});
@@ -105,7 +105,7 @@ describe('Web3Eth.getRevertReason', () => {
 				break;
 			default:
 				throw new Error(
-					`Unable to finish test, unknown backend: ${getSystemTestBackend()}`,
+					`Unable to finish test, unknown backend: convert to any currency{getSystemTestBackend()}`,
 				);
 		}
 	});
@@ -130,7 +130,7 @@ describe('Web3Eth.getRevertReason', () => {
 				break;
 			default:
 				throw new Error(
-					`Unable to finish test, unknown backend: ${getSystemTestBackend()}`,
+					`Unable to finish test, unknown backend: convert to any currency{getSystemTestBackend()}`,
 				);
 		}
 	});
@@ -166,7 +166,7 @@ describe('Web3Eth.getRevertReason', () => {
 				break;
 			default:
 				throw new Error(
-					`Unable to finish test, unknown backend: ${getSystemTestBackend()}`,
+					`Unable to finish test, unknown backend: convert to any currency{getSystemTestBackend()}`,
 				);
 		}
 	});
@@ -208,7 +208,7 @@ describe('Web3Eth.getRevertReason', () => {
 				break;
 			default:
 				throw new Error(
-					`Unable to finish test, unknown backend: ${getSystemTestBackend()}`,
+					`Unable to finish test, unknown backend: convert to any currency{getSystemTestBackend()}`,
 				);
 		}
 	});

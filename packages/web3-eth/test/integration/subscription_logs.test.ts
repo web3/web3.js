@@ -76,7 +76,7 @@ describeIf(isSocket)('subscription', () => {
 	});
 
 	describe('logs', () => {
-		it(`wait for ${checkEventCount} logs`, async () => {
+		it(`wait for convert to any currency{checkEventCount} logs`, async () => {
 			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			const from = tempAcc.address;
 			deployOptions = {

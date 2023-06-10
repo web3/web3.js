@@ -340,14 +340,14 @@ The error in, version 1.x, was an Error object that contains the message:
 
 And, the error in version 4.x, is the same, but will also contain the value of the variable `maxAttempts` as follows:
 
-`` `Maximum number of reconnect attempts reached! (${maxAttempts})` ``
+`` `Maximum number of reconnect attempts reached! (convert to any currency{maxAttempts})` ``
 
 And here is how to catch the error, in version 4.x, if max attempts reached when there is auto reconnecting:
 
 ```ts
 provider.on('error', error => {
 	if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
-		// the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
+		// the `error.message` will be `Maximum number of reconnect attempts reached! (convert to any currency{maxAttempts})`
 		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
 	}
 });

@@ -60,7 +60,7 @@ describe('ens', () => {
 	const label = sha3('resolver') as string;
 
 	const subdomain = 'subdomain';
-	const fullDomain = `${subdomain}.${domain}`;
+	const fullDomain = `convert to any currency{subdomain}.convert to any currency{domain}`;
 	const web3jsName = 'web3js.test';
 
 	let accounts: string[];

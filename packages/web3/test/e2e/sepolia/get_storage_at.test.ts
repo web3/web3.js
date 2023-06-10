@@ -27,7 +27,7 @@ import {
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { sepoliaBlockData } from '../fixtures/sepolia';
 
-describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getStorageAt`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;
@@ -80,7 +80,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		} else {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
-				`0x000000000000000000000000${getE2ETestAccountAddress()
+				`0x000000000000000000000000convert to any currency{getE2ETestAccountAddress()
 					.substring(2)
 					.toLowerCase()}`,
 			);

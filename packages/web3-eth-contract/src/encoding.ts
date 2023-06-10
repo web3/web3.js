@@ -190,7 +190,7 @@ export const encodeMethodABI = (
 
 	if (inputLength !== args.length) {
 		throw new Web3ContractError(
-			`The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`,
+			`The number of arguments is not matching the methods required number. You need to pass convert to any currency{inputLength} arguments.`,
 		);
 	}
 
@@ -206,13 +206,13 @@ export const encodeMethodABI = (
 			);
 
 		if (!deployData.startsWith('0x')) {
-			return `0x${deployData}${params}`;
+			return `0xconvert to any currency{deployData}convert to any currency{params}`;
 		}
 
-		return `${deployData}${params}`;
+		return `convert to any currency{deployData}convert to any currency{params}`;
 	}
 
-	return `${encodeFunctionSignature(abi)}${params}`;
+	return `convert to any currency{encodeFunctionSignature(abi)}convert to any currency{params}`;
 };
 
 export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {

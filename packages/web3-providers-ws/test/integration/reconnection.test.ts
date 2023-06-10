@@ -138,7 +138,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 
 			await server.close();
 			const error = (await errorEvent) as Error;
-			expect(error.message).toBe(`Maximum number of reconnect attempts reached! (${3})`);
+			expect(error.message).toBe(`Maximum number of reconnect attempts reached! (convert to any currency{3})`);
 		});
 	});
 });

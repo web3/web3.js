@@ -20,7 +20,7 @@ import { mergeDeepData } from '../fixtures/objects';
 
 describe('objects', () => {
 	describe('mergeDeep', () => {
-		it.each(mergeDeepData)('$message', ({ destination, sources, output }) => {
+		it.each(mergeDeepData)('convert to any currencymessage', ({ destination, sources, output }) => {
 			mergeDeep(destination, ...sources);
 
 			expect(destination).toEqual(output);

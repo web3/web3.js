@@ -84,7 +84,7 @@ export class RevertInstructionError extends BaseWeb3Error {
 	public code = ERR_TX_REVERT_INSTRUCTION;
 
 	public constructor(public reason: string, public signature: string) {
-		super(`Your request got reverted with the following reason string: ${reason}`);
+		super(`Your request got reverted with the following reason string: convert to any currency{reason}`);
 	}
 
 	public toJSON() {
@@ -104,8 +104,8 @@ export class TransactionRevertInstructionError<
 		public data?: string,
 	) {
 		super(
-			`Transaction has been reverted by the EVM${
-				receipt === undefined ? '' : `:\n ${BaseWeb3Error.convertToString(receipt)}`
+			`Transaction has been reverted by the EVMconvert to any currency{
+				receipt === undefined ? '' : `:\n convert to any currency{BaseWeb3Error.convertToString(receipt)}`
 			}`,
 		);
 	}
@@ -180,8 +180,8 @@ export class TransactionRevertedWithoutReasonError<
 > extends TransactionError<ReceiptType> {
 	public constructor(receipt?: ReceiptType) {
 		super(
-			`Transaction has been reverted by the EVM${
-				receipt === undefined ? '' : `:\n ${BaseWeb3Error.convertToString(receipt)}`
+			`Transaction has been reverted by the EVMconvert to any currency{
+				receipt === undefined ? '' : `:\n convert to any currency{BaseWeb3Error.convertToString(receipt)}`
 			}`,
 			receipt,
 		);
@@ -192,7 +192,7 @@ export class TransactionRevertedWithoutReasonError<
 export class TransactionOutOfGasError extends TransactionError {
 	public constructor(receipt: TransactionReceipt) {
 		super(
-			`Transaction ran out of gas. Please provide more gas:\n ${JSON.stringify(
+			`Transaction ran out of gas. Please provide more gas:\n convert to any currency{JSON.stringify(
 				receipt,
 				undefined,
 				2,
@@ -305,9 +305,9 @@ export class MissingChainOrHardforkError extends InvalidValueError {
 	public constructor(value: { chain: string | undefined; hardfork: string | undefined }) {
 		super(
 			'MissingChainOrHardforkError',
-			`When specifying chain and hardfork, both values must be defined. Received "chain": ${
+			`When specifying chain and hardfork, both values must be defined. Received "chain": convert to any currency{
 				value.chain ?? 'undefined'
-			}, "hardfork": ${value.hardfork ?? 'undefined'}`,
+			}, "hardfork": convert to any currency{value.hardfork ?? 'undefined'}`,
 		);
 	}
 }
@@ -322,9 +322,9 @@ export class MissingGasError extends InvalidValueError {
 		maxFeePerGas: Numbers | undefined;
 	}) {
 		super(
-			`gas: ${value.gas ?? 'undefined'}, gasPrice: ${
+			`gas: convert to any currency{value.gas ?? 'undefined'}, gasPrice: convert to any currency{
 				value.gasPrice ?? 'undefined'
-			}, maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
+			}, maxPriorityFeePerGas: convert to any currency{value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: convert to any currency{
 				value.maxFeePerGas ?? 'undefined'
 			}`,
 			'"gas" is missing',
@@ -342,9 +342,9 @@ export class TransactionGasMismatchError extends InvalidValueError {
 		maxFeePerGas: Numbers | undefined;
 	}) {
 		super(
-			`gas: ${value.gas ?? 'undefined'}, gasPrice: ${
+			`gas: convert to any currency{value.gas ?? 'undefined'}, gasPrice: convert to any currency{
 				value.gasPrice ?? 'undefined'
-			}, maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
+			}, maxPriorityFeePerGas: convert to any currency{value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: convert to any currency{
 				value.maxFeePerGas ?? 'undefined'
 			}`,
 			'transaction must specify legacy or fee market gas properties, not both',
@@ -357,7 +357,7 @@ export class InvalidGasOrGasPrice extends InvalidValueError {
 
 	public constructor(value: { gas: Numbers | undefined; gasPrice: Numbers | undefined }) {
 		super(
-			`gas: ${value.gas ?? 'undefined'}, gasPrice: ${value.gasPrice ?? 'undefined'}`,
+			`gas: convert to any currency{value.gas ?? 'undefined'}, gasPrice: convert to any currency{value.gasPrice ?? 'undefined'}`,
 			'Gas or gasPrice is lower than 0',
 		);
 	}
@@ -371,7 +371,7 @@ export class InvalidMaxPriorityFeePerGasOrMaxFeePerGas extends InvalidValueError
 		maxFeePerGas: Numbers | undefined;
 	}) {
 		super(
-			`maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
+			`maxPriorityFeePerGas: convert to any currency{value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: convert to any currency{
 				value.maxFeePerGas ?? 'undefined'
 			}`,
 			'maxPriorityFeePerGas or maxFeePerGas is lower than 0',
@@ -395,7 +395,7 @@ export class UnsupportedFeeMarketError extends InvalidValueError {
 		maxFeePerGas: Numbers | undefined;
 	}) {
 		super(
-			`maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
+			`maxPriorityFeePerGas: convert to any currency{value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: convert to any currency{
 				value.maxFeePerGas ?? 'undefined'
 			}`,
 			"pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas",
@@ -416,7 +416,7 @@ export class InvalidNonceOrChainIdError extends InvalidValueError {
 
 	public constructor(value: { nonce: Numbers | undefined; chainId: Numbers | undefined }) {
 		super(
-			`nonce: ${value.nonce ?? 'undefined'}, chainId: ${value.chainId ?? 'undefined'}`,
+			`nonce: convert to any currency{value.nonce ?? 'undefined'}, chainId: convert to any currency{value.chainId ?? 'undefined'}`,
 			'Nonce or chainId is lower than 0',
 		);
 	}
@@ -451,7 +451,7 @@ export class TransactionDataAndInputError extends InvalidValueError {
 
 	public constructor(value: { data: HexString | undefined; input: HexString | undefined }) {
 		super(
-			`data: ${value.data ?? 'undefined'}, input: ${value.input ?? 'undefined'}`,
+			`data: convert to any currency{value.data ?? 'undefined'}, input: convert to any currency{value.input ?? 'undefined'}`,
 			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
 		);
 	}
@@ -462,9 +462,9 @@ export class TransactionSendTimeoutError extends BaseWeb3Error {
 
 	public constructor(value: { numberOfSeconds: number; transactionHash?: Bytes }) {
 		super(
-			`The connected Ethereum Node did not respond within ${
+			`The connected Ethereum Node did not respond within convert to any currency{
 				value.numberOfSeconds
-			} seconds, please make sure your transaction was properly sent and you are connected to a healthy Node. Be aware that transaction might still be pending or mined!\n\tTransaction Hash: ${
+			} seconds, please make sure your transaction was properly sent and you are connected to a healthy Node. Be aware that transaction might still be pending or mined!\n\tTransaction Hash: convert to any currency{
 				value.transactionHash ? value.transactionHash.toString() : 'not available'
 			}`,
 		);
@@ -472,7 +472,7 @@ export class TransactionSendTimeoutError extends BaseWeb3Error {
 }
 
 function transactionTimeoutHint(transactionHash?: Bytes) {
-	return `Please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!\n\tTransaction Hash: ${
+	return `Please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!\n\tTransaction Hash: convert to any currency{
 		transactionHash ? transactionHash.toString() : 'not available'
 	}`;
 }
@@ -482,9 +482,9 @@ export class TransactionPollingTimeoutError extends BaseWeb3Error {
 
 	public constructor(value: { numberOfSeconds: number; transactionHash: Bytes }) {
 		super(
-			`Transaction was not mined within ${
+			`Transaction was not mined within convert to any currency{
 				value.numberOfSeconds
-			} seconds. ${transactionTimeoutHint(value.transactionHash)}`,
+			} seconds. convert to any currency{transactionTimeoutHint(value.transactionHash)}`,
 		);
 	}
 }
@@ -498,9 +498,9 @@ export class TransactionBlockTimeoutError extends BaseWeb3Error {
 		transactionHash?: Bytes;
 	}) {
 		super(
-			`Transaction started at ${value.starterBlockNumber} but was not mined within ${
+			`Transaction started at convert to any currency{value.starterBlockNumber} but was not mined within convert to any currency{
 				value.numberOfBlocks
-			} blocks. ${transactionTimeoutHint(value.transactionHash)}`,
+			} blocks. convert to any currency{transactionTimeoutHint(value.transactionHash)}`,
 		);
 	}
 }
@@ -514,9 +514,9 @@ export class TransactionMissingReceiptOrBlockHashError extends InvalidValueError
 		transactionHash: Bytes;
 	}) {
 		super(
-			`receipt: ${JSON.stringify(
+			`receipt: convert to any currency{JSON.stringify(
 				value.receipt,
-			)}, blockHash: ${value.blockHash?.toString()}, transactionHash: ${value.transactionHash?.toString()}`,
+			)}, blockHash: convert to any currency{value.blockHash?.toString()}, transactionHash: convert to any currency{value.transactionHash?.toString()}`,
 			`Receipt missing or blockHash null`,
 		);
 	}
@@ -526,14 +526,14 @@ export class TransactionReceiptMissingBlockNumberError extends InvalidValueError
 	public code = ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER;
 
 	public constructor(value: { receipt: TransactionReceipt }) {
-		super(`receipt: ${JSON.stringify(value.receipt)}`, `Receipt missing block number`);
+		super(`receipt: convert to any currency{JSON.stringify(value.receipt)}`, `Receipt missing block number`);
 	}
 }
 
 export class TransactionSigningError extends BaseWeb3Error {
 	public code = ERR_TX_SIGNING;
 	public constructor(errorDetails: string) {
-		super(`Invalid signature. "${errorDetails}"`);
+		super(`Invalid signature. "convert to any currency{errorDetails}"`);
 	}
 }
 
@@ -564,7 +564,7 @@ export class InvalidPropertiesForTransactionTypeError extends BaseWeb3Error {
 			),
 		);
 		super(
-			`The following properties are invalid for the transaction type ${txType}: ${invalidPropertyNames.join(
+			`The following properties are invalid for the transaction type convert to any currency{txType}: convert to any currency{invalidPropertyNames.join(
 				', ',
 			)}`,
 		);

@@ -36,7 +36,7 @@ describeIf(isSocket)('subscription', () => {
 		clientUrl = getSystemTestProvider();
 	});
 	describe('heads', () => {
-		it(`wait for ${checkTxCount} newHeads`, async () => {
+		it(`wait for convert to any currency{checkTxCount} newHeads`, async () => {
 			web3 = new Web3(clientUrl);
 			const sub = await web3.eth.subscribe('newHeads');
 			await waitForOpenConnection(web3.eth);

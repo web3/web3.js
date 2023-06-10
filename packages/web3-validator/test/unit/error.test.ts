@@ -30,7 +30,7 @@ describe('Web3ValidationError', () => {
 		const validationError = new Web3ValidatorError([error]);
 
 		expect(validationError).toBeInstanceOf(Web3ValidatorError);
-		expect(validationError.message).toBe(`Web3 validator found 1 error[s]:\n${error.message}`);
+		expect(validationError.message).toBe(`Web3 validator found 1 error[s]:\nconvert to any currency{error.message}`);
 	});
 
 	it.each(fullErrorsWithInstance)(
@@ -40,9 +40,9 @@ describe('Web3ValidationError', () => {
 
 			expect(validationError).toBeInstanceOf(Web3ValidatorError);
 			expect(validationError.message).toBe(
-				`Web3 validator found 1 error[s]:\nvalue "${
+				`Web3 validator found 1 error[s]:\nvalue "convert to any currency{
 					(error.params as { value: unknown }).value
-				}" at "${error.instancePath}" ${error.message}`,
+				}" at "convert to any currency{error.instancePath}" convert to any currency{error.message}`,
 			);
 		},
 	);
@@ -54,7 +54,7 @@ describe('Web3ValidationError', () => {
 
 			expect(validationError).toBeInstanceOf(Web3ValidatorError);
 			expect(validationError.message).toBe(
-				`Web3 validator found 1 error[s]:\nvalue at "${error.instancePath}" ${error.message}`,
+				`Web3 validator found 1 error[s]:\nvalue at "convert to any currency{error.instancePath}" convert to any currency{error.message}`,
 			);
 		},
 	);
@@ -66,7 +66,7 @@ describe('Web3ValidationError', () => {
 
 			expect(validationError).toBeInstanceOf(Web3ValidatorError);
 			expect(validationError.message).toBe(
-				`Web3 validator found 1 error[s]:\nvalue at "${error.instancePath}" caused unspecified error`,
+				`Web3 validator found 1 error[s]:\nvalue at "convert to any currency{error.instancePath}" caused unspecified error`,
 			);
 		},
 	);

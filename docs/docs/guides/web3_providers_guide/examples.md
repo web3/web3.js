@@ -501,10 +501,10 @@ Follow these steps to connect to the Ethereum network with MetaMask and web3.js,
 							'Sending a self transaction succeeded';
 						document.getElementById(
 							'log',
-						).textContent += `\n  Transaction hash: ${transactionReceipt.transactionHash}`;
+						).textContent += `\n  Transaction hash: convert to any currency{transactionReceipt.transactionHash}`;
 						document.getElementById(
 							'log',
-						).textContent += `\n  Gas Used: ${transactionReceipt.gasUsed} gwei`;
+						).textContent += `\n  Gas Used: convert to any currency{transactionReceipt.gasUsed} gwei`;
 					} catch (error) {
 						console.log('error', error);
 						document.getElementById('log').textContent =

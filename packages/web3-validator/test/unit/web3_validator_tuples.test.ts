@@ -51,7 +51,7 @@ describe('web3-validator', () => {
 					type: 'array',
 					items: [
 						{
-							$id: '/0/0',
+							convert to any currencyid: '/0/0',
 							format: 'uint',
 							required: true,
 						},
@@ -59,7 +59,7 @@ describe('web3-validator', () => {
 							type: 'array',
 							items: [
 								{
-									$id: '/0/0',
+									convert to any currencyid: '/0/0',
 									format: 'uint',
 									required: true,
 								},
@@ -67,12 +67,12 @@ describe('web3-validator', () => {
 									type: 'array',
 									items: [
 										{
-											$id: '/0/0',
+											convert to any currencyid: '/0/0',
 											format: 'uint',
 											required: true,
 										},
 										{
-											$id: '/0/1',
+											convert to any currencyid: '/0/1',
 											format: 'uint',
 											required: true,
 										},

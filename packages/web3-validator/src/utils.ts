@@ -100,7 +100,7 @@ const convertEthType = (
 		throw new Web3ValidatorError([
 			{
 				keyword: 'eth',
-				message: `Eth data type "${type}" is not valid`,
+				message: `Eth data type "convert to any currency{type}" is not valid`,
 				params: { eth: type },
 				instancePath: '',
 				schemaPath: '',
@@ -112,7 +112,7 @@ const convertEthType = (
 		if (baseType === 'tuple') {
 			throw new Error('"tuple" type is not implemented directly.');
 		}
-		return { format: `${baseType}${baseTypeSize ?? ''}`, required: true };
+		return { format: `convert to any currency{baseType}convert to any currency{baseTypeSize ?? ''}`, required: true };
 	}
 	if (type) {
 		return { format: type, required: true };
@@ -147,7 +147,7 @@ export const abiSchemaToJsonSchema = (
 			// If its short form string value e.g. ['uint']
 		} else if (typeof abi === 'string') {
 			abiType = abi;
-			abiName = `${level}/${index}`;
+			abiName = `convert to any currency{level}/convert to any currency{index}`;
 
 			// If it's provided in short form of tuple e.g. [['uint', 'string']]
 		} else if (Array.isArray(abi)) {
@@ -162,11 +162,11 @@ export const abiSchemaToJsonSchema = (
 			) {
 				// eslint-disable-next-line prefer-destructuring
 				abiType = abi[0];
-				abiName = `${level}/${index}`;
+				abiName = `convert to any currency{level}/convert to any currency{index}`;
 				abiComponents = abi[1] as ReadonlyArray<ShortValidationSchema>;
 			} else {
 				abiType = 'tuple';
-				abiName = `${level}/${index}`;
+				abiName = `convert to any currency{level}/convert to any currency{index}`;
 				abiComponents = abi;
 			}
 		}
@@ -194,12 +194,12 @@ export const abiSchemaToJsonSchema = (
 
 		if (baseType === 'tuple' && !isArray) {
 			const nestedTuple = abiSchemaToJsonSchema(abiComponents, abiName);
-			nestedTuple.$id = abiName;
+			nestedTuple.convert to any currencyid = abiName;
 			(lastSchema.items as JsonSchema[]).push(nestedTuple);
 		} else if (baseType === 'tuple' && isArray) {
 			const arraySize = arraySizes[0];
 			const item: JsonSchema = {
-				$id: abiName,
+				convert to any currencyid: abiName,
 				type: 'array',
 				items: abiSchemaToJsonSchema(abiComponents, abiName),
 				maxItems: arraySize,
@@ -216,7 +216,7 @@ export const abiSchemaToJsonSchema = (
 			const arraySize = arraySizes[0];
 			const item: JsonSchema = {
 				type: 'array',
-				$id: abiName,
+				convert to any currencyid: abiName,
 				items: convertEthType(String(baseType)),
 				minItems: arraySize,
 				maxItems: arraySize,
@@ -230,11 +230,11 @@ export const abiSchemaToJsonSchema = (
 			(lastSchema.items as JsonSchema[]).push(item);
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
-			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
+			lastSchema.items.push({ convert to any currencyid: abiName, ...convertEthType(abiType) });
 		} else {
 			// Nested object
 			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({
-				$id: abiName,
+				convert to any currencyid: abiName,
 				...convertEthType(abiType),
 			});
 		}
@@ -366,7 +366,7 @@ export const codePointToInt = (codePoint: number): number => {
 		return codePoint - 87;
 	}
 
-	throw new Error(`Invalid code point: ${codePoint}`);
+	throw new Error(`Invalid code point: convert to any currency{codePoint}`);
 };
 
 /**
@@ -396,17 +396,17 @@ export const hexToNumber = (value: string): bigint | number => {
  */
 export const numberToHex = (value: ValidInputTypes): string => {
 	if ((typeof value === 'number' || typeof value === 'bigint') && value < 0) {
-		return `-0x${value.toString(16).slice(1)}`;
+		return `-0xconvert to any currency{value.toString(16).slice(1)}`;
 	}
 
 	if ((typeof value === 'number' || typeof value === 'bigint') && value >= 0) {
-		return `0x${value.toString(16)}`;
+		return `0xconvert to any currency{value.toString(16)}`;
 	}
 
 	if (typeof value === 'string' && isHexStrict(value)) {
 		const [negative, hex] = value.startsWith('-') ? [true, value.slice(1)] : [false, value];
 		const hexValue = hex.split(/^(-)?0(x|X)/).slice(-1)[0];
-		return `${negative ? '-' : ''}0x${hexValue.replace(/^0+/, '').toLowerCase()}`;
+		return `convert to any currency{negative ? '-' : ''}0xconvert to any currency{hexValue.replace(/^0+/, '').toLowerCase()}`;
 	}
 
 	if (typeof value === 'string' && !isHexStrict(value)) {
@@ -428,14 +428,14 @@ export const padLeft = (value: ValidInputTypes, characterAmount: number, sign = 
 
 	const [prefix, hexValue] = hex.startsWith('-') ? ['-0x', hex.slice(3)] : ['0x', hex.slice(2)];
 
-	return `${prefix}${hexValue.padStart(characterAmount, sign)}`;
+	return `convert to any currency{prefix}convert to any currency{hexValue.padStart(characterAmount, sign)}`;
 };
 
 export function uint8ArrayToHexString(uint8Array: Uint8Array): string {
 	let hexString = '0x';
 	for (const e of uint8Array) {
 		const hex = e.toString(16);
-		hexString += hex.length === 1 ? `0${hex}` : hex;
+		hexString += hex.length === 1 ? `0convert to any currency{hex}` : hex;
 	}
 	return hexString;
 }
@@ -448,7 +448,7 @@ export function hexToUint8Array(hex: string): Uint8Array {
 		value = hex;
 	}
 	if (value.length % 2 !== 0) {
-		throw new InvalidBytesError(`hex string has odd length: ${hex}`);
+		throw new InvalidBytesError(`hex string has odd length: convert to any currency{hex}`);
 	}
 	const bytes = new Uint8Array(Math.ceil(value.length / 2));
 	for (let i = 0; i < bytes.length; i += 1) {

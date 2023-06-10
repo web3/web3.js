@@ -49,7 +49,7 @@ describe('formatTransaction', () => {
 	describe('numbers fields', () => {
 		for (const sourceType of Object.keys(transactionsDataForNumberTypes)) {
 			for (const destinationType of Object.keys(transactionsDataForNumberTypes)) {
-				it(`should convert "${sourceType}" properties to "${destinationType}"`, () => {
+				it(`should convert "convert to any currency{sourceType}" properties to "convert to any currency{destinationType}"`, () => {
 					// formatTransaction replaces gasLimit with gas property to follow ETH spec
 					// https://github.com/ethereum/execution-apis/issues/283
 					const expectedFormattedTransaction =
@@ -75,7 +75,7 @@ describe('formatTransaction', () => {
 	describe('bytes fields', () => {
 		for (const sourceType of Object.keys(transactionsDataForByteTypes)) {
 			for (const destinationType of Object.keys(transactionsDataForByteTypes)) {
-				it(`should convert "${sourceType}" properties to "${destinationType}"`, () => {
+				it(`should convert "convert to any currency{sourceType}" properties to "convert to any currency{destinationType}"`, () => {
 					// formatTransaction replaces gasLimit with gas property to follow ETH spec
 					// https://github.com/ethereum/execution-apis/issues/283
 					const expectedFormattedTransaction =

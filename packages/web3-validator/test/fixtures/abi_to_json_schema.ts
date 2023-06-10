@@ -41,13 +41,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', format: 'uint', required: true }],
+				items: [{ convert to any currencyid: 'a', format: 'uint', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', format: 'uint', required: true }],
+				items: [{ convert to any currencyid: '/0/0', format: 'uint', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -64,13 +64,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', format: 'address', required: true }],
+				items: [{ convert to any currencyid: 'a', format: 'address', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', format: 'address', required: true }],
+				items: [{ convert to any currencyid: '/0/0', format: 'address', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -87,13 +87,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', format: 'bool', required: true }],
+				items: [{ convert to any currencyid: 'a', format: 'bool', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', format: 'bool', required: true }],
+				items: [{ convert to any currencyid: '/0/0', format: 'bool', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -110,13 +110,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		json: {
 			fullSchema: {
 				type: 'array',
-				items: [{ $id: 'a', format: 'bytes', required: true }],
+				items: [{ convert to any currencyid: 'a', format: 'bytes', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
 			shortSchema: {
 				type: 'array',
-				items: [{ $id: '/0/0', format: 'bytes', required: true }],
+				items: [{ convert to any currencyid: '/0/0', format: 'bytes', required: true }],
 				minItems: 1,
 				maxItems: 1,
 			},
@@ -138,8 +138,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 			fullSchema: {
 				type: 'array',
 				items: [
-					{ $id: 'a', format: 'uint', required: true },
-					{ $id: 'b', format: 'int', required: true },
+					{ convert to any currencyid: 'a', format: 'uint', required: true },
+					{ convert to any currencyid: 'b', format: 'int', required: true },
 				],
 				minItems: 2,
 				maxItems: 2,
@@ -147,8 +147,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 			shortSchema: {
 				type: 'array',
 				items: [
-					{ $id: '/0/0', format: 'uint', required: true },
-					{ $id: '/0/1', format: 'int', required: true },
+					{ convert to any currencyid: '/0/0', format: 'uint', required: true },
+					{ convert to any currencyid: '/0/1', format: 'int', required: true },
 				],
 				minItems: 2,
 				maxItems: 2,
@@ -169,7 +169,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: 'a',
+						convert to any currencyid: 'a',
 						type: 'array',
 						items: { format: 'uint', required: true },
 						maxItems: undefined,
@@ -183,7 +183,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						type: 'array',
 						items: { format: 'uint', required: true },
 					},
@@ -207,7 +207,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: 'a',
+						convert to any currencyid: 'a',
 						type: 'array',
 						items: { format: 'uint', required: true },
 						maxItems: 3,
@@ -221,7 +221,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						type: 'array',
 						items: { format: 'uint', required: true },
 						maxItems: 3,
@@ -255,21 +255,21 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: 'a',
+						convert to any currencyid: 'a',
 						type: 'array',
 						items: { format: 'uint', required: true },
 						maxItems: 3,
 						minItems: 3,
 					},
 					{
-						$id: 'b',
+						convert to any currencyid: 'b',
 						type: 'array',
 						items: { format: 'int', required: true },
 						maxItems: undefined,
 						minItems: undefined,
 					},
 					{
-						$id: 'c',
+						convert to any currencyid: 'c',
 						type: 'array',
 						items: { format: 'string', required: true },
 						maxItems: 5,
@@ -283,21 +283,21 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						type: 'array',
 						items: { format: 'uint', required: true },
 						maxItems: 3,
 						minItems: 3,
 					},
 					{
-						$id: '/0/1',
+						convert to any currencyid: '/0/1',
 						type: 'array',
 						items: { format: 'int', required: true },
 						maxItems: undefined,
 						minItems: undefined,
 					},
 					{
-						$id: '/0/2',
+						convert to any currencyid: '/0/2',
 						type: 'array',
 						items: { format: 'string', required: true },
 						maxItems: 5,
@@ -328,8 +328,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: 'a',
-						items: [{ $id: 'b', format: 'uint', required: true }],
+						convert to any currencyid: 'a',
+						items: [{ convert to any currencyid: 'b', format: 'uint', required: true }],
 						minItems: 1,
 						maxItems: 1,
 					},
@@ -342,8 +342,8 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: '/0/0',
-						items: [{ $id: '/0/0/0', format: 'uint', required: true }],
+						convert to any currencyid: '/0/0',
+						items: [{ convert to any currencyid: '/0/0/0', format: 'uint', required: true }],
 						minItems: 1,
 						maxItems: 1,
 					},
@@ -377,10 +377,10 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: 'a',
+						convert to any currencyid: 'a',
 						items: [
-							{ $id: 'b', format: 'uint', required: true },
-							{ $id: 'c', format: 'string', required: true },
+							{ convert to any currencyid: 'b', format: 'uint', required: true },
+							{ convert to any currencyid: 'c', format: 'string', required: true },
 						],
 						minItems: 2,
 						maxItems: 2,
@@ -394,10 +394,10 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						items: [
-							{ $id: '/0/0/0', format: 'uint', required: true },
-							{ $id: '/0/0/1', format: 'string', required: true },
+							{ convert to any currencyid: '/0/0/0', format: 'uint', required: true },
+							{ convert to any currencyid: '/0/0/1', format: 'string', required: true },
 						],
 						minItems: 2,
 						maxItems: 2,
@@ -436,13 +436,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: 'a',
+						convert to any currencyid: 'a',
 						type: 'array',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'a1', format: 'uint', required: true },
-								{ $id: 'a2', format: 'string', required: true },
+								{ convert to any currencyid: 'a1', format: 'uint', required: true },
+								{ convert to any currencyid: 'a2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -458,13 +458,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						type: 'array',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/0/0', format: 'uint', required: true },
-								{ $id: '/0/0/1', format: 'string', required: true },
+								{ convert to any currencyid: '/0/0/0', format: 'uint', required: true },
+								{ convert to any currencyid: '/0/0/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -512,13 +512,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: 'a',
+						convert to any currencyid: 'a',
 						type: 'array',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'a1', format: 'uint', required: true },
-								{ $id: 'a2', format: 'string', required: true },
+								{ convert to any currencyid: 'a1', format: 'uint', required: true },
+								{ convert to any currencyid: 'a2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -534,13 +534,13 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				type: 'array',
 				items: [
 					{
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						type: 'array',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/0/0', format: 'uint', required: true },
-								{ $id: '/0/0/1', format: 'string', required: true },
+								{ convert to any currencyid: '/0/0/0', format: 'uint', required: true },
+								{ convert to any currencyid: '/0/0/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -608,12 +608,12 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: 'a',
+						convert to any currencyid: 'a',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'a1', format: 'uint', required: true },
-								{ $id: 'a2', format: 'string', required: true },
+								{ convert to any currencyid: 'a1', format: 'uint', required: true },
+								{ convert to any currencyid: 'a2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -624,12 +624,12 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 
 					{
 						type: 'array',
-						$id: 'b',
+						convert to any currencyid: 'b',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: 'b1', format: 'uint', required: true },
-								{ $id: 'b2', format: 'string', required: true },
+								{ convert to any currencyid: 'b1', format: 'uint', required: true },
+								{ convert to any currencyid: 'b2', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -646,12 +646,12 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/0/0', format: 'uint', required: true },
-								{ $id: '/0/0/1', format: 'string', required: true },
+								{ convert to any currencyid: '/0/0/0', format: 'uint', required: true },
+								{ convert to any currencyid: '/0/0/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -661,12 +661,12 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					},
 					{
 						type: 'array',
-						$id: '/0/1',
+						convert to any currencyid: '/0/1',
 						items: {
 							type: 'array',
 							items: [
-								{ $id: '/0/1/0', format: 'uint', required: true },
-								{ $id: '/0/1/1', format: 'string', required: true },
+								{ convert to any currencyid: '/0/1/0', format: 'uint', required: true },
+								{ convert to any currencyid: '/0/1/1', format: 'string', required: true },
 							],
 							maxItems: 2,
 							minItems: 2,
@@ -718,7 +718,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					items: [
 						{
 							type: 'array',
-							$id: 'a',
+							convert to any currencyid: 'a',
 							items: {
 								format: 'uint',
 								required: true,
@@ -740,7 +740,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					items: [
 						{
 							type: 'array',
-							$id: '/0/0',
+							convert to any currencyid: '/0/0',
 							items: {
 								format: 'uint',
 								required: true,
@@ -791,7 +791,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					items: [
 						{
 							type: 'array',
-							$id: 'a',
+							convert to any currencyid: 'a',
 							items: {
 								format: 'uint',
 								required: true,
@@ -811,7 +811,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					items: [
 						{
 							type: 'array',
-							$id: '/0/0',
+							convert to any currencyid: '/0/0',
 							items: {
 								format: 'uint',
 								required: true,
@@ -883,18 +883,18 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					type: 'array',
 					items: [
 						{
-							$id: 'a',
+							convert to any currencyid: 'a',
 							type: 'array',
 							items: {
 								type: 'array',
 								items: [
 									{
-										$id: 'level',
+										convert to any currencyid: 'level',
 										format: 'uint',
 										required: true,
 									},
 									{
-										$id: 'message',
+										convert to any currencyid: 'message',
 										format: 'string',
 										required: true,
 									},
@@ -916,18 +916,18 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					type: 'array',
 					items: [
 						{
-							$id: '/0/0',
+							convert to any currencyid: '/0/0',
 							type: 'array',
 							items: {
 								type: 'array',
 								items: [
 									{
-										$id: '/0/0/0',
+										convert to any currencyid: '/0/0/0',
 										format: 'uint',
 										required: true,
 									},
 									{
-										$id: '/0/0/1',
+										convert to any currencyid: '/0/0/1',
 										format: 'string',
 										required: true,
 									},
@@ -1024,18 +1024,18 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					type: 'array',
 					items: [
 						{
-							$id: 'a',
+							convert to any currencyid: 'a',
 							type: 'array',
 							items: {
 								type: 'array',
 								items: [
 									{
-										$id: 'level',
+										convert to any currencyid: 'level',
 										format: 'uint',
 										required: true,
 									},
 									{
-										$id: 'message',
+										convert to any currencyid: 'message',
 										format: 'string',
 										required: true,
 									},
@@ -1059,18 +1059,18 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					type: 'array',
 					items: [
 						{
-							$id: '/0/0',
+							convert to any currencyid: '/0/0',
 							type: 'array',
 							items: {
 								type: 'array',
 								items: [
 									{
-										$id: '/0/0/0',
+										convert to any currencyid: '/0/0/0',
 										format: 'uint',
 										required: true,
 									},
 									{
-										$id: '/0/0/1',
+										convert to any currencyid: '/0/0/1',
 										format: 'string',
 										required: true,
 									},
@@ -1156,16 +1156,16 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: 'user',
+						convert to any currencyid: 'user',
 						items: [
-							{ $id: 'name', format: 'string', required: true },
-							{ $id: 'addr', format: 'address', required: true },
+							{ convert to any currencyid: 'name', format: 'string', required: true },
+							{ convert to any currencyid: 'addr', format: 'address', required: true },
 							{
 								type: 'array',
-								$id: 'contact',
+								convert to any currencyid: 'contact',
 								items: [
-									{ $id: 'email', format: 'string', required: true },
-									{ $id: 'phone', format: 'string', required: true },
+									{ convert to any currencyid: 'email', format: 'string', required: true },
+									{ convert to any currencyid: 'phone', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1183,16 +1183,16 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						items: [
-							{ $id: '/0/0/0', format: 'string', required: true },
-							{ $id: '/0/0/1', format: 'address', required: true },
+							{ convert to any currencyid: '/0/0/0', format: 'string', required: true },
+							{ convert to any currencyid: '/0/0/1', format: 'address', required: true },
 							{
 								type: 'array',
-								$id: '/0/0/2',
+								convert to any currencyid: '/0/0/2',
 								items: [
-									{ $id: '/0/0/2/0', format: 'string', required: true },
-									{ $id: '/0/0/2/1', format: 'string', required: true },
+									{ convert to any currencyid: '/0/0/2/0', format: 'string', required: true },
+									{ convert to any currencyid: '/0/0/2/1', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1254,16 +1254,16 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: 'user',
+						convert to any currencyid: 'user',
 						items: [
-							{ $id: 'name', format: 'string', required: true },
-							{ $id: 'addr', format: 'address', required: true },
+							{ convert to any currencyid: 'name', format: 'string', required: true },
+							{ convert to any currencyid: 'addr', format: 'address', required: true },
 							{
 								type: 'array',
-								$id: 'contact',
+								convert to any currencyid: 'contact',
 								items: [
-									{ $id: 'email', format: 'string', required: true },
-									{ $id: 'phone', format: 'string', required: true },
+									{ convert to any currencyid: 'email', format: 'string', required: true },
+									{ convert to any currencyid: 'phone', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1281,16 +1281,16 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				items: [
 					{
 						type: 'array',
-						$id: '/0/0',
+						convert to any currencyid: '/0/0',
 						items: [
-							{ $id: '/0/0/0', format: 'string', required: true },
-							{ $id: '/0/0/1', format: 'address', required: true },
+							{ convert to any currencyid: '/0/0/0', format: 'string', required: true },
+							{ convert to any currencyid: '/0/0/1', format: 'address', required: true },
 							{
 								type: 'array',
-								$id: '/0/0/2',
+								convert to any currencyid: '/0/0/2',
 								items: [
-									{ $id: '/0/0/2/0', format: 'string', required: true },
-									{ $id: '/0/0/2/1', format: 'string', required: true },
+									{ convert to any currencyid: '/0/0/2/0', format: 'string', required: true },
+									{ convert to any currencyid: '/0/0/2/1', format: 'string', required: true },
 								],
 								maxItems: 2,
 								minItems: 2,
@@ -1416,7 +1416,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					type: 'array',
 					items: [
 						{
-							$id: 'rects',
+							convert to any currencyid: 'rects',
 							type: 'array',
 							items: {
 								type: 'array',
@@ -1424,30 +1424,30 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 									{
 										type: 'array',
 										items: [
-											{ $id: 'x', format: 'int256', required: true },
-											{ $id: 'y', format: 'int256', required: true },
+											{ convert to any currencyid: 'x', format: 'int256', required: true },
+											{ convert to any currencyid: 'y', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
-										$id: 'start',
+										convert to any currencyid: 'start',
 									},
 									{
 										type: 'array',
 										items: [
-											{ $id: 'x', format: 'int256', required: true },
-											{ $id: 'y', format: 'int256', required: true },
+											{ convert to any currencyid: 'x', format: 'int256', required: true },
+											{ convert to any currencyid: 'y', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
-										$id: 'end',
+										convert to any currencyid: 'end',
 									},
 								],
 								maxItems: 2,
 								minItems: 2,
 							},
 						},
-						{ $id: 'numberValue', format: 'uint256', required: true },
-						{ $id: 'boolValue', format: 'bool', required: true },
+						{ convert to any currencyid: 'numberValue', format: 'uint256', required: true },
+						{ convert to any currencyid: 'boolValue', format: 'bool', required: true },
 					],
 					maxItems: 3,
 					minItems: 3,
@@ -1461,7 +1461,7 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 					type: 'array',
 					items: [
 						{
-							$id: '/0/0',
+							convert to any currencyid: '/0/0',
 							type: 'array',
 							items: {
 								type: 'array',
@@ -1469,30 +1469,30 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 									{
 										type: 'array',
 										items: [
-											{ $id: '/0/0/0/0', format: 'int256', required: true },
-											{ $id: '/0/0/0/1', format: 'int256', required: true },
+											{ convert to any currencyid: '/0/0/0/0', format: 'int256', required: true },
+											{ convert to any currencyid: '/0/0/0/1', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
-										$id: '/0/0/0',
+										convert to any currencyid: '/0/0/0',
 									},
 									{
 										type: 'array',
 										items: [
-											{ $id: '/0/0/1/0', format: 'int256', required: true },
-											{ $id: '/0/0/1/1', format: 'int256', required: true },
+											{ convert to any currencyid: '/0/0/1/0', format: 'int256', required: true },
+											{ convert to any currencyid: '/0/0/1/1', format: 'int256', required: true },
 										],
 										maxItems: 2,
 										minItems: 2,
-										$id: '/0/0/1',
+										convert to any currencyid: '/0/0/1',
 									},
 								],
 								maxItems: 2,
 								minItems: 2,
 							},
 						},
-						{ $id: '/0/1', format: 'uint256', required: true },
-						{ $id: '/0/2', format: 'bool', required: true },
+						{ convert to any currencyid: '/0/1', format: 'uint256', required: true },
+						{ convert to any currencyid: '/0/2', format: 'bool', required: true },
 					],
 					maxItems: 3,
 					minItems: 3,

@@ -37,4 +37,4 @@ If the provided IBAN was not a valid Ethereum Address, an error used be thrown w
 
 ##### In version 4.x
 
-If the provided IBAN was not a valid Ethereum Address, an error object will be thrown which contains the message: `'Invalid value given "${address}". Error: 'invalid ethereum address'` and the code `1005`.
+If the provided IBAN was not a valid Ethereum Address, an error object will be thrown which contains the message: `'Invalid value given "convert to any currency{address}". Error: 'invalid ethereum address'` and the code `1005`.

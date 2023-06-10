@@ -18,7 +18,7 @@ import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 
-describe(`${getSystemTestBackend()} tests - getId`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getId`, () => {
 	const provider = getSystemE2ETestProvider();
 	const expectedChainId = getSystemTestBackend() === 'sepolia' ? BigInt(11155111) : BigInt(1);
 

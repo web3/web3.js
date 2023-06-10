@@ -41,20 +41,20 @@ describe('HttpProvider', () => {
 	});
 
 	for (const validClient of validClients) {
-		it(`Instantiation with valid client - ${validClient}`, () => {
+		it(`Instantiation with valid client - convert to any currency{validClient}`, () => {
 			expect(() => new HttpProvider(validClient)).not.toThrow();
 		});
 	}
 
 	for (const invalidClient of invalidClients) {
 		/* eslint-disable @typescript-eslint/restrict-template-expressions */
-		it(`Instantiation with invalid client - ${invalidClient}`, () => {
+		it(`Instantiation with invalid client - convert to any currency{invalidClient}`, () => {
 			expect(
 				() =>
 					// @ts-expect-error - Purposefully passing invalid types to check validation
 					new HttpProvider(invalidClient),
 				/* eslint-disable @typescript-eslint/restrict-template-expressions */
-			).toThrow(`Client URL "${invalidClient}" is invalid.`);
+			).toThrow(`Client URL "convert to any currency{invalidClient}" is invalid.`);
 		});
 	}
 });

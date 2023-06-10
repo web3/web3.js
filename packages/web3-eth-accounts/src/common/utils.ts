@@ -32,7 +32,7 @@ type ConfigHardfork =
  */
 export const stripHexPrefix = (str: string): string => {
 	if (typeof str !== 'string')
-		throw new Error(`[stripHexPrefix] input must be type 'string', received ${typeof str}`);
+		throw new Error(`[stripHexPrefix] input must be type 'string', received convert to any currency{typeof str}`);
 
 	return isHexPrefixed(str) ? str.slice(2) : str;
 };
@@ -46,9 +46,9 @@ function formatNonce(nonce: string): string {
 		return '0x0000000000000000';
 	}
 	if (isHexPrefixed(nonce)) {
-		return `0x${stripHexPrefix(nonce).padStart(16, '0')}`;
+		return `0xconvert to any currency{stripHexPrefix(nonce).padStart(16, '0')}`;
 	}
-	return `0x${nonce.padStart(16, '0')}`;
+	return `0xconvert to any currency{nonce.padStart(16, '0')}`;
 }
 
 /**
@@ -58,9 +58,9 @@ function formatNonce(nonce: string): string {
  */
 const intToHex = function (i: number) {
 	if (!Number.isSafeInteger(i) || i < 0) {
-		throw new Error(`Received an invalid integer type: ${i}`);
+		throw new Error(`Received an invalid integer type: convert to any currency{i}`);
 	}
-	return `0x${i.toString(16)}`;
+	return `0xconvert to any currency{i.toString(16)}`;
 };
 
 /**
@@ -284,7 +284,7 @@ export function parseGethGenesis(json: any, name?: string, mergeForkIdPostMerge?
 		return parseGethParams(json, mergeForkIdPostMerge);
 	} catch (e: any) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-		throw new Error(`Error parsing parameters file: ${e.message}`);
+		throw new Error(`Error parsing parameters file: convert to any currency{e.message}`);
 	}
 }
 
@@ -297,10 +297,10 @@ export function padToEven(value: string): string {
 	let a = value;
 
 	if (typeof a !== 'string') {
-		throw new Error(`[padToEven] value must be type 'string', received ${typeof a}`);
+		throw new Error(`[padToEven] value must be type 'string', received convert to any currency{typeof a}`);
 	}
 
-	if (a.length % 2) a = `0${a}`;
+	if (a.length % 2) a = `0convert to any currency{a}`;
 
 	return a;
 }
@@ -312,7 +312,7 @@ export function padToEven(value: string): string {
  */
 export const intToUint8Array = function (i: number) {
 	const hex = intToHex(i);
-	return hexToBytes(`0x${padToEven(hex.slice(2))}`);
+	return hexToBytes(`0xconvert to any currency{padToEven(hex.slice(2))}`);
 };
 
 /**
@@ -338,7 +338,7 @@ export const toUint8Array = function (v: ToBytesInputTypes): Uint8Array {
 	if (typeof v === 'string') {
 		if (!isHexString(v)) {
 			throw new Error(
-				`Cannot convert string to Uint8Array. only supports 0x-prefixed hex strings and this string was given: ${v}`,
+				`Cannot convert string to Uint8Array. only supports 0x-prefixed hex strings and this string was given: convert to any currency{v}`,
 			);
 		}
 		return hexToBytes(padToEven(stripHexPrefix(v)));
@@ -350,11 +350,11 @@ export const toUint8Array = function (v: ToBytesInputTypes): Uint8Array {
 
 	if (typeof v === 'bigint') {
 		if (v < BigInt(0)) {
-			throw new Error(`Cannot convert negative bigint to Uint8Array. Given: ${v}`);
+			throw new Error(`Cannot convert negative bigint to Uint8Array. Given: convert to any currency{v}`);
 		}
 		let n = v.toString(16);
-		if (n.length % 2) n = `0${n}`;
-		return toUint8Array(`0x${n}`);
+		if (n.length % 2) n = `0convert to any currency{n}`;
+		return toUint8Array(`0xconvert to any currency{n}`);
 	}
 
 	if (v.toArray) {
@@ -380,7 +380,7 @@ export function uint8ArrayToBigInt(buf: Uint8Array) {
  * Converts a {@link bigint} to a {@link Uint8Array}
  */
 export function bigIntToUint8Array(num: bigint) {
-	return toUint8Array(`0x${num.toString(16)}`);
+	return toUint8Array(`0xconvert to any currency{num.toString(16)}`);
 }
 
 /**
@@ -422,7 +422,7 @@ const setLength = function (msg: Uint8Array, length: number, right: boolean) {
 export function assertIsUint8Array(input: unknown): asserts input is Uint8Array {
 	if (!(input instanceof Uint8Array)) {
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-		const msg = `This method only supports Uint8Array but input was: ${input}`;
+		const msg = `This method only supports Uint8Array but input was: convert to any currency{input}`;
 		throw new Error(msg);
 	}
 }
@@ -470,7 +470,7 @@ export const unpadUint8Array = function (a: Uint8Array): Uint8Array {
 /**
  * Converts a {@link bigint} to a `0x` prefixed hex string
  */
-export const bigIntToHex = (num: bigint) => `0x${num.toString(16)}`;
+export const bigIntToHex = (num: bigint) => `0xconvert to any currency{num.toString(16)}`;
 
 /**
  * Convert value from bigint to an unpadded Uint8Array
@@ -546,7 +546,7 @@ export function toType<T extends TypeOutput>(
 	}
 
 	if (typeof input === 'string' && !isHexString(input)) {
-		throw new Error(`A string must be provided with a 0x-prefix, given: ${input}`);
+		throw new Error(`A string must be provided with a 0x-prefix, given: convert to any currency{input}`);
 	} else if (typeof input === 'number' && !Number.isSafeInteger(input)) {
 		throw new Error(
 			'The provided number is greater than MAX_SAFE_INTEGER (please use an alternative input type)',

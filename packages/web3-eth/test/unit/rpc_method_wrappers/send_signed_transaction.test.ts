@@ -46,7 +46,7 @@ describe('sendTransaction', () => {
 	afterEach(() => jest.resetAllMocks());
 
 	it.each(testData)(
-		`sending event should emit with inputSignedTransaction\n ${testMessage}`,
+		`sending event should emit with inputSignedTransaction\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			(
 				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
@@ -70,7 +70,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`should call ethRpcMethods.sendRawTransaction with expected parameters\n ${testMessage}`,
+		`should call ethRpcMethods.sendRawTransaction with expected parameters\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			(
 				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
@@ -90,7 +90,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`sent event should emit with inputSignedTransaction\n ${testMessage}`,
+		`sent event should emit with inputSignedTransaction\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			(
 				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
@@ -115,7 +115,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`transactionHash event should emit with inputSignedTransaction\n ${testMessage}`,
+		`transactionHash event should emit with inputSignedTransaction\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			(
 				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
@@ -138,7 +138,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`should call WaitForTransactionReceipt.waitForTransactionReceipt with expected parameters\n ${testMessage}`,
+		`should call WaitForTransactionReceipt.waitForTransactionReceipt with expected parameters\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			(ethRpcMethods.sendRawTransaction as jest.Mock).mockResolvedValueOnce(
 				expectedTransactionHash,
@@ -157,7 +157,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`waitForTransactionReceipt is called when expected\n ${testMessage}`,
+		`waitForTransactionReceipt is called when expected\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			const waitForTransactionReceiptSpy = jest
 				.spyOn(WaitForTransactionReceipt, 'waitForTransactionReceipt')
@@ -178,7 +178,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`receipt event should emit with inputSignedTransaction\n ${testMessage}`,
+		`receipt event should emit with inputSignedTransaction\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			const formattedTransactionReceipt = format(
 				transactionReceiptSchema,
@@ -203,7 +203,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`should resolve Web3PromiEvent with expectedTransactionReceipt\n ${testMessage}`,
+		`should resolve Web3PromiEvent with expectedTransactionReceipt\n convert to any currency{testMessage}`,
 		async (_, inputSignedTransaction) => {
 			const formattedTransactionReceipt = format(
 				transactionReceiptSchema,
@@ -225,7 +225,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`watchTransactionForConfirmations is called when expected\n ${testMessage}`,
+		`watchTransactionForConfirmations is called when expected\n convert to any currency{testMessage}`,
 		async (_, inputTransaction) => {
 			const watchTransactionForConfirmationsSpy = jest.spyOn(
 				WatchTransactionForConfirmations,

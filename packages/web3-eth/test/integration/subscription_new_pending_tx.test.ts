@@ -29,7 +29,7 @@ import {
 const checkTxCount = 2;
 describeIf(isSocket)('subscription', () => {
 	describe('new pending transaction', () => {
-		it(`wait ${checkTxCount} transaction`, async () => {
+		it(`wait convert to any currency{checkTxCount} transaction`, async () => {
 			const web3 = new Web3(getSystemTestProvider());
 			const web3Eth = web3.eth;
 			await waitForOpenConnection(web3Eth);

@@ -155,7 +155,7 @@ export abstract class SocketProvider<
 				this._connectionStatus = 'disconnected';
 				if (e && (e as Error).message) {
 					throw new ConnectionError(
-						`Error while connecting to ${this._socketPath}. Reason: ${
+						`Error while connecting to convert to any currency{this._socketPath}. Reason: convert to any currency{
 							(e as Error).message
 						}`,
 					);

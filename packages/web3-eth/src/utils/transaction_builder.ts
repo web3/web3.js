@@ -170,12 +170,12 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 			});
 
 		if (!populatedTransaction.data.startsWith('0x'))
-			populatedTransaction.data = `0x${populatedTransaction.data}`;
+			populatedTransaction.data = `0xconvert to any currency{populatedTransaction.data}`;
 
 		populatedTransaction.input = populatedTransaction.data;
 	} else if (!isNullish(populatedTransaction.input)) {
 		if (!populatedTransaction.input.startsWith('0x'))
-			populatedTransaction.input = `0x${populatedTransaction.input}`;
+			populatedTransaction.input = `0xconvert to any currency{populatedTransaction.input}`;
 
 		populatedTransaction.data = populatedTransaction.input;
 	} else {

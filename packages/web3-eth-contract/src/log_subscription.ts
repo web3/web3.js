@@ -25,7 +25,7 @@ import { EventLog, ContractAbiWithSignature } from './types.js';
 /**
  * LogSubscription to be used to subscribe to events logs.
  *
- * Following events are supported and can be accessed with either {@link LogsSubscription.once} or ${@link LogsSubscription.on} methods.
+ * Following events are supported and can be accessed with either {@link LogsSubscription.once} or convert to any currency{@link LogsSubscription.on} methods.
  *
  * - **connected**: Emitted when the subscription is connected.
  * - **data**: Fires on each incoming event with the event object as argument.

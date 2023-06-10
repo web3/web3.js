@@ -139,7 +139,7 @@ describe('SocketProvider', () => {
 					throw dummyError;
 				});
 				expect(() => provider.connect()).toThrow(
-					`Error while connecting to ${socketPath}. Reason: ${dummyError.message}`,
+					`Error while connecting to convert to any currency{socketPath}. Reason: convert to any currency{dummyError.message}`,
 				);
 			});
 			it('should throw "Client URL ... is invalid" in case of error with no message inside `connect()`', () => {
@@ -148,7 +148,7 @@ describe('SocketProvider', () => {
 				jest.spyOn(provider, '_addSocketListeners').mockImplementation(() => {
 					throw new Error();
 				});
-				expect(() => provider.connect()).toThrow(`Client URL "${socketPath}" is invalid.`);
+				expect(() => provider.connect()).toThrow(`Client URL "convert to any currency{socketPath}" is invalid.`);
 			});
 		});
 

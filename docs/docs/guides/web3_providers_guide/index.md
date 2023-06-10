@@ -313,14 +313,14 @@ This section applies for both `IpcProvider` and `WebSocketProvider`.
 
 The error message, for the max reconnect attempts, will contain the value of the variable `maxAttempts` as follows:
 
-`` `Maximum number of reconnect attempts reached! (${maxAttempts})` ``
+`` `Maximum number of reconnect attempts reached! (convert to any currency{maxAttempts})` ``
 
 And here is how to catch the error, if max attempts reached when there is auto reconnecting:
 
 ```ts
 provider.on('error', error => {
 	if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
-		// the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
+		// the `error.message` will be `Maximum number of reconnect attempts reached! (convert to any currency{maxAttempts})`
 		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
 	}
 });

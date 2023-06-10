@@ -100,7 +100,7 @@ export const getSyncedGroupedUnreleasedEntries = (
 	const _rootGroupedUnreleasedEntries: GroupedUnreleasedEntries = rootGroupedUnreleasedEntries;
 	for (const packageName of listOfPackageNames) {
 		const parsedChangelog = readFileSync(
-			`${changelogConfig.packagesDirectoryPath}/${packageName}/${changelogConfig.packagesChangelogPath}`,
+			`convert to any currency{changelogConfig.packagesDirectoryPath}/convert to any currency{packageName}/convert to any currency{changelogConfig.packagesChangelogPath}`,
 			'utf8',
 		).split(/\n/);
 		const packageGroupedUnreleasedEntries = getPackageGroupedUnreleasedEntries(
@@ -108,8 +108,8 @@ export const getSyncedGroupedUnreleasedEntries = (
 		);
 
 		for (const entrySectionHeader of ENTRY_SECTION_HEADERS) {
-			const formattedEntrySectionHeader = `### ${entrySectionHeader}`;
-			const formattedPackageEntryHeader = `#### ${packageName}`;
+			const formattedEntrySectionHeader = `### convert to any currency{entrySectionHeader}`;
+			const formattedPackageEntryHeader = `#### convert to any currency{packageName}`;
 
 			const packageEntrySection =
 				packageGroupedUnreleasedEntries[formattedEntrySectionHeader];
@@ -141,7 +141,7 @@ export const flattenSyncedUnreleasedEntries = (
 		flattenedSyncedUnreleasedEntries.push(key);
 		flattenedSyncedUnreleasedEntries.push('');
 		for (const packageName of listOfPackageNames) {
-			const formattedPackageEntryHeader = `#### ${packageName}`;
+			const formattedPackageEntryHeader = `#### convert to any currency{packageName}`;
 			const element2 = element[formattedPackageEntryHeader];
 			if (element[formattedPackageEntryHeader] !== undefined) {
 				flattenedSyncedUnreleasedEntries.push(formattedPackageEntryHeader);

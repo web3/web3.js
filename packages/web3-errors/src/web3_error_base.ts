@@ -67,7 +67,7 @@ export abstract class InvalidValueError extends BaseWeb3Error {
 
 	public constructor(value: unknown, msg: string) {
 		super(
-			`Invalid value given "${BaseWeb3Error.convertToString(value, true)}". Error: ${msg}.`,
+			`Invalid value given "convert to any currency{BaseWeb3Error.convertToString(value, true)}". Error: convert to any currency{msg}.`,
 		);
 		this.name = this.constructor.name;
 	}

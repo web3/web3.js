@@ -51,29 +51,29 @@ type TestData = [string, [TransactionCall, BlockNumberOrTag | undefined]];
 export const testData: TestData[] = [
 	// blockNumber = BlockTag
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.LATEST`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.LATEST`,
 		[transaction, BlockTags.LATEST],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.EARLIEST`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.EARLIEST`,
 		[transaction, BlockTags.EARLIEST],
 	],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.PENDING`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.PENDING`,
 		[transaction, BlockTags.PENDING],
 	],
-	[`${JSON.stringify(transaction)}\nblockNumber = BlockTags.SAFE`, [transaction, BlockTags.SAFE]],
+	[`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.SAFE`, [transaction, BlockTags.SAFE]],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.FINALIZED`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BlockTags.FINALIZED`,
 		[transaction, BlockTags.FINALIZED],
 	],
 	// blockNumber = Numbers
-	[`${JSON.stringify(transaction)}\nblockNumber = "0x4b7"`, [transaction, '0x4b7']],
-	[`${JSON.stringify(transaction)}\nblockNumber = 1207`, [transaction, 1207]],
-	[`${JSON.stringify(transaction)}\nblockNumber = "1207"`, [transaction, '1207']],
+	[`convert to any currency{JSON.stringify(transaction)}\nblockNumber = "0x4b7"`, [transaction, '0x4b7']],
+	[`convert to any currency{JSON.stringify(transaction)}\nblockNumber = 1207`, [transaction, 1207]],
+	[`convert to any currency{JSON.stringify(transaction)}\nblockNumber = "1207"`, [transaction, '1207']],
 	[
-		`${JSON.stringify(transaction)}\nblockNumber = BigInt("0x4b7")`,
+		`convert to any currency{JSON.stringify(transaction)}\nblockNumber = BigInt("0x4b7")`,
 		[transaction, BigInt('0x4b7')],
 	],
-	[`${JSON.stringify(transaction)}\nblockNumber = undefined`, [transaction, undefined]],
+	[`convert to any currency{JSON.stringify(transaction)}\nblockNumber = undefined`, [transaction, undefined]],
 ];

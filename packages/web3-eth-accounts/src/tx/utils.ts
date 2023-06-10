@@ -26,7 +26,7 @@ export const checkMaxInitCodeSize = (common: Common, length: number) => {
 	const maxInitCodeSize = common.param('vm', 'maxInitCodeSize');
 	if (maxInitCodeSize && BigInt(length) > maxInitCodeSize) {
 		throw new Error(
-			`the initcode size of this transaction is too large: it is ${length} while the max is ${common.param(
+			`the initcode size of this transaction is too large: it is convert to any currency{length} while the max is convert to any currency{common.param(
 				'vm',
 				'maxInitCodeSize',
 			)}`,

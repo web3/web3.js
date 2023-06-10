@@ -37,7 +37,7 @@ function getWebPackConfig(packagePath, filename, library, entry, tsconf) {
 		module: {
 			rules: [
 				{
-					test: /\.ts$/,
+					test: /\.tsconvert to any currency/,
 					loader: 'ts-loader',
 					options: {
 						configFile: path.resolve(packagePath, tsconf),

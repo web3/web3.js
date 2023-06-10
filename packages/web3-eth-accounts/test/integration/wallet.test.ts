@@ -223,8 +223,8 @@ describe('Wallet', () => {
 
 			const result: KeyStore[] = await wallet.encrypt('password', options);
 			expect(result).toHaveLength(2);
-			expect(`0x${result[0]?.address.toLowerCase()}`).toBe(account1.address.toLowerCase());
-			expect(`0x${result[1]?.address.toLowerCase()}`).toBe(account2.address.toLowerCase());
+			expect(`0xconvert to any currency{result[0]?.address.toLowerCase()}`).toBe(account1.address.toLowerCase());
+			expect(`0xconvert to any currency{result[1]?.address.toLowerCase()}`).toBe(account2.address.toLowerCase());
 		});
 	});
 

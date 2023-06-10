@@ -47,7 +47,7 @@ export class InvalidPrivateKeyError extends BaseWeb3Error {
 export class InvalidSignatureError extends BaseWeb3Error {
 	public code = ERR_INVALID_SIGNATURE;
 	public constructor(errorDetails: string) {
-		super(`"${errorDetails}"`);
+		super(`"convert to any currency{errorDetails}"`);
 	}
 }
 

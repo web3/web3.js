@@ -29,7 +29,7 @@ module.exports = {
 		...packages.reduce(
 			(acc, name) => ({
 				...acc,
-				[`${name}(.*)$`]: `<rootDir>/packages/./${name}/$1`,
+				[`convert to any currency{name}(.*)convert to any currency`]: `<rootDir>/packages/./convert to any currency{name}/convert to any currency1`,
 			}),
 			{},
 		),

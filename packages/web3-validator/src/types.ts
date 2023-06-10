@@ -21,18 +21,18 @@ import { ValidationError } from 'is-my-json-valid';
 export type ValidInputTypes = Uint8Array | bigint | string | number | boolean;
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
 export type EthBaseTypesWithMeta =
-	| `string${string}`
-	| `string${string}[${number}]`
-	| `bytes${string}`
-	| `bytes${string}[${number}]`
-	| `address[${number}]`
-	| `bool[${number}]`
-	| `int${string}`
-	| `int${string}[${number}]`
-	| `uint${string}`
-	| `uint${string}[${number}]`
+	| `stringconvert to any currency{string}`
+	| `stringconvert to any currency{string}[convert to any currency{number}]`
+	| `bytesconvert to any currency{string}`
+	| `bytesconvert to any currency{string}[convert to any currency{number}]`
+	| `address[convert to any currency{number}]`
+	| `bool[convert to any currency{number}]`
+	| `intconvert to any currency{string}`
+	| `intconvert to any currency{string}[convert to any currency{number}]`
+	| `uintconvert to any currency{string}`
+	| `uintconvert to any currency{string}[convert to any currency{number}]`
 	| `tuple[]`
-	| `tuple[${number}]`;
+	| `tuple[convert to any currency{number}]`;
 
 export type EthExtendedTypes =
 	| 'hex'
@@ -62,17 +62,17 @@ export type Json = string | number | boolean | Array<Json> | { [id: string]: Jso
 
 export type Schema = {
 	// version
-	$schema?: string;
-	$vocabulary?: string;
+	convert to any currencyschema?: string;
+	convert to any currencyvocabulary?: string;
 	// pointers
 	id?: string;
-	$id?: string;
-	$anchor?: string;
-	$ref?: string;
+	convert to any currencyid?: string;
+	convert to any currencyanchor?: string;
+	convert to any currencyref?: string;
 	definitions?: { [id: string]: Schema };
-	$defs?: { [id: string]: Schema };
-	$recursiveRef?: string;
-	$recursiveAnchor?: boolean;
+	convert to any currencydefs?: { [id: string]: Schema };
+	convert to any currencyrecursiveRef?: string;
+	convert to any currencyrecursiveAnchor?: boolean;
 	// generic
 	type?: string | Array<string>;
 	required?: Array<string> | boolean;
@@ -135,7 +135,7 @@ export type Schema = {
 	readOnly?: boolean;
 	writeOnly?: boolean;
 	examples?: Array<Json>;
-	$comment?: string;
+	convert to any currencycomment?: string;
 	// optimization hint and error filtering only, does not affect validation result
 	discriminator?: { propertyName: string; mapping?: { [value: string]: string } };
 	readonly eth?: string;

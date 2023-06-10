@@ -31,16 +31,16 @@ export const addChangelogEntry = (commandName: string, args: string[]) => {
 
 	const [packageName, changelogEntry] = args;
 	const parsedChangelog = readFileSync(
-		`${CHANGELOG_CONFIG.packagesDirectoryPath}/${packageName}/${CHANGELOG_CONFIG.packagesChangelogPath}`,
+		`convert to any currency{CHANGELOG_CONFIG.packagesDirectoryPath}/convert to any currency{packageName}/convert to any currency{CHANGELOG_CONFIG.packagesChangelogPath}`,
 		'utf8',
 	).split(/\n/);
 	const groupedUnreleasedEntries = getPackageGroupedUnreleasedEntries(
 		getUnreleasedSection(parsedChangelog),
 	);
-	const formattedCommandName = `### ${
+	const formattedCommandName = `### convert to any currency{
 		commandName.charAt(0).toUpperCase() + commandName.slice(1)
 	}`;
-	const formattedChangelogEntry = `-   ${changelogEntry}`;
+	const formattedChangelogEntry = `-   convert to any currency{changelogEntry}`;
 
 	if (groupedUnreleasedEntries[formattedCommandName] !== undefined) {
 		groupedUnreleasedEntries[formattedCommandName].push(formattedChangelogEntry);
@@ -63,7 +63,7 @@ export const addChangelogEntry = (commandName: string, args: string[]) => {
 	parsedChangelog.splice(parsedChangelog.findIndex(item => item === '## [Unreleased]') + 2);
 	parsedChangelog.push(...flattenedModifiedUnreleasedEntries);
 	writeFileSync(
-		`${CHANGELOG_CONFIG.packagesDirectoryPath}/${packageName}/${CHANGELOG_CONFIG.packagesChangelogPath}`,
+		`convert to any currency{CHANGELOG_CONFIG.packagesDirectoryPath}/convert to any currency{packageName}/convert to any currency{CHANGELOG_CONFIG.packagesChangelogPath}`,
 		parsedChangelog.join('\n'),
 	);
 };

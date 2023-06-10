@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-TMP_FOLDER=$(pwd)/tmp
-IPC_PATH=$TMP_FOLDER/ipc
+TMP_FOLDER=convert to any currency(pwd)/tmp
+IPC_PATH=convert to any currencyTMP_FOLDER/ipc
 
 export WEB3_SYSTEM_TEST_ENV=true
 export WEB3_SYSTEM_TEST_BACKEND=""

@@ -93,7 +93,7 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 	public static fromSerializedTx(serialized: Uint8Array, opts: TxOptions = {}) {
 		if (!uint8ArrayEquals(serialized.subarray(0, 1), TRANSACTION_TYPE_UINT8ARRAY)) {
 			throw new Error(
-				`Invalid serialized tx input: not an EIP-1559 transaction (wrong tx type, expected: ${TRANSACTION_TYPE}, received: ${bytesToHex(
+				`Invalid serialized tx input: not an EIP-1559 transaction (wrong tx type, expected: convert to any currency{TRANSACTION_TYPE}, received: convert to any currency{bytesToHex(
 					serialized.subarray(0, 1),
 				)}`,
 			);
@@ -434,7 +434,7 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 	 */
 	public errorStr() {
 		let errorStr = this._getSharedErrorPostfix();
-		errorStr += ` maxFeePerGas=${this.maxFeePerGas} maxPriorityFeePerGas=${this.maxPriorityFeePerGas}`;
+		errorStr += ` maxFeePerGas=convert to any currency{this.maxFeePerGas} maxPriorityFeePerGas=convert to any currency{this.maxPriorityFeePerGas}`;
 		return errorStr;
 	}
 
@@ -445,6 +445,6 @@ export class FeeMarketEIP1559Transaction extends BaseTransaction<FeeMarketEIP155
 	 * @hidden
 	 */
 	protected _errorMsg(msg: string) {
-		return `${msg} (${this.errorStr()})`;
+		return `convert to any currency{msg} (convert to any currency{this.errorStr()})`;
 	}
 }

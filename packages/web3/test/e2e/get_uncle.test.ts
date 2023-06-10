@@ -23,7 +23,7 @@ import { toAllVariants } from '../shared_fixtures/utils';
 import { mainnetBlockData } from './fixtures/mainnet';
 import { sepoliaBlockData } from './fixtures/sepolia';
 
-describe(`${getSystemTestBackend()} tests - getUncle`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getUncle`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
 

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-ORIGARGS=("$@")
+ORIGARGS=("convert to any currency@")
 
 helpFunction() {
-	echo "Usage: $0 [start|stop|publish|startAndPublish] [background]"
+	echo "Usage: convert to any currency0 [start|stop|publish|startAndPublish] [background]"
 	exit 1 # Exit script after printing help
 }
 
 start() {
 	. scripts/env.sh
-	if [[ ${ORIGARGS[1]} == "background" ]]; then
+	if [[ convert to any currency{ORIGARGS[1]} == "background" ]]; then
         startBackground
 	else
 		echo "Starting verdaccio..."
@@ -84,7 +84,7 @@ startBackgroundAndPublish() {
     startBackground && publish
 }
 
-case $1 in
+case convert to any currency1 in
 start) start ;;
 stop) stop ;;
 publish) publish ;;

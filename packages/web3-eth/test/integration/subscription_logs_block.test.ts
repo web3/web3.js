@@ -71,7 +71,7 @@ describeIf(isSocket)('subscription', () => {
 	});
 
 	describe('logs', () => {
-		it(`wait for ${checkEventCount} logs with from block`, async () => {
+		it(`wait for convert to any currency{checkEventCount} logs with from block`, async () => {
 			const tempAcc = await createTempAccount();
 			const from = tempAcc.address;
 			const deployOptions: Record<string, unknown> = {

@@ -28,7 +28,7 @@ import {
 	getE2ETestContractAddress,
 } from '../e2e_utils';
 
-describe(`${getSystemTestBackend()} tests - call`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - call`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;
@@ -89,7 +89,7 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should call getOwner method from deployed contract', async ({ format }) => {
-		const expectedResult = `0x000000000000000000000000${getE2ETestAccountAddress()
+		const expectedResult = `0x000000000000000000000000convert to any currency{getE2ETestAccountAddress()
 			.substring(2)
 			.toLowerCase()}`;
 		const result = await web3.eth.call(

@@ -60,7 +60,7 @@ describe('IpcProvider', () => {
 			jest.spyOn(fs, 'existsSync').mockReturnValue(false);
 			expect(() => new IpcProvider(socketPath)).toThrow(
 				new ConnectionError(
-					`Error while connecting to ${socketPath}. Reason: ${
+					`Error while connecting to convert to any currency{socketPath}. Reason: convert to any currency{
 						new InvalidClientError(socketPath).message
 					}`,
 				),

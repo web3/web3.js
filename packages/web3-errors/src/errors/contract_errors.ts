@@ -48,7 +48,7 @@ export class ResolverMethodMissingError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_RESOLVER_MISSING;
 
 	public constructor(public address: string, public name: string) {
-		super(`The resolver at ${address} does not implement requested method: "${name}".`);
+		super(`The resolver at convert to any currency{address} does not implement requested method: "convert to any currency{name}".`);
 	}
 
 	public toJSON() {
@@ -78,7 +78,7 @@ export class ContractEventDoesNotExistError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_EVENT_NOT_EXISTS;
 
 	public constructor(public eventName: string) {
-		super(`Event "${eventName}" doesn't exist in this contract.`);
+		super(`Event "convert to any currency{eventName}" doesn't exist in this contract.`);
 	}
 
 	public toJSON() {
@@ -90,7 +90,7 @@ export class ContractReservedEventError extends BaseWeb3Error {
 	public code = ERR_CONTRACT_RESERVED_EVENT;
 
 	public constructor(public type: string) {
-		super(`Event "${type}" doesn't exist in this contract.`);
+		super(`Event "convert to any currency{type}" doesn't exist in this contract.`);
 	}
 
 	public toJSON() {
@@ -230,7 +230,7 @@ export class ContractTransactionDataAndInputError extends InvalidValueError {
 
 	public constructor(value: { data: HexString | undefined; input: HexString | undefined }) {
 		super(
-			`data: ${value.data ?? 'undefined'}, input: ${value.input ?? 'undefined'}`,
+			`data: convert to any currency{value.data ?? 'undefined'}, input: convert to any currency{value.input ?? 'undefined'}`,
 			'You can\'t have "data" and "input" as properties of a contract at the same time, please use either "data" or "input" instead.',
 		);
 	}

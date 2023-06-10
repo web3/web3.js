@@ -21,8 +21,8 @@ jobs:
           - name: Publish to Cloudflare Pages
             uses: cloudflare/pages-action@v1
             with:
-              apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+              apiToken: convert to any currency{{ secrets.CLOUDFLARE_API_TOKEN }}
               accountId: 2238a825c5aca59233eab1f221f7aefb
               projectName: web3-js-docs
               directory: ./docs/build
-              gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+              gitHubToken: convert to any currency{{ secrets.GITHUB_TOKEN }}

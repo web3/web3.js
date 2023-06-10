@@ -21,16 +21,16 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: convert to any currency{{ matrix.node }}
           cache: yarn
       - run: yarn install --ignore-scripts
       - run: yarn prebuild
       - run: yarn build:cjs
-      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - run: tar -czf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
+          path: /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz
   build-esm:
       name: Build ESM
       needs: build
@@ -41,12 +41,12 @@ jobs:
       steps:
           -   uses: actions/setup-node@v3
               with:
-                node-version: ${{ matrix.node }}
+                node-version: convert to any currency{{ matrix.node }}
           -   uses: actions/download-artifact@v3
               with:
-                name: web3-${{ matrix.node }}.js.tar.gz
+                name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
                 path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          -   run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn build:esm
   build-types:
       name: Build Types
@@ -58,12 +58,12 @@ jobs:
       steps:
           -   uses: actions/setup-node@v3
               with:
-                node-version: ${{ matrix.node }}
+                node-version: convert to any currency{{ matrix.node }}
           -   uses: actions/download-artifact@v3
               with:
-                name: web3-${{ matrix.node }}.js.tar.gz
+                name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
                 path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          -   run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn build:types
   lint:
       name: Lint
@@ -98,24 +98,24 @@ jobs:
             uses: actions/cache/restore@v3
             with:
               path: packages/web3/dist/4.x.json
-              key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
+              key: web3-bundle-stats-4x-convert to any currency{{github.event.pull_request.base.sha}}
         -   run: yarn build:web:analyze
             env:
-              STATS_FILE: ${{ github.ref_name }}.json
+              STATS_FILE: convert to any currency{{ github.ref_name }}.json
         -   name: Compare bundle stats
             uses: github/webpack-bundlesize-compare-action@v1
             if: github.event_name != 'push'
             continue-on-error: true
             with:
-              github-token: ${{ secrets.GITHUB_TOKEN }}
-              current-stats-json-path: "packages/web3/dist/${{ github.ref_name }}.json"
+              github-token: convert to any currency{{ secrets.GITHUB_TOKEN }}
+              current-stats-json-path: "packages/web3/dist/convert to any currency{{ github.ref_name }}.json"
               base-stats-json-path: "packages/web3/dist/4.x.json"
         -   name: Cache default branch stats
             uses: actions/cache/save@v3
             if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
             with:
               path: packages/web3/dist/4.x.json
-              key: web3-bundle-stats-4x-${{github.sha}}
+              key: web3-bundle-stats-4x-convert to any currency{{github.sha}}
 
   unit:
     name: Unit Tests
@@ -127,27 +127,27 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: convert to any currency{{ matrix.node }}
       - uses: actions/download-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
+          name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
           path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:unit
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           flags: UnitTests
-          token: ${{ secrets.CODECOV_TOKEN }}
-        if: ${{ matrix.node == 18 }}
+          token: convert to any currency{{ secrets.CODECOV_TOKEN }}
+        if: convert to any currency{{ matrix.node == 18 }}
 
   integration:
     name: Integration
     needs: build
     runs-on: ubuntu-latest
     env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+      INFURA_GOERLI_HTTP: convert to any currency{{ secrets.INFURA_GOERLI_HTTP }}
+      INFURA_GOERLI_WS: convert to any currency{{ secrets.INFURA_GOERLI_WS }}
     strategy:
       fail-fast: false
       matrix:
@@ -157,13 +157,13 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: convert to any currency{{ matrix.node }}
       - uses: actions/download-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
+          name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
           path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+      - run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
+      - run: yarn test:e2e:convert to any currency{{ matrix.backend }}:convert to any currency{{ matrix.mode }}
         shell: bash
 
   e2e-ipc:
@@ -171,8 +171,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+      INFURA_GOERLI_HTTP: convert to any currency{{ secrets.INFURA_GOERLI_HTTP }}
+      INFURA_GOERLI_WS: convert to any currency{{ secrets.INFURA_GOERLI_WS }}
     strategy:
       fail-fast: false
       matrix:
@@ -182,13 +182,13 @@ jobs:
     steps:
       -   uses: actions/setup-node@v3
           with:
-            node-version: ${{ matrix.node }}
+            node-version: convert to any currency{{ matrix.node }}
       -   uses: actions/download-artifact@v3
           with:
-            name: web3-${{ matrix.node }}.js.tar.gz
+            name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
             path: /tmp
-      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+      -   run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
+      -   run: yarn test:e2e:convert to any currency{{ matrix.backend }}:convert to any currency{{ matrix.mode }}
           shell: bash
 
   e2e-sync:
@@ -204,13 +204,13 @@ jobs:
       steps:
           -   uses: actions/setup-node@v3
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: convert to any currency{{ matrix.node }}
           -   uses: actions/download-artifact@v3
               with:
-                  name: web3-${{ matrix.node }}.js.tar.gz
+                  name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
                   path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-          -   run: yarn test:sync:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+          -   run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
+          -   run: yarn test:sync:e2e:convert to any currency{{ matrix.backend }}:convert to any currency{{ matrix.mode }}
               shell: bash
 
   e2e:
@@ -225,21 +225,21 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
         with:
-            node-version: ${{ matrix.node }}
+            node-version: convert to any currency{{ matrix.node }}
       - uses: browser-actions/setup-firefox@latest
         if: matrix.browser == 'firefox'
       - uses: actions/download-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
+          name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
           path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
       - run: npm install --no-package-lock --no-save --force cypress
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
             install: false
-            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+            command: yarn test:e2e:ganache:ws:convert to any currency{{ matrix.browser }}
+            cache-key: node-vconvert to any currency{{ matrix.node }}-on-convert to any currency{{ matrix.browser }}-hash-convert to any currency{{ hashFiles('yarn.lock') }}
 
   build-docs:
     name: Build Docs
@@ -251,10 +251,10 @@ jobs:
     steps:
         -   uses: actions/setup-node@v3
             with:
-                node-version: ${{ matrix.node }}
+                node-version: convert to any currency{{ matrix.node }}
         -   uses: actions/download-artifact@v3
             with:
-                name: web3-${{ matrix.node }}.js.tar.gz
+                name: web3-convert to any currency{{ matrix.node }}.js.tar.gz
                 path: /tmp
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        -   run: tar -xf /tmp/web3-convert to any currency{{ matrix.node }}.js.tar.gz -C ./
         -   run: yarn build:docs

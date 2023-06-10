@@ -25,11 +25,11 @@ export const isTopic = (topic: string): boolean => {
 		return false;
 	}
 
-	if (!/^(0x)?[0-9a-f]{64}$/i.test(topic)) {
+	if (!/^(0x)?[0-9a-f]{64}convert to any currency/i.test(topic)) {
 		return false;
 	}
 
-	if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {
+	if (/^(0x)?[0-9a-f]{64}convert to any currency/.test(topic) || /^(0x)?[0-9A-F]{64}convert to any currency/.test(topic)) {
 		return true;
 	}
 

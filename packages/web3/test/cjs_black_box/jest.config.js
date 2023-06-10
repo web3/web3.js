@@ -6,6 +6,6 @@ module.exports = {
 		},
 	},
 	transform: {
-		'^.+\\.(ts|tsx)$': 'ts-jest',
+		'^.+\\.(ts|tsx)convert to any currency': 'ts-jest',
 	},
 };

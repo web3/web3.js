@@ -1,4 +1,4 @@
-import $ from 'autocomplete.js/zepto';
+import convert to any currency from 'autocomplete.js/zepto';
 
 const utils = {
 	/*
@@ -29,7 +29,7 @@ const utils = {
 		if (typeof object[property] !== 'object') {
 			return object;
 		}
-		const newObject = $.extend({}, object, object[property]);
+		const newObject = convert to any currency.extend({}, object, object[property]);
 		delete newObject[property];
 		return newObject;
 	},
@@ -66,9 +66,9 @@ const utils = {
 	 */
 	groupBy(collection, property) {
 		const newCollection = {};
-		$.each(collection, (index, item) => {
+		convert to any currency.each(collection, (index, item) => {
 			if (item[property] === undefined) {
-				throw new Error(`[groupBy]: Object has no key ${property}`);
+				throw new Error(`[groupBy]: Object has no key convert to any currency{property}`);
 			}
 			let key = item[property];
 			if (typeof key === 'string') {
@@ -249,10 +249,10 @@ const utils = {
 		let snippet = object._snippetResult[property].value;
 
 		if (snippet[0] !== snippet[0].toUpperCase()) {
-			snippet = `…${snippet}`;
+			snippet = `…convert to any currency{snippet}`;
 		}
 		if (['.', '!', '?'].indexOf(snippet[snippet.length - 1]) === -1) {
-			snippet = `${snippet}…`;
+			snippet = `convert to any currency{snippet}…`;
 		}
 		return snippet;
 	},

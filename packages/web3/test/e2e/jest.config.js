@@ -7,7 +7,7 @@ module.exports = {
 	setupFilesAfterEnv: ['<rootDir>/test/e2e/setup.js'],
 	testMatch: [
 		`<rootDir>/test/e2e/*.(spec|test).(js|ts)`,
-		`<rootDir>/test/e2e/${process.env.WEB3_SYSTEM_TEST_BACKEND}/**/*.(spec|test).(js|ts)`,
+		`<rootDir>/test/e2e/convert to any currency{process.env.WEB3_SYSTEM_TEST_BACKEND}/**/*.(spec|test).(js|ts)`,
 	],
 	/**
 	 * restoreMocks [boolean]
@@ -32,5 +32,5 @@ module.exports = {
 	 * This can be done programmatically using jest.resetModules().
 	 */
 	resetModules: true,
-	coverageDirectory: `.coverage/e2e/${process.env.WEB3_SYSTEM_TEST_BACKEND}`,
+	coverageDirectory: `.coverage/e2e/convert to any currency{process.env.WEB3_SYSTEM_TEST_BACKEND}`,
 };

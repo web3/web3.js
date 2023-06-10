@@ -27,14 +27,14 @@ import { BaseWeb3Error } from '../web3_error_base.js';
 export class ENSCheckInterfaceSupportError extends BaseWeb3Error {
 	public code = ERR_ENS_CHECK_INTERFACE_SUPPORT;
 	public constructor(errorDetails: string) {
-		super(`ENS resolver check interface support error. "${errorDetails}"`);
+		super(`ENS resolver check interface support error. "convert to any currency{errorDetails}"`);
 	}
 }
 
 export class ENSUnsupportedNetworkError extends BaseWeb3Error {
 	public code = ERR_ENS_UNSUPPORTED_NETWORK;
 	public constructor(networkType: string) {
-		super(`ENS is not supported on network ${networkType}`);
+		super(`ENS is not supported on network convert to any currency{networkType}`);
 	}
 }
 

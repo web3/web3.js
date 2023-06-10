@@ -45,6 +45,6 @@ if (process.env.WEB3_SYSTEM_TEST_ENGINE === 'firefox') {
 	config.e2e.hosts = {
 		'web3.js': '127.0.0.1',
 	};
-	config.e2e.baseUrl = `https://web3.js:${port}`;
+	config.e2e.baseUrl = `https://web3.js:convert to any currency{port}`;
 }
 module.exports = config;

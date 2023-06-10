@@ -28,8 +28,8 @@ describe('Add Changelog Entry tests', () => {
 		const listOfPackageNames = getListOfPackageNames(TestChangelogConfig.packagesDirectoryPath);
 
 		copyFileSync(
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${TestChangelogConfig.packagesChangelogPath}`,
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${ModifiedTestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{TestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{ModifiedTestChangelogConfig.packagesChangelogPath}`,
 		);
 
 		addChangelogEntry('added', [
@@ -39,13 +39,13 @@ describe('Add Changelog Entry tests', () => {
 		]);
 
 		const parsedModifiedChangelog = readFileSync(
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${ModifiedTestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{ModifiedTestChangelogConfig.packagesChangelogPath}`,
 			'utf8',
 		).split(/\n/);
 		expect(parsedModifiedChangelog).toEqual(ExpectedModifiedChangelog);
 
 		unlinkSync(
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${ModifiedTestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{ModifiedTestChangelogConfig.packagesChangelogPath}`,
 		);
 	});
 
@@ -53,8 +53,8 @@ describe('Add Changelog Entry tests', () => {
 		const listOfPackageNames = getListOfPackageNames(TestChangelogConfig.packagesDirectoryPath);
 
 		copyFileSync(
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${TestChangelogConfig.packagesChangelogPath}`,
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${ModifiedTestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{TestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{ModifiedTestChangelogConfig.packagesChangelogPath}`,
 		);
 
 		addChangelogEntry('newheader', [
@@ -64,13 +64,13 @@ describe('Add Changelog Entry tests', () => {
 		]);
 
 		const parsedModifiedChangelog = readFileSync(
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${ModifiedTestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{ModifiedTestChangelogConfig.packagesChangelogPath}`,
 			'utf8',
 		).split(/\n/);
 		expect(parsedModifiedChangelog).toEqual(ExpectedModifiedChangelog2);
 
 		unlinkSync(
-			`${TestChangelogConfig.packagesDirectoryPath}/${listOfPackageNames[0]}/${ModifiedTestChangelogConfig.packagesChangelogPath}`,
+			`convert to any currency{TestChangelogConfig.packagesDirectoryPath}/convert to any currency{listOfPackageNames[0]}/convert to any currency{ModifiedTestChangelogConfig.packagesChangelogPath}`,
 		);
 	});
 });

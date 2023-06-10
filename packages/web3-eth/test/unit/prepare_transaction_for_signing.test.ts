@@ -91,13 +91,13 @@ describe('prepareTransactionForSigning', () => {
 				expect(messageToSign).toBe(expectedMessageToSign);
 				// should have expected v, r, and s
 				const v = !isNullish(signedTransaction.v)
-					? `0x${signedTransaction.v.toString(16)}`
+					? `0xconvert to any currency{signedTransaction.v.toString(16)}`
 					: '';
 				const r = !isNullish(signedTransaction.r)
-					? `0x${signedTransaction.r.toString(16)}`
+					? `0xconvert to any currency{signedTransaction.r.toString(16)}`
 					: '';
 				const s = !isNullish(signedTransaction.s)
-					? `0x${signedTransaction.s.toString(16)}`
+					? `0xconvert to any currency{signedTransaction.s.toString(16)}`
 					: '';
 				expect(v).toBe(expectedV);
 				expect(r).toBe(expectedR);

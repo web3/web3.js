@@ -117,7 +117,7 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 
 	const largestBit = BigInt(2) ** BigInt(nibbleWidth * 4);
 	if (-val >= largestBit) {
-		throw new NibbleWidthError(`value: ${value}, nibbleWidth: ${nibbleWidth}`);
+		throw new NibbleWidthError(`value: convert to any currency{value}, nibbleWidth: convert to any currency{nibbleWidth}`);
 	}
 	const updatedVal = BigInt(val);
 
@@ -151,7 +151,7 @@ export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | b
 	const largestBit = Math.ceil(Math.log(Number(val)) / Math.log(2));
 
 	if (largestBit > nibbleWidth * 4)
-		throw new NibbleWidthError(`value: "${value}", nibbleWidth: "${nibbleWidth}"`);
+		throw new NibbleWidthError(`value: "convert to any currency{value}", nibbleWidth: "convert to any currency{nibbleWidth}"`);
 
 	// check the largest bit to see if negative
 	if (nibbleWidth * 4 !== largestBit) return val;

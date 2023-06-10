@@ -181,7 +181,7 @@ export class Common extends EventEmitter {
 			);
 		}
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-		throw new Error(`Custom chain ${chainParamsOrName} not supported`);
+		throw new Error(`Custom chain convert to any currency{chainParamsOrName} not supported`);
 	}
 
 	/**
@@ -231,14 +231,14 @@ export class Common extends EventEmitter {
 				return initializedChains[name] as ChainConfig;
 			}
 
-			throw new Error(`Chain with ID ${chain} not supported`);
+			throw new Error(`Chain with ID convert to any currency{chain} not supported`);
 		}
 
 		if (initializedChains[chain] !== undefined) {
 			return initializedChains[chain] as ChainConfig;
 		}
 
-		throw new Error(`Chain with name ${chain} not supported`);
+		throw new Error(`Chain with name convert to any currency{chain} not supported`);
 	}
 
 	public constructor(opts: CommonOpts) {
@@ -278,7 +278,7 @@ export class Common extends EventEmitter {
 			const required = ['networkId', 'genesis', 'hardforks', 'bootstrapNodes'];
 			for (const param of required) {
 				if (!(param in chain)) {
-					throw new Error(`Missing required chain parameter: ${param}`);
+					throw new Error(`Missing required chain parameter: convert to any currency{param}`);
 				}
 			}
 			this._chainParams = chain as ChainConfig;
@@ -309,7 +309,7 @@ export class Common extends EventEmitter {
 			}
 		}
 		if (!existing) {
-			throw new Error(`Hardfork with name ${hardfork} not supported`);
+			throw new Error(`Hardfork with name convert to any currency{hardfork} not supported`);
 		}
 	}
 
@@ -495,14 +495,14 @@ export class Common extends EventEmitter {
 	public setEIPs(eips: number[] = []) {
 		for (const eip of eips) {
 			if (!(eip in EIPs)) {
-				throw new Error(`${eip} not supported`);
+				throw new Error(`convert to any currency{eip} not supported`);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
 			const minHF = this.gteHardfork(EIPs[eip].minimumHardfork);
 			if (!minHF) {
 				throw new Error(
 					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-					`${eip} cannot be activated on hardfork ${this.hardfork()}, minimumHardfork: ${minHF}`,
+					`convert to any currency{eip} cannot be activated on hardfork convert to any currency{this.hardfork()}, minimumHardfork: convert to any currency{minHF}`,
 				);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -513,7 +513,7 @@ export class Common extends EventEmitter {
 					if (!(eips.includes(elem) || this.isActivatedEIP(elem))) {
 						throw new Error(
 							// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-							`${eip} requires EIP ${elem}, but is not included in the EIP list`,
+							`convert to any currency{eip} requires EIP convert to any currency{elem}, but is not included in the EIP list`,
 						);
 					}
 				}
@@ -569,7 +569,7 @@ export class Common extends EventEmitter {
 			} else {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 				if (hfChanges[1][topic] === undefined) {
-					throw new Error(`Topic ${topic} not defined`);
+					throw new Error(`Topic convert to any currency{topic} not defined`);
 				}
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 				if (hfChanges[1][topic][name] !== undefined) {
@@ -593,12 +593,12 @@ export class Common extends EventEmitter {
 	// eslint-disable-next-line class-methods-use-this
 	public paramByEIP(topic: string, name: string, eip: number): bigint | undefined {
 		if (!(eip in EIPs)) {
-			throw new Error(`${eip} not supported`);
+			throw new Error(`convert to any currency{eip} not supported`);
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const eipParams = EIPs[eip];
 		if (!(topic in eipParams)) {
-			throw new Error(`Topic ${topic} not defined`);
+			throw new Error(`Topic convert to any currency{topic} not defined`);
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		if (eipParams[topic][name] === undefined) {

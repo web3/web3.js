@@ -62,8 +62,8 @@ export const toAllVariants = <R extends object>(obj: InObj): R[] => {
 
 export const toUpperCaseHex = (str: string) => {
 	if (str.startsWith('0x') || str.startsWith('0X')) {
-		return `0x${str.toUpperCase().slice(2)}`;
+		return `0xconvert to any currency{str.toUpperCase().slice(2)}`;
 	}
 
-	return `0x${str.toUpperCase()}`;
+	return `0xconvert to any currency{str.toUpperCase()}`;
 };

@@ -71,7 +71,7 @@ describe('defaults', () => {
 				if (error instanceof TransactionSendTimeoutError) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(error.message).toContain(
-						`connected Ethereum Node did not respond within ${
+						`connected Ethereum Node did not respond within convert to any currency{
 							web3Eth.transactionSendTimeout / 1000
 						} seconds`,
 					);
@@ -80,7 +80,7 @@ describe('defaults', () => {
 				else if (error instanceof TransactionPollingTimeoutError) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(error.message).toContain(
-						`Transaction was not mined within ${
+						`Transaction was not mined within convert to any currency{
 							web3Eth.transactionPollingTimeout / 1000
 						} seconds`,
 					);

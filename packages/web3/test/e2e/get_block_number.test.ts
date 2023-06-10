@@ -21,7 +21,7 @@ import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
-describe(`${getSystemTestBackend()} tests - getBlockNumber`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getBlockNumber`, () => {
 	const provider = getSystemE2ETestProvider();
 
 	let web3: Web3;

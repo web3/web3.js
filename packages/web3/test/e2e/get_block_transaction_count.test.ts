@@ -24,7 +24,7 @@ import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlockData } from './fixtures/sepolia';
 import { mainnetBlockData } from './fixtures/mainnet';
 
-describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
+describe(`convert to any currency{getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
 	const expectedTransactionCount = getSystemTestBackend() === 'sepolia' ? 30 : 196;
@@ -80,7 +80,7 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 					break;
 				case 'NUMBER_STR':
 					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result).toBe(`${expectedTransactionCount}`);
+					expect(result).toBe(`convert to any currency{expectedTransactionCount}`);
 					break;
 				case 'NUMBER_BIGINT':
 					// eslint-disable-next-line jest/no-conditional-expect

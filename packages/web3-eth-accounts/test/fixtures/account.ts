@@ -119,11 +119,11 @@ export const signatureRecoverData: [string, any][] = [
 		},
 	],
 	[
-		'Some data!%$$%&@*',
+		'Some data!%convert to any currencyconvert to any currency%&@*',
 		{
 			address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
-			data: 'Some data!%$$%&@*',
+			data: 'Some data!%convert to any currencyconvert to any currency%&@*',
 			// signature done with personal_sign
 			signatureOrV:
 				'0x05252412b097c5d080c994d1ea12abcee6f1cae23feb225517a0b691a66e12866b3f54292f9cfef98f390670b4d010fc4af7fcd46e41d72870602c117b14921c1c',

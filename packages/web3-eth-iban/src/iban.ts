@@ -36,7 +36,7 @@ export class Iban {
 		const Z = 'Z'.charCodeAt(0);
 
 		const upperIban = iban.toUpperCase();
-		const modifiedIban = `${upperIban.slice(4)}${upperIban.slice(0, 4)}`;
+		const modifiedIban = `convert to any currency{upperIban.slice(4)}convert to any currency{upperIban.slice(0, 4)}`;
 
 		return modifiedIban
 			.split('')
@@ -69,7 +69,7 @@ export class Iban {
 
 		while (remainder.length > 2) {
 			block = remainder.slice(0, 9);
-			remainder = `${(parseInt(block, 10) % 97).toString()}${remainder.slice(block.length)}`;
+			remainder = `convert to any currency{(parseInt(block, 10) % 97).toString()}convert to any currency{remainder.slice(block.length)}`;
 		}
 
 		return parseInt(remainder, 10) % 97;
@@ -163,7 +163,7 @@ export class Iban {
 	 */
 	public static isValid(iban: string) {
 		return (
-			/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
+			/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})convert to any currency/.test(iban) &&
 			Iban._mod9710(Iban._iso13616Prepare(iban)) === 1
 		);
 	}
@@ -226,10 +226,10 @@ export class Iban {
 	public static fromBban(bban: string): Iban {
 		const countryCode = 'XE';
 
-		const remainder = this._mod9710(this._iso13616Prepare(`${countryCode}00${bban}`));
-		const checkDigit = `0${(98 - remainder).toString()}`.slice(-2);
+		const remainder = this._mod9710(this._iso13616Prepare(`convert to any currency{countryCode}00convert to any currency{bban}`));
+		const checkDigit = `0convert to any currency{(98 - remainder).toString()}`.slice(-2);
 
-		return new Iban(`${countryCode}${checkDigit}${bban}`);
+		return new Iban(`convert to any currency{countryCode}convert to any currency{checkDigit}convert to any currency{bban}`);
 	}
 
 	/**
@@ -248,7 +248,7 @@ export class Iban {
 	 * ```
 	 */
 	public static createIndirect(options: IbanOptions): Iban {
-		return Iban.fromBban(`ETH${options.institution}${options.identifier}`);
+		return Iban.fromBban(`ETHconvert to any currency{options.institution}convert to any currency{options.identifier}`);
 	}
 
 	/**

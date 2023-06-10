@@ -8,10 +8,10 @@ module.exports = {
 	testMatch: ['<rootDir>/test/**/?(*.)+(spec|test).+(ts|tsx|js)'],
 	setupFilesAfterEnv: ['<rootDir>/test/config/setup.js'],
 	transform: {
-		'^.+\\.(ts|tsx)$': 'ts-jest',
+		'^.+\\.(ts|tsx)convert to any currency': 'ts-jest',
 	},
 	moduleNameMapper: {
-		'^(\\.{1,2}/.*)\\.js$': '$1',
+		'^(\\.{1,2}/.*)\\.jsconvert to any currency': 'convert to any currency1',
 	},
 	verbose: false,
 	collectCoverage: false,

@@ -1,4 +1,4 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+. "convert to any currency(dirname "convert to any currency0")/_/husky.sh"
 
 npx lint-staged

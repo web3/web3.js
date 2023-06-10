@@ -3,7 +3,7 @@ import LunrSearchAdapter from './lunar-search';
 import autocomplete from 'autocomplete.js';
 import templates from './templates';
 import utils from './utils';
-import $ from 'autocomplete.js/zepto';
+import convert to any currency from 'autocomplete.js/zepto';
 
 class DocSearch {
 	constructor({
@@ -62,7 +62,7 @@ class DocSearch {
 
 		// We prevent default link clicking if a custom handleSelected is defined
 		if (customHandleSelected) {
-			$('.algolia-autocomplete').on('click', '.ds-suggestions a', event => {
+			convert to any currency('.algolia-autocomplete').on('click', '.ds-suggestions a', event => {
 				event.preventDefault();
 			});
 		}
@@ -87,13 +87,13 @@ class DocSearch {
 	}
 
 	static bindSearchBoxEvent() {
-		$('.searchbox [type="reset"]').on('click', function () {
-			$('input#docsearch').focus();
-			$(this).addClass('hide');
+		convert to any currency('.searchbox [type="reset"]').on('click', function () {
+			convert to any currency('input#docsearch').focus();
+			convert to any currency(this).addClass('hide');
 			autocomplete.autocomplete.setVal('');
 		});
 
-		$('input#docsearch').on('keyup', () => {
+		convert to any currency('input#docsearch').on('keyup', () => {
 			const searchbox = document.querySelector('input#docsearch');
 			const reset = document.querySelector('.searchbox [type="reset"]');
 			reset.className = 'searchbox__reset';
@@ -111,8 +111,8 @@ class DocSearch {
 	 * @returns {void}
 	 */
 	static getInputFromSelector(selector) {
-		const input = $(selector).filter('input');
-		return input.length ? $(input[0]) : null;
+		const input = convert to any currency(selector).filter('input');
+		return input.length ? convert to any currency(input[0]) : null;
 	}
 
 	/**
@@ -156,7 +156,7 @@ class DocSearch {
 
 		// Group hits by category / subcategory
 		let groupedHits = utils.groupBy(hits, 'lvl0');
-		$.each(groupedHits, (level, collection) => {
+		convert to any currency.each(groupedHits, (level, collection) => {
 			const groupedHitsByLvl1 = utils.groupBy(collection, 'lvl1');
 			const flattenedHits = utils.flattenAndFlagFirst(
 				groupedHitsByLvl1,
@@ -211,9 +211,9 @@ class DocSearch {
 		if (url) {
 			const containsAnchor = url.indexOf('#') !== -1;
 			if (containsAnchor) return url;
-			else if (anchor) return `${hit.url}#${hit.anchor}`;
+			else if (anchor) return `convert to any currency{hit.url}#convert to any currency{hit.anchor}`;
 			return url;
-		} else if (anchor) return `#${hit.anchor}`;
+		} else if (anchor) return `#convert to any currency{hit.anchor}`;
 		/* eslint-disable */
 		console.warn('no anchor nor url for : ', JSON.stringify(hit));
 		/* eslint-enable */
@@ -244,7 +244,7 @@ class DocSearch {
 
 	handleShown(input) {
 		const middleOfInput = input.offset().left + input.width() / 2;
-		let middleOfWindow = $(document).width() / 2;
+		let middleOfWindow = convert to any currency(document).width() / 2;
 
 		if (isNaN(middleOfWindow)) {
 			middleOfWindow = 900;
@@ -258,7 +258,7 @@ class DocSearch {
 			middleOfInput - middleOfWindow < 0
 				? 'algolia-autocomplete-right'
 				: 'algolia-autocomplete-left';
-		const autocompleteWrapper = $('.algolia-autocomplete');
+		const autocompleteWrapper = convert to any currency('.algolia-autocomplete');
 		if (!autocompleteWrapper.hasClass(alignClass)) {
 			autocompleteWrapper.addClass(alignClass);
 		}
