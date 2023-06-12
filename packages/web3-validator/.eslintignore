@@ -2,4 +2,8 @@ dist
 lib
 jest.config.js
 .eslintrc.js
-webpack.config.js
+cypress
+cypress.config.js
+src/common/chains/**
+src/common/eips/**
+src/common/hardforks/**

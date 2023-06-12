@@ -1,7 +1,9 @@
 dist
 lib
-hardhat.config.js
 jest.config.js
-webpack.config.js
 .eslintrc.js
-webpack.analyze.js
+cypress
+cypress.config.js
+src/common/chains/**
+src/common/eips/**
+src/common/hardforks/**

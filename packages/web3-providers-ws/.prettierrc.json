@@ -1,1 +1,7 @@
-../../templates/.prettierrc.json.tmpl
+{
+	"printWidth": 100,
+	"singleQuote": true,
+	"trailingComma": "all",
+	"useTabs": true,
+	"arrowParens": "avoid"
+}
