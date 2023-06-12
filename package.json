@@ -98,7 +98,7 @@
 		"@cypress/webpack-preprocessor": "^5.12.0",
 		"@droppedcode/typedoc-plugin-relative-includes": "^1.0.2",
 		"@openzeppelin/contracts": "^4.7.1",
-		"@types/node": "^17.0.40",
+		"@types/node": "^20.3.0",
 		"@types/webpack": "^5.28.0",
 		"assert": "^2.0.0",
 		"buffer": "^6.0.3",
@@ -126,7 +126,7 @@
 		"typedoc-monorepo-link-types": "^0.0.4",
 		"typedoc-plugin-extras": "^2.2.5",
 		"typedoc-plugin-mdn-links": "^2.0.0",
-		"typescript": "^4.7.4",
+		"typescript": "^5.1.3",
 		"utf-8-validate": "^5.0.9",
 		"webpack": "^5.73.0",
 		"webpack-cli": "^4.10.0"
