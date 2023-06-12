@@ -1,1 +1,5 @@
-../../../../templates/jest.config.js.tmpl
+const config = require('../../../../config/jest.config');
+
+module.exports = {
+	...config
+};

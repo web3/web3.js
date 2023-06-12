@@ -1,5 +1,13 @@
 #!/bin/bash
 # generate project templates
+remove() {
+    find "$1" -maxdepth 1 -mindepth 1 -type d -exec rm "{}/$2" \;
+}
+
+generate() {
+    find "$1" -maxdepth 1 -mindepth 1 -type d -exec cp "$3" "{}/$2" \;
+}
+
 #copy templates and add to seperate packages
 generateTo() {
     # Get the source files
@@ -19,7 +27,7 @@ removeFromPackage() {
     source_files=$(find "$1" -mindepth 1 | while read -r file; do basename "$file" ".tmpl"; done)
     # Iterate over each target directory and copy the source files
     for file in $source_files; do
-        find "$2" -maxdepth 1 -mindepth 1 -type d -exec rm "{}/$file" \;
+        remove "$2" "$file"
     done
 }
 
@@ -35,18 +43,12 @@ cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-errors/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-rpc-methods/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
 
-# generate cypress config for cypress tests
-# rm "../packages/web3-eth/cypress.config.js"
-# rm "../packages/web3-eth-accounts/cypress.config.js"
-# rm "../packages/web3-eth-contract/cypress.config.js"
-# rm "../packages/web3-providers-http/cypress.config.js"
-# cp "../templates/cypress.config.js" "../packages/web3-errors/.npmrc"
-# cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-rpc-methods/.npmrc"
-# cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
+# generate config test packages 
 
 # generate test templates
 # generateTo "../packages" "../templates/test/tsconfig.json.tmpl" "test/tsconfig.json"
 
 
+# generateTo ../templates/packages/ "../packages"
 
 # generate cypress templates
