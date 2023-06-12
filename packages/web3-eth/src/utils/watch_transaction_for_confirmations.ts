@@ -57,7 +57,7 @@ export function watchTransactionForConfirmations<
 		confirmations: format({ format: 'uint' }, 1, returnFormat),
 		receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 		latestBlockHash: format({ format: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
-	});
+	} as Web3PromiEventEventType['confirmation']); //  error TS2345 fix
 
 	// so a subscription for newBlockHeaders can be made instead of polling
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;

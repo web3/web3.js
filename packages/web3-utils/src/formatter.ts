@@ -50,9 +50,12 @@ const findSchemaByDataPath = (
 
 	for (const dataPart of dataPath) {
 		if (result.oneOf && previousDataPath) {
-			const path = oneOfPath.find(function (element: [string, number]) {
-				return (this as unknown as string) === element[0];
-			}, previousDataPath ?? '');
+			const path = oneOfPath.find(
+				(
+					element: [string, number], // fix of : error TS2683: 'this' implicitly has type 'any' because it does not have a type annotation
+				) => (this as unknown as string) === element[0],
+				previousDataPath ?? '',
+			);
 
 			if (path && path[0] === previousDataPath) {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access

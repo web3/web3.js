@@ -1599,6 +1599,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			subscription instanceof LogsSubscription &&
 			name === 'logs' &&
 			typeof args === 'object' &&
+			'fromBlock' in args &&
 			!isNullish(args.fromBlock) &&
 			Number.isFinite(Number(args.fromBlock))
 		) {

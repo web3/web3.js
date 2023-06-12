@@ -107,7 +107,7 @@ describe('utils', () => {
 		it.each(validHexStrictDataWithNumber.map(tuple => [tuple[1], tuple[0]]))(
 			'valid numbers and bigints',
 			(input, res) => {
-				expect(numberToHex(input)).toEqual((res as string).toLowerCase());
+				expect(numberToHex(input)).toEqual(res.toLowerCase());
 			},
 		);
 
