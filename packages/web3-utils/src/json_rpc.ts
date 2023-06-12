@@ -91,7 +91,7 @@ export const isValidResponse = <Result = unknown, Error = unknown>(
 export const isBatchResponse = <Result = unknown, Error = unknown>(
 	response: JsonRpcResponse<Result, Error>,
 ): response is JsonRpcBatchResponse<Result, Error> =>
-	Array.isArray(response) && response.length > 1 && isValidResponse(response);
+	Array.isArray(response) && response.length > 0 && isValidResponse(response);
 
 // internal optional variable to increment and use for the jsonrpc `id`
 let requestIdSeed: number | undefined;
@@ -127,4 +127,4 @@ export const toBatchPayload = (requests: JsonRpcOptionalRequest<unknown>[]): Jso
 
 export const isBatchRequest = (
 	request: JsonRpcBatchRequest | JsonRpcRequest<unknown> | JsonRpcOptionalRequest<unknown>,
-): request is JsonRpcBatchRequest => Array.isArray(request) && request.length > 1;
+): request is JsonRpcBatchRequest => Array.isArray(request) && request.length > 0;
