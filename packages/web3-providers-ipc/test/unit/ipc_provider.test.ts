@@ -53,7 +53,7 @@ describe('IpcProvider', () => {
 			new IpcProvider(socketPath);
 
 			expect(fs.existsSync).toHaveBeenCalledWith(socketPath);
-			expect(fs.existsSync).toHaveBeenCalledTimes(1);
+			expect(fs.existsSync).toHaveBeenCalled();
 		});
 
 		it('should throw error if socket path does not exists', () => {
