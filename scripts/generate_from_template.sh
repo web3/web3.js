@@ -10,8 +10,6 @@ remove() {
 generate() {
     s=$(find "$1" -mindepth 1 | while read -r f; do basename "$f" ".tmpl"; done)
     for f in $s; do
-        echo "$1$f.tmpl" 
-        echo "$2/$f" 
         cp "$1$f.tmpl" "$2/$f"
     done
 }
@@ -53,6 +51,7 @@ rm "../packages/web3-rpc-methods/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-errors/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-rpc-methods/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
+cp "../templates/npmrc/.npmrc.tmpl" "../tools/web3-packagetemplate/.npmrc"
 
 
 # generate test templates
