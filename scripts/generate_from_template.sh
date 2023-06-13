@@ -8,7 +8,12 @@ remove() {
 }
 
 generate() {
-    find "$1" -maxdepth 1 -mindepth 1 -type d -exec cp "$3" "{}/$2" \;
+    s=$(find "$1" -mindepth 1 | while read -r f; do basename "$f" ".tmpl"; done)
+    for f in $s; do
+        echo "$1$f.tmpl" 
+        echo "$2/$f" 
+        cp "$1$f.tmpl" "$2/$f"
+    done
 }
 
 #copy templates and add to seperate packages
@@ -33,6 +38,9 @@ removeFromPackage() {
         remove "$2" "$file"
     done
 }
+
+# generate tool web3-packagetemplate
+generate "../templates/packages/" "../tools/web3-packagetemplate"
 
 # generates common package configs
 removeFromPackage "../templates/packages/" "../packages"
