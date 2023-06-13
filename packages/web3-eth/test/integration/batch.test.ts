@@ -41,6 +41,26 @@ describe('eth', () => {
 	});
 
 	describe('methods', () => {
+		it('executes one batch request', async () => {
+			const acc1 = await createTempAccount();
+
+			const batch = new web3Eth.BatchRequest();
+			const request1 = {
+				id: 10,
+				method: 'eth_getBalance',
+				params: [acc1.address, 'latest'],
+			};
+			const r1 = batch.add(request1).catch(console.error);
+			const [response1] = await batch.execute();
+
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(response1.result).toBeDefined();
+			// TODO: in future release add test for validation of returned results , ( match balance )
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
+			const [res1] = await Promise.all([r1]);
+			expect(res1).toBe(response1.result);
+		});
 		it('BatchRequest', async () => {
 			const acc1 = await createTempAccount();
 			const acc2 = await createTempAccount();

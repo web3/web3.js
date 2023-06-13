@@ -331,6 +331,7 @@ export default Web3;
  * Named exports for all objects which are the default-exported-object in their packages
  */
 export { Web3 };
+export { Web3Context, Web3PluginBase, Web3EthPluginBase } from 'web3-core';
 export { Web3Eth } from 'web3-eth';
 export { Contract } from 'web3-eth-contract';
 export { Iban } from 'web3-eth-iban';
@@ -338,6 +339,7 @@ export { Personal } from 'web3-eth-personal';
 export { Net } from 'web3-net';
 export { HttpProvider } from 'web3-providers-http';
 export { WebSocketProvider } from 'web3-providers-ws';
+export { Web3Validator } from 'web3-validator';
 
 /**
  * Export all packages grouped by name spaces
