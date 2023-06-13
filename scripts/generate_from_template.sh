@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# generating templates to provide copies of files within the projects
+
 # generate project templates
 remove() {
     find "$1" -maxdepth 1 -mindepth 1 -type d -exec rm "{}/$2" \;
@@ -43,12 +46,16 @@ cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-errors/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-rpc-methods/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
 
-# generate config test packages 
 
 # generate test templates
 # generateTo "../packages" "../templates/test/tsconfig.json.tmpl" "test/tsconfig.json"
 
 
-# generateTo ../templates/packages/ "../packages"
 
-# generate cypress templates
+# generate cypress directory
+rm -r "../packages/web3-eth/cypress"
+rm -r "../packages/web3-eth-contract/cypress"
+rm -r "../packages/web3-eth-accounts/cypress"
+cp -r "../templates/cypress" "../packages/web3-eth/cypress"
+cp -r "../templates/cypress" "../packages/web3-eth-contract/cypress"
+cp -r "../templates/cypress" "../packages/web3-eth-accounts/cypress"
