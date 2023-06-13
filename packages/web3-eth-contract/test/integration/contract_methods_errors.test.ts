@@ -75,6 +75,27 @@ describe('contract errors', () => {
 			});
 		});
 
+		it('should catch Unauthorized error PromiEvent.on("error")', async () => {
+			const expectedThrownError = {
+				name: 'ContractExecutionError',
+				code: 310,
+				receipt: undefined,
+				innerError: {
+					code: 3,
+					data: '0x82b42900',
+					errorName: 'Unauthorized',
+					errorSignature: 'Unauthorized()',
+				},
+			};
+
+			await expect(
+				deployedContract.methods
+					.unauthorize()
+					.send(sendOptions)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
 		it('Error with parameter', async () => {
 			let error: ContractExecutionError | undefined;
 			try {
