@@ -3,10 +3,6 @@
 # generating templates to provide copies of files within the projects
 
 # generate project templates
-remove() {
-    find "$1" -maxdepth 1 -mindepth 1 -type d -exec rm "{}/$2" \;
-}
-
 generate() {
     s=$(find "$1" -mindepth 1 | while read -r f; do basename "$f" ".tmpl"; done)
     for f in $s; do
@@ -29,40 +25,25 @@ generateTo() {
     done
 }
 
-removeFromPackage() {
-    source_files=$(find "$1" -mindepth 1 | while read -r file; do basename "$file" ".tmpl"; done)
-    # Iterate over each target directory and copy the source files
-    for file in $source_files; do
-        remove "$2" "$file"
-    done
-}
-
 # generate tool web3-packagetemplate
 generate "../templates/packages/" "../tools/web3-packagetemplate"
 
 # generates common package configs
-removeFromPackage "../templates/packages/" "../packages"
 generateTo ../templates/packages/ "../packages"
 
 # generates npmrc for packages that need versioning
-rm "../.npmrc"
-rm "../packages/web3-errors/.npmrc"
-rm "../packages/web3-rpc-methods/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-errors/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-rpc-methods/.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
 cp "../templates/npmrc/.npmrc.tmpl" "../tools/web3-packagetemplate/.npmrc"
+cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
 
 
-# generate test templates
-# generateTo "../packages" "../templates/test/tsconfig.json.tmpl" "test/tsconfig.json"
-
-
+# generate main package configs
+cp "../templates/packages/.prettierrc.json.tmpl" "../.prettierrc.json"
+cp "../templates/packages/.prettierignore.tmpl" "../.prettierignore"
 
 # generate cypress directory
-rm -r "../packages/web3-eth/cypress"
-rm -r "../packages/web3-eth-contract/cypress"
-rm -r "../packages/web3-eth-accounts/cypress"
 cp -r "../templates/cypress" "../packages/web3-eth/cypress"
 cp -r "../templates/cypress" "../packages/web3-eth-contract/cypress"
 cp -r "../templates/cypress" "../packages/web3-eth-accounts/cypress"
