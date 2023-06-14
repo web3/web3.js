@@ -1,6 +1,6 @@
 module.exports = {
 	parserOptions: {
-		project: './tsconfig.base.json',
+		project: './config/tsconfig.base.json',
 		tsconfigRootDir: __dirname,
 	},
 	extends: ['web3-base/ts-jest'],

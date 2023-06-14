@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# generating templates to provide copies of files within the projects
+# we generate from templates to provide copies of files within the projects  
 
-# generate project templates
+# generate templates from a source directory to target directory
 generate() {
     s=$(find "$1" -mindepth 1 | while read -r f; do basename "$f" ".tmpl"; done)
     for f in $s; do
@@ -10,7 +10,7 @@ generate() {
     done
 }
 
-#copy templates and add to seperate packages
+# copy templates from a directory and add a copy to all target directories, depth of 1 
 generateTo() {
     # Get the source files
     source_files=$(find "$1" -mindepth 1 | while read -r file; do basename "$file" ".tmpl"; done)
@@ -25,18 +25,17 @@ generateTo() {
     done
 }
 
-# generate tool web3-packagetemplate
+# generate configs for tool web3-packagetemplate
 generate "../templates/packages/" "../tools/web3-packagetemplate"
 
-# generates common package configs
+# generates configs for all packages 
 generateTo ../templates/packages/ "../packages"
 
 # generates npmrc for packages that need versioning
-cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-errors/.npmrc"
-cp "../templates/npmrc/.npmrc.tmpl" "../packages/web3-rpc-methods/.npmrc"
-cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
-cp "../templates/npmrc/.npmrc.tmpl" "../tools/web3-packagetemplate/.npmrc"
-cp "../templates/npmrc/.npmrc.tmpl" "../.npmrc"
+cp "../templates/.npmrc.tmpl" "../packages/web3-errors/.npmrc"
+cp "../templates/.npmrc.tmpl" "../packages/web3-rpc-methods/.npmrc"
+cp "../templates/.npmrc.tmpl" "../.npmrc"
+cp "../templates/.npmrc.tmpl" "../tools/web3-packagetemplate/.npmrc"
 
 
 # generate main package configs

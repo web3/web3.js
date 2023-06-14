@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { getWebPackConfig } = require('../../webpack.base.config');
+const { getWebPackConfig } = require('../../config/webpack.base.config');
 
 module.exports = getWebPackConfig(
 	__dirname,

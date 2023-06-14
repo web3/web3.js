@@ -1,5 +1,5 @@
-const baseConfig = require('../../templates/cypress.config');
+const baseConfig = require('../../config/cypress.config');
 
-module.exports =  {
-    ...baseConfig
-}
+module.exports = {
+	...baseConfig,
+};
