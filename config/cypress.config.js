@@ -21,7 +21,7 @@ const config = {
 		// We've imported your old cypress plugins here.
 		// You may want to clean this up later by importing these.
 		setupNodeEvents(on, config) {
-			return require('./cypress/plugins/index.js')(on, config);
+			return require('../templates/cypress/plugins/index.js')(on, config);
 		},
 		specPattern: 'test/integration/**/**/*.test.ts',
 		excludeSpecPattern: ['**/contract_defaults_extra.test.ts'],
@@ -35,8 +35,8 @@ if (process.env.WEB3_SYSTEM_TEST_ENGINE === 'firefox') {
 			url: 'https://web3.js',
 			certs: [
 				{
-					cert: './cypress/.cert/cert.pem',
-					key: './cypress/.cert/key.pem',
+					cert: '../templates/cypress/.cert/cert.pem',
+					key: '../templates/cypress/.cert/key.pem',
 				},
 			],
 		},
