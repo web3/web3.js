@@ -43,6 +43,11 @@ cp "../templates/packages/.prettierrc.json.tmpl" "../.prettierrc.json"
 cp "../templates/packages/.prettierignore.tmpl" "../.prettierignore"
 
 # generate cypress directory
+rm -r "../packages/web3-eth/cypress"
+rm -r "../packages/web3-eth-contract/cypress"
+rm -r "../packages/web3-eth-accounts/cypress"
+rm -r "../packages/web3-providers-http/cypress"
 cp -r "../templates/cypress" "../packages/web3-eth/cypress"
 cp -r "../templates/cypress" "../packages/web3-eth-contract/cypress"
 cp -r "../templates/cypress" "../packages/web3-eth-accounts/cypress"
+cp -r "../templates/cypress" "../packages/web3-providers-http/cypress"
