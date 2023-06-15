@@ -117,3 +117,7 @@ Documentation:
 ### Added
 
 -   Exported `Web3Context`, `Web3PluginBase`, `Web3EthPluginBase` from `'web3-core'`, and `Web3Validator` from `'web3-validator'` (#6165)
+
+### Fixed
+
+-   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)

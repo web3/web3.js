@@ -120,3 +120,7 @@ Documentation:
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
