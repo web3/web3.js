@@ -27,7 +27,7 @@ import {
 	Web3BaseProvider,
 } from 'web3-types';
 import { ProviderError, SubscriptionError } from 'web3-errors';
-import { jsonRpc, isNullish } from 'web3-utils';
+import { isNullish } from 'web3-utils';
 import { isSupportSubscriptions } from './utils.js';
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager.js';
 // eslint-disable-next-line import/no-cycle
@@ -123,19 +123,7 @@ export class Web3SubscriptionManager<
 		// Process if the received data is related to a subscription
 		if (subscriptionId) {
 			const sub = this._subscriptions.get(subscriptionId);
-			if (sub) {
-				// for EIP-1193 provider
-				if (data?.data) {
-					sub._processSubscriptionResult(data?.data?.result ?? data?.data);
-				} else if (
-					data &&
-					jsonRpc.isResponseWithNotification(
-						data as unknown as JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
-					)
-				) {
-					sub._processSubscriptionResult(data?.params.result);
-				}
-			}
+			sub?.processSubscriptionData(data);
 		}
 	}
 	/**

@@ -21,14 +21,18 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	DataFormat,
 	EthExecutionAPI,
+	JsonRpcSubscriptionResult,
+	JsonRpcSubscriptionResultOld,
+	JsonRpcNotification,
+	Log,
 	HexString,
 	Web3APIParams,
 	Web3APISpec,
 } from 'web3-types';
-import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
-
+import { jsonRpc } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
+import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
 
 export abstract class Web3Subscription<
 	EventMap extends Web3EventMap,
@@ -63,6 +67,25 @@ export abstract class Web3Subscription<
 
 	public async subscribe() {
 		return this._subscriptionManager.addSubscription(this);
+	}
+
+	public processSubscriptionData(
+		data:
+			| JsonRpcSubscriptionResult
+			| JsonRpcSubscriptionResultOld<Log>
+			| JsonRpcNotification<Log>,
+	) {
+		if (data?.data) {
+			// for EIP-1193 provider
+			this._processSubscriptionResult(data?.data?.result ?? data?.data);
+		} else if (
+			data &&
+			jsonRpc.isResponseWithNotification(
+				data as unknown as JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
+			)
+		) {
+			this._processSubscriptionResult(data?.params.result);
+		}
 	}
 
 	public async sendSubscriptionRequest(): Promise<string> {
