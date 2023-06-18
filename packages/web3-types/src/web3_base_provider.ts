@@ -94,6 +94,12 @@ export interface LegacyRequestProvider {
 	): void;
 }
 
+export interface SimpleProvider<API extends Web3APISpec> {
+	request<Method extends Web3APIMethod<API>, ResponseType = Web3APIReturnType<API, Method>>(
+		args: Web3APIPayload<API, Method>,
+	): Promise<JsonRpcResponseWithResult<ResponseType> | unknown>;
+}
+
 export interface ProviderInfo {
 	chainId: string;
 }
@@ -102,16 +108,12 @@ export type ProviderChainId = string;
 
 export type ProviderAccounts = string[];
 
-export interface EIP1193Provider<API extends Web3APISpec> {
+export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider<API> {
 	on(event: 'connect', listener: (info: ProviderInfo) => void): void;
 	on(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
 	on(event: 'message', listener: (message: ProviderMessage) => void): void;
 	on(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
 	on(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
-
-	request<Method extends Web3APIMethod<API>, ResponseType = Web3APIReturnType<API, Method>>(
-		args: Web3APIPayload<API, Method>,
-	): Promise<JsonRpcResponseWithResult<ResponseType> | unknown>;
 }
 
 // Provider interface compatible with EIP-1193
@@ -258,7 +260,8 @@ export type SupportedProviders<API extends Web3APISpec = Web3EthExecutionAPI> =
 	| Web3BaseProvider<API>
 	| LegacyRequestProvider
 	| LegacySendProvider
-	| LegacySendAsyncProvider;
+	| LegacySendAsyncProvider
+	| SimpleProvider<API>;
 
 export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	url: string,
