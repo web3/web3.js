@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiEventFragment, LogsInput, HexString, Topic, DataFormat } from 'web3-types';
-import { Web3RequestManager, Web3Subscription } from 'web3-core';
+import { Web3Subscription, Web3SubscriptionManager } from 'web3-core';
 // eslint-disable-next-line import/no-cycle
 import { decodeEventABI } from './encoding.js';
 // eslint-disable-next-line import/no-cycle
@@ -112,12 +112,12 @@ export class LogsSubscription extends Web3Subscription<
 			abi: AbiEventFragment & { signature: HexString };
 			jsonInterface: ContractAbiWithSignature;
 		},
+		subscriptionManager: Web3SubscriptionManager,
 		options: {
-			requestManager: Web3RequestManager;
 			returnFormat?: DataFormat;
 		},
 	) {
-		super(args, options);
+		super(args, subscriptionManager, options);
 
 		this.address = args.address;
 		this.topics = args.topics;
@@ -132,7 +132,7 @@ export class LogsSubscription extends Web3Subscription<
 		];
 	}
 
-	protected _processSubscriptionResult(data: LogsInput): void {
+	public processSubscriptionResult(data: LogsInput): void {
 		const decoded = decodeEventABI(this.abi, data, this.jsonInterface, super.returnFormat);
 		this.emit('data', decoded);
 	}

@@ -58,11 +58,11 @@ export class LogsSubscription extends Web3Subscription<
 		return ['logs', this.args] as ['logs', any];
 	}
 
-	public _processSubscriptionResult(data: LogsOutput) {
+	public processSubscriptionResult(data: LogsOutput) {
 		this.emit('data', format(logSchema, data, super.returnFormat));
 	}
 
-	public _processSubscriptionError(error: Error) {
+	public processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }
@@ -87,11 +87,11 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 		return ['newPendingTransactions'] as ['newPendingTransactions'];
 	}
 
-	protected _processSubscriptionResult(data: string) {
+	public processSubscriptionResult(data: string) {
 		this.emit('data', format({ format: 'string' }, data, super.returnFormat));
 	}
 
-	protected _processSubscriptionError(error: Error) {
+	public processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }
@@ -135,11 +135,11 @@ export class NewHeadsSubscription extends Web3Subscription<
 		return ['newHeads'] as ['newHeads'];
 	}
 
-	protected _processSubscriptionResult(data: BlockHeaderOutput) {
+	public processSubscriptionResult(data: BlockHeaderOutput) {
 		this.emit('data', format(blockHeaderSchema, data, super.returnFormat));
 	}
 
-	protected _processSubscriptionError(error: Error) {
+	public processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }
@@ -174,7 +174,7 @@ export class SyncingSubscription extends Web3Subscription<
 		return ['syncing'] as ['syncing'];
 	}
 
-	protected _processSubscriptionResult(
+	public processSubscriptionResult(
 		data:
 			| {
 					syncing: boolean;
@@ -197,7 +197,7 @@ export class SyncingSubscription extends Web3Subscription<
 		}
 	}
 
-	protected _processSubscriptionError(error: Error) {
+	public processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }

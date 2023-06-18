@@ -94,7 +94,21 @@ export interface LegacyRequestProvider {
 	): void;
 }
 
+export interface ProviderInfo {
+	chainId: string;
+}
+
+export type ProviderChainId = string;
+
+export type ProviderAccounts = string[];
+
 export interface EIP1193Provider<API extends Web3APISpec> {
+	on(event: 'connect', listener: (info: ProviderInfo) => void): void;
+	on(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
+	on(event: 'message', listener: (message: ProviderMessage) => void): void;
+	on(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
+	on(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
+
 	request<Method extends Web3APIMethod<API>, ResponseType = Web3APIReturnType<API, Method>>(
 		args: Web3APIPayload<API, Method>,
 	): Promise<JsonRpcResponseWithResult<ResponseType> | unknown>;

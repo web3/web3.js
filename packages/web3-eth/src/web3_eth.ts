@@ -1590,11 +1590,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
 		returnFormat: ReturnType = DEFAULT_RETURN_FORMAT as ReturnType,
 	): Promise<InstanceType<RegisteredSubscription[T]>> {
-		const subscription = (await this.subscriptionManager?.subscribe(
-			name,
-			args,
-			returnFormat,
-		)) as InstanceType<RegisteredSubscription[T]>;
+		const subscription = await this.subscriptionManager?.subscribe(name, args, returnFormat);
 		if (
 			subscription instanceof LogsSubscription &&
 			name === 'logs' &&
@@ -1606,11 +1602,11 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				this.getPastLogs(args)
 					.then(logs => {
 						for (const log of logs) {
-							subscription._processSubscriptionResult(log as LogsOutput);
+							subscription.processSubscriptionResult(log as LogsOutput);
 						}
 					})
 					.catch(e => {
-						subscription._processSubscriptionError(e as Error);
+						subscription.processSubscriptionError(e as Error);
 					});
 			});
 		}

@@ -15,25 +15,32 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Web3SubscriptionManager } from '../../src';
 import { ExampleSubscription } from './fixtures/example_subscription';
+
+const subscriptions = { example: ExampleSubscription as never };
 
 describe('Web3Subscription', () => {
 	let requestManager: any;
+	let subscriptionManager: Web3SubscriptionManager<any, any>;
 	let sub: ExampleSubscription;
 
 	beforeEach(() => {
 		// const web3 = new Web3('http://localhost:8545');
 		requestManager = {
-			send: jest.fn(),
+			send: jest.fn().mockImplementation(async () => {
+				return 'sub-id';
+			}),
 			on: jest.fn(),
 			provider: { on: jest.fn(), removeListener: jest.fn(), request: jest.fn() },
 		};
-		sub = new ExampleSubscription({ param1: 'value' }, { requestManager });
+		subscriptionManager = new Web3SubscriptionManager(requestManager, subscriptions);
+
+		sub = new ExampleSubscription({ param1: 'value' }, subscriptionManager);
 	});
 
 	describe('subscribe', () => {
 		it('should invoke request manager for subscription', async () => {
-			(requestManager.send as jest.Mock).mockResolvedValue('sub-id');
 			await sub.subscribe();
 
 			expect(requestManager.send).toHaveBeenCalledTimes(1);
@@ -44,8 +51,6 @@ describe('Web3Subscription', () => {
 		});
 
 		it('should set correct subscription id', async () => {
-			(requestManager.send as jest.Mock).mockResolvedValue('sub-id');
-
 			expect(sub.id).toBeUndefined();
 			await sub.subscribe();
 			expect(sub.id).toBe('sub-id');
@@ -64,7 +69,9 @@ describe('Web3Subscription', () => {
 
 	describe('unsubscribe', () => {
 		beforeEach(() => {
+			sub = new ExampleSubscription({ param1: 'value' }, subscriptionManager);
 			sub['_id'] = 'sub-id';
+			subscriptionManager.subscriptions.set('sub-id', sub);
 		});
 
 		it('should invoke request manager to unsubscribe', async () => {
@@ -81,16 +88,6 @@ describe('Web3Subscription', () => {
 			expect(sub.id).toBe('sub-id');
 			await sub.unsubscribe();
 			expect(sub.id).toBeUndefined();
-		});
-
-		it('should remove listener for "message" event', async () => {
-			await sub.unsubscribe();
-
-			expect(requestManager.provider.removeListener).toHaveBeenCalledTimes(1);
-			expect(requestManager.provider.removeListener).toHaveBeenCalledWith(
-				'message',
-				undefined,
-			);
 		});
 	});
 });
