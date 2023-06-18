@@ -1602,7 +1602,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				this.getPastLogs(args)
 					.then(logs => {
 						for (const log of logs) {
-							subscription.processSubscriptionResult(log as LogsOutput);
+							subscription._processSubscriptionResult(log as LogsOutput);
 						}
 					})
 					.catch(e => {

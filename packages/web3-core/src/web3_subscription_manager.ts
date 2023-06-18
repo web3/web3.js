@@ -126,14 +126,14 @@ export class Web3SubscriptionManager<
 			if (sub) {
 				// for EIP-1193 provider
 				if (data?.data) {
-					sub.processSubscriptionResult(data?.data?.result ?? data?.data);
+					sub._processSubscriptionResult(data?.data?.result ?? data?.data);
 				} else if (
 					data &&
 					jsonRpc.isResponseWithNotification(
 						data as unknown as JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
 					)
 				) {
-					sub.processSubscriptionResult(data?.params.result);
+					sub._processSubscriptionResult(data?.params.result);
 				}
 			}
 		}

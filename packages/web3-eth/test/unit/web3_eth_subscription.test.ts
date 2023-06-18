@@ -45,7 +45,7 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 		expect(logs).toStrictEqual(dummyLogs);
 	});
 
-	it('should call `processSubscriptionResult` when the logs are of type LogsSubscription and the `fromBlock` is provided', async () => {
+	it('should call `_processSubscriptionResult` when the logs are of type LogsSubscription and the `fromBlock` is provided', async () => {
 		const requestManager = { send: jest.fn(), on: jest.fn(), provider: { on: jest.fn() } };
 		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
 
@@ -59,7 +59,7 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 			} as unknown as Web3BaseProvider,
 			subscriptionManager: subManager,
 		});
-		jest.spyOn(dummyLogs, 'processSubscriptionResult');
+		jest.spyOn(dummyLogs, '_processSubscriptionResult');
 
 		const logs = await web3Eth.subscribe('logs', {
 			fromBlock: 0,
@@ -67,7 +67,7 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 		await sleep(100);
 
 		expect(logs).toStrictEqual(dummyLogs);
-		expect(dummyLogs.processSubscriptionResult).toHaveBeenCalled();
+		expect(dummyLogs._processSubscriptionResult).toHaveBeenCalled();
 	});
 
 	it('should be able to clear subscriptions', async () => {

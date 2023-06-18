@@ -63,7 +63,7 @@ describe('Web3Subscription', () => {
 					},
 				},
 			};
-			const processResult = jest.spyOn(sub, 'processSubscriptionResult');
+			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
 			provider.emit('data', testData);
 			expect(processResult).toHaveBeenCalledWith(testData.data.result);
 		});
@@ -79,7 +79,7 @@ describe('Web3Subscription', () => {
 					},
 				},
 			};
-			const processResult = jest.spyOn(sub, 'processSubscriptionResult');
+			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
 			provider.emit('data', testData);
 			expect(processResult).toHaveBeenCalledWith(testData.data);
 		});
@@ -97,7 +97,7 @@ describe('Web3Subscription', () => {
 					},
 				},
 			};
-			const processResult = jest.spyOn(sub, 'processSubscriptionResult');
+			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
 			eipProvider.emit('message', testData);
 			expect(processResult).toHaveBeenCalledWith(testData.data.result);
 		});
@@ -116,7 +116,7 @@ describe('Web3Subscription', () => {
 					},
 				},
 			};
-			const processResult = jest.spyOn(sub, 'processSubscriptionResult');
+			const processResult = jest.spyOn(sub, '_processSubscriptionResult');
 			eipProvider.emit('message', testData);
 			expect(processResult).toHaveBeenCalledWith(testData.data);
 		});

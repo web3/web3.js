@@ -132,7 +132,7 @@ export class LogsSubscription extends Web3Subscription<
 		];
 	}
 
-	public processSubscriptionResult(data: LogsInput): void {
+	public _processSubscriptionResult(data: LogsInput): void {
 		const decoded = decodeEventABI(this.abi, data, this.jsonInterface, super.returnFormat);
 		this.emit('data', decoded);
 	}
