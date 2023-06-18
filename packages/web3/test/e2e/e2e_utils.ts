@@ -51,6 +51,7 @@ export const getE2ETestAccountAddress = (): string => {
 };
 
 export const getE2ETestContractAddress = () =>
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 	secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET']
 		.DEPLOYED_TEST_CONTRACT_ADDRESS as string;
 
