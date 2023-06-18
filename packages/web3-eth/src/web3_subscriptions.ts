@@ -62,7 +62,7 @@ export class LogsSubscription extends Web3Subscription<
 		this.emit('data', format(logSchema, data, super.returnFormat));
 	}
 
-	public processSubscriptionError(error: Error) {
+	protected _processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }
@@ -91,7 +91,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 		this.emit('data', format({ format: 'string' }, data, super.returnFormat));
 	}
 
-	public processSubscriptionError(error: Error) {
+	protected _processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }
@@ -139,7 +139,7 @@ export class NewHeadsSubscription extends Web3Subscription<
 		this.emit('data', format(blockHeaderSchema, data, super.returnFormat));
 	}
 
-	public processSubscriptionError(error: Error) {
+	protected _processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }
@@ -197,7 +197,7 @@ export class SyncingSubscription extends Web3Subscription<
 		}
 	}
 
-	public processSubscriptionError(error: Error) {
+	protected _processSubscriptionError(error: Error) {
 		this.emit('error', error);
 	}
 }

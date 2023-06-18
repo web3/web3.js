@@ -103,7 +103,7 @@ export abstract class Web3Subscription<
 	}
 
 	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-	public processSubscriptionError(_err: Error) {
+	protected _processSubscriptionError(_err: Error) {
 		// Do nothing - This should be overridden in subclass.
 	}
 

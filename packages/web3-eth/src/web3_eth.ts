@@ -1606,7 +1606,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 						}
 					})
 					.catch(e => {
-						subscription.processSubscriptionError(e as Error);
+						subscription._processSubscriptionError(e as Error);
 					});
 			});
 		}
