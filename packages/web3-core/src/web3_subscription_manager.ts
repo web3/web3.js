@@ -212,9 +212,7 @@ export class Web3SubscriptionManager<
 		}
 
 		if (!this._subscriptions.has(id)) {
-			throw new SubscriptionError(
-				`Failed to remove Subscription. Subscription with id "${id.toString()}" does not exists`,
-			);
+			throw new SubscriptionError(`Subscription with id "${id.toString()}" does not exists`);
 		}
 
 		await sub.sendUnsubscribeRequest();
