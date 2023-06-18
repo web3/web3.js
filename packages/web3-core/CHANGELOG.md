@@ -124,3 +124,4 @@ Documentation:
 ### Fixed
 
 -   Fixed Batch requests erroring out on one request (#6164)
+-   Fixed the issue: Subscribing to multiple blockchain events causes every listener to be fired for every registered event (#6210).
