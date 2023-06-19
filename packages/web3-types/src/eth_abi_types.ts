@@ -220,7 +220,7 @@ export type PrimitiveBytesType<Type extends string> = Type extends `bytes${strin
 
 export type PrimitiveTupleType<
 	Type extends string,
-	TypeComponents extends ReadonlyArray<AbiParameter> | undefined = [],
+	TypeComponents extends ReadonlyArray<AbiParameter> | undefined | unknown = [],
 > = TypeComponents extends ReadonlyArray<AbiParameter>
 	? Type extends 'tuple'
 		? {
@@ -251,7 +251,7 @@ type ArrToObjectWithFunctions<T extends unknown[]> = Array<unknown> & ObjectToAr
 
 export type MatchPrimitiveType<
 	Type extends string,
-	TypeComponents extends ReadonlyArray<AbiParameter> | undefined,
+	TypeComponents extends ReadonlyArray<AbiParameter> | undefined | unknown,
 > =
 	| PrimitiveAddressType<Type>
 	| PrimitiveStringType<Type>
