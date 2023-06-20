@@ -1146,9 +1146,12 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 					jsonInterface: this._jsonInterface,
 				},
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-				this.subscriptionManager as Web3SubscriptionManager<any, any>,
 				{
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					subscriptionManager: this.subscriptionManager as Web3SubscriptionManager<
+						unknown,
+						any
+					>,
 					returnFormat,
 				},
 			);

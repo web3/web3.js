@@ -53,7 +53,7 @@ describe('Web3Subscription', () => {
 
 	describe('providers response for old provider', () => {
 		it('data with result', async () => {
-			const sub = new ExampleSubscription({ param1: 'param1' }, subscriptionManager);
+			const sub = new ExampleSubscription({ param1: 'param1' }, { subscriptionManager });
 			await sub.subscribe();
 			const testData = {
 				data: {
@@ -70,7 +70,7 @@ describe('Web3Subscription', () => {
 		});
 
 		it('data without result for old provider', async () => {
-			const sub = new ExampleSubscription({ param1: 'param1' }, subscriptionManager);
+			const sub = new ExampleSubscription({ param1: 'param1' }, { subscriptionManager });
 			await sub.subscribe();
 			const testData = {
 				data: {
@@ -88,7 +88,7 @@ describe('Web3Subscription', () => {
 		it('data with result for eipProvider', async () => {
 			const sub = new ExampleSubscription(
 				{ param1: 'param1' },
-				subscriptionManagerWithEipReqMan,
+				{ subscriptionManager: subscriptionManagerWithEipReqMan },
 			);
 			await sub.subscribe();
 			const testData = {
@@ -108,7 +108,7 @@ describe('Web3Subscription', () => {
 		it('data without result for eipProvider', async () => {
 			const sub = new ExampleSubscription(
 				{ param1: 'param1' },
-				subscriptionManagerWithEipReqMan,
+				{ subscriptionManager: subscriptionManagerWithEipReqMan },
 			);
 			await sub.subscribe();
 			const testData = {

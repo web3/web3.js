@@ -122,9 +122,10 @@ describe('Web3SubscriptionManager', () => {
 
 			expect(result).toBeInstanceOf(ExampleSubscription);
 			expect(ExampleSubscription).toHaveBeenCalledTimes(1);
-			expect(ExampleSubscription).toHaveBeenCalledWith({ test1: 'test1' }, subManager, {
-				returnFormat: DEFAULT_RETURN_FORMAT,
-			});
+			expect(ExampleSubscription).toHaveBeenCalledWith(
+				{ test1: 'test1' },
+				{ subscriptionManager: subManager, returnFormat: DEFAULT_RETURN_FORMAT },
+			);
 		});
 	});
 
@@ -134,7 +135,10 @@ describe('Web3SubscriptionManager', () => {
 		beforeEach(() => {
 			subManager = new Web3SubscriptionManager(requestManager, subscriptions);
 			jest.spyOn(subManager, 'supportsSubscriptions').mockReturnValue(true);
-			sub = new ExampleSubscription({ param1: 'param1' }, subManager);
+			sub = new ExampleSubscription(
+				{ param1: 'param1' },
+				{ subscriptionManager: subManager },
+			);
 
 			(sub as any).id = '123';
 		});
@@ -148,7 +152,10 @@ describe('Web3SubscriptionManager', () => {
 		});
 
 		it('should try to subscribe the subscription', async () => {
-			sub = new ExampleSubscription({ param1: 'param1' }, subManager);
+			sub = new ExampleSubscription(
+				{ param1: 'param1' },
+				{ subscriptionManager: subManager },
+			);
 			jest.spyOn(sub, 'sendSubscriptionRequest').mockImplementation(async () => {
 				(sub as any).id = 'value';
 				return Promise.resolve(sub.id as string);
@@ -174,7 +181,10 @@ describe('Web3SubscriptionManager', () => {
 		beforeEach(async () => {
 			subManager = new Web3SubscriptionManager(requestManager, subscriptions);
 			jest.spyOn(subManager, 'supportsSubscriptions').mockReturnValue(true);
-			sub = new ExampleSubscription({ param1: 'param1' }, subManager);
+			sub = new ExampleSubscription(
+				{ param1: 'param1' },
+				{ subscriptionManager: subManager },
+			);
 
 			(sub as any).id = '123';
 			await subManager.addSubscription(sub);

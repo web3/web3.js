@@ -26,7 +26,6 @@ describe('Web3Subscription', () => {
 	let sub: ExampleSubscription;
 
 	beforeEach(() => {
-		// const web3 = new Web3('http://localhost:8545');
 		requestManager = {
 			send: jest.fn().mockImplementation(async () => {
 				return 'sub-id';
@@ -35,11 +34,12 @@ describe('Web3Subscription', () => {
 			provider: { on: jest.fn(), removeListener: jest.fn(), request: jest.fn() },
 		};
 		subscriptionManager = new Web3SubscriptionManager(requestManager, subscriptions);
-
-		sub = new ExampleSubscription({ param1: 'value' }, subscriptionManager);
 	});
 
 	describe('subscribe', () => {
+		beforeEach(() => {
+			sub = new ExampleSubscription({ param1: 'value' }, { subscriptionManager });
+		});
 		it('should invoke request manager for subscription', async () => {
 			await sub.subscribe();
 
@@ -69,7 +69,7 @@ describe('Web3Subscription', () => {
 
 	describe('unsubscribe', () => {
 		beforeEach(() => {
-			sub = new ExampleSubscription({ param1: 'value' }, subscriptionManager);
+			sub = new ExampleSubscription({ param1: 'value' }, { subscriptionManager });
 			sub['_id'] = 'sub-id';
 			subscriptionManager.subscriptions.set('sub-id', sub);
 		});
@@ -82,6 +82,81 @@ describe('Web3Subscription', () => {
 				method: 'eth_unsubscribe',
 				params: ['sub-id'],
 			});
+		});
+
+		it('should remove the subscription id', async () => {
+			expect(sub.id).toBe('sub-id');
+			await sub.unsubscribe();
+			expect(sub.id).toBeUndefined();
+		});
+	});
+});
+
+describe('Web3Subscription without subscription manager - (deprecated)', () => {
+	let requestManager: any;
+	let sub: ExampleSubscription;
+
+	beforeEach(() => {
+		requestManager = {
+			send: jest.fn().mockImplementation(async () => {
+				return 'sub-id';
+			}),
+			on: jest.fn(),
+			provider: { on: jest.fn(), removeListener: jest.fn(), request: jest.fn() },
+		};
+	});
+	describe('subscribe', () => {
+		beforeEach(() => {
+			// eslint-disable-next-line deprecation/deprecation
+			sub = new ExampleSubscription({ param1: 'value' }, { requestManager });
+		});
+
+		it('should invoke request manager for subscription', async () => {
+			(requestManager.send as jest.Mock).mockResolvedValue('sub-id');
+			await sub.subscribe();
+
+			expect(requestManager.send).toHaveBeenCalledTimes(1);
+			expect(requestManager.send).toHaveBeenCalledWith({
+				method: 'eth_subscribe',
+				params: ['newHeads'],
+			});
+		});
+
+		it('should set correct subscription id', async () => {
+			(requestManager.send as jest.Mock).mockResolvedValue('sub-id');
+
+			expect(sub.id).toBeUndefined();
+			await sub.subscribe();
+			expect(sub.id).toBe('sub-id');
+		});
+
+		it('should start listening to the "message" event', async () => {
+			// requestManager.provider.on.mockClear();
+			await sub.subscribe();
+
+			expect(requestManager.provider.on).toHaveBeenCalledTimes(1);
+			expect(requestManager.provider.on).toHaveBeenCalledWith(
+				'message',
+				expect.any(Function),
+			);
+		});
+	});
+
+	describe('unsubscribe', () => {
+		beforeEach(() => {
+			// eslint-disable-next-line deprecation/deprecation
+			sub = new ExampleSubscription({ param1: 'value' }, { requestManager });
+			sub['_id'] = 'sub-id';
+		});
+
+		it('should invoke request manager to unsubscribe', async () => {
+			await sub.unsubscribe();
+
+			expect(requestManager.provider.on).toHaveBeenCalledTimes(1);
+			expect(requestManager.provider.on).toHaveBeenCalledWith(
+				'message',
+				expect.any(Function),
+			);
 		});
 
 		it('should remove the subscription id', async () => {

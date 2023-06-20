@@ -64,8 +64,21 @@ export class Web3SubscriptionManager<
 	 * ```
 	 */
 	public constructor(
+		requestManager: Web3RequestManager<API>,
+		registeredSubscriptions: RegisteredSubs,
+	);
+	/**
+	 * @deprecated This constructor overloading should not be used
+	 */
+	public constructor(
+		requestManager: Web3RequestManager<API>,
+		registeredSubscriptions: RegisteredSubs,
+		tolerateUnlinkedSubscription: boolean,
+	);
+	public constructor(
 		public readonly requestManager: Web3RequestManager<API>,
 		public readonly registeredSubscriptions: RegisteredSubs,
+		private readonly tolerateUnlinkedSubscription: boolean = false,
 	) {
 		this.requestManager.on(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, async () => {
 			await this.unsubscribe();
@@ -146,14 +159,11 @@ export class Web3SubscriptionManager<
 			throw new SubscriptionError('Invalid subscription type');
 		}
 
-		const subscription = new Klass(
-			args ?? undefined,
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-			this as Web3SubscriptionManager<API, any>,
-			{
-				returnFormat,
-			},
-		) as InstanceType<RegisteredSubs[T]>;
+		const subscription = new Klass(args ?? undefined, {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			subscriptionManager: this as Web3SubscriptionManager<API, any>,
+			returnFormat,
+		}) as InstanceType<RegisteredSubs[T]>;
 
 		await this.addSubscription(subscription);
 
@@ -211,7 +221,7 @@ export class Web3SubscriptionManager<
 			);
 		}
 
-		if (!this._subscriptions.has(id)) {
+		if (!this._subscriptions.has(id) && !this.tolerateUnlinkedSubscription) {
 			throw new SubscriptionError(`Subscription with id "${id.toString()}" does not exists`);
 		}
 

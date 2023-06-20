@@ -30,9 +30,12 @@ import {
 	Web3APISpec,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
+import { SubscriptionError } from 'web3-errors';
+
 // eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
+import { Web3RequestManager } from './web3_request_manager.js';
 
 export abstract class Web3Subscription<
 	EventMap extends Web3EventMap,
@@ -46,14 +49,45 @@ export abstract class Web3Subscription<
 	protected _id?: HexString;
 
 	public constructor(
+		args: ArgsType,
+		options: { subscriptionManager: Web3SubscriptionManager; returnFormat?: DataFormat },
+	);
+	/**
+	 * @deprecated This constructor overloading should not be used
+	 */
+	public constructor(
+		args: ArgsType,
+		options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
+	);
+	public constructor(
 		public readonly args: ArgsType,
-		subscriptionManager: Web3SubscriptionManager,
-		options?: {
+		options: (
+			| { subscriptionManager: Web3SubscriptionManager; requestManager: never }
+			| { requestManager: Web3RequestManager<API>; subscriptionManager: never }
+		) & {
 			returnFormat?: DataFormat;
 		},
 	) {
 		super();
-		this._subscriptionManager = subscriptionManager;
+		const { requestManager } = options;
+		const { subscriptionManager } = options;
+		if (requestManager && subscriptionManager) {
+			throw new SubscriptionError(
+				'Only requestManager or subscriptionManager should be provided at Subscription constructor',
+			);
+		}
+		if (!requestManager && !subscriptionManager) {
+			throw new SubscriptionError(
+				'Either requestManager or subscriptionManager should be provided at Subscription constructor',
+			);
+		}
+		if (requestManager) {
+			// eslint-disable-next-line deprecation/deprecation
+			this._subscriptionManager = new Web3SubscriptionManager(requestManager, {}, true);
+		} else {
+			this._subscriptionManager = subscriptionManager;
+		}
+
 		this._returnFormat = options?.returnFormat ?? (DEFAULT_RETURN_FORMAT as DataFormat);
 	}
 
@@ -65,7 +99,7 @@ export abstract class Web3Subscription<
 		return this._lastBlock;
 	}
 
-	public async subscribe() {
+	public async subscribe(): Promise<string> {
 		return this._subscriptionManager.addSubscription(this);
 	}
 
@@ -145,8 +179,10 @@ export type Web3SubscriptionConstructor<
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	args: any,
-	subscriptionManager: Web3SubscriptionManager<API>,
-	options: {
+	options: (
+		| { subscriptionManager: Web3SubscriptionManager }
+		| { requestManager: Web3RequestManager<API> }
+	) & {
 		returnFormat?: DataFormat;
 	},
 ) => SubscriptionType;
