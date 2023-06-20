@@ -78,10 +78,10 @@ describe('contract errors', () => {
 		it('should catch Unauthorized error PromiEvent.on("error")', async () => {
 			const expectedThrownError = {
 				name: 'ContractExecutionError',
-				code: 310,
+				code: ERR_CONTRACT_EXECUTION_REVERTED,
 				receipt: undefined,
 				innerError: {
-					code: ERR_CONTRACT_EXECUTION_REVERTED,
+					code: 3,
 					data: '0x82b42900',
 					errorName: 'Unauthorized',
 					errorSignature: 'Unauthorized()',
