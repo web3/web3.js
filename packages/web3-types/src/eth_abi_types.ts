@@ -84,7 +84,7 @@ export type AbiParameter = {
 	readonly internalType?: string;
 };
 
-type FragmentTypes = 'constructor' | 'event' | 'function' | 'fallback';
+type FragmentTypes = 'constructor' | 'event' | 'function' | 'fallback' | 'receive';
 
 export type AbiBaseFragment = {
 	// type will default to string if passed ABI is declared without "as const"
