@@ -126,7 +126,7 @@ describe('contract errors', () => {
 		it('should catch error with parameter using PromiEvent.on("error")', async () => {
 			const expectedThrownError = {
 				name: 'ContractExecutionError',
-				code: 310,
+				code: ERR_CONTRACT_EXECUTION_REVERTED,
 				receipt: undefined,
 				innerError: {
 					code: 3,
