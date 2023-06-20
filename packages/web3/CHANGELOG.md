@@ -121,3 +121,4 @@ Documentation:
 ### Fixed
 
 -   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
+-   Fixed #6162 @types/ws issue (#6205)
