@@ -81,7 +81,7 @@ describe('contract errors', () => {
 				code: 310,
 				receipt: undefined,
 				innerError: {
-					code: 3,
+					code: ERR_CONTRACT_EXECUTION_REVERTED,
 					data: '0x82b42900',
 					errorName: 'Unauthorized',
 					errorSignature: 'Unauthorized()',
