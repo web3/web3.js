@@ -134,4 +134,4 @@ Documentation:
 -   Fixed Batch requests erroring out on one request (#6164)
 -   Fixed the issue: Subscribing to multiple blockchain events causes every listener to be fired for every registered event (#6210)
 -   Fixed the issue: Unsubscribe at a Web3Subscription class will still have the id of the subscription at the Web3SubscriptionManager (#6210)
--   Fixed the issue: A call to the provider is made for every subscription object. This means multiple subscription is made at the provider for each subscription object (#6210)
+-   Fixed the issue: A call to the provider is made for every subscription object (#6210)
