@@ -54,8 +54,8 @@ export class Web3SubscriptionManager<
 
 	/**
 	 *
-	 * @param requestManager
-	 * @param registeredSubscriptions
+	 * @param - requestManager
+	 * @param - registeredSubscriptions
 	 *
 	 * @example
 	 * ```ts
@@ -143,8 +143,8 @@ export class Web3SubscriptionManager<
 	 * Will create a new subscription
 	 *
 	 * @param name - The subscription you want to subscribe to
-	 * @param args (optional) - Optional additional parameters, depending on the subscription type
-	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
+	 * @param args - Optional additional parameters, depending on the subscription type
+	 * @param returnFormat- ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
 	 *
 	 * Will subscribe to a specific topic (note: name)
 	 * @returns The subscription object

@@ -49,7 +49,7 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 		const requestManager = { send: jest.fn(), on: jest.fn(), provider: { on: jest.fn() } };
 		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
 
-		const dummyLogs = new LogsSubscription({}, subManager);
+		const dummyLogs = new LogsSubscription({}, { subscriptionManager: subManager });
 		jest.spyOn(subManager, 'subscribe').mockResolvedValueOnce(dummyLogs);
 		jest.spyOn(rpcMethodWrappers, 'getLogs').mockResolvedValueOnce(mockGetLogsRpcResponse);
 
