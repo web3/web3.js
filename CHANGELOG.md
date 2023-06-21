@@ -1603,3 +1603,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth-contract
 
 -   Event filtering using non-indexed and indexed string event arguments (#6167)
+
+#### web3-eth-types
+
+-   Receive fragment type added (#6204)

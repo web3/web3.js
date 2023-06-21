@@ -93,3 +93,7 @@ Documentation:
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed #6162 @types/ws issue (#6205)
