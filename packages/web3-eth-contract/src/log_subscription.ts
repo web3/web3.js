@@ -112,6 +112,29 @@ export class LogsSubscription extends Web3Subscription<
 			abi: AbiEventFragment & { signature: HexString };
 			jsonInterface: ContractAbiWithSignature;
 		},
+		options: { subscriptionManager: Web3SubscriptionManager; returnFormat?: DataFormat },
+	);
+	/**
+	 * @deprecated This constructor overloading should not be used
+	 */
+	public constructor(
+		args: {
+			address?: HexString;
+			// eslint-disable-next-line @typescript-eslint/ban-types
+			topics?: (Topic | Topic[] | null)[];
+			abi: AbiEventFragment & { signature: HexString };
+			jsonInterface: ContractAbiWithSignature;
+		},
+		options: { requestManager: Web3RequestManager; returnFormat?: DataFormat },
+	);
+	public constructor(
+		args: {
+			address?: HexString;
+			// eslint-disable-next-line @typescript-eslint/ban-types
+			topics?: (Topic | Topic[] | null)[];
+			abi: AbiEventFragment & { signature: HexString };
+			jsonInterface: ContractAbiWithSignature;
+		},
 		options: (
 			| { subscriptionManager: Web3SubscriptionManager }
 			| { requestManager: Web3RequestManager }
@@ -119,7 +142,8 @@ export class LogsSubscription extends Web3Subscription<
 			returnFormat?: DataFormat;
 		},
 	) {
-		super(args, options);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+		super(args, options as any);
 
 		this.address = args.address;
 		this.topics = args.topics;

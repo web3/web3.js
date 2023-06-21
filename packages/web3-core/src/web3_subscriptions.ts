@@ -62,15 +62,15 @@ export abstract class Web3Subscription<
 	public constructor(
 		public readonly args: ArgsType,
 		options: (
-			| { subscriptionManager: Web3SubscriptionManager; requestManager: never }
-			| { requestManager: Web3RequestManager<API>; subscriptionManager: never }
+			| { subscriptionManager: Web3SubscriptionManager }
+			| { requestManager: Web3RequestManager<API> }
 		) & {
 			returnFormat?: DataFormat;
 		},
 	) {
 		super();
-		const { requestManager } = options;
-		const { subscriptionManager } = options;
+		const { requestManager } = options as { requestManager: Web3RequestManager<API> };
+		const { subscriptionManager } = options as { subscriptionManager: Web3SubscriptionManager };
 		if (requestManager && subscriptionManager) {
 			throw new SubscriptionError(
 				'Only requestManager or subscriptionManager should be provided at Subscription constructor',
@@ -175,14 +175,23 @@ export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
-> = new (
-	// We accept any type of arguments here and don't deal with this type internally
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	args: any,
-	options: (
-		| { subscriptionManager: Web3SubscriptionManager }
-		| { requestManager: Web3RequestManager<API> }
-	) & {
-		returnFormat?: DataFormat;
-	},
-) => SubscriptionType;
+> =
+	| (new (
+			// We accept any type of arguments here and don't deal with this type internally
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			args: any,
+			options:
+				| { subscriptionManager: Web3SubscriptionManager<API>; returnFormat?: DataFormat }
+				| { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
+	  ) => SubscriptionType)
+	| (new (
+			args: any,
+			options: {
+				subscriptionManager: Web3SubscriptionManager<API>;
+				returnFormat?: DataFormat;
+			},
+	  ) => SubscriptionType)
+	| (new (
+			args: any,
+			options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
+	  ) => SubscriptionType);

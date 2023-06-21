@@ -159,11 +159,11 @@ export class Web3SubscriptionManager<
 			throw new SubscriptionError('Invalid subscription type');
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const subscription = new Klass(args ?? undefined, {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			subscriptionManager: this as Web3SubscriptionManager<API, any>,
+			subscriptionManager: this as Web3SubscriptionManager<API, RegisteredSubs>,
 			returnFormat,
-		}) as InstanceType<RegisteredSubs[T]>;
+		} as any) as InstanceType<RegisteredSubs[T]>;
 
 		await this.addSubscription(subscription);
 
