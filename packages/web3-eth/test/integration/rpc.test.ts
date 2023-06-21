@@ -347,7 +347,7 @@ describe('rpc', () => {
 			}
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contractDeployed.options.address as string,
-				fromBlock: numberToHex(Math.min(...resTx.map(d => Number(d.blockNumber)))),
+				fromBlock: Math.min(...resTx.map(d => Number(d.blockNumber))),
 			});
 			const results = res.map(
 				r =>
