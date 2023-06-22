@@ -991,18 +991,12 @@ export async function getLogs<ReturnFormat extends DataFormat>(
 	let { toBlock, fromBlock } = filter;
 
 	if (toBlock) {
-		if (typeof toBlock === 'bigint') {
-			toBlock = `0x${toBlock.toString(16)}`;
-		}
-		if (typeof toBlock === 'number') {
+		if (typeof toBlock === 'number' || typeof toBlock === 'bigint') {
 			toBlock = numberToHex(toBlock);
 		}
 	}
 	if (fromBlock) {
-		if (typeof fromBlock === 'bigint') {
-			fromBlock = `0x${fromBlock.toString(16)}`;
-		}
-		if (typeof fromBlock === 'number') {
+		if (typeof toBlock === 'number' || typeof toBlock === 'bigint') {
 			fromBlock = numberToHex(fromBlock);
 		}
 	}

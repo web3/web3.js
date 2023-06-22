@@ -26,15 +26,12 @@ import {
 } from '../fixtures/rpc_methods_wrappers';
 import {
 	estimateGasValidData,
-	// estimateGasValidData,
 	getBalanceValidData,
 	getBlockTransactionCountValidData,
 	getBlockUncleCountValidData,
 	getBlockValidData,
 	getCodeValidData,
 	getFeeHistoryValidData,
-	// getCodeValidData,
-	// getFeeHistoryValidData,
 	getPastLogsValidData,
 	getProofValidData,
 	getStorageAtValidData,
