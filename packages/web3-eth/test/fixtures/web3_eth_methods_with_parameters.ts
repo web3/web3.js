@@ -1848,6 +1848,36 @@ export const getPastLogsValidData: [[Filter, DataFormat | undefined], [Filter, D
 	[
 		[
 			{
+				fromBlock: BigInt(0),
+				toBlock: BigInt(1000),
+			},
+			undefined,
+		],
+		[
+			{
+				fromBlock: BigInt(0),
+				toBlock: BigInt(1000),
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
+	],
+	[
+		[
+			{
+				blockHash: '0x829df9bb801fc0494abf2f443423a49ffa32964554db71b098d332d87b70a48b',
+			},
+			undefined,
+		],
+		[
+			{
+				blockHash: '0x829df9bb801fc0494abf2f443423a49ffa32964554db71b098d332d87b70a48b',
+			},
+			DEFAULT_RETURN_FORMAT,
+		],
+	],
+	[
+		[
+			{
 				fromBlock: BlockTags.EARLIEST,
 				toBlock: BlockTags.EARLIEST,
 			},

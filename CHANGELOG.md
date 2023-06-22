@@ -1611,3 +1611,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-utils
 
 -   BigInts pass validation within the method `numberToHex` (#6206)
+
+#### web3-rpc-methods
+
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
