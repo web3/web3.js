@@ -369,7 +369,6 @@ describe('rpc', () => {
 					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r, [])
 						.returnValues[0],
 			);
-
 			// test type BigInt
 			const res3: Array<any> = await web3Eth.getPastLogs({
 				address: contractDeployed.options.address as string,
