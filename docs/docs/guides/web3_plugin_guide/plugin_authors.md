@@ -13,14 +13,18 @@ To provide type safety and IntelliSense for your plugin users, please refer to t
 
 ## Plugin Dependencies
 
-At the minimum, your plugin should depend on the `4.x` version of `web3`. This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/):
+At the minimum, your plugin should depend on `web3` package version `4.0.2`. This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/).
+
+:::important
+If the version `web3@4.0.2`, was not available yet. You can use the version `web3@4.0.2-dev.af57eae.0`.
+:::
 
 ```json
 {
 	"name": "web3-plugin-custom-rpc-methods",
 	"version": "0.1.0",
 	"peerDependencies": {
-		"web3": ">= 4.0.1 < 5"
+		"web3": ">= 4.0.2 < 5"
 	}
 }
 ```
@@ -210,9 +214,9 @@ public link(parentContext: Web3Context) {
 
 ## Setting Up Module Augmentation
 
-To ensure type safety and enable IntelliSense for your plugin (which still needs to be registered by the user), you must augment the `Web3Context` class inside the `web3` module. In simpler terms, this is to modify the `Web3Context` class, and any inheriting classes, to make your plugin's functionality accessible from within. As a result, your plugin object will be accessible within a namespace of your choice, which will be available within any `Web3Context` object.
+In order to provide type safety and IntelliSense for your plugin when it's registered by the user, you must [augment](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) the `Web3Context` module. In simpler terms, you will be making TypeScript aware that you are modifying the interface of the class `Web3Context`, and any class that extends it, to include the interface of your plugin (i.e. your plugin's added methods, properties, etc.). As a result, your plugin object will be accessible within a namespace of your choice, which will be available within any `Web3Context` object.
 
-For a general understanding of Module Augmentation, you can refer to [this tutorial](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
+A good tutorial that further explains Module Augmentation, in general, can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
 
 ### Module Augmentation
 
@@ -245,16 +249,16 @@ declare module 'web3' {
 1. By augmenting `Web3Context` (and, by extension, all the classes that extend it), your plugin's interface will show up in things like IntelliSense for **all** Web3 modules that extend `Web3Context`, even if your plugin isn't registered.
    This is something worth making your users aware of, as they'll only be able to use your plugin if they register it with a Web3 class instance using `.registerPlugin`.
 
-    :::warning
+:::danger
 
-    The following represent what your **plugin users** would see, when they use the plugin `CustomRpcMethodsPlugin`, without calling `.registerPlugin`:
+The following represent what your **plugin users** would see, when they use the plugin `CustomRpcMethodsPlugin`, without calling `.registerPlugin`:
 
-    ![web3 context augmentation](./assets/web3_context_augmentation.png 'Web3Context augmentation')
+![web3 context augmentation](./assets/web3_context_augmentation.png 'Web3Context augmentation')
 
-    The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, regardless if the plugin user registered or did not register `CustomRpcMethodsPlugin`.
-    But, the user who does not call `.registerPlugin`, before accessing your plugin, would face an error. And you need to make it clear for them that they need to call `.registerPlugin`, before they can access any plugin functionality.
+The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, regardless if the plugin user registered or did not register `CustomRpcMethodsPlugin`.
+But, the user who does not call `.registerPlugin`, before accessing your plugin, would face an error. And you need to make it clear for them that they need to call `.registerPlugin`, before they can access any plugin functionality.
 
-    :::
+:::
 
 2. The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends Web3Context` has the ability to add your plugin's additional functionality to its interface. So, by augmenting `Web3Context` to include your plugin's interface, you're essentially providing a blanket augmentation that adds your plugin's interface to **all** Web3 modules that extend `Web3Context` (i.e. `web3`, `web3-eth`, `web3-eth-contract`, etc.).
 
@@ -298,3 +302,7 @@ declare module 'web3' {
     // on the instance of Web3
     web3.customRpcMethods;
     ```
+
+## Complete Example
+
+You may find it helpful to reference a complete example for developing and using a web3 plugin. The [Web3.js Chainlink Plugin](https://github.com/ChainSafe/web3.js-plugin-chainlink/) repository provides an excellent example which you can check out.
