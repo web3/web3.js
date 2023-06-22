@@ -91,3 +91,7 @@ Documentation:
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
