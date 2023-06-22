@@ -121,6 +121,15 @@ Documentation:
 
 ## [Unreleased]
 
+### Added
+
+-   Added the `SimpleProvider` interface which has only `request(args)` method that is compatible with EIP-1193 (#6210)
+-   Added the `Eip1193EventName` type that contains the possible events names according to EIP-1193 (#6210)
+
+### Changed
+
+-   The `EIP1193Provider` class has now all the events (for `on` and `removeListener`) according to EIP-1193 (#6210)
+
 ### Fixed
 
 -   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)

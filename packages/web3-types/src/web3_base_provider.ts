@@ -108,12 +108,25 @@ export type ProviderChainId = string;
 
 export type ProviderAccounts = string[];
 
+export type Eip1193EventName =
+	| 'connect'
+	| 'disconnect'
+	| 'message'
+	| 'chainChanged'
+	| 'accountsChanged';
+
 export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider<API> {
 	on(event: 'connect', listener: (info: ProviderInfo) => void): void;
 	on(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
 	on(event: 'message', listener: (message: ProviderMessage) => void): void;
 	on(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
 	on(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
+
+	removeListener(event: 'connect', listener: (info: ProviderInfo) => void): void;
+	removeListener(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
+	removeListener(event: 'message', listener: (message: ProviderMessage) => void): void;
+	removeListener(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
+	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
 }
 
 // Provider interface compatible with EIP-1193
