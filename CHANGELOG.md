@@ -1607,3 +1607,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth-types
 
 -   Receive fragment type added (#6204)
+
+#### web3-utils
+
+-   BigInts pass validation within the method `numberToHex` (#6206)
