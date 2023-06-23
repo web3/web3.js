@@ -327,7 +327,7 @@ export class MissingGasError extends InvalidValueError {
 			}, maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
 				value.maxFeePerGas ?? 'undefined'
 			}`,
-			'"gas" is missing',
+			'"gas" is missing, For legacy transactions gasPrice and gas must be defined. For type 2 transactions maxPriorityFeePerGas and maxFeePerGas must be defined',
 		);
 	}
 }
