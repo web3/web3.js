@@ -124,3 +124,4 @@ Documentation:
 ### Fixed
 
 -   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
+-   type `Filter` includes `blockHash` (#6206)

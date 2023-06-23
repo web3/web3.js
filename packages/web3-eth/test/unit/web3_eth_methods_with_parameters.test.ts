@@ -330,6 +330,7 @@ describe('web3_eth_methods_with_parameters', () => {
 					it.each(getPastLogsValidData)(
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
+							await rpcMethodWrappers.getLogs(web3Eth, ...rpcMethodParameters);
 							await web3Eth.getPastLogs(...input);
 							expect(rpcMethodWrappers.getLogs).toHaveBeenCalledWith(
 								web3Eth,
