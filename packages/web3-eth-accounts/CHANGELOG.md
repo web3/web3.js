@@ -107,3 +107,7 @@ Documentation:
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed "The `r` and `s` returned by `signTransaction` to does not always consist of 64 characters #6207" (#6216)

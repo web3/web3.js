@@ -271,8 +271,8 @@ export const signTransaction = async (
 	return {
 		messageHash: bytesToHex(signedTx.getMessageToSign(true)),
 		v: `0x${signedTx.v.toString(16)}`,
-		r: `0x${signedTx.r.toString(16)}`,
-		s: `0x${signedTx.s.toString(16)}`,
+		r: `0x${signedTx.r.toString(16).padStart(64, '0')}`,
+		s: `0x${signedTx.s.toString(16).padStart(64, '0')}`,
 		rawTransaction: rawTx,
 		transactionHash: bytesToHex(txHash),
 	};
