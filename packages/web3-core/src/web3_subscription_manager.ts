@@ -15,11 +15,22 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, Web3APISpec } from 'web3-types';
+import {
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	EIP1193Provider,
+	JsonRpcNotification,
+	JsonRpcSubscriptionResult,
+	JsonRpcSubscriptionResultOld,
+	Log,
+	Web3APISpec,
+	Web3BaseProvider,
+} from 'web3-types';
 import { ProviderError, SubscriptionError } from 'web3-errors';
 import { isNullish } from 'web3-utils';
 import { isSupportSubscriptions } from './utils.js';
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager.js';
+// eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionConstructor } from './web3_subscriptions.js';
 
 type ShouldUnsubscribeCondition = ({
@@ -31,8 +42,10 @@ type ShouldUnsubscribeCondition = ({
 }) => boolean | undefined;
 
 export class Web3SubscriptionManager<
-	API extends Web3APISpec,
-	RegisteredSubs extends { [key: string]: Web3SubscriptionConstructor<API> },
+	API extends Web3APISpec = Web3APISpec,
+	RegisteredSubs extends { [key: string]: Web3SubscriptionConstructor<API> } = {
+		[key: string]: Web3SubscriptionConstructor<API>;
+	},
 > {
 	private readonly _subscriptions: Map<
 		string,
@@ -41,8 +54,8 @@ export class Web3SubscriptionManager<
 
 	/**
 	 *
-	 * @param requestManager
-	 * @param registeredSubscriptions
+	 * @param - requestManager
+	 * @param - registeredSubscriptions
 	 *
 	 * @example
 	 * ```ts
@@ -51,8 +64,21 @@ export class Web3SubscriptionManager<
 	 * ```
 	 */
 	public constructor(
+		requestManager: Web3RequestManager<API>,
+		registeredSubscriptions: RegisteredSubs,
+	);
+	/**
+	 * @deprecated This constructor overloading should not be used
+	 */
+	public constructor(
+		requestManager: Web3RequestManager<API>,
+		registeredSubscriptions: RegisteredSubs,
+		tolerateUnlinkedSubscription: boolean,
+	);
+	public constructor(
 		public readonly requestManager: Web3RequestManager<API>,
 		public readonly registeredSubscriptions: RegisteredSubs,
+		private readonly tolerateUnlinkedSubscription: boolean = false,
 	) {
 		this.requestManager.on(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, async () => {
 			await this.unsubscribe();
@@ -60,15 +86,65 @@ export class Web3SubscriptionManager<
 
 		this.requestManager.on(Web3RequestManagerEvent.PROVIDER_CHANGED, () => {
 			this.clear();
+			this.listenToProviderEvents();
 		});
+
+		this.listenToProviderEvents();
 	}
 
+	private listenToProviderEvents() {
+		const providerAsWebProvider = this.requestManager.provider as Web3BaseProvider;
+		if (
+			!this.requestManager.provider ||
+			(typeof providerAsWebProvider?.supportsSubscriptions === 'function' &&
+				!providerAsWebProvider?.supportsSubscriptions())
+		) {
+			return;
+		}
+
+		if (typeof (this.requestManager.provider as EIP1193Provider<API>).on === 'function') {
+			if (
+				typeof (this.requestManager.provider as EIP1193Provider<API>).request === 'function'
+			) {
+				// Listen to provider messages and data
+				(this.requestManager.provider as EIP1193Provider<API>).on(
+					'message',
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+					(message: any) => this.messageListener(message),
+				);
+			} else {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+				providerAsWebProvider.on<Log>('data', (data: any) => this.messageListener(data));
+			}
+		}
+	}
+
+	protected messageListener(
+		data?:
+			| JsonRpcSubscriptionResult
+			| JsonRpcSubscriptionResultOld<Log>
+			| JsonRpcNotification<Log>,
+	) {
+		if (!data) {
+			throw new SubscriptionError('Should not call messageListener with no data. Type was');
+		}
+		const subscriptionId =
+			(data as JsonRpcNotification).params?.subscription ||
+			(data as JsonRpcSubscriptionResultOld).data?.subscription ||
+			(data as JsonRpcSubscriptionResult).id?.toString(16);
+
+		// Process if the received data is related to a subscription
+		if (subscriptionId) {
+			const sub = this._subscriptions.get(subscriptionId);
+			sub?.processSubscriptionData(data);
+		}
+	}
 	/**
 	 * Will create a new subscription
 	 *
 	 * @param name - The subscription you want to subscribe to
-	 * @param args (optional) - Optional additional parameters, depending on the subscription type
-	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
+	 * @param args - Optional additional parameters, depending on the subscription type
+	 * @param returnFormat- ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
 	 *
 	 * Will subscribe to a specific topic (note: name)
 	 * @returns The subscription object
@@ -78,19 +154,16 @@ export class Web3SubscriptionManager<
 		args?: ConstructorParameters<RegisteredSubs[T]>[0],
 		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<InstanceType<RegisteredSubs[T]>> {
-		if (!this.requestManager.provider) {
-			throw new ProviderError('Provider not available');
-		}
-
 		const Klass: RegisteredSubs[T] = this.registeredSubscriptions[name];
 		if (!Klass) {
 			throw new SubscriptionError('Invalid subscription type');
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const subscription = new Klass(args ?? undefined, {
-			requestManager: this.requestManager,
+			subscriptionManager: this as Web3SubscriptionManager<API, RegisteredSubs>,
 			returnFormat,
-		}) as InstanceType<RegisteredSubs[T]>;
+		} as any) as InstanceType<RegisteredSubs[T]>;
 
 		await this.addSubscription(subscription);
 
@@ -111,6 +184,10 @@ export class Web3SubscriptionManager<
 	 * @param sub - A {@link Web3Subscription} object
 	 */
 	public async addSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
+		if (!this.requestManager.provider) {
+			throw new ProviderError('Provider not available');
+		}
+
 		if (!this.supportsSubscriptions()) {
 			throw new SubscriptionError('The current provider does not support subscriptions');
 		}
@@ -119,34 +196,36 @@ export class Web3SubscriptionManager<
 			throw new SubscriptionError(`Subscription with id "${sub.id}" already exists`);
 		}
 
-		await sub.subscribe();
+		await sub.sendSubscriptionRequest();
 
 		if (isNullish(sub.id)) {
 			throw new SubscriptionError('Subscription is not subscribed yet.');
 		}
 
 		this._subscriptions.set(sub.id, sub);
+
+		return sub.id;
 	}
+
 	/**
 	 * Will clear a subscription
 	 *
 	 * @param id - The subscription of type {@link Web3Subscription}  to remove
 	 */
-
 	public async removeSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
-		if (isNullish(sub.id)) {
+		const { id } = sub;
+
+		if (isNullish(id)) {
 			throw new SubscriptionError(
 				'Subscription is not subscribed yet. Or, had already been unsubscribed but not through the Subscription Manager.',
 			);
 		}
 
-		if (!this._subscriptions.has(sub.id)) {
-			throw new SubscriptionError(
-				`Subscription with id "${sub.id.toString()}" does not exists`,
-			);
+		if (!this._subscriptions.has(id) && !this.tolerateUnlinkedSubscription) {
+			throw new SubscriptionError(`Subscription with id "${id.toString()}" does not exists`);
 		}
-		const { id } = sub;
-		await sub.unsubscribe();
+
+		await sub.sendUnsubscribeRequest();
 		this._subscriptions.delete(id);
 		return id;
 	}

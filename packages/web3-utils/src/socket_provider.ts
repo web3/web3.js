@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import {
 	ConnectionEvent,
+	Eip1193EventName,
 	EthExecutionAPI,
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
@@ -223,8 +224,11 @@ export abstract class SocketProvider<
 		listener: Web3Eip1193ProviderEventCallback<unknown> | Web3ProviderEventCallback<T>,
 	): void;
 	public on<T = JsonRpcResult, P = unknown>(
-		type: string | 'disconnect' | 'connect' | 'chainChanged' | 'accountsChanged',
-		listener: Web3Eip1193ProviderEventCallback<P> | Web3ProviderEventCallback<T>,
+		type: string | Eip1193EventName,
+		listener:
+			| Web3Eip1193ProviderEventCallback<P>
+			| Web3ProviderMessageEventCallback<T>
+			| Web3ProviderEventCallback<T>,
 	): void {
 		this._eventEmitter.on(type, listener);
 	}
@@ -249,15 +253,20 @@ export abstract class SocketProvider<
 	): void;
 	public once<T = JsonRpcResult>(
 		type: 'message',
-		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+		listener:
+			| Web3Eip1193ProviderEventCallback<ProviderMessage>
+			| Web3ProviderMessageEventCallback<T>,
 	): void;
 	public once<T = JsonRpcResult>(
 		type: string,
 		listener: Web3Eip1193ProviderEventCallback<unknown> | Web3ProviderEventCallback<T>,
 	): void;
 	public once<T = JsonRpcResult, P = unknown>(
-		type: string | 'disconnect' | 'connect' | 'chainChanged' | 'accountsChanged',
-		listener: Web3Eip1193ProviderEventCallback<P> | Web3ProviderEventCallback<T>,
+		type: string | Eip1193EventName,
+		listener:
+			| Web3Eip1193ProviderEventCallback<P>
+			| Web3ProviderMessageEventCallback<T>
+			| Web3ProviderEventCallback<T>,
 	): void {
 		this._eventEmitter.once(type, listener);
 	}
@@ -285,15 +294,20 @@ export abstract class SocketProvider<
 	): void;
 	public removeListener<T = JsonRpcResult>(
 		type: 'message',
-		listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>,
+		listener:
+			| Web3Eip1193ProviderEventCallback<ProviderMessage>
+			| Web3ProviderMessageEventCallback<T>,
 	): void;
 	public removeListener<T = JsonRpcResult>(
 		type: string,
 		listener: Web3Eip1193ProviderEventCallback<unknown> | Web3ProviderEventCallback<T>,
 	): void;
 	public removeListener<T = JsonRpcResult, P = unknown>(
-		type: string | 'disconnect' | 'connect' | 'chainChanged' | 'accountsChanged',
-		listener: Web3Eip1193ProviderEventCallback<P> | Web3ProviderEventCallback<T>,
+		type: string | Eip1193EventName,
+		listener:
+			| Web3Eip1193ProviderEventCallback<P>
+			| Web3ProviderMessageEventCallback<T>
+			| Web3ProviderEventCallback<T>,
 	): void {
 		this._eventEmitter.removeListener(type, listener);
 	}
