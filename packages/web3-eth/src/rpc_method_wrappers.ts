@@ -988,6 +988,7 @@ export async function getLogs<ReturnFormat extends DataFormat>(
 	filter: Filter,
 	returnFormat: ReturnFormat,
 ) {
+	// format type bigint or number toBlock and fromBlock to hexstring.
 	let { toBlock, fromBlock } = filter;
 	if (!isNullish(toBlock)) {
 		if (typeof toBlock === 'number' || typeof toBlock === 'bigint') {
