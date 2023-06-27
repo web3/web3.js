@@ -119,3 +119,11 @@ Documentation:
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
 ## [Unreleased]
+
+### Added
+
+-   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
+
+### Fixed
+
+-   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)
