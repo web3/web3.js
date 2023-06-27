@@ -1592,18 +1592,109 @@ Detailed List of changes are mentioned under:
 
 If there are any bugs, improvements, optimizations or any new feature proposal feel free to create github issue, or post a pull request for contributions.
 
-## [Unreleased]
+## [4.0.2]
 
 ### Fixed
+
+#### web3
+
+-   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
+-   Fixed #6162 @types/ws issue (#6205)
+
+#### web3-core
+
+-   Fixed Batch requests erroring out on one request (#6164)
+-   Fixed the issue: Subscribing to multiple blockchain events causes every listener to be fired for every registered event (#6210)
+-   Fixed the issue: Unsubscribe at a Web3Subscription class will still have the id of the subscription at the Web3SubscriptionManager (#6210)
+-   Fixed the issue: A call to the provider is made for every subscription object (#6210)
 
 #### web3-eth-abi
 
 -   Support for "decoding" indexed string event arguments (returns the keccak256 hash of the string value instead of the actual string value) (#6167)
 
+#### web3-eth-accounts
+
+-   Fixed "The `r` and `s` returned by `signTransaction` to does not always consist of 64 characters #6207" (#6216)
+
 #### web3-eth-contract
 
 -   Event filtering using non-indexed and indexed string event arguments (#6167)
 
-#### web3-eth-types
+#### web3-eth-ens
 
--   Receive fragment type added (#6204)
+-   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
+
+#### web3-providers-ws
+
+-   Fixed #6162 @types/ws issue (#6205)
+
+#### web3-types
+
+-   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
+
+### Added
+
+#### web3
+
+-   Exported `Web3Context`, `Web3PluginBase`, `Web3EthPluginBase` from `'web3-core'`, and `Web3Validator` from `'web3-validator'` (#6165)
+
+#### web3-core
+
+-   Web3Subscription constructor accept a Subscription Manager (as an alternative to accepting Request Manager that is now marked marked as deprecated) (#6210)
+
+#### web3-types
+
+-   Added the `SimpleProvider` interface which has only `request(args)` method that is compatible with EIP-1193 (#6210)
+-   Added the `Eip1193EventName` type that contains the possible events names according to EIP-1193 (#6210)
+
+### Changed
+
+#### web3-core
+
+-   Web3Subscription constructor overloading that accept a Request Manager is marked as deprecated (#6210)
+
+#### web3-errors
+
+-   Dependencies updated
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
+#### web3-providers-http
+
+-   Dependencies updated
+
+#### web3-providers-ipc
+
+-   Dependencies updated
+
+#### web3-rpc-methods
+
+-   Dependencies updated
+
+#### web3-types
+
+-   The `EIP1193Provider` class has now all the events (for `on` and `removeListener`) according to EIP-1193 (#6210)
+
+#### web3-utils
+
+-   Dependencies updated
+
+#### web3-validator
+
+-   Dependencies updated
+
+## [Unreleased]
