@@ -135,3 +135,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   BigInts pass validation within the method `numberToHex` (#6206)

@@ -345,17 +345,45 @@ describe('rpc', () => {
 				// eslint-disable-next-line  no-await-in-loop
 				resTx.push(await contractDeployed.methods?.firesStringEvent(l).send(sendOptions));
 			}
+
+			// test type hexstring
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contractDeployed.options.address as string,
 				fromBlock: numberToHex(Math.min(...resTx.map(d => Number(d.blockNumber)))),
+				toBlock: numberToHex(1000),
 			});
 			const results = res.map(
 				r =>
 					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r, [])
 						.returnValues[0],
 			);
+
+			// test type number
+			const res2: Array<any> = await web3Eth.getPastLogs({
+				address: contractDeployed.options.address as string,
+				fromBlock: Math.min(...resTx.map(d => Number(d.blockNumber))),
+				toBlock: 1000,
+			});
+			const results2 = res2.map(
+				r =>
+					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r, [])
+						.returnValues[0],
+			);
+			// test type BigInt
+			const res3: Array<any> = await web3Eth.getPastLogs({
+				address: contractDeployed.options.address as string,
+				fromBlock: BigInt(Math.min(...resTx.map(d => Number(d.blockNumber)))),
+				toBlock: BigInt(1000),
+			});
+			const results3 = res3.map(
+				r =>
+					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r, [])
+						.returnValues[0],
+			);
 			for (const l of listOfStrings) {
 				expect(results).toContain(l);
+				expect(results2).toContain(l);
+				expect(results3).toContain(l);
 			}
 		});
 	});

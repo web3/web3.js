@@ -97,3 +97,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)

@@ -175,11 +175,10 @@ export const toDecimal = hexToNumber;
  * ```
  */
 export const numberToHex = (value: Numbers, hexstrict?: boolean): HexString => {
-	validator.validate(['int'], [value]);
+	if (typeof value !== 'bigint') validator.validate(['int'], [value]);
 	// To avoid duplicate code and circular dependency we will
 	// use `numberToHex` implementation from `web3-validator`
 	let updatedValue = validatorUtils.numberToHex(value);
-	// return validatorUtils.numberToHex(value);
 	if (hexstrict) {
 		if (!updatedValue.startsWith('-') && updatedValue.length % 2 === 1) {
 			// To avoid duplicate a circular dependancy we will not be using the padLeft method
