@@ -119,8 +119,21 @@ Documentation:
 [Web3 API](https://docs.web3js.org/api)
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
-## [Unreleased]
+## [4.0.2]
+
+### Added
+
+-   Web3Subscription constructor accept a Subscription Manager (as an alternative to accepting Request Manager that is now marked marked as deprecated) (#6210)
+
+### Changed
+
+-   Web3Subscription constructor overloading that accept a Request Manager is marked as deprecated (#6210)
 
 ### Fixed
 
 -   Fixed Batch requests erroring out on one request (#6164)
+-   Fixed the issue: Subscribing to multiple blockchain events causes every listener to be fired for every registered event (#6210)
+-   Fixed the issue: Unsubscribe at a Web3Subscription class will still have the id of the subscription at the Web3SubscriptionManager (#6210)
+-   Fixed the issue: A call to the provider is made for every subscription object (#6210)
+
+## [Unreleased]

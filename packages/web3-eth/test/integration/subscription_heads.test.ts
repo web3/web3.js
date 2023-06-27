@@ -43,9 +43,9 @@ describeIf(isSocket)('subscription', () => {
 			let times = 0;
 			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: BlockHeaderOutput) => {
-					if (data.parentHash) {
-						times += 1;
-					}
+					expect(typeof data.parentHash).toBe('string');
+
+					times += 1;
 					expect(times).toBeGreaterThanOrEqual(times);
 					if (times >= checkTxCount) {
 						resolve();
@@ -65,12 +65,25 @@ describeIf(isSocket)('subscription', () => {
 			await web3.eth.subscriptionManager?.removeSubscription(sub);
 			await closeOpenConnection(web3.eth);
 		});
-		it(`clear`, async () => {
+		it(`remove at subscriptionManager`, async () => {
 			const web3Eth = new Web3Eth(clientUrl);
 			await waitForOpenConnection(web3Eth);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe('newHeads');
 			expect(sub.id).toBeDefined();
+			const subId = sub.id as string;
 			await web3Eth.subscriptionManager?.removeSubscription(sub);
+			expect(web3Eth.subscriptionManager.subscriptions.has(subId)).toBe(false);
+			expect(sub.id).toBeUndefined();
+			await closeOpenConnection(web3Eth);
+		});
+		it(`remove at subscribe object`, async () => {
+			const web3Eth = new Web3Eth(clientUrl);
+			await waitForOpenConnection(web3Eth);
+			const sub: NewHeadsSubscription = await web3Eth.subscribe('newHeads');
+			expect(sub.id).toBeDefined();
+			const subId = sub.id as string;
+			await sub.unsubscribe();
+			expect(web3Eth.subscriptionManager.subscriptions.has(subId)).toBe(false);
 			expect(sub.id).toBeUndefined();
 			await closeOpenConnection(web3Eth);
 		});

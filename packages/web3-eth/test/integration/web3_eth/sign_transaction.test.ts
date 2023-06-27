@@ -61,8 +61,8 @@ describe('Web3Eth.signTransaction', () => {
 		// Pulling out of toMatchObject to be compatiable with Cypress
 		expect(response.raw).toMatch(/0[xX][0-9a-fA-F]+/);
 		expect(typeof (response.tx as TransactionLegacySignedAPI).v).toBe('bigint');
-		expect(response.tx.r).toMatch(/0[xX][0-9a-fA-F]+/);
-		expect(response.tx.s).toMatch(/0[xX][0-9a-fA-F]+/);
+		expect(response.tx.r).toMatch(/0[xX][0-9a-fA-F]{64}/);
+		expect(response.tx.s).toMatch(/0[xX][0-9a-fA-F]{64}/);
 	});
 
 	it('should sign a contract deployment', async () => {
@@ -90,7 +90,7 @@ describe('Web3Eth.signTransaction', () => {
 		// Pulling out of toMatchObject to be compatiable with Cypress
 		expect(response.raw).toMatch(/0[xX][0-9a-fA-F]+/);
 		expect(typeof (response.tx as TransactionLegacySignedAPI).v).toBe('bigint');
-		expect(response.tx.r).toMatch(/0[xX][0-9a-fA-F]+/);
-		expect(response.tx.s).toMatch(/0[xX][0-9a-fA-F]+/);
+		expect(response.tx.r).toMatch(/0[xX][0-9a-fA-F]{64}/);
+		expect(response.tx.s).toMatch(/0[xX][0-9a-fA-F]{64}/);
 	});
 });

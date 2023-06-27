@@ -73,6 +73,7 @@ Object {
       },
       "useRpcCallSpecification": undefined,
     },
+    "tolerateUnlinkedSubscription": false,
   },
   "wallet": undefined,
 }

@@ -17,23 +17,24 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line max-classes-per-file
 import {
-	HexString,
 	BlockOutput,
-	Web3BaseProvider,
-	Web3APISpec,
-	Web3APIParams,
-	EthExecutionAPI,
-	Log,
-	JsonRpcNotification,
-	JsonRpcSubscriptionResult,
-	DataFormat,
 	DEFAULT_RETURN_FORMAT,
+	DataFormat,
+	EthExecutionAPI,
+	JsonRpcSubscriptionResult,
 	JsonRpcSubscriptionResultOld,
-	EIP1193Provider,
+	JsonRpcNotification,
+	Log,
+	HexString,
+	Web3APIParams,
+	Web3APISpec,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
-import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
+import { SubscriptionError } from 'web3-errors';
 
+// eslint-disable-next-line import/no-cycle
+import { Web3SubscriptionManager } from './web3_subscription_manager.js';
+import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
 import { Web3RequestManager } from './web3_request_manager.js';
 
 export abstract class Web3Subscription<
@@ -42,20 +43,52 @@ export abstract class Web3Subscription<
 	ArgsType = any,
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3EventEmitter<EventMap> {
-	private readonly _requestManager: Web3RequestManager<API>;
+	private readonly _subscriptionManager: Web3SubscriptionManager<API>;
 	private readonly _lastBlock?: BlockOutput;
 	private readonly _returnFormat: DataFormat;
-	private _id?: HexString;
-	private _messageListener?: (data?: JsonRpcNotification<Log>) => void;
+	protected _id?: HexString;
 
 	public constructor(
-		public readonly args: ArgsType,
-
+		args: ArgsType,
+		options: { subscriptionManager: Web3SubscriptionManager; returnFormat?: DataFormat },
+	);
+	/**
+	 * @deprecated This constructor overloading should not be used
+	 */
+	public constructor(
+		args: ArgsType,
 		options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
+	);
+	public constructor(
+		public readonly args: ArgsType,
+		options: (
+			| { subscriptionManager: Web3SubscriptionManager }
+			| { requestManager: Web3RequestManager<API> }
+		) & {
+			returnFormat?: DataFormat;
+		},
 	) {
 		super();
-		this._requestManager = options.requestManager;
-		this._returnFormat = options.returnFormat ?? (DEFAULT_RETURN_FORMAT as DataFormat);
+		const { requestManager } = options as { requestManager: Web3RequestManager<API> };
+		const { subscriptionManager } = options as { subscriptionManager: Web3SubscriptionManager };
+		if (requestManager && subscriptionManager) {
+			throw new SubscriptionError(
+				'Only requestManager or subscriptionManager should be provided at Subscription constructor',
+			);
+		}
+		if (!requestManager && !subscriptionManager) {
+			throw new SubscriptionError(
+				'Either requestManager or subscriptionManager should be provided at Subscription constructor',
+			);
+		}
+		if (requestManager) {
+			// eslint-disable-next-line deprecation/deprecation
+			this._subscriptionManager = new Web3SubscriptionManager(requestManager, {}, true);
+		} else {
+			this._subscriptionManager = subscriptionManager;
+		}
+
+		this._returnFormat = options?.returnFormat ?? (DEFAULT_RETURN_FORMAT as DataFormat);
 	}
 
 	public get id() {
@@ -66,42 +99,37 @@ export abstract class Web3Subscription<
 		return this._lastBlock;
 	}
 
-	public async subscribe() {
-		this._id = await this._requestManager.send({
+	public async subscribe(): Promise<string> {
+		return this._subscriptionManager.addSubscription(this);
+	}
+
+	public processSubscriptionData(
+		data:
+			| JsonRpcSubscriptionResult
+			| JsonRpcSubscriptionResultOld<Log>
+			| JsonRpcNotification<Log>,
+	) {
+		if (data?.data) {
+			// for EIP-1193 provider
+			this._processSubscriptionResult(data?.data?.result ?? data?.data);
+		} else if (
+			data &&
+			jsonRpc.isResponseWithNotification(
+				data as unknown as JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
+			)
+		) {
+			this._processSubscriptionResult(data?.params.result);
+		}
+	}
+
+	public async sendSubscriptionRequest(): Promise<string> {
+		this._id = await this._subscriptionManager.requestManager.send({
 			method: 'eth_subscribe',
 			params: this._buildSubscriptionParams(),
 		});
-
-		const messageListener = (
-			data?:
-				| JsonRpcSubscriptionResult
-				| JsonRpcSubscriptionResultOld<Log>
-				| JsonRpcNotification<Log>,
-		) => {
-			// for EIP-1193 provider
-			if (data?.data) {
-				this._processSubscriptionResult(data?.data?.result ?? data?.data);
-				return;
-			}
-
-			if (
-				data &&
-				jsonRpc.isResponseWithNotification(
-					data as unknown as JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
-				)
-			) {
-				this._processSubscriptionResult(data?.params.result);
-			}
-		};
-
-		if (typeof (this._requestManager.provider as EIP1193Provider<API>).request === 'function') {
-			(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
-		} else {
-			(this._requestManager.provider as Web3BaseProvider).on<Log>('data', messageListener);
-		}
-
-		this._messageListener = messageListener;
+		return this._id;
 	}
+
 	protected get returnFormat() {
 		return this._returnFormat;
 	}
@@ -115,16 +143,15 @@ export abstract class Web3Subscription<
 			return;
 		}
 
-		await this._requestManager.send({
+		await this._subscriptionManager.removeSubscription(this);
+	}
+
+	public async sendUnsubscribeRequest() {
+		await this._subscriptionManager.requestManager.send({
 			method: 'eth_unsubscribe',
 			params: [this.id] as Web3APIParams<API, 'eth_unsubscribe'>,
 		});
-
 		this._id = undefined;
-		(this._requestManager.provider as Web3BaseProvider).removeListener(
-			'message',
-			this._messageListener as never,
-		);
 	}
 
 	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
@@ -148,9 +175,23 @@ export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
-> = new (
-	// We accept any type of arguments here and don't deal with this type internally
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	args: any,
-	options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
-) => SubscriptionType;
+> =
+	| (new (
+			// We accept any type of arguments here and don't deal with this type internally
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			args: any,
+			options:
+				| { subscriptionManager: Web3SubscriptionManager<API>; returnFormat?: DataFormat }
+				| { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
+	  ) => SubscriptionType)
+	| (new (
+			args: any,
+			options: {
+				subscriptionManager: Web3SubscriptionManager<API>;
+				returnFormat?: DataFormat;
+			},
+	  ) => SubscriptionType)
+	| (new (
+			args: any,
+			options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
+	  ) => SubscriptionType);

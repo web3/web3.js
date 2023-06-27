@@ -149,4 +149,10 @@ Documentation:
 [Web3 API](https://docs.web3js.org/api)
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
+## [4.0.2]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

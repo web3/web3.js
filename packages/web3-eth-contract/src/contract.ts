@@ -15,7 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Context, Web3EventEmitter, Web3PromiEvent, Web3ConfigEvent } from 'web3-core';
+import {
+	Web3Context,
+	Web3EventEmitter,
+	Web3PromiEvent,
+	Web3ConfigEvent,
+	Web3SubscriptionManager,
+} from 'web3-core';
 import {
 	ContractExecutionError,
 	ContractTransactionDataAndInputError,
@@ -1140,7 +1146,14 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 					jsonInterface: this._jsonInterface,
 				},
-				{ requestManager: this.requestManager, returnFormat },
+				{
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					subscriptionManager: this.subscriptionManager as Web3SubscriptionManager<
+						unknown,
+						any
+					>,
+					returnFormat,
+				},
 			);
 			if (!isNullish(fromBlock)) {
 				// emit past events when fromBlock is defined
