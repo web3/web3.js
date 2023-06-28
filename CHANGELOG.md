@@ -681,3 +681,7 @@ Released with 1.0.0-beta.37 code base.
 
 
 ## [Unreleased]
+
+### Fixed
+
+- Builds fixed by updating all typescript versions to 4.9.5 (#6238)

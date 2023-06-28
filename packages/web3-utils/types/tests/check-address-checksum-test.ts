@@ -25,11 +25,11 @@ import {checkAddressChecksum} from 'web3-utils';
 
 // $ExpectType boolean
 checkAddressChecksum('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e558cf1ab51');
-// $ExpectType boolean
-checkAddressChecksum('0xFb6916095CA1dF60bb79CE92ce3Ea74C37c5D359', 31);
-// $ExpectType boolean
-checkAddressChecksum('0xFb6916095CA1dF60bb79CE92ce3Ea74C37c5D359', undefined);
 
+// $ExpectError
+checkAddressChecksum('0xFb6916095CA1dF60bb79CE92ce3Ea74C37c5D359', 31);
+// $ExpectError
+checkAddressChecksum('0xFb6916095CA1dF60bb79CE92ce3Ea74C37c5D359', undefined);
 // $ExpectError
 checkAddressChecksum([4]);
 // $ExpectError
