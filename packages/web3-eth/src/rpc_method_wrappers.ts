@@ -49,7 +49,7 @@ import {
 	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { format, hexToBytes, bytesToUint8Array } from 'web3-utils';
+import { format, hexToBytes, bytesToUint8Array, numberToHex } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
@@ -988,7 +988,22 @@ export async function getLogs<ReturnFormat extends DataFormat>(
 	filter: Filter,
 	returnFormat: ReturnFormat,
 ) {
-	const response = await ethRpcMethods.getLogs(web3Context.requestManager, filter);
+	// format type bigint or number toBlock and fromBlock to hexstring.
+	let { toBlock, fromBlock } = filter;
+	if (!isNullish(toBlock)) {
+		if (typeof toBlock === 'number' || typeof toBlock === 'bigint') {
+			toBlock = numberToHex(toBlock);
+		}
+	}
+	if (!isNullish(fromBlock)) {
+		if (typeof fromBlock === 'number' || typeof fromBlock === 'bigint') {
+			fromBlock = numberToHex(fromBlock);
+		}
+	}
+
+	const formattedFilter = { ...filter, fromBlock, toBlock };
+
+	const response = await ethRpcMethods.getLogs(web3Context.requestManager, formattedFilter);
 
 	const result = response.map(res => {
 		if (typeof res === 'string') {
