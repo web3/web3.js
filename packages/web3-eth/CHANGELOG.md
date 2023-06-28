@@ -156,3 +156,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
