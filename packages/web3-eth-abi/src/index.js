@@ -268,13 +268,11 @@ ABICoder.prototype.formatParam = function (type, param) {
     if (match) {
         let size = parseInt(match[2] || "256");
         if (size / 8 < param.length) {
-            if (param.startsWith('-')) {
-                // pad to correct bit width with - at the beginning
-                param = `-${utils.leftPad(param.substring(1), size)}`;
-            } else {
+            param = param.startsWith("-")
+                // pad to correct bit width, with - at the beginning
+                ? `-${utils.leftPad(param.substring(1), size)}`
                 // pad to correct bit width
-                param = utils.leftPad(param, size);
-            }
+                : utils.leftPad(param, size);
         }
     }
 
