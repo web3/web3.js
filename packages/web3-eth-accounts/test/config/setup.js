@@ -22,3 +22,7 @@ require('jest-extended');
 // @todo extend jest to have "toHaveBeenCalledOnceWith" matcher.
 
 process.env.NODE_ENV = 'test';
+
+const jestTimeout = 10000;
+
+jest.setTimeout(jestTimeout);

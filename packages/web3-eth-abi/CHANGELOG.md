@@ -112,8 +112,10 @@ Documentation:
 [Web3 API](https://docs.web3js.org/api)
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
-## [Unreleased]
+## [4.0.2]
 
 ### Fixed
 
 -   Support for "decoding" indexed string event arguments (returns the keccak256 hash of the string value instead of the actual string value) (#6167)
+
+## [Unreleased]

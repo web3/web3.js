@@ -1,6 +1,6 @@
 {
 	"name": "web3-errors",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "This package has web3 error classes",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -41,7 +41,7 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"web3-types": "^1.0.0"
+		"web3-types": "^1.0.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",

@@ -112,7 +112,7 @@ Documentation:
 [Web3 API](https://docs.web3js.org/api)
 [Migration Guide from 1.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
 
-## [Unreleased]
+## [4.0.2]
 
 ### Added
 
@@ -121,3 +121,6 @@ Documentation:
 ### Fixed
 
 -   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
+-   Fixed #6162 @types/ws issue (#6205)
+
+## [Unreleased]

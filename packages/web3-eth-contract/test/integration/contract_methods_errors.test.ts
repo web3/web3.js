@@ -75,6 +75,27 @@ describe('contract errors', () => {
 			});
 		});
 
+		it('should catch Unauthorized error PromiEvent.on("error")', async () => {
+			const expectedThrownError = {
+				name: 'ContractExecutionError',
+				code: ERR_CONTRACT_EXECUTION_REVERTED,
+				receipt: undefined,
+				innerError: {
+					code: 3,
+					data: '0x82b42900',
+					errorName: 'Unauthorized',
+					errorSignature: 'Unauthorized()',
+				},
+			};
+
+			await expect(
+				deployedContract.methods
+					.unauthorize()
+					.send(sendOptions)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
 		it('Error with parameter', async () => {
 			let error: ContractExecutionError | undefined;
 			try {
@@ -100,6 +121,28 @@ describe('contract errors', () => {
 					},
 				},
 			});
+		});
+
+		it('should catch error with parameter using PromiEvent.on("error")', async () => {
+			const expectedThrownError = {
+				name: 'ContractExecutionError',
+				code: ERR_CONTRACT_EXECUTION_REVERTED,
+				receipt: undefined,
+				innerError: {
+					code: 3,
+					data: '0x8d6ea8be0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001b7265766572746564207573696e6720637573746f6d204572726f720000000000',
+					errorName: 'CustomError',
+					errorSignature: 'CustomError(string)',
+					errorArgs: { '0': 'reverted using custom Error' },
+				},
+			};
+
+			await expect(
+				deployedContract.methods
+					.badRequire()
+					.send(sendOptions)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
 		});
 	});
 });

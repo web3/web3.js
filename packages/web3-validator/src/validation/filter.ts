@@ -33,6 +33,7 @@ export const isFilterObject = (value: Filter) => {
 		'toBlock',
 		'address',
 		'topics',
+		'blockHash',
 	];
 	if (isNullish(value) || typeof value !== 'object') return false;
 
