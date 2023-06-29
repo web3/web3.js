@@ -685,3 +685,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 - Builds fixed by updating all typescript versions to 4.9.5 (#6238)
+- ABI encoding for large negative `int`s (#6239)
