@@ -124,3 +124,7 @@ Documentation:
 -   Fixed #6162 @types/ws issue (#6205)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed bug #6236 by adding personal type in web3.eth (#6245)
