@@ -255,7 +255,7 @@ Object {
 }
 `;
 
-exports[`rpc errors rpc_errors.RpcError test constructor 1`] = `
+exports[`rpc errors rpcErrors.RpcError test constructor 1`] = `
 Object {
   "code": 123,
   "error": Object {
@@ -274,7 +274,7 @@ Object {
 }
 `;
 
-exports[`rpc errors rpc_errors.RpcError test constructor with custom message 1`] = `
+exports[`rpc errors rpcErrors.RpcError test constructor with custom message 1`] = `
 Object {
   "code": 123,
   "error": Object {

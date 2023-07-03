@@ -30,11 +30,10 @@ describe('rpc errors', () => {
 	describe('rpcErrorsMap', () => {
 		it('child RpcError classes should be also mapped inside `rpcErrorsMap`', () => {
 			expect(
-				Object.keys(rpcErrors).filter(
+				Object.values(rpcErrors).filter(
 					err =>
-						err !== 'RpcError' &&
-						err !== 'rpcErrorsMap' &&
-						err !== 'EIP1193ProviderRpcError',
+						(err as any).prototype?.constructor?.prototype instanceof
+						rpcErrors.RpcError,
 				),
 			).toHaveLength(rpcErrors.rpcErrorsMap.size);
 		});
