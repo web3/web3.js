@@ -305,7 +305,7 @@ transactionBlockTimeout
 
 .. code-block:: javascript
 
-    web3.eth.Contract.transcationBlockTimeout
+    web3.eth.Contract.transactionBlockTimeout
     contract.transactionBlockTimeout // on contract instance
 
 The ``transactionBlockTimeout`` is used over socket-based connections. This option defines the amount of new blocks it should wait until the first confirmation happens, otherwise the PromiEvent rejects with a timeout error.
