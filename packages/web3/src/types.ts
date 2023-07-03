@@ -38,8 +38,9 @@ import {
 } from 'web3-eth-accounts';
 import { Contract } from 'web3-eth-contract';
 import { ENS } from 'web3-eth-ens';
-import Net from 'web3-net';
+import { Net } from 'web3-net';
 import { Iban } from 'web3-eth-iban';
+import { Personal } from 'web3-eth-personal';
 
 /**
  * The Ethereum interface for main web3 object. It provides extra methods in addition to `web3-eth` interface.
@@ -90,4 +91,5 @@ export interface Web3EthInterface extends Eth {
 		) => Promise<Web3Account>;
 		wallet: Wallet;
 	};
+	personal: Personal;
 }
