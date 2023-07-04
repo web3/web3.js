@@ -386,8 +386,8 @@ export class Eth {
     ): Promise<string[]>;
 
     submitWork(
-        nonce: string, 
-        powHash:string, 
+        nonce: string,
+        powHash:string,
         digest: string,
         callback?: (error: Error, result: boolean) => void
     ): Promise<boolean>;
