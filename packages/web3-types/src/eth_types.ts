@@ -144,18 +144,35 @@ export interface BlockOutput {
 	readonly parentHash?: HexString32Bytes;
 }
 
+export interface Withdrawals {
+	readonly index: Numbers;
+	readonly validatorIndex: Numbers;
+	readonly address: Address;
+	readonly amount: Numbers;
+}
+
 export interface BlockHeaderOutput {
+	readonly hash?: HexString32Bytes;
+	readonly parentHash?: HexString32Bytes;
+	readonly receiptsRoot?: HexString32Bytes;
+	readonly miner?: HexString;
+	readonly stateRoot?: HexString32Bytes;
+	readonly transactionsRoot?: HexString32Bytes;
+	readonly withdrawalsRoot?: HexString32Bytes;
+	readonly logsBloom?: Bytes;
+	readonly difficulty?: Numbers;
+	readonly number?: Numbers;
 	readonly gasLimit: Numbers;
 	readonly gasUsed: Numbers;
 	readonly timestamp: Numbers;
-	readonly number?: Numbers;
-	readonly difficulty?: Numbers;
-	readonly totalDifficulty?: Numbers;
-	readonly transactions?: TransactionOutput[];
-	readonly miner?: HexString;
-	readonly baseFeePerGas?: Numbers;
-	readonly parentHash?: HexString32Bytes;
+	readonly extraData?: Bytes;
+	readonly nonce?: Numbers;
 	readonly sha3Uncles: HexString32Bytes[];
+	readonly baseFeePerGas?: Numbers;
+	readonly mixHash?: HexString32Bytes;
+	readonly transactions?: TransactionOutput[];
+	readonly uncles?: Uncles;
+	readonly withdrawals?: Withdrawals[];
 }
 
 export interface ReceiptInput {
