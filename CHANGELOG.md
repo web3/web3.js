@@ -686,3 +686,4 @@ Released with 1.0.0-beta.37 code base.
 
 - Builds fixed by updating all typescript versions to 4.9.5 (#6238)
 - ABI encoding for large negative `int`s (#6239)
+- Fixed submitWork function types, accepts 3 parameters instead of an array (#5200)
