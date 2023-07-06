@@ -79,7 +79,7 @@ import { EventLog, ContractAbiWithSignature } from './types.js';
 export class LogsSubscription extends Web3Subscription<
 	{
 		error: Error;
-		connected: number;
+		connected: string;
 		data: EventLog;
 		changed: EventLog & { removed: true };
 	},
@@ -158,8 +158,7 @@ export class LogsSubscription extends Web3Subscription<
 		];
 	}
 
-	protected _processSubscriptionResult(data: LogsInput): void {
-		const decoded = decodeEventABI(this.abi, data, this.jsonInterface, super.returnFormat);
-		this.emit('data', decoded);
+	protected formatSubscriptionResult(data: EventLog) {
+		return decodeEventABI(this.abi, data as LogsInput, this.jsonInterface, super.returnFormat);
 	}
 }

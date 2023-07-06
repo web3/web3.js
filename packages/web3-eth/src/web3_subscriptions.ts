@@ -26,13 +26,9 @@ import {
 	BlockHeaderOutput,
 	LogsOutput,
 } from 'web3-types';
-import { Web3Subscription } from 'web3-core';
+import { CommonSubscriptionEvents, Web3Subscription } from 'web3-core';
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas.js';
 
-type CommonSubscriptionEvents = {
-	error: Error;
-	connected: number;
-};
 /**
  * ## subscribe('logs')
  * Subscribes to incoming logs, filtered by the given options. If a valid numerical fromBlock options property is set, web3.js will retrieve logs beginning from this point, backfilling the response as necessary.
@@ -58,12 +54,8 @@ export class LogsSubscription extends Web3Subscription<
 		return ['logs', this.args] as ['logs', any];
 	}
 
-	public _processSubscriptionResult(data: LogsOutput) {
-		this.emit('data', format(logSchema, data, super.returnFormat));
-	}
-
-	public _processSubscriptionError(error: Error) {
-		this.emit('error', error);
+	protected formatSubscriptionResult(data: LogsOutput) {
+		return format(logSchema, data, super.returnFormat);
 	}
 }
 
@@ -87,12 +79,8 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 		return ['newPendingTransactions'] as ['newPendingTransactions'];
 	}
 
-	protected _processSubscriptionResult(data: string) {
-		this.emit('data', format({ format: 'string' }, data, super.returnFormat));
-	}
-
-	protected _processSubscriptionError(error: Error) {
-		this.emit('error', error);
+	protected formatSubscriptionResult(data: string) {
+		return format({ format: 'string' }, data, super.returnFormat);
 	}
 }
 
@@ -135,12 +123,8 @@ export class NewHeadsSubscription extends Web3Subscription<
 		return ['newHeads'] as ['newHeads'];
 	}
 
-	protected _processSubscriptionResult(data: BlockHeaderOutput) {
-		this.emit('data', format(blockHeaderSchema, data, super.returnFormat));
-	}
-
-	protected _processSubscriptionError(error: Error) {
-		this.emit('error', error);
+	protected formatSubscriptionResult(data: BlockHeaderOutput) {
+		return format(blockHeaderSchema, data, super.returnFormat);
 	}
 }
 
@@ -174,7 +158,7 @@ export class SyncingSubscription extends Web3Subscription<
 		return ['syncing'] as ['syncing'];
 	}
 
-	protected _processSubscriptionResult(
+	public _processSubscriptionResult(
 		data:
 			| {
 					syncing: boolean;
@@ -195,9 +179,5 @@ export class SyncingSubscription extends Web3Subscription<
 			this.emit('changed', data.syncing);
 			this.emit('data', format(syncSchema, mappedData, super.returnFormat));
 		}
-	}
-
-	protected _processSubscriptionError(error: Error) {
-		this.emit('error', error);
 	}
 }

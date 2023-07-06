@@ -34,11 +34,11 @@ import { SubscriptionError } from 'web3-errors';
 
 // eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
-import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
+import { CommonSubscriptionEvents, Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
 import { Web3RequestManager } from './web3_request_manager.js';
 
 export abstract class Web3Subscription<
-	EventMap extends Web3EventMap,
+	EventMap extends Web3EventMap & CommonSubscriptionEvents,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
 	API extends Web3APISpec = EthExecutionAPI,
@@ -127,6 +127,8 @@ export abstract class Web3Subscription<
 			method: 'eth_subscribe',
 			params: this._buildSubscriptionParams(),
 		});
+
+		this.emit('connected', this._id);
 		return this._id;
 	}
 
@@ -154,14 +156,17 @@ export abstract class Web3Subscription<
 		this._id = undefined;
 	}
 
-	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-	protected _processSubscriptionResult(_data: unknown) {
-		// Do nothing - This should be overridden in subclass.
+	// eslint-disable-next-line class-methods-use-this
+	protected formatSubscriptionResult(data: EventMap['data']) {
+		return data;
 	}
 
-	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-	protected _processSubscriptionError(_err: Error) {
-		// Do nothing - This should be overridden in subclass.
+	public _processSubscriptionResult(data: EventMap['data'] | unknown) {
+		this.emit('data', this.formatSubscriptionResult(data));
+	}
+
+	public _processSubscriptionError(error: Error) {
+		this.emit('error', error);
 	}
 
 	// eslint-disable-next-line class-methods-use-this
