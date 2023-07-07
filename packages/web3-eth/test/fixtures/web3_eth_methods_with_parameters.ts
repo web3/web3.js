@@ -1770,6 +1770,15 @@ export const signValidData: [
 ];
 
 /**
+ * Array tests getPastLogs and formats valid fromBlock and toBlock
+ */
+export const getPastLogsValidFormatData: [Filter][] = [
+	[{ fromBlock: 0, toBlock: 100 }],
+	[{ fromBlock: BigInt(0), toBlock: BigInt(100) }],
+	[{ fromBlock: '0x0', toBlock: '0x10' }],
+	[{ blockHash: '0x19e54b41ac6ed5eb5045aab59967489bbab1852e742857b1987f62290a4b89af' }],
+];
+/**
  * Array consists of:
  * - array of inputs
  * - array of passed RPC parameters (excluding Web3Context) - This is to account for any defaults set by the method
@@ -1778,6 +1787,16 @@ export const getPastLogsValidData: [[Filter, DataFormat | undefined], [Filter, D
 	[
 		[{}, undefined],
 		[{}, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[
+			{ blockHash: '0x19e54b41ac6ed5eb5045aab59967489bbab1852e742857b1987f62290a4b89af' },
+			undefined,
+		],
+		[
+			{ blockHash: '0x19e54b41ac6ed5eb5045aab59967489bbab1852e742857b1987f62290a4b89af' },
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
 		[

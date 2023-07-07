@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Web3RequestManager, Web3SubscriptionManager } from 'web3-core';
+import { Web3SubscriptionManager } from 'web3-core';
 import { Web3BaseProvider } from 'web3-types';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import { LogsSubscription } from '../../src';
@@ -28,7 +28,7 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 	let web3Eth: Web3Eth;
 
 	it('should return the subscription data provided by the Subscription Manager', async () => {
-		const requestManager = { send: jest.fn(), on: jest.fn(), provider: jest.fn() };
+		const requestManager = { send: jest.fn(), on: jest.fn(), provider: { on: jest.fn() } };
 
 		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
 		const dummyLogs = { logs: { test1: 'test1' } };
@@ -46,15 +46,10 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 	});
 
 	it('should call `_processSubscriptionResult` when the logs are of type LogsSubscription and the `fromBlock` is provided', async () => {
-		const requestManager = { send: jest.fn(), on: jest.fn(), provider: jest.fn() };
+		const requestManager = { send: jest.fn(), on: jest.fn(), provider: { on: jest.fn() } };
 		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
 
-		const dummyLogs = new LogsSubscription(
-			{},
-			{
-				requestManager: requestManager as unknown as Web3RequestManager,
-			},
-		);
+		const dummyLogs = new LogsSubscription({}, { subscriptionManager: subManager });
 		jest.spyOn(subManager, 'subscribe').mockResolvedValueOnce(dummyLogs);
 		jest.spyOn(rpcMethodWrappers, 'getLogs').mockResolvedValueOnce(mockGetLogsRpcResponse);
 
@@ -76,7 +71,7 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 	});
 
 	it('should be able to clear subscriptions', async () => {
-		const requestManager = { send: jest.fn(), on: jest.fn(), provider: jest.fn() };
+		const requestManager = { send: jest.fn(), on: jest.fn(), provider: { on: jest.fn() } };
 		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
 
 		jest.spyOn(subManager, 'unsubscribe');
@@ -94,7 +89,7 @@ describe('Web3Eth subscribe and clear subscriptions', () => {
 	});
 
 	it('should be able to clear subscriptions and pass `shouldClearSubscription` when passing `notClearSyncing`', async () => {
-		const requestManager = { send: jest.fn(), on: jest.fn(), provider: jest.fn() };
+		const requestManager = { send: jest.fn(), on: jest.fn(), provider: { on: jest.fn() } };
 		const subManager = new Web3SubscriptionManager(requestManager as any, undefined as any);
 
 		jest.spyOn(subManager, 'unsubscribe');

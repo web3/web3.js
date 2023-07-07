@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiEventFragment, LogsInput, HexString, Topic, DataFormat } from 'web3-types';
-import { Web3RequestManager, Web3Subscription } from 'web3-core';
+import { Web3RequestManager, Web3Subscription, Web3SubscriptionManager } from 'web3-core';
 // eslint-disable-next-line import/no-cycle
 import { decodeEventABI } from './encoding.js';
 // eslint-disable-next-line import/no-cycle
@@ -112,12 +112,38 @@ export class LogsSubscription extends Web3Subscription<
 			abi: AbiEventFragment & { signature: HexString };
 			jsonInterface: ContractAbiWithSignature;
 		},
-		options: {
-			requestManager: Web3RequestManager;
+		options: { subscriptionManager: Web3SubscriptionManager; returnFormat?: DataFormat },
+	);
+	/**
+	 * @deprecated This constructor overloading should not be used
+	 */
+	public constructor(
+		args: {
+			address?: HexString;
+			// eslint-disable-next-line @typescript-eslint/ban-types
+			topics?: (Topic | Topic[] | null)[];
+			abi: AbiEventFragment & { signature: HexString };
+			jsonInterface: ContractAbiWithSignature;
+		},
+		options: { requestManager: Web3RequestManager; returnFormat?: DataFormat },
+	);
+	public constructor(
+		args: {
+			address?: HexString;
+			// eslint-disable-next-line @typescript-eslint/ban-types
+			topics?: (Topic | Topic[] | null)[];
+			abi: AbiEventFragment & { signature: HexString };
+			jsonInterface: ContractAbiWithSignature;
+		},
+		options: (
+			| { subscriptionManager: Web3SubscriptionManager }
+			| { requestManager: Web3RequestManager }
+		) & {
 			returnFormat?: DataFormat;
 		},
 	) {
-		super(args, options);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+		super(args, options as any);
 
 		this.address = args.address;
 		this.topics = args.topics;

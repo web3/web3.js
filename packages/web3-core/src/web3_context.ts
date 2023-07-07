@@ -96,7 +96,7 @@ export class Web3Context<
 	public static givenProvider?: SupportedProviders<never>;
 	public readonly providers = Web3RequestManager.providers;
 	protected _requestManager: Web3RequestManager<API>;
-	protected _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
+	protected _subscriptionManager: Web3SubscriptionManager<API, RegisteredSubs>;
 	protected _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
 	protected _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 
@@ -146,10 +146,10 @@ export class Web3Context<
 
 		if (subscriptionManager) {
 			this._subscriptionManager = subscriptionManager;
-		} else if (registeredSubscriptions) {
+		} else {
 			this._subscriptionManager = new Web3SubscriptionManager(
 				this.requestManager,
-				registeredSubscriptions,
+				registeredSubscriptions ?? ({} as RegisteredSubs),
 			);
 		}
 
@@ -195,8 +195,7 @@ export class Web3Context<
 			provider: this.provider,
 			requestManager: this.requestManager,
 			subscriptionManager: this.subscriptionManager,
-			registeredSubscriptions: this.subscriptionManager
-				?.registeredSubscriptions as RegisteredSubs,
+			registeredSubscriptions: this.subscriptionManager?.registeredSubscriptions,
 			providers: this.providers,
 			wallet: this.wallet,
 			accountProvider: this.accountProvider,
@@ -231,6 +230,7 @@ export class Web3Context<
 		this.setConfig(parentContext.config);
 		this._requestManager = parentContext.requestManager;
 		this.provider = parentContext.provider;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		this._subscriptionManager = parentContext.subscriptionManager;
 		this._wallet = parentContext.wallet;
 		this._accountProvider = parentContext._accountProvider;

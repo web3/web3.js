@@ -26,15 +26,12 @@ import {
 } from '../fixtures/rpc_methods_wrappers';
 import {
 	estimateGasValidData,
-	// estimateGasValidData,
 	getBalanceValidData,
 	getBlockTransactionCountValidData,
 	getBlockUncleCountValidData,
 	getBlockValidData,
 	getCodeValidData,
 	getFeeHistoryValidData,
-	// getCodeValidData,
-	// getFeeHistoryValidData,
 	getPastLogsValidData,
 	getProofValidData,
 	getStorageAtValidData,
@@ -334,6 +331,18 @@ describe('web3_eth_methods_with_parameters', () => {
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getPastLogs(...input);
+							expect(rpcMethodWrappers.getLogs).toHaveBeenCalledWith(
+								web3Eth,
+								...rpcMethodParameters,
+							);
+						},
+					);
+				});
+				describe('getPastLogs called with rpcMethodWrappers', () => {
+					it.each(getPastLogsValidData)(
+						'input: %s\nrpcMethodParameters: %s',
+						async (_, rpcMethodParameters) => {
+							await rpcMethodWrappers.getLogs(web3Eth, ...rpcMethodParameters);
 							expect(rpcMethodWrappers.getLogs).toHaveBeenCalledWith(
 								web3Eth,
 								...rpcMethodParameters,

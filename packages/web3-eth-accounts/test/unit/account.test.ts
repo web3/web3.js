@@ -104,9 +104,9 @@ describe('accounts', () => {
 			expect(signedResult.messageHash).toBeDefined();
 			expect(signedResult.rawTransaction).toBeDefined();
 			expect(signedResult.transactionHash).toBeDefined();
-			expect(signedResult.r).toBeDefined();
-			expect(signedResult.s).toBeDefined();
-			expect(signedResult.v).toBeDefined();
+			expect(signedResult.r).toMatch(/0[xX][0-9a-fA-F]{64}/);
+			expect(signedResult.s).toMatch(/0[xX][0-9a-fA-F]{64}/);
+			expect(signedResult.v).toMatch(/0[xX][0-9a-fA-F]+/);
 		});
 
 		it.each(transactionsTestData)('Recover transaction', async txData => {
