@@ -16,19 +16,80 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3ValidationErrorObject } from 'web3-types';
 
-import { Validator as JsonSchemaValidator, ValidationError } from 'jsonschema';
-import formats from './formats.js';
+import { z, ZodType, ZodIssue, ZodIssueCode, ZodTypeAny } from 'zod';
+
+import { RawCreateParams } from 'zod/lib/types';
 import { Web3ValidatorError } from './errors.js';
 import { Json, Schema } from './types.js';
+import formats from './formats';
+
+const convertToZod = (schema: Schema): ZodType => {
+	if ((!schema?.type || schema?.type === 'object') && schema?.properties) {
+		const obj: { [key: string]: ZodType } = {};
+		for (const name of Object.keys(schema.properties)) {
+			const zItem = convertToZod(schema.properties[name]);
+			if (zItem) {
+				obj[name] = zItem;
+			}
+		}
+
+		if (Array.isArray(schema.required)) {
+			return z
+				.object(obj)
+				.partial()
+				.required(schema.required.reduce((acc, v: string) => ({ ...acc, [v]: true }), {}));
+		}
+		return z.object(obj).partial();
+	}
+
+	if (schema?.type === 'array' && schema?.items) {
+		if (Array.isArray(schema.items) && schema.items.length > 0) {
+			const arr: Partial<[ZodTypeAny, ...ZodTypeAny[]]> = [];
+			for (const item of schema.items) {
+				const zItem = convertToZod(item);
+				if (zItem) {
+					arr.push(zItem);
+				}
+			}
+			return z.tuple(arr as [ZodTypeAny, ...ZodTypeAny[]]);
+		}
+		return z.array(convertToZod(schema.items as Schema));
+	}
+
+	if (schema.oneOf && Array.isArray(schema.oneOf)) {
+		return z.union(
+			schema.oneOf.map(oneOfSchema => convertToZod(oneOfSchema)) as [
+				ZodTypeAny,
+				ZodTypeAny,
+				...ZodTypeAny[],
+			],
+		);
+	}
+
+	if (schema?.format) {
+		return z.any().refine(formats[schema.format], (value: unknown) => ({
+			params: { value, format: schema.format },
+		}));
+	}
+
+	if (
+		schema?.type &&
+		schema?.type !== 'object' &&
+		typeof (z as unknown as { [key: string]: (params?: RawCreateParams) => ZodType })[
+			String(schema.type)
+		] === 'function'
+	) {
+		return (z as unknown as { [key: string]: (params?: RawCreateParams) => ZodType })[
+			String(schema.type)
+		]();
+	}
+	return z.object({ data: z.any() }).partial();
+};
 
 export class Validator {
-	private readonly internalValidator: JsonSchemaValidator;
-	private constructor() {
-		JsonSchemaValidator.prototype.customFormats = formats;
-		this.internalValidator = new JsonSchemaValidator();
-	}
 	// eslint-disable-next-line no-use-before-define
 	private static validatorInstance?: Validator;
+
 	// eslint-disable-next-line no-useless-constructor, @typescript-eslint/no-empty-function
 	public static factory(): Validator {
 		if (!Validator.validatorInstance) {
@@ -38,9 +99,10 @@ export class Validator {
 	}
 
 	public validate(schema: Schema, data: Json, options?: { silent?: boolean }) {
-		const validationResult = this.internalValidator.validate(data, schema);
-		if (!validationResult.valid) {
-			const errors = this.convertErrors(validationResult.errors);
+		const zod = convertToZod(schema);
+		const result = zod.safeParse(data);
+		if (!result.success) {
+			const errors = this.convertErrors(result.error?.issues ?? []);
 			if (errors) {
 				if (options?.silent) {
 					return errors;
@@ -51,11 +113,9 @@ export class Validator {
 		return undefined;
 	}
 	// eslint-disable-next-line class-methods-use-this
-	private convertErrors(
-		errors: ValidationError[] | undefined,
-	): Web3ValidationErrorObject[] | undefined {
+	private convertErrors(errors: ZodIssue[] | undefined): Web3ValidationErrorObject[] | undefined {
 		if (errors && Array.isArray(errors) && errors.length > 0) {
-			return errors.map((error: ValidationError) => {
+			return errors.map((error: ZodIssue) => {
 				let message;
 				let keyword;
 				let params;
@@ -63,42 +123,42 @@ export class Validator {
 
 				schemaPath = error.path.join('/');
 
-				const field = error.property;
+				const field = String(error.path[error.path.length - 1]);
 				const instancePath = error.path.join('/');
-				if (error?.message.startsWith('does not meet minimum length of')) {
-					if (error.argument) {
-						keyword = 'minItems';
-						schemaPath = `${instancePath}/minItems`;
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-						params = { limit: error.argument };
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-						message = `must NOT have fewer than ${error.argument} items`;
+				if (error.code === ZodIssueCode.too_big) {
+					keyword = 'maxItems';
+					schemaPath = `${instancePath}/maxItems`;
+					params = { limit: error.maximum };
+					message = `must NOT have more than ${error.maximum} items`;
+				} else if (error.code === ZodIssueCode.too_small) {
+					keyword = 'minItems';
+					schemaPath = `${instancePath}/minItems`;
+					params = { limit: error.minimum };
+					message = `must NOT have fewer than ${error.minimum} items`;
+				} else if (error.code === ZodIssueCode.custom) {
+					const { value, format } = (error.params ?? {}) as {
+						value: unknown;
+						format: string;
+					};
+
+					if (typeof value === 'undefined') {
+						message = `value at "/${schemaPath}" is required`;
+					} else {
+						message = `value "${
+							// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+							typeof value === 'object' ? JSON.stringify(value) : value
+						}" at "/${schemaPath}" must pass "${format}" validation`;
 					}
-				} else if (error?.message.startsWith('does not meet maximum length of')) {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-					if (error.argument) {
-						keyword = 'maxItems';
-						schemaPath = `${instancePath}/maxItems`;
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-						params = { limit: error.argument };
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-						message = `must NOT have more than ${error.argument} items`;
-					}
-				} else if (
-					error?.message.startsWith('does not conform to the') &&
-					error?.message.endsWith('format')
-				) {
-					const formatName = error?.message.split(' ')[5];
-					if (formatName) {
-						message = `must pass ${formatName} validation`;
-					}
+
+					params = { value };
 				}
+
 				return {
-					keyword: keyword ?? field.replace('instance', 'data'),
+					keyword: keyword ?? field,
 					instancePath: instancePath ? `/${instancePath}` : '',
 					schemaPath: schemaPath ? `#${schemaPath}` : '#',
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					params: params ?? { value: error.instance },
+					params: params ?? { value: error.message },
 					message: message ?? error.message,
 				} as Web3ValidationErrorObject;
 			});

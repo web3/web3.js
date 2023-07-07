@@ -39,25 +39,6 @@ export const fullErrors: any[] = [
 	},
 ];
 
-export const fullErrorsWithInstance: any[] = [
-	{
-		message: 'must pass "uint" validation',
-		keyword: 'eth',
-		params: { value: -1 },
-		instancePath: '/0',
-		schemaPath: '#/items/0/eth',
-	},
-];
-
-export const errorsWithInstanceNoParams: any[] = [
-	{
-		message: 'must pass "uint" validation',
-		keyword: 'eth',
-		instancePath: '/0',
-		schemaPath: '#/items/0/eth',
-	},
-];
-
 export const errorsWithInstanceNoParamsNoMessage: any[] = [
 	{
 		keyword: 'eth',

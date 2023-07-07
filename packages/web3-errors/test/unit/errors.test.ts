@@ -198,7 +198,7 @@ describe('errors', () => {
 				new transactionErrors.InvalidPropertiesForTransactionTypeError(
 					[
 						{
-							keyword: 'data.property',
+							keyword: 'property',
 							instancePath: '',
 							schemaPath: '',
 							params: {},

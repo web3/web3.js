@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter } from 'web3-types';
-import { ValidationError } from 'jsonschema';
+import { ZodIssueBase } from 'zod';
 
 export type ValidInputTypes = Uint8Array | bigint | string | number | boolean;
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
@@ -143,7 +143,7 @@ export type Schema = {
 };
 export interface Validate {
 	(value: Json): boolean;
-	errors?: ValidationError[];
+	errors?: ZodIssueBase[];
 }
 
 export type JsonSchema = Schema;

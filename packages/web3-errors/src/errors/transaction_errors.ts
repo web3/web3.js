@@ -557,10 +557,11 @@ export class InvalidPropertiesForTransactionTypeError extends BaseWeb3Error {
 		const invalidPropertyNames: string[] = [];
 		validationError.forEach(error =>
 			invalidPropertyNames.push(
+				error.keyword,
 				// These errors are erroneously reported, error
 				// has type Web3ValidationErrorObject, but eslint doesn't recognize it
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-				(error.keyword.match(/data.(.+)/) as string[])[1],
+				// (error.keyword.match(/data.(.+)/) as string[])[1],
 			),
 		);
 		super(
