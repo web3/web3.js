@@ -113,6 +113,7 @@ export const getTransactionType = (
 	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
+	console.log("get transaction type")
 	const inferredType = detectTransactionType(transaction, web3Context);
 
 	if (!isNullish(inferredType)) return inferredType;
@@ -131,6 +132,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	fillGasPrice?: boolean;
 }): Promise<ReturnType> {
 	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
+	console.log("transaction builder")
 	let populatedTransaction = format(
 		transactionSchema,
 		options.transaction,
@@ -221,14 +223,15 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	}
 
 	populatedTransaction.type = getTransactionType(populatedTransaction, options.web3Context);
-
+	console.log("type ", populatedTransaction.type)
 	if (
 		isNullish(populatedTransaction.accessList) &&
 		(populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2')
 	) {
 		populatedTransaction.accessList = [];
 	}
-
+	console.log("fill gas price", options.fillGasPrice)
+	console.log("populatedTransaction", populatedTransaction)
 	if (options.fillGasPrice)
 		populatedTransaction = {
 			...populatedTransaction,

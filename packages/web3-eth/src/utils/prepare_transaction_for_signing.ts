@@ -126,6 +126,7 @@ export const prepareTransactionForSigning = async (
 	privateKey?: HexString | Uint8Array,
 	fillGasPrice = false,
 ) => {
+	console.log("preparetransaction for signing")
 	const populatedTransaction = (await transactionBuilder({
 		transaction,
 		web3Context,

@@ -495,6 +495,8 @@ export function sendTransaction<
 	returnFormat: ReturnFormat,
 	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
+	console.log("send transaction method")
+	console.log(options)
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
 			setImmediate(() => {
@@ -516,8 +518,6 @@ export function sendTransaction<
 					) {
 						transactionFormatted = {
 							...transactionFormatted,
-							// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
-							// should not be included if undefined, but currently are
 							...(await getTransactionGasPricing(
 								transactionFormatted,
 								web3Context,
@@ -525,7 +525,31 @@ export function sendTransaction<
 							)),
 						};
 					}
-
+					
+					// check if gas is present
+					const gasPresent = !isNullish(transactionFormatted.gas) || !isNullish(transactionFormatted.gasLimit);
+					const legacyGasPresent = gasPresent && !isNullish(transactionFormatted.gasPrice);
+					const feeMarketGasPresent =
+						gasPresent &&
+						!isNullish(transactionFormatted.maxPriorityFeePerGas) &&
+						!isNullish(transactionFormatted.maxFeePerGas);
+					if ( // if no gas is passed, fill maxPriorityFeePerGas and maxFeePerGas by default 
+						!options?.ignoreFillingGas && 
+						!(legacyGasPresent || feeMarketGasPresent)
+					) {
+						if((!isNullish(transactionFormatted.gasPrice)) && isNullish(transactionFormatted.type) || transactionFormatted.type === "0x2"){ // if no type is specified use default to type-2 transaction
+							// Using legacy gasPrice property on an eip-1559 network,
+                        	// so use gasPrice as both fee properties
+							transactionFormatted.maxFeePerGas = transactionFormatted.gasPrice;
+							transactionFormatted.maxPriorityFeePerGas = transactionFormatted.gasPrice; // maybe switch this to block gas
+							transactionFormatted.type = '0x2';
+							delete transactionFormatted.gasPrice
+							transactionFormatted.gasLimit = await estimateGas(web3Context,
+								transactionFormatted, 'latest', ETH_DATA_FORMAT);
+						} 
+					}
+					console.log(transactionFormatted)
+					console.log("before checking for revert")
 					try {
 						if (options.checkRevertBeforeSending !== false) {
 							const reason = await getRevertReason(
@@ -567,7 +591,7 @@ export function sendTransaction<
 							const signedTransaction = await wallet.signTransaction(
 								transactionFormatted,
 							);
-
+							console.log("sign transaction wallet")
 							transactionHash = await trySendTransaction(
 								web3Context,
 								async (): Promise<string> =>
@@ -578,6 +602,7 @@ export function sendTransaction<
 								signedTransaction.transactionHash,
 							);
 						} else {
+							console.log("sign transaction normal")
 							transactionHash = await trySendTransaction(
 								web3Context,
 								async (): Promise<string> =>

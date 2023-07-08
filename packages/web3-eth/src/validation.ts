@@ -250,10 +250,11 @@ export const validateFeeMarketGas = (transaction: InternalTransaction) => {
  * legacy gas (type 0x0 and 0x1) OR fee market transactions (0x2)
  */
 export const validateGas = (transaction: InternalTransaction) => {
+	console.log("validateGas")
+	console.log(transaction)
 	const gasPresent = !isNullish(transaction.gas) || !isNullish(transaction.gasLimit);
 	const legacyGasPresent = gasPresent && !isNullish(transaction.gasPrice);
 	const feeMarketGasPresent =
-		gasPresent &&
 		!isNullish(transaction.maxPriorityFeePerGas) &&
 		!isNullish(transaction.maxFeePerGas);
 
