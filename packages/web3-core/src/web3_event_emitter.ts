@@ -17,12 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EventEmitter } from 'events';
 
-export type CommonSubscriptionEvents = {
-	data: unknown; // Fires on each incoming block header.
-	error: Error; // Fires when an error in the subscription occurs.
-	connected: string; // Fires once after the subscription successfully connected. Returns the subscription id.
-};
-
 export type Web3EventMap = Record<string, unknown>;
 export type Web3EventKey<T extends Web3EventMap> = string & keyof T;
 export type Web3EventCallback<T> = (params: T) => void | Promise<void>;

@@ -26,7 +26,7 @@ import {
 	BlockHeaderOutput,
 	LogsOutput,
 } from 'web3-types';
-import { CommonSubscriptionEvents, Web3Subscription } from 'web3-core';
+import { Web3Subscription } from 'web3-core';
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas.js';
 
 /**
@@ -40,7 +40,7 @@ import { blockHeaderSchema, logSchema, syncSchema } from './schemas.js';
  *
  */
 export class LogsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
+	{
 		data: LogsOutput;
 	},
 	{
@@ -69,11 +69,9 @@ export class LogsSubscription extends Web3Subscription<
  * (await web3.eth.subscribe('pendingTransactions')).on('data', console.log);
  * ```
  */
-export class NewPendingTransactionsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: HexString;
-	}
-> {
+export class NewPendingTransactionsSubscription extends Web3Subscription<{
+	data: HexString;
+}> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
 		return ['newPendingTransactions'] as ['newPendingTransactions'];
@@ -113,11 +111,9 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
  * }
  * ```
  */
-export class NewHeadsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: BlockHeaderOutput;
-	}
-> {
+export class NewHeadsSubscription extends Web3Subscription<{
+	data: BlockHeaderOutput;
+}> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
 		return ['newHeads'] as ['newHeads'];
@@ -147,12 +143,10 @@ export class NewHeadsSubscription extends Web3Subscription<
  *   }
  * ```
  */
-export class SyncingSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: SyncOutput;
-		changed: boolean;
-	}
-> {
+export class SyncingSubscription extends Web3Subscription<{
+	data: SyncOutput;
+	changed: boolean;
+}> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
 		return ['syncing'] as ['syncing'];

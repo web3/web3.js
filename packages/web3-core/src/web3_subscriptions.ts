@@ -34,15 +34,26 @@ import { SubscriptionError } from 'web3-errors';
 
 // eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
-import { CommonSubscriptionEvents, Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
+import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
 import { Web3RequestManager } from './web3_request_manager.js';
 
+type CommonSubscriptionEvents = {
+	data: unknown; // Fires on each incoming block header.
+	error: Error; // Fires when an error in the subscription occurs.
+	connected: string; // Fires once after the subscription successfully connected. Returns the subscription id.
+};
+
 export abstract class Web3Subscription<
-	EventMap extends Web3EventMap & CommonSubscriptionEvents,
+	EventMap extends Web3EventMap,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
 	API extends Web3APISpec = EthExecutionAPI,
-> extends Web3EventEmitter<EventMap> {
+	// The following generic type is just to define the type `CombinedEventMap` and use it inside the class
+	// 	it combines the user passed `EventMap` with the `CommonSubscriptionEvents`
+	//	However, this type definition could be refactored depending on the closure of
+	//	[Permit type alias declarations inside a class](https://github.com/microsoft/TypeScript/issues/7061)
+	CombinedEventMap extends CommonSubscriptionEvents = EventMap & CommonSubscriptionEvents,
+> extends Web3EventEmitter<CombinedEventMap> {
 	private readonly _subscriptionManager: Web3SubscriptionManager<API>;
 	private readonly _lastBlock?: BlockOutput;
 	private readonly _returnFormat: DataFormat;
@@ -157,11 +168,11 @@ export abstract class Web3Subscription<
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	protected formatSubscriptionResult(data: EventMap['data']) {
+	protected formatSubscriptionResult(data: CombinedEventMap['data']) {
 		return data;
 	}
 
-	public _processSubscriptionResult(data: EventMap['data'] | unknown) {
+	public _processSubscriptionResult(data: CombinedEventMap['data'] | unknown) {
 		this.emit('data', this.formatSubscriptionResult(data));
 	}
 

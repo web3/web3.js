@@ -15,13 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CommonSubscriptionEvents, Web3Subscription } from 'web3-core';
+import { Web3Subscription } from 'web3-core';
 import { Web3 } from '../../src/web3';
 
 describe('Web3 Custom Subscriptions', () => {
 	it('should be able to define and subscribe to custom subscription', async () => {
 		class CustomSubscription extends Web3Subscription<
-			CommonSubscriptionEvents & {
+			{
 				data: string;
 			},
 			{
