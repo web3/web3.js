@@ -88,6 +88,7 @@ describe('ContractMethodWrappersPlugin', () => {
 			requestManagerSendSpy.mockResolvedValueOnce(expectedGasPrice);
 			// Mocking block number for trySendTransaction call
 			requestManagerSendSpy.mockResolvedValueOnce('0x1');
+			requestManagerSendSpy.mockResolvedValueOnce('0x1');
 			requestManagerSendSpy.mockResolvedValueOnce(expectedTransactionHash);
 			// Mocking response for getTransactionReceipt for waitForTransactionReceipt
 			requestManagerSendSpy.mockResolvedValueOnce({});
@@ -95,24 +96,23 @@ describe('ContractMethodWrappersPlugin', () => {
 			requestManagerSendSpy.mockResolvedValueOnce('0x2');
 			requestManagerSendSpy.mockResolvedValueOnce(expectedSenderBalance);
 			requestManagerSendSpy.mockResolvedValueOnce(expectedRecipientBalance);
-
 			const balances = await web3.contractMethodWrappersPlugin.transferAndGetBalances(
 				sender,
 				recipient,
 				amount,
 			);
-
-			// The first call will be to `eth_gasPrice` and the second is to `eth_blockNumber`. And the third one will be to `eth_sendTransaction`:
-			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(3, {
+			// The first call will be to `eth_gasPrice` and the second is to `eth_sendTransaction, the third is `eth_blockNumber`. And the fourth will be to `eth_sendTransaction`:
+			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(4, {
 				method: 'eth_sendTransaction',
 				params: [
 					expect.objectContaining({
 						input: '0xa9059cbb0000000000000000000000004f641def1e7845caab95ac717c80416082430d0d000000000000000000000000000000000000000000000000000000000000002a',
 						from: sender,
-						gasPrice: expectedGasPrice,
-						maxFeePerGas: undefined,
-						maxPriorityFeePerGas: undefined,
+						maxFeePerGas: '0x1ca14bd70',
+						maxPriorityFeePerGas: '0x1ca14bd70',
 						to: contractAddress,
+						type: '0x2',
+						gasLimit: '0x1',
 					}),
 				],
 			});
