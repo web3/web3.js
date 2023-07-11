@@ -33,9 +33,7 @@ import {
 	ERR_RPC_UNAVAILABLE_RESOURCE,
 	ERR_RPC_UNSUPPORTED_METHOD,
 } from '../error_codes.js';
-import { RpcErrorMessages } from './rpc_error_messages.js';
-
-const genericRpcMessage = 'An Rpc error has occured with a code of *code*';
+import { RpcErrorMessages, genericRpcErrorMessageTemplate } from './rpc_error_messages.js';
 
 export class RpcError extends BaseWeb3Error {
 	public code: number;
@@ -43,7 +41,10 @@ export class RpcError extends BaseWeb3Error {
 	public jsonrpc: string;
 	public jsonRpcError: JsonRpcError;
 	public constructor(rpcError: JsonRpcResponseWithError, message?: string) {
-		super(message ?? genericRpcMessage.replace('*code*', rpcError.error.code.toString()));
+		super(
+			message ??
+				genericRpcErrorMessageTemplate.replace('*code*', rpcError.error.code.toString()),
+		);
 		this.code = rpcError.error.code;
 		this.id = rpcError.id;
 		this.jsonrpc = rpcError.jsonrpc;
@@ -75,7 +76,7 @@ export class EIP1193ProviderRpcError extends BaseWeb3Error {
 			);
 			super(
 				RpcErrorMessages[statusCodeRange ?? '']?.message ??
-					genericRpcMessage.replace('*code*', code?.toString() ?? '""'),
+					genericRpcErrorMessageTemplate.replace('*code*', code?.toString() ?? '""'),
 			);
 		}
 		this.code = code;
