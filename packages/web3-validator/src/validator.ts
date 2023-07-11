@@ -22,6 +22,8 @@ import { RawCreateParams } from 'zod/lib/types';
 import { Web3ValidatorError } from './errors.js';
 import { Json, Schema } from './types.js';
 import formats from './formats';
+// import { isAbiParameterSchema } from './validation/abi';
+// import { parseBaseType } from './utils';
 
 const convertToZod = (schema: Schema): ZodType => {
 	if ((!schema?.type || schema?.type === 'object') && schema?.properties) {
@@ -85,6 +87,123 @@ const convertToZod = (schema: Schema): ZodType => {
 	}
 	return z.object({ data: z.any() }).partial();
 };
+
+// export const abiToZod = (abis: ShortValidationSchema | FullValidationSchema, level = '/0') => {
+// 	for (const [index, abi] of abis.entries()) {
+// 		if (isAbiParameterSchema(abi)) {
+// 		}
+//
+// 		// eslint-disable-next-line no-nested-ternary
+// 		let abiType!: string;
+// 		let abiName!: string;
+// 		let abiComponents: ShortValidationSchema | FullValidationSchema | undefined = [];
+//
+// 		// If it's a complete Abi Parameter
+// 		// e.g. {name: 'a', type: 'uint'}
+// 		if (isAbiParameterSchema(abi)) {
+// 			z.object({[abi.name]:convertToZod(abi)}).partial();
+//
+// 			convertToZod({
+//                 type
+// 				properties: {
+// 					[abi.name]: { type: parseBaseType(abiType) },
+// 				},
+// 			});
+// 			abiType = abi.type;
+// 			abiName = abi.name;
+// 			abiComponents = abi.components as FullValidationSchema;
+// 			// If its short form string value e.g. ['uint']
+// 		} else if (typeof abi === 'string') {
+// 			abiType = abi;
+// 			abiName = `${level}/${index}`;
+//
+// 			// If it's provided in short form of tuple e.g. [['uint', 'string']]
+// 		} else if (Array.isArray(abi)) {
+// 			// If its custom tuple e.g. ['tuple[2]', ['uint', 'string']]
+// 			if (
+// 				abi[0] &&
+// 				typeof abi[0] === 'string' &&
+// 				abi[0].startsWith('tuple') &&
+// 				!Array.isArray(abi[0]) &&
+// 				abi[1] &&
+// 				Array.isArray(abi[1])
+// 			) {
+// 				// eslint-disable-next-line prefer-destructuring
+// 				abiType = abi[0];
+// 				abiName = `${level}/${index}`;
+// 				abiComponents = abi[1] as ReadonlyArray<ShortValidationSchema>;
+// 			} else {
+// 				abiType = 'tuple';
+// 				abiName = `${level}/${index}`;
+// 				abiComponents = abi;
+// 			}
+// 		}
+//
+// 		const { baseType, isArray, arraySizes } = parseBaseType(abiType);
+//
+// 		let childSchema: ZodType;
+// 		let lastSchema: ZodType;
+// 		for (let i = arraySizes.length - 1; i > 0; i -= 1) {
+// 			childSchema = convertToZod({
+// 				type: 'array',
+// 				items: [],
+// 				maxItems: arraySizes[i],
+// 				minItems: arraySizes[i],
+// 			});
+//
+// 			lastSchema = childSchema;
+// 		}
+//
+// 		if (baseType === 'tuple' && !isArray) {
+// 			const nestedTuple = abiToZod(abiComponents, abiName);
+// 			nestedTuple.$id = abiName;
+// 			(lastSchema.items as JsonSchema[]).push(nestedTuple);
+// 		} else if (baseType === 'tuple' && isArray) {
+// 			const arraySize = arraySizes[0];
+// 			const item: JsonSchema = {
+// 				$id: abiName,
+// 				type: 'array',
+// 				items: abiToZod(abiComponents, abiName),
+// 				maxItems: arraySize,
+// 				minItems: arraySize,
+// 			};
+//
+// 			if (arraySize < 0) {
+// 				delete item.maxItems;
+// 				delete item.minItems;
+// 			}
+//
+// 			(lastSchema.items as JsonSchema[]).push(item);
+// 		} else if (isArray) {
+// 			const arraySize = arraySizes[0];
+// 			const item: JsonSchema = {
+// 				type: 'array',
+// 				$id: abiName,
+// 				items: convertEthType(String(baseType)),
+// 				minItems: arraySize,
+// 				maxItems: arraySize,
+// 			};
+//
+// 			if (arraySize < 0) {
+// 				delete item.maxItems;
+// 				delete item.minItems;
+// 			}
+//
+// 			(lastSchema.items as JsonSchema[]).push(item);
+// 		} else if (Array.isArray(lastSchema.items)) {
+// 			// Array of non-tuple items
+// 			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
+// 		} else {
+// 			// Nested object
+// 			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({
+// 				$id: abiName,
+// 				...convertEthType(abiType),
+// 			});
+// 		}
+// 	}
+//
+// 	return schema;
+// };
 
 export class Validator {
 	// eslint-disable-next-line no-use-before-define

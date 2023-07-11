@@ -555,15 +555,7 @@ export class InvalidPropertiesForTransactionTypeError extends BaseWeb3Error {
 		txType: '0x0' | '0x1' | '0x2',
 	) {
 		const invalidPropertyNames: string[] = [];
-		validationError.forEach(error =>
-			invalidPropertyNames.push(
-				error.keyword,
-				// These errors are erroneously reported, error
-				// has type Web3ValidationErrorObject, but eslint doesn't recognize it
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-				// (error.keyword.match(/data.(.+)/) as string[])[1],
-			),
-		);
+		validationError.forEach(error => invalidPropertyNames.push(error.keyword));
 		super(
 			`The following properties are invalid for the transaction type ${txType}: ${invalidPropertyNames.join(
 				', ',
