@@ -323,7 +323,7 @@ describe('Web3Eth.sendTransaction', () => {
 				expect(typeof data.gasUsed).toBe('bigint');
 				expect(typeof data.transactionIndex).toBe('bigint');
 				expect(data.status).toBe(BigInt(1));
-				expect(data.type).toBe(BigInt(0));
+				expect(data.type).toBe(BigInt(2));
 			});
 			expect.assertions(8);
 		});
@@ -435,6 +435,8 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
+				gasPrice: 2000000000,
+				gas: 23605,
 			};
 
 			web3Eth.handleRevert = true;
@@ -463,6 +465,8 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0x3ebf4d9c',
+				gasPrice: 2000000000,
+				gas: 23605,
 			};
 
 			web3Eth.handleRevert = true;
@@ -493,6 +497,8 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0x819f48fe',
+				gasPrice: 2000000000,
+				gas: 23605,
 			};
 
 			web3Eth.handleRevert = true;
@@ -527,6 +533,8 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
+				gasPrice: 2000000000,
+				gas: 23605,
 			};
 
 			web3Eth.handleRevert = false;
