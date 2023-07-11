@@ -37,6 +37,16 @@ import { initAccountsForContext } from './accounts.js';
 import { Web3EthInterface } from './types.js';
 import { Web3PkgInfo } from './version.js';
 
+function isQueryMethod(methodName: string): boolean {
+	// Add the method names of query methods that you want to replicate
+	const queryMethods = [
+		'getBlockNumber',
+		'getBlock',
+		'getTransaction' /* add more methods as needed */,
+	];
+	return queryMethods.includes(methodName);
+}
+
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = Web3PkgInfo.version;
 	public static utils = utils;
@@ -102,7 +112,32 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			}
 		}
 
-		const eth = self.use(Web3Eth);
+		const eth = new Proxy<Web3Eth>(self.use(Web3Eth), {
+			get(target: Web3Eth, prop: string) {
+				const originalMethod = target[prop as keyof Web3Eth];
+				if (isQueryMethod(prop) && typeof originalMethod === 'function') {
+					return async (...args: unknown[]): Promise<unknown> => {
+						let funcArgs: unknown[] = args;
+						if (!args.length) {
+							const latestBlockNumber: bigint = await target.getBlockNumber();
+							funcArgs = [latestBlockNumber];
+						}
+						const replicatedQueries = Array.from(
+							{ length: 4 },
+							async () => originalMethod.apply(target, funcArgs) as Promise<unknown>,
+						);
+						const promises = await Promise.all(replicatedQueries);
+						const areAllEqual: boolean = promises.every(
+							(val, i, arr) => JSON.stringify(val) === JSON.stringify(arr[0]),
+						);
+						if (areAllEqual) return promises[0];
+						return undefined;
+					};
+				}
+
+				return originalMethod;
+			},
+		});
 
 		// Eth Module
 		this.eth = Object.assign(eth, {
