@@ -123,8 +123,10 @@ Documentation:
 -   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
 -   Fixed #6162 @types/ws issue (#6205)
 
-## [Unreleased]
+## [4.0.3]
 
 ### Fixed
 
 -   Fixed bug #6236 by adding personal type in web3.eth (#6245)
+
+## [Unreleased]
