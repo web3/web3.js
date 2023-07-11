@@ -409,6 +409,8 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
+				gasPrice: 2000000000,
+				gas: 23605,
 			};
 
 			const expectedThrownError = {
