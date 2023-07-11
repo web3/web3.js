@@ -112,4 +112,10 @@ Documentation:
 
 -   Fixed "The `r` and `s` returned by `signTransaction` to does not always consist of 64 characters #6207" (#6216)
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

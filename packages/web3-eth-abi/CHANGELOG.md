@@ -118,4 +118,10 @@ Documentation:
 
 -   Support for "decoding" indexed string event arguments (returns the keccak256 hash of the string value instead of the actual string value) (#6167)
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
