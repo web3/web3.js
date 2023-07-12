@@ -124,6 +124,7 @@ export const ERR_INVALID_SIGNATURE = 802;
 
 export const GENESIS_BLOCK_NUMBER = '0x0';
 
+// RPC error codes (EIP-1193)
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
 export const JSONRPC_ERR_REJECTED_REQUEST = 4001;
 export const JSONRPC_ERR_UNAUTHORIZED = 4100;
@@ -159,7 +160,8 @@ export const ERR_VALIDATION = 1100;
 export const ERR_CORE_HARDFORK_MISMATCH = 1101;
 export const ERR_CORE_CHAIN_MISMATCH = 1102;
 
-// rpc error codes EIP-1474
+// RPC error codes (EIP-1474)
+// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md
 export const ERR_RPC_INVALID_JSON = -32700;
 export const ERR_RPC_INVALID_REQUEST = -32600;
 export const ERR_RPC_INVALID_METHOD = -32601;
