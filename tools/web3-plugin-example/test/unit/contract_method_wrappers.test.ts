@@ -112,7 +112,7 @@ describe('ContractMethodWrappersPlugin', () => {
 						maxPriorityFeePerGas: '0x1ca14bd70',
 						to: contractAddress,
 						type: '0x2',
-						gasLimit: '0x1',
+						gas: '0x1',
 					}),
 				],
 			});
