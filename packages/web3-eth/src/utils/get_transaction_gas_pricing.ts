@@ -28,7 +28,7 @@ import { isNullish } from 'web3-validator';
 import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from 'web3-errors';
 import { format } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
-import { getBlock, getGasPrice, estimateGas } from '../rpc_method_wrappers.js';
+import { getBlock, getGasPrice } from '../rpc_method_wrappers.js';
 import { InternalTransaction } from '../types.js';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionType } from './transaction_builder.js';
@@ -39,7 +39,6 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ): Promise<FormatType<{ maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers }, ReturnFormat>> {
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, returnFormat);
-	console.log("gas pricing")
 	if (isNullish(block.baseFeePerGas)) throw new Eip1559NotSupportedError();
 
 	if (!isNullish(transaction.gasPrice)) {
@@ -72,40 +71,6 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	};
 }
 
-export async function fillGas(
-	transaction: InternalTransaction, 
-	web3Context: Web3Context<EthExecutionAPI>,
-	) {
-		let transactionFormatted: InternalTransaction = {
-			...transaction
-		}
-		const gasPresent = !isNullish(transactionFormatted.gas) || !isNullish(transactionFormatted.gasLimit);
-		const legacyGasPresent = gasPresent && !isNullish(transactionFormatted.gasPrice);
-		const feeMarketGasPresent =
-			gasPresent &&
-			!isNullish(transactionFormatted.maxPriorityFeePerGas) &&
-			!isNullish(transactionFormatted.maxFeePerGas);
-		
-		if(!(legacyGasPresent || feeMarketGasPresent)){
-			if((!isNullish(transactionFormatted.gasPrice)) && isNullish(transactionFormatted.type) || transactionFormatted.type === "0x2"){ // if no type is specified use default to type-2 transaction
-				// Using legacy gasPrice property on an eip-1559 network,
-				// so use gasPrice as both fee properties
-				transactionFormatted.maxFeePerGas = transactionFormatted.gasPrice;
-				transactionFormatted.maxPriorityFeePerGas = transactionFormatted.gasPrice;
-				transactionFormatted.type = '0x2';
-				delete transactionFormatted.gasPrice
-				delete transaction.gasPrice;
-				transactionFormatted.gasLimit = await estimateGas(web3Context,
-					transactionFormatted, 'latest', ETH_DATA_FORMAT);
-			} 
-		}
-		return {
-			gasLimit: transactionFormatted.gasLimit,
-			maxFeePerGas: transactionFormatted.maxFeePerGas,
-			maxPriorityFeePerGas: transactionFormatted.maxPriorityFeePerGas
-		}
-}
-
 export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 	transaction: InternalTransaction,
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -118,9 +83,7 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 	| undefined
 > {
 	const transactionType = getTransactionType(transaction, web3Context);
-	console.log("getting getTransactionGasPricing")
 	if (!isNullish(transactionType)) {
-		console.log(transactionType)
 		if (transactionType.startsWith('-'))
 			throw new UnsupportedTransactionTypeError(transactionType);
 

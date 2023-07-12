@@ -479,242 +479,6 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 }
 
 /**
- * View additional documentations here: {@link Web3Eth.sendTransaction}
- * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
- */
-export function sendTransaction<
-	ReturnFormat extends DataFormat,
-	ResolveType = FormatType<TransactionReceipt, ReturnFormat>,
->(
-	web3Context: Web3Context<EthExecutionAPI>,
-	transaction:
-		| Transaction
-		| TransactionWithFromLocalWalletIndex
-		| TransactionWithToLocalWalletIndex
-		| TransactionWithFromAndToLocalWalletIndex,
-	returnFormat: ReturnFormat,
-	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
-): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
-	console.log("send transaction method")
-	console.log(options)
-	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
-		(resolve, reject) => {
-			setImmediate(() => {
-				(async () => {
-					let transactionFormatted = formatTransaction(
-						{
-							...transaction,
-							from: getTransactionFromOrToAttr('from', web3Context, transaction),
-							to: getTransactionFromOrToAttr('to', web3Context, transaction),
-						},
-						ETH_DATA_FORMAT,
-					);
-
-					if (
-						!options?.ignoreGasPricing &&
-						isNullish(transactionFormatted.gasPrice) &&
-						(isNullish(transaction.maxPriorityFeePerGas) ||
-							isNullish(transaction.maxFeePerGas))
-					) {
-						transactionFormatted = {
-							...transactionFormatted,
-							...(await getTransactionGasPricing(
-								transactionFormatted,
-								web3Context,
-								ETH_DATA_FORMAT,
-							)),
-						};
-					}
-					
-					// check if gas is present
-					const gasPresent = !isNullish(transactionFormatted.gas) || !isNullish(transactionFormatted.gasLimit);
-					const legacyGasPresent = gasPresent && !isNullish(transactionFormatted.gasPrice);
-					const feeMarketGasPresent =
-						gasPresent &&
-						!isNullish(transactionFormatted.maxPriorityFeePerGas) &&
-						!isNullish(transactionFormatted.maxFeePerGas);
-					if ( // if no gas is passed, fill maxPriorityFeePerGas and maxFeePerGas by default 
-						!options?.ignoreFillingGas && 
-						!(legacyGasPresent || feeMarketGasPresent)
-					) {
-						if((!isNullish(transactionFormatted.gasPrice)) && isNullish(transactionFormatted.type) || transactionFormatted.type === "0x2"){ // if no type is specified use default to type-2 transaction
-							// Using legacy gasPrice property on an eip-1559 network,
-                        	// so use gasPrice as both fee properties
-							transactionFormatted.maxFeePerGas = transactionFormatted.gasPrice;
-							transactionFormatted.maxPriorityFeePerGas = transactionFormatted.gasPrice; // maybe switch this to block gas
-							transactionFormatted.type = '0x2';
-							delete transactionFormatted.gasPrice
-							transactionFormatted.gasLimit = await estimateGas(web3Context,
-								transactionFormatted, 'latest', ETH_DATA_FORMAT);
-						} 
-					}
-					console.log(transactionFormatted)
-					console.log("before checking for revert")
-					try {
-						if (options.checkRevertBeforeSending !== false) {
-							const reason = await getRevertReason(
-								web3Context,
-								transactionFormatted as TransactionCall,
-								options.contractAbi,
-							);
-							if (reason !== undefined) {
-								const error = await getTransactionError<ReturnFormat>(
-									web3Context,
-									transactionFormatted as TransactionCall,
-									undefined,
-									undefined,
-									options.contractAbi,
-									reason,
-								);
-
-								if (promiEvent.listenerCount('error') > 0) {
-									promiEvent.emit('error', error);
-								}
-
-								reject(error);
-								return;
-							}
-						}
-
-						if (promiEvent.listenerCount('sending') > 0) {
-							promiEvent.emit('sending', transactionFormatted);
-						}
-
-						let transactionHash: HexString;
-						let wallet: Web3BaseWalletAccount | undefined;
-
-						if (web3Context.wallet && !isNullish(transactionFormatted.from)) {
-							wallet = web3Context.wallet.get(transactionFormatted.from);
-						}
-
-						if (wallet) {
-							const signedTransaction = await wallet.signTransaction(
-								transactionFormatted,
-							);
-							console.log("sign transaction wallet")
-							transactionHash = await trySendTransaction(
-								web3Context,
-								async (): Promise<string> =>
-									ethRpcMethods.sendRawTransaction(
-										web3Context.requestManager,
-										signedTransaction.rawTransaction,
-									),
-								signedTransaction.transactionHash,
-							);
-						} else {
-							console.log("sign transaction normal")
-							transactionHash = await trySendTransaction(
-								web3Context,
-								async (): Promise<string> =>
-									ethRpcMethods.sendTransaction(
-										web3Context.requestManager,
-										transactionFormatted as Partial<TransactionWithSenderAPI>,
-									),
-							);
-						}
-
-						const transactionHashFormatted = format(
-							{ format: 'bytes32' },
-							transactionHash as Bytes,
-							returnFormat,
-						);
-
-						if (promiEvent.listenerCount('sent') > 0) {
-							promiEvent.emit('sent', transactionFormatted);
-						}
-
-						if (promiEvent.listenerCount('transactionHash') > 0) {
-							promiEvent.emit('transactionHash', transactionHashFormatted);
-						}
-
-						const transactionReceipt = await waitForTransactionReceipt(
-							web3Context,
-							transactionHash,
-							returnFormat,
-						);
-
-						const transactionReceiptFormatted = format(
-							transactionReceiptSchema,
-							transactionReceipt,
-							returnFormat,
-						);
-
-						if (promiEvent.listenerCount('receipt') > 0) {
-							promiEvent.emit('receipt', transactionReceiptFormatted);
-						}
-
-						if (options?.transactionResolver) {
-							resolve(
-								options?.transactionResolver(
-									transactionReceiptFormatted,
-								) as unknown as ResolveType,
-							);
-						} else if (transactionReceipt.status === BigInt(0)) {
-							const error = await getTransactionError<ReturnFormat>(
-								web3Context,
-								transactionFormatted as TransactionCall,
-								transactionReceiptFormatted,
-								undefined,
-								options?.contractAbi,
-							);
-
-							if (promiEvent.listenerCount('error') > 0) {
-								promiEvent.emit('error', error);
-							}
-
-							reject(error);
-						} else {
-							resolve(transactionReceiptFormatted as unknown as ResolveType);
-						}
-
-						if (promiEvent.listenerCount('confirmation') > 0) {
-							watchTransactionForConfirmations<
-								ReturnFormat,
-								SendTransactionEvents<ReturnFormat>,
-								ResolveType
-							>(
-								web3Context,
-								promiEvent,
-								transactionReceiptFormatted as TransactionReceipt,
-								transactionHash,
-								returnFormat,
-							);
-						}
-					} catch (error) {
-						let _error = error;
-
-						if (_error instanceof ContractExecutionError && web3Context.handleRevert) {
-							_error = await getTransactionError(
-								web3Context,
-								transactionFormatted as TransactionCall,
-								undefined,
-								undefined,
-								options?.contractAbi,
-							);
-						}
-
-						if (
-							(_error instanceof InvalidResponseError ||
-								_error instanceof ContractExecutionError ||
-								_error instanceof TransactionRevertWithCustomError ||
-								_error instanceof TransactionRevertedWithoutReasonError ||
-								_error instanceof TransactionRevertInstructionError) &&
-							promiEvent.listenerCount('error') > 0
-						) {
-							promiEvent.emit('error', _error);
-						}
-
-						reject(_error);
-					}
-				})() as unknown;
-			});
-		},
-	);
-
-	return promiEvent;
-}
-
-/**
  * View additional documentations here: {@link Web3Eth.sendSignedTransaction}
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
  */
@@ -1001,6 +765,250 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	);
 
 	return format({ format: 'uint' }, response as Numbers, returnFormat);
+}
+
+/**
+ * View additional documentations here: {@link Web3Eth.sendTransaction}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export function sendTransaction<
+	ReturnFormat extends DataFormat,
+	ResolveType = FormatType<TransactionReceipt, ReturnFormat>,
+>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction:
+		| Transaction
+		| TransactionWithFromLocalWalletIndex
+		| TransactionWithToLocalWalletIndex
+		| TransactionWithFromAndToLocalWalletIndex,
+	returnFormat: ReturnFormat,
+	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
+): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
+	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
+		(resolve, reject) => {
+			setImmediate(() => {
+				(async () => {
+					let transactionFormatted = formatTransaction(
+						{
+							...transaction,
+							from: getTransactionFromOrToAttr('from', web3Context, transaction),
+							to: getTransactionFromOrToAttr('to', web3Context, transaction),
+						},
+						ETH_DATA_FORMAT,
+					);
+
+					if (
+						!options?.ignoreGasPricing &&
+						isNullish(transactionFormatted.gasPrice) &&
+						(isNullish(transaction.maxPriorityFeePerGas) ||
+							isNullish(transaction.maxFeePerGas))
+					) {
+						transactionFormatted = {
+							...transactionFormatted,
+							...(await getTransactionGasPricing(
+								transactionFormatted,
+								web3Context,
+								ETH_DATA_FORMAT,
+							)),
+						};
+					}
+
+					// check if gas is present
+					const gasPresent =
+						!isNullish(transactionFormatted.gas) ||
+						!isNullish(transactionFormatted.gasLimit);
+					const legacyGasPresent =
+						gasPresent && !isNullish(transactionFormatted.gasPrice);
+					const feeMarketGasPresent =
+						gasPresent &&
+						!isNullish(transactionFormatted.maxPriorityFeePerGas) &&
+						!isNullish(transactionFormatted.maxFeePerGas);
+					if (
+						// if no gas is passed, fill maxPriorityFeePerGas and maxFeePerGas by default
+						!options?.ignoreFillingGas &&
+						!(legacyGasPresent || feeMarketGasPresent)
+					) {
+						if (
+							(!isNullish(transactionFormatted.gasPrice) &&
+								isNullish(transactionFormatted.type)) ||
+							transactionFormatted.type === '0x2'
+						) {
+							// if no type is specified use default to type-2 transaction
+							// Using legacy gasPrice property on an eip-1559 network,
+							// so use gasPrice as both fee properties
+							transactionFormatted.maxFeePerGas = transactionFormatted.gasPrice;
+							transactionFormatted.maxPriorityFeePerGas =
+								transactionFormatted.gasPrice; // maybe switch this to block gas
+							transactionFormatted.type = '0x2';
+							delete transactionFormatted.gasPrice;
+							transactionFormatted.gas = await estimateGas(
+								web3Context,
+								transactionFormatted,
+								'latest',
+								ETH_DATA_FORMAT,
+							);
+						}
+					}
+					try {
+						if (options.checkRevertBeforeSending !== false) {
+							const reason = await getRevertReason(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								options.contractAbi,
+							);
+							if (reason !== undefined) {
+								const error = await getTransactionError<ReturnFormat>(
+									web3Context,
+									transactionFormatted as TransactionCall,
+									undefined,
+									undefined,
+									options.contractAbi,
+									reason,
+								);
+
+								if (promiEvent.listenerCount('error') > 0) {
+									promiEvent.emit('error', error);
+								}
+
+								reject(error);
+								return;
+							}
+						}
+
+						if (promiEvent.listenerCount('sending') > 0) {
+							promiEvent.emit('sending', transactionFormatted);
+						}
+
+						let transactionHash: HexString;
+						let wallet: Web3BaseWalletAccount | undefined;
+
+						if (web3Context.wallet && !isNullish(transactionFormatted.from)) {
+							wallet = web3Context.wallet.get(transactionFormatted.from);
+						}
+
+						if (wallet) {
+							const signedTransaction = await wallet.signTransaction(
+								transactionFormatted,
+							);
+							transactionHash = await trySendTransaction(
+								web3Context,
+								async (): Promise<string> =>
+									ethRpcMethods.sendRawTransaction(
+										web3Context.requestManager,
+										signedTransaction.rawTransaction,
+									),
+								signedTransaction.transactionHash,
+							);
+						} else {
+							transactionHash = await trySendTransaction(
+								web3Context,
+								async (): Promise<string> =>
+									ethRpcMethods.sendTransaction(
+										web3Context.requestManager,
+										transactionFormatted as Partial<TransactionWithSenderAPI>,
+									),
+							);
+						}
+
+						const transactionHashFormatted = format(
+							{ format: 'bytes32' },
+							transactionHash as Bytes,
+							returnFormat,
+						);
+
+						if (promiEvent.listenerCount('sent') > 0) {
+							promiEvent.emit('sent', transactionFormatted);
+						}
+
+						if (promiEvent.listenerCount('transactionHash') > 0) {
+							promiEvent.emit('transactionHash', transactionHashFormatted);
+						}
+
+						const transactionReceipt = await waitForTransactionReceipt(
+							web3Context,
+							transactionHash,
+							returnFormat,
+						);
+
+						const transactionReceiptFormatted = format(
+							transactionReceiptSchema,
+							transactionReceipt,
+							returnFormat,
+						);
+
+						if (promiEvent.listenerCount('receipt') > 0) {
+							promiEvent.emit('receipt', transactionReceiptFormatted);
+						}
+
+						if (options?.transactionResolver) {
+							resolve(
+								options?.transactionResolver(
+									transactionReceiptFormatted,
+								) as unknown as ResolveType,
+							);
+						} else if (transactionReceipt.status === BigInt(0)) {
+							const error = await getTransactionError<ReturnFormat>(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								transactionReceiptFormatted,
+								undefined,
+								options?.contractAbi,
+							);
+
+							if (promiEvent.listenerCount('error') > 0) {
+								promiEvent.emit('error', error);
+							}
+
+							reject(error);
+						} else {
+							resolve(transactionReceiptFormatted as unknown as ResolveType);
+						}
+
+						if (promiEvent.listenerCount('confirmation') > 0) {
+							watchTransactionForConfirmations<
+								ReturnFormat,
+								SendTransactionEvents<ReturnFormat>,
+								ResolveType
+							>(
+								web3Context,
+								promiEvent,
+								transactionReceiptFormatted as TransactionReceipt,
+								transactionHash,
+								returnFormat,
+							);
+						}
+					} catch (error) {
+						let _error = error;
+
+						if (_error instanceof ContractExecutionError && web3Context.handleRevert) {
+							_error = await getTransactionError(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								undefined,
+								undefined,
+								options?.contractAbi,
+							);
+						}
+
+						if (
+							(_error instanceof InvalidResponseError ||
+								_error instanceof ContractExecutionError ||
+								_error instanceof TransactionRevertWithCustomError ||
+								_error instanceof TransactionRevertedWithoutReasonError ||
+								_error instanceof TransactionRevertInstructionError) &&
+							promiEvent.listenerCount('error') > 0
+						) {
+							promiEvent.emit('error', _error);
+						}
+
+						reject(_error);
+					}
+				})() as unknown;
+			});
+		},
+	);
+
+	return promiEvent;
 }
 
 // TODO - Add input formatting to filter
