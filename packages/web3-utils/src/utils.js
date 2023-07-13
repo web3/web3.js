@@ -23,7 +23,7 @@
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var ethereumjsUtil = require('ethereumjs-util');
+var ethereumjsUtil = require('@ethereumjs/util');
 var ethereumBloomFilters = require('ethereum-bloom-filters');
 
 /**
@@ -550,7 +550,7 @@ var BNwrapped = function (value) {
     }
     else {
         return new BN(value);
-    } 
+    }
 };
 Object.setPrototypeOf(BNwrapped, BN);
 Object.setPrototypeOf(BNwrapped.prototype, BN.prototype);

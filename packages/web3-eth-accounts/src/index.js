@@ -33,7 +33,7 @@ var helpers = require('web3-core-helpers');
 var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 var HardForks = require('@ethereumjs/common').Hardfork;
-var ethereumjsUtil = require('ethereumjs-util');
+var ethereumjsUtil = require('@ethereumjs/util');
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
@@ -397,7 +397,7 @@ function _handleTxPricing(_this, tx) {
             ) {
                 // Legacy transaction, return provided gasPrice
                 resolve({ gasPrice: tx.gasPrice })
-            } 
+            }
             else if (tx.type === '0x2' && tx.maxFeePerGas && tx.maxPriorityFeePerGas) {
                 // EIP-1559 transaction, return provided maxFeePerGas and maxPriorityFeePerGas
                 resolve({ maxFeePerGas: tx.maxFeePerGas, maxPriorityFeePerGas: tx.maxPriorityFeePerGas })

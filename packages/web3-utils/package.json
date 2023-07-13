@@ -14,9 +14,9 @@
     },
     "main": "lib/index.js",
     "dependencies": {
+        "@ethereumjs/util": "^8.1.0",
         "bn.js": "^5.2.1",
         "ethereum-bloom-filters": "^1.0.6",
-        "ethereumjs-util": "^7.1.0",
         "ethjs-unit": "0.1.6",
         "number-to-bn": "1.7.0",
         "randombytes": "^2.1.0",
