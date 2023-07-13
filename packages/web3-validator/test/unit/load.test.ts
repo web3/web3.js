@@ -15,9 +15,27 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Validator } from '../../src/validator';
-import { Json, JsonSchema } from '../../';
+import { Web3Validator } from '../../src/web3_validator';
+import { Json, JsonSchema, ValidationSchemaInput } from '../..';
 
+const abi = [
+	{ indexed: true, internalType: 'address', name: 'from', type: 'address' },
+	{ indexed: true, internalType: 'address', name: 'to', type: 'address' },
+	{ indexed: false, internalType: 'uint256', name: 'value', type: 'uint256' },
+];
+const abiJsonSchema = {
+	type: 'array',
+	items: [
+		{ name: 'from', format: 'address' },
+		{ name: 'to', format: 'address' },
+		{ name: 'value', format: 'uint256' },
+	],
+};
+const abiData = [
+	'0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
+	'0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
+	'0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
+];
 const simpleSchema = {
 	type: 'object',
 	required: ['blockHash', 'blockNumber', 'from', 'to', 'data'],
@@ -45,54 +63,111 @@ const simpleData = {
 	from: '0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
 	to: '0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
 	data: '0xafea',
-};
-// @ts-ignore
-const createHugeSchema = (schema: JsonSchema, data: object, n = 3) => {
+} as unknown as ValidationSchemaInput;
+const createHugeSchema = (
+	schema: JsonSchema,
+	data: Json,
+	n = 3,
+): { schema: JsonSchema; data: Json } => {
 	if (n > 0) {
-		// @ts-ignore
 		const { data: resultData, schema: resultSchema } = createHugeSchema(
-			// @ts-ignore
-			{ ...simpleSchema },
-			// @ts-ignore
-			{ ...simpleData },
+			{ ...simpleSchema } as JsonSchema,
+			{ ...simpleData } as Json,
 			n - 1,
 		);
 		return {
-			data: { ...data, simple: resultData },
+			data: { ...(data as unknown as object), simple: resultData },
 			schema: { ...schema, properties: { ...schema.properties, simple: resultSchema } },
 		};
-	} else {
-		return {
-			schema,
-			data,
-		};
 	}
+	return {
+		schema,
+		data,
+	};
 };
 const { schema: hugeSchema, data: hugeData } = createHugeSchema(
 	{ ...simpleSchema },
-	{ ...simpleData },
+	{ ...simpleData } as Json,
+	500,
+);
+
+const { schema: hugeSchema1000, data: hugeData1000 } = createHugeSchema(
+	{ ...simpleSchema },
+	{ ...simpleData } as Json,
 	1000,
 );
 describe('instance of validator', () => {
-	let validator: Validator;
+	let validator: Web3Validator;
 	beforeAll(() => {
-		validator = Validator.factory();
+		validator = new Web3Validator();
 	});
 
 	it('huge schema', () => {
+		let t = 0;
 		expect(() => {
-			console.time('hugeData');
-			validator.validate(hugeSchema, hugeData);
-			console.timeLog('hugeData');
+			const t1 = Number(new Date());
+			validator.validateJSONSchema(hugeSchema, hugeData as object);
+			t = Number(new Date()) - t1;
 		}).not.toThrow();
+		expect(t).toBeLessThan(500);
+		expect(t).toBeGreaterThan(0);
+	});
+	it('huge schema 1000', () => {
+		let t = 0;
+		expect(() => {
+			const t1 = Number(new Date());
+			validator.validateJSONSchema(hugeSchema1000, hugeData1000 as object);
+			t = Number(new Date()) - t1;
+		}).not.toThrow();
+		expect(t).toBeLessThan(500);
+		expect(t).toBeGreaterThan(0);
 	});
 	it('simple schema multiple times', () => {
+		let t = 0;
 		expect(() => {
-			console.time('hugeData');
-			for (let i = 0; i < 1000; i++) {
-				validator.validate(simpleSchema, simpleData as unknown as Json);
+			const t1 = Number(new Date());
+			for (let i = 0; i < 500; i += 1) {
+				validator.validateJSONSchema(simpleSchema, simpleData as object);
 			}
-			console.timeLog('hugeData');
+			t = Number(new Date()) - t1;
 		}).not.toThrow();
+		expect(t).toBeLessThan(500);
+		expect(t).toBeGreaterThan(0);
+	});
+	it('simple schema 10000 times', () => {
+		let t = 0;
+		expect(() => {
+			const t1 = Number(new Date());
+			for (let i = 0; i < 10000; i += 1) {
+				validator.validateJSONSchema(simpleSchema, simpleData as object);
+			}
+			t = Number(new Date()) - t1;
+		}).not.toThrow();
+		expect(t).toBeLessThan(1000);
+		expect(t).toBeGreaterThan(0);
+	});
+	it('simple JSON schema 10000 times', () => {
+		let t = 0;
+		expect(() => {
+			const t1 = Number(new Date());
+			for (let i = 0; i < 10000; i += 1) {
+				validator.validateJSONSchema(abiJsonSchema, abiData as object);
+			}
+			t = Number(new Date()) - t1;
+		}).not.toThrow();
+		expect(t).toBeLessThan(1000);
+		expect(t).toBeGreaterThan(0);
+	});
+	it('simple ABI 10000 times', () => {
+		let t = 0;
+		expect(() => {
+			const t1 = Number(new Date());
+			for (let i = 0; i < 10000; i += 1) {
+				validator.validate(abi, abiData);
+			}
+			t = Number(new Date()) - t1;
+		}).not.toThrow();
+		expect(t).toBeLessThan(1000);
+		expect(t).toBeGreaterThan(0);
 	});
 });
