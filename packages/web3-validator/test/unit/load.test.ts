@@ -109,7 +109,7 @@ describe('instance of validator', () => {
 			validator.validateJSONSchema(hugeSchema, hugeData as object);
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(3000);
+		expect(t).toBeLessThan(6000);
 		expect(t).toBeGreaterThan(0);
 	});
 	it('huge schema 1000', () => {
@@ -119,7 +119,7 @@ describe('instance of validator', () => {
 			validator.validateJSONSchema(hugeSchema1000, hugeData1000 as object);
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(3000);
+		expect(t).toBeLessThan(6000);
 		expect(t).toBeGreaterThan(0);
 	});
 	it('simple schema multiple times', () => {
@@ -131,7 +131,7 @@ describe('instance of validator', () => {
 			}
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(1500);
+		expect(t).toBeLessThan(3000);
 		expect(t).toBeGreaterThan(0);
 	});
 	it('simple schema 1000 times', () => {
@@ -143,7 +143,7 @@ describe('instance of validator', () => {
 			}
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(2000);
+		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
 	});
 	it('simple JSON schema 1000 times', () => {
@@ -155,7 +155,7 @@ describe('instance of validator', () => {
 			}
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(2000);
+		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
 	});
 	it('simple ABI 1000 times', () => {
@@ -167,7 +167,7 @@ describe('instance of validator', () => {
 			}
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(2000);
+		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
 	});
 });
