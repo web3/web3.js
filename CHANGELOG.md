@@ -1776,3 +1776,21 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Added
+
+#### web3-errors
+
+-   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
+
+### Fixed
+
+#### web3-errors
+
+-   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)
+
+### Changed
+
+#### web3-validator
+
+-   Replace `is-my-json-valid` with `zod` dependency. Related code was changed (#6264)

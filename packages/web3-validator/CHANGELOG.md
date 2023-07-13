@@ -121,3 +121,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Changed
+
+-   Replace `is-my-json-valid` with `zod` dependency. Related code was changed (#6264)
