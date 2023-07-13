@@ -78,8 +78,6 @@ import { EventLog, ContractAbiWithSignature } from './types.js';
  */
 export class LogsSubscription extends Web3Subscription<
 	{
-		error: Error;
-		connected: string;
 		data: EventLog;
 		changed: EventLog & { removed: true };
 	},
