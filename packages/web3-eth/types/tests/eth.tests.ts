@@ -580,19 +580,17 @@ eth.getWork();
 eth.getWork((error: Error, result: string[]) => {});
 
 // $ExpectType Promise<boolean>
-eth.submitWork([
+eth.submitWork(
     '0x0000000000000001',
     '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
     '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000'
-]);
+);
 
 // $ExpectType Promise<boolean>
 eth.submitWork(
-    [
-        '0x0000000000000001',
-        '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-        '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000'
-    ],
+    '0x0000000000000001',
+    '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+    '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000',
     (error: Error, result: boolean) => {}
 );
 

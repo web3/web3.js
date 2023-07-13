@@ -2015,11 +2015,11 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.submitWork([
+    web3.eth.submitWork(
         "0x0000000000000001",
         "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
         "0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000"
-    ])
+    )
     .then(console.log);
     > true
 

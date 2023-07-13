@@ -870,7 +870,7 @@ methods.myMethod.send
 
 .. code-block:: javascript
 
-    myContract.methods.myMethod([param1[, param2[, ...]]]).send(options[, callback])
+    myContract.methods.myMethod(param1, param2, ...).send(options[, callback])
 
 Will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
 
