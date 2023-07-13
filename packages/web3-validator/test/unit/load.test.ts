@@ -23,6 +23,7 @@ const abi = [
 	{ indexed: true, internalType: 'address', name: 'to', type: 'address' },
 	{ indexed: false, internalType: 'uint256', name: 'value', type: 'uint256' },
 ];
+
 const abiJsonSchema = {
 	type: 'array',
 	items: [
@@ -31,11 +32,13 @@ const abiJsonSchema = {
 		{ name: 'value', format: 'uint256' },
 	],
 };
+
 const abiData = [
 	'0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
 	'0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
 	'0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
 ];
+
 const simpleSchema = {
 	type: 'object',
 	required: ['blockHash', 'blockNumber', 'from', 'to', 'data'],
@@ -57,6 +60,7 @@ const simpleSchema = {
 		},
 	},
 };
+
 const simpleData = {
 	blockHash: '0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
 	blockNumber: BigInt(2),
@@ -64,6 +68,7 @@ const simpleData = {
 	to: '0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b',
 	data: '0xafea',
 } as unknown as ValidationSchemaInput;
+
 const createHugeSchema = (
 	schema: JsonSchema,
 	data: Json,
@@ -85,6 +90,7 @@ const createHugeSchema = (
 		data,
 	};
 };
+
 const { schema: hugeSchema, data: hugeData } = createHugeSchema(
 	{ ...simpleSchema },
 	{ ...simpleData } as Json,
@@ -112,6 +118,7 @@ describe('instance of validator', () => {
 		expect(t).toBeLessThan(6000);
 		expect(t).toBeGreaterThan(0);
 	});
+
 	it('huge schema 1000', () => {
 		let t = 0;
 		expect(() => {
@@ -122,6 +129,7 @@ describe('instance of validator', () => {
 		expect(t).toBeLessThan(6000);
 		expect(t).toBeGreaterThan(0);
 	});
+
 	it('simple schema multiple times', () => {
 		let t = 0;
 		expect(() => {
@@ -134,6 +142,7 @@ describe('instance of validator', () => {
 		expect(t).toBeLessThan(3000);
 		expect(t).toBeGreaterThan(0);
 	});
+
 	it('simple schema 1000 times', () => {
 		let t = 0;
 		expect(() => {
@@ -146,6 +155,7 @@ describe('instance of validator', () => {
 		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
 	});
+
 	it('simple JSON schema 1000 times', () => {
 		let t = 0;
 		expect(() => {
@@ -158,6 +168,7 @@ describe('instance of validator', () => {
 		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
 	});
+
 	it('simple ABI 1000 times', () => {
 		let t = 0;
 		expect(() => {
