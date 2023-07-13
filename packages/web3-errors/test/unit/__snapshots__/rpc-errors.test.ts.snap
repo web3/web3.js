@@ -1,0 +1,294 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rpc errors EIP1193ProviderRpcError test constructor with a known code (1000) 1`] = `
+Object {
+  "code": 1000,
+  "innerError": undefined,
+  "message": "The connection successfully completed the purpose for which it was created.",
+  "name": "EIP1193ProviderRpcError",
+}
+`;
+
+exports[`rpc errors EIP1193ProviderRpcError test constructor with no code 1`] = `
+Object {
+  "code": undefined,
+  "innerError": undefined,
+  "message": "",
+  "name": "EIP1193ProviderRpcError",
+}
+`;
+
+exports[`rpc errors EIP1193ProviderRpcError test constructor with un registered code 1`] = `
+Object {
+  "code": 99999,
+  "innerError": undefined,
+  "message": "An Rpc error has occured with a code of 99999",
+  "name": "EIP1193ProviderRpcError",
+}
+`;
+
+exports[`rpc errors InternalError test constructor 1`] = `
+Object {
+  "code": -32603,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Internal error",
+  "name": "InternalError",
+}
+`;
+
+exports[`rpc errors InvalidInputError test constructor 1`] = `
+Object {
+  "code": -32000,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Invalid input",
+  "name": "InvalidInputError",
+}
+`;
+
+exports[`rpc errors InvalidParamsError test constructor 1`] = `
+Object {
+  "code": -32602,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Invalid params",
+  "name": "InvalidParamsError",
+}
+`;
+
+exports[`rpc errors InvalidRequestError test constructor 1`] = `
+Object {
+  "code": -32600,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Invalid request",
+  "name": "InvalidRequestError",
+}
+`;
+
+exports[`rpc errors LimitExceededError test constructor 1`] = `
+Object {
+  "code": -32005,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Limit exceeded",
+  "name": "LimitExceededError",
+}
+`;
+
+exports[`rpc errors MethodNotFoundError test constructor 1`] = `
+Object {
+  "code": -32601,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Method not found",
+  "name": "MethodNotFoundError",
+}
+`;
+
+exports[`rpc errors MethodNotSupported test constructor 1`] = `
+Object {
+  "code": -32004,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Method not supported",
+  "name": "MethodNotSupported",
+}
+`;
+
+exports[`rpc errors ParseError test constructor 1`] = `
+Object {
+  "code": -32700,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Parse error",
+  "name": "ParseError",
+}
+`;
+
+exports[`rpc errors ResourceUnavailableError test constructor 1`] = `
+Object {
+  "code": -32002,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Resource unavailable",
+  "name": "ResourceUnavailableError",
+}
+`;
+
+exports[`rpc errors ResourcesNotFoundError test constructor 1`] = `
+Object {
+  "code": -32001,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Resource not found",
+  "name": "ResourcesNotFoundError",
+}
+`;
+
+exports[`rpc errors TransactionRejectedError test constructor 1`] = `
+Object {
+  "code": -32003,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "Transaction rejected",
+  "name": "TransactionRejectedError",
+}
+`;
+
+exports[`rpc errors VersionNotSupportedError test constructor 1`] = `
+Object {
+  "code": -32006,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "JSON-RPC version not supported",
+  "name": "VersionNotSupportedError",
+}
+`;
+
+exports[`rpc errors rpcErrors.RpcError test constructor 1`] = `
+Object {
+  "code": 123,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "An Rpc error has occured with a code of 123",
+  "name": "RpcError",
+}
+`;
+
+exports[`rpc errors rpcErrors.RpcError test constructor with custom message 1`] = `
+Object {
+  "code": 123,
+  "error": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
+  "id": 1,
+  "innerError": undefined,
+  "jsonRpc": "2.0",
+  "message": "some message",
+  "name": "RpcError",
+}
+`;

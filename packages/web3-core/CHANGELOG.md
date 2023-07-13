@@ -136,4 +136,10 @@ Documentation:
 -   Fixed the issue: Unsubscribe at a Web3Subscription class will still have the id of the subscription at the Web3SubscriptionManager (#6210)
 -   Fixed the issue: A call to the provider is made for every subscription object (#6210)
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
