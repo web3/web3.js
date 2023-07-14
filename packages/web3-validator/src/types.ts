@@ -141,9 +141,12 @@ export type Schema = {
 	readonly eth?: string;
 	items?: Schema | Schema[];
 };
+
+type ValidationError = ZodIssueBase;
+
 export interface Validate {
 	(value: Json): boolean;
-	errors?: ZodIssueBase[];
+	errors?: ValidationError[];
 }
 
 export type JsonSchema = Schema;
