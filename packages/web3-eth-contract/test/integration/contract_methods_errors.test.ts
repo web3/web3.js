@@ -53,7 +53,6 @@ describe('contract errors', () => {
 	describeIf(getSystemTestBackend() === 'geth')('Test EIP-838 Error Codes', () => {
 		it('Unauthorized', async () => {
 			let error: ContractExecutionError | undefined;
-			sendOptions = { ...sendOptions };
 			try {
 				await deployedContract.methods.unauthorize().send(sendOptions);
 
@@ -77,7 +76,6 @@ describe('contract errors', () => {
 		});
 
 		it('should catch Unauthorized error PromiEvent.on("error")', async () => {
-			sendOptions = { ...sendOptions };
 			const expectedThrownError = {
 				name: 'ContractExecutionError',
 				code: ERR_CONTRACT_EXECUTION_REVERTED,
@@ -100,7 +98,6 @@ describe('contract errors', () => {
 
 		it('Error with parameter', async () => {
 			let error: ContractExecutionError | undefined;
-			sendOptions = { ...sendOptions };
 			try {
 				await deployedContract.methods.badRequire().send(sendOptions);
 
@@ -127,8 +124,6 @@ describe('contract errors', () => {
 		});
 
 		it('should catch error with parameter using PromiEvent.on("error")', async () => {
-			sendOptions = { ...sendOptions };
-
 			const expectedThrownError = {
 				name: 'ContractExecutionError',
 				code: ERR_CONTRACT_EXECUTION_REVERTED,

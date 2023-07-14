@@ -478,32 +478,6 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 	return format({ format: 'uint' }, response as Numbers, returnFormat);
 }
 
-// TODO - Investigate whether response is padded as 1.x docs suggest
-/**
- * View additional documentations here: {@link Web3Eth.estimateGas}
- * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
- */
-export async function estimateGas<ReturnFormat extends DataFormat>(
-	web3Context: Web3Context<EthExecutionAPI>,
-	transaction: Transaction,
-	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-	returnFormat: ReturnFormat,
-) {
-	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT);
-
-	const blockNumberFormatted = isBlockTag(blockNumber as string)
-		? (blockNumber as BlockTag)
-		: format({ format: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
-
-	const response = await ethRpcMethods.estimateGas(
-		web3Context.requestManager,
-		transactionFormatted,
-		blockNumberFormatted,
-	);
-
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
-}
-
 /**
  * View additional documentations here: {@link Web3Eth.sendTransaction}
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
@@ -549,23 +523,6 @@ export function sendTransaction<
 						};
 					}
 
-					// check if gas is present
-					if (
-						!options?.ignoreFillingGas &&
-						isNullish(transactionFormatted.gas) &&
-						!isNullish(transactionFormatted.data)
-					) {
-						try {
-							transactionFormatted.gas = await estimateGas(
-								web3Context,
-								transactionFormatted,
-								'latest',
-								ETH_DATA_FORMAT,
-							);
-						} catch (error) {
-							// might error due to a revert or evm error, will be caught  in the revert check
-						}
-					}
 					const detectType2 =
 						transactionFormatted.type === '0x2' ||
 						!isNullish(transactionFormatted.maxFeePerGas) ||
@@ -1005,6 +962,32 @@ export async function call<ReturnFormat extends DataFormat>(
 	);
 
 	return format({ format: 'bytes' }, response as Bytes, returnFormat);
+}
+
+// TODO - Investigate whether response is padded as 1.x docs suggest
+/**
+ * View additional documentations here: {@link Web3Eth.estimateGas}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function estimateGas<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction: Transaction,
+	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+	returnFormat: ReturnFormat,
+) {
+	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT);
+
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
+		? (blockNumber as BlockTag)
+		: format({ format: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
+
+	const response = await ethRpcMethods.estimateGas(
+		web3Context.requestManager,
+		transactionFormatted,
+		blockNumberFormatted,
+	);
+
+	return format({ format: 'uint' }, response as Numbers, returnFormat);
 }
 
 // TODO - Add input formatting to filter

@@ -109,7 +109,9 @@ describe('ContractMethodWrappersPlugin', () => {
 						input: '0xa9059cbb0000000000000000000000004f641def1e7845caab95ac717c80416082430d0d000000000000000000000000000000000000000000000000000000000000002a',
 						from: sender,
 						to: contractAddress,
-						gas: '0x1',
+						gasPrice: expectedGasPrice,
+						maxFeePerGas: undefined,
+						maxPriorityFeePerGas: undefined,
 					}),
 				],
 			});

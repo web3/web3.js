@@ -253,7 +253,9 @@ export const validateGas = (transaction: InternalTransaction) => {
 	const gasPresent = !isNullish(transaction.gas) || !isNullish(transaction.gasLimit);
 	const legacyGasPresent = gasPresent && !isNullish(transaction.gasPrice);
 	const feeMarketGasPresent =
-		!isNullish(transaction.maxPriorityFeePerGas) && !isNullish(transaction.maxFeePerGas);
+		gasPresent &&
+		!isNullish(transaction.maxPriorityFeePerGas) &&
+		!isNullish(transaction.maxFeePerGas);
 
 	if (!legacyGasPresent && !feeMarketGasPresent)
 		throw new MissingGasError({
