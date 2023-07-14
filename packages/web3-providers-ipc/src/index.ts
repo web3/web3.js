@@ -103,7 +103,7 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._socketConnection.connect({ path: this._socketPath });
 	}
 
-	protected _closeSocketConnection(code?: number, data?: string) {
+	protected _closeSocketConnection(code: number, data?: string) {
 		this._socketConnection?.end(() => {
 			this._onDisconnect(code, data);
 		});
