@@ -29,8 +29,7 @@ describe('Web3 Custom Subscriptions', () => {
 			}
 		> {
 			protected _buildSubscriptionParams() {
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				return ['customArgs', this.args] as ['customArgs', any];
+				return ['customArgs', this.args];
 			}
 		}
 

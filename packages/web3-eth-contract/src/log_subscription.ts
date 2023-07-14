@@ -150,10 +150,7 @@ export class LogsSubscription extends Web3Subscription<
 	}
 
 	protected _buildSubscriptionParams() {
-		return ['logs', { address: this.address, topics: this.topics }] as [
-			'logs',
-			{ address?: string; topics?: string[] },
-		];
+		return ['logs', { address: this.address, topics: this.topics }];
 	}
 
 	protected formatSubscriptionResult(data: EventLog) {

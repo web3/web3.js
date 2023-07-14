@@ -50,8 +50,7 @@ export class LogsSubscription extends Web3Subscription<
 	}
 > {
 	protected _buildSubscriptionParams() {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return ['logs', this.args] as ['logs', any];
+		return ['logs', this.args];
 	}
 
 	protected formatSubscriptionResult(data: LogsOutput) {
@@ -74,7 +73,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<{
 }> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
-		return ['newPendingTransactions'] as ['newPendingTransactions'];
+		return ['newPendingTransactions'];
 	}
 
 	protected formatSubscriptionResult(data: string) {
@@ -116,7 +115,7 @@ export class NewHeadsSubscription extends Web3Subscription<{
 }> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
-		return ['newHeads'] as ['newHeads'];
+		return ['newHeads'];
 	}
 
 	protected formatSubscriptionResult(data: BlockHeaderOutput) {
@@ -149,7 +148,7 @@ export class SyncingSubscription extends Web3Subscription<{
 }> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
-		return ['syncing'] as ['syncing'];
+		return ['syncing'];
 	}
 
 	public _processSubscriptionResult(
