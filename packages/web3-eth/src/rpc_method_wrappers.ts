@@ -523,25 +523,6 @@ export function sendTransaction<
 						};
 					}
 
-					const detectType2 =
-						transactionFormatted.type === '0x2' ||
-						!isNullish(transactionFormatted.maxFeePerGas) ||
-						!isNullish(transactionFormatted.maxPriorityFeePerGas);
-					const missingType2Property =
-						isNullish(transactionFormatted.type) &&
-						isNullish(transactionFormatted.maxFeePerGas) &&
-						isNullish(transactionFormatted.maxPriorityFeePerGas);
-					// check if type 2 propery is missing
-					if (!options?.ignoreFillingGas && detectType2 && missingType2Property) {
-						if (!isNullish(transactionFormatted.gasPrice)) {
-							transactionFormatted.maxFeePerGas =
-								transactionFormatted.maxFeePerGas ?? transactionFormatted.gasPrice;
-							transactionFormatted.maxPriorityFeePerGas =
-								transactionFormatted.maxPriorityFeePerGas ??
-								transactionFormatted.gasPrice;
-							delete transactionFormatted.gasPrice;
-						}
-					}
 					try {
 						if (options.checkRevertBeforeSending !== false) {
 							const reason = await getRevertReason(

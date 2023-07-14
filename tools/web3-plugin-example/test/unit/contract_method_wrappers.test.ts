@@ -88,7 +88,6 @@ describe('ContractMethodWrappersPlugin', () => {
 			requestManagerSendSpy.mockResolvedValueOnce(expectedGasPrice);
 			// Mocking block number for trySendTransaction call
 			requestManagerSendSpy.mockResolvedValueOnce('0x1');
-			requestManagerSendSpy.mockResolvedValueOnce('0x1');
 			requestManagerSendSpy.mockResolvedValueOnce(expectedTransactionHash);
 			// Mocking response for getTransactionReceipt for waitForTransactionReceipt
 			requestManagerSendSpy.mockResolvedValueOnce({});
@@ -102,7 +101,7 @@ describe('ContractMethodWrappersPlugin', () => {
 				amount,
 			);
 			// The first call will be to `eth_gasPrice` and the second is to `eth_sendTransaction, the third is `eth_blockNumber`. And the fourth will be to `eth_sendTransaction`:
-			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(4, {
+			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(3, {
 				method: 'eth_sendTransaction',
 				params: [
 					expect.objectContaining({

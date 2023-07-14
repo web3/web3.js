@@ -84,7 +84,7 @@ export abstract class Web3Config
 		// TODO - Check if there is a default Common
 		defaultCommon: undefined,
 		defaultTransactionType: '0x0',
-		defaultMaxPriorityFeePerGas: toHex(2500000000),
+		defaultMaxPriorityFeePerGas: toHex(1000000000),
 		enableExperimentalFeatures: {
 			useSubscriptionWhenCheckingBlockTimeout: false,
 			useRpcCallSpecification: false,

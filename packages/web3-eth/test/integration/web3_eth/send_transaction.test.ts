@@ -25,6 +25,7 @@ import {
 	TransactionWithToLocalWalletIndex,
 	TransactionWithFromAndToLocalWalletIndex,
 	Address,
+	DEFAULT_RETURN_FORMAT,
 } from 'web3-types';
 import { Wallet } from 'web3-eth-accounts';
 import { isHexStrict } from 'web3-validator';
@@ -280,13 +281,29 @@ describe('Web3Eth.sendTransaction', () => {
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject(transaction);
 		});
+
+		it('should send a successful type 0x2 transaction ignoring gasPrice using getBlock', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				type: BigInt(2),
+			};
+			const response = await web3Eth.sendTransaction(transaction, DEFAULT_RETURN_FORMAT, {
+				ignoreGasPricing: true,
+			});
+			expect(response.type).toBe(BigInt(2));
+			expect(response.status).toBe(BigInt(1));
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
 	});
 	it('should autofill a successful type 0x2 transaction with only maxFeePerGas passed', async () => {
 		const transaction: Transaction = {
 			from: tempAcc.address,
 			to: '0x0000000000000000000000000000000000000000',
 			value: BigInt(1),
-			maxFeePerGas: BigInt(2500000000),
+			maxFeePerGas: BigInt(1000000016),
 		};
 		const response = await web3Eth.sendTransaction(transaction);
 		expect(response.type).toBe(BigInt(2));
