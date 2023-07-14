@@ -27,7 +27,7 @@ This will give your plugin access to [requestManager](/api/web3-core/class/Web3C
 import { Web3PluginBase } from 'web3';
 
 export default class CustomRpcMethodsPlugin extends Web3PluginBase {
-	// step 2
+	// step 1
 	// ...
 }
 ```
@@ -38,7 +38,7 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 import { Web3PluginBase } from 'web3';
 
 export default class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods'; // step 3
+	public pluginNamespace = 'customRpcMethods'; // step 2
 }
 ```
 
@@ -51,7 +51,7 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 	public pluginNamespace = 'customRpcMethods';
 
 	public async customRpcMethod() {
-		// step 4
+		// step 3
 		return this.requestManager.send({
 			// plugin has access to web3.js internal features like request manager
 			method: 'custom_rpc_method',
@@ -70,7 +70,6 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 	public pluginNamespace = 'customRpcMethods';
 
 	public async customRpcMethod() {
-		// step 4
 		return this.requestManager.send({
 			// plugin has access to web3.js internal features like request manager
 			method: 'custom_rpc_method',
