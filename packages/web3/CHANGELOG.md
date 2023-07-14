@@ -125,6 +125,10 @@ Documentation:
 
 ## [4.0.3]
 
+## Added
+
+-   Web3 constructor accepts `Web3ContextInitOptions<EthExecutionAPI, CustomRegisteredSubscription>` as alternative to the still supported `undefined`, `string`, and `SupportedProviders<EthExecutionAPI>` (#6262).
+
 ### Fixed
 
 -   Fixed bug #6236 by adding personal type in web3.eth (#6245)

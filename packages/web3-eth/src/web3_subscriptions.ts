@@ -29,10 +29,6 @@ import {
 import { Web3Subscription } from 'web3-core';
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas.js';
 
-type CommonSubscriptionEvents = {
-	error: Error;
-	connected: number;
-};
 /**
  * ## subscribe('logs')
  * Subscribes to incoming logs, filtered by the given options. If a valid numerical fromBlock options property is set, web3.js will retrieve logs beginning from this point, backfilling the response as necessary.
@@ -44,7 +40,7 @@ type CommonSubscriptionEvents = {
  *
  */
 export class LogsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
+	{
 		data: LogsOutput;
 	},
 	{
@@ -54,16 +50,11 @@ export class LogsSubscription extends Web3Subscription<
 	}
 > {
 	protected _buildSubscriptionParams() {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return ['logs', this.args] as ['logs', any];
+		return ['logs', this.args];
 	}
 
-	public _processSubscriptionResult(data: LogsOutput) {
-		this.emit('data', format(logSchema, data, super.returnFormat));
-	}
-
-	public _processSubscriptionError(error: Error) {
-		this.emit('error', error);
+	protected formatSubscriptionResult(data: LogsOutput) {
+		return format(logSchema, data, super.returnFormat);
 	}
 }
 
@@ -77,22 +68,16 @@ export class LogsSubscription extends Web3Subscription<
  * (await web3.eth.subscribe('pendingTransactions')).on('data', console.log);
  * ```
  */
-export class NewPendingTransactionsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: HexString;
-	}
-> {
+export class NewPendingTransactionsSubscription extends Web3Subscription<{
+	data: HexString;
+}> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
-		return ['newPendingTransactions'] as ['newPendingTransactions'];
+		return ['newPendingTransactions'];
 	}
 
-	protected _processSubscriptionResult(data: string) {
-		this.emit('data', format({ format: 'string' }, data, super.returnFormat));
-	}
-
-	protected _processSubscriptionError(error: Error) {
-		this.emit('error', error);
+	protected formatSubscriptionResult(data: string) {
+		return format({ format: 'string' }, data, super.returnFormat);
 	}
 }
 
@@ -125,22 +110,16 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
  * }
  * ```
  */
-export class NewHeadsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: BlockHeaderOutput;
-	}
-> {
+export class NewHeadsSubscription extends Web3Subscription<{
+	data: BlockHeaderOutput;
+}> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
-		return ['newHeads'] as ['newHeads'];
+		return ['newHeads'];
 	}
 
-	protected _processSubscriptionResult(data: BlockHeaderOutput) {
-		this.emit('data', format(blockHeaderSchema, data, super.returnFormat));
-	}
-
-	protected _processSubscriptionError(error: Error) {
-		this.emit('error', error);
+	protected formatSubscriptionResult(data: BlockHeaderOutput) {
+		return format(blockHeaderSchema, data, super.returnFormat);
 	}
 }
 
@@ -163,18 +142,16 @@ export class NewHeadsSubscription extends Web3Subscription<
  *   }
  * ```
  */
-export class SyncingSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: SyncOutput;
-		changed: boolean;
-	}
-> {
+export class SyncingSubscription extends Web3Subscription<{
+	data: SyncOutput;
+	changed: boolean;
+}> {
 	// eslint-disable-next-line
 	protected _buildSubscriptionParams() {
-		return ['syncing'] as ['syncing'];
+		return ['syncing'];
 	}
 
-	protected _processSubscriptionResult(
+	public _processSubscriptionResult(
 		data:
 			| {
 					syncing: boolean;
@@ -195,9 +172,5 @@ export class SyncingSubscription extends Web3Subscription<
 			this.emit('changed', data.syncing);
 			this.emit('data', format(syncSchema, mappedData, super.returnFormat));
 		}
-	}
-
-	protected _processSubscriptionError(error: Error) {
-		this.emit('error', error);
 	}
 }

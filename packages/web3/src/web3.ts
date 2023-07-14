@@ -15,13 +15,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
-import { Web3Context } from 'web3-core';
-import Web3Eth, { registeredSubscriptions } from 'web3-eth';
+import {
+	Web3Context,
+	Web3ContextInitOptions,
+	Web3ContextObject,
+	Web3SubscriptionConstructor,
+	isSupportedProvider,
+} from 'web3-core';
+import { Web3Eth, RegisteredSubscription, registeredSubscriptions } from 'web3-eth';
 import Contract from 'web3-eth-contract';
 import { ENS, registryAddresses } from 'web3-eth-ens';
-import Iban from 'web3-eth-iban';
-import Personal from 'web3-eth-personal';
-import Net from 'web3-net';
+import { Iban } from 'web3-eth-iban';
+import { Personal } from 'web3-eth-personal';
+import { Net } from 'web3-net';
 import * as utils from 'web3-utils';
 import { isNullish } from 'web3-utils';
 import {
@@ -37,7 +43,11 @@ import { initAccountsForContext } from './accounts.js';
 import { Web3EthInterface } from './types.js';
 import { Web3PkgInfo } from './version.js';
 
-export class Web3 extends Web3Context<EthExecutionAPI> {
+export class Web3<
+	CustomRegisteredSubscription extends {
+		[key: string]: Web3SubscriptionConstructor<EthExecutionAPI>;
+	} = RegisteredSubscription,
+> extends Web3Context<EthExecutionAPI, CustomRegisteredSubscription & RegisteredSubscription> {
 	public static version = Web3PkgInfo.version;
 	public static utils = utils;
 	public static modules = {
@@ -52,15 +62,46 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 
 	public eth: Web3EthInterface;
 
-	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
-		super({ provider, registeredSubscriptions });
-
-		if (isNullish(provider) || (typeof provider === 'string' && provider.trim() === '')) {
+	public constructor(
+		providerOrContext?:
+			| string
+			| SupportedProviders<EthExecutionAPI>
+			| Web3ContextInitOptions<EthExecutionAPI, CustomRegisteredSubscription>,
+	) {
+		if (
+			isNullish(providerOrContext) ||
+			(typeof providerOrContext === 'string' && providerOrContext.trim() === '') ||
+			(!isSupportedProvider(providerOrContext as SupportedProviders<EthExecutionAPI>) &&
+				!(providerOrContext as Web3ContextInitOptions).provider)
+		) {
 			console.warn(
 				'NOTE: web3.js is running without provider. You need to pass a provider in order to interact with the network!',
 			);
 		}
 
+		let contextInitOptions: Web3ContextInitOptions<EthExecutionAPI> = {};
+		if (
+			typeof providerOrContext === 'string' ||
+			isSupportedProvider(providerOrContext as SupportedProviders)
+		) {
+			contextInitOptions.provider = providerOrContext as
+				| undefined
+				| string
+				| SupportedProviders;
+		} else if (providerOrContext) {
+			contextInitOptions = providerOrContext as Web3ContextInitOptions;
+		} else {
+			contextInitOptions = {};
+		}
+
+		contextInitOptions.registeredSubscriptions = {
+			// all the Eth standard subscriptions
+			...registeredSubscriptions,
+			// overridden and combined with any custom subscriptions
+			...(contextInitOptions.registeredSubscriptions ?? {}),
+		} as CustomRegisteredSubscription;
+
+		super(contextInitOptions);
 		const accounts = initAccountsForContext(this);
 
 		// Init protected properties
@@ -89,11 +130,20 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 					);
 				}
 				if (isNullish(addressOrOptions)) {
-					super(jsonInterface, options, self.getContextObject());
+					super(jsonInterface, options, self.getContextObject() as Web3ContextObject);
 				} else if (typeof addressOrOptions === 'object') {
-					super(jsonInterface, addressOrOptions, self.getContextObject());
+					super(
+						jsonInterface,
+						addressOrOptions,
+						self.getContextObject() as Web3ContextObject,
+					);
 				} else if (typeof addressOrOptions === 'string') {
-					super(jsonInterface, addressOrOptions, options ?? {}, self.getContextObject());
+					super(
+						jsonInterface,
+						addressOrOptions,
+						options ?? {},
+						self.getContextObject() as Web3ContextObject,
+					);
 				} else {
 					throw new InvalidMethodParamsError();
 				}
