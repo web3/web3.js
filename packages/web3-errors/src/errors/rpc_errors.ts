@@ -33,6 +33,7 @@ import {
 	ERR_RPC_UNAVAILABLE_RESOURCE,
 	ERR_RPC_UNSUPPORTED_METHOD,
 } from '../error_codes.js';
+import { RpcErrorMessages, genericRpcErrorMessageTemplate } from './rpc_error_messages.js';
 
 export class RpcError extends BaseWeb3Error {
 	public code: number;
@@ -40,7 +41,10 @@ export class RpcError extends BaseWeb3Error {
 	public jsonrpc: string;
 	public jsonRpcError: JsonRpcError;
 	public constructor(rpcError: JsonRpcResponseWithError, message?: string) {
-		super(message ?? `An Rpc error has occured with a code of ${rpcError.error.code}`);
+		super(
+			message ??
+				genericRpcErrorMessageTemplate.replace('*code*', rpcError.error.code.toString()),
+		);
 		this.code = rpcError.error.code;
 		this.id = rpcError.id;
 		this.jsonrpc = rpcError.jsonrpc;
@@ -52,87 +56,115 @@ export class RpcError extends BaseWeb3Error {
 	}
 }
 
+export class EIP1193ProviderRpcError extends BaseWeb3Error {
+	public code: number;
+	public data?: unknown;
+
+	public constructor(code: number, data?: unknown) {
+		if (!code) {
+			// this case should ideally not happen
+			super();
+		} else if (RpcErrorMessages[code]?.message) {
+			super(RpcErrorMessages[code].message);
+		} else {
+			// Retrieve the status code object for the given code from the table, by searching through the appropriate range
+			const statusCodeRange = Object.keys(RpcErrorMessages).find(
+				statusCode =>
+					typeof statusCode === 'string' &&
+					code >= parseInt(statusCode.split('-')[0], 10) &&
+					code <= parseInt(statusCode.split('-')[1], 10),
+			);
+			super(
+				RpcErrorMessages[statusCodeRange ?? '']?.message ??
+					genericRpcErrorMessageTemplate.replace('*code*', code?.toString() ?? '""'),
+			);
+		}
+		this.code = code;
+		this.data = data;
+	}
+}
+
 export class ParseError extends RpcError {
 	public code = ERR_RPC_INVALID_JSON;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Parse error');
+		super(rpcError, RpcErrorMessages[ERR_RPC_INVALID_JSON].message);
 	}
 }
 
 export class InvalidRequestError extends RpcError {
 	public code = ERR_RPC_INVALID_REQUEST;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Invalid request');
+		super(rpcError, RpcErrorMessages[ERR_RPC_INVALID_REQUEST].message);
 	}
 }
 
 export class MethodNotFoundError extends RpcError {
 	public code = ERR_RPC_INVALID_METHOD;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Method not found');
+		super(rpcError, RpcErrorMessages[ERR_RPC_INVALID_METHOD].message);
 	}
 }
 
 export class InvalidParamsError extends RpcError {
 	public code = ERR_RPC_INVALID_PARAMS;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Invalid request');
+		super(rpcError, RpcErrorMessages[ERR_RPC_INVALID_PARAMS].message);
 	}
 }
 
 export class InternalError extends RpcError {
 	public code = ERR_RPC_INTERNAL_ERROR;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Internal error');
+		super(rpcError, RpcErrorMessages[ERR_RPC_INTERNAL_ERROR].message);
 	}
 }
 
 export class InvalidInputError extends RpcError {
 	public code = ERR_RPC_INVALID_INPUT;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Invalid input');
+		super(rpcError, RpcErrorMessages[ERR_RPC_INVALID_INPUT].message);
 	}
 }
 
 export class MethodNotSupported extends RpcError {
 	public code = ERR_RPC_UNSUPPORTED_METHOD;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Method not supported');
+		super(rpcError, RpcErrorMessages[ERR_RPC_UNSUPPORTED_METHOD].message);
 	}
 }
 
 export class ResourceUnavailableError extends RpcError {
 	public code = ERR_RPC_UNAVAILABLE_RESOURCE;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Resource unavailable');
+		super(rpcError, RpcErrorMessages[ERR_RPC_UNAVAILABLE_RESOURCE].message);
 	}
 }
 
 export class ResourcesNotFoundError extends RpcError {
 	public code = ERR_RPC_MISSING_RESOURCE;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Resource not found');
+		super(rpcError, RpcErrorMessages[ERR_RPC_MISSING_RESOURCE].message);
 	}
 }
 
 export class VersionNotSupportedError extends RpcError {
 	public code = ERR_RPC_NOT_SUPPORTED;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'JSON-RPC version not supported');
+		super(rpcError, RpcErrorMessages[ERR_RPC_NOT_SUPPORTED].message);
 	}
 }
 
 export class TransactionRejectedError extends RpcError {
 	public code = ERR_RPC_TRANSACTION_REJECTED;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Transaction rejected');
+		super(rpcError, RpcErrorMessages[ERR_RPC_TRANSACTION_REJECTED].message);
 	}
 }
 
 export class LimitExceededError extends RpcError {
 	public code = ERR_RPC_LIMIT_EXCEEDED;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, 'Limit exceeded');
+		super(rpcError, RpcErrorMessages[ERR_RPC_LIMIT_EXCEEDED].message);
 	}
 }
 

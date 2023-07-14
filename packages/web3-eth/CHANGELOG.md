@@ -155,4 +155,10 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

@@ -29,3 +29,4 @@ export * from './errors/utils_errors.js';
 export * from './errors/response_errors.js';
 export * from './errors/core_errors.js';
 export * from './errors/rpc_errors.js';
+export * from './errors/rpc_error_messages.js';
