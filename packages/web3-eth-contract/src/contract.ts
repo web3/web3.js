@@ -105,7 +105,7 @@ import {
 	encodeEventABI,
 	encodeMethodABI,
 } from './encoding.js';
-import { LogsSubscription } from './log_subscription.js';
+import { ContractLogsSubscription } from './contract_log_subscription.js';
 import {
 	ContractEventOptions,
 	NonPayableMethodObject,
@@ -179,9 +179,9 @@ export type ContractMethodSend = Web3PromiEvent<
  * ```
  *
  * @param options - The options used to subscribe for the event
- * @returns - A Promise resolved with {@link LogsSubscription} object
+ * @returns - A Promise resolved with {@link ContractLogsSubscription} object
  */
-export type ContractBoundEvent = (options?: ContractEventOptions) => LogsSubscription;
+export type ContractBoundEvent = (options?: ContractEventOptions) => ContractLogsSubscription;
 
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractEventsInterface<
@@ -204,7 +204,7 @@ export type ContractEventEmitterInterface<Abi extends ContractAbi> = {
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
 const contractSubscriptions = {
-	logs: LogsSubscription,
+	logs: ContractLogsSubscription,
 	newHeads: NewHeadsSubscription,
 	newBlockHeaders: NewHeadsSubscription,
 };
@@ -1414,7 +1414,7 @@ export class Contract<Abi extends ContractAbi>
 				abi,
 				params[0] as EventParameters,
 			);
-			const sub = new LogsSubscription(
+			const sub = new ContractLogsSubscription(
 				{
 					address: this.options.address,
 					topics,
