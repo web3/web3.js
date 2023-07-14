@@ -921,7 +921,7 @@ describe('defaults', () => {
 		});
 		it('defaultMaxPriorityFeePerGas', async () => {
 			// default
-			expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(2500000000));
+			expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(1000000000));
 			// after set
 			web3Eth.setConfig({
 				defaultMaxPriorityFeePerGas: numberToHex(2100000000),

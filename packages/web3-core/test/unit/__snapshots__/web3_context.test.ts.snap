@@ -10,7 +10,7 @@ Object {
     "defaultChain": "mainnet",
     "defaultCommon": undefined,
     "defaultHardfork": "london",
-    "defaultMaxPriorityFeePerGas": "0x9502f900",
+    "defaultMaxPriorityFeePerGas": "0x3b9aca00",
     "defaultNetworkId": undefined,
     "defaultTransactionType": "0x0",
     "enableExperimentalFeatures": Object {
