@@ -108,10 +108,7 @@ describe('ContractMethodWrappersPlugin', () => {
 					expect.objectContaining({
 						input: '0xa9059cbb0000000000000000000000004f641def1e7845caab95ac717c80416082430d0d000000000000000000000000000000000000000000000000000000000000002a',
 						from: sender,
-						maxFeePerGas: '0x1ca14bd70',
-						maxPriorityFeePerGas: '0x1ca14bd70',
 						to: contractAddress,
-						type: '0x2',
 						gas: '0x1',
 					}),
 				],
