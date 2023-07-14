@@ -7,7 +7,7 @@ sidebar_label: Add custom RPC methods
 
 #### Introduction
 
-Web3.js is a popular library for interacting with Ethereum blockchain. It provides a set of APIs to interact with Ethereum nodes via JSON-RPC calls. For adding new JSON-RPC function calls to the library, you can do so using the plugin feature in web3.js 4.x. This allows you to extend the functionality of Web3.js and add support for new JSON-RPC methods.
+Web3.js is a popular library for interacting with the Ethereum blockchain. It provides a set of APIs to interact with Ethereum nodes via JSON-RPC calls. For adding new JSON-RPC function calls to the library, you can do so using the plugin feature in web3.js 4.x. This allows you to extend the functionality of Web3.js and add support for new JSON-RPC methods.
 
 :::caution
 In Web3.js 1.x, `web3.extend()` function could be used to add new JSON-RPC methods. However, this function is not available in Web3.js 4.x. Instead, the plugin feature can be used to achieve the feature of extending web3 functionality.
