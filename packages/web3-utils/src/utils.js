@@ -25,6 +25,7 @@ var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
 var ethereumjsUtil = require('@ethereumjs/util');
 var ethereumBloomFilters = require('ethereum-bloom-filters');
+var {keccak256} = require('ethereum-cryptography/keccak.js');
 
 /**
  * Returns true if object is BN, otherwise false
@@ -500,7 +501,7 @@ var sha3 = function (value) {
         value = Buffer.from(value, 'utf-8');
     }
 
-    var returnValue = ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(value));
+    var returnValue = ethereumjsUtil.bufferToHex(keccak256(value));
 
     if(returnValue === SHA3_NULL_S) {
         return null;
@@ -509,7 +510,7 @@ var sha3 = function (value) {
     }
 };
 // expose the under the hood keccak256
-sha3._Hash = ethereumjsUtil.keccak256;
+sha3._Hash = keccak256;
 
 /**
  * @method sha3Raw

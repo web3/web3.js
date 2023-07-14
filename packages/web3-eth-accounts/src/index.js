@@ -465,7 +465,7 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(ethMessage));
+    return ethereumjsUtil.bufferToHex(utils.keccak256(ethMessage));
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
