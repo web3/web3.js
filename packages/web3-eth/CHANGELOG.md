@@ -156,3 +156,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Type 2 transactions will be detected and auto-filled by default unless options.ignoreFillGas is true (6215)

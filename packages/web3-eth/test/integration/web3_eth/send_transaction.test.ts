@@ -170,6 +170,19 @@ describe('Web3Eth.sendTransaction', () => {
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
 	});
+	it('should send a transaction with data', async () => {
+		const transaction: Transaction = {
+			from: tempAcc.address,
+			to: '0x0000000000000000000000000000000000000000',
+			data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
+			value: BigInt(0),
+		};
+		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.status).toBe(BigInt(1));
+
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject(transaction);
+	});
 
 	describe('Deploy and interact with contract', () => {
 		let greeterContractAddress: string;
@@ -268,6 +281,32 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(minedTransactionData).toMatchObject(transaction);
 		});
 	});
+	it('should autofill a successful type 0x2 transaction with only maxFeePerGas passed', async () => {
+		const transaction: Transaction = {
+			from: tempAcc.address,
+			to: '0x0000000000000000000000000000000000000000',
+			value: BigInt(1),
+		};
+		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.type).toBe(BigInt(2));
+		expect(response.status).toBe(BigInt(1));
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject(transaction);
+	});
+
+	it('should autofill a successful type 0x2 transaction with only maxPriorityFeePerGas passed', async () => {
+		const transaction: Transaction = {
+			from: tempAcc.address,
+			to: '0x0000000000000000000000000000000000000000',
+			value: BigInt(1),
+			maxPriorityFeePerGas: BigInt(100),
+		};
+		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.type).toBe(BigInt(2));
+		expect(response.status).toBe(BigInt(1));
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject(transaction);
+	});
 
 	describe('Transaction PromiEvents', () => {
 		let transaction: Transaction;
@@ -323,7 +362,7 @@ describe('Web3Eth.sendTransaction', () => {
 				expect(typeof data.gasUsed).toBe('bigint');
 				expect(typeof data.transactionIndex).toBe('bigint');
 				expect(data.status).toBe(BigInt(1));
-				expect(data.type).toBe(BigInt(2));
+				expect(data.type).toBe(BigInt(0));
 			});
 			expect.assertions(8);
 		});
@@ -409,8 +448,6 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
-				gasPrice: 2000000000,
-				gas: 23605,
 			};
 
 			const expectedThrownError = {
@@ -437,8 +474,6 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
-				gasPrice: 2000000000,
-				gas: 23605,
 			};
 
 			web3Eth.handleRevert = true;
@@ -467,8 +502,6 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0x3ebf4d9c',
-				gasPrice: 2000000000,
-				gas: 23605,
 			};
 
 			web3Eth.handleRevert = true;
@@ -499,8 +532,6 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0x819f48fe',
-				gasPrice: 2000000000,
-				gas: 23605,
 			};
 
 			web3Eth.handleRevert = true;
@@ -535,8 +566,6 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
 				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
-				gasPrice: 2000000000,
-				gas: 23605,
 			};
 
 			web3Eth.handleRevert = false;
