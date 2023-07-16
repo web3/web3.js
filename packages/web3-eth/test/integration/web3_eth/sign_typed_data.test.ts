@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { getEncodedEip712Message } from 'web3-eth-abi';
 import { ecrecover, toUint8Array } from 'web3-eth-accounts';
-import { hexToNumber, keccak256 } from 'web3-utils';
+import { bytesToHex, hexToNumber, keccak256 } from 'web3-utils';
 
 import Web3Eth from '../../../src';
 import {
@@ -112,13 +112,11 @@ describe('Web3Eth.signTypedData', () => {
 			const r = toUint8Array(signature.slice(0, 66));
 			const s = toUint8Array(`0x${signature.slice(66, 130)}`);
 			const v = BigInt(hexToNumber(`0x${signature.slice(130, 132)}`));
-			const recoveredPublicKey = Buffer.from(
+			const recoveredPublicKey = bytesToHex(
 				ecrecover(toUint8Array(encodedTypedDataHash), v, r, s),
-			).toString('hex');
+			);
 
-			const recoveredAddress = `0x${keccak256(Buffer.from(recoveredPublicKey, 'hex')).slice(
-				-40,
-			)}`;
+			const recoveredAddress = `0x${keccak256(bytesToHex(recoveredPublicKey)).slice(-40)}`;
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(recoveredAddress).toBe(tempAcc.address);
 		},
