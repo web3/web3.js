@@ -582,7 +582,7 @@ export async function signTypedData(
 	address: Address,
 	typedData: Eip712TypedData,
 	useLegacy = false,
-) {
+): Promise<string> {
 	// TODO Add validation for typedData
 	validator.validate(['address'], [address]);
 
