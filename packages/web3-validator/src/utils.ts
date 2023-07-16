@@ -20,7 +20,6 @@ import { VALID_ETH_BASE_TYPES } from './constants.js';
 import {
 	FullValidationSchema,
 	JsonSchema,
-	Schema,
 	ShortValidationSchema,
 	ValidationSchemaInput,
 	ValidInputTypes,
@@ -78,7 +77,7 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 
 const convertEthType = (
 	type: string,
-	parentSchema: Schema = {},
+	parentSchema: JsonSchema = {},
 ): { format?: string; required?: boolean } => {
 	const typePropertyPresent = Object.keys(parentSchema).includes('type');
 
@@ -124,7 +123,7 @@ const convertEthType = (
 export const abiSchemaToJsonSchema = (
 	abis: ShortValidationSchema | FullValidationSchema,
 	level = '/0',
-) => {
+): JsonSchema => {
 	const schema: JsonSchema = {
 		type: 'array',
 		items: [],
@@ -174,7 +173,7 @@ export const abiSchemaToJsonSchema = (
 		const { baseType, isArray, arraySizes } = parseBaseType(abiType);
 
 		let childSchema: JsonSchema;
-		let lastSchema = schema;
+		let lastSchema: JsonSchema = schema;
 		for (let i = arraySizes.length - 1; i > 0; i -= 1) {
 			childSchema = {
 				type: 'array',
@@ -230,7 +229,7 @@ export const abiSchemaToJsonSchema = (
 			(lastSchema.items as JsonSchema[]).push(item);
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
-			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
+			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) } as JsonSchema);
 		} else {
 			// Nested object
 			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({

@@ -125,3 +125,8 @@ Documentation:
 ### Changed
 
 -   Replace `is-my-json-valid` with `zod` dependency. Related code was changed (#6264)
+-   Types `ValidationError` and `JsonSchema` were changed
+
+### Removed
+
+-   Types RawValidationError was removed

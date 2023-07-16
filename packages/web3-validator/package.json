@@ -46,6 +46,7 @@
 	},
 	"dependencies": {
 		"ethereum-cryptography": "^2.0.0",
+		"json-schema": "^0.4.0",
 		"util": "^0.12.5",
 		"web3-errors": "^1.0.2",
 		"web3-types": "^1.0.2",
