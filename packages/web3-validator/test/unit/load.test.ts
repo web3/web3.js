@@ -92,13 +92,13 @@ const createHugeSchema = (
 };
 
 const { schema: hugeSchema, data: hugeData } = createHugeSchema(
-	{ ...simpleSchema },
+	{ ...simpleSchema } as JsonSchema,
 	{ ...simpleData } as Json,
 	500,
 );
 
 const { schema: hugeSchema1000, data: hugeData1000 } = createHugeSchema(
-	{ ...simpleSchema },
+	{ ...simpleSchema } as JsonSchema,
 	{ ...simpleData } as Json,
 	1000,
 );

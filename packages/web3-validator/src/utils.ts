@@ -123,7 +123,7 @@ const convertEthType = (
 export const abiSchemaToJsonSchema = (
 	abis: ShortValidationSchema | FullValidationSchema,
 	level = '/0',
-): JsonSchema => {
+) => {
 	const schema: JsonSchema = {
 		type: 'array',
 		items: [],
@@ -173,7 +173,7 @@ export const abiSchemaToJsonSchema = (
 		const { baseType, isArray, arraySizes } = parseBaseType(abiType);
 
 		let childSchema: JsonSchema;
-		let lastSchema: JsonSchema = schema;
+		let lastSchema = schema;
 		for (let i = arraySizes.length - 1; i > 0; i -= 1) {
 			childSchema = {
 				type: 'array',
@@ -229,7 +229,7 @@ export const abiSchemaToJsonSchema = (
 			(lastSchema.items as JsonSchema[]).push(item);
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
-			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) } as JsonSchema);
+			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
 		} else {
 			// Nested object
 			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({

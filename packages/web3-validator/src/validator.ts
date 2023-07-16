@@ -27,7 +27,7 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 	if ((!schema?.type || schema?.type === 'object') && schema?.properties) {
 		const obj: { [key: string]: ZodType } = {};
 		for (const name of Object.keys(schema.properties)) {
-			const zItem = convertToZod(schema.properties[name] as JsonSchema);
+			const zItem = convertToZod(schema.properties[name]);
 			if (zItem) {
 				obj[name] = zItem;
 			}
@@ -46,7 +46,7 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 		if (Array.isArray(schema.items) && schema.items.length > 0) {
 			const arr: Partial<[ZodTypeAny, ...ZodTypeAny[]]> = [];
 			for (const item of schema.items) {
-				const zItem = convertToZod(item as JsonSchema);
+				const zItem = convertToZod(item);
 				if (zItem) {
 					arr.push(zItem);
 				}
@@ -58,7 +58,7 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 
 	if (schema.oneOf && Array.isArray(schema.oneOf)) {
 		return z.union(
-			schema.oneOf.map(oneOfSchema => convertToZod(oneOfSchema as JsonSchema)) as [
+			schema.oneOf.map(oneOfSchema => convertToZod(oneOfSchema)) as [
 				ZodTypeAny,
 				ZodTypeAny,
 				...ZodTypeAny[],
