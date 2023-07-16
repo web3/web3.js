@@ -312,7 +312,7 @@ export abstract class SocketProvider<
 		this._eventEmitter.removeListener(type, listener);
 	}
 
-	protected _onDisconnect(code?: number, data?: string) {
+	protected _onDisconnect(code: number, data?: string) {
 		this._connectionStatus = 'disconnected';
 		super._onDisconnect(code, data);
 	}

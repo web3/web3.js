@@ -124,4 +124,18 @@ Documentation:
 
 -   Dependencies updated
 
+## [1.0.2]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
+
+### Added
+
+-   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
+
+### Fixed
+
+-   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)

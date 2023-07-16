@@ -24,6 +24,7 @@ import {
 	Web3BaseProvider,
 } from 'web3-types';
 import { EventEmitter } from 'events';
+import { EIP1193ProviderRpcError } from 'web3-errors';
 import { toPayload } from './json_rpc.js';
 
 /**
@@ -104,11 +105,8 @@ export abstract class Eip1193Provider<
 	}
 
 	// todo this must be ProvideRpcError with a message too
-	protected _onDisconnect(code?: number, data?: unknown) {
-		this._eventEmitter.emit('disconnect', {
-			code,
-			data,
-		});
+	protected _onDisconnect(code: number, data?: unknown) {
+		this._eventEmitter.emit('disconnect', new EIP1193ProviderRpcError(code, data));
 	}
 
 	private _onAccountsChanged() {

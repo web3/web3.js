@@ -1697,13 +1697,82 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.0.3]
 
+### Fixed
+
+#### web3
+
+-   Fixed bug #6236 by adding personal type in web3.eth (#6245)
+
+#### web3-rpc-methods
+
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
+
+#### web3-types
+
+-   type `Filter` includes `blockHash` (#6206)
 
 #### web3-utils
 
 -   BigInts pass validation within the method `numberToHex` (#6206)
 
-#### web3-rpc-methods
+### Changed
 
--   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
+#### web3-core
+
+-   Dependencies updated
+
+#### web3-errors
+
+-   Dependencies updated
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-eth-abi
+
+-   Dependencies updated
+
+#### web3-eth-accounts
+
+-   Dependencies updated
+
+#### web3-eth-contract
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
+#### web3-providers-http
+
+-   Dependencies updated
+
+#### web3-providers-ipc
+
+-   Dependencies updated
+
+#### web3-providers-ws
+
+-   Dependencies updated
+
+#### web3-validator
+
+-   Dependencies updated
+
+## [Unreleased]
