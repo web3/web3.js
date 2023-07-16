@@ -129,8 +129,7 @@ Documentation:
 
 ### Removed
 
--   Types RawValidationError was removed (#6264)
--   Methods `getSchema`, `addSchema`, `getOrCreateValidator`, `getKey` was removed from `Validator` class
+-   Type `RawValidationError` was removed (#6264)
 
 ### Added
 
