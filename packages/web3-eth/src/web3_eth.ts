@@ -52,7 +52,7 @@ import {
 	SyncingSubscription,
 } from './web3_subscriptions.js';
 
-type RegisteredSubscription = {
+export type RegisteredSubscription = {
 	logs: typeof LogsSubscription;
 	newPendingTransactions: typeof NewPendingTransactionsSubscription;
 	pendingTransactions: typeof NewPendingTransactionsSubscription;

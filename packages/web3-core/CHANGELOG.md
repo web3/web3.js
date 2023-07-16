@@ -143,3 +143,14 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Changed
+
+-   No need to pass `CommonSubscriptionEvents &` at every child class of `Web3Subscription` (#6262)
+-   Implementation of `_processSubscriptionResult` and `_processSubscriptionError` has been written in the base class `Web3Subscription` and maid `public`. (#6262)
+-   A new optional protected method `formatSubscriptionResult` could be used to customize data formatting instead of re-implementing `_processSubscriptionResult`. (#6262)
+-   No more needed to pass `CommonSubscriptionEvents & ` for the first generic parameter of `Web3Subscription` when inheriting from it. (#6262)
+
+### Fixed
+
+-   Fixed the issue: "Version 4.x does not fire connected event for subscriptions. #6252". (#6262)
