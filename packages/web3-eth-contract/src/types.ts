@@ -37,7 +37,7 @@ import {
 	Uint,
 } from 'web3-types';
 // eslint-disable-next-line import/no-cycle
-import { ContractLogsSubscription } from './contract_log_subscription.js';
+import { LogsSubscription } from './log_subscription.js';
 
 export type NonPayableTxOptions = NonPayableCallOptions;
 export type PayableTxOptions = PayableCallOptions;
@@ -525,7 +525,7 @@ export type Web3ContractContext = Partial<
 	Web3ContextInitOptions<
 		EthExecutionAPI,
 		{
-			logs: typeof ContractLogsSubscription;
+			logs: typeof LogsSubscription;
 			newHeads: typeof NewHeadsSubscription;
 			newBlockHeaders: typeof NewHeadsSubscription;
 		}

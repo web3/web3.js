@@ -87,7 +87,7 @@ import {
 } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants.js';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding.js';
-import { ContractLogsSubscription } from './contract_log_subscription.js';
+import { LogsSubscription } from './log_subscription.js';
 import {
 	ContractAbiWithSignature,
 	ContractEventOptions,
@@ -157,9 +157,9 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
  * ```
  *
  * @param options - The options used to subscribe for the event
- * @returns - A Promise resolved with {@link ContractLogsSubscription} object
+ * @returns - A Promise resolved with {@link LogsSubscription} object
  */
-export type ContractBoundEvent = (options?: ContractEventOptions) => ContractLogsSubscription;
+export type ContractBoundEvent = (options?: ContractEventOptions) => LogsSubscription;
 
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractEventsInterface<
@@ -182,7 +182,7 @@ export type ContractEventEmitterInterface<Abi extends ContractAbi> = {
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
 const contractSubscriptions = {
-	logs: ContractLogsSubscription,
+	logs: LogsSubscription,
 	newHeads: NewHeadsSubscription,
 	newBlockHeaders: NewHeadsSubscription,
 };
@@ -1139,7 +1139,7 @@ export class Contract<Abi extends ContractAbi>
 				abi,
 				params[0] as EventParameters,
 			);
-			const sub = new ContractLogsSubscription(
+			const sub = new LogsSubscription(
 				{
 					address: this.options.address,
 					topics,

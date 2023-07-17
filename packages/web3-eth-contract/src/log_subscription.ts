@@ -23,9 +23,9 @@ import { decodeEventABI } from './encoding.js';
 import { EventLog, ContractAbiWithSignature } from './types.js';
 
 /**
- * ContractLogsSubscription to be used to subscribe to events logs.
+ * LogSubscription to be used to subscribe to events logs.
  *
- * Following events are supported and can be accessed with either {@link ContractLogsSubscription.once} or ${@link ContractLogsSubscription.on} methods.
+ * Following events are supported and can be accessed with either {@link LogsSubscription.once} or ${@link LogsSubscription.on} methods.
  *
  * - **connected**: Emitted when the subscription is connected.
  * - **data**: Fires on each incoming event with the event object as argument.
@@ -76,8 +76,7 @@ import { EventLog, ContractAbiWithSignature } from './types.js';
  * }
  * ```
  */
-
-export class ContractLogsSubscription extends Web3Subscription<
+export class LogsSubscription extends Web3Subscription<
 	{
 		data: EventLog;
 		changed: EventLog & { removed: true };
