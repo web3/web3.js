@@ -24,12 +24,12 @@ jobs:
             TEST: "build_and_lint"
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v3
               with:
                   node-version: 18
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
 
-            - uses: actions/cache@v2
+            - uses: actions/cache@v3
               id: cache-deps
               with:
                   path: |
@@ -49,13 +49,13 @@ jobs:
         env:
             TEST: "unit"
         steps:
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
 
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
 
-            - uses: actions/cache@v2
+            - uses: actions/cache@v3
               id: cache-deps
               with:
                   path: |
@@ -84,13 +84,13 @@ jobs:
             TEST: ${{ matrix.testCmd }}
             INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
         steps:
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v3
               with:
                   node-version: 18
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - uses: browser-actions/setup-firefox@latest
               if: matrix.testCmd == 'e2e_browsers'
-            - uses: actions/cache@v2
+            - uses: actions/cache@v3
               id: cache-deps
               if: env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers'
               with:
@@ -116,10 +116,10 @@ jobs:
             INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
             INFURA_WSS: ${{ secrets.INFURA_WSS }}
         steps:
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v3
               with:
                   node-version: 18
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - run: bash ./scripts/ci.sh
     eth2:
         runs-on: ubuntu-latest
@@ -129,13 +129,13 @@ jobs:
         env:
             TEST: "eth2"
         steps:
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
 
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
 
-            - uses: actions/cache@v2
+            - uses: actions/cache@v3
               id: cache-deps
               with:
                   path: |
