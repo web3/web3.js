@@ -46,10 +46,10 @@
 	},
 	"dependencies": {
 		"ethereum-cryptography": "^2.0.0",
-		"is-my-json-valid": "^2.20.6",
 		"util": "^0.12.5",
 		"web3-errors": "^1.0.2",
-		"web3-types": "^1.0.2"
+		"web3-types": "^1.0.2",
+		"zod": "^3.21.4"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",

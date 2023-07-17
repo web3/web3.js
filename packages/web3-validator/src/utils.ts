@@ -20,7 +20,6 @@ import { VALID_ETH_BASE_TYPES } from './constants.js';
 import {
 	FullValidationSchema,
 	JsonSchema,
-	Schema,
 	ShortValidationSchema,
 	ValidationSchemaInput,
 	ValidInputTypes,
@@ -78,7 +77,7 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 
 const convertEthType = (
 	type: string,
-	parentSchema: Schema = {},
+	parentSchema: JsonSchema = {},
 ): { format?: string; required?: boolean } => {
 	const typePropertyPresent = Object.keys(parentSchema).includes('type');
 

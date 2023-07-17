@@ -17,8 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Filter } from 'web3-types';
 import { ValidInputTypes } from './types.js';
 import { isAddress } from './validation/address.js';
-import { isBlockNumber,isBlockNumberOrTag,
-	isBlockTag, } from './validation/block.js';
+import { isBlockNumber, isBlockNumberOrTag, isBlockTag } from './validation/block.js';
 import { isBloom } from './validation/bloom.js';
 import { isBoolean } from './validation/boolean.js';
 import { isBytes } from './validation/bytes.js';
@@ -52,5 +51,6 @@ for (let size = 1; size <= 32; size += 1) {
 	formats[`bytes${size}`] = data =>
 		isBytes(data as ValidInputTypes | Uint8Array | number[], { size });
 }
+formats.bytes256 = formats.bytes;
 
 export default formats;

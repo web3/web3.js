@@ -131,29 +131,7 @@ describe('rpc with block', () => {
 				b.totalDifficulty = '0x0';
 			}
 
-			// just fix tests for oneOf validation
-			// @TODO: when use schemasafe remove this fix
-			const schema = JSON.parse(JSON.stringify(blockSchema));
-			if (
-				b.transactions &&
-				Array.isArray(b.transactions) &&
-				typeof b.transactions[0] === 'object'
-			) {
-				// eslint-disable-next-line prefer-destructuring
-				schema.properties.transactions = schema.properties.transactions.oneOf[0];
-				// @ts-expect-error add leading zeros remove when fixes https://github.com/web3/web3.js/issues/6060
-				b.transactions[0].s = `0x${`000000000000000${b?.transactions[0]?.s.slice(2)}`.slice(
-					-64,
-				)}`;
-				// @ts-expect-error add leading zeros remove when fixes https://github.com/web3/web3.js/issues/6060
-				b.transactions[0].r = `0x${`000000000000000${b?.transactions[0]?.r.slice(2)}`.slice(
-					-64,
-				)}`;
-			} else {
-				// eslint-disable-next-line prefer-destructuring
-				schema.properties.transactions = schema.properties.transactions.oneOf[1];
-			}
-			expect(validator.validateJSONSchema(schema, b)).toBeUndefined();
+			expect(validator.validateJSONSchema(blockSchema, b)).toBeUndefined();
 			if (hydrated && b.transactions?.length > 0) {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(b.transactions).toBeInstanceOf(Array<Transaction>);
