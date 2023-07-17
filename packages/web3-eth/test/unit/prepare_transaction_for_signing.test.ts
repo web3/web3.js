@@ -51,9 +51,9 @@ describe('prepareTransactionForSigning', () => {
 				expectedR,
 				expectedS,
 			) => {
-				// @ts-expect-error - Mocked implementation doesn't have correct method signature
 				// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
 				jest.spyOn(ethRpcMethods, 'estimateGas').mockImplementation(
+					// @ts-expect-error - Mocked implementation doesn't have correct method signaturea
 					() => expectedTransaction.gas,
 				);
 				// @ts-expect-error - Mocked implementation doesn't have correct method signature
