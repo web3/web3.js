@@ -88,6 +88,10 @@ declare module 'web3' {
 }
 ```
 
+:::info
+After the plugin is ready, it is recommended to publish it on the NPM registry.
+:::
+
 #### Using Web3 Custom PRC Plugin (with web3 instance)
 
 5. First add plugin in your plugin consumer project's `package.json`, create web3 and plugin instances, and after that use `.registerPlugin` method with some web3.js module (in following example its registered with main web3).
