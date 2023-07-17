@@ -47,7 +47,7 @@ import {
 import { bytesToHex, format } from 'web3-utils';
 import { NUMBER_DATA_FORMAT } from '../constants.js';
 // eslint-disable-next-line import/no-cycle
-import { getChainId, getTransactionCount } from '../rpc_method_wrappers.js';
+import { getChainId, getTransactionCount, estimateGas } from '../rpc_method_wrappers.js';
 import { detectTransactionType } from './detect_transaction_type.js';
 import { transactionSchema } from '../schemas.js';
 import { InternalTransaction } from '../types.js';
@@ -129,6 +129,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Uint8Array;
 	fillGasPrice?: boolean;
+	fillGas?: boolean;
 }): Promise<ReturnType> {
 	let populatedTransaction = format(
 		transactionSchema,
@@ -235,7 +236,21 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 				ETH_DATA_FORMAT,
 			)),
 		};
-
+	if (
+		(isNullish(populatedTransaction.gas) || isNullish(populatedTransaction.gasLimit)) &&
+		options.fillGas
+	) {
+		const fillGas = await estimateGas(
+			options.web3Context,
+			populatedTransaction,
+			'latest',
+			ETH_DATA_FORMAT,
+		);
+		populatedTransaction = {
+			...populatedTransaction,
+			gas: format({ format: 'uint' }, fillGas as Numbers, ETH_DATA_FORMAT),
+		};
+	}
 	return populatedTransaction as ReturnType;
 }
 
@@ -245,6 +260,7 @@ export const transactionBuilder = async <ReturnType = Transaction>(
 		web3Context: Web3Context<EthExecutionAPI>;
 		privateKey?: HexString | Uint8Array;
 		fillGasPrice?: boolean;
+		fillGas?: boolean;
 	},
 	// eslint-disable-next-line @typescript-eslint/require-await
 ) =>

@@ -282,17 +282,15 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(minedTransactionData).toMatchObject(transaction);
 		});
 
-		it('should send a successful type 0x2 transaction ignoring gasPrice using getBlock', async () => {
+		it('should send a successful type 0x0 transaction with data', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
+				data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
 				value: BigInt(1),
-				type: BigInt(2),
 			};
-			const response = await web3Eth.sendTransaction(transaction, DEFAULT_RETURN_FORMAT, {
-				ignoreGasPricing: true,
-			});
-			expect(response.type).toBe(BigInt(2));
+			const response = await web3Eth.sendTransaction(transaction, DEFAULT_RETURN_FORMAT);
+			expect(response.type).toBe(BigInt(0));
 			expect(response.status).toBe(BigInt(1));
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject(transaction);
