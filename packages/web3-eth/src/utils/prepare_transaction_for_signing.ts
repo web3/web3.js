@@ -124,7 +124,7 @@ export const prepareTransactionForSigning = async (
 	transaction: Transaction,
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Uint8Array,
-	fillGasPrice = true,
+	fillGasPrice = false,
 	fillGas = true,
 ) => {
 	const populatedTransaction = (await transactionBuilder({

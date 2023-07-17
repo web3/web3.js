@@ -53,6 +53,10 @@ describe('prepareTransactionForSigning', () => {
 			) => {
 				// @ts-expect-error - Mocked implementation doesn't have correct method signature
 				// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
+				jest.spyOn(ethRpcMethods, 'estimateGas').mockImplementation(
+					() => expectedTransaction.gas,
+				);
+				// @ts-expect-error - Mocked implementation doesn't have correct method signature
 				jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockImplementation(() => mockBlock);
 
 				const ethereumjsTx = await prepareTransactionForSigning(

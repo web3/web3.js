@@ -159,4 +159,4 @@ Documentation:
 
 ### Fixed
 
--   Type 2 transactions will be detected and auto-filled by default unless options.ignoreFillGas is true (6215)
+-   sendTransaction and signTransaction will have gas filled by default unless transaction builder `options.fillGas` is false. (6215)

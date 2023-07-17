@@ -68,7 +68,6 @@ describe('signTransaction', () => {
 							blockNum += 10;
 							response.result = `0x${blockNum.toString(16)}`;
 							break;
-
 						case 'eth_getTransactionReceipt':
 							response.result = {
 								blockHash:
