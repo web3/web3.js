@@ -28,7 +28,7 @@ To create a custom subscription, start by extending the `Web3Subscription` class
 
 For example:
 
-```js
+```ts
 class MyCustomSubscription extends Web3Subscription<
 	{
 		// here provide the type of the `data` that will be emitted by the node
@@ -47,7 +47,7 @@ class MyCustomSubscription extends Web3Subscription<
 
 You need to specify the exact data that will be passed to the provide. You do this by overriding `_buildSubscriptionParams` in your class. It could be something as follow:
 
-```js
+```ts
     protected _buildSubscriptionParams() {
     // the `someCustomSubscription` below is the name of the subscription provided by the node your are connected to.
         return ['someCustomSubscription', this.args];
@@ -56,7 +56,7 @@ You need to specify the exact data that will be passed to the provide. You do th
 
 With the implementation above, the call that will be made to the provider will be as follow:
 
-```js
+```ts
 {
   id: "[GUID-STRING]", // something like: '3f839900-afdd-4553-bca7-b4e2b835c687'
   jsonrpc: '2.0',
@@ -79,7 +79,7 @@ You may need to do some processing in the constructor. Or you may need to do som
 You can optionally write a constructor, incase you need to do some additional initialization or processing.
 And here is an example constructor implementation:
 
-```js
+```ts
 constructor(
   args: {customArg: string},
   options: {
@@ -101,7 +101,7 @@ You can access the subscription manager via `this.subscriptionManager`.
 
 In case you need to formate the data received from the node before it will be emitted, you just need to override the protected method `formatSubscriptionResult` in your class. It will be something like the following. However, the data type could be whatever provided by the node and it is what you should already provided at the first generic type when you extended `Web3Subscription`:
 
-```js
+```ts
 protected formatSubscriptionResult(data: string) {
   const formattedData = formate(data)
   return formattedData;
@@ -112,7 +112,7 @@ protected formatSubscriptionResult(data: string) {
 
 To subscribe, you need to pass the custom subscriptions to the `Web3`. And then you can call the `subscribe` method for your custom subscription, as in the following sample:
 
-```js
+```ts
 const CustomSubscriptions = {
 	// the key (`custom`) is what you chose to use when you call `web3.subscriptionManager.subscribe`.
 	// the value (`CustomSubscription`) is your class name.
@@ -141,7 +141,7 @@ sub.on('data', result => {
 
 To unsubscribe:
 
-```js
+```ts
 // this will send `eth_unsubscribe` to stop the subscription.
 await sub.unsubscribe();
 ```
@@ -150,7 +150,7 @@ await sub.unsubscribe();
 
 Here is the full example for a custom subscription implementation:
 
-```js
+```ts
 class MyCustomSubscription extends Web3Subscription {
 
   protected _buildSubscriptionParams() {
