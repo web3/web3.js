@@ -38,7 +38,7 @@ However, the approach to subscribing to Provider events remains the same, utiliz
 
 ### Not Available
 
--   [web3.extend](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) function is not available in web3.js 4.x, instead of this for extending web3 functionality more powerful plugin feature is available. Follow [Add custom RPC methods guide](/guides/advanced/support_additional_rpc_methods/) for this new feature.
+- The [`web3.extend`](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) function is not available in web3.js v4. Instead, for extending web3 functionality, a more powerful plugin feature is available. Follow the [Add custom RPC methods guide](/guides/advanced/support_additional_rpc_methods/) for this new feature.
 
 -   [web3.bzz](https://web3js.readthedocs.io/en/v1.7.3/web3-bzz.html) Package for interacting with Swarm is not implemented
 -   [web3.shh](https://web3js.readthedocs.io/en/v1.7.3/web3-shh.html) Package for interacting with Whisper is not implemented
