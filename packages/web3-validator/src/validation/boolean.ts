@@ -35,9 +35,6 @@ export const isBoolean = (value: ValidInputTypes) => {
 		return value === '0x1' || value === '0x0';
 	}
 
-	if (typeof value === 'number') {
-		return value === 1 || value === 0;
-	}
-
-	return false;
+	// type === number
+	return value === 1 || value === 0;
 };
