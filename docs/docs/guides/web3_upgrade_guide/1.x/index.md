@@ -36,9 +36,10 @@ For example, the approach to subscribing-to and listening-for blockchain events 
 
 However, the approach to subscribing to Provider events remains the same, utilizing callbacks as explained in the [Providers Events Listening guide](../../web3_providers_guide/events_listening.md). It is important to note that Providers have undergone some breaking changes, including the renaming of the `on('close', ...)` to `on('disconnect', ...)`.
 
-### Not Implemented or Exported
+### Not Available
 
--   [extend](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) Extending web3 modules functionality is not implemented
+- The [`web3.extend`](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) function is not available in web3.js v4. Instead, for extending web3 functionality, a more powerful plugin feature is available. Follow the [Add custom RPC methods guide](/guides/advanced/support_additional_rpc_methods/) for this new feature.
+
 -   [web3.bzz](https://web3js.readthedocs.io/en/v1.7.3/web3-bzz.html) Package for interacting with Swarm is not implemented
 -   [web3.shh](https://web3js.readthedocs.io/en/v1.7.3/web3-shh.html) Package for interacting with Whisper is not implemented
 
