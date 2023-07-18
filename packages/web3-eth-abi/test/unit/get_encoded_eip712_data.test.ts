@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { getEncodedEip712Data } from '../../src/index';
-import { erroneousTestData, testData } from '../fixtures/get_encoded_eip712_message';
+import { erroneousTestData, testData } from '../fixtures/get_encoded_eip712_data';
 
 describe('getEncodedEip712Data', () => {
 	it.each(testData)('%s', (_, typedData, hashEncodedData, expectedResponse) => {
