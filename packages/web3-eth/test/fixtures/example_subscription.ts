@@ -23,6 +23,6 @@ export class NewHeadsSubscription extends Web3Subscription<
 > {
 	// eslint-disable-next-line class-methods-use-this
 	protected _buildSubscriptionParams() {
-		return ['newHeads'] as ['newHeads'];
+		return ['newHeads'];
 	}
 }

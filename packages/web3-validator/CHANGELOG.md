@@ -114,4 +114,23 @@ Documentation:
 
 -   Dependencies updated
 
+## [1.0.2]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
+
+### Changed
+
+-   Replace `is-my-json-valid` with `zod` dependency. Related code was changed (#6264)
+-   Types `ValidationError` and `JsonSchema` were changed (#6264)
+
+### Removed
+
+-   Type `RawValidationError` was removed (#6264)
+
+### Added
+
+-   Added `json-schema` as a main json schema type (#6264)

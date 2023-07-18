@@ -156,6 +156,12 @@ Documentation:
 -   Dependencies updated
 -   `MissingGasError` error message changed for clarity (#6215)
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
 
 ### Fixed

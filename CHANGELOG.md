@@ -1697,13 +1697,122 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.0.3]
 
+### Fixed
+
+#### web3
+
+-   Fixed bug #6236 by adding personal type in web3.eth (#6245)
+
+#### web3-rpc-methods
+
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
+
+#### web3-types
+
+-   type `Filter` includes `blockHash` (#6206)
 
 #### web3-utils
 
 -   BigInts pass validation within the method `numberToHex` (#6206)
 
-#### web3-rpc-methods
+### Changed
 
--   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
+#### web3-core
+
+-   Dependencies updated
+
+#### web3-errors
+
+-   Dependencies updated
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-eth-abi
+
+-   Dependencies updated
+
+#### web3-eth-accounts
+
+-   Dependencies updated
+
+#### web3-eth-contract
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
+#### web3-providers-http
+
+-   Dependencies updated
+
+#### web3-providers-ipc
+
+-   Dependencies updated
+
+#### web3-providers-ws
+
+-   Dependencies updated
+
+#### web3-validator
+
+-   Dependencies updated
+
+## [Unreleased]
+
+### Added
+
+#### web3-errors
+
+-   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
+
+#### web3-validator
+
+-   Added `json-schema` as a main json schema type (#6264)
+
+### Fixed
+
+#### web3-core
+
+-   Fixed the issue: "Version 4.x does not fire connected event for subscriptions. #6252". (#6262)
+
+#### web3-errors
+
+-   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)
+
+### Changed
+
+#### web3-core
+
+-   No need to pass `CommonSubscriptionEvents &` at every child class of `Web3Subscription` (#6262)
+-   Implementation of `_processSubscriptionResult` and `_processSubscriptionError` has been written in the base class `Web3Subscription` and maid `public`. (#6262)
+-   A new optional protected method `formatSubscriptionResult` could be used to customize data formatting instead of re-implementing `_processSubscriptionResult`. (#6262)
+-   No more needed to pass `CommonSubscriptionEvents & ` for the first generic parameter of `Web3Subscription` when inheriting from it. (#6262)
+
+#### web3-validator
+
+-   Replace `is-my-json-valid` with `zod` dependency. Related code was changed (#6264)
+-   Types `ValidationError` and `JsonSchema` were changed (#6264)
+
+### Removed
+
+#### web3-validator
+
+-   Type `RawValidationError` was removed (#6264)

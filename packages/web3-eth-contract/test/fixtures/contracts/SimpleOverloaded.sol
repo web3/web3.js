@@ -16,10 +16,11 @@ contract SimpleOverload {
 		return secret + numToAdd;
 	}
 
-	function getSecret(
-		uint256 numToAdd,
-		string calldata _someString
-	) public view returns (uint256, string memory) {
+	function getSecret(uint256 numToAdd, string calldata _someString)
+		public
+		view
+		returns (uint256, string memory)
+	{
 		return (secret + numToAdd, string.concat(someString, _someString));
 	}
 
@@ -37,14 +38,14 @@ contract SimpleOverload {
 	}
 
 	function multicall(bytes[] calldata datas) external {
-		for (uint i = 0; i < datas.length; i++) {
+		for (uint256 i = 0; i < datas.length; i++) {
 			address(this).call(datas[i]);
 		}
 	}
 
-	function multicall(uint deadline, bytes[] calldata datas) external {
+	function multicall(uint256 deadline, bytes[] calldata datas) external {
 		require(block.timestamp <= deadline);
-		for (uint i = 0; i < datas.length; i++) {
+		for (uint256 i = 0; i < datas.length; i++) {
 			address(this).call(datas[i]);
 		}
 	}

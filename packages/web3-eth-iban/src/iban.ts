@@ -389,6 +389,7 @@ export class Iban {
 	 * const iban = new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
 	 * iban.toString();
 	 * > 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
+	 * ```
 	 */
 	public toString(): string {
 		return this._iban;
