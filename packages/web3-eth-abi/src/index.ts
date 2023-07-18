@@ -25,4 +25,4 @@ export * from './api/logs_api.js';
 export * from './api/parameters_api.js';
 export * from './utils.js';
 export * from './decode_contract_error_data.js';
-export { getMessage as getEncodedEip712Message } from './eip_712.js';
+export { getMessage as getEncodedEip712Data } from './eip_712.js';

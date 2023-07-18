@@ -20,7 +20,7 @@ import { Eip712TypedData } from 'web3-types';
  * string is the test title
  * Eip712TypedData is the entire EIP-712 typed data object
  * boolean is whether the EIP-712 encoded data is keccak256 hashed
- * string is the encoded data expected to be returned by getEncodedEip712Message
+ * string is the encoded data expected to be returned by getEncodedEip712Data
  */
 export const testData: [string, Eip712TypedData, boolean | undefined, string][] = [
 	[
@@ -593,7 +593,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
  * string is the test title
  * Eip712TypedData is the entire EIP-712 typed data object
  * boolean is whether the EIP-712 encoded data is keccak256 hashed
- * string is the encoded data expected to be returned by getEncodedEip712Message
+ * string is the encoded data expected to be returned by getEncodedEip712Data
  */
 export const erroneousTestData: [string, Eip712TypedData, boolean | undefined, Error][] = [
 	[

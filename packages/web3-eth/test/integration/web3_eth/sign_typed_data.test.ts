@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { getEncodedEip712Message } from 'web3-eth-abi';
+import { getEncodedEip712Data } from 'web3-eth-abi';
 import { ecrecover, toUint8Array } from 'web3-eth-accounts';
 import { bytesToHex, hexToNumber, keccak256 } from 'web3-utils';
 
@@ -107,7 +107,7 @@ describe('Web3Eth.signTypedData', () => {
 					contents: 'Hello, Bob!',
 				},
 			};
-			const encodedTypedDataHash = getEncodedEip712Message(typedData, true);
+			const encodedTypedDataHash = getEncodedEip712Data(typedData, true);
 			const signature = await web3Eth.signTypedData(tempAcc.address, typedData);
 			const r = toUint8Array(signature.slice(0, 66));
 			const s = toUint8Array(`0x${signature.slice(66, 130)}`);
@@ -189,7 +189,7 @@ describe('Web3Eth.signTypedData', () => {
 					contents: 'Hello, Bob!',
 				},
 			};
-			const encodedTypedDataHash = getEncodedEip712Message(typedData, true);
+			const encodedTypedDataHash = getEncodedEip712Data(typedData, true);
 			const signature = await web3Eth.signTypedData(tempAcc.address, typedData, true);
 			const r = toUint8Array(signature.slice(0, 66));
 			const s = toUint8Array(`0x${signature.slice(66, 130)}`);
