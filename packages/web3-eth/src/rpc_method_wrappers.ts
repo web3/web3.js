@@ -507,6 +507,7 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 					);
+
 					if (
 						!options?.ignoreGasPricing &&
 						isNullish(transactionFormatted.gasPrice) &&
@@ -515,6 +516,8 @@ export function sendTransaction<
 					) {
 						transactionFormatted = {
 							...transactionFormatted,
+							// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
+							// should not be included if undefined, but currently are
 							...(await getTransactionGasPricing(
 								transactionFormatted,
 								web3Context,
@@ -559,10 +562,12 @@ export function sendTransaction<
 						if (web3Context.wallet && !isNullish(transactionFormatted.from)) {
 							wallet = web3Context.wallet.get(transactionFormatted.from);
 						}
+
 						if (wallet) {
 							const signedTransaction = await wallet.signTransaction(
 								transactionFormatted,
 							);
+
 							transactionHash = await trySendTransaction(
 								web3Context,
 								async (): Promise<string> =>
@@ -582,6 +587,7 @@ export function sendTransaction<
 									),
 							);
 						}
+
 						const transactionHashFormatted = format(
 							{ format: 'bytes32' },
 							transactionHash as Bytes,
@@ -607,6 +613,7 @@ export function sendTransaction<
 							transactionReceipt,
 							returnFormat,
 						);
+
 						if (promiEvent.listenerCount('receipt') > 0) {
 							promiEvent.emit('receipt', transactionReceiptFormatted);
 						}

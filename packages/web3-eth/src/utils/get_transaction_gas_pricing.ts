@@ -39,7 +39,9 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ): Promise<FormatType<{ maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers }, ReturnFormat>> {
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, returnFormat);
+
 	if (isNullish(block.baseFeePerGas)) throw new Eip1559NotSupportedError();
+
 	if (!isNullish(transaction.gasPrice)) {
 		const convertedTransactionGasPrice = format(
 			{ format: 'uint' },
