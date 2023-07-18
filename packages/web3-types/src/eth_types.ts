@@ -169,6 +169,13 @@ export interface BlockHeaderOutput {
 	readonly nonce?: Numbers;
 	readonly sha3Uncles: HexString32Bytes[];
 	readonly baseFeePerGas?: Numbers;
+
+	// These fields are returned when the RPC client is Nethermind,
+	// but aren't available in other clients such as Geth
+	readonly author?: Address;
+	readonly totalDifficulty?: Numbers;
+	readonly size?: Numbers;
+	readonly excessDataGas?: Numbers;
 	readonly mixHash?: HexString32Bytes;
 	readonly transactions?: TransactionOutput[];
 	readonly uncles?: Uncles;

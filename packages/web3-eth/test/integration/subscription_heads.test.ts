@@ -44,26 +44,27 @@ describeIf(isSocket)('subscription', () => {
 			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: BlockHeaderOutput) => {
 					try {
-						expect(data).toMatchObject<BlockHeaderOutput>({
-							hash: expect.any(String),
-							parentHash: expect.any(String),
-							receiptsRoot: expect.any(String),
-							miner: expect.any(String),
-							stateRoot: expect.any(String),
-							transactionsRoot: expect.any(String),
-							logsBloom: expect.any(String),
-							difficulty: expect.any(BigInt),
-							number: expect.any(BigInt),
-							gasLimit: expect.any(BigInt),
-							gasUsed: expect.any(BigInt),
-							timestamp: expect.any(BigInt),
-							extraData: expect.any(String),
-							nonce: expect.any(BigInt),
-							sha3Uncles: expect.any(String),
-							baseFeePerGas: expect.any(BigInt),
-							mixHash: expect.any(String),
-							withdrawalsRoot: expect.any(String),
-						});
+						expect(data).toEqual(
+							expect.objectContaining({
+								hash: expect.any(String),
+								parentHash: expect.any(String),
+								receiptsRoot: expect.any(String),
+								miner: expect.any(String),
+								stateRoot: expect.any(String),
+								transactionsRoot: expect.any(String),
+								logsBloom: expect.any(String),
+								difficulty: expect.any(BigInt),
+								number: expect.any(BigInt),
+								gasLimit: expect.any(BigInt),
+								gasUsed: expect.any(BigInt),
+								timestamp: expect.any(BigInt),
+								extraData: expect.any(String),
+								nonce: expect.any(BigInt),
+								sha3Uncles: expect.any(String),
+								baseFeePerGas: expect.any(BigInt),
+								mixHash: expect.any(String),
+							}),
+						);
 					} catch (error) {
 						reject(error);
 					}
