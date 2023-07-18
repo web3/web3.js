@@ -42,20 +42,8 @@ describe('instance of validator', () => {
 	it('instance', () => {
 		expect(validator).toBeDefined();
 		expect(validator.validate).toBeDefined();
-		expect(validator.addSchema).toBeDefined();
-		expect(validator.getOrCreateValidator).toBeDefined();
-		expect(validator.getSchema).toBeDefined();
 	});
-	it('add/get schema', () => {
-		const schema = {
-			type: 'array',
-			items: {
-				format: 'uint',
-			},
-		};
-		validator.addSchema('k', schema);
-		expect(typeof validator.getSchema('k')).toBe('function');
-	});
+
 	it('convertErrors', () => {
 		const schema = {
 			type: 'array',
@@ -65,18 +53,6 @@ describe('instance of validator', () => {
 		};
 		// @ts-expect-error-next-line
 		expect(validator.convertErrors(undefined, schema, [])).toBeUndefined();
-	});
-	it('getObjectValueByPath', () => {
-		// @ts-expect-error-next-line
-		expect(validator.getObjectValueByPath({}, '$')).toBe('');
-	});
-	it('untilde', () => {
-		// @ts-expect-error-next-line
-		expect(validator.untilde('~1')).toBe('/');
-		// @ts-expect-error-next-line
-		expect(validator.untilde('~0')).toBe('~');
-		// @ts-expect-error-next-line
-		expect(validator.untilde('123')).toBe('123');
 	});
 	it('formats exists', () => {
 		for (const f of formatNames) {

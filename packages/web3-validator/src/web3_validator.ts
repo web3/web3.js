@@ -23,11 +23,9 @@ import { Web3ValidatorError } from './errors.js';
 
 export class Web3Validator {
 	private readonly _validator: Validator;
-
 	public constructor() {
 		this._validator = Validator.factory();
 	}
-
 	public validateJSONSchema(
 		schema: object,
 		data: object,
@@ -35,7 +33,6 @@ export class Web3Validator {
 	): Web3ValidationErrorObject[] | undefined {
 		return this._validator.validate(schema, data as Json, options);
 	}
-
 	public validate(
 		schema: ValidationSchemaInput,
 		data: ReadonlyArray<unknown>,

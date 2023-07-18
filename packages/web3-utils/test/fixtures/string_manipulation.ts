@@ -34,10 +34,13 @@ export const padLeftData: [[Numbers, number, string], HexString][] = [
 export const padInvalidData: [[any, number, string], string][] = [
 	[[9.5, 64, 'f'], 'value "9.5" at "/0" must pass "int" validation'],
 	// Using "null" value intentionally for validation
-	// eslint-disable-next-line no-null/no-null
-	[[null, 8, '0'], 'Web3 validator found 1 error[s]:\nvalue at "/0" must pass "int" validation'],
+	[
+		// eslint-disable-next-line no-null/no-null
+		[null, 8, '0'],
+		'Web3 validator found 1 error[s]:\nvalue "null" at "/0" must pass "int" validation',
+	],
 	[[undefined, 8, '0'], 'Web3 validator found 1 error[s]:\nvalue at "/0" is required'],
-	[[{}, 3, 'f'], 'value "[object Object]" at "/0" must pass "int" validation'],
+	[[{}, 3, 'f'], 'value "{}" at "/0" must pass "int" validation'],
 ];
 
 export const padRightData: [[Numbers, number, string], HexString][] = [

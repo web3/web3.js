@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter } from 'web3-types';
-import { ValidationError } from 'is-my-json-valid';
+import { ZodIssueBase } from 'zod';
 
 export type ValidInputTypes = Uint8Array | bigint | string | number | boolean;
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
@@ -44,12 +44,7 @@ export type EthExtendedTypes =
 
 export type FullValidationSchema = ReadonlyArray<AbiParameter>;
 export type ShortValidationSchema = ReadonlyArray<
-	| string
-	| EthBaseTypes
-	| EthExtendedTypes
-	| EthBaseTypesWithMeta
-	| EthBaseTypesWithMeta
-	| ShortValidationSchema
+	string | EthBaseTypes | EthExtendedTypes | EthBaseTypesWithMeta | ShortValidationSchema
 >;
 export type ValidationSchemaInput = FullValidationSchema | ShortValidationSchema;
 
@@ -57,8 +52,14 @@ export type Web3ValidationOptions = {
 	readonly silent: boolean;
 };
 
-// is-my-json-valid types
 export type Json = string | number | boolean | Array<Json> | { [id: string]: Json };
+
+export type ValidationError = ZodIssueBase;
+
+export interface Validate {
+	(value: Json): boolean;
+	errors?: ValidationError[];
+}
 
 export type Schema = {
 	// version
@@ -140,13 +141,6 @@ export type Schema = {
 	discriminator?: { propertyName: string; mapping?: { [value: string]: string } };
 	readonly eth?: string;
 	items?: Schema | Schema[];
-};
-export interface Validate {
-	(value: Json): boolean;
-	errors?: ValidationError[];
-}
-export type RawValidationError = ValidationError & {
-	schemaPath: string[];
 };
 
 export type JsonSchema = Schema;
