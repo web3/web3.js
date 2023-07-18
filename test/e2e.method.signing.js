@@ -539,7 +539,6 @@ describe('transaction and message signing [ @E2E ]', function() {
     });
 
     it('eth.accounts.sign', async function(){
-        this.timeout(30000);
         if (process.env.GANACHE || global.window ) return
 
         const message = 'hello';
