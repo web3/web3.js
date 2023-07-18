@@ -154,7 +154,6 @@ Documentation:
 ### Changed
 
 -   Dependencies updated
--   `MissingGasError` error message changed for clarity (#6215)
 
 ## [4.0.3]
 
@@ -167,3 +166,7 @@ Documentation:
 ### Fixed
 
 -   sendTransaction will have gas filled by default using method `estimateGas` unless transaction builder `options.fillGas` is false. (#6249)
+
+### Changed
+
+-   `MissingGasError` error message changed for clarity (#6215)
