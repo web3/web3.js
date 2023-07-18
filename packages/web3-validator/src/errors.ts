@@ -18,24 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { BaseWeb3Error, ERR_VALIDATION } from 'web3-errors';
 import { Web3ValidationErrorObject } from 'web3-types';
 
-import { isNullish } from './validation/object.js';
-
 const errorFormatter = (error: Web3ValidationErrorObject): string => {
-	if (error.message && error.instancePath && error.params && !isNullish(error.params.value)) {
-		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-		return `value "${(error.params as { value: unknown }).value}" at "${error.instancePath}" ${
-			error.message
-		}`;
-	}
-
-	if (error.message && error.instancePath) {
-		return `value at "${error.instancePath}" ${error.message}`;
-	}
-
-	if (error.instancePath) {
-		return `value at "${error.instancePath}" caused unspecified error`;
-	}
-
 	if (error.message) {
 		return error.message;
 	}
@@ -58,7 +41,6 @@ export class Web3ValidatorError extends BaseWeb3Error {
 	}
 
 	private _compileErrors(): string[] {
-		const errorMsgs = this.errors.map(errorFormatter);
-		return errorMsgs;
+		return this.errors.map(errorFormatter);
 	}
 }

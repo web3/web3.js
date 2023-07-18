@@ -19,8 +19,6 @@ import { Web3ValidationErrorObject } from 'web3-types';
 import { Web3ValidatorError } from '../../src/errors';
 import {
 	fullErrors,
-	fullErrorsWithInstance,
-	errorsWithInstanceNoParams,
 	errorsWithInstanceNoParamsNoMessage,
 	unspecifiedErrors,
 } from '../fixtures/errors';
@@ -33,32 +31,6 @@ describe('Web3ValidationError', () => {
 		expect(validationError.message).toBe(`Web3 validator found 1 error[s]:\n${error.message}`);
 	});
 
-	it.each(fullErrorsWithInstance)(
-		'errors with message, instance and params',
-		(error: Web3ValidationErrorObject) => {
-			const validationError = new Web3ValidatorError([error]);
-
-			expect(validationError).toBeInstanceOf(Web3ValidatorError);
-			expect(validationError.message).toBe(
-				`Web3 validator found 1 error[s]:\nvalue "${
-					(error.params as { value: unknown }).value
-				}" at "${error.instancePath}" ${error.message}`,
-			);
-		},
-	);
-
-	it.each(errorsWithInstanceNoParams)(
-		'errors with only message and instance',
-		(error: Web3ValidationErrorObject) => {
-			const validationError = new Web3ValidatorError([error]);
-
-			expect(validationError).toBeInstanceOf(Web3ValidatorError);
-			expect(validationError.message).toBe(
-				`Web3 validator found 1 error[s]:\nvalue at "${error.instancePath}" ${error.message}`,
-			);
-		},
-	);
-
 	it.each(errorsWithInstanceNoParamsNoMessage)(
 		'errors with only instance',
 		(error: Web3ValidationErrorObject) => {
@@ -66,7 +38,7 @@ describe('Web3ValidationError', () => {
 
 			expect(validationError).toBeInstanceOf(Web3ValidatorError);
 			expect(validationError.message).toBe(
-				`Web3 validator found 1 error[s]:\nvalue at "${error.instancePath}" caused unspecified error`,
+				`Web3 validator found 1 error[s]:\nunspecified error`,
 			);
 		},
 	);
