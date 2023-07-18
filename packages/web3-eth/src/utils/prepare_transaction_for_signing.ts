@@ -125,14 +125,14 @@ export const prepareTransactionForSigning = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Uint8Array,
 	fillGasPrice = false,
-	fillGas = true,
+	fillGasLimit = true,
 ) => {
 	const populatedTransaction = (await transactionBuilder({
 		transaction,
 		web3Context,
 		privateKey,
 		fillGasPrice,
-		fillGas,
+		fillGasLimit,
 	})) as unknown as PopulatedUnsignedTransaction;
 	const formattedTransaction = formatTransaction(
 		populatedTransaction,

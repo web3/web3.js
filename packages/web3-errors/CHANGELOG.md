@@ -135,6 +135,8 @@ Documentation:
 ### Added
 
 -   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
+-   created `TransactionGasMismatchInnerError` for clarity on the error in `TransactionGasMismatchError` (#6215)
+-   created `MissingGasInnerError` for clarity on the error in `MissingGasError` (#6215)
 
 ### Fixed
 

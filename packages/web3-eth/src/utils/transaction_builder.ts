@@ -129,7 +129,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Uint8Array;
 	fillGasPrice?: boolean;
-	fillGas?: boolean;
+	fillGasLimit?: boolean;
 }): Promise<ReturnType> {
 	let populatedTransaction = format(
 		transactionSchema,
@@ -237,10 +237,11 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 			)),
 		};
 	if (
-		(isNullish(populatedTransaction.gas) || isNullish(populatedTransaction.gasLimit)) &&
-		options.fillGas
+		isNullish(populatedTransaction.gas) &&
+		isNullish(populatedTransaction.gasLimit) &&
+		options.fillGasLimit
 	) {
-		const fillGas = await estimateGas(
+		const fillGasLimit = await estimateGas(
 			options.web3Context,
 			populatedTransaction,
 			'latest',
@@ -248,7 +249,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 		);
 		populatedTransaction = {
 			...populatedTransaction,
-			gas: format({ format: 'uint' }, fillGas as Numbers, ETH_DATA_FORMAT),
+			gas: format({ format: 'uint' }, fillGasLimit as Numbers, ETH_DATA_FORMAT),
 		};
 	}
 	return populatedTransaction as ReturnType;
@@ -260,7 +261,7 @@ export const transactionBuilder = async <ReturnType = Transaction>(
 		web3Context: Web3Context<EthExecutionAPI>;
 		privateKey?: HexString | Uint8Array;
 		fillGasPrice?: boolean;
-		fillGas?: boolean;
+		fillGasLimit?: boolean;
 	},
 	// eslint-disable-next-line @typescript-eslint/require-await
 ) =>

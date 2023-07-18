@@ -301,7 +301,7 @@ describe('Web3Eth.sendTransaction', () => {
 			from: tempAcc.address,
 			to: '0x0000000000000000000000000000000000000000',
 			value: BigInt(1),
-			maxFeePerGas: BigInt(1000000016),
+			maxFeePerGas: BigInt(2500000016),
 		};
 		const response = await web3Eth.sendTransaction(transaction);
 		expect(response.type).toBe(BigInt(2));

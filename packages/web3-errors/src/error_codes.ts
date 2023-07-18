@@ -90,6 +90,8 @@ export const ERR_TX_INVALID_RECEIVER = 437;
 export const ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR = 438;
 export const ERR_TX_INVALID_PROPERTIES_FOR_TYPE = 439;
 
+export const ERR_TX_MISSING_GAS_INNER_ERROR = 440;
+export const ERR_TX_GAS_MISMATCH_INNER_ERROR = 441;
 // Connection error codes
 export const ERR_CONN = 500;
 export const ERR_CONN_INVALID = 501;
