@@ -327,7 +327,7 @@ export class MissingGasError extends InvalidValueError {
 			}, maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
 				value.maxFeePerGas ?? 'undefined'
 			}`,
-			'"gas" is missing',
+			'Missing properties in transaction, either define "gas" and "gasPrice" for type 0 transactions or "gas", "maxPriorityFeePerGas" and "maxFeePerGas" for type 2 transactions',
 		);
 	}
 }
@@ -347,7 +347,7 @@ export class TransactionGasMismatchError extends InvalidValueError {
 			}, maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
 				value.maxFeePerGas ?? 'undefined'
 			}`,
-			'transaction must specify legacy or fee market gas properties, not both',
+			'Transaction must define "gas" and "gasPrice" for type 0 transactions or "gas", "maxPriorityFeePerGas" and "maxFeePerGas" for type 2 transactions, not both',
 		);
 	}
 }
