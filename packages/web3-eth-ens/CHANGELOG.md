@@ -105,4 +105,10 @@ Documentation:
 
 -   Fixed bug #6185, now web3.js compiles on typescript v5 (#6195)
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

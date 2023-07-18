@@ -278,4 +278,10 @@ Documentation:
 
 -   Event filtering using non-indexed and indexed string event arguments (#6167)
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

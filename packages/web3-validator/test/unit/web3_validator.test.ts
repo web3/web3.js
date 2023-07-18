@@ -64,12 +64,10 @@ describe('web3-validator', () => {
 				expect(validator.validate(['uint'], [-1], { silent: true })).toEqual([
 					{
 						instancePath: '/0',
-						keyword: 'data["0"]',
-						// keyword: 'eth',
-						message: 'must pass "uint" validation',
+						keyword: '0',
+						message: 'value "-1" at "/0" must pass "uint" validation',
 						params: { value: -1 },
-						schemaPath: '#',
-						// schemaPath: '#/items/0/eth',
+						schemaPath: '#0',
 					},
 				]);
 			});
@@ -83,9 +81,7 @@ describe('web3-validator', () => {
 				const testFunction = () => {
 					validator.validate([], data);
 				};
-				expect(testFunction).toThrow(
-					'value at "/0" empty schema against data can not be validated',
-				);
+				expect(testFunction).toThrow('empty schema against data can not be validated');
 
 				expect(testFunction).toThrow(Web3ValidatorError);
 			});

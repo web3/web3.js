@@ -63,7 +63,7 @@ describe('web3.accounts', () => {
 				const tx = {
 					from: account.address,
 					to: tempAccount,
-					value: web3.utils.toWei('0.1', 'ether'),
+					value: web3.utils.toWei('0.00001', 'ether'),
 					gas: '0x5218',
 					data: '0x1',
 				};
@@ -73,7 +73,7 @@ describe('web3.accounts', () => {
 					web3.eth.sendTransaction({
 						from: tempAccount,
 						to: account.address,
-						value: web3.utils.toWei('0.5', 'ether'),
+						value: web3.utils.toWei('0.00005', 'ether'),
 					}),
 				).resolves.toBeDefined();
 

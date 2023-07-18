@@ -98,4 +98,10 @@ Documentation:
 
 -   Fixed #6162 @types/ws issue (#6205)
 
+## [4.0.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
