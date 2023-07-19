@@ -44,27 +44,23 @@ describeIf(isSocket)('subscription', () => {
 			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: BlockHeaderOutput) => {
 					try {
-						expect(data).toEqual(
-							expect.objectContaining({
-								hash: expect.any(String),
-								parentHash: expect.any(String),
-								receiptsRoot: expect.any(String),
-								miner: expect.any(String),
-								stateRoot: expect.any(String),
-								transactionsRoot: expect.any(String),
-								logsBloom: expect.any(String),
-								difficulty: expect.any(BigInt),
-								number: expect.any(BigInt),
-								gasLimit: expect.any(BigInt),
-								gasUsed: expect.any(BigInt),
-								timestamp: expect.any(BigInt),
-								extraData: expect.any(String),
-								nonce: expect.any(BigInt),
-								sha3Uncles: expect.any(String),
-								baseFeePerGas: expect.any(BigInt),
-								mixHash: expect.any(String),
-							}),
-						);
+						expect(typeof data.hash).toBe('string');
+						expect(typeof data.parentHash).toBe('string');
+						expect(typeof data.receiptsRoot).toBe('string');
+						expect(typeof data.miner).toBe('string');
+						expect(typeof data.stateRoot).toBe('string');
+						expect(typeof data.transactionsRoot).toBe('string');
+						expect(typeof data.logsBloom).toBe('string');
+						expect(typeof data.difficulty).toBe('bigint');
+						expect(typeof data.number).toBe('bigint');
+						expect(typeof data.gasLimit).toBe('bigint');
+						expect(typeof data.gasUsed).toBe('bigint');
+						expect(typeof data.timestamp).toBe('bigint');
+						expect(typeof data.extraData).toBe('string');
+						expect(typeof data.nonce).toBe('bigint');
+						expect(typeof data.sha3Uncles).toBe('string');
+						expect(typeof data.baseFeePerGas).toBe('bigint');
+						expect(typeof data.mixHash).toBe('string');
 					} catch (error) {
 						reject(error);
 					}
