@@ -115,8 +115,6 @@ describeIf(isSocket)('subscription', () => {
 				}).catch(e => reject(e));
 			});
 
-			await makeFewTxToContract({ contract: contractDeployed, sendOptions, testDataString });
-
 			await pr;
 			await web3Eth.clearSubscriptions();
 		});
