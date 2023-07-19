@@ -186,6 +186,11 @@ Documentation:
 -   Added return type for `formatSubscriptionResult` in class `NewHeadsSubscription` (#6368)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+
 ### Added
 
-- increase eip-4337 methods `sendUserOperation`, `estimateUserOperationGas`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`, `generateUserOpHash`
+-   increase eip-4337 methods `sendUserOperation`, `estimateUserOperationGas`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`, `generateUserOpHash`
