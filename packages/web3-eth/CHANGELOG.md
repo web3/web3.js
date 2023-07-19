@@ -167,3 +167,7 @@ Documentation:
 
 -   A `rpc_method_wrapper` (`signTypedData`) for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
 -   A `signTypedData` method to the `Web3Eth` class (#6286)
+
+### Fixed
+
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)

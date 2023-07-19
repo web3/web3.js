@@ -1833,4 +1833,9 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-validator
 
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
+
+#### web3-eth
+
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
 -   Type `RawValidationError` was removed (#6264)
