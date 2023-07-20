@@ -32,7 +32,7 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 
 git submodule update --init --recursive
 
-yarn add "web3@^1.0.0-beta.36" --dev --registry http://localhost:4873
+yarn add "web3@1.10" --dev --registry http://localhost:4873
 
 yarn --registry http://localhost:4873
 
