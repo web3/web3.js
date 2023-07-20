@@ -145,3 +145,8 @@ Documentation:
 ### Changed
 
 -   `input` and `data` are now optional properties on `PopulatedUnsignedBaseTransaction` (previously `input` was a required property, and `data` was not available) (#6294)
+
+### Added
+
+-   `eth_signTypedData` and `eth_signTypedData_v4` to `web3_eth_execution_api` (#6286)
+-   `Eip712TypeDetails` and `Eip712TypedData` to `eth_types` (#6286)

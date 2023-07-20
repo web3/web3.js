@@ -93,7 +93,7 @@ describeIf(isSocket)('subscription', () => {
 
 			let count = 0;
 
-			const pr = new Promise((resolve: Resolve) => {
+			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: any) => {
 					count += 1;
 					const decodedData = decodeEventABI(
@@ -106,9 +106,14 @@ describeIf(isSocket)('subscription', () => {
 						resolve();
 					}
 				});
-			});
+				sub.on('error', reject);
 
-			await makeFewTxToContract({ contract: contractDeployed, sendOptions, testDataString });
+				makeFewTxToContract({
+					contract: contractDeployed,
+					sendOptions,
+					testDataString,
+				}).catch(e => reject(e));
+			});
 
 			await pr;
 			await web3Eth.clearSubscriptions();

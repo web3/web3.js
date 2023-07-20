@@ -37,6 +37,7 @@ import {
 	TransactionForAccessList,
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
+	Eip712TypedData,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
@@ -1532,6 +1533,24 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.createAccessList(this, transaction, blockNumber, returnFormat);
+	}
+
+	/**
+	 * This method sends EIP-712 typed data to the RPC provider to be signed.
+	 *
+	 * @param address The address that corresponds with the private key used to sign the typed data.
+	 * @param typedData The EIP-712 typed data object.
+	 * @param useLegacy A boolean flag determining whether the RPC call uses the legacy method `eth_signTypedData` or the newer method `eth_signTypedData_v4`
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the signed typed data should be formatted.
+	 * @returns The signed typed data.
+	 */
+	public async signTypedData<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		address: Address,
+		typedData: Eip712TypedData,
+		useLegacy = false,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.signTypedData(this, address, typedData, useLegacy, returnFormat);
 	}
 
 	/**
