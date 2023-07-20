@@ -146,6 +146,11 @@ export abstract class Web3Subscription<
 	protected get returnFormat() {
 		return this._returnFormat;
 	}
+
+	protected get subscriptionManager() {
+		return this._subscriptionManager;
+	}
+
 	public async resubscribe() {
 		await this.unsubscribe();
 		await this.subscribe();

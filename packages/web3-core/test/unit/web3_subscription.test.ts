@@ -36,6 +36,22 @@ describe('Web3Subscription', () => {
 		subscriptionManager = new Web3SubscriptionManager(requestManager, subscriptions);
 	});
 
+	describe('subscriptionManager', () => {
+		it('subscriptionManager is accessible in inherited subscription', async () => {
+			class InheritedExampleSubscription extends ExampleSubscription {
+				public verifyAccessToSubscriptionManager(
+					originalSubscriptionManager: Web3SubscriptionManager,
+				) {
+					expect(this.subscriptionManager).toBe(originalSubscriptionManager);
+				}
+			}
+			new InheritedExampleSubscription(
+				{ param1: 'value' },
+				{ subscriptionManager },
+			).verifyAccessToSubscriptionManager(subscriptionManager);
+		});
+	});
+
 	describe('subscribe', () => {
 		beforeEach(() => {
 			sub = new ExampleSubscription({ param1: 'value' }, { subscriptionManager });

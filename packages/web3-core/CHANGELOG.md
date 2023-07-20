@@ -138,6 +138,10 @@ Documentation:
 
 ## [4.0.3]
 
+### Added
+
+-   Expose `subscriptionManager` as a `protected get` at `Web3Subscription` to be able to use it inside custom subscriptions, if needed. (#6285)
+
 ### Changed
 
 -   Dependencies updated

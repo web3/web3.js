@@ -1783,6 +1783,24 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
 
+#### web3-eth
+
+-   A `rpc_method_wrapper` (`signTypedData`) for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
+-   A `signTypedData` method to the `Web3Eth` class (#6286)
+
+#### web3-eth-abi
+
+-   A `getEncodedEip712Data` method that takes an EIP-712 typed data object and returns the encoded data with the option to also keccak256 hash it (#6286)
+
+#### web3-rpc-methods
+
+-   A `signTypedData` method to `eth_rpc_methods` for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
+
+#### web3-types
+
+-   `eth_signTypedData` and `eth_signTypedData_v4` to `web3_eth_execution_api` (#6286)
+-   `Eip712TypeDetails` and `Eip712TypedData` to `eth_types` (#6286)
+
 #### web3-validator
 
 -   Added `json-schema` as a main json schema type (#6264)
@@ -1815,4 +1833,9 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-validator
 
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
+
+#### web3-eth
+
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
 -   Type `RawValidationError` was removed (#6264)

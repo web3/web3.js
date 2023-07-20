@@ -15,27 +15,39 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Subscription } from 'web3-core';
+import { Web3Subscription, Web3SubscriptionManager } from 'web3-core';
 import { Web3 } from '../../src/web3';
 
-describe('Web3 Custom Subscriptions', () => {
-	it('should be able to define and subscribe to custom subscription', async () => {
-		class CustomSubscription extends Web3Subscription<
-			{
-				data: string;
-			},
-			{
-				readonly customArgs?: string;
-			}
-		> {
-			protected _buildSubscriptionParams() {
-				return ['customArgs', this.args];
-			}
-		}
+class CustomSubscription extends Web3Subscription<
+	{
+		data: string;
+	},
+	{
+		readonly customArgs?: string;
+	}
+> {
+	protected _buildSubscriptionParams() {
+		return ['someCustomSubscription', this.args];
+	}
 
-		const CustomSub = {
-			custom: CustomSubscription,
-		};
+	public get subscriptionManager() {
+		return super.subscriptionManager;
+	}
+}
+
+const CustomSub = {
+	custom: CustomSubscription,
+};
+
+describe('Web3 Custom Subscriptions', () => {
+	let web3: Web3<{ custom: typeof CustomSubscription }>;
+	beforeAll(() => {
+		web3 = new Web3({
+			registeredSubscriptions: CustomSub,
+		});
+	});
+
+	it('should be able to define and subscribe to custom subscription', async () => {
 		const args = {
 			customArgs: 'hello custom',
 		};
@@ -49,7 +61,7 @@ describe('Web3 Custom Subscriptions', () => {
 						),
 						jsonrpc: '2.0',
 						method: 'eth_subscribe',
-						params: ['customArgs', args],
+						params: ['someCustomSubscription', args],
 					});
 					resolve(true);
 				}),
@@ -59,17 +71,28 @@ describe('Web3 Custom Subscriptions', () => {
 			};
 
 			try {
-				const web3NoProvider = new Web3({
-					provider,
-					registeredSubscriptions: CustomSub,
-				});
+				web3.provider = provider;
 
 				// eslint-disable-next-line no-void
-				void web3NoProvider.subscriptionManager.subscribe('custom', args);
+				void web3.subscriptionManager.subscribe('custom', args);
 			} catch (error) {
 				reject(error);
 			}
 		});
 		await expect(exec).resolves.toBe(true);
+	});
+
+	it('should access subscriptionManager from derived class', async () => {
+		const sub = new CustomSubscription(
+			{ customArgs: undefined },
+			{
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				subscriptionManager: web3.subscriptionManager as Web3SubscriptionManager<
+					unknown,
+					any
+				>,
+			},
+		);
+		expect(web3.subscriptionManager).toBe(sub.subscriptionManager);
 	});
 });

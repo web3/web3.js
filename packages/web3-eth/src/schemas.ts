@@ -321,13 +321,37 @@ export const blockSchema = {
 	},
 };
 
+export const withdrawalsSchema = {
+	type: 'object',
+	properties: {
+		index: {
+			format: 'uint',
+		},
+		validatorIndex: {
+			format: 'uint',
+		},
+		address: {
+			format: 'bytes32',
+		},
+		amount: {
+			format: 'uint',
+		},
+	},
+};
+
 export const blockHeaderSchema = {
 	type: 'object',
 	properties: {
+		author: {
+			format: 'bytes32',
+		},
+		hash: {
+			format: 'bytes32',
+		},
 		parentHash: {
 			format: 'bytes32',
 		},
-		receiptRoot: {
+		receiptsRoot: {
 			format: 'bytes32',
 		},
 		miner: {
@@ -339,10 +363,16 @@ export const blockHeaderSchema = {
 		transactionsRoot: {
 			format: 'bytes32',
 		},
+		withdrawalsRoot: {
+			format: 'bytes32',
+		},
 		logsBloom: {
 			format: 'bytes256',
 		},
 		difficulty: {
+			format: 'uint',
+		},
+		totalDifficulty: {
 			format: 'uint',
 		},
 		number: {
@@ -365,6 +395,36 @@ export const blockHeaderSchema = {
 		},
 		sha3Uncles: {
 			format: 'bytes32',
+		},
+		size: {
+			format: 'uint',
+		},
+		baseFeePerGas: {
+			format: 'uint',
+		},
+		excessDataGas: {
+			format: 'uint',
+		},
+		mixHash: {
+			format: 'bytes32',
+		},
+		transactions: {
+			type: 'array',
+			items: {
+				format: 'bytes32',
+			},
+		},
+		uncles: {
+			type: 'array',
+			items: {
+				format: 'bytes32',
+			},
+		},
+		withdrawals: {
+			type: 'array',
+			items: {
+				...withdrawalsSchema,
+			},
 		},
 	},
 };

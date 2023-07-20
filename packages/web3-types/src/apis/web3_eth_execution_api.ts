@@ -19,6 +19,8 @@ import {
 	AccountObject,
 	Address,
 	BlockNumberOrTag,
+	Eip712TypedData,
+	HexString256Bytes,
 	HexString32Bytes,
 	TransactionInfo,
 	Uint,
@@ -41,4 +43,18 @@ export type Web3EthExecutionAPI = EthExecutionAPI & {
 		storageKeys: HexString32Bytes[],
 		blockNumber: BlockNumberOrTag,
 	) => AccountObject;
+
+	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
+	eth_signTypedData: (
+		address: Address,
+		typedData: Eip712TypedData,
+		useLegacy: true,
+	) => HexString256Bytes;
+
+	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
+	eth_signTypedData_v4: (
+		address: Address,
+		typedData: Eip712TypedData,
+		useLegacy: false | undefined,
+	) => HexString256Bytes;
 };

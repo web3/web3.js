@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,14 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * The web3.eth.abi functions let you encode and decode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
- */
-export * from './api/errors_api.js';
-export * from './api/events_api.js';
-export * from './api/functions_api.js';
-export * from './api/logs_api.js';
-export * from './api/parameters_api.js';
-export * from './utils.js';
-export * from './decode_contract_error_data.js';
-export { getMessage as getEncodedEip712Data } from './eip_712.js';
+// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('../config/setup');
+
+const jestTimeout = 30000; // Sometimes `in3` takes long time because of its decentralized nature.
+
+jest.setTimeout(jestTimeout);
