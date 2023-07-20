@@ -33,6 +33,8 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 git submodule update --init --recursive
 yarn --registry http://localhost:4873
 
+yarn add "web3@^1.0.0-beta.36" --dev --registry http://localhost:4873
+
 yarn add web3@e2e --registry http://localhost:4873 --network-timeout 600000
 
 yarn list web3
