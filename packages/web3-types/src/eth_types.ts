@@ -496,3 +496,17 @@ export interface AccountObject {
 	readonly accountProof: Bytes[];
 	readonly storageProof: StorageProof[];
 }
+
+export interface Eip712TypeDetails {
+	name: string;
+	type: string;
+}
+export interface Eip712TypedData {
+	readonly types: {
+		EIP712Domain: Eip712TypeDetails[];
+		[key: string]: Eip712TypeDetails[];
+	};
+	readonly primaryType: string;
+	readonly domain: Record<string, string | number>;
+	readonly message: Record<string, unknown>;
+}

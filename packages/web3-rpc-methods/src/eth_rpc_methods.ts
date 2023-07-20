@@ -28,6 +28,7 @@ import {
 	Uint256,
 	Web3EthExecutionAPI,
 } from 'web3-types';
+import { Eip712TypedData } from 'web3-types/src/eth_types';
 import { validator } from 'web3-validator';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
@@ -573,5 +574,20 @@ export async function createAccessList(
 	return requestManager.send({
 		method: 'eth_createAccessList',
 		params: [transaction, blockNumber],
+	});
+}
+
+export async function signTypedData(
+	requestManager: Web3RequestManager,
+	address: Address,
+	typedData: Eip712TypedData,
+	useLegacy = false,
+): Promise<string> {
+	// TODO Add validation for typedData
+	validator.validate(['address'], [address]);
+
+	return requestManager.send({
+		method: `eth_signTypedData${useLegacy ? '' : '_v4'}`,
+		params: [address, typedData],
 	});
 }
