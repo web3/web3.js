@@ -47,6 +47,7 @@ import {
 	TransactionWithFromAndToLocalWalletIndex,
 	TransactionForAccessList,
 	AccessListResult,
+	Eip712TypedData,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { format, hexToBytes, bytesToUint8Array, numberToHex } from 'web3-utils';
@@ -1124,4 +1125,25 @@ export async function createAccessList<ReturnFormat extends DataFormat>(
 	)) as unknown as AccessListResult;
 
 	return format(accessListResultSchema, response, returnFormat);
+}
+
+/**
+ * View additional documentations here: {@link Web3Eth.signTypedData}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function signTypedData<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	address: Address,
+	typedData: Eip712TypedData,
+	useLegacy: boolean,
+	returnFormat: ReturnFormat,
+) {
+	const response = await ethRpcMethods.signTypedData(
+		web3Context.requestManager,
+		address,
+		typedData,
+		useLegacy,
+	);
+
+	return format({ format: 'bytes' }, response, returnFormat);
 }
