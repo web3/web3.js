@@ -24,6 +24,7 @@ echo " "
 # Launch client w/ two unlocked accounts.
 # + accounts[0] default geth unlocked bal = ~infinity
 # + accounts[1] unlocked, bal=50 eth, signing password = 'left-hand-of-darkness'
+cleanup()
 geth-dev-assistant --accounts 1 --tag 'stable'
 
 # Test
