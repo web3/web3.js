@@ -20,6 +20,7 @@ import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
 
@@ -47,7 +48,7 @@ describe('Web3Eth.signTransaction', () => {
 			gasPrice: '0x3b9aca01',
 		};
 		const response = await web3Eth.signTransaction(transaction);
-		expect(response).toMatchObject({
+		const expectedResponse: { tx: Transaction } = {
 			tx: {
 				type: BigInt(0),
 				nonce: BigInt(nonce),
@@ -55,9 +56,13 @@ describe('Web3Eth.signTransaction', () => {
 				gas: BigInt(21000),
 				value: BigInt(1),
 				to: transaction.to,
-				input: '0x',
 			},
-		});
+		};
+		if (getSystemTestBackend() === 'geth') expectedResponse.tx.input = '0x';
+		else if (getSystemTestBackend() === 'ganache') expectedResponse.tx.data = '0x';
+
+		expect(response).toMatchObject(expectedResponse);
+
 		// Pulling out of toMatchObject to be compatiable with Cypress
 		expect(response.raw).toMatch(/0[xX][0-9a-fA-F]+/);
 		expect(typeof (response.tx as TransactionLegacySignedAPI).v).toBe('bigint');
@@ -77,16 +82,21 @@ describe('Web3Eth.signTransaction', () => {
 			gasPrice: '0x3b9aca01',
 		};
 		const response = await web3Eth.signTransaction(transaction);
-		// eslint-disable-next-line jest/no-standalone-expect
-		expect(response).toMatchObject({
+		const expectedResponse: { tx: Transaction } = {
 			tx: {
 				type: BigInt(0),
 				nonce: BigInt(nonce),
 				gasPrice: BigInt(1000000001),
 				gas: BigInt(475320),
-				input: greeterContractDeploymentData,
 			},
-		});
+		};
+		if (getSystemTestBackend() === 'geth')
+			expectedResponse.tx.input = greeterContractDeploymentData;
+		else if (getSystemTestBackend() === 'ganache')
+			expectedResponse.tx.data = greeterContractDeploymentData;
+
+		// eslint-disable-next-line jest/no-standalone-expect
+		expect(response).toMatchObject(expectedResponse);
 		// Pulling out of toMatchObject to be compatiable with Cypress
 		expect(response.raw).toMatch(/0[xX][0-9a-fA-F]+/);
 		expect(typeof (response.tx as TransactionLegacySignedAPI).v).toBe('bigint');
