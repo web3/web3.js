@@ -11,9 +11,8 @@ set -o errexit
 trap cleanup EXIT
 
 cleanup() {
-  if [ -n "$client" ]; then
-    kill -9 $client
-  fi
+  processID=`lsof -Fp -i:8545| grep '^p'`
+  kill -9 ${processID##p}
 }
 
 echo " "
