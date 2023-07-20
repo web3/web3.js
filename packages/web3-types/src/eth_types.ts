@@ -409,7 +409,8 @@ export interface PopulatedUnsignedBaseTransaction {
 	gas?: Numbers;
 	gasPrice: Numbers;
 	type: Numbers;
-	input: Bytes;
+	input?: Bytes;
+	data?: Bytes;
 	nonce: Numbers;
 	networkId: Numbers;
 	chain: ValidChains;
