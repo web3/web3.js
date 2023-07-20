@@ -166,3 +166,7 @@ Documentation:
 ### Fixed
 
 -   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+
+### Changed
+
+-   `input` and `data` are no longer auto populated for transaction objects if they are not present. Instead, whichever property is provided by the user is formatted and sent to the RPC provider. Additionally, whatever property name is returned by the RPC provider is used in the response to the user's request, e.g. if the user's request uses `input` and the RPC provider returns `data`, `data` will be used in the request response the user receives (#6294)

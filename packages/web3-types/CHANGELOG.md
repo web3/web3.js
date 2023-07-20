@@ -141,3 +141,7 @@ Documentation:
 -   type `Filter` includes `blockHash` (#6206)
 
 ## [Unreleased]
+
+### Changed
+
+-   `input` and `data` are now optional properties on `PopulatedUnsignedBaseTransaction` (previously `input` was a required property, and `data` was not available) (#6294)

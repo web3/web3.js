@@ -1797,6 +1797,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)
 
+#### web3-eth
+
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+
 ### Changed
 
 #### web3-core
@@ -1806,6 +1810,14 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   A new optional protected method `formatSubscriptionResult` could be used to customize data formatting instead of re-implementing `_processSubscriptionResult`. (#6262)
 -   No more needed to pass `CommonSubscriptionEvents & ` for the first generic parameter of `Web3Subscription` when inheriting from it. (#6262)
 
+#### web3-eth
+
+-   `input` and `data` are no longer auto populated for transaction objects if they are not present. Instead, whichever property is provided by the user is formatted and sent to the RPC provider. Additionally, whatever property name is returned by the RPC provider is used in the response to the user's request, e.g. if the user's request uses `input` and the RPC provider returns `data`, `data` will be used in the request response the user receives (#6294)
+
+#### web3-types
+
+-   `input` and `data` are now optional properties on `PopulatedUnsignedBaseTransaction` (previously `input` was a required property, and `data` was not available) (#6294)
+
 #### web3-validator
 
 -   Replace `is-my-json-valid` with `zod` dependency. Related code was changed (#6264)
@@ -1813,11 +1825,11 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ### Removed
 
-#### web3-validator
-
--   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
-
 #### web3-eth
 
 -   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+-   Type `RawValidationError` was removed (#6264)
+
+#### web3-validator
+
 -   Type `RawValidationError` was removed (#6264)
