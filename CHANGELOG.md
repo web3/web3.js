@@ -1815,6 +1815,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)
 
+#### broken link 
+
+- Fixed: broken link in the readme file of the root folder.
+
 ### Changed
 
 #### web3-core
@@ -1839,7 +1843,3 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
 -   Type `RawValidationError` was removed (#6264)
-
-#### fixed 
-
-- broken link in the readme file of the root folder.
