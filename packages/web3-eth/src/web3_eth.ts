@@ -38,6 +38,8 @@ import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	Eip712TypedData,
+	UserOperation,
+	HexStringBytes,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
@@ -52,6 +54,7 @@ import {
 	NewHeadsSubscription,
 	SyncingSubscription,
 } from './web3_subscriptions.js';
+import { generateUserOpHash } from './utils/generate_useroperation_hash.js';
 
 export type RegisteredSubscription = {
 	logs: typeof LogsSubscription;
@@ -1652,5 +1655,173 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			// eslint-disable-next-line
 			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,
 		);
+	}
+
+	/**
+	 * Sends a UserOperation to the bundler. If accepted, the bundler will add it to the UserOperation mempool and return a userOpHash.
+	 *
+	 * @param UserOperation represents the structure of a transaction initiated by the user. It contains the sender, receiver, call data, maximum fee per unit of Gas, maximum priority fee, signature, nonce, and other specific elements.
+	 * @param entryPoint a singleton contract to execute bundles of UserOperations. Bundlers/Clients whitelist the supported entrypoint.
+	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) Specifies what block to use as the current state for the balance query.
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @returns The current balance for the given address in `wei`.
+	 *
+	 * ```ts
+	 * 	web3.eth.sendUserOperation({
+			sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
+			nonce: "123",
+			initCode: "0x68656c6c6f",
+			callData: "0x776F726C64",
+			callGasLimit: "1000",
+			verificationGasLimit: "2300",
+			preVerificationGas: "3100",
+			maxFeePerGas: "8500",
+			maxPriorityFeePerGas: "1",
+			paymasterAndData: "0x626c6f63746f",
+			signature: "0x636c656d656e74"
+		},"0x636c656d656e74").then(console.log);
+	 * > 0xe554d0701f7fdc734f84927d109537f1ac4ee4ebfa3670c71d224a4fa15dbcd1
+	 * ```
+	 */
+	public async sendUserOperation<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		userOperation: UserOperation,
+		entryPoint: Address,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.sendUserOperation(this, userOperation, entryPoint, returnFormat);
+	}
+	/**
+	 * Estimate the gas values for a UserOperation. Given UserOperation optionally without gas limits and gas prices, return the needed gas limits. The signature field is ignored by the wallet, so that the operation will not require user's approval. Still, it might require putting a "semi-valid" signature (e.g. a signature in the right length)
+	 *
+	 * @param UserOperation represents the structure of a transaction initiated by the user. It contains the sender, receiver, call data, maximum fee per unit of Gas, maximum priority fee, signature, nonce, and other specific elements.
+	 * @param entryPoint a singleton contract to execute bundles of UserOperations. Bundlers/Clients whitelist the supported entrypoint.
+  	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) Specifies what block to use as the current state for the balance query.
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @returns The current balance for the given address in `wei`.
+	 *
+	 * ```ts
+	 * {
+      sender, // address
+      nonce, // uint256
+      initCode, // bytes
+      callData, // bytes
+      callGasLimit, // uint256
+      verificationGasLimit, // uint256
+      preVerificationGas, // uint256
+      maxFeePerGas, // uint256
+      maxPriorityFeePerGas, // uint256
+      paymasterAndData, // bytes
+      signature // bytes
+    }
+	 * 	web3.eth.estimateUserOperationGas({
+			sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
+			nonce: "123",
+			initCode: "0x68656c6c6f",
+			callData: "0x776F726C64",
+			callGasLimit: "1000",
+			verificationGasLimit: "2300",
+			preVerificationGas: "3100",
+			maxFeePerGas: "0",
+			maxPriorityFeePerGas: "0",
+			paymasterAndData: "0x626c6f63746f",
+			signature: "0x636c656d656e74"
+		},"0x636c656d656e74").then(console.log);
+	 * > 0xe554d0701f7fdc734f84927d109537f1ac4ee4ebfa3670c71d224a4fa15dbcd1
+	 * ```
+	 */
+	public async estimateUserOperationGas<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(
+		userOperation: UserOperation,
+		entryPoint: Address,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.sendUserOperation(this, userOperation, entryPoint, returnFormat);
+	}
+	/**
+	 * Return a UserOperation based on a hash (userOpHash) returned by eth_sendUserOperation
+	 *
+	 * @param hash a userOpHash value returned by `eth_sendUserOperation`
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @returns null in case the UserOperation is not yet included in a block, or a full UserOperation, with the addition of entryPoint, blockNumber, blockHash and transactionHash
+	 *
+	 * ```ts
+	 * 	web3.eth.getUserOperationByHash("0xxxxx").then(console.log);
+	 * > 0xxxxx
+	 * ```
+	 */
+	public async getUserOperationByHash<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(hash: HexStringBytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+		return rpcMethodsWrappers.getUserOperationByHash(this, hash, returnFormat);
+	}
+	/**
+	 * Return null in case the UserOperation is not yet included in a block, or
+	 *  - userOpHash the request hash
+	 *  - entryPoint
+	 *  - sender
+	 *	- nonce
+	 *	- paymaster the paymaster used for this userOp (or empty)
+	 *	- actualGasCost - actual amount paid (by account or paymaster) for this UserOperation
+	 *	- actualGasUsed - total gas used by this UserOperation (including preVerification, creation, validation and execution)
+	 *	- success boolean - did this execution completed without revert
+	 *	- reason in case of revert, this is the revert reason
+	 *	- logs the logs generated by this UserOperation (not including logs of other UserOperations in the same bundle)
+	 *	- receipt the TransactionReceipt object. Note that the returned TransactionReceipt is for the entire bundle, not only for this UserOperation.
+	 *
+	 * @param hash hash a userOpHash value returned by `eth_sendUserOperation`
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @returns null in case the UserOperation is not yet included in a block, or UserOperation
+	 *
+	 * ```ts
+	 * 	web3.eth.getUserOperationReceipt("0xxxxx").then(console.log);
+	 * >
+	 * ```
+	 */
+	public async getUserOperationReceipt<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(hash: HexStringBytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+		return rpcMethodsWrappers.getUserOperationReceipt(this, hash, returnFormat);
+	}
+	/**
+	 * Returns an array of the entryPoint addresses supported by the client. The first element of the array SHOULD be the entryPoint addressed preferred by the client.
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @returns an array of the entryPoint addresses supported by the client. The first element of the array SHOULD be the entryPoint addressed preferred by the client.
+	 *
+	 * ```ts
+	 * 	web3.eth.supportedEntryPoints().then(console.log);
+	 * > ["0xcd01C8aa8995A59eB7B2627E69b40e0524B5ecf8", "0x7A0A0d159218E6a2f407B99173A2b12A6DDfC2a6"]
+	 * ```
+	 */
+	public async supportedEntryPoints<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+		return rpcMethodsWrappers.supportedEntryPoints(this, returnFormat);
+	}
+	/**
+	 * calculate UserOperationHash
+	 * @param userOp a structure that describes a transaction to be sent on behalf of a user.
+	 * @param entryPoint  a singleton contract to execute bundles of UserOperations. Bundlers/Clients whitelist the supported entrypoint.
+	 * @returns an array of the entryPoint addresses supported by the client. The first element of the array SHOULD be the entryPoint addressed preferred by the client.
+	 *
+	 * ```ts
+	 * 	web3.eth.generateUserOpHash(sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
+			nonce: "123",
+			initCode: "0x68656c6c6f",
+			callData: "0x776F726C64",
+			callGasLimit: "1000",
+			verificationGasLimit: "2300",
+			preVerificationGas: "3100",
+			maxFeePerGas: "0",
+			maxPriorityFeePerGas: "0",
+			paymasterAndData: "0x626c6f63746f",
+			signature: "0x636c656d656e74"
+		},"0x636c656d656e74", '0x1').then(console.log);
+	 * > 0xxxx
+	 * ```
+	 */
+	public async generateUserOpHash(userOp: UserOperation, entryPoint: string) {
+		const chainId = await this.getChainId();
+		return generateUserOpHash(userOp, entryPoint, String(chainId));
 	}
 }

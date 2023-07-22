@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,8 +15,22 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './detect_transaction_type.js';
-export * from './format_transaction.js';
-export * from './prepare_transaction_for_signing.js';
-export * from './transaction_builder.js';
-export * from './generate_useroperation_hash.js';
+export interface UserOperation {
+	sender: string;
+	nonce: string;
+	initCode: string;
+	callData: string;
+	callGasLimit: string;
+	verificationGasLimit: string;
+	preVerificationGas: string;
+	maxFeePerGas: string;
+	maxPriorityFeePerGas: string;
+	paymasterAndData: string;
+	signature: string;
+}
+
+// Interface for UserOperation without maxFeePerGas and maxPriorityFeePerGas
+export interface UserOperationOptionalFees extends Omit<UserOperation, 'maxFeePerGas' | 'maxPriorityFeePerGas'> {
+	maxFeePerGas?: string;
+	maxPriorityFeePerGas?: string;
+}

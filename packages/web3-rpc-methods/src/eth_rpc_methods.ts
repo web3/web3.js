@@ -27,6 +27,7 @@ import {
 	Uint,
 	Uint256,
 	Web3EthExecutionAPI,
+	UserOperation,
 } from 'web3-types';
 import { Eip712TypedData } from 'web3-types/src/eth_types';
 import { validator } from 'web3-validator';
@@ -589,5 +590,40 @@ export async function signTypedData(
 	return requestManager.send({
 		method: `eth_signTypedData${useLegacy ? '' : '_v4'}`,
 		params: [address, typedData],
+	});
+}
+export async function sendUserOperation(
+	requestManager: Web3RequestManager,
+	userOperation: UserOperation,
+	entryPoint: Address,
+) {
+	return requestManager.send({
+		method: 'eth_sendUserOperation',
+		params: [userOperation, entryPoint],
+	});
+}
+
+export async function getUserOperationByHash(
+	requestManager: Web3RequestManager,
+	hash: HexStringBytes,
+) {
+	return requestManager.send({
+		method: 'eth_getUserOperationByHash',
+		params: [hash],
+	});
+}
+export async function getUserOperationReceipt(
+	requestManager: Web3RequestManager,
+	hash: HexStringBytes,
+) {
+	return requestManager.send({
+		method: 'eth_getUserOperationReceipt',
+		params: [hash],
+	});
+}
+export async function supportedEntryPoints(requestManager: Web3RequestManager) {
+	return requestManager.send({
+		method: 'eth_supportedEntryPoints',
+		params: [],
 	});
 }

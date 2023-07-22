@@ -33,7 +33,7 @@ import {
 	LogBase,
 } from '../eth_types.js';
 import { HexString } from '../primitives_types.js';
-
+import { UserOperation } from '../user_operation_types.js';
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis
 // These types follow closely to the v1.0.0-alpha.9 Ethereum spec
@@ -283,4 +283,8 @@ export type EthExecutionAPI = {
 	eth_compileSolidity: (code: string) => CompileResultAPI;
 	eth_compileLLL: (code: string) => HexStringBytes;
 	eth_compileSerpent: (code: string) => HexStringBytes;
+	eth_sendUserOperation: (userOperation: UserOperation, entryPoint: Address) => HexString32Bytes;
+	eth_getUserOperationByHash: (hash: HexStringBytes) => HexString32Bytes;
+	eth_getUserOperationReceipt: (hash: HexStringBytes) => HexString32Bytes;
+	eth_supportedEntryPoints: () => HexString32Bytes;
 };

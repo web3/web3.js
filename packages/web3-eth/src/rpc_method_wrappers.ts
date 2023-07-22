@@ -48,6 +48,8 @@ import {
 	TransactionForAccessList,
 	AccessListResult,
 	Eip712TypedData,
+	UserOperation,
+	UserOperationOptionalFees,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { format, hexToBytes, bytesToUint8Array, numberToHex } from 'web3-utils';
@@ -1151,4 +1153,81 @@ export async function signTypedData<ReturnFormat extends DataFormat>(
 	);
 
 	return format({ format: 'bytes' }, response, returnFormat);
+}
+/**
+ * View additional documentations here: {@link Web3Eth.sendUserOperation}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function sendUserOperation<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	userOperation: UserOperation,
+	entryPoint: Address,
+	returnFormat: ReturnFormat,
+) {
+	const response = await ethRpcMethods.sendUserOperation(
+		web3Context.requestManager,
+		userOperation,
+		entryPoint,
+	);
+	return format({ format: 'uint' }, response as Numbers, returnFormat);
+}
+
+/**
+ * View additional documentations here: {@link Web3Eth.estimateUserOperationGas}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function estimateUserOperationGas<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	userOperation: UserOperationOptionalFees,
+	entryPoint: Address,
+	returnFormat: ReturnFormat,
+) {
+	// If maxFeePerGas or maxPriorityFeePerGas is not provided, set them to '0'
+	if (userOperation?.maxFeePerGas === undefined) {
+		userOperation.maxFeePerGas = '0';
+	}
+	if (userOperation?.maxPriorityFeePerGas === undefined) {
+		userOperation.maxPriorityFeePerGas = '0';
+	}
+	const response = await ethRpcMethods.sendUserOperation(
+		web3Context.requestManager,
+		userOperation as UserOperation,
+		entryPoint,
+	);
+	return format({ format: 'uint' }, response as Numbers, returnFormat);
+}
+/**
+ * View additional documentations here: {@link Web3Eth.getUserOperationByHash}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function getUserOperationByHash<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	hash: HexStringBytes,
+	returnFormat: ReturnFormat,
+) {
+	const response = await ethRpcMethods.getUserOperationByHash(web3Context.requestManager, hash);
+	return format({ format: 'uint' }, response as Numbers, returnFormat);
+}
+/**
+ * View additional documentations here: {@link Web3Eth.getUserOperationReceipt}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function getUserOperationReceipt<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	hash: HexStringBytes,
+	returnFormat: ReturnFormat,
+) {
+	const response = await ethRpcMethods.getUserOperationReceipt(web3Context.requestManager, hash);
+	return format({ format: 'uint' }, response as Numbers, returnFormat);
+}
+/**
+ * View additional documentations here: {@link Web3Eth.supportedEntryPoints}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function supportedEntryPoints<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	returnFormat: ReturnFormat,
+) {
+	const response = await ethRpcMethods.supportedEntryPoints(web3Context.requestManager);
+	return format({ format: 'uint' }, response as Numbers, returnFormat);
 }
