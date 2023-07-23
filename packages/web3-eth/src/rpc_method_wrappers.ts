@@ -1169,7 +1169,7 @@ export async function sendUserOperation<ReturnFormat extends DataFormat>(
 		userOperation,
 		entryPoint,
 	);
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format({ format: 'uint' }, response, returnFormat);
 }
 
 /**
@@ -1182,19 +1182,20 @@ export async function estimateUserOperationGas<ReturnFormat extends DataFormat>(
 	entryPoint: Address,
 	returnFormat: ReturnFormat,
 ) {
+	const userOp = { ...userOperation };
 	// If maxFeePerGas or maxPriorityFeePerGas is not provided, set them to '0'
 	if (userOperation?.maxFeePerGas === undefined) {
-		userOperation.maxFeePerGas = '0';
+		userOp.maxFeePerGas = '0';
 	}
 	if (userOperation?.maxPriorityFeePerGas === undefined) {
-		userOperation.maxPriorityFeePerGas = '0';
+		userOp.maxPriorityFeePerGas = '0';
 	}
 	const response = await ethRpcMethods.sendUserOperation(
 		web3Context.requestManager,
-		userOperation as UserOperation,
+		userOp as UserOperation,
 		entryPoint,
 	);
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format({ format: 'uint' }, response, returnFormat);
 }
 /**
  * View additional documentations here: {@link Web3Eth.getUserOperationByHash}
@@ -1206,7 +1207,7 @@ export async function getUserOperationByHash<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const response = await ethRpcMethods.getUserOperationByHash(web3Context.requestManager, hash);
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format({ format: 'uint' }, response, returnFormat);
 }
 /**
  * View additional documentations here: {@link Web3Eth.getUserOperationReceipt}
@@ -1218,7 +1219,7 @@ export async function getUserOperationReceipt<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const response = await ethRpcMethods.getUserOperationReceipt(web3Context.requestManager, hash);
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format({ format: 'uint' }, response, returnFormat);
 }
 /**
  * View additional documentations here: {@link Web3Eth.supportedEntryPoints}
@@ -1229,5 +1230,5 @@ export async function supportedEntryPoints<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const response = await ethRpcMethods.supportedEntryPoints(web3Context.requestManager);
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format({ format: 'uint' }, response, returnFormat);
 }

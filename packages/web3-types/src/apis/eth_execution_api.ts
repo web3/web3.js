@@ -286,5 +286,5 @@ export type EthExecutionAPI = {
 	eth_sendUserOperation: (userOperation: UserOperation, entryPoint: Address) => HexString32Bytes;
 	eth_getUserOperationByHash: (hash: HexStringBytes) => HexString32Bytes;
 	eth_getUserOperationReceipt: (hash: HexStringBytes) => HexString32Bytes;
-	eth_supportedEntryPoints: () => HexString32Bytes;
+	eth_supportedEntryPoints: () => Address[];
 };
