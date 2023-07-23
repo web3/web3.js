@@ -186,3 +186,6 @@ Documentation:
 -   Added return type for `formatSubscriptionResult` in class `NewHeadsSubscription` (#6368)
 
 ## [Unreleased]
+### Added
+
+- increase eip-4337 methods `sendUserOperation`, `estimateUserOperationGas`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`, `generateUserOpHash`

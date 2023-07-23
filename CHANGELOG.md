@@ -1913,6 +1913,15 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
 
+#### web3-rpc-methods
+
+-   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
+-   increase eip-4337 rpc methods `sendUserOperation`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`
+
+#### web3-eth
+
+-   increase eip-4337 methods `sendUserOperation`, `estimateUserOperationGas`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`, `generateUserOpHash`
+
 #### web3-core
 
 -   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
@@ -1920,6 +1929,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth-contract
 
 -   In case of error events there will be inner error also available for details
+
+#### web3-type
+
+-   added eip-4337 `UserOperation` type
 
 ### Fixed
 

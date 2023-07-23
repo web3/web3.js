@@ -114,4 +114,8 @@ Documentation:
 
 -   Dependencies updated
 
+### Added
+
+-   increase eip-4337 rpc methods `sendUserOperation`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`
+
 ## [Unreleased]
