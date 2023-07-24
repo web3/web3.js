@@ -65,6 +65,8 @@ import {
 	ERR_TX_UNSUPPORTED_TYPE,
 	ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR,
 	ERR_TX_INVALID_PROPERTIES_FOR_TYPE,
+	ERR_TX_MISSING_GAS_INNER_ERROR,
+	ERR_TX_GAS_MISMATCH_INNER_ERROR,
 } from '../error_codes.js';
 import { InvalidValueError, BaseWeb3Error } from '../web3_error_base.js';
 
@@ -312,6 +314,16 @@ export class MissingChainOrHardforkError extends InvalidValueError {
 	}
 }
 
+export class MissingGasInnerError extends BaseWeb3Error {
+	public code = ERR_TX_MISSING_GAS_INNER_ERROR;
+
+	public constructor() {
+		super(
+			'Missing properties in transaction, either define "gas" and "gasPrice" for type 0 transactions or "gas", "maxPriorityFeePerGas" and "maxFeePerGas" for type 2 transactions',
+		);
+	}
+}
+
 export class MissingGasError extends InvalidValueError {
 	public code = ERR_TX_MISSING_GAS;
 
@@ -328,6 +340,17 @@ export class MissingGasError extends InvalidValueError {
 				value.maxFeePerGas ?? 'undefined'
 			}`,
 			'"gas" is missing',
+		);
+		this.innerError = new MissingGasInnerError();
+	}
+}
+
+export class TransactionGasMismatchInnerError extends BaseWeb3Error {
+	public code = ERR_TX_GAS_MISMATCH_INNER_ERROR;
+
+	public constructor() {
+		super(
+			'Missing properties in transaction, either define "gas" and "gasPrice" for type 0 transactions or "gas", "maxPriorityFeePerGas" and "maxFeePerGas" for type 2 transactions, not both',
 		);
 	}
 }
@@ -349,6 +372,7 @@ export class TransactionGasMismatchError extends InvalidValueError {
 			}`,
 			'transaction must specify legacy or fee market gas properties, not both',
 		);
+		this.innerError = new TransactionGasMismatchInnerError();
 	}
 }
 
