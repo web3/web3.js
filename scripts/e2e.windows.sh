@@ -13,8 +13,8 @@ cd windows_test
 
 # Install web3 as dep
 npm init --yes
-npm install web3@e2e --save --registry http://localhost:4873
-npm install iltorb --save --registry http://localhost:4873
+#npm install web3@e2e --save --registry http://localhost:4873
+#npm install iltorb --save --registry http://localhost:4873
 ./basic_usage.js
 
 # Shutdown verdaccio server
