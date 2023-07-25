@@ -110,7 +110,7 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
     e2e_windows:
-        runs-on: ubuntu-latest
+        runs-on: windows-latest
         env:
             TEST: "e2e_windows"
             INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
