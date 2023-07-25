@@ -472,6 +472,13 @@ describe('defaultTransactionBuilder', () => {
 			input.hardfork = 'istanbul';
 			if (!isNullish(input.common)) input.common.hardfork = 'istanbul';
 
+			const mockBlockDataNoBaseFeePerGas = { ...mockBlockData, baseFeePerGas: undefined };
+			jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockImplementation(
+				// @ts-expect-error - Mocked implementation doesn't have correct method signature
+				// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
+				() => mockBlockDataNoBaseFeePerGas,
+			);
+			
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,

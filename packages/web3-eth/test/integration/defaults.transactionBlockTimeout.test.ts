@@ -81,7 +81,7 @@ describe('defaults', () => {
 			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 			// eslint-disable-next-line no-void
 			await sendFewSampleTxs(2);
-
+			
 			try {
 				await sentTx;
 				throw new Error(

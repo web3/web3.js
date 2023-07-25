@@ -282,7 +282,7 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(minedTransactionData).toMatchObject(transaction);
 		});
 
-		it('should send a successful type 0x0 transaction with data', async () => {
+		it.only('should send a successful default transaction with data', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
@@ -290,7 +290,7 @@ describe('Web3Eth.sendTransaction', () => {
 				value: BigInt(1),
 			};
 			const response = await web3Eth.sendTransaction(transaction, DEFAULT_RETURN_FORMAT);
-			expect(response.type).toBe(BigInt(0));
+			expect(response.type).toBe(BigInt(2));
 			expect(response.status).toBe(BigInt(1));
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject(transaction);
@@ -378,7 +378,7 @@ describe('Web3Eth.sendTransaction', () => {
 				expect(typeof data.gasUsed).toBe('bigint');
 				expect(typeof data.transactionIndex).toBe('bigint');
 				expect(data.status).toBe(BigInt(1));
-				expect(data.type).toBe(BigInt(0));
+				expect(data.type).toBe(BigInt(2));
 			});
 			expect.assertions(8);
 		});

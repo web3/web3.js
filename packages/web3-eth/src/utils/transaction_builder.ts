@@ -47,7 +47,7 @@ import {
 import { bytesToHex, format } from 'web3-utils';
 import { NUMBER_DATA_FORMAT } from '../constants.js';
 // eslint-disable-next-line import/no-cycle
-import { getChainId, getTransactionCount, estimateGas } from '../rpc_method_wrappers.js';
+import { getChainId, getTransactionCount, estimateGas, getBlock } from '../rpc_method_wrappers.js';
 import { detectTransactionType } from './detect_transaction_type.js';
 import { transactionSchema } from '../schemas.js';
 import { InternalTransaction } from '../types.js';
@@ -109,13 +109,18 @@ export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	return getTransactionCount(web3Context, address, web3Context.defaultBlock, returnFormat);
 };
 
-export const getTransactionType = (
+export const getTransactionType = async (
 	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
+	ignoreFillTransactionType?: Boolean
 ) => {
-	const inferredType = detectTransactionType(transaction, web3Context);
-
+	const inferredType = await detectTransactionType(transaction, web3Context);
 	if (!isNullish(inferredType)) return inferredType;
+	// if there was no inferredType by a user, check if network supports eip-1559 and use type 0x2 transaction
+	const block = await getBlock(web3Context, "latest", false, ETH_DATA_FORMAT);
+	if (!ignoreFillTransactionType && !isNullish(block) && !isNullish(block.baseFeePerGas)) {
+		return '0x2';
+	}
 	if (!isNullish(web3Context.defaultTransactionType))
 		return format({ format: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
 
@@ -220,7 +225,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 		populatedTransaction.gasLimit = populatedTransaction.gas;
 	}
 
-	populatedTransaction.type = getTransactionType(populatedTransaction, options.web3Context);
+	populatedTransaction.type = await getTransactionType(populatedTransaction, options.web3Context);
 	if (
 		isNullish(populatedTransaction.accessList) &&
 		(populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2')

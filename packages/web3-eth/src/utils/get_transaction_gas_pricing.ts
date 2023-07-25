@@ -83,7 +83,7 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 	  >
 	| undefined
 > {
-	const transactionType = getTransactionType(transaction, web3Context);
+	const transactionType = await getTransactionType(transaction, web3Context);
 	if (!isNullish(transactionType)) {
 		if (transactionType.startsWith('-'))
 			throw new UnsupportedTransactionTypeError(transactionType);
