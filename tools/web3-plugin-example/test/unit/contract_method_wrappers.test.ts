@@ -81,10 +81,43 @@ describe('ContractMethodWrappersPlugin', () => {
 		});
 
 		it('should call `transferAndGetBalances` with expected RPC object', async () => {
+			const mockBlockData = {
+				parentHash: '0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54',
+				sha3Uncles: '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
+				miner: '0xbb7b8287f3f0a933474a79eae42cbca977791171',
+				stateRoot: '0xddc8b0234c2e0cad087c8b389aa7ef01f7d79b2570bccb77ce48648aa61c904d',
+				transactionsRoot:
+					'0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+				receiptsRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+				logsBloom:
+					'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+				difficulty: '0x4ea3f27bc',
+				number: '0x1b4',
+				gasLimit: '0x1388',
+				gasUsed: '0x1c96e73',
+				timestamp: '0x55ba467c',
+				extraData: '0x476574682f4c5649562f76312e302e302f6c696e75782f676f312e342e32',
+				mixHash: '0x4fffe9ae21f1c9e15207b1f472d5bbdd68c9595d461666602f2be20daf5e7843',
+				nonce: '0x1c11920a4',
+				totalDifficulty: '0x78ed983323d',
+				size: '0x220',
+				transactions: [
+					'0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b',
+					'0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b',
+					'0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b',
+				],
+				uncles: [
+					'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+					'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+					'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+				],
+				hash: '0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+			};
 			const expectedGasPrice = '0x1ca14bd70';
 			const expectedTransactionHash =
 				'0xc41b9a4f654c44552e135f770945916f57c069b80326f9a5f843e613491ab6b1';
 
+			requestManagerSendSpy.mockResolvedValueOnce(mockBlockData);
 			requestManagerSendSpy.mockResolvedValueOnce(expectedGasPrice);
 			// Mocking block number for trySendTransaction call
 			requestManagerSendSpy.mockResolvedValueOnce('0x1');
@@ -102,7 +135,7 @@ describe('ContractMethodWrappersPlugin', () => {
 				amount,
 			);
 			// The first call will be to `eth_gasPrice` and the second is to `eth_blockNumber`. And the third one will be to `eth_sendTransaction`:
-			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(3, {
+			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(4, {
 				method: 'eth_sendTransaction',
 				params: [
 					expect.objectContaining({

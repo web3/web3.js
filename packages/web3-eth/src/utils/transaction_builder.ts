@@ -112,15 +112,19 @@ export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 export const getTransactionType = async (
 	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
-	ignoreFillTransactionType?: Boolean
+	ignoreFillTransactionType?: boolean,
 ) => {
-	const inferredType = await detectTransactionType(transaction, web3Context);
+	const inferredType = detectTransactionType(transaction, web3Context);
 	if (!isNullish(inferredType)) return inferredType;
-	// if there was no inferredType by a user, check if network supports eip-1559 and use type 0x2 transaction
-	const block = await getBlock(web3Context, "latest", false, ETH_DATA_FORMAT);
-	if (!ignoreFillTransactionType && !isNullish(block) && !isNullish(block.baseFeePerGas)) {
-		return '0x2';
+	// check if type 0 gas properties are defined
+	if (!transaction.gas && !transaction.gasPrice) {
+		// if there was no inferredType by a user, check if network supports eip-1559 and use type 0x2 transaction
+		const block = await getBlock(web3Context, 'latest', false, ETH_DATA_FORMAT);
+		if (!ignoreFillTransactionType && !isNullish(block) && !isNullish(block.baseFeePerGas)) {
+			return '0x2';
+		}
 	}
+
 	if (!isNullish(web3Context.defaultTransactionType))
 		return format({ format: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
 
