@@ -345,7 +345,6 @@ describe('rpc', () => {
 				// eslint-disable-next-line  no-await-in-loop
 				resTx.push(await contractDeployed.methods?.firesStringEvent(l).send(sendOptions));
 			}
-			console.log(resTx)
 
 			// test type hexstring
 			const res: Array<any> = await web3Eth.getPastLogs({
