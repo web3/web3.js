@@ -282,7 +282,7 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(minedTransactionData).toMatchObject(transaction);
 		});
 
-		it.only('should send a successful default transaction with data', async () => {
+		it('should send a successful default transaction with data', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
