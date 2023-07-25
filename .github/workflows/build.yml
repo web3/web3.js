@@ -109,18 +109,18 @@ jobs:
               uses: coverallsapp/github-action@master
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-#    e2e_windows:
-#        runs-on: windows-latest
-#        env:
-#            TEST: "e2e_windows"
-#            INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
-#            INFURA_WSS: ${{ secrets.INFURA_WSS }}
-#        steps:
-#            - uses: actions/setup-node@v1
-#              with:
-#                  node-version: 16
-#            - uses: actions/checkout@v2
-#            - run: bash ./scripts/ci.sh
+    e2e_windows:
+        runs-on: windows-latest
+        env:
+            TEST: "e2e_windows"
+            INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
+            INFURA_WSS: ${{ secrets.INFURA_WSS }}
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 16
+            - uses: actions/checkout@v2
+            - run: bash ./scripts/ci.sh
 #    eth2:
 #        runs-on: ubuntu-latest
 #        strategy:
