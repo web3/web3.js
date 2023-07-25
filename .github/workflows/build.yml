@@ -18,68 +18,68 @@ on:
             - "assets/**"
             - "**.md"
 jobs:
-#    lint:
-#        runs-on: ubuntu-latest
-#        env:
-#            TEST: "build_and_lint"
-#            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        steps:
-#            - uses: actions/setup-node@v1
-#              with:
-#                  node-version: 16
-#            - uses: actions/checkout@v2
-#
-#            - uses: actions/cache@v2
-#              id: cache-deps
-#              with:
-#                  path: |
-#                      node_modules
-#                      */*/node_modules
-#                  key: ${{ runner.os }}-node16-${{ hashFiles('**/package-lock.json') }}
-#
-#            - run: npm ci
-#              if: steps.cache-deps.outputs.cache-hit != 'true'
-#
-#            - run: bash ./scripts/ci.sh
-#    unit:
-#        runs-on: ubuntu-latest
-#        strategy:
-#            matrix:
-#                node: [16, 18]
-#        env:
-#            TEST: "unit"
-#        steps:
-#            - uses: actions/setup-node@v1
-#              with:
-#                  node-version: ${{ matrix.node }}
-#
-#            - uses: actions/checkout@v2
-#
-#            - uses: actions/cache@v2
-#              id: cache-deps
-#              with:
-#                  path: |
-#                      node_modules
-#                      */*/node_modules
-#                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
-#
-#            - run: npm ci
-#              if: steps.cache-deps.outputs.cache-hit != 'true'
-#
-#            - run: bash ./scripts/ci.sh
+    lint:
+        runs-on: ubuntu-latest
+        env:
+            TEST: "build_and_lint"
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 16
+            - uses: actions/checkout@v2
+
+            - uses: actions/cache@v2
+              id: cache-deps
+              with:
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node16-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm ci
+              if: steps.cache-deps.outputs.cache-hit != 'true'
+
+            - run: bash ./scripts/ci.sh
+    unit:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [16, 18]
+        env:
+            TEST: "unit"
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node }}
+
+            - uses: actions/checkout@v2
+
+            - uses: actions/cache@v2
+              id: cache-deps
+              with:
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm ci
+              if: steps.cache-deps.outputs.cache-hit != 'true'
+
+            - run: bash ./scripts/ci.sh
     e2e:
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
             matrix:
                 testCmd:
-                    [
-#                        'unit_and_e2e_clients',
-#                        'e2e_browsers',
-#                        'e2e_ganache',
-                        'e2e_mosaic',
-                        #'e2e_gnosis_dex',
-                    ]
+                  [
+                      'unit_and_e2e_clients',
+                      'e2e_browsers',
+                      'e2e_ganache',
+                      'e2e_mosaic',
+                    #'e2e_gnosis_dex',
+                  ]
         env:
             TEST: ${{ matrix.testCmd }}
             INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
@@ -100,7 +100,7 @@ jobs:
                   key: ${{ runner.os }}-node16-${{ hashFiles('**/package-lock.json') }}
 
             - run: npm ci
-#              if: (env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers') && steps.cache-deps.outputs.cache-hit != 'true'
+              if: (env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers') && steps.cache-deps.outputs.cache-hit != 'true'
 
             - run: bash ./scripts/ci.sh
 
@@ -121,32 +121,32 @@ jobs:
                   node-version: 16
             - uses: actions/checkout@v2
             - run: bash ./scripts/ci.sh
-#    eth2:
-#        runs-on: ubuntu-latest
-#        strategy:
-#            matrix:
-#                node: [16, 18]
-#        env:
-#            TEST: "eth2"
-#        steps:
-#            - uses: actions/setup-node@v1
-#              with:
-#                  node-version: ${{ matrix.node }}
-#
-#            - uses: actions/checkout@v2
-#
-#            - uses: actions/cache@v2
-#              id: cache-deps
-#              with:
-#                  path: |
-#                      node_modules
-#                      */*/node_modules
-#                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
-#
-#            - run: npm ci
-#              if: steps.cache-deps.outputs.cache-hit != 'true'
-#
-#            - run: bash ./scripts/ci.sh
+    eth2:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [16, 18]
+        env:
+            TEST: "eth2"
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node }}
+
+            - uses: actions/checkout@v2
+
+            - uses: actions/cache@v2
+              id: cache-deps
+              with:
+                  path: |
+                      node_modules
+                      */*/node_modules
+                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm ci
+              if: steps.cache-deps.outputs.cache-hit != 'true'
+
+            - run: bash ./scripts/ci.sh
     build:
         runs-on: ubuntu-latest
         steps:
