@@ -31,6 +31,9 @@ echo "Installing updated web3 via virtual registry "
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 
 git submodule update --init --recursive
+
+yarn add "web3@^1.0.0-beta.36" --dev --registry http://localhost:4873
+
 yarn --registry http://localhost:4873
 
 yarn add web3@e2e --registry http://localhost:4873 --network-timeout 600000
@@ -53,4 +56,57 @@ sleep 10
 
 # Compile and test
 npx buidler compile
+
+# make links to web3@1.x
+rm -rf node_modules/web3-utils
+ln -s ../node_modules/web3-utils node_modules/web3-utils
+
+rm -rf node_modules/web3-providers-ws
+ln -s ../node_modules/web3-providers-ws node_modules/web3-providers-ws
+
+rm -rf node_modules/web3-eth-accounts
+ln -s ../node_modules/web3-eth-accounts node_modules/web3-eth-accounts
+
+rm -rf node_modules/web3-shh
+ln -s ../node_modules/web3-shh node_modules/web3-shh
+
+rm -rf node_modules/web3-core
+ln -s ../node_modules/web3-core node_modules/web3-core
+
+rm -rf node_modules/web3-net
+ln -s ../node_modules/web3-net node_modules/web3-net
+
+rm -rf node_modules/web3-eth
+ln -s ../node_modules/web3-eth node_modules/web3-eth
+
+rm -rf node_modules/web3-eth-abi
+ln -s ../node_modules/web3-eth-abi node_modules/web3-eth-abi
+
+rm -rf node_modules/web3-eth-contract
+ln -s ../node_modules/web3-eth-contract node_modules/web3-eth-contract
+
+rm -rf node_modules/web3-eth-personal
+ln -s ../node_modules/web3-eth-personal node_modules/web3-eth-personal
+
+rm -rf node_modules/web3-eth-ens
+ln -s ../node_modules/web3-eth-ens node_modules/web3-eth-ens
+
+rm -rf node_modules/web3-validator
+ln -s ../node_modules/web3-validator node_modules/web3-validator
+
+rm -rf node_modules/web3-provider-http
+ln -s ../node_modules/web3-provider-http node_modules/web3-provider-http
+
+rm -rf node_modules/web3-eth-iban
+ln -s ../node_modules/web3-eth-iban node_modules/web3-eth-iban
+
+rm -rf node_modules/web3-bzz
+ln -s ../node_modules/web3-bzz node_modules/web3-bzz
+
+rm -rf node_modules/web3
+rm -rf node_modules/@truffle/interface-adapter/node_modules/web3
+ln -s ../node_modules/web3 node_modules/web3
+ln -s ../node_modules/web3 node_modules/@truffle/interface-adapter/node_modules/web3
+
+# run test
 npm test

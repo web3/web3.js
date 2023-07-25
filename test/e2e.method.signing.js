@@ -603,7 +603,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         };
 
         const signed = await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
-        
+
         const data = Buffer.from(signed.rawTransaction.slice(2), "hex")
         const tx = TransactionFactory.fromSerializedData(data);
 

@@ -22,13 +22,12 @@ module.exports = {
 	],
     resolve: {
         alias: {
-            // To avoid blotting up the `bn.js` library all over the packages 
-            // use single library instance. 
+            // To avoid blotting up the `bn.js` library all over the packages
+            // use single library instance.
             "bn.js": path.resolve(__dirname, 'node_modules/bn.js'),
             'ethereumjs-util': path.resolve(__dirname, 'node_modules/ethereumjs-util'),
             "buffer": path.resolve(__dirname, 'node_modules/buffer'),
-            
-            
+            "zlib": require.resolve('browserify-zlib'),
         },
         fallback: {
             https: require.resolve('https-browserify'),
@@ -36,9 +35,8 @@ module.exports = {
             crypto: require.resolve("crypto-browserify"),
             stream: require.resolve("stream-browserify")
         },
-
     },
-		
+
     module: {
         rules: [
             {
