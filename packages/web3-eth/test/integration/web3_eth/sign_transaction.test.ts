@@ -20,7 +20,6 @@ import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
-	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
 
@@ -56,10 +55,10 @@ describe('Web3Eth.signTransaction', () => {
 				gas: BigInt(21000),
 				value: BigInt(1),
 				to: transaction.to,
+				input: '0x',
+				data: '0x',
 			},
 		};
-		if (getSystemTestBackend() === 'geth') expectedResponse.tx.input = '0x';
-		else if (getSystemTestBackend() === 'ganache') expectedResponse.tx.data = '0x';
 
 		expect(response).toMatchObject(expectedResponse);
 
@@ -88,12 +87,10 @@ describe('Web3Eth.signTransaction', () => {
 				nonce: BigInt(nonce),
 				gasPrice: BigInt(1000000001),
 				gas: BigInt(475320),
+				input: greeterContractDeploymentData,
+				data: greeterContractDeploymentData,
 			},
 		};
-		if (getSystemTestBackend() === 'geth')
-			expectedResponse.tx.input = greeterContractDeploymentData;
-		else if (getSystemTestBackend() === 'ganache')
-			expectedResponse.tx.data = greeterContractDeploymentData;
 
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(response).toMatchObject(expectedResponse);
