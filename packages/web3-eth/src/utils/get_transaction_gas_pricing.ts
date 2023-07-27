@@ -76,6 +76,7 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 	transaction: InternalTransaction,
 	web3Context: Web3Context<EthExecutionAPI>,
 	returnFormat: ReturnFormat,
+	ignoreFillTransactionType?: false,
 ): Promise<
 	| FormatType<
 			{ gasPrice?: Numbers; maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers },
@@ -83,7 +84,11 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 	  >
 	| undefined
 > {
-	const transactionType = await getTransactionType(transaction, web3Context);
+	const transactionType = await getTransactionType(
+		transaction,
+		web3Context,
+		ignoreFillTransactionType,
+	);
 	if (!isNullish(transactionType)) {
 		if (transactionType.startsWith('-'))
 			throw new UnsupportedTransactionTypeError(transactionType);

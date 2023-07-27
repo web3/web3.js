@@ -73,7 +73,7 @@ type ExpectOptions = {
 };
 export const validateTransaction = (
 	tx: TransactionInfo,
-	expectOptions: ExpectOptions = { type: 2 },
+	expectOptions: ExpectOptions = { type: 0 },
 ) => {
 	expect(tx.nonce).toBeDefined();
 	expect(tx.hash).toMatch(regexHex32);

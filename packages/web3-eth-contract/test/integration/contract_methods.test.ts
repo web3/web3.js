@@ -17,11 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ContractExecutionError } from 'web3-errors';
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import {
-	getSystemTestProvider,
-	createTempAccount,
-	getSystemTestBackend,
-} from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
@@ -165,7 +161,7 @@ describe('contract', () => {
 						status: BigInt(0),
 						to: contractDeployed.options.address?.toLowerCase(),
 						transactionIndex: BigInt(0),
-						type: BigInt(2),
+						type: BigInt(0),
 					},
 				});
 			});
