@@ -367,7 +367,10 @@ export class Web3Context<
 		);
 	}
 
-	// extend(extendObj: ExtensionObject) method is
+	/**
+	 * This method allows extending the web3 modules.
+	 * Note: This method is only for backward compatibility, and It is recommended to use Web3 v4 Plugin feature for extending web3.js functionality if you are developing some thing new.
+	 */
 	public extend(extendObj: ExtensionObject) {
 		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
 		if (extendObj.property && !this[extendObj.property])
@@ -388,6 +391,7 @@ export class Web3Context<
 			// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
 			else this[element.name] = method;
 		});
+		return this;
 	}
 }
 
