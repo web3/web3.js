@@ -77,6 +77,7 @@ export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
 	contractAbi?: ContractAbi;
 	checkRevertBeforeSending?: boolean;
+	ignoreFillingGasLimit?: boolean;
 }
 
 export interface SendSignedTransactionOptions<ResolveType = TransactionReceipt> {

@@ -163,6 +163,16 @@ Documentation:
 
 ## [Unreleased]
 
+### Fixed
+
+-   sendTransaction will have gas filled by default using method `estimateGas` unless transaction builder `options.fillGas` is false. (#6249)
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+
+### Changed
+
+-   `MissingGasError` error message changed for clarity (#6215)
+-
+
 ### Added
 
 -   A `rpc_method_wrapper` (`signTypedData`) for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)

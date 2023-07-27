@@ -101,7 +101,6 @@ describe('ContractMethodWrappersPlugin', () => {
 				recipient,
 				amount,
 			);
-
 			// The first call will be to `eth_gasPrice` and the second is to `eth_blockNumber`. And the third one will be to `eth_sendTransaction`:
 			expect(requestManagerSendSpy).toHaveBeenNthCalledWith(3, {
 				method: 'eth_sendTransaction',

@@ -66,11 +66,11 @@ describe('eth', () => {
 
 			sendOptions = { from: tempAcc.address, gas: '1000000' };
 
-			const deoloyedContract = await contract.deploy(deployOptions).send(sendOptions);
+			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
 			const { provider } = web3Eth;
-			web3Eth.setProvider(deoloyedContract.provider as SupportedProviders);
+			web3Eth.setProvider(deployedContract.provider as SupportedProviders);
 
-			expect(web3Eth.provider).toBe(deoloyedContract.provider);
+			expect(web3Eth.provider).toBe(deployedContract.provider);
 			web3Eth.setProvider(provider as SupportedProviders);
 		});
 		it('providers', () => {
