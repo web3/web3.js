@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Transaction, DataFormat, DEFAULT_RETURN_FORMAT, FormatType } from 'web3-types';
 import { isNullish, ValidationSchemaInput } from 'web3-validator';
-import { mergeDeep, format, bytesToHex } from 'web3-utils';
+import { mergeDeep, format, bytesToHex, toHex } from 'web3-utils';
 import { TransactionDataAndInputError } from 'web3-errors';
 
 import { transactionInfoSchema, transactionSchema } from '../schemas.js';
@@ -52,7 +52,9 @@ export function formatTransaction<
 	if (
 		!isNullish(formattedTransaction.data) &&
 		!isNullish(formattedTransaction.input) &&
-		formattedTransaction.data !== formattedTransaction.input
+		// Converting toHex is accounting for data and input being Uint8Arrays
+		// since comparing Uint8Array is not as straightforward as comparing strings
+		toHex(formattedTransaction.data) !== toHex(formattedTransaction.input)
 	)
 		throw new TransactionDataAndInputError({
 			data: bytesToHex(formattedTransaction.data),
