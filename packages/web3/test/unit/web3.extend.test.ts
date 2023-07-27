@@ -22,13 +22,13 @@ declare module 'web3' {
 	interface Web3Context {
 		// for first test like web3.myModule.getL2Balance(...)
 		myModule: {
-			getBalance(address: Address, blockTag: BlockTag): Promise<string>;
-			getL2Balance(address: Address, blockTag: BlockTag): Promise<string>;
+			getBalance(address: Address, blockTag: BlockTag): Promise<bigint>;
+			getL2Balance(address: Address, blockTag: BlockTag): Promise<bigint>;
 		};
 
 		// for second test, if user want to define these method types on web3 obj like web3.getBalance(...)
-		getBalance(address: Address, blockTag: BlockTag): Promise<string>;
-		getL2Balance(address: Address, blockTag: BlockTag): Promise<string>;
+		getBalance(address: Address, blockTag: BlockTag): Promise<bigint>;
+		getL2Balance(address: Address, blockTag: BlockTag): Promise<bigint>;
 	}
 }
 
