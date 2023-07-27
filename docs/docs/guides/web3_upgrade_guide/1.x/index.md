@@ -38,7 +38,7 @@ However, the approach to subscribing to Provider events remains the same, utiliz
 
 ### Not Available
 
-- The [`web3.extend`](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) function is not available in web3.js v4. Instead, for extending web3 functionality, a more powerful plugin feature is available. Follow the [Add custom RPC methods guide](/guides/advanced/support_additional_rpc_methods/) for this new feature.
+-   The [`web3.extend`](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) function is not available in web3.js v4. Instead, for extending web3 functionality, a more powerful plugin feature is available. Follow the [Add custom RPC methods guide](/guides/advanced/support_additional_rpc_methods/) for this new feature.
 
 -   [web3.bzz](https://web3js.readthedocs.io/en/v1.7.3/web3-bzz.html) Package for interacting with Swarm is not implemented
 -   [web3.shh](https://web3js.readthedocs.io/en/v1.7.3/web3-shh.html) Package for interacting with Whisper is not implemented
@@ -50,7 +50,6 @@ It will not have:
 ```ts
 // web3.bzz is NOT available
 // web3.shh is NOT available
-// web3.extend is NOT available
 ```
 
 ### Defaults and Configs
@@ -136,6 +135,60 @@ import type { Transaction, TransactionReceipt } from 'web3-core';
 
 // in 4.x
 import type { Transaction, TransactionReceipt } from 'web3-types';
+```
+
+### Web3 Extend
+
+`web3.extend` is available but methods.params , methods.inputFormatter and methods.outputFormatter are not available to set. In typescript
+you will need to set module augmentation as mentioned in following example.
+
+```ts
+// in 1.x
+web3.extend({
+	property: 'myModule',
+	methods: [
+		{
+			name: 'getBalance',
+			call: 'eth_getBalance',
+			params: 2,
+			inputFormatter: [
+				web3.extend.formatters.inputAddressFormatter,
+				web3.extend.formatters.inputDefaultBlockNumberFormatter,
+			],
+			outputFormatter: web3.utils.hexToNumberString,
+		},
+		{
+			name: 'getGasPriceSuperFunction',
+			call: 'eth_gasPriceSuper',
+			params: 2,
+			inputFormatter: [null, web3.utils.numberToHex],
+		},
+	],
+});
+
+// in 4.x
+declare module 'web3' {
+	interface Web3Context {
+		myModule: {
+			getBalance(address: Address, blockTag: BlockTag): Promise<bigint>;
+			getGasPriceSuperFunction(blockTag: BlockTag): Promise<bigint>;
+		};
+	}
+}
+
+web3.extend({
+	property: 'myModule',
+	methods: [
+		{
+			name: 'getBalance',
+			call: 'eth_getBalance',
+		},
+		{
+			name: 'getGasPriceSuperFunction',
+			call: 'eth_gasPriceSuper',
+		},
+	],
+});
 ```
 
 ### Formatters
