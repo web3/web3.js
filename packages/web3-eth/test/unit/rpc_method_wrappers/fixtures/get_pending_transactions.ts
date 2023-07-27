@@ -26,6 +26,7 @@ const transaction: Transaction = {
 	maxFeePerGas: '0x1229298c00',
 	maxPriorityFeePerGas: '0x49504f80',
 	data: '0x',
+	input: '0x',
 	nonce: '0x4',
 	chain: 'mainnet',
 	hardfork: 'berlin',
