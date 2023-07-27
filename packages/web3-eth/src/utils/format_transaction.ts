@@ -17,8 +17,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Transaction, DataFormat, DEFAULT_RETURN_FORMAT, FormatType } from 'web3-types';
 import { isNullish, ValidationSchemaInput } from 'web3-validator';
-import { mergeDeep, format } from 'web3-utils';
-import { transactionSchema } from '../schemas.js';
+import { mergeDeep, format, bytesToHex } from 'web3-utils';
+import { TransactionDataAndInputError } from 'web3-errors';
+
+import { transactionInfoSchema, transactionSchema } from '../schemas.js';
 
 export function formatTransaction<
 	ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
@@ -26,8 +28,12 @@ export function formatTransaction<
 >(
 	transaction: TransactionType,
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
-	options: { transactionSchema: ValidationSchemaInput | typeof transactionSchema } = {
-		transactionSchema,
+	options: {
+		transactionSchema?: ValidationSchemaInput | typeof transactionSchema;
+		fillInputAndData?: boolean;
+	} = {
+		transactionSchema: transactionInfoSchema,
+		fillInputAndData: false,
 	},
 ): FormatType<TransactionType, ReturnFormat> {
 	let formattedTransaction = mergeDeep({}, transaction as Record<string, unknown>) as Transaction;
@@ -37,7 +43,29 @@ export function formatTransaction<
 			formattedTransaction.common.customChain = { ...transaction.common.customChain };
 	}
 
-	formattedTransaction = format(options.transactionSchema, formattedTransaction, returnFormat);
+	formattedTransaction = format(
+		options.transactionSchema ?? transactionInfoSchema,
+		formattedTransaction,
+		returnFormat,
+	);
+
+	if (
+		!isNullish(formattedTransaction.data) &&
+		!isNullish(formattedTransaction.input) &&
+		formattedTransaction.data !== formattedTransaction.input
+	)
+		throw new TransactionDataAndInputError({
+			data: bytesToHex(formattedTransaction.data),
+			input: bytesToHex(formattedTransaction.input),
+		});
+
+	if (options.fillInputAndData) {
+		if (!isNullish(formattedTransaction.data)) {
+			formattedTransaction.input = formattedTransaction.data;
+		} else if (!isNullish(formattedTransaction.input)) {
+			formattedTransaction.data = formattedTransaction.input;
+		}
+	}
 
 	if (!isNullish(formattedTransaction.gasLimit)) {
 		formattedTransaction.gas = formattedTransaction.gasLimit;

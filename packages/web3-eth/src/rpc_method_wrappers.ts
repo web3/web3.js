@@ -70,7 +70,6 @@ import {
 	feeHistorySchema,
 	logSchema,
 	transactionReceiptSchema,
-	transactionInfoSchema,
 	accessListResultSchema,
 	SignatureObjectSchema,
 } from './schemas.js';
@@ -375,7 +374,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: formatTransaction(response, returnFormat, { transactionSchema: transactionInfoSchema });
+		: formatTransaction(response, returnFormat, { fillInputAndData: true });
 }
 
 /**
@@ -389,7 +388,9 @@ export async function getPendingTransactions<ReturnFormat extends DataFormat>(
 	const response = await ethRpcMethods.getPendingTransactions(web3Context.requestManager);
 
 	return response.map(transaction =>
-		formatTransaction(transaction as unknown as Transaction, returnFormat),
+		formatTransaction(transaction as unknown as Transaction, returnFormat, {
+			fillInputAndData: true,
+		}),
 	);
 }
 
@@ -426,7 +427,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: formatTransaction(response, returnFormat, { transactionSchema: transactionInfoSchema });
+		: formatTransaction(response, returnFormat, { fillInputAndData: true });
 }
 
 /**
@@ -924,7 +925,9 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 					(response as SignedTransactionInfoAPI).raw,
 					returnFormat,
 				),
-				tx: formatTransaction((response as SignedTransactionInfoAPI).tx, returnFormat),
+				tx: formatTransaction((response as SignedTransactionInfoAPI).tx, returnFormat, {
+					fillInputAndData: true,
+				}),
 		  };
 }
 
