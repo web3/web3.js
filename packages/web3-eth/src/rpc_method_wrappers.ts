@@ -918,7 +918,9 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 	// Some clients only return the encoded signed transaction (e.g. Ganache)
 	// while clients such as Geth return the desired SignedTransactionInfoAPI object
 	return isString(response as HexStringBytes)
-		? decodeSignedTransaction(response as HexStringBytes, returnFormat)
+		? decodeSignedTransaction(response as HexStringBytes, returnFormat, {
+				fillInputAndData: true,
+		  })
 		: {
 				raw: format(
 					{ format: 'bytes' },
