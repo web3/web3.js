@@ -165,7 +165,7 @@ web3.extend({
 	],
 });
 
-// in 4.x
+// in 4.0.4+
 declare module 'web3' {
 	interface Web3Context {
 		myModule: {
