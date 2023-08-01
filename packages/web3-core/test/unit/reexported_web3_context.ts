@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,17 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Web3Context } from '../../src/index';
 
-import { HexString, Transaction } from 'web3-types';
-
-export type TransactionTypeParser = (transaction: Transaction) => HexString | undefined;
-
-export interface Method {
-	name: string;
-	call: string;
-}
-
-export interface ExtensionObject {
-	property?: string;
-	methods: Method[];
-}
+export { Web3Context };
