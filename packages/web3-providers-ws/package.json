@@ -61,7 +61,7 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"@types/ws": "^8.5.3",
+		"@types/ws": "8.5.3",
 		"isomorphic-ws": "^5.0.0",
 		"web3-errors": "^1.0.2",
 		"web3-types": "^1.0.2",
