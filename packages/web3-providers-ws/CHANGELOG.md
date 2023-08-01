@@ -105,3 +105,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Ensure a fixed version for "@types/ws": "8.5.3" (#6309)
