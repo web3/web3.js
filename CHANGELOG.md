@@ -680,7 +680,7 @@ Released with 1.0.0-beta.37 code base.
   - Updated dependencies (#6044)
 
 
-## [Unreleased]
+## [1.10.1]
 
 ### Fixed
 
@@ -690,3 +690,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 - Replace ethereumjs-util with @ethereumjs/util (#6283) 
+
+
+## [Unreleased]
