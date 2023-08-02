@@ -1,5 +1,5 @@
 {
-  "version": "1.10.0",
+  "version": "1.10.1-rc.0",
   "command": {
     "init": {
       "exact": true
