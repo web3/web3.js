@@ -140,8 +140,10 @@ Documentation:
 
 -   BigInts pass validation within the method `numberToHex` (#6206)
 
-## [Unreleased]
+## [4.0.4]
 
 ### Changed
 
 -   Dependencies updated
+
+## [Unreleased]

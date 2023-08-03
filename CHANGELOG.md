@@ -1775,7 +1775,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.0.4]
 
 ### Added
 
@@ -1908,3 +1908,5 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-validator
 
 -   Type `RawValidationError` was removed (#6264)
+
+## [Unreleased]

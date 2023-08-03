@@ -140,7 +140,7 @@ Documentation:
 
 -   type `Filter` includes `blockHash` (#6206)
 
-## [Unreleased]
+## [1.0.3]
 
 ### Changed
 
@@ -150,3 +150,5 @@ Documentation:
 
 -   `eth_signTypedData` and `eth_signTypedData_v4` to `web3_eth_execution_api` (#6286)
 -   `Eip712TypeDetails` and `Eip712TypedData` to `eth_types` (#6286)
+
+## [Unreleased]
