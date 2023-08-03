@@ -246,9 +246,8 @@ describe('defaultTransactionBuilder', () => {
 	});
 
 	describe('should populate input/data', () => {
-		it('should populate with 0x', async () => {
+		it('should populate input with 0x', async () => {
 			const input = { ...transaction };
-			delete input.input;
 			delete input.maxPriorityFeePerGas;
 			delete input.maxFeePerGas;
 			delete input.data;
@@ -259,12 +258,27 @@ describe('defaultTransactionBuilder', () => {
 				fillGasPrice: true,
 			});
 			expect(result.input).toBe('0x');
-			expect(result.data).toBe('0x');
+			expect(result.data).toBeUndefined();
 		});
 
-		it('should prefix with 0x', async () => {
+		it('should prefix input with 0x', async () => {
 			const input = { ...transaction };
 			input.input = '123';
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
+			delete input.data;
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+				fillGasPrice: true,
+			});
+			expect(result.input).toBe('0x123');
+			expect(result.data).toBeUndefined();
+		});
+
+		it('should prefix data with 0x', async () => {
+			const input = { ...transaction };
 			delete input.maxPriorityFeePerGas;
 			delete input.maxFeePerGas;
 			input.data = '123';
@@ -274,7 +288,7 @@ describe('defaultTransactionBuilder', () => {
 				web3Context,
 				fillGasPrice: true,
 			});
-			expect(result.input).toBe('0x123');
+			expect(result.input).toBeUndefined();
 			expect(result.data).toBe('0x123');
 		});
 

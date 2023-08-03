@@ -132,7 +132,9 @@ export const testData: TestData[] = [
 		[
 			rawLegacyTransaction,
 			legacySignedTransactionInfo,
-			decodeSignedTransaction(legacySignedTransactionInfo.raw, returnFormat),
+			decodeSignedTransaction(legacySignedTransactionInfo.raw, returnFormat, {
+				fillInputAndData: true,
+			}),
 		],
 	],
 	[
@@ -140,7 +142,9 @@ export const testData: TestData[] = [
 		[
 			rawLegacyTransaction,
 			legacySignedTransactionInfo.raw,
-			decodeSignedTransaction(legacySignedTransactionInfo.raw, returnFormat),
+			decodeSignedTransaction(legacySignedTransactionInfo.raw, returnFormat, {
+				fillInputAndData: true,
+			}),
 		],
 	],
 	[
@@ -148,7 +152,9 @@ export const testData: TestData[] = [
 		[
 			rawType0x1Transaction,
 			type0x1SignedTransactionInfo,
-			decodeSignedTransaction(type0x1SignedTransactionInfo.raw, returnFormat),
+			decodeSignedTransaction(type0x1SignedTransactionInfo.raw, returnFormat, {
+				fillInputAndData: true,
+			}),
 		],
 	],
 	[
@@ -156,7 +162,9 @@ export const testData: TestData[] = [
 		[
 			rawType0x1Transaction,
 			type0x1SignedTransactionInfo.raw,
-			decodeSignedTransaction(type0x1SignedTransactionInfo.raw, returnFormat),
+			decodeSignedTransaction(type0x1SignedTransactionInfo.raw, returnFormat, {
+				fillInputAndData: true,
+			}),
 		],
 	],
 	[
@@ -164,7 +172,9 @@ export const testData: TestData[] = [
 		[
 			rawType0x2Transaction,
 			type0x2SignedTransactionInfo,
-			decodeSignedTransaction(type0x2SignedTransactionInfo.raw, returnFormat),
+			decodeSignedTransaction(type0x2SignedTransactionInfo.raw, returnFormat, {
+				fillInputAndData: true,
+			}),
 		],
 	],
 	[
@@ -172,7 +182,9 @@ export const testData: TestData[] = [
 		[
 			rawType0x2Transaction,
 			type0x2SignedTransactionInfo.raw,
-			decodeSignedTransaction(type0x2SignedTransactionInfo.raw, returnFormat),
+			decodeSignedTransaction(type0x2SignedTransactionInfo.raw, returnFormat, {
+				fillInputAndData: true,
+			}),
 		],
 	],
 ];
