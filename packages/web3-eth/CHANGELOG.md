@@ -167,21 +167,14 @@ Documentation:
 
 -   sendTransaction will have gas filled by default using method `estimateGas` unless transaction builder `options.fillGas` is false. (#6249)
 -   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
 
 ### Changed
 
 -   `MissingGasError` error message changed for clarity (#6215)
--
+-   `input` and `data` are no longer auto populated for transaction objects if they are not present. Instead, whichever property is provided by the user is formatted and sent to the RPC provider. Transaction objects returned from RPC responses are still formatted to contain both `input` and `data` properties (#6294)
 
 ### Added
 
 -   A `rpc_method_wrapper` (`signTypedData`) for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
 -   A `signTypedData` method to the `Web3Eth` class (#6286)
-
-### Fixed
-
--   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
-
-### Changed
-
--   `input` and `data` are no longer auto populated for transaction objects if they are not present. Instead, whichever property is provided by the user is formatted and sent to the RPC provider. Transaction objects returned from RPC responses are still formatted to contain both `input` and `data` properties (#6294)

@@ -135,6 +135,6 @@ Documentation:
 
 ## [Unreleased]
 
-## Added
+### Added
 
 -   Added minimum support of web3.extend function

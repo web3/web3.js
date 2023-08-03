@@ -141,3 +141,7 @@ Documentation:
 -   BigInts pass validation within the method `numberToHex` (#6206)
 
 ## [Unreleased]
+
+### Changed
+
+-   Dependencies updated

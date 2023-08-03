@@ -119,3 +119,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Changed
+
+-   Dependencies updated
