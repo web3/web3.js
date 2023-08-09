@@ -159,6 +159,6 @@ Documentation:
 
 -   Fixed the issue: "Version 4.x does not fire connected event for subscriptions. #6252". (#6262)
 
-## Added
+### Added
 
 -   Added minimum support of web3.extend function

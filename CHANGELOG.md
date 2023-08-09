@@ -1779,9 +1779,19 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ### Added
 
+#### web3
+
+-   Added minimum support of web3.extend function
+
+#### web3-core
+
+-   Added minimum support of web3.extend function
+
 #### web3-errors
 
 -   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
+-   created `TransactionGasMismatchInnerError` for clarity on the error in `TransactionGasMismatchError` (#6215)
+-   created `MissingGasInnerError` for clarity on the error in `MissingGasError` (#6215)
 
 #### web3-eth
 
@@ -1818,6 +1828,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth
 
 -   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+
+#### web3-providers-ws
+
+-   Ensure a fixed version for "@types/ws": "8.5.3" (#6309)
 
 ### Changed
 
