@@ -146,7 +146,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.1.0]
 
 ### Changed
 
@@ -162,3 +162,5 @@ Documentation:
 ### Added
 
 -   Added minimum support of web3.extend function
+
+## [Unreleased]
