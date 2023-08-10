@@ -247,4 +247,48 @@ describe('contract', () => {
 			).toHaveLength(2);
 		});
 	});
+
+	describeIf(isWs)('allEvents', () => {
+		it('should sub and get event using earliest options with allEvents()', async () => {
+			// eslint-disable-next-line jest/no-standalone-expect
+			return expect(
+				processAsync(async (resolve, reject) => {
+					const event = contractDeployed.events.allEvents({ fromBlock: 'earliest' });
+
+					event.on('data', resolve);
+					event.on('error', reject);
+
+					// trigger event
+					await contractDeployed.methods
+						.firesMultiValueEvent('val test', 12, true)
+						.send(sendOptions);
+				}),
+			).resolves.toEqual(
+				expect.objectContaining({
+					event: 'MultiValueEvent',
+				}),
+			);
+		});
+
+		it('should sub allEvents()', async () => {
+			// eslint-disable-next-line jest/no-standalone-expect
+			return expect(
+				processAsync(async (resolve, reject) => {
+					const event = contractDeployed.events.allEvents();
+
+					event.on('data', resolve);
+					event.on('error', reject);
+
+					// trigger event
+					await contractDeployed.methods
+						.firesMultiValueEvent('Pak1', 12, true)
+						.send(sendOptions);
+				}),
+			).resolves.toEqual(
+				expect.objectContaining({
+					event: 'MultiValueEvent',
+				}),
+			);
+		});
+	});
 });

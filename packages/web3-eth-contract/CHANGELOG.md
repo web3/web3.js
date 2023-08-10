@@ -285,3 +285,11 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed bug in `contract.events.allEvents`
+
+### Added
+
+-   For failed subscription on contract events with fromBlock filter, inner error will also available for details
