@@ -1167,8 +1167,8 @@ export class Contract<Abi extends ContractAbi>
 						);
 					});
 			}
-			this.subscriptionManager?.addSubscription(sub).catch(() => {
-				sub.emit('error', new SubscriptionError('Failed to subscribe.'));
+			this.subscriptionManager?.addSubscription(sub).catch((error: Error) => {
+				sub.emit('error', new SubscriptionError('Failed to subscribe.', error));
 			});
 
 			return sub;
