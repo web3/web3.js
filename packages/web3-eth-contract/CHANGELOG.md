@@ -292,4 +292,4 @@ Documentation:
 
 ### Added
 
--   For failed subscription on contract events with fromBlock filter, inner error will also available for details
+-   In case of error events there will be inner error also available for details
