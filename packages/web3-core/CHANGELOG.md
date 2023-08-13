@@ -158,6 +158,7 @@ Documentation:
 ### Fixed
 
 -   Fixed the issue: "Version 4.x does not fire connected event for subscriptions. #6252". (#6262)
+-   Fixed rpc errors not being sent as an inner error when using the `send` method on request manager (#6300).
 
 ## Added
 
