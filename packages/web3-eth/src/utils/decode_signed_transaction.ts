@@ -35,6 +35,7 @@ import { formatTransaction } from './format_transaction.js';
 export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 	encodedSignedTransaction: HexStringBytes,
 	returnFormat: ReturnFormat,
+	options: { fillInputAndData?: boolean } = { fillInputAndData: false },
 ): SignedTransactionInfoAPI {
 	return {
 		raw: format({ format: 'bytes' }, encodedSignedTransaction, returnFormat),
@@ -47,6 +48,7 @@ export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 				type: detectRawTransactionType(hexToBytes(encodedSignedTransaction)),
 			} as TransactionSignedAPI,
 			returnFormat,
+			{ fillInputAndData: options.fillInputAndData },
 		),
 	};
 }

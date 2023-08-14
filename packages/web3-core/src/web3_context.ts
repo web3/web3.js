@@ -36,6 +36,7 @@ import { Web3RequestManager } from './web3_request_manager.js';
 import { Web3SubscriptionConstructor } from './web3_subscriptions.js';
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
 import { Web3BatchRequest } from './web3_batch_request.js';
+import { ExtensionObject } from './types.js';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
@@ -364,6 +365,33 @@ export class Web3Context<
 			undefined,
 			this._requestManager as unknown as Web3RequestManager,
 		);
+	}
+
+	/**
+	 * This method allows extending the web3 modules.
+	 * Note: This method is only for backward compatibility, and It is recommended to use Web3 v4 Plugin feature for extending web3.js functionality if you are developing some thing new.
+	 */
+	public extend(extendObj: ExtensionObject) {
+		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
+		if (extendObj.property && !this[extendObj.property])
+			// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
+			this[extendObj.property] = {};
+
+		extendObj.methods?.forEach(element => {
+			const method = async (...givenParams: unknown[]) =>
+				this.requestManager.send({
+					method: element.call,
+					params: givenParams,
+				});
+
+			if (extendObj.property)
+				// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+				this[extendObj.property][element.name] = method;
+			// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
+			else this[element.name] = method;
+		});
+		return this;
 	}
 }
 
