@@ -105,8 +105,12 @@ describe('rpc', () => {
 
 		it('isMining', async () => {
 			const isMining = await web3Eth.isMining();
-			expect(isMining).toBe(true);
+
+			const isMiningAvalible = !(getSystemTestBackend() === 'geth');
+
+			expect(isMining).toBe(isMiningAvalible);
 		});
+
 		it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
 			const hashRate = await web3Eth.getHashRate({
 				number: format as FMT_NUMBER,
