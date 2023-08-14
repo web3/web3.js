@@ -20,7 +20,6 @@ import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
-	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
 
