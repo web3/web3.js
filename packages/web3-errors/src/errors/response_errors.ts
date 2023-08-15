@@ -67,6 +67,14 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 		}
 
 		this.request = request;
+		let errorOrErrors: JsonRpcError | JsonRpcError[] | undefined;
+		if (`error` in response) {
+			errorOrErrors = response.error as JsonRpcError;
+		} else if (response instanceof Array) {
+			errorOrErrors = response.map(r => r.error) as JsonRpcError[];
+		}
+
+		this.innerError = errorOrErrors as Error | Error[] | undefined;
 	}
 
 	public toJSON() {
@@ -84,7 +92,6 @@ export class InvalidResponseError<ErrorType = unknown, RequestType = unknown> ex
 	) {
 		super(result, undefined, request);
 		this.code = ERR_INVALID_RESPONSE;
-
 		let errorOrErrors: JsonRpcError | JsonRpcError[] | undefined;
 		if (`error` in result) {
 			errorOrErrors = result.error as JsonRpcError;
