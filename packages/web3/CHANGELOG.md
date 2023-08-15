@@ -133,8 +133,10 @@ Documentation:
 
 -   Fixed bug #6236 by adding personal type in web3.eth (#6245)
 
-## [Unreleased]
+## [4.1.0]
 
-## Added
+### Added
 
 -   Added minimum support of web3.extend function
+
+## [Unreleased]

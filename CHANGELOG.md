@@ -1775,13 +1775,23 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.1.0]
 
 ### Added
+
+#### web3
+
+-   Added minimum support of web3.extend function
+
+#### web3-core
+
+-   Added minimum support of web3.extend function
 
 #### web3-errors
 
 -   `RpcErrorMessages` that contains mapping for standard RPC Errors and their messages. (#6230)
+-   created `TransactionGasMismatchInnerError` for clarity on the error in `TransactionGasMismatchError` (#6215)
+-   created `MissingGasInnerError` for clarity on the error in `MissingGasError` (#6215)
 
 #### web3-eth
 
@@ -1817,7 +1827,13 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth
 
+-   sendTransaction will have gas filled by default using method `estimateGas` unless transaction builder `options.fillGas` is false. (#6249)
 -   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+-   Missing `blockHeaderSchema` properties causing some properties to not appear in response of `newHeads` subscription (#6243)
+
+#### web3-providers-ws
+
+-   Ensure a fixed version for "@types/ws": "8.5.3" (#6309)
 
 ### Changed
 
@@ -1830,11 +1846,48 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth
 
+-   `MissingGasError` error message changed for clarity (#6215)
 -   `input` and `data` are no longer auto populated for transaction objects if they are not present. Instead, whichever property is provided by the user is formatted and sent to the RPC provider. Transaction objects returned from RPC responses are still formatted to contain both `input` and `data` properties (#6294)
+
+#### web3-eth-accounts
+
+-   Dependencies updated
+
+#### web3-eth-contract
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
+#### web3-providers-http
+
+-   Dependencies updated
+
+#### web3-providers-ipc
+
+-   Dependencies updated
 
 #### web3-types
 
 -   `input` and `data` are now optional properties on `PopulatedUnsignedBaseTransaction` (previously `input` was a required property, and `data` was not available) (#6294)
+
+#### web3-utils
+
+-   Dependencies updated
 
 #### web3-validator
 
@@ -1851,3 +1904,5 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-validator
 
 -   Type `RawValidationError` was removed (#6264)
+
+## [Unreleased]
