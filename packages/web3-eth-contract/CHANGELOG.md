@@ -291,3 +291,11 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed bug in `contract.events.allEvents`
+
+### Added
+
+-   In case of error events there will be inner error also available for details

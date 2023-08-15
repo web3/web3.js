@@ -27,6 +27,7 @@ import { AllGetPastEventsData, getLogsData, getPastEventsData } from '../fixture
 import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
+import { processAsync } from '../shared_fixtures/utils';
 
 jest.mock('web3-eth');
 
@@ -794,6 +795,46 @@ describe('Contract', () => {
 			});
 			expect(pastEvent).toHaveLength(1);
 			expect(pastEvent[0]).toStrictEqual(AllGetPastEventsData.response[1]);
+
+			spyTx.mockClear();
+			spyGetLogs.mockClear();
+		});
+
+		it('allEvents() should throw error with inner error', async () => {
+			const contract = new Contract<typeof GreeterAbi>(GreeterAbi);
+
+			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
+				const newContract = contract.clone();
+				newContract.options.address = deployedAddr;
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return Promise.resolve(newContract) as any;
+			});
+
+			const spyGetLogs = jest
+				.spyOn(eth, 'getLogs')
+				.mockImplementation((_objInstance, _params) => {
+					throw new Error('Inner error');
+				});
+
+			const deployedContract = await contract
+				.deploy({
+					data: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+
+			await expect(
+				processAsync(async (resolve, reject) => {
+					const event = deployedContract.events.allEvents({ fromBlock: 'earliest' });
+
+					event.on('error', reject);
+					event.on('data', resolve);
+				}),
+			).rejects.toThrow(
+				expect.objectContaining({
+					innerError: expect.any(Error),
+				}),
+			);
 
 			spyTx.mockClear();
 			spyGetLogs.mockClear();
