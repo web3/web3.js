@@ -102,8 +102,10 @@ Documentation:
 
 -   Rpc method `getPastLogs` accept blockHash as a parameter https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getlogs (#6181)
 
-## [Unreleased]
+## [1.1.0]
 
 ### Added
 
 -   A `signTypedData` method to `eth_rpc_methods` for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
+
+## [Unreleased]
