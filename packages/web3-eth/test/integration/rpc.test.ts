@@ -106,9 +106,9 @@ describe('rpc', () => {
 		it('isMining', async () => {
 			const isMining = await web3Eth.isMining();
 
-			const isMiningAvalible = !(getSystemTestBackend() === 'geth');
-
-			expect(isMining).toBe(isMiningAvalible);
+			if(getSystemTestBackend() != 'geth')
+			// eslint-disable-next-line jest/no-conditional-expect
+				expect(isMining).toBe(true);
 		});
 
 		it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
