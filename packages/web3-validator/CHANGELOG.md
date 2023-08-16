@@ -120,7 +120,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [2.0.0]
 
 ### Changed
 
@@ -134,3 +134,5 @@ Documentation:
 ### Added
 
 -   Added `json-schema` as a main json schema type (#6264)
+
+## [Unreleased]

@@ -130,7 +130,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [1.1.0]
 
 ### Added
 
@@ -141,3 +141,5 @@ Documentation:
 ### Fixed
 
 -   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)
+
+## [Unreleased]

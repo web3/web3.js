@@ -85,7 +85,7 @@ import {
 	ValidationSchemaInput,
 	Web3ValidatorError,
 } from 'web3-validator';
-import { ALL_EVENTS_ABI } from './constants.js';
+import { ALL_EVENTS, ALL_EVENTS_ABI } from './constants.js';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding.js';
 import { LogsSubscription } from './log_subscription.js';
 import {
@@ -718,7 +718,7 @@ export class Contract<Abi extends ContractAbi>
 			: param3 ?? DEFAULT_RETURN_FORMAT;
 
 		const abi =
-			eventName === 'allEvents'
+			eventName === 'allEvents' || eventName === ALL_EVENTS
 				? ALL_EVENTS_ABI
 				: (this._jsonInterface.find(
 						j => 'name' in j && j.name === eventName,
@@ -856,11 +856,10 @@ export class Contract<Abi extends ContractAbi>
 				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event as never;
 			}
 
-			this._events.allEvents = this._createContractEvent(ALL_EVENTS_ABI, returnFormat);
-
 			result = [...result, abi];
 		}
 
+		this._events.allEvents = this._createContractEvent(ALL_EVENTS_ABI, returnFormat);
 		this._jsonInterface = [...result] as unknown as ContractAbiWithSignature;
 		this._errorsInterface = errorsAbi;
 	}
@@ -1161,12 +1160,15 @@ export class Contract<Abi extends ContractAbi>
 					.then(logs => {
 						logs.forEach(log => sub.emit('data', log as EventLog));
 					})
-					.catch(() => {
-						sub.emit('error', new SubscriptionError('Failed to get past events.'));
+					.catch((error: Error) => {
+						sub.emit(
+							'error',
+							new SubscriptionError('Failed to get past events.', error),
+						);
 					});
 			}
-			this.subscriptionManager?.addSubscription(sub).catch(() => {
-				sub.emit('error', new SubscriptionError('Failed to subscribe.'));
+			this.subscriptionManager?.addSubscription(sub).catch((error: Error) => {
+				sub.emit('error', new SubscriptionError('Failed to subscribe.', error));
 			});
 
 			return sub;

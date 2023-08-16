@@ -7,6 +7,8 @@ sidebar_label: 'For Plugin Users'
 
 This guide intends to provide the necessary context for registering plugins with web3.js packages.
 
+To help you get started, take a look at a list of useful plugins at <https://web3js.org/plugins>
+
 ## Installing the Plugin
 
 Unless otherwise mentioned by the plugin author, installing a plugin should be as simple as `yarn add web3-plugin-example`. This should add the plugin as a dependency within your `package.json` and the plugin should be available to import within your code.

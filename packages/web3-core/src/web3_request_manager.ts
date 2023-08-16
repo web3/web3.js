@@ -156,7 +156,6 @@ export class Web3RequestManager<
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIRequest<API, Method>): Promise<ResponseType> {
 		const response = await this._sendRequest<Method, ResponseType>(request);
-
 		if (jsonRpc.isResponseWithResult(response)) {
 			return response.result;
 		}
