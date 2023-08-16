@@ -106,8 +106,8 @@ describe('rpc', () => {
 		it('isMining', async () => {
 			const isMining = await web3Eth.isMining();
 
-			if(getSystemTestBackend() != 'geth')
-			// eslint-disable-next-line jest/no-conditional-expect
+			if (getSystemTestBackend() !== 'geth')
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(isMining).toBe(true);
 		});
 
