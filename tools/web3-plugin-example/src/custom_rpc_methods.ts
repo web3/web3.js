@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3PluginBase } from 'web3-core';
 
-import { Web3Context } from './reexported_web3_context';
+import { Web3Context } from './reexported_web3_context.js';
 
 type CustomRpcApi = {
 	custom_rpc_method: () => string;
