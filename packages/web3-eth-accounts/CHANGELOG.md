@@ -125,3 +125,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   ESM import bug (#6359)
