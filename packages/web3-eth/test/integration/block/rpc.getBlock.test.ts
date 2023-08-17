@@ -146,10 +146,10 @@ describe('rpc with block', () => {
 				// only geth throws this error
 				'getBlock',
 				async blockTag => {
-					const request = web3Eth.getBlock(blockTag);
-					await expect(request).rejects.toThrow(
-						`'${blockTag}' tag not supported on pre-merge network`,
-					);
+					const request = await web3Eth.getBlock(blockTag);
+
+					expect(request).toBeDefined();
+					expect(validator.validateJSONSchema(blockSchema, request)).toBeUndefined();
 				},
 			);
 		},
