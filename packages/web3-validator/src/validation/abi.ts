@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter } from 'web3-types';
-import { ShortValidationSchema } from '../types.js';
+import { ShortValidationSchema } from '../types';
 
 export const isAbiParameterSchema = (
 	schema: string | ShortValidationSchema | AbiParameter,
