@@ -256,7 +256,14 @@ Object {
     "a": "10",
     "b": "20",
   },
-  "innerError": undefined,
+  "innerError": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
   "message": "Returned error: error message",
   "name": "ResponseError",
   "request": undefined,
@@ -267,8 +274,49 @@ exports[`errors ResponseError should have valid json structure without data 1`] 
 Object {
   "code": 100,
   "data": undefined,
-  "innerError": undefined,
+  "innerError": Object {
+    "code": 123,
+    "data": undefined,
+    "message": "error message",
+  },
   "message": "Returned error: error message",
+  "name": "ResponseError",
+  "request": undefined,
+}
+`;
+
+exports[`errors ResponseError should include the array of inner errors 1`] = `
+Object {
+  "code": 100,
+  "data": Array [
+    Object {
+      "a": "10",
+      "b": "20",
+    },
+    Object {
+      "c": "30",
+      "d": "40",
+    },
+  ],
+  "innerError": Array [
+    Object {
+      "code": 123,
+      "data": Object {
+        "a": "10",
+        "b": "20",
+      },
+      "message": "error message",
+    },
+    Object {
+      "code": 124,
+      "data": Object {
+        "c": "30",
+        "d": "40",
+      },
+      "message": "error message",
+    },
+  ],
+  "message": "Returned error: error message,error message",
   "name": "ResponseError",
   "request": undefined,
 }

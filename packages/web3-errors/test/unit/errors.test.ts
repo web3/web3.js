@@ -349,6 +349,23 @@ describe('errors', () => {
 				}).toJSON(),
 			).toMatchSnapshot();
 		});
+
+		it('should include the array of inner errors', () => {
+			expect(
+				new responseErrors.ResponseError([
+					{
+						id: 1,
+						jsonrpc: '2.0',
+						error: { code: 123, message: 'error message', data: { a: '10', b: '20' } },
+					},
+					{
+						id: 2,
+						jsonrpc: '2.0',
+						error: { code: 124, message: 'error message', data: { c: '30', d: '40' } },
+					},
+				]).toJSON(),
+			).toMatchSnapshot();
+		});
 	});
 
 	describe('InvalidResponseError', () => {

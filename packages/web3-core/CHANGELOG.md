@@ -164,3 +164,7 @@ Documentation:
 -   Added minimum support of web3.extend function
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed rpc errors not being sent as an inner error when using the `send` method on request manager (#6300).
