@@ -1905,4 +1905,92 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Type `RawValidationError` was removed (#6264)
 
+## [4.1.1]
+
+### Added
+
+#### web3
+
+-   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
+
+#### web3-core
+
+-   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
+
+#### web3-eth-contract
+
+-   In case of error events there will be inner error also available for details
+
+### Fixed
+
+#### web3-core
+
+-   Fixed rpc errors not being sent as an inner error when using the `send` method on request manager (#6300).
+
+#### web3-errors
+
+-   ESM import bug (#6359)
+
+#### web3-eth-contract
+
+-   Fixed bug in `contract.events.allEvents`
+
+#### web3-validator
+
+-   ESM import bug (#6359)
+
+### Changed
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-eth-abi
+
+-   Dependencies updated
+
+#### web3-eth-accounts
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
+#### web3-providers-http
+
+-   Dependencies updated
+
+#### web3-providers-ipc
+
+-   Dependencies updated
+
+#### web3-providers-ws
+
+-   Dependencies updated
+
+#### web3-rpc-methods
+
+-   Dependencies updated
+
+#### web3-types
+
+-   Dependencies updated
+
+#### web3-utils
+
+-   Dependencies updated
+
 ## [Unreleased]

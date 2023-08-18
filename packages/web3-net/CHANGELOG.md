@@ -123,4 +123,10 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.0.5]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
