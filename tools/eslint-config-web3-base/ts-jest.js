@@ -22,6 +22,7 @@ module.exports = {
 		'jest/globals': true,
 	},
 	rules: {
+		'require-extensions/require-extensions': 'off',
 		'jest/valid-title': ['error'],
 		'jest/no-conditional-expect': ['error'],
 		'import/no-extraneous-dependencies': ['error', { devDependencies: true }],

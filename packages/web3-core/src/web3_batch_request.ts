@@ -48,13 +48,15 @@ export class Web3BatchRequest {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	public async execute(): Promise<JsonRpcBatchResponse<unknown, unknown>> {
+	public async execute(options?: {
+		timeout?: number;
+	}): Promise<JsonRpcBatchResponse<unknown, unknown>> {
 		if (this.requests.length === 0) {
 			return Promise.resolve([]);
 		}
 
 		const request = new Web3DeferredPromise<JsonRpcBatchResponse<unknown, unknown>>({
-			timeout: DEFAULT_BATCH_REQUEST_TIMEOUT,
+			timeout: options?.timeout ?? DEFAULT_BATCH_REQUEST_TIMEOUT,
 			eagerStart: true,
 			timeoutMessage: 'Batch request timeout',
 		});

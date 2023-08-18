@@ -143,3 +143,7 @@ Documentation:
 -   Fixed: "'disconnect' in Eip1193 provider must emit ProviderRpcError #6003".(#6230)
 
 ## [Unreleased]
+
+### Fixed
+
+-   ESM import bug (#6359)

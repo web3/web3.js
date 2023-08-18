@@ -18,6 +18,7 @@ import { Socket } from 'net';
 
 import { Web3Error } from './error_types.js';
 import { EthExecutionAPI } from './apis/eth_execution_api.js';
+// eslint-disable-next-line require-extensions/require-extensions
 import {
 	JsonRpcNotification,
 	JsonRpcPayload,
@@ -27,6 +28,7 @@ import {
 	JsonRpcResult,
 	JsonRpcSubscriptionResult,
 } from './json_rpc_types';
+// eslint-disable-next-line require-extensions/require-extensions
 import {
 	Web3APISpec,
 	Web3APIMethod,
@@ -36,7 +38,9 @@ import {
 	ProviderRpcError,
 	ProviderMessage,
 } from './web3_api_types';
+// eslint-disable-next-line require-extensions/require-extensions
 import { Web3EthExecutionAPI } from './apis/web3_eth_execution_api';
+// eslint-disable-next-line require-extensions/require-extensions
 import { Web3DeferredPromiseInterface } from './web3_deferred_promise_type';
 
 const symbol = Symbol.for('web3/base-provider');

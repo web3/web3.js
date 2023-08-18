@@ -21,7 +21,7 @@ import { z, ZodType, ZodIssue, ZodIssueCode, ZodTypeAny } from 'zod';
 import { RawCreateParams } from 'zod/lib/types';
 import { Web3ValidatorError } from './errors.js';
 import { Json, JsonSchema } from './types.js';
-import formats from './formats';
+import formats from './formats.js';
 
 const convertToZod = (schema: JsonSchema): ZodType => {
 	if ((!schema?.type || schema?.type === 'object') && schema?.properties) {
