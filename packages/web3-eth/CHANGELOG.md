@@ -180,3 +180,7 @@ Documentation:
 -   A `signTypedData` method to the `Web3Eth` class (#6286)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Added return type for `formatSubscriptionResult` in class `NewHeadsSubscription` (#6368)
