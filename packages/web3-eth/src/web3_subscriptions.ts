@@ -118,7 +118,7 @@ export class NewHeadsSubscription extends Web3Subscription<{
 		return ['newHeads'];
 	}
 
-	protected formatSubscriptionResult(data: BlockHeaderOutput) {
+	protected formatSubscriptionResult(data: BlockHeaderOutput): BlockHeaderOutput {
 		return format(blockHeaderSchema, data, super.returnFormat);
 	}
 }
