@@ -168,3 +168,8 @@ Documentation:
 ### Fixed
 
 -   Fixed rpc errors not being sent as an inner error when using the `send` method on request manager (#6300).
+
+### Added
+
+-   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
+
