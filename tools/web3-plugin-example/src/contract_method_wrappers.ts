@@ -20,7 +20,8 @@ import { Address, ContractAbi, DataFormat, DEFAULT_RETURN_FORMAT, Numbers } from
 import { format, numberToHex } from 'web3-utils';
 // eslint-disable-next-line require-extensions/require-extensions
 import { ERC20TokenAbi } from './ERC20Token';
-import { Web3Context } from './reexported_web3_context.js';
+// eslint-disable-next-line require-extensions/require-extensions
+import { Web3Context } from './reexported_web3_context';
 
 export class ContractMethodWrappersPlugin extends Web3PluginBase {
 	public pluginNamespace = 'contractMethodWrappersPlugin';
