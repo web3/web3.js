@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import type { HexString, Numbers } from 'web3-types';
 
 import type { Common } from '../common/common.js';
+// eslint-disable-next-line require-extensions/require-extensions
 import type { Uint8ArrayLike, PrefixedHexString } from '../common/types';
 import { Address } from './address.js';
 

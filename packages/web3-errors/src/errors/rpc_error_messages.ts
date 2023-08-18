@@ -33,7 +33,7 @@ import {
 	JSONRPC_ERR_REJECTED_REQUEST,
 	JSONRPC_ERR_UNAUTHORIZED,
 	JSONRPC_ERR_UNSUPPORTED_METHOD,
-} from '../error_codes';
+} from '../error_codes.js';
 
 /**
  * A template string for a generic Rpc Error. The `*code*` will be replaced with the code number.
