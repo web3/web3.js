@@ -103,6 +103,7 @@ export const getEthTxCallParams = ({
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;

@@ -65,6 +65,8 @@ export interface NonPayableCallOptions {
 	 */
 	gasPrice?: string;
 	type?: string | number;
+	data?: HexString;
+	input?: HexString;
 }
 
 export interface PayableCallOptions extends NonPayableCallOptions {
