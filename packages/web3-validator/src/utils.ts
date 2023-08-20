@@ -88,13 +88,6 @@ const convertEthType = (
 	parentSchema: JsonSchema = {},
 ): { format?: string; required?: boolean } => {
 	const typePropertyPresent = Object.keys(parentSchema).includes('type');
-	console.table([
-		{
-			typePropertyPresent,
-			type,
-			parentSchema,
-		},
-	]);
 	if (typePropertyPresent) {
 		throw new Web3ValidatorError([
 			{
@@ -108,12 +101,6 @@ const convertEthType = (
 	}
 
 	const { baseType, baseTypeSize } = parseBaseType(type);
-	console.table([
-		{
-			baseType,
-			baseTypeSize,
-		},
-	]);
 	if (!baseType && !extraTypes.includes(type)) {
 		throw new Web3ValidatorError([
 			{
