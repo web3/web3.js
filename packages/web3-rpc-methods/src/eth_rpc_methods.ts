@@ -597,6 +597,7 @@ export async function sendUserOperation(
 	userOperation: UserOperation,
 	entryPoint: Address,
 ) {
+	validator.validate(['userOperation'], [userOperation]);
 	return requestManager.send({
 		method: 'eth_sendUserOperation',
 		params: [userOperation, entryPoint],

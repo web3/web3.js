@@ -116,9 +116,10 @@ Documentation:
 
 ### Added
 
-### Added
-
 -   A `signTypedData` method to `eth_rpc_methods` for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
--   increase eip-4337 rpc methods `sendUserOperation`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`
 
 ## [Unreleased]
+
+### Added
+
+-   Increase eip-4337 rpc methods `sendUserOperation`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints` (#6302)

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Filter } from 'web3-types';
+import { Filter, UserOperation } from 'web3-types';
 import { ValidInputTypes } from './types.js';
 import { isAddress } from './validation/address.js';
 import { isBlockNumber, isBlockNumberOrTag, isBlockTag } from './validation/block.js';
@@ -24,6 +24,7 @@ import { isBytes } from './validation/bytes.js';
 import { isFilterObject } from './validation/filter.js';
 import { isHexStrict, isString } from './validation/string.js';
 import { isNumber, isInt, isUInt } from './validation/numbers.js';
+import { isUserOperationAllHex } from './validation/userOperation.js';
 
 const formats: { [key: string]: (data: unknown) => boolean } = {
 	address: (data: unknown) => isAddress(data as ValidInputTypes),
@@ -39,6 +40,7 @@ const formats: { [key: string]: (data: unknown) => boolean } = {
 	int: (data: unknown) => isInt(data as ValidInputTypes),
 	number: (data: unknown) => isNumber(data as ValidInputTypes),
 	string: (data: unknown) => isString(data as ValidInputTypes),
+	userOperation: (data: unknown) => isUserOperationAllHex(data as UserOperation),
 };
 // generate formats for all numbers types
 for (let i = 3; i <= 8; i += 1) {

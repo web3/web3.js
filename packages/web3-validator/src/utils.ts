@@ -28,7 +28,15 @@ import { isAbiParameterSchema } from './validation/abi.js';
 import { isHexStrict } from './validation/string.js';
 import { Web3ValidatorError } from './errors.js';
 
-const extraTypes = ['hex', 'number', 'blockNumber', 'blockNumberOrTag', 'filter', 'bloom'];
+const extraTypes = [
+	'hex',
+	'number',
+	'blockNumber',
+	'blockNumberOrTag',
+	'filter',
+	'bloom',
+	'userOperation',
+];
 
 export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	type: string,
@@ -80,7 +88,13 @@ const convertEthType = (
 	parentSchema: JsonSchema = {},
 ): { format?: string; required?: boolean } => {
 	const typePropertyPresent = Object.keys(parentSchema).includes('type');
-
+	console.table([
+		{
+			typePropertyPresent,
+			type,
+			parentSchema,
+		},
+	]);
 	if (typePropertyPresent) {
 		throw new Web3ValidatorError([
 			{
@@ -94,7 +108,12 @@ const convertEthType = (
 	}
 
 	const { baseType, baseTypeSize } = parseBaseType(type);
-
+	console.table([
+		{
+			baseType,
+			baseTypeSize,
+		},
+	]);
 	if (!baseType && !extraTypes.includes(type)) {
 		throw new Web3ValidatorError([
 			{

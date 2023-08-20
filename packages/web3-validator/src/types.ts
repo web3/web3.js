@@ -40,7 +40,8 @@ export type EthExtendedTypes =
 	| 'blockNumber'
 	| 'blockNumberOrTag'
 	| 'filter'
-	| 'bloom';
+	| 'bloom'
+	| 'userOperation';
 
 export type FullValidationSchema = ReadonlyArray<AbiParameter>;
 export type ShortValidationSchema = ReadonlyArray<
