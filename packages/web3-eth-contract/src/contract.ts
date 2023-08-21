@@ -480,6 +480,7 @@ export class Contract<Abi extends ContractAbi>
 					gasPrice: this.options.gasPrice,
 					from: this.options.from,
 					input: this.options.input,
+					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
@@ -493,6 +494,7 @@ export class Contract<Abi extends ContractAbi>
 					gasPrice: this.options.gasPrice,
 					from: this.options.from,
 					input: this.options.input,
+					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
@@ -588,18 +590,25 @@ export class Contract<Abi extends ContractAbi>
 
 		const _input = format(
 			{ format: 'bytes' },
-			deployOptions?.input ?? deployOptions?.data ?? this.options.input,
+			deployOptions?.input ?? this.options.input,
 			DEFAULT_RETURN_FORMAT,
 		);
 
-		if (!_input || _input.trim() === '0x') {
+		const _data = format(
+			{ format: 'bytes' },
+			deployOptions?.data ?? this.options.data,
+			DEFAULT_RETURN_FORMAT,
+		);
+
+		if ((!_input || _input.trim() === '0x') && (!_data || _data.trim() === '0x')) {
 			throw new Web3ContractError('contract creation without any data provided.');
 		}
-
+		// check if data is used properly
+		// see if deploy data is working as intended.
 		const args = deployOptions?.arguments ?? [];
 
-		const contractOptions: ContractOptions = { ...this.options, input: _input };
-
+		const contractOptions: ContractOptions = { ...this.options, input: _input, data: _data };
+		const deployData = _input ?? _data;
 		return {
 			arguments: args,
 			send: (
@@ -636,7 +645,7 @@ export class Contract<Abi extends ContractAbi>
 				encodeMethodABI(
 					abi as AbiFunctionFragment,
 					args as unknown[],
-					format({ format: 'bytes' }, _input as Bytes, DEFAULT_RETURN_FORMAT),
+					format({ format: 'bytes' }, deployData as Bytes, DEFAULT_RETURN_FORMAT),
 				),
 		};
 	}
@@ -913,7 +922,7 @@ export class Contract<Abi extends ContractAbi>
 					throw new Web3ValidatorError(errors);
 				}
 			}
-
+			console.log("_createContractMethod")
 			const methods = {
 				arguments: abiParams,
 
@@ -930,7 +939,7 @@ export class Contract<Abi extends ContractAbi>
 					),
 
 				send: (options?: PayableTxOptions | NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
+					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // this options does not include data
 
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: PayableCallOptions | NonPayableCallOptions,
@@ -1042,13 +1051,19 @@ export class Contract<Abi extends ContractAbi>
 			input: undefined,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
-
+		console.log("_contractMethodSend")
+		console.log("mods")
+		console.log(modifiedContractOptions)
+		console.log("options");
+		console.log(options);
 		const tx = getSendTxParams({
 			abi,
 			params,
 			options,
 			contractOptions: modifiedContractOptions,
 		});
+		console.log("_contractMethodSend tx")
+		console.log(tx)
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
@@ -1061,7 +1076,6 @@ export class Contract<Abi extends ContractAbi>
 				decodeContractErrorData(errorsAbi, error.innerError);
 			}
 		});
-
 		return transactionToSend;
 	}
 
@@ -1076,14 +1090,13 @@ export class Contract<Abi extends ContractAbi>
 			...modifiedContractOptions,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
-
+		console.log("_contractMethodDeploySend");
 		const tx = getSendTxParams({
 			abi,
 			params,
 			options,
 			contractOptions: modifiedContractOptions,
 		});
-
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
 				if (receipt.status === BigInt(0)) {

@@ -527,7 +527,6 @@ export function sendTransaction<
 							)),
 						};
 					}
-
 					try {
 						if (options.checkRevertBeforeSending !== false) {
 							const reason = await getRevertReason(

@@ -46,7 +46,11 @@ export const getSendTxParams = ({
 	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input;
+	console.log("asd contractOptions")
+	console.log(contractOptions)
+	console.log("casd options")
+	console.log(options)
+	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input ?? contractOptions.data;
 
 	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
@@ -55,7 +59,7 @@ export const getSendTxParams = ({
 	if (!options?.from && !contractOptions.from) {
 		throw new Web3ContractError('Contract "from" address not specified');
 	}
-
+	console.log("222")
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -65,17 +69,29 @@ export const getSendTxParams = ({
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
+			data: contractOptions.data
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-
+	// am i supposed to change input?
+	// doesn't reach
+	console.log("333")
+	console.log("txparams")
+	console.log(txParams);
 	if (!txParams.input || abi.type === 'constructor') {
 		txParams = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
 	}
-
+	if (!txParams.data || abi.type === 'constructor') {
+		txParams = {
+			...txParams,
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	}
+	console.log("tx params")
+	console.log(txParams)
 	return txParams;
 };
 
@@ -111,6 +127,7 @@ export const getEthTxCallParams = ({
 	txParams = {
 		...txParams,
 		input: encodeMethodABI(abi, params, txParams.input ? toHex(txParams.input) : undefined),
+		data: encodeMethodABI(abi, params, txParams.data ? toHex(txParams.data) : undefined),
 	};
 
 	return txParams;
@@ -134,13 +151,14 @@ export const getEstimateGasParams = ({
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
 			input: contractOptions.input,
+			data: contractOptions.data
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-
+	const deployData = txParams.input ? toHex(txParams.input) : txParams.data ? toHex(txParams.data) : undefined
 	txParams = {
 		...txParams,
-		input: encodeMethodABI(abi, params, txParams.input ? toHex(txParams.input) : undefined),
+		input: encodeMethodABI(abi, params, deployData),
 	};
 
 	return txParams as TransactionWithSenderAPI;
@@ -192,6 +210,7 @@ export const getCreateAccessListParams = ({
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
@@ -200,7 +219,7 @@ export const getCreateAccessListParams = ({
 		txParams = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
+		}; // need an option for data?
 	}
 
 	return txParams;

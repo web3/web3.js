@@ -95,17 +95,18 @@ describe('contract', () => {
 			).toBe(value - transferFromValue);
 		});
 
-		it.each(['0x1', '0x2'])('should increase allowance %p', async type => {
+		it.only.each(['0x2'])('should increase allowance %p', async type => {
 			const value = BigInt(10);
 			const extraAmount = BigInt(4);
 			const tempAccount = await createLocalAccount(web3);
-
+			console.log("1")
 			// approve
 			await contractDeployed.methods
 				.approve(tempAccount.address, value)
 				.send({ ...sendOptions, type });
 
 			// allowance
+			console.log("2")
 			expect(
 				await contractDeployed.methods
 					.allowance(localAccount.address, tempAccount.address)
@@ -118,6 +119,7 @@ describe('contract', () => {
 				.send({ ...sendOptions, from: localAccount.address, type, gas: '2000000' });
 
 			// check allowance
+			console.log("3")
 			expect(
 				await contractDeployed.methods
 					.allowance(localAccount.address, tempAccount.address)

@@ -215,7 +215,7 @@ describe('Contract', () => {
 			};
 		});
 
-		it('should deploy contract', async () => {
+		it('should deploy contract with input property', async () => {
 			const input = `${GreeterBytecode}0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b4d79204772656574696e67000000000000000000000000000000000000000000`;
 			const contract = new Contract(GreeterAbi);
 
@@ -228,6 +228,39 @@ describe('Contract', () => {
 					expect(tx.gasPrice).toBeUndefined();
 					expect(tx.from).toStrictEqual(sendOptions.from);
 					expect(tx.input).toStrictEqual(input); // padded data
+
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(newContract) as any;
+				});
+
+			const deployedContract = await contract
+				.deploy({
+					input: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+
+			expect(deployedContract).toBeDefined();
+			expect(deployedContract.options.address).toStrictEqual(deployedAddr);
+			sendTransactionSpy.mockClear();
+		});
+
+		it('should deploy contract with data property', async () => {
+			const data = `${GreeterBytecode}0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b4d79204772656574696e67000000000000000000000000000000000000000000`;
+			const contract = new Contract(GreeterAbi);
+
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const sendTransactionSpy = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, tx) => {
+					expect(tx.to).toBeUndefined();
+					expect(tx.gas).toStrictEqual(sendOptions.gas);
+					expect(tx.gasPrice).toBeUndefined();
+					expect(tx.from).toStrictEqual(sendOptions.from);
+					expect(tx.data).toStrictEqual(data); // padded data
 
 					const newContract = contract.clone();
 					newContract.options.address = deployedAddr;

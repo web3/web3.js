@@ -172,4 +172,3 @@ Documentation:
 ### Added
 
 -   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
-
