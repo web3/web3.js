@@ -186,3 +186,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Added return type for `formatSubscriptionResult` in class `NewHeadsSubscription` (#6368)
