@@ -163,7 +163,7 @@ Documentation:
 
 -   Added minimum support of web3.extend function
 
-## [Unreleased]
+## [4.1.1]
 
 ### Fixed
 
@@ -173,3 +173,4 @@ Documentation:
 
 -   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
 
+## [Unreleased]

@@ -290,7 +290,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.0.5]
 
 ### Fixed
 
@@ -299,3 +299,5 @@ Documentation:
 ### Added
 
 -   In case of error events there will be inner error also available for details
+
+## [Unreleased]
