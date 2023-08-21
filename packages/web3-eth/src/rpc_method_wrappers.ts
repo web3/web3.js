@@ -49,7 +49,6 @@ import {
 	AccessListResult,
 	Eip712TypedData,
 	UserOperation,
-	UserOperationOptionalFees,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { format, hexToBytes, bytesToUint8Array, numberToHex } from 'web3-utils';
@@ -1178,7 +1177,7 @@ export async function sendUserOperation<ReturnFormat extends DataFormat>(
  */
 export async function estimateUserOperationGas<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	userOperation: UserOperationOptionalFees,
+	userOperation: UserOperation,
 	entryPoint: Address,
 	returnFormat: ReturnFormat,
 ) {

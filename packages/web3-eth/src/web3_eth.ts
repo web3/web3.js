@@ -39,6 +39,7 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	Eip712TypedData,
 	UserOperation,
+	UserOperationRequire,
 	HexStringBytes,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
@@ -1662,24 +1663,23 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *
 	 * @param UserOperation represents the structure of a transaction initiated by the user. It contains the sender, receiver, call data, maximum fee per unit of Gas, maximum priority fee, signature, nonce, and other specific elements.
 	 * @param entryPoint a singleton contract to execute bundles of UserOperations. Bundlers/Clients whitelist the supported entrypoint.
-	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) Specifies what block to use as the current state for the balance query.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
-	 * @returns The current balance for the given address in `wei`.
-	 *
+	 * @returns userOperation hash or throws error instead of balance.
+	 * @example
 	 * ```ts
 	 * 	web3.eth.sendUserOperation({
-			sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
-			nonce: "123",
-			initCode: "0x68656c6c6f",
-			callData: "0x776F726C64",
-			callGasLimit: "1000",
-			verificationGasLimit: "2300",
-			preVerificationGas: "3100",
-			maxFeePerGas: "8500",
-			maxPriorityFeePerGas: "1",
-			paymasterAndData: "0x626c6f63746f",
-			signature: "0x636c656d656e74"
-		},"0x636c656d656e74").then(console.log);
+	 *		sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
+	 *		nonce: "123",
+	 *		initCode: "0x68656c6c6f",
+	 *		callData: "0x776F726C64",
+	 *		callGasLimit: "1000",
+	 *		verificationGasLimit: "2300",
+	 *		preVerificationGas: "3100",
+	 *		maxFeePerGas: "8500",
+	 *		maxPriorityFeePerGas: "1",
+	 *		paymasterAndData: "0x626c6f63746f",
+	 *		signature: "0x636c656d656e74"
+	 *	},"0x636c656d656e74").then(console.log);
 	 * > 0xe554d0701f7fdc734f84927d109537f1ac4ee4ebfa3670c71d224a4fa15dbcd1
 	 * ```
 	 */
@@ -1695,37 +1695,25 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *
 	 * @param UserOperation represents the structure of a transaction initiated by the user. It contains the sender, receiver, call data, maximum fee per unit of Gas, maximum priority fee, signature, nonce, and other specific elements.
 	 * @param entryPoint a singleton contract to execute bundles of UserOperations. Bundlers/Clients whitelist the supported entrypoint.
-  	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) Specifies what block to use as the current state for the balance query.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
-	 * @returns The current balance for the given address in `wei`.
-	 *
+	 * @returns - `preVerificationGas` gas overhead of this UserOperation
+	 * - `verificationGasLimit` actual gas used by the validation of this UserOperation
+	 * - `callGasLimit` value used by inner account execution
+	 * @example
 	 * ```ts
-	 * {
-      sender, // address
-      nonce, // uint256
-      initCode, // bytes
-      callData, // bytes
-      callGasLimit, // uint256
-      verificationGasLimit, // uint256
-      preVerificationGas, // uint256
-      maxFeePerGas, // uint256
-      maxPriorityFeePerGas, // uint256
-      paymasterAndData, // bytes
-      signature // bytes
-    }
 	 * 	web3.eth.estimateUserOperationGas({
-			sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
-			nonce: "123",
-			initCode: "0x68656c6c6f",
-			callData: "0x776F726C64",
-			callGasLimit: "1000",
-			verificationGasLimit: "2300",
-			preVerificationGas: "3100",
-			maxFeePerGas: "0",
-			maxPriorityFeePerGas: "0",
-			paymasterAndData: "0x626c6f63746f",
-			signature: "0x636c656d656e74"
-		},"0x636c656d656e74").then(console.log);
+	 *		sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
+	 *		nonce: "123",
+	 *		initCode: "0x68656c6c6f",
+	 *		callData: "0x776F726C64",
+	 *		callGasLimit: "1000",
+	 *		verificationGasLimit: "2300",
+	 *		preVerificationGas: "3100",
+	 *		maxFeePerGas: "0",
+	 *		maxPriorityFeePerGas: "0",
+	 *		paymasterAndData: "0x626c6f63746f",
+	 *		signature: "0x636c656d656e74"
+	 *	},"0x636c656d656e74").then(console.log);
 	 * > 0xe554d0701f7fdc734f84927d109537f1ac4ee4ebfa3670c71d224a4fa15dbcd1
 	 * ```
 	 */
@@ -1744,7 +1732,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * @param hash a userOpHash value returned by `eth_sendUserOperation`
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
 	 * @returns null in case the UserOperation is not yet included in a block, or a full UserOperation, with the addition of entryPoint, blockNumber, blockHash and transactionHash
-	 *
+	 * @example
 	 * ```ts
 	 * 	web3.eth.getUserOperationByHash("0xxxxx").then(console.log);
 	 * > 0xxxxx
@@ -1772,7 +1760,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * @param hash hash a userOpHash value returned by `eth_sendUserOperation`
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
 	 * @returns null in case the UserOperation is not yet included in a block, or UserOperation
-	 *
+	 * @example
 	 * ```ts
 	 * 	web3.eth.getUserOperationReceipt("0xxxxx").then(console.log);
 	 * >
@@ -1787,7 +1775,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * Returns an array of the entryPoint addresses supported by the client. The first element of the array SHOULD be the entryPoint addressed preferred by the client.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
 	 * @returns an array of the entryPoint addresses supported by the client. The first element of the array SHOULD be the entryPoint addressed preferred by the client.
-	 *
+	 * @example
 	 * ```ts
 	 * 	web3.eth.supportedEntryPoints().then(console.log);
 	 * > ["0xcd01C8aa8995A59eB7B2627E69b40e0524B5ecf8", "0x7A0A0d159218E6a2f407B99173A2b12A6DDfC2a6"]
@@ -1803,24 +1791,25 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * @param userOp a structure that describes a transaction to be sent on behalf of a user.
 	 * @param entryPoint  a singleton contract to execute bundles of UserOperations. Bundlers/Clients whitelist the supported entrypoint.
 	 * @returns an array of the entryPoint addresses supported by the client. The first element of the array SHOULD be the entryPoint addressed preferred by the client.
-	 *
+	 * @example
 	 * ```ts
-	 * 	web3.eth.generateUserOpHash(sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
-			nonce: "123",
-			initCode: "0x68656c6c6f",
-			callData: "0x776F726C64",
-			callGasLimit: "1000",
-			verificationGasLimit: "2300",
-			preVerificationGas: "3100",
-			maxFeePerGas: "0",
-			maxPriorityFeePerGas: "0",
-			paymasterAndData: "0x626c6f63746f",
-			signature: "0x636c656d656e74"
-		},"0x636c656d656e74", '0x1').then(console.log);
+	 *web3.eth.generateUserOpHash({
+	 *		sender: "0x9fd042a18e90ce326073fa70f111dc9d798d9a52",
+	 *		nonce: "123",
+	 *		initCode: "0x68656c6c6f",
+	 *		callData: "0x776F726C64",
+	 *		callGasLimit: "1000",
+	 *		verificationGasLimit: "2300",
+	 *		preVerificationGas: "3100",
+	 *		maxFeePerGas: "0",
+	 *		maxPriorityFeePerGas: "0",
+	 *		paymasterAndData: "0x626c6f63746f",
+	 *		signature: "0x636c656d656e74"
+	 *	},"0x636c656d656e74", '0x1').then(console.log);
 	 * > 0xxxx
 	 * ```
 	 */
-	public async generateUserOpHash(userOp: UserOperation, entryPoint: string) {
+	public async generateUserOpHash(userOp: UserOperationRequire, entryPoint: string) {
 		const chainId = await this.getChainId();
 		return generateUserOpHash(userOp, entryPoint, String(chainId));
 	}

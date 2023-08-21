@@ -143,4 +143,6 @@ Documentation:
 
 ## [Unreleased]
 
+### Added
+
 -   Added a new function `isUserOperationAllHex` to check if all properties of the `UserOperation` object are valid hexadecimal values.(#6302)

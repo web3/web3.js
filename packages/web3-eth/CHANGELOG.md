@@ -191,6 +191,7 @@ Documentation:
 
 -   A `rpc_method_wrapper` (`signTypedData`) for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
 -   A `signTypedData` method to the `Web3Eth` class (#6286)
+-   increase eip-4337 methods `sendUserOperation`, `estimateUserOperationGas`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`, `generateUserOpHash` (#6302)
 
 ### Fixed
 

@@ -15,55 +15,56 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/* eslint-disable @typescript-eslint/no-unsafe-member-access  */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { encodeParameters } from 'web3-eth-abi';
-import { AbiInput, UserOperation } from 'web3-types';
+import { AbiInput, UserOperationRequire, Address, Uint256, HexStringBytes } from 'web3-types';
 import { sha3 } from 'web3-utils';
 
 const sha3Checked = (data: string): string => {
 	const result = sha3(data);
 	if (result === undefined) {
-		throw new Error(`sha3 returned undefined for data: ${data}`);
+		throw new Error('sha3 returned undefined');
 	}
 	return result;
 };
 
-export const generateUserOpHash = (userOp: UserOperation, entryPoint: string, chainId: string): string => {
-	try {
-		const types: AbiInput[] = [
-			'address',
-			'uint256',
-			'bytes32',
-			'bytes32',
-			'uint256',
-			'uint256',
-			'uint256',
-			'uint256',
-			'uint256',
-			'bytes32',
-		];
+export const generateUserOpHash = (
+	userOp: UserOperationRequire,
+	entryPoint: string,
+	chainId: string,
+): string => {
+	const types: AbiInput[] = [
+		'address',
+		'uint256',
+		'bytes32',
+		'bytes32',
+		'uint256',
+		'uint256',
+		'uint256',
+		'uint256',
+		'uint256',
+		'bytes32',
+	];
 
-		const values: (string | number)[] = [
-			userOp.sender,
-			userOp.nonce,
-			sha3Checked(userOp.initCode),
-			sha3Checked(userOp.callData),
-			userOp.callGasLimit,
-			userOp.verificationGasLimit,
-			userOp.preVerificationGas,
-			userOp.maxFeePerGas,
-			userOp.maxPriorityFeePerGas,
-			sha3Checked(userOp.paymasterAndData),
-		];
+	const values: (Address | Uint256 | HexStringBytes)[] = [
+		userOp.sender,
+		userOp.nonce,
+		sha3Checked(userOp.initCode),
+		sha3Checked(userOp.callData),
+		userOp.callGasLimit,
+		userOp.verificationGasLimit,
+		userOp.preVerificationGas,
+		userOp.maxFeePerGas,
+		userOp.maxPriorityFeePerGas,
+		sha3Checked(userOp.paymasterAndData),
+	];
 
-		const packed: string = encodeParameters(types, values);
+	const packed: string = encodeParameters(types, values);
 
-		const enctype: AbiInput[] = ['bytes32', 'address', 'uint256'];
-		const encValues: string[] = [sha3Checked(packed), entryPoint, chainId];
-		const enc: string = encodeParameters(enctype, encValues);
+	const enctype: AbiInput[] = ['bytes32', 'address', 'uint256'];
+	const encValues: string[] = [sha3Checked(packed), entryPoint, chainId];
+	const enc: string = encodeParameters(enctype, encValues);
 
-		return sha3Checked(enc);
-	} catch (error) {
-		console.error(error);
-		throw error;
-	}
+	return sha3Checked(enc);
 };

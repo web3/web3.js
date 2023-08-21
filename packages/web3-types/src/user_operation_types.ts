@@ -15,22 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Address, Uint256, HexStringBytes } from './eth_types.js';
+
 export interface UserOperation {
-	sender: string;
-	nonce: string;
-	initCode: string;
-	callData: string;
-	callGasLimit: string;
-	verificationGasLimit: string;
-	preVerificationGas: string;
-	maxFeePerGas: string;
-	maxPriorityFeePerGas: string;
-	paymasterAndData: string;
-	signature: string;
+	sender: Address;
+	nonce: Uint256;
+	initCode: HexStringBytes;
+	callData: HexStringBytes;
+	callGasLimit?: Uint256;
+	verificationGasLimit: Uint256;
+	preVerificationGas: Uint256;
+	maxFeePerGas?: Uint256;
+	maxPriorityFeePerGas?: Uint256;
+	paymasterAndData: HexStringBytes;
+	signature: HexStringBytes;
 }
 
-// Interface for UserOperation without maxFeePerGas and maxPriorityFeePerGas
-export interface UserOperationOptionalFees extends Omit<UserOperation, 'maxFeePerGas' | 'maxPriorityFeePerGas'> {
-	maxFeePerGas?: string;
-	maxPriorityFeePerGas?: string;
+export interface UserOperationRequire
+	extends Omit<UserOperation, 'callGasLimit' | 'maxFeePerGas' | 'maxPriorityFeePerGas'> {
+	callGasLimit: Uint256;
+	maxFeePerGas: Uint256;
+	maxPriorityFeePerGas: Uint256;
 }

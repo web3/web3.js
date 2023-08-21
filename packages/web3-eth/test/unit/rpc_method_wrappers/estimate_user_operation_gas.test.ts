@@ -85,4 +85,46 @@ describe('estimateUserOperationGas', () => {
 		);
 		expect(result).toBe(expectedFormattedResult);
 	});
+
+	it('should set maxFeePerGas to "0" if not provided', async () => {
+		const userOperationWithoutMaxFee = {
+			...userOperation,
+			maxFeePerGas: undefined,
+		};
+		await estimateUserOperationGas(
+			web3Context,
+			userOperationWithoutMaxFee,
+			entryPoint,
+			DEFAULT_RETURN_FORMAT,
+		);
+		expect(ethRpcMethods.sendUserOperation).toHaveBeenCalledWith(
+			web3Context.requestManager,
+			expect.objectContaining({
+				...userOperationWithoutMaxFee,
+				maxFeePerGas: '0', // Ensure it's set to "0"
+			}),
+			entryPoint,
+		);
+	});
+
+	it('should set maxPriorityFeePerGas to "0" if not provided', async () => {
+		const userOperationWithoutMaxPriorityFee = {
+			...userOperation,
+			maxPriorityFeePerGas: undefined,
+		};
+		await estimateUserOperationGas(
+			web3Context,
+			userOperationWithoutMaxPriorityFee,
+			entryPoint,
+			DEFAULT_RETURN_FORMAT,
+		);
+		expect(ethRpcMethods.sendUserOperation).toHaveBeenCalledWith(
+			web3Context.requestManager,
+			expect.objectContaining({
+				...userOperationWithoutMaxPriorityFee,
+				maxPriorityFeePerGas: '0', // Ensure it's set to "0"
+			}),
+			entryPoint,
+		);
+	});
 });

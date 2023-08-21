@@ -150,7 +150,6 @@ Documentation:
 
 -   `eth_signTypedData` and `eth_signTypedData_v4` to `web3_eth_execution_api` (#6286)
 -   `Eip712TypeDetails` and `Eip712TypedData` to `eth_types` (#6286)
--   added eip-4337 `UserOperation` type
 
 ## [1.1.1]
 
@@ -159,3 +158,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Added
+
+-   Added eip-4337 `UserOperation` type (#6302)
