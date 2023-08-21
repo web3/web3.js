@@ -1923,6 +1923,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ### Fixed
 
+#### web3-eth
+
+-   Added return type for `formatSubscriptionResult` in class `NewHeadsSubscription` (#6368)
+
 #### web3-core
 
 -   Fixed rpc errors not being sent as an inner error when using the `send` method on request manager (#6300).
@@ -1940,10 +1944,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   ESM import bug (#6359)
 
 ### Changed
-
-#### web3-eth
-
--   Dependencies updated
 
 #### web3-eth-abi
 
