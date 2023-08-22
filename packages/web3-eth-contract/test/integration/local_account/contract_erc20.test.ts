@@ -101,6 +101,7 @@ describe('contract', () => {
 			const tempAccount = await createLocalAccount(web3);
 			console.log("1")
 			// approve
+			console.log("approve")
 			await contractDeployed.methods
 				.approve(tempAccount.address, value)
 				.send({ ...sendOptions, type });

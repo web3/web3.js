@@ -1051,11 +1051,8 @@ export class Contract<Abi extends ContractAbi>
 			input: undefined,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
-		console.log("_contractMethodSend")
-		console.log("mods")
-		console.log(modifiedContractOptions)
-		console.log("options");
-		console.log(options);
+		console.log("contractmethodsend")
+		console.log(contractOptions)
 		const tx = getSendTxParams({
 			abi,
 			params,

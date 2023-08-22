@@ -46,12 +46,13 @@ export const getSendTxParams = ({
 	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	console.log("asd contractOptions")
-	console.log(contractOptions)
-	console.log("casd options")
+	console.log("options")
 	console.log(options)
+	console.log("contractoptions")
+	console.log(contractOptions)
 	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input ?? contractOptions.data;
-
+	console.log("deploymentcall")
+	console.log(deploymentCall)
 	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
@@ -59,7 +60,6 @@ export const getSendTxParams = ({
 	if (!options?.from && !contractOptions.from) {
 		throw new Web3ContractError('Contract "from" address not specified');
 	}
-	console.log("222")
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -75,16 +75,19 @@ export const getSendTxParams = ({
 	) as unknown as TransactionCall;
 	// am i supposed to change input?
 	// doesn't reach
-	console.log("333")
 	console.log("txparams")
 	console.log(txParams);
-	if (!txParams.input || abi.type === 'constructor') {
+	if (txParams.input && abi.type === 'constructor') {
 		txParams = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
-	}
-	if (!txParams.data || abi.type === 'constructor') {
+	} else if (txParams.data && abi.type === 'constructor') {
+		txParams = {
+			...txParams,
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	} else if (abi.type === 'constructor') {
 		txParams = {
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
