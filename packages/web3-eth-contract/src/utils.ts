@@ -46,13 +46,7 @@ export const getSendTxParams = ({
 	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	console.log("options")
-	console.log(options)
-	console.log("contractoptions")
-	console.log(contractOptions)
 	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input ?? contractOptions.data;
-	console.log("deploymentcall")
-	console.log(deploymentCall)
 	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
@@ -73,10 +67,6 @@ export const getSendTxParams = ({
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	// am i supposed to change input?
-	// doesn't reach
-	console.log("txparams")
-	console.log(txParams);
 	if (txParams.input && abi.type === 'constructor') {
 		txParams = {
 			...txParams,
@@ -92,9 +82,12 @@ export const getSendTxParams = ({
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
+	} else {
+		txParams = {
+			...txParams,
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
 	}
-	console.log("tx params")
-	console.log(txParams)
 	return txParams;
 };
 
@@ -159,11 +152,22 @@ export const getEstimateGasParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 	const deployData = txParams.input ? toHex(txParams.input) : txParams.data ? toHex(txParams.data) : undefined
-	txParams = {
-		...txParams,
-		input: encodeMethodABI(abi, params, deployData),
-	};
-
+	if (txParams.input) {
+		txParams = {
+			...txParams,
+			input: encodeMethodABI(abi, params, deployData),
+		};
+	} else if (txParams.data) {
+		txParams = {
+			...txParams,
+			data: encodeMethodABI(abi, params, deployData),
+		};
+	} else {
+		txParams = {
+			...txParams,
+			input: encodeMethodABI(abi, params, deployData),
+		}
+	}
 	return txParams as TransactionWithSenderAPI;
 };
 

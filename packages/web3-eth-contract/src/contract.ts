@@ -632,7 +632,6 @@ export class Contract<Abi extends ContractAbi>
 				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
-
 				return this._contractMethodEstimateGas({
 					abi: abi as AbiFunctionFragment,
 					params: args as unknown[],
@@ -922,7 +921,6 @@ export class Contract<Abi extends ContractAbi>
 					throw new Web3ValidatorError(errors);
 				}
 			}
-			console.log("_createContractMethod")
 			const methods = {
 				arguments: abiParams,
 
@@ -1051,16 +1049,12 @@ export class Contract<Abi extends ContractAbi>
 			input: undefined,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
-		console.log("contractmethodsend")
-		console.log(contractOptions)
 		const tx = getSendTxParams({
 			abi,
 			params,
 			options,
 			contractOptions: modifiedContractOptions,
 		});
-		console.log("_contractMethodSend tx")
-		console.log(tx)
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
@@ -1087,7 +1081,6 @@ export class Contract<Abi extends ContractAbi>
 			...modifiedContractOptions,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
-		console.log("_contractMethodDeploySend");
 		const tx = getSendTxParams({
 			abi,
 			params,
@@ -1133,7 +1126,6 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: contractOptions ?? this.options,
 		});
-
 		return estimateGas(this, tx, BlockTags.LATEST, returnFormat);
 	}
 
