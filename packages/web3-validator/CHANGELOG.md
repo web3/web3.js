@@ -135,8 +135,10 @@ Documentation:
 
 -   Added `json-schema` as a main json schema type (#6264)
 
-## [Unreleased]
+## [2.0.1]
 
 ### Fixed
 
 -   ESM import bug (#6359)
+
+## [Unreleased]
