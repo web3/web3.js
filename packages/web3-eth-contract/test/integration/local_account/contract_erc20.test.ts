@@ -95,7 +95,7 @@ describe('contract', () => {
 			).toBe(value - transferFromValue);
 		});
 
-		it.each(['0x1','0x2'])('should increase allowance %p', async type => {
+		it.each(['0x1', '0x2'])('should increase allowance %p', async type => {
 			const value = BigInt(10);
 			const extraAmount = BigInt(4);
 			const tempAccount = await createLocalAccount(web3);

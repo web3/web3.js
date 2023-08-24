@@ -937,7 +937,7 @@ export class Contract<Abi extends ContractAbi>
 					),
 
 				send: (options?: PayableTxOptions | NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // this options does not include data
+					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
 
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: PayableCallOptions | NonPayableCallOptions,
@@ -1059,7 +1059,7 @@ export class Contract<Abi extends ContractAbi>
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
 		});
-
+		
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
