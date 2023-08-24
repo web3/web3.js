@@ -951,7 +951,7 @@ export async function call<ReturnFormat extends DataFormat>(
 
 	const response = await ethRpcMethods.call(
 		web3Context.requestManager,
-		formatTransaction(transaction, ETH_DATA_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT, {fillInputAndData: true,}),
 		blockNumberFormatted,
 	);
 
