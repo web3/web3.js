@@ -14,7 +14,7 @@
     "types": "types/index.d.ts",
     "main": "lib/index.js",
     "dependencies": {
-        "abortcontroller-polyfill": "^1.7.3",
+        "abortcontroller-polyfill": "^1.7.5",
         "cross-fetch": "^4.0.0",
         "es6-promise": "^4.2.8",
         "web3-core-helpers": "1.10.1"
