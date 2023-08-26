@@ -7,7 +7,9 @@ var http = require('http');
 var https = require('https');
 var Web3 = require('../packages/web3');
 var HttpProvider = require('../packages/web3-providers-http');
+// Mock test with globalThis.fetch func
 var fetchMock = require('fetch-mock');
+require('cross-fetch/polyfill');
 
 function isObject(object) {
     return object != null && typeof object === 'object';

@@ -112,6 +112,7 @@
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "core-js": "^3.6.5",
+        "cross-fetch": "^4.0.0",
         "crypto-browserify": "^3.12.0",
         "crypto-js": "^3.3.0",
         "decache": "^4.6.0",
