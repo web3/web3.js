@@ -49,6 +49,7 @@ export class HttpProvider extends HttpProviderBase {
     timeout: number;
     headers?: HttpHeader[];
     agent?: HttpProviderAgent;
+    forceGlobalFetch?: boolean;
     connected: boolean;
 
     constructor(host?: string, options?: HttpProviderOptions);

@@ -24,16 +24,16 @@
  */
 
 var errors = require('web3-core-helpers').errors;
+var fetch = require('cross-fetch');
 var http = require('http');
 var https = require('https');
 
 // Apply missing polyfill for IE
-require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
 
 // import abortController if abortController is not included in node
 if(typeof global !== "undefined" && !global.AbortController){
-    require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
+    require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
 }
 
 /**
@@ -46,6 +46,7 @@ var HttpProvider = function HttpProvider(host, options) {
     this.timeout = options.timeout || 0;
     this.headers = options.headers;
     this.agent = options.agent;
+    this.forceGlobalFetch = options.forceGlobalFetch || false;
     this.connected = false;
 
     // keepAlive is true unless explicitly set to false
@@ -74,6 +75,7 @@ HttpProvider.prototype.send = function (payload, callback) {
     };
     var headers = {};
     var controller;
+    var fetchFunc = this.forceGlobalFetch ? globalThis.fetch : fetch;
 
     if (typeof AbortController !== 'undefined') {
         controller = new AbortController();
@@ -138,11 +140,25 @@ HttpProvider.prototype.send = function (payload, callback) {
         }
 
         // Response is a stream data so should be awaited for json response
-        response.json().then(function (data) {
-            callback(null, data);
-        }).catch(function (error) {
-            callback(errors.InvalidResponse(response));
-        });
+        response
+            .json()
+            .then(
+                function (data) {
+                    callback(null, data);
+                },
+                function () {
+                    response
+                        .text()
+                        .then(
+                            function (text) {
+                                callback(errors.InvalidResponse(text));
+                            },
+                            function () {
+                                callback(errors.InvalidResponse(""));
+                            }
+                        );
+                }
+            );
     };
 
     var failed = function (error) {
@@ -152,14 +168,14 @@ HttpProvider.prototype.send = function (payload, callback) {
 
         if (error.name === 'AbortError') {
             callback(errors.ConnectionTimeout(this.timeout));
+            return;
         }
 
         callback(errors.InvalidConnection(this.host, error));
-    }
+    };
 
-    fetch(this.host, options)
-        .then(success.bind(this))
-        .catch(failed.bind(this));
+    fetchFunc(this.host, options)
+        .then(success.bind(this), failed.bind(this));
 };
 
 HttpProvider.prototype.disconnect = function () {
