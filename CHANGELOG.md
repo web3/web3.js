@@ -693,3 +693,7 @@ Released with 1.0.0-beta.37 code base.
 
 
 ## [Unreleased]
+
+### Fixed
+
+- Fixed broken fetch for Node.js > 18.x and fixed double callback (#6381)

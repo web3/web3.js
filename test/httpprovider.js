@@ -7,7 +7,9 @@ var http = require('http');
 var https = require('https');
 var Web3 = require('../packages/web3');
 var HttpProvider = require('../packages/web3-providers-http');
+// Mock test with globalThis.fetch func
 var fetchMock = require('fetch-mock');
+require('cross-fetch/polyfill');
 
 function isObject(object) {
     return object != null && typeof object === 'object';
@@ -72,15 +74,14 @@ describe('web3-providers-http', function () {
     describe('send', function () {
         it('should fail with invalid remote node connection', async function () {
 
-            var provider = new HttpProvider('http://localhost:8545');
+            var provider = new HttpProvider('http://localhost:8545', { forceGlobalFetch: true });
             var web3 = new Web3(provider);
 
             await expect(web3.eth.getChainId()).to.be.rejectedWith(Error, "CONNECTION ERROR: Couldn't connect to node http://localhost:8545.");
-            
         });
 
         it('should fail for non-json format response', async function () {
-            var provider = new HttpProvider('/fetchMock');
+            var provider = new HttpProvider('/fetchMock', { forceGlobalFetch: true });
             var web3 = new Web3(provider);
 
             fetchMock.mock('/fetchMock', 'Testing non-json format response');
@@ -90,7 +91,7 @@ describe('web3-providers-http', function () {
         });
 
         it('should timeout by delayed response', async function () {
-            var provider = new HttpProvider('/fetchMock', { timeout: 500 });
+            var provider = new HttpProvider('/fetchMock', { forceGlobalFetch: true, timeout: 500 });
             var web3 = new Web3(provider);
 
             fetchMock.mock('/fetchMock', 'Testing non-json format response', { delay: 1000 });
@@ -100,7 +101,7 @@ describe('web3-providers-http', function () {
         });
 
         it('should send basic async request', async function () {
-            var provider = new HttpProvider('/fetchMock');
+            var provider = new HttpProvider('/fetchMock', { forceGlobalFetch: true });
 
             var reqObject = {
                 'jsonrpc': '2.0',
