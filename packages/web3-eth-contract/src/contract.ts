@@ -605,8 +605,7 @@ export class Contract<Abi extends ContractAbi>
 		if ((!_input || _input.trim() === '0x') && (!_data || _data.trim() === '0x')) {
 			throw new Web3ContractError('contract creation without any data provided.');
 		}
-		// check if data is used properly
-		// see if deploy data is working as intended.
+
 		const args = deployOptions?.arguments ?? [];
 
 		const contractOptions: ContractOptions = { ...this.options, input: _input, data: _data };

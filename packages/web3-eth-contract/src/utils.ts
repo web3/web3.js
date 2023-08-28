@@ -232,11 +232,27 @@ export const getCreateAccessListParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
 
-	if (!txParams.input || abi.type === 'constructor') {
+	if (txParams.input) {
 		txParams = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		}; // need an option for data?
+		};
+	} else if (txParams.data) {
+		txParams = {
+			...txParams,
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	} else if (abi.type === 'constructor') {
+		txParams = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	} else {
+		// if no data is specified, default to input
+		txParams = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
 	}
 
 	return txParams;
