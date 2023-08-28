@@ -96,7 +96,6 @@ describe('contract', () => {
 			);
 
 			it('should return estimated gas of contract constructor %p', async () => {
-				console.log("estimate gas")
 				const estimatedGas = await new Contract(GreeterAbi, undefined, {
 					provider: getSystemTestProvider(),
 				})
@@ -109,7 +108,6 @@ describe('contract', () => {
 						gas: '1000000',
 					});
 				expect(Number(estimatedGas)).toBeGreaterThan(0);
-				console.log("after estimate")
 			});
 			it('should return estimated gas of contract constructor without arguments', async () => {
 				const estimatedGas = await new Contract(ERC721TokenAbi, undefined, {
