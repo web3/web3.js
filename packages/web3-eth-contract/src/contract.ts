@@ -212,6 +212,7 @@ export class Contract<Abi extends ContractAbi>
 	 * myContract.options.gas = 5000000; // provide as fallback always 5M gas
 	 * ```
 	 */
+
 	public readonly options: ContractOptions;
 
 	/**
@@ -373,7 +374,8 @@ export class Contract<Abi extends ContractAbi>
 			gas: options?.gas ?? options?.gasLimit,
 			gasPrice: options?.gasPrice,
 			from: options?.from,
-			input: options?.input ?? options?.data,
+			input: options?.input,
+			data: options?.data,
 		};
 
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
@@ -1059,7 +1061,7 @@ export class Contract<Abi extends ContractAbi>
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
 		});
-		
+
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {

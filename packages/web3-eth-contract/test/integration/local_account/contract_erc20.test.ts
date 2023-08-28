@@ -99,6 +99,7 @@ describe('contract', () => {
 			const value = BigInt(10);
 			const extraAmount = BigInt(4);
 			const tempAccount = await createLocalAccount(web3);
+
 			// approve
 			await contractDeployed.methods
 				.approve(tempAccount.address, value)

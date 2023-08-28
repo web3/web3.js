@@ -46,7 +46,8 @@ export const getSendTxParams = ({
 	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input ?? contractOptions.data;
+	const deploymentCall =
+		options?.input ?? options?.data ?? contractOptions.input ?? contractOptions.data;
 	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
@@ -63,16 +64,16 @@ export const getSendTxParams = ({
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
-			data: contractOptions.data
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	if (txParams.input && abi.type === 'constructor') {
+	if (txParams.input) {
 		txParams = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
-	} else if (txParams.data && abi.type === 'constructor') {
+	} else if (txParams.data) {
 		txParams = {
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
@@ -80,12 +81,13 @@ export const getSendTxParams = ({
 	} else if (abi.type === 'constructor') {
 		txParams = {
 			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
+			input: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
 	} else {
+		// if no data is specified, default to input
 		txParams = {
 			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
+			input: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
 	}
 	return txParams;
@@ -147,11 +149,19 @@ export const getEstimateGasParams = ({
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
 			input: contractOptions.input,
-			data: contractOptions.data
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	const deployData = txParams.input ? toHex(txParams.input) : txParams.data ? toHex(txParams.data) : undefined
+	let deployData;
+
+	if (txParams.input) {
+		deployData = toHex(txParams.input);
+	} else if (txParams.data) {
+		deployData = toHex(txParams.data);
+	} else {
+		deployData = undefined;
+	}
 	if (txParams.input) {
 		txParams = {
 			...txParams,
@@ -166,7 +176,7 @@ export const getEstimateGasParams = ({
 		txParams = {
 			...txParams,
 			input: encodeMethodABI(abi, params, deployData),
-		}
+		};
 	}
 	return txParams as TransactionWithSenderAPI;
 };

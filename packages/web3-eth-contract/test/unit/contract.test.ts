@@ -208,7 +208,7 @@ describe('Contract', () => {
 		let sendOptions: Record<string, unknown>;
 		const deployedAddr = '0x20bc23D0598b12c34cBDEf1fae439Ba8744DB426';
 
-		beforeAll(() => {
+		beforeEach(() => {
 			sendOptions = {
 				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
 				gas: '1000000',
@@ -291,39 +291,22 @@ describe('Contract', () => {
 		});
 
 		// eslint-disable-next-line @typescript-eslint/require-await
-		it('send method on deployed contract should work', async () => {
+		it('send method on deployed contract should work using input', async () => {
 			const arg = 'Hello';
 			const contract = new Contract(GreeterAbi);
-
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			// const send = jest.spyOn(
-			// 	{
-			// 		send: () => {
-			// 			return { on: () => {} };
-			// 		},
-			// 	},
-			// 	'send',
-			// );
-
-			// const setResolverMock = jest.spyOn(ens['_registry'], 'setResolver').mockReturnValue({
-			// 	send,
-			// } as unknown as Web3PromiEvent<any, any>);
+			sendOptions = {
+				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
+				gas: '1000000',
+			};
 			const spyTx = jest
 				.spyOn(eth, 'sendTransaction')
 				.mockImplementation((_objInstance, _tx) => {
 					const newContract = contract.clone();
 					newContract.options.address = deployedAddr;
-
-					// jest.spyOn(newContract.methods.setGreeting(arg), 'send').mockReturnValue({
-					// 	send,
-					// 	status: '0x1',
-					// } as unknown as Web3PromiEvent<any, any>);
-
+					expect(_tx.input).toBeDefined();
 					if (
 						_tx.input ===
-							'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000' ||
-						_tx.data ===
-							'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
+						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
 					) {
 						// eslint-disable-next-line
 						expect(_tx.to).toStrictEqual(deployedAddr);
@@ -334,24 +317,52 @@ describe('Contract', () => {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
 					return Promise.resolve(Object.assign(newContract, { on: () => {} })) as any;
 				});
-			// const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation((...args) => {
-			// 	// const actualEth = jest.requireActual('web3-eth');
 
-			// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			// 	// const transactionToSend = actualEth.sendTransaction(args);
-			// 	// Object.assign(transactionToSend, { on: () => {} });
-			// 	// return transactionToSend;
-			// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-			// 	// eslint-disable-next-line @typescript-eslint/no-empty-function
-			// 	return { on: () => {} } as unknown as Web3PromiEvent<any, any>;
-			// });
 			const deployedContract = await contract
 				.deploy({
 					input: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
+			const receipt = await deployedContract.methods.setGreeting(arg).send(sendOptions);
+			expect(receipt.status).toBe('0x1');
 
+			spyTx.mockClear();
+		});
+
+		it('send method on deployed contract should work using data', async () => {
+			const arg = 'Hello';
+			const contract = new Contract(GreeterAbi);
+			sendOptions = {
+				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
+				gas: '1000000',
+				data: '0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
+			};
+			const spyTx = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx) => {
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+					if (
+						_tx.data ===
+						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
+					) {
+						// eslint-disable-next-line
+						expect(_tx.to).toStrictEqual(deployedAddr);
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+						return { status: '0x1', on: () => {} } as any;
+					}
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return Promise.resolve(Object.assign(newContract, { on: () => {} })) as any;
+				});
+
+			const deployedContract = await contract
+				.deploy({
+					data: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
 			const receipt = await deployedContract.methods.setGreeting(arg).send(sendOptions);
 			expect(receipt.status).toBe('0x1');
 
@@ -990,7 +1001,7 @@ describe('Contract', () => {
 					expect(_block).toBe('latest');
 					expect(_tx.to).toStrictEqual(deployedAddr);
 					expect(_tx.from).toStrictEqual(sendOptions.from);
-					expect(_tx.input).toBe(
+					expect(_tx.data).toBe(
 						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
 					);
 
