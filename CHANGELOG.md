@@ -692,8 +692,10 @@ Released with 1.0.0-beta.37 code base.
 - Replace ethereumjs-util with @ethereumjs/util (#6283) 
 
 
-## [Unreleased]
+## [1.10.2]
 
 ### Fixed
 
 - Fixed broken fetch for Node.js > 18.x and fixed double callback (#6381)
+
+## [Unreleased]
