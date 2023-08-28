@@ -7,6 +7,9 @@ sidebar_label: 'For Plugin Developers'
 
 This guide intends to provide the necessary context for developing plugins for web3.js.
 
+Feel free to explore some of [the already built plugins](https://github.com/chainSafe?q=web3.js-plugin) and/or
+use this [template](https://github.com/ChainSafe/web3.js-plugin-template) to start with development of your Web3.js plugin.
+
 :::caution
 To provide type safety and IntelliSense for your plugin users, please refer to the [Setting Up Module Augmentation](#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
 :::

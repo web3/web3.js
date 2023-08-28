@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { uint8ArrayConcat } from 'web3-utils';
-import { EncoderResult } from '../types';
-import { WORD_SIZE } from '../utils';
-import { encodeNumber } from './number';
+import { EncoderResult } from '../types.js';
+import { WORD_SIZE } from '../utils.js';
+import { encodeNumber } from './number.js';
 
 export function encodeDynamicParams(encodedParams: ReadonlyArray<EncoderResult>): Uint8Array {
 	let staticSize = 0;

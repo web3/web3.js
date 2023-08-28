@@ -18,8 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiError } from 'web3-errors';
 import type { AbiParameter } from 'web3-types';
 import { bytesToHex, toBigInt } from 'web3-utils';
-import { DecoderResult, EncoderResult } from '../types';
-import { allocUnsafe, WORD_SIZE } from '../utils';
+import { DecoderResult, EncoderResult } from '../types.js';
+import { allocUnsafe, WORD_SIZE } from '../utils.js';
 
 function bigIntToUint8Array(value: bigint, byteLength = WORD_SIZE): Uint8Array {
 	const uint8Array = allocUnsafe(byteLength);

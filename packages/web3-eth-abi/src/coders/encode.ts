@@ -18,7 +18,7 @@ import { AbiError } from 'web3-errors';
 import { AbiInput } from 'web3-types';
 import { bytesToHex } from 'web3-utils';
 import { encodeTuple } from './base';
-import { toAbiParams } from './utils';
+import { toAbiParams } from './utils.js';
 
 export function encodeParameters(abi: ReadonlyArray<AbiInput>, params: unknown[]): string {
 	if (abi.length !== params.length) {

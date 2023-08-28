@@ -124,8 +124,16 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.1.0]
 
 ### Added
 
 -   A `getEncodedEip712Data` method that takes an EIP-712 typed data object and returns the encoded data with the option to also keccak256 hash it (#6286)
+
+## [4.1.1]
+
+### Changed
+
+-   Dependencies updated
+
+## [Unreleased]

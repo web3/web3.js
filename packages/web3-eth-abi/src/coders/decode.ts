@@ -17,8 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AbiInput, HexString } from 'web3-types';
 import { hexToBytes } from 'web3-utils';
-import { toAbiParams } from './utils';
-import { decodeTuple } from './base/tuple';
+import { toAbiParams } from './utils.js';
+import { decodeTuple } from './base/tuple.js';
 
 export function decodeParameters(
 	abis: AbiInput[],

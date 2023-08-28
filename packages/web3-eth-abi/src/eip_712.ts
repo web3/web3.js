@@ -21,7 +21,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Eip712TypedData } from 'web3-types';
 import { isNullish, keccak256 } from 'web3-utils';
-import { encodeParameters } from './coders/encode';
+import { encodeParameters } from './coders/encode.js';
 
 const TYPE_REGEX = /^\w+/;
 const ARRAY_REGEX = /^(.*)\[([0-9]*?)]$/;

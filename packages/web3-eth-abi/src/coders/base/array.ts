@@ -19,10 +19,10 @@ import { AbiParameter } from 'web3-types';
 import { uint8ArrayConcat } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { decodeParamFromAbiParameter, encodeNumber, encodeParamFromAbiParameter } from '.';
-import { DecoderResult, EncoderResult } from '../types';
-import { extractArrayType, isDynamic } from '../utils';
-import { decodeNumber } from './number';
-import { encodeDynamicParams } from './utils';
+import { DecoderResult, EncoderResult } from '../types.js';
+import { extractArrayType, isDynamic } from '../utils.js';
+import { decodeNumber } from './number.js';
+import { encodeDynamicParams } from './utils.js';
 
 export function encodeArray(param: AbiParameter, values: unknown): EncoderResult {
 	if (!Array.isArray(values)) {

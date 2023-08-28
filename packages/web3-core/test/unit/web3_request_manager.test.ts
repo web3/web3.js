@@ -40,6 +40,7 @@ import {
 	VersionNotSupportedError,
 	RpcError,
 	ResourceUnavailableError,
+	ResponseError,
 } from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
 import WSProvider from 'web3-providers-ws';
@@ -597,6 +598,35 @@ describe('Web3RequestManager', () => {
 				await expect(manager.send(request)).rejects.toThrow(new RpcError(rpcErrorResponse));
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+			});
+			it('should reject and include inner error when send method errors with an error property', async () => {
+				const rpcErrorResponse = {
+					id: 1,
+					jsonrpc: '2.0' as JsonRpcIdentifier,
+					error: {
+						code: 4001,
+						message: 'MetaMask Tx Signature: User denied transaction signature.',
+					},
+				};
+				const manager = new Web3RequestManager(undefined, true);
+				const myProvider = {
+					request: jest.fn().mockImplementation(async () => {
+						return Promise.resolve(successResponse.result);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+				// use any as a way to test private method '_sendRequest'
+				jest.spyOn(manager as any, '_sendRequest').mockReturnValue(rpcErrorResponse);
+				let err;
+				try {
+					await manager.send(request);
+				} catch (error: any) {
+					err = error;
+				} finally {
+					expect(err).toBeInstanceOf(ResponseError);
+					expect(err.innerError).toEqual(rpcErrorResponse.error);
+				}
 			});
 		});
 

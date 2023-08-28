@@ -104,8 +104,16 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.0.4]
 
 ### Fixed
 
 -   Ensure a fixed version for "@types/ws": "8.5.3" (#6309)
+
+## [4.0.5]
+
+### Changed
+
+-   Dependencies updated
+
+## [Unreleased]

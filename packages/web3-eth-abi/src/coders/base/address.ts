@@ -18,8 +18,8 @@ import { AbiError } from 'web3-errors';
 import { AbiParameter } from 'web3-types';
 import { bytesToHex, hexToBytes, toChecksumAddress } from 'web3-utils';
 import { isAddress } from 'web3-validator';
-import { DecoderResult, EncoderResult } from '../types';
-import { alloc, WORD_SIZE } from '../utils';
+import { DecoderResult, EncoderResult } from '../types.js';
+import { alloc, WORD_SIZE } from '../utils.js';
 
 const ADDRESS_BYTES_COUNT = 20;
 

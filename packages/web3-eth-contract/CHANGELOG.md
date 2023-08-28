@@ -284,4 +284,20 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.0.4]
+
+### Changed
+
+-   Dependencies updated
+
+## [4.0.5]
+
+### Fixed
+
+-   Fixed bug in `contract.events.allEvents`
+
+### Added
+
+-   In case of error events there will be inner error also available for details
+
 ## [Unreleased]

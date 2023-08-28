@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiError } from 'web3-errors';
 import { AbiInput, DecodedParams, HexString } from 'web3-types';
-import { encodeParameters as encodeParametersInternal } from '../coders/encode';
-import { decodeParameters as decodeParametersInternal } from '../coders/decode';
+import { encodeParameters as encodeParametersInternal } from '../coders/encode.js';
+import { decodeParameters as decodeParametersInternal } from '../coders/decode.js';
 
 /**
  * Encodes a parameter based on its type to its ABI representation.

@@ -16,24 +16,26 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter } from 'web3-types';
-import { EncoderResult, DecoderResult } from '../types';
-import { decodeAddress, encodeAddress } from './address';
+import { EncoderResult, DecoderResult } from '../types.js';
+import { decodeAddress, encodeAddress } from './address.js';
+import { decodeBool, encodeBoolean } from './bool.js';
+import { decodeBytes, encodeBytes } from './bytes.js';
+import { decodeNumber, encodeNumber } from './number.js';
+import { decodeString, encodeString } from './string.js';
 // eslint-disable-next-line import/no-cycle
-import { decodeArray, encodeArray } from './array';
-import { decodeBool, encodeBoolean } from './bool';
-import { decodeBytes, encodeBytes } from './bytes';
-import { decodeNumber, encodeNumber } from './number';
-import { decodeString, encodeString } from './string';
+import { decodeTuple, encodeTuple } from './tuple.js';
 // eslint-disable-next-line import/no-cycle
-import { decodeTuple, encodeTuple } from './tuple';
+import { decodeArray, encodeArray } from './array.js';
 
-export { encodeAddress } from './address';
-export { encodeBoolean } from './bool';
-export { encodeBytes } from './bytes';
-export { encodeNumber } from './number';
-export { encodeString } from './string';
+export { encodeAddress, decodeAddress } from './address.js';
+export { encodeBoolean, decodeBool } from './bool.js';
+export { encodeBytes, decodeBytes } from './bytes.js';
+export { encodeNumber, decodeNumber } from './number.js';
+export { encodeString, decodeString } from './string.js';
 // eslint-disable-next-line import/no-cycle
-export { encodeTuple } from './tuple';
+export { encodeTuple, decodeTuple } from './tuple.js';
+// eslint-disable-next-line import/no-cycle
+export { encodeArray, decodeArray } from './array.js';
 
 export function encodeParamFromAbiParameter(param: AbiParameter, value: unknown): EncoderResult {
 	if (param.type === 'string') {

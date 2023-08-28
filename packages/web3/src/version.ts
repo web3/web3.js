@@ -1,1 +1,1 @@
-/* eslint-disable header/header */ export const Web3PkgInfo = { version: '4.0.3' };
+/* eslint-disable header/header */ export const Web3PkgInfo = { version: '4.1.1' };

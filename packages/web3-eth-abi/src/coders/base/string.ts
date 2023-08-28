@@ -17,8 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiError } from 'web3-errors';
 import { AbiParameter } from 'web3-types';
 import { hexToUtf8, utf8ToBytes } from 'web3-utils';
-import { DecoderResult, EncoderResult } from '../types';
-import { decodeBytes, encodeBytes } from './bytes';
+import { DecoderResult, EncoderResult } from '../types.js';
+import { decodeBytes, encodeBytes } from './bytes.js';
 
 export function encodeString(_param: AbiParameter, input: unknown): EncoderResult {
 	if (typeof input !== 'string') {

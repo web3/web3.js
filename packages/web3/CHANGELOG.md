@@ -133,8 +133,16 @@ Documentation:
 
 -   Fixed bug #6236 by adding personal type in web3.eth (#6245)
 
-## [Unreleased]
+## [4.1.0]
 
-## Added
+### Added
 
 -   Added minimum support of web3.extend function
+
+## [4.1.1]
+
+### Added
+
+-   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
+
+## [Unreleased]

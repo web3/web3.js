@@ -146,7 +146,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.1.0]
 
 ### Changed
 
@@ -159,6 +159,18 @@ Documentation:
 
 -   Fixed the issue: "Version 4.x does not fire connected event for subscriptions. #6252". (#6262)
 
-## Added
+### Added
 
 -   Added minimum support of web3.extend function
+
+## [4.1.1]
+
+### Fixed
+
+-   Fixed rpc errors not being sent as an inner error when using the `send` method on request manager (#6300).
+
+### Added
+
+-   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
+
+## [Unreleased]

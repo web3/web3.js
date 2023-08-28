@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter } from 'web3-types';
+// eslint-disable-next-line require-extensions/require-extensions
 import { ShortValidationSchema } from '../types';
 
 export const isAbiParameterSchema = (

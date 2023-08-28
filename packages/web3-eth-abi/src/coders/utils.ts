@@ -19,7 +19,11 @@ import { AbiParameter as ExternalAbiParameter, parseAbiParameter } from 'abitype
 import { AbiError } from 'web3-errors';
 import { AbiInput, AbiParameter, AbiStruct } from 'web3-types';
 import { isNullish } from 'web3-utils';
-import { isSimplifiedStructFormat, mapStructNameAndType, mapStructToCoderFormat } from '../utils';
+import {
+	isSimplifiedStructFormat,
+	mapStructNameAndType,
+	mapStructToCoderFormat,
+} from '../utils.js';
 
 export const WORD_SIZE = 32;
 

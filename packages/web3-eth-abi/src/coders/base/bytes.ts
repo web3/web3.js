@@ -18,9 +18,9 @@ import { AbiError } from 'web3-errors';
 import { AbiParameter, Bytes } from 'web3-types';
 import { bytesToHex, bytesToUint8Array } from 'web3-utils';
 import { isBytes, ValidInputTypes } from 'web3-validator';
-import { DecoderResult, EncoderResult } from '../types';
-import { alloc, WORD_SIZE } from '../utils';
-import { decodeNumber, encodeNumber } from './number';
+import { DecoderResult, EncoderResult } from '../types.js';
+import { alloc, WORD_SIZE } from '../utils.js';
+import { decodeNumber, encodeNumber } from './number.js';
 
 export function encodeBytes(param: AbiParameter, input: unknown): EncoderResult {
 	// hack for odd length hex strings

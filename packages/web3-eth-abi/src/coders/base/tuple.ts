@@ -17,12 +17,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiError } from 'web3-errors';
 import { AbiParameter } from 'web3-types';
 import { uint8ArrayConcat } from 'web3-utils';
-import { DecoderResult, EncoderResult } from '../types';
+import { DecoderResult, EncoderResult } from '../types.js';
 // eslint-disable-next-line import/no-cycle
 import { decodeParamFromAbiParameter, encodeParamFromAbiParameter } from '.';
-import { encodeDynamicParams } from './utils';
-import { isDynamic } from '../utils';
-import { decodeNumber } from './number';
+import { encodeDynamicParams } from './utils.js';
+import { isDynamic } from '../utils.js';
+import { decodeNumber } from './number.js';
 
 export function encodeTuple(param: AbiParameter, input: unknown): EncoderResult {
 	let dynamic = false;

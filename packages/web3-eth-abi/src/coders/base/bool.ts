@@ -17,9 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiError, InvalidBooleanError } from 'web3-errors';
 import { AbiParameter } from 'web3-types';
 import { toBool } from 'web3-utils';
-import { DecoderResult, EncoderResult } from '../types';
-import { WORD_SIZE } from '../utils';
-import { decodeNumber, encodeNumber } from './number';
+import { DecoderResult, EncoderResult } from '../types.js';
+import { WORD_SIZE } from '../utils.js';
+import { decodeNumber, encodeNumber } from './number.js';
 
 export function encodeBoolean(param: AbiParameter, input: unknown): EncoderResult {
 	let value;

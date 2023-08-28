@@ -101,4 +101,16 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.0.4]
+
+### Changed
+
+-   Dependencies updated
+
+## [4.0.5]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
