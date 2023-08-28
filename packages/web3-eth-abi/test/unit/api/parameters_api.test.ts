@@ -33,7 +33,7 @@ describe('parameters_api', () => {
 				'%#: should pass for valid values: %j',
 				({ input: [abi, params], output }) => {
 					const expected = encodeParameters(abi, params);
-					expect(JSON.parse(JSON.stringify(expected))).toEqual(output);
+					expect(expected).toEqual(output);
 				},
 			);
 		});
@@ -41,8 +41,8 @@ describe('parameters_api', () => {
 		describe('invalid data', () => {
 			it.each(inValidEncodeParametersData)(
 				'%#: should not pass for invalid values: %j',
-				({ input: [abi, params], output }) => {
-					expect(() => encodeParameters(abi, params)).toThrow(output);
+				({ input: [abi, params] }) => {
+					expect(() => encodeParameters(abi, params)).toThrow();
 				},
 			);
 		});
@@ -93,8 +93,8 @@ describe('parameters_api', () => {
 		describe('invalid data', () => {
 			it.each(inValidDecodeParametersData)(
 				'%#: should not pass for invalid values: %j',
-				({ input: [abi, bytes], output }) => {
-					expect(() => decodeParameters(abi, bytes)).toThrow(output);
+				({ input: [abi, bytes] }) => {
+					expect(() => decodeParameters(abi, bytes)).toThrow();
 				},
 			);
 		});

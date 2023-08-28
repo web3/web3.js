@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,18 +14,22 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { AbiError } from 'web3-errors';
+import { AbiInput } from 'web3-types';
+import { bytesToHex } from 'web3-utils';
+import { encodeTuple } from './base';
+import { toAbiParams } from './utils';
 
-import { AbiCoder } from '@ethersproject/abi';
-import type { BigNumber } from '@ethersproject/bignumber';
-
-const ethersAbiCoder = new AbiCoder((_, value) => {
-	if ((value as BigNumber)?._isBigNumber) {
-		return (value as BigNumber).toBigInt();
+export function encodeParameters(abi: ReadonlyArray<AbiInput>, params: unknown[]): string {
+	if (abi.length !== params.length) {
+		throw new AbiError('Invalid number of values received for given ABI', {
+			expected: abi.length,
+			received: params.length,
+		});
 	}
+	const abiParams = toAbiParams(abi);
 
-	// Because of tye type def from @ethersproject/abi
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-	return value;
-});
-
-export default ethersAbiCoder;
+	return bytesToHex(
+		encodeTuple({ type: 'tuple', name: '', components: abiParams }, params).encoded,
+	);
+}

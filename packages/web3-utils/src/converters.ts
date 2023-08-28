@@ -16,14 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { keccak256 } from 'ethereum-cryptography/keccak.js';
-import { bytesToUtf8, utf8ToBytes } from 'ethereum-cryptography/utils.js';
+import { bytesToUtf8, utf8ToBytes as ecUtf8ToBytes } from 'ethereum-cryptography/utils.js';
 import { Address, Bytes, HexString, Numbers, ValueTypes } from 'web3-types';
 import {
 	isAddress,
 	isHex,
 	isHexStrict,
-	isNullish,
 	isInt,
+	isNullish,
 	utils as validatorUtils,
 	validator,
 } from 'web3-validator';
@@ -31,6 +31,7 @@ import {
 import {
 	HexProcessingError,
 	InvalidAddressError,
+	InvalidBooleanError,
 	InvalidBytesError,
 	InvalidNumberError,
 	InvalidUnitError,
@@ -264,6 +265,8 @@ export const toUtf8 = (input: HexString | Uint8Array) => {
 	return bytesToUtf8(input);
 };
 
+export const utf8ToBytes = ecUtf8ToBytes;
+
 /**
  * @alias hexToUtf8
  */
@@ -442,6 +445,9 @@ export const toBigInt = (value: unknown): bigint => {
 
 	// isHex passes for dec, too
 	if (typeof value === 'string' && isHex(value)) {
+		if (value.startsWith('-')) {
+			return -BigInt(value.substring(1));
+		}
 		return BigInt(value);
 	}
 
@@ -599,4 +605,38 @@ export const toChecksumAddress = (address: Address): string => {
 		}
 	}
 	return checksumAddress;
+};
+
+export const toBool = (value: boolean | string | number | unknown): boolean => {
+	if (typeof value === 'boolean') {
+		return value;
+	}
+
+	if (typeof value === 'number' && (value === 0 || value === 1)) {
+		return Boolean(value);
+	}
+
+	if (typeof value === 'bigint' && (value === BigInt(0) || value === BigInt(1))) {
+		return Boolean(value);
+	}
+
+	if (
+		typeof value === 'string' &&
+		!isHexStrict(value) &&
+		(value === '1' || value === '0' || value === 'false' || value === 'true')
+	) {
+		if (value === 'true') {
+			return true;
+		}
+		if (value === 'false') {
+			return false;
+		}
+		return Boolean(Number(value));
+	}
+
+	if (typeof value === 'string' && isHexStrict(value) && (value === '0x1' || value === '0x0')) {
+		return Boolean(toNumber(value));
+	}
+
+	throw new InvalidBooleanError(value);
 };
