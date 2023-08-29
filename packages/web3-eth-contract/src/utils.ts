@@ -47,7 +47,7 @@ const dataInputEncodeMethodHelper = (
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
-	} else if (abi.type === 'constructor') {
+	} else {
 		// default to using input
 		tx = {
 			...txParams,
@@ -232,7 +232,7 @@ export const getCreateAccessListParams = ({
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
-	} else if (abi.type === 'constructor') {
+	} else {
 		txParams = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
