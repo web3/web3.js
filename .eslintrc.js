@@ -10,7 +10,7 @@ module.exports = {
 		tsconfigRootDir: __dirname,
 		sourceType: 'module',
 	},
-	extends: ['web3-base/ts'],
+	extends: ['eslint-config-base-web3/ts'],
 	settings: {
 		'import/resolver': {
 			typescript: {}, // this loads tsconfig.json to eslint
