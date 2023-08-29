@@ -1,6 +1,5 @@
 {
 	"name": "eslint-config-web3-base",
-	"private": true,
 	"version": "0.1.0",
 	"description": "Base eslint config for Web3 project.",
 	"author": "ChainSafe Systems",
