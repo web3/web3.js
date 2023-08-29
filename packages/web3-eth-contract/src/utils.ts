@@ -31,6 +31,37 @@ import { isNullish, mergeDeep, toHex } from 'web3-utils';
 import { encodeMethodABI } from './encoding.js';
 import { ContractOptions, Web3ContractContext } from './types.js';
 
+const dataInputEncodeMethodHelper = (
+	txParams: TransactionCall,
+	abi: AbiFunctionFragment,
+	params: unknown[],
+): TransactionCall => {
+	let tx = txParams;
+	if (tx.input) {
+		tx = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.input as HexString),
+		};
+	} else if (tx.data) {
+		tx = {
+			...txParams,
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	} else if (abi.type === 'constructor') {
+		tx = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	} else {
+		// if no data is specified, default to input
+		tx = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	}
+	return tx;
+};
+
 export const getSendTxParams = ({
 	abi,
 	params,
@@ -68,28 +99,7 @@ export const getSendTxParams = ({
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	if (txParams.input) {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
-	} else if (txParams.data) {
-		txParams = {
-			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
-	} else if (abi.type === 'constructor') {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
-	} else {
-		// if no data is specified, default to input
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
-	}
+	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
 	return txParams;
 };
 
@@ -153,31 +163,16 @@ export const getEstimateGasParams = ({
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	let deployData;
 
 	if (txParams.input) {
-		deployData = toHex(txParams.input);
-	} else if (txParams.data) {
-		deployData = toHex(txParams.data);
-	} else {
-		deployData = undefined;
+		txParams.input = toHex(txParams.input);
 	}
-	if (txParams.input) {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, deployData),
-		};
-	} else if (txParams.data) {
-		txParams = {
-			...txParams,
-			data: encodeMethodABI(abi, params, deployData),
-		};
-	} else {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, deployData),
-		};
+	if (txParams.data) {
+		txParams.data = toHex(txParams.data);
 	}
+
+	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
+
 	return txParams as TransactionWithSenderAPI;
 };
 
