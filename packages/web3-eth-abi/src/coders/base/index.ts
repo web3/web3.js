@@ -50,11 +50,11 @@ export function encodeParamFromAbiParameter(param: AbiParameter, value: unknown)
 	if (param.type === 'tuple') {
 		return encodeTuple(param, value);
 	}
-	if (param.type.startsWith('bytes')) {
-		return encodeBytes(param, value);
-	}
 	if (param.type.endsWith(']')) {
 		return encodeArray(param, value);
+	}
+	if (param.type.startsWith('bytes')) {
+		return encodeBytes(param, value);
 	}
 	if (param.type.startsWith('uint') || param.type.startsWith('int')) {
 		return encodeNumber(param, value);
@@ -75,11 +75,11 @@ export function decodeParamFromAbiParameter(param: AbiParameter, bytes: Uint8Arr
 	if (param.type === 'tuple') {
 		return decodeTuple(param, bytes);
 	}
-	if (param.type.startsWith('bytes')) {
-		return decodeBytes(param, bytes);
-	}
 	if (param.type.endsWith(']')) {
 		return decodeArray(param, bytes);
+	}
+	if (param.type.startsWith('bytes')) {
+		return decodeBytes(param, bytes);
 	}
 	if (param.type.startsWith('uint') || param.type.startsWith('int')) {
 		return decodeNumber(param, bytes);
