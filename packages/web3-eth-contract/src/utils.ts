@@ -48,15 +48,10 @@ const dataInputEncodeMethodHelper = (
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
 	} else if (abi.type === 'constructor') {
+		// default to using input
 		tx = {
 			...txParams,
-			input: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
-	} else {
-		// if no data is specified, default to input
-		tx = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.data as HexString),
+			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
 	}
 	return tx;
@@ -240,13 +235,7 @@ export const getCreateAccessListParams = ({
 	} else if (abi.type === 'constructor') {
 		txParams = {
 			...txParams,
-			input: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
-	} else {
-		// if no data is specified, default to input
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.data as HexString),
+			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
 	}
 
