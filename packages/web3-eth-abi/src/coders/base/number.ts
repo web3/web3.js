@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AbiError } from 'web3-errors';
 import type { AbiParameter } from 'web3-types';
-import { bytesToHex, toBigInt } from 'web3-utils';
+import { toBigInt } from 'web3-utils';
 import { DecoderResult, EncoderResult } from '../types.js';
 import { allocUnsafe, WORD_SIZE } from '../utils.js';
 
@@ -59,6 +59,30 @@ function bigIntToUint8Array(value: bigint, byteLength = WORD_SIZE): Uint8Array {
 	}
 
 	return uint8Array;
+}
+
+function uint8ArrayToBigInt(value: Uint8Array): bigint {
+	// eslint-disable-next-line no-bitwise
+	const isNegative = (value[0] & 0x80) !== 0; // Check the most significant bit for negativity
+
+	let result = BigInt(0);
+
+	// Convert the Uint8Array to a BigInt
+	for (const byte of value) {
+		// eslint-disable-next-line no-bitwise
+		result <<= BigInt(8);
+		// eslint-disable-next-line no-bitwise
+		result |= BigInt(byte);
+	}
+	// If negative, apply two's complement
+	if (isNegative) {
+		// eslint-disable-next-line no-bitwise
+		const mask = (BigInt(1) << (BigInt(8) * BigInt(value.length))) - BigInt(1);
+		// eslint-disable-next-line no-bitwise
+		result = -((~result + BigInt(1)) & mask);
+	}
+
+	return result;
 }
 
 const numberLimits = new Map<string, { min: bigint; max: bigint }>();
@@ -126,9 +150,7 @@ export function decodeNumber(param: AbiParameter, bytes: Uint8Array): DecoderRes
 	if (!limit) {
 		throw new AbiError('provided abi contains invalid number datatype', { type: param.type });
 	}
-	// TODO: negative number decoding. See "bigIntToUint8Array" as you need to implement decoding mannually
-
-	const numberResult = toBigInt(bytesToHex(boolBytes));
+	const numberResult = uint8ArrayToBigInt(boolBytes);
 
 	if (numberResult < limit.min) {
 		throw new AbiError('decoded value is less then minimum for given type', {

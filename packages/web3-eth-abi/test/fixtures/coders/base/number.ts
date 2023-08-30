@@ -91,7 +91,18 @@ export const validNumberDecoderData: [AbiParameter, string, Numbers, string][] =
 		BigInt('92312312312312312312312312312312312303939393939393'),
 		'0x',
 	],
-	// [{type: "uint256", name: ""}, "0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f", BigInt("-92312312312312312312312312312312312303939393939393"), "0x"],
+	[
+		{ type: 'int256', name: '' },
+		'0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f',
+		BigInt('-92312312312312312312312312312312312303939393939393'),
+		'0x',
+	],
+	[
+		{ type: 'int8', name: '' },
+		'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe7',
+		BigInt('-25'),
+		'0x',
+	],
 	[
 		{ type: 'uint256', name: '' },
 		'0x000000000000000000000000000000000000000000000000000000000001e0f30000000000000000000000000000000000000000000000000000000000000001',
@@ -106,5 +117,8 @@ export const invalidNumberDecoderData: [AbiParameter, string][] = [
 		{ type: 'uint8', name: '' },
 		'0x00000000000000000000003f29a33f562a1feab357509b77f71717e78667e7c1',
 	],
-	// [{type: "uint256", name: ""}, "0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f"],
+	[
+		{ type: 'uint256', name: '' },
+		'0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f',
+	],
 ];

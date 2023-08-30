@@ -140,7 +140,9 @@ export const decodeParametersWith = (
 		}
 		return decodeParametersInternal(abis, `0x${bytes.replace(/0x/i, '')}`, loose);
 	} catch (err) {
-		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
+		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`, {
+			internalErr: err,
+		});
 	}
 };
 
