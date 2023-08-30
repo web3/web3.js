@@ -3,5 +3,5 @@ module.exports = {
 		project: './tsconfig.base.json',
 		tsconfigRootDir: __dirname,
 	},
-	extends: ['web3-base/ts-jest'],
+	extends: ['eslint-config-base-web3/ts-jest'],
 };
