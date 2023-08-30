@@ -68,6 +68,16 @@ export const validNumberEncoderData: [AbiParameter, Numbers, string][] = [
 		'-0xa2',
 		'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5e',
 	],
+	[
+		{ type: 'uint24', name: '' },
+		'12312312',
+		'0000000000000000000000000000000000000000000000000000000000bbdef8',
+	],
+	[
+		{ type: 'int24', name: '' },
+		'-123123',
+		'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe1f0d',
+	],
 ];
 
 export const invalidNumberEncoderData: [AbiParameter, Numbers][] = [
@@ -108,6 +118,18 @@ export const validNumberDecoderData: [AbiParameter, string, Numbers, string][] =
 		'0x000000000000000000000000000000000000000000000000000000000001e0f30000000000000000000000000000000000000000000000000000000000000001',
 		BigInt(123123),
 		'0x0000000000000000000000000000000000000000000000000000000000000001',
+	],
+	[
+		{ type: 'uint24', name: '' },
+		'0x0000000000000000000000000000000000000000000000000000000000bbdef8',
+		BigInt(12312312),
+		'0x',
+	],
+	[
+		{ type: 'int24', name: '' },
+		'0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe1f0d',
+		-BigInt(123123),
+		'0x',
 	],
 ];
 

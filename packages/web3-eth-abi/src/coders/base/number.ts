@@ -88,7 +88,7 @@ function uint8ArrayToBigInt(value: Uint8Array): bigint {
 const numberLimits = new Map<string, { min: bigint; max: bigint }>();
 
 // precalculate all the limits
-for (let i = 8; i <= 256; i *= 2) {
+for (let i = 8; i <= 256; i += 8) {
 	numberLimits.set(`uint${i}`, {
 		min: BigInt(0),
 		max: BigInt(2) ** BigInt(i) - BigInt(1),
