@@ -1815,7 +1815,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   A `rpc_method_wrapper` (`signTypedData`) for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
 -   A `signTypedData` method to the `Web3Eth` class (#6286)
--   Increase eip-4337 methods `sendUserOperation`, `estimateUserOperationGas`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`, `generateUserOpHash` (#6302)
 
 #### web3-eth-abi
 
@@ -1824,18 +1823,15 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-rpc-methods
 
 -   A `signTypedData` method to `eth_rpc_methods` for the rpc calls `eth_signTypedData` and `eth_signTypedData_v4` (#6286)
--   Increase eip-4337 rpc methods `sendUserOperation`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints` (#6302)
 
 #### web3-types
 
 -   `eth_signTypedData` and `eth_signTypedData_v4` to `web3_eth_execution_api` (#6286)
 -   `Eip712TypeDetails` and `Eip712TypedData` to `eth_types` (#6286)
--   Added eip-4337 `UserOperation` type (#6302)
 
 #### web3-validator
 
 -   Added `json-schema` as a main json schema type (#6264)
--   Added a new function `isUserOperationAllHex` to check if all properties of the `UserOperation` object are valid hexadecimal values. (#6302)
 
 ### Fixed
 
@@ -2034,3 +2030,21 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Added
+
+#### web3-eth
+
+-   Increase eip-4337 methods `sendUserOperation`, `estimateUserOperationGas`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints`, `generateUserOpHash` (#6302)
+
+#### web3-rpc-methods
+
+-   Increase eip-4337 rpc methods `sendUserOperation`, `getUserOperationByHash`, `getUserOperationReceipt`, `supportedEntryPoints` (#6302)
+
+#### web3-types
+
+-   Added eip-4337 `UserOperation` type (#6302)
+
+#### web3-validator
+
+-   Added a new function `isUserOperationAllHex` to check if all properties of the `UserOperation` object are valid hexadecimal values. (#6302)
