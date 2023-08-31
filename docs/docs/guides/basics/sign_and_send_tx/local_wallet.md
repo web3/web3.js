@@ -16,7 +16,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
 const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
-const account = web3.eth.accounts.wallet.add(privateKeyString);
+const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
 
@@ -24,7 +24,7 @@ const account = web3.eth.accounts.wallet.add(privateKeyString);
 // Magic happens behind sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed.
 try {
 	const receipt = await web3.eth.sendTransaction({
-		from: account.address,
+		from: account?.address,
 		to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
 		value: '0x1',
 		gas: '300000',
@@ -50,7 +50,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
 const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
-const account = web3.eth.accounts.wallet.add(privateKeyString);
+const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
 
@@ -66,7 +66,7 @@ try {
 			arguments: ['Constructor param1', 'Constructor param2'],
 		})
 		.send({
-			from: account.address,
+			from: account?.address,
 			gas: '1000000',
 			// other transaction's params
 		});
@@ -75,7 +75,7 @@ try {
 	await contractDeployed.methods
 		.transfer('0xe2597eb05cf9a87eb1309e86750c903ec38e527e', '0x1')
 		.send({
-			from: account.address,
+			from: account?.address,
 			gas: '1000000',
 			// other transaction's params
 		});
