@@ -1229,5 +1229,14 @@ export async function supportedEntryPoints<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const response = await ethRpcMethods.supportedEntryPoints(web3Context.requestManager);
-	return format({ format: 'uint' }, response, returnFormat);
+	return format(
+		{
+			type: 'array',
+			items: {
+				format: 'string',
+			},
+		},
+		response,
+		returnFormat,
+	);
 }

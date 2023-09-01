@@ -39,9 +39,14 @@ describe('supportedEntryPoints', () => {
 			'0xcd01C8aa8995A59eB7B2627E69b40e0524B5ecf8',
 			'0x7A0A0d159218E6a2f407B99173A2b12A6DDfC2a6',
 		];
-		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
+		const expectedReturnFormat = { number: FMT_NUMBER.BIGINT, bytes: FMT_BYTES.HEX };
 		const expectedFormattedResult = format(
-			{ format: 'uint' },
+			{
+				type: 'array',
+				items: {
+					format: 'string',
+				},
+			},
 			mockRpcResponse,
 			expectedReturnFormat,
 		);
