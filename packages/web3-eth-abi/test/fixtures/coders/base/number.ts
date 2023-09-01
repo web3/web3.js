@@ -86,6 +86,7 @@ export const invalidNumberEncoderData: [AbiParameter, Numbers][] = [
 	[{ type: 'uint8', name: '' }, '256'],
 	[{ type: 'int8', name: '' }, '128'],
 	[{ type: 'int8', name: '' }, '-129'],
+	[{ type: 'int17', name: '' }, '129'],
 ];
 
 export const validNumberDecoderData: [AbiParameter, string, Numbers, string][] = [
@@ -141,6 +142,10 @@ export const invalidNumberDecoderData: [AbiParameter, string][] = [
 	],
 	[
 		{ type: 'uint256', name: '' },
+		'0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f',
+	],
+	[
+		{ type: 'int17', name: '' },
 		'0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f',
 	],
 ];

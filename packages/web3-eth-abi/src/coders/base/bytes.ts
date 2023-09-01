@@ -39,13 +39,16 @@ export function encodeBytes(param: AbiParameter, input: unknown): EncoderResult 
 	}
 	const bytes = bytesToUint8Array(input as Bytes);
 	const [, size] = param.type.split('bytes');
-	if (Number(size) > MAX_STATIC_BYTES_COUNT || Number(size) < 1) {
-		throw new AbiError('invalid bytes type. Static byte type can have between 1 and 32 bytes', {
-			type: param.type,
-		});
-	}
 	// fixed size
 	if (size) {
+		if (Number(size) > MAX_STATIC_BYTES_COUNT || Number(size) < 1) {
+			throw new AbiError(
+				'invalid bytes type. Static byte type can have between 1 and 32 bytes',
+				{
+					type: param.type,
+				},
+			);
+		}
 		if (Number(size) < bytes.length) {
 			throw new AbiError('provided input size is different than type size', {
 				type: param.type,

@@ -26,13 +26,14 @@ export const validAddressEncoderData: [string, string][] = [
 	],
 ];
 
-export const invalidAddressEncoderData: [string][] = [
+export const invalidAddressEncoderData: [unknown][] = [
 	['blem'],
 	['--123'],
 	['2'],
 	['-1'],
 	['0x01'],
 	['0x00'],
+	[123],
 ];
 
 export const validAddressDecoderData: { bytes: string; result: string; remaining: string }[] = [

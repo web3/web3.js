@@ -35,6 +35,7 @@ export const invalidBoolEncoderData: [any][] = [
 	['-1'],
 	['0x01'],
 	['0x00'],
+	['0x0000000000000000000000000000000000000000000000000000000000000002'],
 ];
 
 export const validBoolDecoderData: { bytes: string; result: boolean; remaining: string }[] = [

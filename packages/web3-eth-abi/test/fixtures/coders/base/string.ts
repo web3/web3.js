@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export const validStringEncoderData: [string, string][] = [
+export const validStringEncoderData: [unknown, string][] = [
 	[
 		'marin',
 		'00000000000000000000000000000000000000000000000000000000000000056d6172696e000000000000000000000000000000000000000000000000000000',
@@ -29,6 +29,8 @@ export const validStringEncoderData: [string, string][] = [
 		'000000000000000000000000000000000000000000000000000000000000000ac5a1c48d7ce282ac2d2100000000000000000000000000000000000000000000',
 	],
 ];
+
+export const invalidStringEncoderData: [unknown][] = [[123]];
 
 export const validStringDecoderData: [string, string, string][] = [
 	[

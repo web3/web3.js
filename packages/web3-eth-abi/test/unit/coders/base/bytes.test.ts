@@ -58,8 +58,11 @@ describe('abi - coder - base - bytes', () => {
 			},
 		);
 
-		it.each(invalidBytesDecoderData)('bytes%j type value %s to throw', (type, value) => {
-			expect(() => encodeBytes(type, value)).toThrow(AbiError);
-		});
+		it.each(invalidBytesDecoderData)(
+			'decode bytes %j type with value %s to throw',
+			(type, value) => {
+				expect(() => decodeBytes(type, hexToBytes(value))).toThrow(AbiError);
+			},
+		);
 	});
 });

@@ -15,9 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AbiError } from 'web3-errors';
 import { hexToBytes } from 'web3-utils';
 import { decodeString, encodeString } from '../../../../src/coders/base/string';
 import {
+	invalidStringEncoderData,
 	validStringDecoderData,
 	validStringEncoderData,
 } from '../../../fixtures/coders/base/string';
@@ -32,6 +34,9 @@ describe('abi - coder - base - string', () => {
 				expect(result.dynamic).toBeTruthy();
 			},
 		);
+		it.each(invalidStringEncoderData)('string type with value %s to error', value => {
+			expect(() => encodeString({ type: 'string', name: '' }, value)).toThrow(AbiError);
+		});
 	});
 
 	describe('decode', () => {

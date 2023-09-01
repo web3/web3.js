@@ -38,6 +38,7 @@ export const validBytesEncoderData: [AbiParameter, string, string][] = [
 export const invalidBytesEncoderData: [AbiParameter, string][] = [
 	[{ type: 'bytes', name: '' }, 'blem'],
 	[{ type: 'bytes', name: '' }, '--123'],
+	[{ type: 'bytes1', name: '' }, '0x0000001010'],
 ];
 
 export const validBytesDecoderData: [AbiParameter, string, string, string][] = [
@@ -68,6 +69,5 @@ export const validBytesDecoderData: [AbiParameter, string, string, string][] = [
 ];
 
 export const invalidBytesDecoderData: [AbiParameter, string][] = [
-	[{ type: 'bytes', name: '' }, 'blem'],
-	[{ type: 'bytes', name: '' }, '--123'],
+	[{ type: 'bytes32', name: '' }, '0x0000001010'],
 ];
