@@ -66,7 +66,7 @@ describe('sendUserOperation', () => {
 			'0xe554d0701f7fdc734f84927d109537f1ac4ee4ebfa3670c71d224a4fa15dbcd1';
 		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 		const expectedFormattedResult = format(
-			{ format: 'uint' },
+			{ format: 'bytes32' },
 			mockRpcResponse,
 			expectedReturnFormat,
 		);
@@ -78,6 +78,6 @@ describe('sendUserOperation', () => {
 			entryPoint,
 			expectedReturnFormat,
 		);
-		expect(result).toBe(expectedFormattedResult);
+		expect(result).toEqual(expectedFormattedResult);
 	});
 });

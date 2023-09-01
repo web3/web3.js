@@ -1168,7 +1168,7 @@ export async function sendUserOperation<ReturnFormat extends DataFormat>(
 		userOperation,
 		entryPoint,
 	);
-	return format({ format: 'uint' }, response, returnFormat);
+	return format({ format: 'bytes32' }, response, returnFormat);
 }
 
 /**
