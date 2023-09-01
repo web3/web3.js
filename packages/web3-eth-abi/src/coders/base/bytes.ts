@@ -22,6 +22,8 @@ import { DecoderResult, EncoderResult } from '../types.js';
 import { alloc, WORD_SIZE } from '../utils.js';
 import { decodeNumber, encodeNumber } from './number.js';
 
+const MAX_STATIC_BYTES_COUNT = 32;
+
 export function encodeBytes(param: AbiParameter, input: unknown): EncoderResult {
 	// hack for odd length hex strings
 	if (typeof input === 'string' && input.length % 2 !== 0) {
@@ -37,6 +39,11 @@ export function encodeBytes(param: AbiParameter, input: unknown): EncoderResult 
 	}
 	const bytes = bytesToUint8Array(input as Bytes);
 	const [, size] = param.type.split('bytes');
+	if (Number(size) > MAX_STATIC_BYTES_COUNT || Number(size) < 1) {
+		throw new AbiError('invalid bytes type. Static byte type can have between 1 and 32 bytes', {
+			type: param.type,
+		});
+	}
 	// fixed size
 	if (size) {
 		if (Number(size) < bytes.length) {
@@ -59,11 +66,7 @@ export function encodeBytes(param: AbiParameter, input: unknown): EncoderResult 
 	const encoded = alloc(WORD_SIZE + partsLength * WORD_SIZE);
 
 	encoded.set(encodeNumber({ type: 'uint32', name: '' }, bytes.length).encoded);
-	let offset = WORD_SIZE;
-	for (let i = 0; i < partsLength; i += 1) {
-		encoded.set(bytes.subarray(i * WORD_SIZE, (i + 1) * WORD_SIZE), offset);
-		offset += WORD_SIZE;
-	}
+	encoded.set(bytes, WORD_SIZE);
 	return {
 		dynamic: true,
 		encoded,

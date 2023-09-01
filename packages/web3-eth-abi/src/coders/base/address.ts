@@ -22,6 +22,7 @@ import { DecoderResult, EncoderResult } from '../types.js';
 import { alloc, WORD_SIZE } from '../utils.js';
 
 const ADDRESS_BYTES_COUNT = 20;
+const ADDRESS_OFFSET = WORD_SIZE - ADDRESS_BYTES_COUNT;
 
 export function encodeAddress(param: AbiParameter, input: unknown): EncoderResult {
 	if (typeof input !== 'string') {
@@ -46,7 +47,7 @@ export function encodeAddress(param: AbiParameter, input: unknown): EncoderResul
 	const addressBytes = hexToBytes(address);
 	// expand address to WORD_SIZE
 	const encoded = alloc(WORD_SIZE);
-	encoded.set(addressBytes, WORD_SIZE - ADDRESS_BYTES_COUNT);
+	encoded.set(addressBytes, ADDRESS_OFFSET);
 	return {
 		dynamic: false,
 		encoded,
@@ -54,9 +55,7 @@ export function encodeAddress(param: AbiParameter, input: unknown): EncoderResul
 }
 
 export function decodeAddress(_param: AbiParameter, bytes: Uint8Array): DecoderResult<string> {
-	const start = WORD_SIZE - ADDRESS_BYTES_COUNT;
-	const end = start + ADDRESS_BYTES_COUNT;
-	const addressBytes = bytes.subarray(start, end);
+	const addressBytes = bytes.subarray(ADDRESS_OFFSET, WORD_SIZE);
 	if (addressBytes.length !== ADDRESS_BYTES_COUNT) {
 		throw new AbiError('Invalid decoding input, not enough bytes to decode address', { bytes });
 	}
@@ -70,7 +69,7 @@ export function decodeAddress(_param: AbiParameter, bytes: Uint8Array): DecoderR
 	// }
 	return {
 		result: toChecksumAddress(result),
-		encoded: bytes.subarray(end),
+		encoded: bytes.subarray(WORD_SIZE),
 		consumed: WORD_SIZE,
 	};
 }

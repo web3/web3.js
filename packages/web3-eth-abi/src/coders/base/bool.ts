@@ -39,10 +39,12 @@ export function encodeBoolean(param: AbiParameter, input: unknown): EncoderResul
 }
 
 export function decodeBool(_param: AbiParameter, bytes: Uint8Array): DecoderResult<boolean> {
-	const boolBytes = bytes.subarray(0, WORD_SIZE);
 	const numberResult = decodeNumber({ type: 'uint8', name: '' }, bytes);
 	if (numberResult.result > 1 || numberResult.result < 0) {
-		throw new AbiError('Invalid boolean value encoded', { boolBytes, numberResult });
+		throw new AbiError('Invalid boolean value encoded', {
+			boolBytes: bytes.subarray(0, WORD_SIZE),
+			numberResult,
+		});
 	}
 	return {
 		result: numberResult.result === BigInt(1),
