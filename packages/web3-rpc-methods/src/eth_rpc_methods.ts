@@ -603,7 +603,16 @@ export async function sendUserOperation(
 		params: [userOperation, entryPoint],
 	});
 }
-
+export async function estimateUserOperationGas(
+	requestManager: Web3RequestManager,
+	userOperation: UserOperation,
+	entryPoint: Address,
+) {
+	return requestManager.send({
+		method: 'eth_estimateUserOperationGas',
+		params: [userOperation, entryPoint],
+	});
+}
 export async function getUserOperationByHash(
 	requestManager: Web3RequestManager,
 	hash: HexStringBytes,

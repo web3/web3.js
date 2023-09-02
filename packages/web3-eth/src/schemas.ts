@@ -695,3 +695,18 @@ export const userOperationSchema = {
 		},
 	},
 };
+
+export const estimateUserOperationGasSchema = {
+	type: 'object',
+	properties: {
+		preVerificationGas: {
+			format: 'uint',
+		},
+		verificationGasLimit: {
+			format: 'uint',
+		},
+		callGasLimit: {
+			format: 'uint',
+		},
+	},
+};

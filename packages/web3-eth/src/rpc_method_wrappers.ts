@@ -74,6 +74,7 @@ import {
 	accessListResultSchema,
 	SignatureObjectSchema,
 	userOperationSchema,
+	estimateUserOperationGasSchema,
 } from './schemas.js';
 import {
 	SendSignedTransactionEvents,
@@ -1190,12 +1191,12 @@ export async function estimateUserOperationGas<ReturnFormat extends DataFormat>(
 	if (userOperation?.maxPriorityFeePerGas === undefined) {
 		userOp.maxPriorityFeePerGas = '0';
 	}
-	const response = await ethRpcMethods.sendUserOperation(
+	const response = await ethRpcMethods.estimateUserOperationGas(
 		web3Context.requestManager,
 		userOp as UserOperation,
 		entryPoint,
 	);
-	return format({ format: 'uint' }, response, returnFormat);
+	return format(estimateUserOperationGasSchema, response, returnFormat);
 }
 /**
  * View additional documentations here: {@link Web3Eth.getUserOperationByHash}

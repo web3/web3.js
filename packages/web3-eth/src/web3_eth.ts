@@ -1724,7 +1724,12 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		entryPoint: Address,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.sendUserOperation(this, userOperation, entryPoint, returnFormat);
+		return rpcMethodsWrappers.estimateUserOperationGas(
+			this,
+			userOperation,
+			entryPoint,
+			returnFormat,
+		);
 	}
 	/**
 	 * Return a UserOperation based on a hash (userOpHash) returned by eth_sendUserOperation

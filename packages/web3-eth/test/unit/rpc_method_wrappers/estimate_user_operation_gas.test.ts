@@ -26,6 +26,7 @@ import {
 } from 'web3-types';
 import { ethRpcMethods } from 'web3-rpc-methods';
 import { estimateUserOperationGas } from '../../../src/rpc_method_wrappers';
+import { estimateUserOperationGasSchema } from '../../../src/schemas';
 
 jest.mock('web3-rpc-methods');
 
@@ -37,10 +38,11 @@ describe('estimateUserOperationGas', () => {
 	beforeAll(() => {
 		web3Context = new Web3Context('http://127.0.0.1:8545');
 		userOperation = {
-			sender: '0x9fd042a18e90ce326073fa70f111dc9d798d9a52',
+			sender: '0x026B37A09aF3ceB346c39999c5738F86A1a48f4d',
 			nonce: '123',
 			initCode: '0x68656c6c6f',
-			callData: '0x776F726C64',
+			callData:
+				'b61d27f600000000000000000000000000005ea00ac477b1030ce78506496e8c2de24bf5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000084161ac21f000000000000000000000000fd8ec18d48ac1f46b600e231da07d1da8209ceef0000000000000000000000000000a26b00c1f0df003000390027140000faa7190000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000',
 			callGasLimit: '1000',
 			verificationGasLimit: '2300',
 			preVerificationGas: '3100',
@@ -59,7 +61,7 @@ describe('estimateUserOperationGas', () => {
 			entryPoint,
 			DEFAULT_RETURN_FORMAT,
 		);
-		expect(ethRpcMethods.sendUserOperation).toHaveBeenCalledWith(
+		expect(ethRpcMethods.estimateUserOperationGas).toHaveBeenCalledWith(
 			web3Context.requestManager,
 			userOperation,
 			entryPoint,
@@ -67,15 +69,20 @@ describe('estimateUserOperationGas', () => {
 	});
 
 	it('should format mockRpcResponse using provided return format', async () => {
-		const mockRpcResponse =
-			'0xe554d0701f7fdc734f84927d109537f1ac4ee4ebfa3670c71d224a4fa15dbcd1';
+		const mockRpcResponse = {
+			preVerificationGas: '0xdf17',
+			verificationGasLimit: '0x128c4',
+			callGasLimit: '0x18b33',
+		};
 		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 		const expectedFormattedResult = format(
-			{ format: 'uint' },
+			estimateUserOperationGasSchema,
 			mockRpcResponse,
 			expectedReturnFormat,
 		);
-		(ethRpcMethods.sendUserOperation as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+		(ethRpcMethods.estimateUserOperationGas as jest.Mock).mockResolvedValueOnce(
+			mockRpcResponse,
+		);
 
 		const result = await estimateUserOperationGas(
 			web3Context,
@@ -83,7 +90,7 @@ describe('estimateUserOperationGas', () => {
 			entryPoint,
 			expectedReturnFormat,
 		);
-		expect(result).toBe(expectedFormattedResult);
+		expect(result).toEqual(expectedFormattedResult);
 	});
 
 	it('should set maxFeePerGas to "0" if not provided', async () => {
@@ -97,7 +104,7 @@ describe('estimateUserOperationGas', () => {
 			entryPoint,
 			DEFAULT_RETURN_FORMAT,
 		);
-		expect(ethRpcMethods.sendUserOperation).toHaveBeenCalledWith(
+		expect(ethRpcMethods.estimateUserOperationGas).toHaveBeenCalledWith(
 			web3Context.requestManager,
 			expect.objectContaining({
 				...userOperationWithoutMaxFee,
@@ -118,7 +125,7 @@ describe('estimateUserOperationGas', () => {
 			entryPoint,
 			DEFAULT_RETURN_FORMAT,
 		);
-		expect(ethRpcMethods.sendUserOperation).toHaveBeenCalledWith(
+		expect(ethRpcMethods.estimateUserOperationGas).toHaveBeenCalledWith(
 			web3Context.requestManager,
 			expect.objectContaining({
 				...userOperationWithoutMaxPriorityFee,
