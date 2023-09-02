@@ -639,3 +639,59 @@ export const accountSchema = {
 		},
 	},
 };
+
+export const userOperationSchema = {
+	type: 'object',
+	properties: {
+		blockHash: {
+			format: 'bytes32',
+		},
+		blockNumber: {
+			format: 'uint',
+		},
+		entryPoint: {
+			format: 'address',
+		},
+		transactionHash: {
+			format: 'bytes32',
+		},
+		userOperation: {
+			type: 'object',
+			properties: {
+				sender: {
+					format: 'address',
+				},
+				nonce: {
+					format: 'uint',
+				},
+				initCode: {
+					format: 'bytes',
+				},
+				callData: {
+					format: 'bytes',
+				},
+				callGasLimit: {
+					format: 'uint',
+				},
+				verificationGasLimit: {
+					format: 'uint',
+				},
+				preVerificationGas: {
+					format: 'uint',
+				},
+				maxFeePerGas: {
+					format: 'uint',
+				},
+				maxPriorityFeePerGas: {
+					format: 'uint',
+				},
+				paymasterAndData: {
+					format: 'bytes',
+				},
+				signature: {
+					format: 'bytes',
+				},
+			},
+		},
+	},
+};

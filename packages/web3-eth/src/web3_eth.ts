@@ -1735,7 +1735,25 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * @example
 	 * ```ts
 	 * 	web3.eth.getUserOperationByHash("0xxxxx").then(console.log);
-	 * > 0xxxxx
+	 * > {
+	 *  userOperation: {
+	 *		sender: "xxxx",
+	 *		nonce: "xxxx",
+	 *		initCode: "0xxxxxxxxxxxxxxx",
+	 *		callData: "0xxxxxxxxxxxxxxx",
+	 *		callGasLimit: "xxxx",
+	 *		verificationGasLimit: "xxxx",
+	 *		preVerificationGas: "xxxx",
+	 *		maxFeePerGas: "0",
+	 *		maxPriorityFeePerGas: "0",
+	 *		paymasterAndData: "0xxxxxxxxxxxxxxx",
+	 *		signature: "0xxxxxxxxxxxxxxx"
+	 *	},
+	 *	entryPoint: '0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789',
+	 *	blockNumber: 39642225,
+	 *	blockHash: '0x638a175940cacb33f35e265961b164b14aa77477438340e635b227752f31981f',
+	 *	transactionHash: '0xc3e64ac247ae2343335596e106d1b97e35637656e1b99b37977a4165b34aeeb4',
+	 * }
 	 * ```
 	 */
 	public async getUserOperationByHash<
