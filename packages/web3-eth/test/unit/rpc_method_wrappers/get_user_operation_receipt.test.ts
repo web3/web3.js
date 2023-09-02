@@ -25,6 +25,8 @@ import {
 } from 'web3-types';
 import { ethRpcMethods } from 'web3-rpc-methods';
 import { getUserOperationReceipt } from '../../../src/rpc_method_wrappers';
+import { userOperationReceiptSchema } from '../../../src/schemas';
+import { mockRpcResponse } from './fixtures/get_user_operation_receippt';
 
 jest.mock('web3-rpc-methods');
 
@@ -46,16 +48,15 @@ describe('getUserOperationReceipt', () => {
 	});
 
 	it('should format mockRpcResponse using provided return format', async () => {
-		const mockRpcResponse = '0x12345678';
 		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 		const expectedFormattedResult = format(
-			{ format: 'uint' },
+			userOperationReceiptSchema,
 			mockRpcResponse,
 			expectedReturnFormat,
 		);
 		(ethRpcMethods.getUserOperationReceipt as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 		const result = await getUserOperationReceipt(web3Context, hash, expectedReturnFormat);
-		expect(result).toBe(expectedFormattedResult);
+		expect(result).toEqual(expectedFormattedResult);
 	});
 });

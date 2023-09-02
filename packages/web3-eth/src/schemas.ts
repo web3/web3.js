@@ -710,3 +710,45 @@ export const estimateUserOperationGasSchema = {
 		},
 	},
 };
+
+export const userOperationReceiptSchema = {
+	type: 'object',
+	properties: {
+		userOpHash: {
+			format: 'address',
+		},
+		entryPoint: {
+			format: 'address',
+		},
+		sender: {
+			format: 'address',
+		},
+		nonce: {
+			format: 'uint',
+		},
+		paymaster: {
+			format: 'address',
+		},
+		actualGasCost: {
+			format: 'uint',
+		},
+		actualGasUsed: {
+			format: 'uint',
+		},
+		success: {
+			format: 'bool',
+		},
+		reason: {
+			type: 'string',
+		},
+		logs: {
+			type: 'array',
+			items: {
+				...logSchema,
+			},
+		},
+		receipt: {
+			...transactionReceiptSchema,
+		},
+	},
+};

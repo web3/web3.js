@@ -75,6 +75,7 @@ import {
 	SignatureObjectSchema,
 	userOperationSchema,
 	estimateUserOperationGasSchema,
+	userOperationReceiptSchema,
 } from './schemas.js';
 import {
 	SendSignedTransactionEvents,
@@ -1225,7 +1226,7 @@ export async function getUserOperationReceipt<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const response = await ethRpcMethods.getUserOperationReceipt(web3Context.requestManager, hash);
-	return format({ format: 'uint' }, response, returnFormat);
+	return format(userOperationReceiptSchema, response, returnFormat);
 }
 /**
  * View additional documentations here: {@link Web3Eth.supportedEntryPoints}
