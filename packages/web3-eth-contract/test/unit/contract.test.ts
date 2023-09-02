@@ -623,6 +623,31 @@ describe('Contract', () => {
 			spyEthCall.mockClear();
 		});
 
+		it('should be able call a payable method with data as an option', async () => {
+			const contract = new Contract(
+				erc721Abi,
+				'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
+				{ gas: '123' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
+			);
+
+			const spyEthCall = jest
+				.spyOn(eth, 'call')
+				.mockImplementation(async (_objInstance, _tx) => {
+					expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
+					expect(_tx.input).toBe(
+						'0x095ea7b300000000000000000000000000000000219ab540356cbb839cbe05303d7705fa0000000000000000000000000000000000000000000000000000000000000001',
+					);
+					return '0x00';
+				});
+
+			await expect(
+				contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).call(),
+			).resolves.toBeTruthy();
+
+			spyEthCall.mockClear();
+		});
+
 		it('getPastEvents with filter should work', async () => {
 			const contract = new Contract<typeof GreeterAbi>(GreeterAbi);
 

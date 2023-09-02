@@ -37,12 +37,12 @@ const dataInputEncodeMethodHelper = (
 	params: unknown[],
 ): TransactionCall => {
 	let tx = txParams;
-	if (tx.input) {
+	if (isNullish(tx.input)) {
 		tx = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
-	} else if (tx.data) {
+	} else if (!isNullish(tx.data)) {
 		tx = {
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
@@ -127,11 +127,7 @@ export const getEthTxCallParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	txParams = {
-		...txParams,
-		input: encodeMethodABI(abi, params, txParams.input ? toHex(txParams.input) : undefined),
-		data: encodeMethodABI(abi, params, txParams.data ? toHex(txParams.data) : undefined),
-	};
+	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
 
 	return txParams;
 };
@@ -159,10 +155,10 @@ export const getEstimateGasParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	if (txParams.input) {
+	if (!isNullish(txParams.input)) {
 		txParams.input = toHex(txParams.input);
 	}
-	if (txParams.data) {
+	if (!isNullish(txParams.data)) {
 		txParams.data = toHex(txParams.data);
 	}
 
@@ -222,22 +218,7 @@ export const getCreateAccessListParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
 
-	if (txParams.input) {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
-	} else if (txParams.data) {
-		txParams = {
-			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
-	} else {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
-	}
+	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
 
 	return txParams;
 };
