@@ -37,7 +37,7 @@ const dataInputEncodeMethodHelper = (
 	params: unknown[],
 ): TransactionCall => {
 	let tx = txParams;
-	if (isNullish(tx.input)) {
+	if (!isNullish(tx.input)) {
 		tx = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
@@ -218,7 +218,22 @@ export const getCreateAccessListParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
 
-	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
-
+	if (!isNullish(txParams.input)) {
+		txParams = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.input as HexString),
+		};
+	} else if (!isNullish(txParams.data)) {
+		txParams = {
+			...txParams,
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	} else {
+		// default to using input
+		txParams = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.input),
+		};
+	}
 	return txParams;
 };
