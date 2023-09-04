@@ -17,20 +17,31 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EventEmitter as NodeEventEmitter } from 'events';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Callback = (params: any) => void | Promise<void>;
 
+type EventTargetCallback = (params: CustomEvent) => void;
+
+const wrapFunction =
+	(fn: Callback): EventTargetCallback =>
+	(params: CustomEvent) =>
+		fn(params.detail);
+
+/**
+ * This class copy the behavior of Node.js EventEmitter class.
+ * It is used to provide the same interface for the browser environment.
+ */
 export class InBrowserEventEmitter extends EventTarget {
-	private _listeners: Record<string, Callback[]> = {};
+	private _listeners: Record<string, [key: Callback, value: EventTargetCallback][]> = {};
 	private maxListeners = Number.MAX_SAFE_INTEGER;
 
 	public on(eventName: string, fn: Callback) {
-		super.addEventListener(eventName, fn as EventListener);
-		this._addToListeners(eventName, fn);
+		this.addEventListener(eventName, fn);
 		return this;
 	}
 
 	public once(eventName: string, fn: Callback) {
-		const onceCallback = async (params: unknown) => {
+		const onceCallback = async (params: Callback) => {
 			await fn(params);
 			this.off(eventName, onceCallback);
 		};
@@ -38,8 +49,7 @@ export class InBrowserEventEmitter extends EventTarget {
 	}
 
 	public off(eventName: string, fn: Callback) {
-		super.removeEventListener(eventName, fn as EventListener);
-		this._removeFromListeners(eventName, fn);
+		this.removeEventListener(eventName, fn);
 		return this;
 	}
 
@@ -54,7 +64,7 @@ export class InBrowserEventEmitter extends EventTarget {
 	}
 
 	public listeners(eventName: string): Callback[] {
-		return this._listeners[eventName] || [];
+		return this._listeners[eventName].map(value => value[0]) || [];
 	}
 
 	public eventNames(): string[] {
@@ -75,18 +85,21 @@ export class InBrowserEventEmitter extends EventTarget {
 		return this.maxListeners;
 	}
 
-	private _addToListeners(eventName: string, fn: Callback) {
+	public addEventListener(eventName: string, fn: Callback) {
+		const wrappedFn = wrapFunction(fn);
+		super.addEventListener(eventName, wrappedFn as EventListener);
 		if (!this._listeners[eventName]) {
 			this._listeners[eventName] = [];
 		}
-		this._listeners[eventName].push(fn);
+		this._listeners[eventName].push([fn, wrappedFn]);
 	}
 
-	private _removeFromListeners(eventName: string, fn: Callback) {
+	public removeEventListener(eventName: string, fn: Callback) {
 		const eventListeners = this._listeners[eventName];
 		if (eventListeners) {
-			const index = eventListeners.indexOf(fn);
+			const index = eventListeners.findIndex(item => item[0] === fn);
 			if (index !== -1) {
+				super.removeEventListener(eventName, eventListeners[index][1] as EventListener);
 				eventListeners.splice(index, 1);
 			}
 		}
