@@ -175,6 +175,47 @@ export interface CompileResultAPI {
 	};
 }
 
+export interface IUserOperation {
+	readonly callData: HexStringBytes;
+	readonly callGasLimit: Uint;
+	readonly initCode: HexStringBytes;
+	readonly maxFeePerGas: Uint;
+	readonly maxPriorityFeePerGas: Uint;
+	readonly nonce: Uint;
+	readonly paymasterAndData: HexStringBytes;
+	readonly preVerificationGas: Uint;
+	readonly sender: Address;
+	readonly signature: HexStringBytes;
+	readonly verificationGasLimit: Uint;
+}
+export interface GetUserOperationByHashAPI {
+	readonly blockHash: HexString32Bytes;
+	readonly blockNumber: Uint;
+	readonly entryPoint: Address;
+	readonly transactionHash: TransactionHash;
+	readonly userOperation: IUserOperation;
+}
+
+export interface EstimateUserOperationGasAPI {
+	readonly preVerificationGas: Uint;
+	readonly verificationGasLimit: Uint;
+	readonly callGasLimit: Uint;
+}
+
+export interface GetUserOperationReceiptAPI {
+	readonly userOpHash: HexString32Bytes;
+	readonly entryPoint: Address;
+	readonly sender: Address;
+	readonly nonce: Uint;
+	readonly paymaster: Address;
+	readonly actualGasCost: Uint;
+	readonly actualGasUsed: Uint;
+	readonly success: boolean;
+	readonly reason: HexStringBytes;
+	readonly logs: LogAPI[];
+	readonly receipt: TransactionReceiptAPI;
+}
+
 /* eslint-disable camelcase */
 export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/block.yaml
@@ -284,7 +325,11 @@ export type EthExecutionAPI = {
 	eth_compileLLL: (code: string) => HexStringBytes;
 	eth_compileSerpent: (code: string) => HexStringBytes;
 	eth_sendUserOperation: (userOperation: UserOperation, entryPoint: Address) => HexString32Bytes;
-	eth_getUserOperationByHash: (hash: HexStringBytes) => HexString32Bytes;
-	eth_getUserOperationReceipt: (hash: HexStringBytes) => HexString32Bytes;
+	eth_estimateUserOperationGas: (
+		userOperation: UserOperation,
+		entryPoint: Address,
+	) => EstimateUserOperationGasAPI;
+	eth_getUserOperationByHash: (hash: HexStringBytes) => GetUserOperationByHashAPI;
+	eth_getUserOperationReceipt: (hash: HexStringBytes) => GetUserOperationReceiptAPI;
 	eth_supportedEntryPoints: () => Address[];
 };

@@ -94,7 +94,7 @@ export const mockRpcResponse = {
 		to: '0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789',
 		cumulativeGasUsed: '0x1716d3b',
 		gasUsed: '0x2b6c6',
-		contractAddress: null,
+		contractAddress: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
 		logs: [
 			{
 				address: '0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789',
