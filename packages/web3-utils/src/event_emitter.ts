@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EventEmitter as NodeEventEmitter } from 'events';
+import { EventEmitter as EventEmitterAtNode } from 'events';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Callback = (params: any) => void | Promise<void>;
@@ -31,7 +31,7 @@ const wrapFunction =
  * This class copy the behavior of Node.js EventEmitter class.
  * It is used to provide the same interface for the browser environment.
  */
-export class InBrowserEventEmitter extends EventTarget {
+export class EventEmitterAtBrowser extends EventTarget {
 	private _listeners: Record<string, [key: Callback, value: EventTargetCallback][]> = {};
 	private maxListeners = Number.MAX_SAFE_INTEGER;
 
@@ -107,11 +107,11 @@ export class InBrowserEventEmitter extends EventTarget {
 }
 
 // eslint-disable-next-line import/no-mutable-exports
-export let EventEmitter: typeof NodeEventEmitter;
+export let EventEmitter: typeof EventEmitterAtNode;
 // Check if the code is running in a Node.js environment
 if (typeof window === 'undefined') {
-	EventEmitter = NodeEventEmitter;
+	EventEmitter = EventEmitterAtNode;
 } else {
 	// Fallback for the browser environment
-	EventEmitter = InBrowserEventEmitter as unknown as typeof NodeEventEmitter;
+	EventEmitter = EventEmitterAtBrowser as unknown as typeof EventEmitterAtNode;
 }
