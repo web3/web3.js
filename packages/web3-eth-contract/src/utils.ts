@@ -27,29 +27,38 @@ import {
 	PayableCallOptions,
 	ContractInitOptions,
 } from 'web3-types';
-import { isNullish, mergeDeep, toHex } from 'web3-utils';
+import { isNullish, mergeDeep } from 'web3-utils';
 import { encodeMethodABI } from './encoding.js';
 import { ContractOptions, Web3ContractContext } from './types.js';
 
 const dataInputEncodeMethodHelper = (
-	txParams: TransactionCall,
+	txParams: TransactionCall | TransactionForAccessList,
 	abi: AbiFunctionFragment,
 	params: unknown[],
-): TransactionCall => {
+): {data?: HexString, input?: HexString} => {
 	let tx = txParams;
 	if (!isNullish(tx.data)) {
 		tx = {
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
-	} else {
+	}  
+	if (!isNullish(tx.input)){
+		tx = {
+			...txParams,
+			input: encodeMethodABI(abi, params, txParams.input as HexString),
+		};
+	}
+	// if input and data is empty, use input as default
+	if (isNullish(tx.input) && isNullish(tx.data)) {
 		// default to using input
 		tx = {
 			...txParams,
 			input: encodeMethodABI(abi, params, txParams.input as HexString),
 		};
 	}
-	return tx;
+
+	return {data: tx.data as HexString, input: tx.input as HexString};
 };
 
 export const getSendTxParams = ({
@@ -89,7 +98,9 @@ export const getSendTxParams = ({
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
+	
 	return txParams;
 };
 
@@ -122,7 +133,8 @@ export const getEthTxCallParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
 
 	return txParams;
 };
@@ -150,14 +162,8 @@ export const getEstimateGasParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	if (!isNullish(txParams.input)) {
-		txParams.input = toHex(txParams.input);
-	}
-	if (!isNullish(txParams.data)) {
-		txParams.data = toHex(txParams.data);
-	}
-
-	txParams = dataInputEncodeMethodHelper(txParams, abi, params);
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
 
 	return txParams as TransactionWithSenderAPI;
 };
@@ -213,22 +219,8 @@ export const getCreateAccessListParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
 
-	if (!isNullish(txParams.input)) {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
-	} else if (!isNullish(txParams.data)) {
-		txParams = {
-			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
-	} else {
-		// default to using input
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input),
-		};
-	}
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
+
 	return txParams;
 };
