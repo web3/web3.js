@@ -48,7 +48,8 @@ export function encodeTuple(param: AbiParameter, input: unknown): EncoderResult 
 			result = encodeParamFromAbiParameter(paramComponent, narrowedInput[i]);
 		} else {
 			const paramInput = narrowedInput[paramComponent.name ?? ''];
-			if (!paramInput) {
+			// eslint-disable-next-line no-null/no-null
+			if (paramInput === undefined || paramInput === null) {
 				throw new AbiError('missing input defined in abi', {
 					param,
 					input,

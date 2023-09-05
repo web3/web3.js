@@ -24,6 +24,7 @@ import {
 	isHexStrict,
 	isInt,
 	isNullish,
+	utils,
 	utils as validatorUtils,
 	validator,
 } from 'web3-validator';
@@ -584,7 +585,7 @@ export const toChecksumAddress = (address: Address): string => {
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
 
-	const hash = bytesToHex(keccak256(utf8ToBytes(lowerCaseAddress)));
+	const hash = utils.uint8ArrayToHexString(keccak256(utf8ToBytes(lowerCaseAddress)));
 
 	if (
 		isNullish(hash) ||

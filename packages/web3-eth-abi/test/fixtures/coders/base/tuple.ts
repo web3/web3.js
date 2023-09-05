@@ -19,7 +19,7 @@ import { AbiParameter } from 'web3-types';
 
 export const validEncoderData: Array<{
 	components: ReadonlyArray<AbiParameter>;
-	values: Array<unknown>;
+	values: unknown;
 	result: string;
 	dynamic: boolean;
 }> = [
@@ -47,6 +47,15 @@ export const validEncoderData: Array<{
 		values: [true, [69, true]],
 		dynamic: false,
 		result: '000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000450000000000000000000000000000000000000000000000000000000000000001',
+	},
+	{
+		components: [
+			{ type: 'bool', name: 'y' },
+			{ type: 'bool', name: 'z' },
+		],
+		values: { y: false, z: true },
+		dynamic: false,
+		result: '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001',
 	},
 ];
 

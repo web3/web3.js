@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiError } from 'web3-errors';
 import { AbiParameter } from 'web3-types';
-import { bytesToHex, hexToBytes, toChecksumAddress } from 'web3-utils';
-import { isAddress } from 'web3-validator';
+import { toChecksumAddress } from 'web3-utils';
+import { isAddress, utils } from 'web3-validator';
 import { DecoderResult, EncoderResult } from '../types.js';
 import { alloc, WORD_SIZE } from '../utils.js';
 
@@ -44,7 +44,7 @@ export function encodeAddress(param: AbiParameter, input: unknown): EncoderResul
 		});
 	}
 	// for better performance, we could convert hex to destination bytes directly (encoded var)
-	const addressBytes = hexToBytes(address);
+	const addressBytes = utils.hexToUint8Array(address);
 	// expand address to WORD_SIZE
 	const encoded = alloc(WORD_SIZE);
 	encoded.set(addressBytes, ADDRESS_OFFSET);
@@ -59,7 +59,7 @@ export function decodeAddress(_param: AbiParameter, bytes: Uint8Array): DecoderR
 	if (addressBytes.length !== ADDRESS_BYTES_COUNT) {
 		throw new AbiError('Invalid decoding input, not enough bytes to decode address', { bytes });
 	}
-	const result = bytesToHex(addressBytes);
+	const result = utils.uint8ArrayToHexString(addressBytes);
 
 	// should we check is decoded value is valid address?
 	// if(!isAddress(result)) {

@@ -17,72 +17,30 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AbiError } from 'web3-errors';
 import type { AbiParameter } from 'web3-types';
-import { toBigInt } from 'web3-utils';
+import { padLeft, toBigInt } from 'web3-utils';
+import { utils } from 'web3-validator';
 import { DecoderResult, EncoderResult } from '../types.js';
-import { allocUnsafe, WORD_SIZE } from '../utils.js';
+import { WORD_SIZE } from '../utils.js';
+
+// eslint-disable-next-line no-bitwise
+const mask = BigInt(1) << BigInt(256);
 
 function bigIntToUint8Array(value: bigint, byteLength = WORD_SIZE): Uint8Array {
-	const uint8Array = allocUnsafe(byteLength);
-	let isNegative = false;
-
-	let a = value;
-
-	// Convert the BigInt value to a positive number and set the sign flag if it's negative.
-	if (value < BigInt(0)) {
-		a = -value;
-		isNegative = true;
+	let hexValue;
+	if (value < 0) {
+		hexValue = (mask + value).toString(16);
+	} else {
+		hexValue = value.toString(16);
 	}
-
-	// Write the binary representation of the value to the Uint8Array.
-	for (let i = byteLength - 1; i >= 0; i -= 1) {
-		// eslint-disable-next-line no-bitwise
-		const byteValue = Number(a & BigInt(0xff));
-		uint8Array[i] = byteValue;
-		// eslint-disable-next-line no-bitwise
-		a >>= BigInt(8);
-	}
-
-	// If the value is negative, convert it to two's complement.
-	if (isNegative) {
-		for (let i = 0; i < byteLength; i += 1) {
-			// eslint-disable-next-line no-bitwise
-			uint8Array[i] = ~uint8Array[i];
-		}
-		for (let i = byteLength - 1; i >= 0; i -= 1) {
-			const byteValue = uint8Array[i] + 1;
-			// eslint-disable-next-line no-bitwise
-			uint8Array[i] = byteValue & 0xff;
-			if (byteValue <= 0xff) {
-				break;
-			}
-		}
-	}
-
-	return uint8Array;
+	hexValue = padLeft(hexValue, byteLength * 2);
+	return utils.hexToUint8Array(hexValue);
 }
 
-function uint8ArrayToBigInt(value: Uint8Array): bigint {
-	// eslint-disable-next-line no-bitwise
-	const isNegative = (value[0] & 0x80) !== 0; // Check the most significant bit for negativity
-
-	let result = BigInt(0);
-
-	// Convert the Uint8Array to a BigInt
-	for (const byte of value) {
-		// eslint-disable-next-line no-bitwise
-		result <<= BigInt(8);
-		// eslint-disable-next-line no-bitwise
-		result |= BigInt(byte);
-	}
-	// If negative, apply two's complement
-	if (isNegative) {
-		// eslint-disable-next-line no-bitwise
-		const mask = (BigInt(1) << (BigInt(8) * BigInt(value.length))) - BigInt(1);
-		// eslint-disable-next-line no-bitwise
-		result = -((~result + BigInt(1)) & mask);
-	}
-
-	return result;
+function uint8ArrayToBigInt(value: Uint8Array, max: bigint): bigint {
+	const hexValue = utils.uint8ArrayToHexString(value);
+	const result = BigInt(hexValue);
+	if (result <= max) return result;
+	return result - mask;
 }
 
 const numberLimits = new Map<string, { min: bigint; max: bigint }>();
@@ -150,7 +108,7 @@ export function decodeNumber(param: AbiParameter, bytes: Uint8Array): DecoderRes
 	if (!limit) {
 		throw new AbiError('provided abi contains invalid number datatype', { type: param.type });
 	}
-	const numberResult = uint8ArrayToBigInt(boolBytes);
+	const numberResult = uint8ArrayToBigInt(boolBytes, limit.max);
 
 	if (numberResult < limit.min) {
 		throw new AbiError('decoded value is less then minimum for given type', {

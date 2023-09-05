@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiError } from 'web3-errors';
 import { AbiInput } from 'web3-types';
-import { bytesToHex } from 'web3-utils';
+import { utils } from 'web3-validator';
 import { encodeTuple } from './base';
 import { toAbiParams } from './utils.js';
 
@@ -29,7 +29,7 @@ export function encodeParameters(abi: ReadonlyArray<AbiInput>, params: unknown[]
 	}
 	const abiParams = toAbiParams(abi);
 
-	return bytesToHex(
+	return utils.uint8ArrayToHexString(
 		encodeTuple({ type: 'tuple', name: '', components: abiParams }, params).encoded,
 	);
 }

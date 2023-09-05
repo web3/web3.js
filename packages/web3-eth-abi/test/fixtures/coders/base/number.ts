@@ -141,10 +141,6 @@ export const invalidNumberDecoderData: [AbiParameter, string][] = [
 		'0x00000000000000000000003f29a33f562a1feab357509b77f71717e78667e7c1',
 	],
 	[
-		{ type: 'uint256', name: '' },
-		'0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f',
-	],
-	[
 		{ type: 'int17', name: '' },
 		'0xffffffffffffffffffffffc0d65cc0a9d5e0154ca8af648808e8e8187998183f',
 	],
