@@ -37,12 +37,7 @@ const dataInputEncodeMethodHelper = (
 	params: unknown[],
 ): TransactionCall => {
 	let tx = txParams;
-	if (!isNullish(tx.input)) {
-		tx = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
-	} else if (!isNullish(tx.data)) {
+	if (!isNullish(tx.data)) {
 		tx = {
 			...txParams,
 			data: encodeMethodABI(abi, params, txParams.data as HexString),
