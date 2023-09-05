@@ -20,7 +20,7 @@ import { uint8ArrayConcat } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { decodeParamFromAbiParameter, encodeNumber, encodeParamFromAbiParameter } from '.';
 import { DecoderResult, EncoderResult } from '../types.js';
-import { extractArrayType, isDynamic } from '../utils.js';
+import { extractArrayType, isDynamic, WORD_SIZE } from '../utils.js';
 import { decodeNumber } from './number.js';
 import { encodeDynamicParams } from './utils.js';
 
@@ -32,6 +32,12 @@ export function encodeArray(param: AbiParameter, values: unknown): EncoderResult
 	const encodedParams = values.map(v => encodeParamFromAbiParameter(arrayItemParam, v));
 	const dynamic = size === -1;
 	const dynamicItems = encodedParams.length > 0 && encodedParams[0].dynamic;
+	if (!dynamic && values.length !== size) {
+		throw new AbiError("Given arguments count doesn't match array length", {
+			arrayLength: size,
+			argumentsLength: values.length,
+		});
+	}
 	if (dynamic || dynamicItems) {
 		const encodingResult = encodeDynamicParams(encodedParams);
 		if (dynamic) {
@@ -78,7 +84,10 @@ export function decodeArray(param: AbiParameter, bytes: Uint8Array): DecoderResu
 	if (hasDynamicChild) {
 		// known length but dynamic child, each child is actually head element with encoded offset
 		for (let i = 0; i < size; i += 1) {
-			const offsetResult = decodeNumber({ type: 'uint32', name: '' }, remaining);
+			const offsetResult = decodeNumber(
+				{ type: 'uint32', name: '' },
+				remaining.subarray(i * WORD_SIZE),
+			);
 			consumed += offsetResult.consumed;
 			const decodedChildResult = decodeParamFromAbiParameter(
 				arrayItemParam,

@@ -15,7 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AbiError } from 'web3-errors';
+import { bytesToHex, hexToBytes } from 'web3-utils';
+import { decodeArray, encodeArray } from '../../../../src/coders/base';
 import { extractArrayType } from '../../../../src/coders/utils';
+import {
+	invalidArrayDecoderData,
+	invalidArrayEncoderData,
+	validArrayDecoderData,
+	validArrayEncoderData,
+} from '../../../fixtures/coders/base/array';
 
 describe('abi - coder - base - array', () => {
 	describe('extractArrayType', () => {
@@ -43,6 +52,34 @@ describe('abi - coder - base - array', () => {
 		});
 		it('should fail for invalid array size', () => {
 			expect(() => extractArrayType({ type: 'uint256[2q]', name: '' })).toThrow();
+		});
+	});
+
+	describe('encode', () => {
+		it.each(validArrayEncoderData)('value %s to result in %s', value => {
+			const result = encodeArray({ type: value.type, name: '' }, value.values);
+			expect(bytesToHex(result.encoded)).toEqual(value.result);
+			expect(result.dynamic).toEqual(value.dynamic);
+		});
+
+		it.each(invalidArrayEncoderData)('value %s to throw', value => {
+			expect(() => encodeArray({ type: value.type, name: '' }, value.values)).toThrow(
+				AbiError,
+			);
+		});
+	});
+
+	describe('decode', () => {
+		it.each(validArrayDecoderData)('value to result', value => {
+			const result = decodeArray({ type: value.type, name: '' }, hexToBytes(value.bytes));
+			expect(result.result).toEqual(value.result);
+			expect(bytesToHex(result.encoded)).toEqual(value.remaining);
+		});
+
+		it.each(invalidArrayDecoderData)('value to throw', value => {
+			expect(() =>
+				decodeArray({ type: value.type, name: '' }, hexToBytes(value.bytes)),
+			).toThrow(AbiError);
 		});
 	});
 });
