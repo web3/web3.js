@@ -234,6 +234,7 @@ export class Contract<Abi extends ContractAbi>
 	private readonly _overloadedMethodAbis: Map<string, AbiFunctionFragment[]>;
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
+	private _dataInputFill?: 'data' | 'input' | 'both'
 
 	private context?: Web3Context;
 	/**
@@ -349,7 +350,6 @@ export class Contract<Abi extends ContractAbi>
 			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
-
 		this._overloadedMethodAbis = new Map<string, AbiFunctionFragment[]>();
 
 		// eslint-disable-next-line no-nested-ternary
@@ -362,6 +362,10 @@ export class Contract<Abi extends ContractAbi>
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
 
+		this._dataInputFill = (options as ContractInitOptions)?.dataInputFill ?? 'input';
+		if (contractContext instanceof Web3Context){
+			this._dataInputFill = contractContext.config.contractDataInputFill;
+		}
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
 		if (!isNullish(address)) {
@@ -378,11 +382,12 @@ export class Contract<Abi extends ContractAbi>
 			data: options?.data,
 		};
 
+
+
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
 		if (contractContext instanceof Web3Context) {
 			this.subscribeToContextEvents(contractContext);
 		}
-
 		Object.defineProperty(this.options, 'address', {
 			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
 			get: () => this._address,
@@ -472,7 +477,6 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public clone() {
 		let newContract: Contract<any>;
-
 		if (this.options.address) {
 			newContract = new Contract<Abi>(
 				[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
@@ -485,6 +489,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
+					dataInputFill: this._dataInputFill
 				},
 				this.getContextObject(),
 			);
@@ -499,6 +504,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
+					dataInputFill: this._dataInputFill
 				},
 				this.getContextObject(),
 			);
@@ -581,7 +587,6 @@ export class Contract<Abi extends ContractAbi>
 		arguments?: ContractConstructorArgs<Abi>;
 	}) {
 		let abi = this._jsonInterface.find(j => j.type === 'constructor') as AbiConstructorFragment;
-
 		if (!abi) {
 			abi = {
 				type: 'constructor',
@@ -792,7 +797,6 @@ export class Contract<Abi extends ContractAbi>
 		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		this._functions = {};
-
 		this._methods = {} as ContractMethodsInterface<Abi>;
 		this._events = {} as ContractEventsInterface<Abi>;
 
@@ -829,7 +833,7 @@ export class Contract<Abi extends ContractAbi>
 				const contractMethod = this._createContractMethod<
 					typeof abiFragment,
 					AbiErrorFragment
-				>(abiFragment, errorsAbi);
+				>(abiFragment, errorsAbi, this._dataInputFill);
 
 				this._functions[methodName] = {
 					signature: methodSignature,
@@ -887,8 +891,10 @@ export class Contract<Abi extends ContractAbi>
 	private _createContractMethod<T extends AbiFunctionFragment[], E extends AbiErrorFragment>(
 		abiArr: T,
 		errorsAbis: E[],
+		dataInputFill?: string
 	): ContractBoundMethod<T[0]> {
 		const abi = abiArr[abiArr.length - 1];
+		console.log(dataInputFill)
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
 			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
@@ -933,7 +939,8 @@ export class Contract<Abi extends ContractAbi>
 						methodAbi,
 						abiParams,
 						internalErrorsAbis,
-						options,
+						{...options,
+							dataInputFill},
 						block,
 					),
 
@@ -983,9 +990,10 @@ export class Contract<Abi extends ContractAbi>
 		abi: AbiFunctionFragment,
 		params: unknown[],
 		errorsAbi: AbiErrorFragment[],
-		options?: Options,
+		options?: Options & {dataInputFill?: string},
 		block?: BlockNumberOrTag,
 	) {
+		console.log(options?.dataInputFill)
 		const tx = getEthTxCallParams({
 			abi,
 			params,

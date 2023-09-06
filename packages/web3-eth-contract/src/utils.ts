@@ -35,27 +35,18 @@ const dataInputEncodeMethodHelper = (
 	txParams: TransactionCall | TransactionForAccessList,
 	abi: AbiFunctionFragment,
 	params: unknown[],
+	dataInputFill?: string,
 ): {data?: HexString, input?: HexString} => {
 	let tx = txParams;
-	if (!isNullish(tx.data)) {
-		tx = {
-			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as HexString),
-		};
+	if (!isNullish(tx.data) || dataInputFill === 'data' || dataInputFill === 'both') {
+		tx.data = encodeMethodABI(abi, params, txParams.data as HexString)
 	}  
-	if (!isNullish(tx.input)){
-		tx = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
+	if (!isNullish(tx.input) || dataInputFill === 'input' || dataInputFill === 'both'){
+		tx.input = encodeMethodABI(abi, params, txParams.input as HexString)
 	}
 	// if input and data is empty, use input as default
 	if (isNullish(tx.input) && isNullish(tx.data)) {
-		// default to using input
-		tx = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
+		tx.input = encodeMethodABI(abi, params, txParams.input as HexString)
 	}
 
 	return {data: tx.data as HexString, input: tx.input as HexString};
@@ -112,13 +103,13 @@ export const getEthTxCallParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address };
+	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address, dataInputFill?: string };
 	contractOptions: ContractOptions;
 }): TransactionCall => {
 	if (!options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
-
+	console.log(options)
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -133,7 +124,7 @@ export const getEthTxCallParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
 	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
 
 	return txParams;
@@ -181,6 +172,7 @@ export const isContractInitOptions = (options: unknown): options is ContractInit
 		'address',
 		'jsonInterface',
 		'syncWithContext',
+		'dataInputFill'
 	].some(key => key in options);
 
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>

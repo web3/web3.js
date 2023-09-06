@@ -37,6 +37,7 @@ export interface Web3ConfigOptions {
 	transactionConfirmationPollingInterval?: number;
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
+	contractDataInputFill: 'data' | 'input' | 'both'
 	defaultNetworkId?: Numbers;
 	defaultChain: string;
 	defaultHardfork: string;
@@ -78,6 +79,7 @@ export abstract class Web3Config
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
+		contractDataInputFill: 'input',
 		defaultNetworkId: undefined,
 		defaultChain: 'mainnet',
 		defaultHardfork: 'london',
@@ -124,6 +126,25 @@ export abstract class Web3Config
 	public set handleRevert(val) {
 		this._triggerConfigChange('handleRevert', val);
 		this.config.handleRevert = val;
+	}
+
+	/**
+	 * The `contractDataInputFill` options property will allow you to set the hash of the method signature and encoded parameters to the property either `data`, `input` or both within your contract. This will affect:
+	 * - myContract.deploy()
+	 * - myContract.methods.myMethod().call()
+	 * - myContract.methods.myMethod().send()
+	 * Default is `input`.
+	 */
+	 public get contractDataInputFill() {
+		return this.config.contractDataInputFill;
+	}
+
+	/**
+	 * Will set the contractDataInputFill
+	 */
+	public set contractDataInputFill(val) {
+		this._triggerConfigChange('contractDataInputFill', val);
+		this.config.contractDataInputFill = val;
 	}
 
 	/**

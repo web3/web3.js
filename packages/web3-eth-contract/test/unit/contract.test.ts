@@ -370,10 +370,10 @@ describe('Contract', () => {
 		});
 
 		it('call on deployed contract should decode result', async () => {
+			
 			const arg = 'Hello';
 			const encodedArg =
 				'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
-
 			const contract = new Contract(GreeterAbi);
 
 			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
@@ -389,14 +389,12 @@ describe('Contract', () => {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return Promise.resolve(encodedArg) as any; // contract class should decode encodedArg
 			});
-
 			const deployedContract = await contract
 				.deploy({
 					input: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
-
 			const res = await deployedContract.methods.greet().call();
 			expect(res).toStrictEqual(arg);
 
@@ -623,19 +621,44 @@ describe('Contract', () => {
 			spyEthCall.mockClear();
 		});
 
-		it('should be able call a payable method with data as an option', async () => {
+		it('should be able call a payable method with data as a contract init option', async () => {
 			const contract = new Contract(
 				erc721Abi,
 				'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
-				{ gas: '123' },
-				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
+				{ gas: '123', dataInputFill: "data" },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa'} },
 			);
 
 			const spyEthCall = jest
 				.spyOn(eth, 'call')
 				.mockImplementation(async (_objInstance, _tx) => {
 					expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
-					expect(_tx.input).toBe(
+					expect(_tx.data).toBe(
+						'0x095ea7b300000000000000000000000000000000219ab540356cbb839cbe05303d7705fa0000000000000000000000000000000000000000000000000000000000000001',
+					);
+					return '0x00';
+				});
+
+			await expect(
+				contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).call(),
+			).resolves.toBeTruthy();
+
+			spyEthCall.mockClear();
+		});
+
+		it('should be able call a payable method with data as a web3config option', async () => {
+			const contract = new Contract(
+				erc721Abi,
+				'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
+				{ gas: '123' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa'} },
+			);
+
+			const spyEthCall = jest
+				.spyOn(eth, 'call')
+				.mockImplementation(async (_objInstance, _tx) => {
+					expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
+					expect(_tx.data).toBe(
 						'0x095ea7b300000000000000000000000000000000219ab540356cbb839cbe05303d7705fa0000000000000000000000000000000000000000000000000000000000000001',
 					);
 					return '0x00';
