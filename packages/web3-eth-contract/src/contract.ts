@@ -234,7 +234,7 @@ export class Contract<Abi extends ContractAbi>
 	private readonly _overloadedMethodAbis: Map<string, AbiFunctionFragment[]>;
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
-	private readonly _dataInputFill?: 'data' | 'input' | 'both'
+	private readonly _dataInputFill?: 'data' | 'input' | 'both';
 
 	private context?: Web3Context;
 	/**
@@ -310,12 +310,6 @@ export class Contract<Abi extends ContractAbi>
 			? optionsOrContextOrReturnFormat
 			: undefined;
 
-		if (!isNullish(options) && !isNullish(options.data) && !isNullish(options.input))
-			throw new ContractTransactionDataAndInputError({
-				data: options.data as HexString,
-				input: options.input as HexString,
-			});
-
 		let contractContext;
 		if (isWeb3ContractContext(addressOrOptionsOrContext)) {
 			contractContext = addressOrOptionsOrContext;
@@ -350,6 +344,16 @@ export class Contract<Abi extends ContractAbi>
 			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
+		if (
+			!isNullish(options) &&
+			!isNullish(options.data) &&
+			!isNullish(options.input) &&
+			this.config.contractDataInputFill !== 'both'
+		)
+			throw new ContractTransactionDataAndInputError({
+				data: options.data as HexString,
+				input: options.input as HexString,
+			});
 		this._overloadedMethodAbis = new Map<string, AbiFunctionFragment[]>();
 
 		// eslint-disable-next-line no-nested-ternary
@@ -365,7 +369,9 @@ export class Contract<Abi extends ContractAbi>
 		if (this.config.contractDataInputFill === 'both') {
 			this._dataInputFill = this.config.contractDataInputFill;
 		} else {
-			this._dataInputFill = (options as ContractInitOptions)?.dataInputFill ?? this.config.contractDataInputFill;
+			this._dataInputFill =
+				(options as ContractInitOptions)?.dataInputFill ??
+				this.config.contractDataInputFill;
 		}
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
@@ -382,8 +388,6 @@ export class Contract<Abi extends ContractAbi>
 			input: options?.input,
 			data: options?.data,
 		};
-
-
 
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
 		if (contractContext instanceof Web3Context) {
@@ -490,7 +494,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
-					dataInputFill: this._dataInputFill
+					dataInputFill: this._dataInputFill,
 				},
 				this.getContextObject(),
 			);
@@ -505,7 +509,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
-					dataInputFill: this._dataInputFill
+					dataInputFill: this._dataInputFill,
 				},
 				this.getContextObject(),
 			);
@@ -995,7 +999,8 @@ export class Contract<Abi extends ContractAbi>
 			abi,
 			params,
 			options: {
-				...options, dataInputFill: this._dataInputFill
+				...options,
+				dataInputFill: this._dataInputFill,
 			},
 			contractOptions: {
 				...this.options,
@@ -1026,8 +1031,8 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getCreateAccessListParams({
 			abi,
 			params,
-			options: {...options, dataInputFill: this.config.contractDataInputFill},
-			contractOptions: {	
+			options: { ...options, dataInputFill: this.config.contractDataInputFill },
+			contractOptions: {
 				...this.options,
 				from: this.options.from ?? this.config.defaultAccount,
 			},
@@ -1060,7 +1065,7 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getSendTxParams({
 			abi,
 			params,
-			options: {...options, dataInputFill: this.config.contractDataInputFill},
+			options: { ...options, dataInputFill: this.config.contractDataInputFill },
 			contractOptions: modifiedContractOptions,
 		});
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
@@ -1092,7 +1097,7 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getSendTxParams({
 			abi,
 			params,
-			options: {...options, dataInputFill: this.config.contractDataInputFill},
+			options: { ...options, dataInputFill: this.config.contractDataInputFill },
 			contractOptions: modifiedContractOptions,
 		});
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
@@ -1131,7 +1136,7 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getEstimateGasParams({
 			abi,
 			params,
-			options:{...options, dataInputFill: this.config.contractDataInputFill},
+			options: { ...options, dataInputFill: this.config.contractDataInputFill },
 			contractOptions: contractOptions ?? this.options,
 		});
 		return estimateGas(this, tx, BlockTags.LATEST, returnFormat);
