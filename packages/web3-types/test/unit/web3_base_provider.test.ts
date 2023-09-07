@@ -44,22 +44,22 @@ class Web3ChildProvider extends Web3BaseProvider {
 }
 
 describe('Web3BaseProvider', () => {
-	it('asEip1193FullyCompatible will fix the returned result of the request method', async () => {
+	it('asEIP1193Provider will fix the returned result of the request method', async () => {
 		const childProvider = new Web3ChildProvider();
 		const returnValue = await childProvider.request({ method: 'eth_getBalance' });
 		expect(returnValue.result).toBe('result');
 
-		const eip1193FullyCompatibleClass = childProvider.asEip1193FullyCompatible();
+		const eip1193FullyCompatibleClass = childProvider.asEIP1193Provider();
 		const returnValue2 = await eip1193FullyCompatibleClass.request({
 			method: 'eth_getBalance',
 		});
 		expect(returnValue2).toBe('result');
 	});
 
-	it('asEip1193FullyCompatible would not be available inside the newly generated class', () => {
+	it('asEIP1193Provider would not be available inside the newly generated class', () => {
 		const childProvider = new Web3ChildProvider();
 
-		const eip1193FullyCompatibleClass = childProvider.asEip1193FullyCompatible();
-		expect((eip1193FullyCompatibleClass as any).asEip1193FullyCompatible).toBeUndefined();
+		const eip1193FullyCompatibleClass = childProvider.asEIP1193Provider();
+		expect((eip1193FullyCompatibleClass as any).asEIP1193Provider).toBeUndefined();
 	});
 });

@@ -136,7 +136,7 @@ export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider
 export type Eip1193FullyCompatible<API extends Web3APISpec = EthExecutionAPI> = Omit<
 	// eslint-disable-next-line no-use-before-define
 	Omit<Web3BaseProvider, 'request'>,
-	'asEip1193FullyCompatible'
+	'asEIP1193Provider'
 > & {
 	request<
 		Method extends Web3APIMethod<API>,
@@ -213,12 +213,12 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	 * @example
 	 * ```ts
 	 * const provider = new Web3HttpProvider('http://localhost:8545');
-	 * const fullyCompatibleProvider = provider.asEip1193FullyCompatible();
+	 * const fullyCompatibleProvider = provider.asEIP1193Provider();
 	 * const result = await fullyCompatibleProvider.request({ method: 'eth_getBalance' });
 	 * console.log(result); // '0x0234c8a3397aab58' or something like that
 	 * ```
 	 */
-	public asEip1193FullyCompatible(): Eip1193FullyCompatible<API> {
+	public asEIP1193Provider(): Eip1193FullyCompatible<API> {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const newObj = Object.create(this) as Eip1193FullyCompatible<API>;
 		// eslint-disable-next-line @typescript-eslint/unbound-method
@@ -232,7 +232,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		} as typeof newObj.request;
 		// @ts-expect-error the property should not be available in the new object because of using Object.create(this).
 		//	But it is available if we do not delete it.
-		newObj.asEip1193FullyCompatible = undefined; // to prevent the user for calling this method again
+		newObj.asEIP1193Provider = undefined; // to prevent the user for calling this method again
 		return newObj;
 	}
 
