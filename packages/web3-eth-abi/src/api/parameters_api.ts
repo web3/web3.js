@@ -41,7 +41,7 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 /**
  * Encodes a parameter based on its type to its ABI representation.
  * @param abi -  The type of the parameter. See the [Solidity documentation](https://docs.soliditylang.org/en/develop/types.html) for a list of types.
- * @param param - The actual pazrameter to encode.
+ * @param param - The actual parameter to encode.
  * @returns -  The ABI encoded parameter
  * @example
  * ```ts
