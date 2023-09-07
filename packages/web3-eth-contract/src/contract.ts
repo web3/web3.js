@@ -234,6 +234,11 @@ export class Contract<Abi extends ContractAbi>
 	private readonly _overloadedMethodAbis: Map<string, AbiFunctionFragment[]>;
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
+	/**
+	 * Set property to `data`, `input`, or `both` to change the property of the contract being sent to the
+	 * RPC provider when using contract methods.
+	 * Default is `input`
+	 */
 	private readonly _dataInputFill?: 'data' | 'input' | 'both';
 
 	private context?: Web3Context;

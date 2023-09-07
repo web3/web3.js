@@ -37,7 +37,7 @@ export interface Web3ConfigOptions {
 	transactionConfirmationPollingInterval?: number;
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
-	contractDataInputFill: 'data' | 'input' | 'both'
+	contractDataInputFill: 'data' | 'input' | 'both';
 	defaultNetworkId?: Numbers;
 	defaultChain: string;
 	defaultHardfork: string;
@@ -129,13 +129,12 @@ export abstract class Web3Config
 	}
 
 	/**
-	 * The `contractDataInputFill` options property will allow you to set the hash of the method signature and encoded parameters to the property either `data`, `input` or both within your contract. This will affect:
-	 * - myContract.deploy()
-	 * - myContract.methods.myMethod().call()
-	 * - myContract.methods.myMethod().send()
+	 * The `contractDataInputFill` options property will allow you to set the hash of the method signature and encoded parameters to the property
+	 * either `data`, `input` or both within your contract.
+	 * This will affect the contracts send, call and estimateGas methods
 	 * Default is `input`.
 	 */
-	 public get contractDataInputFill() {
+	public get contractDataInputFill() {
 		return this.config.contractDataInputFill;
 	}
 
