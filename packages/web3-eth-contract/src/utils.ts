@@ -35,18 +35,18 @@ const dataInputEncodeMethodHelper = (
 	txParams: TransactionCall | TransactionForAccessList,
 	abi: AbiFunctionFragment,
 	params: unknown[],
-	dataInputFill?: string,
+	dataInputFill?: 'data' | 'input' | 'both',
 ): {data?: HexString, input?: HexString} => {
-	let tx = txParams;
-	if (!isNullish(tx.data) || dataInputFill === 'data' || dataInputFill === 'both') {
-		tx.data = encodeMethodABI(abi, params, txParams.data as HexString)
+	let tx: {data?: HexString, input?: HexString} = {};
+	if (!isNullish(txParams.data) || dataInputFill === 'both') {
+		tx.data = encodeMethodABI(abi, params, (txParams.data ?? txParams.input) as HexString)
 	}  
-	if (!isNullish(tx.input) || dataInputFill === 'input' || dataInputFill === 'both'){
-		tx.input = encodeMethodABI(abi, params, txParams.input as HexString)
+	if (!isNullish(txParams.input) || dataInputFill === 'both'){
+		tx.input = encodeMethodABI(abi, params, (txParams.input ?? txParams.data) as HexString)
 	}
-	// if input and data is empty, use input as default
+	// if input and data is empty, use web3config default
 	if (isNullish(tx.input) && isNullish(tx.data)) {
-		tx.input = encodeMethodABI(abi, params, txParams.input as HexString)
+		tx[dataInputFill as 'data' | 'input'] = encodeMethodABI(abi, params)
 	}
 
 	return {data: tx.data as HexString, input: tx.input as HexString};
@@ -64,6 +64,7 @@ export const getSendTxParams = ({
 		input?: HexString;
 		data?: HexString;
 		to?: Address;
+		dataInputFill?: 'input' | 'data' | 'both';
 	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
@@ -89,7 +90,7 @@ export const getSendTxParams = ({
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
 	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
 	
 	return txParams;
@@ -103,13 +104,12 @@ export const getEthTxCallParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address, dataInputFill?: string };
+	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address, dataInputFill?: 'input' | 'data' | 'both' };
 	contractOptions: ContractOptions;
 }): TransactionCall => {
 	if (!options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
-	console.log(options)
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -138,7 +138,7 @@ export const getEstimateGasParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: PayableCallOptions | NonPayableCallOptions;
+	options?: (PayableCallOptions | NonPayableCallOptions) & { dataInputFill?: 'input' | 'data' | 'both' };
 	contractOptions: ContractOptions;
 }): Partial<TransactionWithSenderAPI> => {
 	let txParams = mergeDeep(
@@ -153,7 +153,7 @@ export const getEstimateGasParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
 	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
 
 	return txParams as TransactionWithSenderAPI;
@@ -186,7 +186,7 @@ export const getCreateAccessListParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address };
+	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address, dataInputFill?: 'input' | 'data' | 'both' };
 	contractOptions: ContractOptions;
 }): TransactionForAccessList => {
 	if (!options?.to && !contractOptions.address) {
@@ -211,7 +211,7 @@ export const getCreateAccessListParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
 
-	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params);
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
 	txParams = {...txParams, data: dataInput.data, input: dataInput.input}
 
 	return txParams;

@@ -234,7 +234,7 @@ export class Contract<Abi extends ContractAbi>
 	private readonly _overloadedMethodAbis: Map<string, AbiFunctionFragment[]>;
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
-	private _dataInputFill?: 'data' | 'input' | 'both'
+	private readonly _dataInputFill?: 'data' | 'input' | 'both'
 
 	private context?: Web3Context;
 	/**
@@ -362,9 +362,10 @@ export class Contract<Abi extends ContractAbi>
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
 
-		this._dataInputFill = (options as ContractInitOptions)?.dataInputFill ?? 'input';
-		if (contractContext instanceof Web3Context){
-			this._dataInputFill = contractContext.config.contractDataInputFill;
+		if (this.config.contractDataInputFill === 'both') {
+			this._dataInputFill = this.config.contractDataInputFill;
+		} else {
+			this._dataInputFill = (options as ContractInitOptions)?.dataInputFill ?? this.config.contractDataInputFill;
 		}
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
@@ -833,7 +834,7 @@ export class Contract<Abi extends ContractAbi>
 				const contractMethod = this._createContractMethod<
 					typeof abiFragment,
 					AbiErrorFragment
-				>(abiFragment, errorsAbi, this._dataInputFill);
+				>(abiFragment, errorsAbi);
 
 				this._functions[methodName] = {
 					signature: methodSignature,
@@ -891,10 +892,8 @@ export class Contract<Abi extends ContractAbi>
 	private _createContractMethod<T extends AbiFunctionFragment[], E extends AbiErrorFragment>(
 		abiArr: T,
 		errorsAbis: E[],
-		dataInputFill?: string
 	): ContractBoundMethod<T[0]> {
 		const abi = abiArr[abiArr.length - 1];
-		console.log(dataInputFill)
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
 			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
@@ -939,8 +938,7 @@ export class Contract<Abi extends ContractAbi>
 						methodAbi,
 						abiParams,
 						internalErrorsAbis,
-						{...options,
-							dataInputFill},
+						options,
 						block,
 					),
 
@@ -990,14 +988,15 @@ export class Contract<Abi extends ContractAbi>
 		abi: AbiFunctionFragment,
 		params: unknown[],
 		errorsAbi: AbiErrorFragment[],
-		options?: Options & {dataInputFill?: string},
+		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
-		console.log(options?.dataInputFill)
 		const tx = getEthTxCallParams({
 			abi,
 			params,
-			options,
+			options: {
+				...options, dataInputFill: this._dataInputFill
+			},
 			contractOptions: {
 				...this.options,
 				from: this.options.from ?? this.config.defaultAccount,
@@ -1027,8 +1026,8 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getCreateAccessListParams({
 			abi,
 			params,
-			options,
-			contractOptions: {
+			options: {...options, dataInputFill: this.config.contractDataInputFill},
+			contractOptions: {	
 				...this.options,
 				from: this.options.from ?? this.config.defaultAccount,
 			},
@@ -1061,7 +1060,7 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getSendTxParams({
 			abi,
 			params,
-			options,
+			options: {...options, dataInputFill: this.config.contractDataInputFill},
 			contractOptions: modifiedContractOptions,
 		});
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
@@ -1093,7 +1092,7 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getSendTxParams({
 			abi,
 			params,
-			options,
+			options: {...options, dataInputFill: this.config.contractDataInputFill},
 			contractOptions: modifiedContractOptions,
 		});
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
@@ -1132,7 +1131,7 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getEstimateGasParams({
 			abi,
 			params,
-			options,
+			options:{...options, dataInputFill: this.config.contractDataInputFill},
 			contractOptions: contractOptions ?? this.options,
 		});
 		return estimateGas(this, tx, BlockTags.LATEST, returnFormat);
