@@ -133,7 +133,7 @@ export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider
 	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
 }
 
-export type Eip1193FullyCompatible<API extends Web3APISpec = EthExecutionAPI> = Omit<
+export type Eip1193Compatible<API extends Web3APISpec = EthExecutionAPI> = Omit<
 	// eslint-disable-next-line no-use-before-define
 	Omit<Web3BaseProvider, 'request'>,
 	'asEIP1193Provider'
@@ -218,9 +218,9 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	 * console.log(result); // '0x0234c8a3397aab58' or something like that
 	 * ```
 	 */
-	public asEIP1193Provider(): Eip1193FullyCompatible<API> {
+	public asEIP1193Provider(): Eip1193Compatible<API> {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		const newObj = Object.create(this) as Eip1193FullyCompatible<API>;
+		const newObj = Object.create(this) as Eip1193Compatible<API>;
 		// eslint-disable-next-line @typescript-eslint/unbound-method
 		const originalRequest = newObj.request;
 		newObj.request = async function request(

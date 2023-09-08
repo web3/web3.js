@@ -49,8 +49,8 @@ describe('Web3BaseProvider', () => {
 		const returnValue = await childProvider.request({ method: 'eth_getBalance' });
 		expect(returnValue.result).toBe('result');
 
-		const eip1193FullyCompatibleClass = childProvider.asEIP1193Provider();
-		const returnValue2 = await eip1193FullyCompatibleClass.request({
+		const eip1193CompatibleClass = childProvider.asEIP1193Provider();
+		const returnValue2 = await eip1193CompatibleClass.request({
 			method: 'eth_getBalance',
 		});
 		expect(returnValue2).toBe('result');
@@ -59,7 +59,7 @@ describe('Web3BaseProvider', () => {
 	it('asEIP1193Provider would not be available inside the newly generated class', () => {
 		const childProvider = new Web3ChildProvider();
 
-		const eip1193FullyCompatibleClass = childProvider.asEIP1193Provider();
-		expect((eip1193FullyCompatibleClass as any).asEIP1193Provider).toBeUndefined();
+		const eip1193CompatibleClass = childProvider.asEIP1193Provider();
+		expect((eip1193CompatibleClass as any).asEIP1193Provider).toBeUndefined();
 	});
 });
