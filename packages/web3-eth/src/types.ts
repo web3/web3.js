@@ -36,9 +36,9 @@ import {
 
 export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
 
-export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
-	sending: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
-	sent: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
+export type SendTransactionEventsBase<ReturnFormat extends DataFormat, TxType> = {
+	sending: FormatType<TxType, typeof ETH_DATA_FORMAT>;
+	sent: FormatType<TxType, typeof ETH_DATA_FORMAT>;
 	transactionHash: FormatType<Bytes, ReturnFormat>;
 	receipt: FormatType<TransactionReceipt, ReturnFormat>;
 	confirmation: {
@@ -54,23 +54,12 @@ export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
 		| ContractExecutionError;
 };
 
-export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
-	sending: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
-	sent: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
-	transactionHash: FormatType<Bytes, ReturnFormat>;
-	receipt: FormatType<TransactionReceipt, ReturnFormat>;
-	confirmation: {
-		confirmations: FormatType<Numbers, ReturnFormat>;
-		receipt: FormatType<TransactionReceipt, ReturnFormat>;
-		latestBlockHash: FormatType<Bytes, ReturnFormat>;
-	};
-	error:
-		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
-		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
-		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
-		| InvalidResponseError
-		| ContractExecutionError;
-};
+export type SendTransactionEvents<ReturnFormat extends DataFormat> = SendTransactionEventsBase<
+	ReturnFormat,
+	Transaction
+>;
+export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> =
+	SendTransactionEventsBase<ReturnFormat, Bytes>;
 
 export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 	ignoreGasPricing?: boolean;
