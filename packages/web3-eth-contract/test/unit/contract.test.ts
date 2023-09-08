@@ -570,6 +570,7 @@ describe('Contract', () => {
 				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
 			);
 
+			// @ts-expect-error fix-types
 			const spyEthCall = jest.spyOn(eth, 'call').mockImplementation((_objInstance, _tx) => {
 				expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
 				expect(_tx.input).toBe(
