@@ -336,7 +336,7 @@ describe('Contract', () => {
 			sendOptions = {
 				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
 				gas: '1000000',
-				data: '0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
+				data: '0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
 			};
 			const spyTx = jest
 				.spyOn(eth, 'sendTransaction')
@@ -374,7 +374,10 @@ describe('Contract', () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
-				config: { contractDataInputFill: 'data', defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' },
+				config: {
+					contractDataInputFill: 'data',
+					defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa',
+				},
 			});
 			const arg = 'Hello';
 			const contract = new Contract(GreeterAbi, web3Context);
@@ -417,7 +420,10 @@ describe('Contract', () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
-				config: { contractDataInputFill: 'both', defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' },
+				config: {
+					contractDataInputFill: 'both',
+					defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa',
+				},
 			});
 			const arg = 'Hello';
 			const contract = new Contract(GreeterAbi, web3Context);
@@ -434,7 +440,10 @@ describe('Contract', () => {
 						_tx.data ===
 						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
 					) {
-						expect(_tx.input).toStrictEqual("0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000")
+						// eslint-disable-next-line
+						expect(_tx.input).toStrictEqual(
+							'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
+						);
 						// eslint-disable-next-line
 						expect(_tx.to).toStrictEqual(deployedAddr);
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
@@ -461,7 +470,10 @@ describe('Contract', () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
-				config: { contractDataInputFill: 'input', defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' },
+				config: {
+					contractDataInputFill: 'input',
+					defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa',
+				},
 			});
 			const arg = 'Hello';
 			const contract = new Contract(GreeterAbi, web3Context);
@@ -501,7 +513,6 @@ describe('Contract', () => {
 		});
 
 		it('call on deployed contract should decode result', async () => {
-			
 			const arg = 'Hello';
 			const encodedArg =
 				'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
@@ -756,8 +767,8 @@ describe('Contract', () => {
 			const contract = new Contract(
 				erc721Abi,
 				'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
-				{ gas: '123', dataInputFill: "data" },
-				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa'} },
+				{ gas: '123', dataInputFill: 'data' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
 			);
 
 			const spyEthCall = jest
@@ -781,8 +792,8 @@ describe('Contract', () => {
 			const contract = new Contract(
 				erc721Abi,
 				'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
-				{ gas: '123', dataInputFill: "input" },
-				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa'} },
+				{ gas: '123', dataInputFill: 'input' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
 			);
 
 			const spyEthCall = jest
@@ -806,7 +817,10 @@ describe('Contract', () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
-				config: { contractDataInputFill: 'data', defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' },
+				config: {
+					contractDataInputFill: 'data',
+					defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa',
+				},
 			});
 			const contract = new Contract(
 				erc721Abi,
@@ -836,7 +850,10 @@ describe('Contract', () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
-				config: { contractDataInputFill: 'both', defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' },
+				config: {
+					contractDataInputFill: 'both',
+					defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa',
+				},
 			});
 			const contract = new Contract(
 				erc721Abi,
@@ -1229,7 +1246,7 @@ describe('Contract', () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
-				config: {contractDataInputFill: 'both'}
+				config: { contractDataInputFill: 'both' },
 			});
 
 			const contract = new Contract(GreeterAbi, web3Context);
@@ -1274,7 +1291,7 @@ describe('Contract', () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
-				config: {contractDataInputFill: 'data'}
+				config: { contractDataInputFill: 'data' },
 			});
 
 			const contract = new Contract(GreeterAbi, web3Context);
@@ -1471,7 +1488,7 @@ describe('Contract', () => {
 
 			spyEthCall.mockClear();
 		});
-		it('contract method createAccessList should work using data with web3config', async () => {
+		it('contract method createAccessList should work using data with web3config with both input and data', async () => {
 			const expectedProvider = 'http://127.0.0.1:8545';
 			const web3Context = new Web3Context({
 				provider: expectedProvider,
