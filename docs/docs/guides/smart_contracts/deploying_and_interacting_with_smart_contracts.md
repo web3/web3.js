@@ -357,7 +357,7 @@ my number updated value: 2
 
 If you are running into errors when executing contract methods such as `myContract.methods.call` or `myContract.deploy.estimateGas()` you might be see a contract execution revert error such as: `value transfer did not complete from a contract execution reverted`.
 
-This could be due to the node you are connected to and is expecting the `data` property to be populated in your contract instead of `input`. Web3 version >4.03 will always populate `input` when sending transactions.
+This could be due to the node you are connected to and is expecting the `data` property to be populated in your contract instead of `input`, for example this issue will happen with an Anvil node from Foundry. Web3 version >4.0.3 will always populate `input` when sending transactions.
 To fix this, configure the `contractDataInputFill` in `Web3Config` or when initializing your contract to specify `data` in `dataInputFill` to be filled.
 Another way to fix this is to provide `data` when using the send or call method.
 If you want both `data` and `input` filled, set the property to `both`.
