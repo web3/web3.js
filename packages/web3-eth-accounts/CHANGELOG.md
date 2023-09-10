@@ -131,3 +131,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed "The `r` and `s` returned by `sign` to does not always consist of 64 characters" (#6411)

@@ -99,6 +99,8 @@ export const signatureRecoverData: [string, any][] = [
 	[
 		'Some long text with integers 1233 and special characters and unicode \u1234 as well.',
 		{
+			r: '0x2ac888726c80494b80b63996455d109aef5db27e673dd92f277ac6e48dc300db',
+			s: '0x3dfc7549744c2a33a03a2eaa0f2837f54c5951b80d5e05257d605bc695c2ae7f',
 			address: '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
 			privateKey: '0xcb89ec4b01771c6c8272f4c0aafba2f8ee0b101afb22273b786939a8af7c1912',
 			data: 'Some long text with integers 1233 and special characters and unicode \u1234 as well.',
@@ -110,6 +112,8 @@ export const signatureRecoverData: [string, any][] = [
 	[
 		'Some data',
 		{
+			r: '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f9',
+			s: '0x53e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb150',
 			address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
 			data: 'Some data',
@@ -121,6 +125,8 @@ export const signatureRecoverData: [string, any][] = [
 	[
 		'Some data!%$$%&@*',
 		{
+			r: '0x05252412b097c5d080c994d1ea12abcee6f1cae23feb225517a0b691a66e1286',
+			s: '0x6b3f54292f9cfef98f390670b4d010fc4af7fcd46e41d72870602c117b14921c',
 			address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
 			data: 'Some data!%$$%&@*',
@@ -130,11 +136,25 @@ export const signatureRecoverData: [string, any][] = [
 		},
 	],
 	[
+		'102',
+		{
+			r: '0x0442af06beec07a50981386c8ffb38eed2b51decd90980d8c30eda18f112339c',
+			s: '0x080f6f5fb41313d623971020faa2354dd6b62518b758823c03e8b87d5ea4a649',
+			address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
+			data: '102',
+			// signature done with personal_sign
+			signatureOrV:
+				'0x0442af06beec07a50981386c8ffb38eed2b51decd90980d8c30eda18f112339c080f6f5fb41313d623971020faa2354dd6b62518b758823c03e8b87d5ea4a6491b',
+		},
+	],
+	[
 		// testcase for recover(data, V, R, S)
 		'some data',
 		{
 			signatureOrV: '0x1c',
 			prefixedOrR: '0xb9be9700e1c7fd9c3e5e1b511de5c6f62680480a7f8c68962a74375cabe51c18',
+			r: '0xb9be9700e1c7fd9c3e5e1b511de5c6f62680480a7f8c68962a74375cabe51c18',
 			s: '0x6fcbbcf5b1bc357d3e56bef2ef8a1b3ad7e48564dd886d7636eb1c18e1e41f1b',
 			address: '0x54BF9ed7F22b64a5D69Beea57cFCd378763bcdc5',
 			privateKey: '0x03a0021a87dc354855f900fd15c063bcc9c155c33b8f2321ec294e0933ef29d2',
