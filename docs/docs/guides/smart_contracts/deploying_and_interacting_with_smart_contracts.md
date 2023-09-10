@@ -367,6 +367,8 @@ Here are examples:
 ```typescript
 
 // Configuring Web3Context with `contractDataInputFill`
+import { Web3Context } from 'web3-core';
+
 const expectedProvider = 'http://127.0.0.1:8545';
 const web3Context = new Web3Context({
 	provider: expectedProvider,
