@@ -527,7 +527,6 @@ export function sendTransaction<
 							)),
 						};
 					}
-
 					try {
 						if (options.checkRevertBeforeSending !== false) {
 							const reason = await getRevertReason(
@@ -970,7 +969,6 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT);
-
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ format: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);

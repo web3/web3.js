@@ -186,3 +186,7 @@ Documentation:
 -   Added return type for `formatSubscriptionResult` in class `NewHeadsSubscription` (#6368)
 
 ## [Unreleased]
+
+### Added
+
+-   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377) (#6400)

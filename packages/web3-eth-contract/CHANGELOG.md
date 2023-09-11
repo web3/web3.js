@@ -301,3 +301,10 @@ Documentation:
 -   In case of error events there will be inner error also available for details
 
 ## [Unreleased]
+
+### Fixed
+
+### Added
+
+-   Added `dataInputFill` as a ContractInitOption, allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider. (#6355)
+-   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377)
