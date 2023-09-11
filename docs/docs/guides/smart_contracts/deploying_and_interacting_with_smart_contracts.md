@@ -205,7 +205,7 @@ node index.js
 
 If everything is working correctly, you should see the current block number logged to the console. However, if you got an error with the reason `connect ECONNREFUSED 127.0.0.1:7545` then double check that you are running Ganache locally on port `7545`.
 
-## Step 5: Deploy the smart contract to the Ganache network using web3.js
+## Step 6: Deploy the smart contract to the Ganache network using web3.js
 
 In this step, we will use web3.js to deploy the smart contract to the Ganache network.
 
@@ -282,7 +282,7 @@ Estimated gas: 142748n
 Contract deployed at address: 0x16447837D4A572d0a8b419201bdcD91E6e428Df1
 ```
 
-## Step 6: Interact with the smart contract using web3.js
+## Step 7: Interact with the smart contract using web3.js
 
 In this step, we will use web3.js to interact with the smart contract on the Ganache network.
 
@@ -355,7 +355,9 @@ my number updated value: 2
 
 ## Troubleshooting and errors
 
-If you are running into errors when executing contract methods such as `myContract.methods.call` or `myContract.deploy.estimateGas()` you might be see a contract execution revert error such as: `value transfer did not complete from a contract execution reverted`.
+If you are running into errors when executing contract methods such as `myContract.methods.call` or `myContract.deploy.estimateGas()` you might be seeing a contract execution revert error such as: `value transfer did not complete from a contract execution reverted`
+
+or response error: ResponseError: Returned error: unknown field `input`, expected one of `from`, `to`, `gasPrice`, `maxFeePerGas`, `maxPriorityFeePerGas`, `gas`, `value`, `data`, `nonce`, `chainId`, `accessList`, `type`.
 
 This could be due to the node you are connected to and is expecting the `data` property to be populated in your contract instead of `input`, for example this issue will happen with an Anvil node from Foundry. Web3 version >4.0.3 will always populate `input` when sending transactions.
 To fix this, configure the `contractDataInputFill` in `Web3Config` or when initializing your contract to specify `data` in `dataInputFill` to be filled.
