@@ -158,3 +158,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Added
+
+-   add `asEIP1193Provider` to `Web3BaseProvider` so every inherited class can have the returned value of `request` method, fully compatible with EIP-1193. (#6407)
