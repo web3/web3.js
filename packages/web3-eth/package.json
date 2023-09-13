@@ -59,7 +59,6 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-eth-abi": "^4.1.1",
 		"web3-providers-http": "^4.0.5"
 	},
 	"dependencies": {

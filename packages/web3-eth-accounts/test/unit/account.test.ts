@@ -136,6 +136,8 @@ describe('accounts', () => {
 			it.each(signatureRecoverData)('%s', (data, testObj) => {
 				const result = sign(data, testObj.privateKey);
 				expect(result.signature).toEqual(testObj.signature || testObj.signatureOrV); // makes sure we get signature and not V value
+				expect(result.r).toEqual(testObj.r);
+				expect(result.s).toEqual(testObj.s);
 			});
 		});
 

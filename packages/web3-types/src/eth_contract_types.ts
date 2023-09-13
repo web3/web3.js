@@ -46,6 +46,11 @@ export interface ContractInitOptions {
 	 * If `true`, the defaults of the contract instance will be updated automatically based on the changes of the context used to instantiate the contract.
 	 */
 	readonly syncWithContext?: boolean;
+
+	readonly dataInputFill?: 'data' | 'input' | 'both';
+	/**
+	 * this will make calls default to `data`, `input` or `both`
+	 */
 }
 
 export interface NonPayableCallOptions {
@@ -66,6 +71,8 @@ export interface NonPayableCallOptions {
 	 */
 	gasPrice?: string;
 	type?: string | number;
+	data?: HexString;
+	input?: HexString;
 }
 
 export interface PayableCallOptions extends NonPayableCallOptions {

@@ -587,22 +587,23 @@ class SendTxHelper<
 		transaction: TxType;
 	}): Promise<TxType> {
 		if (
-			!this.options?.ignoreGasPricing &&
-			isNullish((transactionFormatted as Transaction).gasPrice) &&
-			(isNullish((transaction as Transaction).maxPriorityFeePerGas) ||
-				isNullish((transaction as Transaction).maxFeePerGas))
+			!thisюoptions?.ignoreGasPricing &&
+			isNullish(transactionFormatted.gasPrice) &&
+			(isNullish(transaction.maxPriorityFeePerGas) ||
+				isNullish(transaction.maxFeePerGas))
 		) {
-			return {
+			transactionFormatted = {
 				...transactionFormatted,
 				// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
 				// should not be included if undefined, but currently are
 				...(await getTransactionGasPricing(
 					transactionFormatted,
-					this.web3Context,
+					web3Context,
 					ETH_DATA_FORMAT,
 				)),
 			};
 		}
+
 		return transactionFormatted;
 	}
 
@@ -778,6 +779,7 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 					);
+
 
 					transactionFormatted = await sendTxHelper.populateGasPrice({
 						transaction,
@@ -1059,7 +1061,6 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT);
-
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ format: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);

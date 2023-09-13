@@ -5,6 +5,7 @@ Object {
   "accountProvider": undefined,
   "config": Object {
     "blockHeaderTimeout": 10,
+    "contractDataInputFill": "input",
     "defaultAccount": undefined,
     "defaultBlock": "latest",
     "defaultChain": "mainnet",
