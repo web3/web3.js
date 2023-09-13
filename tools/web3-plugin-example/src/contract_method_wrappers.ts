@@ -67,7 +67,7 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 	) {
 		await this._contract.methods
 			.transfer(recipient, numberToHex(amount))
-			.send({ from: sender });
+			.send({ from: sender, type: 0 });
 		return {
 			sender: {
 				address: sender,

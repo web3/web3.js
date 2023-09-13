@@ -112,8 +112,12 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 
 	// check if eip 2718 is supported
 	if (!isNullish(tx.gasPrice)) {
+		// const block = await getBlock(web3Context, web3Context.defaultBlock, false, returnFormat);
+
+		// if (isNullish(block.baseFeePerGas)) {
 		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
 		return '0x0';
+		// }
 	}
 
 	const givenHardfork = tx.hardfork ?? tx.common?.hardfork;
