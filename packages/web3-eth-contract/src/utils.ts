@@ -32,6 +32,7 @@ import { isNullish, mergeDeep } from 'web3-utils';
 import { encodeMethodABI } from './encoding.js';
 import { Web3ContractContext } from './types.js';
 
+export { ContractOptions } from 'web3-types';
 const dataInputEncodeMethodHelper = (
 	txParams: TransactionCall | TransactionForAccessList,
 	abi: AbiFunctionFragment,

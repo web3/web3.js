@@ -29,8 +29,8 @@ import {
 	TransactionWithToLocalWalletIndex,
 	TransactionWithFromAndToLocalWalletIndex,
 	LogsInput,
-	AbiFragment,
 	TransactionHash,
+	ContractAbiWithSignature,
 } from 'web3-types';
 import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
 import { isNullish } from 'web3-validator';
@@ -61,7 +61,6 @@ import { getTransactionError } from './get_transaction_error.js';
 import { getRevertReason } from './get_revert_reason.js';
 import { decodeEventABI } from './decoding.js';
 
-type ContractAbiWithSignature = ReadonlyArray<AbiFragment & { signature: HexString }>;
 export class SendTxHelper<
 	ReturnFormat extends DataFormat,
 	ResolveType = FormatType<TransactionReceipt, ReturnFormat>,
