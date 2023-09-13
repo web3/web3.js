@@ -29,12 +29,12 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	FormatType,
 } from 'web3-types';
-// eslint-disable-next-line import/no-cycle
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
 import { LogsSubscription } from './log_subscription.js';
 
 export type NonPayableTxOptions = NonPayableCallOptions;
 export type PayableTxOptions = PayableCallOptions;
+export { ContractAbiWithSignature, EventLog, ContractOptions } from 'web3-types';
 
 export interface ContractEventOptions {
 	/**

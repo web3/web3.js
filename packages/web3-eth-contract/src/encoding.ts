@@ -39,9 +39,10 @@ import {
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
 
-import { blockSchema, decodeEventABI as _decodeEventABI, ALL_EVENTS } from 'web3-eth';
-
+import { blockSchema, ALL_EVENTS } from 'web3-eth';
 import { Web3ContractError } from 'web3-errors';
+
+export { decodeEventABI } from 'web3-eth';
 
 type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 export const encodeEventABI = (
@@ -112,8 +113,6 @@ export const encodeEventABI = (
 
 	return opts;
 };
-
-export const decodeEventABI = _decodeEventABI;
 
 export const encodeMethodABI = (
 	abi: AbiFunctionFragment | AbiConstructorFragment,
