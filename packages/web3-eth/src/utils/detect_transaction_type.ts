@@ -110,13 +110,10 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 		return '0x1';
 	}
 
-	// We don't return 0x0 here, because if gasPrice is not
-	// undefined, we still don't know if the network
-	// supports EIP-2718 (https://eips.ethereum.org/EIPS/eip-2718)
-	// and whether we should return undefined for legacy txs,
-	// or type 0x0 for legacy txs post EIP-2718
+	// check if eip 2718 is supported
 	if (!isNullish(tx.gasPrice)) {
 		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
+		return '0x0';
 	}
 
 	const givenHardfork = tx.hardfork ?? tx.common?.hardfork;

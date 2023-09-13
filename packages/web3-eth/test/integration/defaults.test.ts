@@ -711,9 +711,11 @@ describe('defaults', () => {
 				provider: web3Eth.provider,
 				config: {
 					defaultHardfork: 'istanbul',
+					defaultTransactionType: '0x0',
 				},
 			});
 			expect(eth2.defaultHardfork).toBe('istanbul');
+			expect(eth2.defaultTransactionType).toBe('0x0');
 
 			const res = await prepareTransactionForSigning(
 				{
@@ -761,7 +763,7 @@ describe('defaults', () => {
 		});
 		it('defaultTransactionType', () => {
 			// default
-			expect(web3Eth.defaultTransactionType).toBe('0x0');
+			expect(web3Eth.defaultTransactionType).toBe('0x2');
 			// after set
 			web3Eth.setConfig({
 				defaultTransactionType: '0x3',

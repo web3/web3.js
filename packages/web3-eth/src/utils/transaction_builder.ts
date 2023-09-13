@@ -114,7 +114,6 @@ export const getTransactionType = (
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
 	const inferredType = detectTransactionType(transaction, web3Context);
-
 	if (!isNullish(inferredType)) return inferredType;
 	if (!isNullish(web3Context.defaultTransactionType))
 		return format({ format: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
