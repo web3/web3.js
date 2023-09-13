@@ -28,8 +28,8 @@ import {
 
 import { decodeLog } from 'web3-eth-abi';
 
-import { logSchema } from './schemas.js';
-import { ALL_EVENTS } from './constants.js';
+import { logSchema } from '../schemas.js';
+import { ALL_EVENTS } from '../constants.js';
 
 export const decodeEventABI = (
 	event: AbiEventFragment & { signature: string },

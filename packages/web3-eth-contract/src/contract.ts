@@ -33,12 +33,12 @@ import {
 	call,
 	estimateGas,
 	getLogs,
-	NewHeadsSubscription,
 	sendTransaction,
-	SendTransactionEvents,
+	decodeEventABI,
+	NewHeadsSubscription,
 	ALL_EVENTS,
 	ALL_EVENTS_ABI,
-	decodeEventABI,
+	SendTransactionEvents,
 } from 'web3-eth';
 import {
 	encodeEventSignature,
