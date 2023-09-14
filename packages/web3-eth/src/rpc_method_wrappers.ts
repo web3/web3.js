@@ -492,8 +492,6 @@ export function sendTransaction<
 						web3Context,
 						promiEvent,
 						options,
-						reject,
-						resolve,
 						returnFormat,
 					});
 
@@ -510,12 +508,12 @@ export function sendTransaction<
 						ETH_DATA_FORMAT,
 					);
 
-					transactionFormatted = await sendTxHelper.populateGasPrice({
-						transaction,
-						transactionFormatted,
-					});
-
 					try {
+						transactionFormatted = await sendTxHelper.populateGasPrice({
+							transaction,
+							transactionFormatted,
+						});
+
 						await sendTxHelper.checkRevertBeforeSending(
 							transactionFormatted as TransactionCall,
 						);
@@ -557,20 +555,24 @@ export function sendTransaction<
 
 						sendTxHelper.emitReceipt(transactionReceiptFormatted);
 
-						await sendTxHelper.handleResolve({
-							receipt: transactionReceiptFormatted,
-							tx: transactionFormatted as TransactionCall,
-						});
+						resolve(
+							await sendTxHelper.handleResolve({
+								receipt: transactionReceiptFormatted,
+								tx: transactionFormatted as TransactionCall,
+							}),
+						);
 
 						sendTxHelper.emitConfirmation({
 							receipt: transactionReceiptFormatted,
 							transactionHash,
 						});
 					} catch (error) {
-						await sendTxHelper.handleError({
-							error,
-							tx: transactionFormatted as TransactionCall,
-						});
+						reject(
+							await sendTxHelper.handleError({
+								error,
+								tx: transactionFormatted as TransactionCall,
+							}),
+						);
 					}
 				})() as unknown;
 			});
@@ -603,8 +605,6 @@ export function sendSignedTransaction<
 						web3Context,
 						promiEvent,
 						options,
-						reject,
-						resolve,
 						returnFormat,
 					});
 					// Formatting signedTransaction to be send to RPC endpoint
@@ -666,20 +666,24 @@ export function sendSignedTransaction<
 
 						sendTxHelper.emitReceipt(transactionReceiptFormatted);
 
-						await sendTxHelper.handleResolve({
-							receipt: transactionReceiptFormatted,
-							tx: unSerializedTransactionWithFrom as TransactionCall,
-						});
+						resolve(
+							await sendTxHelper.handleResolve({
+								receipt: transactionReceiptFormatted,
+								tx: unSerializedTransactionWithFrom as TransactionCall,
+							}),
+						);
 
 						sendTxHelper.emitConfirmation({
 							receipt: transactionReceiptFormatted,
 							transactionHash,
 						});
 					} catch (error) {
-						await sendTxHelper.handleError({
-							error,
-							tx: unSerializedTransactionWithFrom as TransactionCall,
-						});
+						reject(
+							await sendTxHelper.handleError({
+								error,
+								tx: unSerializedTransactionWithFrom as TransactionCall,
+							}),
+						);
 					}
 				})() as unknown;
 			});

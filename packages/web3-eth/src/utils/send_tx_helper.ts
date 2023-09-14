@@ -79,14 +79,10 @@ export class SendTxHelper<
 		checkRevertBeforeSending: true,
 	};
 	private readonly returnFormat: ReturnFormat;
-	private readonly resolve: (data: ResolveType) => void;
-	private readonly reject: (reason: unknown) => void;
 	public constructor({
 		options,
 		web3Context,
 		promiEvent,
-		reject,
-		resolve,
 		returnFormat,
 	}: {
 		web3Context: Web3Context<EthExecutionAPI>;
@@ -96,14 +92,10 @@ export class SendTxHelper<
 			SendSignedTransactionEvents<ReturnFormat> | SendTransactionEvents<ReturnFormat>
 		>;
 		returnFormat: ReturnFormat;
-		resolve: (data: ResolveType) => void;
-		reject: (reason: unknown) => void;
 	}) {
 		this.options = options;
 		this.web3Context = web3Context;
 		this.promiEvent = promiEvent;
-		this.reject = reject;
-		this.resolve = resolve;
 		this.returnFormat = returnFormat;
 	}
 
@@ -131,7 +123,7 @@ export class SendTxHelper<
 		if (this.options.checkRevertBeforeSending !== false) {
 			const reason = await getRevertReason(this.web3Context, tx, this.options.contractAbi);
 			if (reason !== undefined) {
-				const error = await getTransactionError<ReturnFormat>(
+				throw await getTransactionError<ReturnFormat>(
 					this.web3Context,
 					tx,
 					undefined,
@@ -139,12 +131,6 @@ export class SendTxHelper<
 					this.options.contractAbi,
 					reason,
 				);
-
-				if (this.promiEvent.listenerCount('error') > 0) {
-					this.promiEvent.emit('error', error);
-				}
-
-				this.reject(error);
 			}
 		}
 	}
@@ -263,7 +249,7 @@ export class SendTxHelper<
 			this.promiEvent.emit('error', _error);
 		}
 
-		this.reject(_error);
+		return _error;
 	}
 
 	public emitConfirmation({
@@ -290,10 +276,9 @@ export class SendTxHelper<
 
 	public async handleResolve({ receipt, tx }: { receipt: ResolveType; tx: TransactionCall }) {
 		if (this.options?.transactionResolver) {
-			this.resolve(
-				this.options?.transactionResolver(receipt as unknown as TransactionReceipt),
-			);
-		} else if ((receipt as unknown as TransactionReceipt).status === BigInt(0)) {
+			return this.options?.transactionResolver(receipt as unknown as TransactionReceipt);
+		}
+		if ((receipt as unknown as TransactionReceipt).status === BigInt(0)) {
 			const error = await getTransactionError<ReturnFormat>(
 				this.web3Context,
 				tx,
@@ -302,14 +287,13 @@ export class SendTxHelper<
 				undefined,
 				this.options?.contractAbi,
 			);
-
 			if (this.promiEvent.listenerCount('error') > 0) {
 				this.promiEvent.emit('error', error);
 			}
 
-			this.reject(error);
+			throw error;
 		} else {
-			this.resolve(receipt);
+			return receipt;
 		}
 	}
 }
