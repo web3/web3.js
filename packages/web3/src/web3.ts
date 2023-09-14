@@ -71,7 +71,8 @@ export class Web3<
 		if (
 			isNullish(providerOrContext) ||
 			(typeof providerOrContext === 'string' && providerOrContext.trim() === '') ||
-			(!isSupportedProvider(providerOrContext as SupportedProviders<EthExecutionAPI>) &&
+			(typeof providerOrContext !== 'string' &&
+				!isSupportedProvider(providerOrContext as SupportedProviders<EthExecutionAPI>) &&
 				!(providerOrContext as Web3ContextInitOptions).provider)
 		) {
 			console.warn(
