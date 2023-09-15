@@ -153,3 +153,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   `soliditySha3()` with BigInt support
