@@ -104,7 +104,7 @@ describe('web3-validator', () => {
 		});
 		describe('validateJsonSchema', () => {
 			// only single param test cases
-			it.each(abiToJsonSchemaCases.slice(0, 37))(
+			it.each(abiToJsonSchemaCases.slice(0, 69))(
 				`$title - should pass for valid data`,
 				abi => {
 					const jsonSchema = abi.json;
