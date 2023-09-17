@@ -36,6 +36,7 @@ import { Web3RequestManager } from './web3_request_manager.js';
 import { Web3SubscriptionConstructor } from './web3_subscriptions.js';
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
 import { Web3BatchRequest } from './web3_batch_request.js';
+// eslint-disable-next-line import/no-cycle
 import { ExtensionObject } from './types.js';
 
 // To avoid circular dependencies, we need to export type from here.
