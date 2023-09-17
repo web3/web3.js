@@ -142,3 +142,7 @@ Documentation:
 -   ESM import bug (#6359)
 
 ## [Unreleased]
+
+## Fixed
+
+-   Multi-dimensional arrays are now handled properly when parsing ABIs
