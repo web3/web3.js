@@ -31,8 +31,10 @@ import { getBlock } from '../../src/rpc_method_wrappers';
 
 describe('detectTransactionType', () => {
 	beforeAll(() => {
+		
 		jest.mock('../../src/rpc_method_wrappers');
-		(getBlock as jest.Mock).mockReturnValue({ baseFeePerGas: 1 });
+		// eslint-disable-next-line
+		(getBlock as jest.Mock).mockReturnValue(() => {baseFeePerGas: 1});
 	});
 	afterAll(() => {
 		jest.resetAllMocks();

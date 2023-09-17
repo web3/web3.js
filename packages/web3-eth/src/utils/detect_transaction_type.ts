@@ -133,7 +133,7 @@ export const defaultTransactionTypeParser: TransactionTypeParser = async (
 
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, ETH_DATA_FORMAT);
 
-	// if gasprice is defined or eip 2719 isn't supported use type 0
+	// if gasprice is defined or eip 2718 isn't supported use type 0
 	if (!isNullish(tx.gasPrice) || isNullish(block.baseFeePerGas)) {
 		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
 		return '0x0';
