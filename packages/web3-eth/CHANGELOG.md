@@ -190,3 +190,7 @@ Documentation:
 ### Added
 
 -   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377) (#6400)
+
+### Changed
+
+-   Transactions will now default to type 2 transactions instead of type 0, similar to 1.x version. (#6282)

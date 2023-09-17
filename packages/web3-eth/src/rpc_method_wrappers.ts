@@ -63,6 +63,7 @@ import {
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+// eslint-disable-next-line import/no-cycle
 import { decodeSignedTransaction } from './utils/decode_signed_transaction.js';
 import {
 	accountSchema,

@@ -174,3 +174,7 @@ Documentation:
 -   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
 
 ## [Unreleased]
+
+### Changed
+
+-   type `TransactionTypeParser` now accepts `web3Context` and returns a `Promise` (#6282)

@@ -16,8 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { HexString, Transaction } from 'web3-types';
+// eslint-disable-next-line import/no-cycle
+import { Web3Context } from './web3_context.js';
 
-export type TransactionTypeParser = (transaction: Transaction) => HexString | undefined;
+export type TransactionTypeParser = (
+	transaction: Transaction,
+	web3Context: Web3Context,
+) => Promise<HexString | undefined>;
 
 export interface Method {
 	name: string;

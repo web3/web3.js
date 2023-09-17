@@ -26,7 +26,6 @@ import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
 import { isNullish } from 'web3-validator';
 import { ethRpcMethods } from 'web3-rpc-methods';
-
 import {
 	Eip1559NotSupportedError,
 	TransactionDataAndInputError,
@@ -36,7 +35,6 @@ import {
 import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
 
 jest.mock('web3-rpc-methods');
-
 const expectedNetworkId = '0x4';
 jest.mock('web3-net', () => ({
 	getId: jest.fn().mockImplementation(() => expectedNetworkId),
