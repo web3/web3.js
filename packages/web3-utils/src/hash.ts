@@ -159,8 +159,12 @@ const getType = (arg: Sha3Input): [string, EncodingTypes] => {
 		type = 't' in arg ? arg.t : arg.type;
 		value = 'v' in arg ? arg.v : arg.value;
 
-		// otherwise try to guess the type
-	} else {
+		type = type.toLowerCase() === 'bigint' ? 'int' : type;
+	} else if (typeof arg === 'bigint') {
+		return ['int', arg];
+	}
+	// otherwise try to guess the type
+	else {
 		type = toHex(arg, true);
 		value = toHex(arg);
 
