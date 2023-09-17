@@ -67,9 +67,9 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 	}
 
 	if (schema?.format) {
-        if (!formats[schema.format]) {
-            throw new Error(`format ${schema.format} is unsupported`);
-        }
+		if (!formats[schema.format]) {
+			throw new Error(`format ${schema.format} is unsupported`);
+		}
 
 		return z.any().refine(formats[schema.format], (value: unknown) => ({
 			params: { value, format: schema.format },

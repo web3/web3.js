@@ -103,13 +103,16 @@ describe('web3-validator', () => {
 			});
 		});
 		describe('validateJsonSchema', () => {
-            // only single param test cases
-			it.each(abiToJsonSchemaCases.slice(0, 37))(`$title - should pass for valid data`, abi => {
-				const jsonSchema = abi.json;
-				expect(
-					validator.validateJSONSchema(jsonSchema.fullSchema, jsonSchema.data),
-				).toBeUndefined();
-			});
+			// only single param test cases
+			it.each(abiToJsonSchemaCases.slice(0, 37))(
+				`$title - should pass for valid data`,
+				abi => {
+					const jsonSchema = abi.json;
+					expect(
+						validator.validateJSONSchema(jsonSchema.fullSchema, jsonSchema.data),
+					).toBeUndefined();
+				},
+			);
 
 			it('should throw', () => {
 				expect(() => {
