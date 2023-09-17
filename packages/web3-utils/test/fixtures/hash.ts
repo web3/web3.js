@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TypedObject, TypedObjectAbbreviated, Bytes } from 'web3-types';
+import { TypedObject, TypedObjectAbbreviated, Bytes, Sha3Input } from 'web3-types';
 import { hexToBytes } from '../../src/converters';
 
 export const sha3Data: [Bytes, string | undefined][] = [
@@ -303,4 +303,49 @@ export const keccak256ValidData: [string | Uint8Array | bigint, string][] = [
 export const elementaryNameValidData: [any, string][] = [
 	['uint128', '128'],
 	['int256', '256'],
+];
+
+export const soliditySha3BigIntValidData: [Sha3Input[], string][] = [
+	[[3434], '0xf219fa5590f999dc677e94dd9cf99cf14103d2f4323898edb31db982d5909687'],
+	[[BigInt(3434)], '0xf219fa5590f999dc677e94dd9cf99cf14103d2f4323898edb31db982d5909687'],
+	[
+		[{ t: 'bigint', v: BigInt(3434) }],
+		'0xf219fa5590f999dc677e94dd9cf99cf14103d2f4323898edb31db982d5909687',
+	],
+
+	[[0], '0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563'],
+	[[BigInt(0)], '0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563'],
+	[
+		[{ t: 'bigint', v: BigInt(0) }],
+		'0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563',
+	],
+
+	[[90071992547409], '0x290998ceba657b344f8ee112246f32b20ecaad06d8d9ad09748de1821b9ef73e'],
+	[
+		[BigInt(90071992547409)],
+		'0x290998ceba657b344f8ee112246f32b20ecaad06d8d9ad09748de1821b9ef73e',
+	],
+	[
+		[{ t: 'bigint', v: BigInt(90071992547409) }],
+		'0x290998ceba657b344f8ee112246f32b20ecaad06d8d9ad09748de1821b9ef73e',
+	],
+
+	[['0x70696e67', 0], '0xe54a278c69f07b6b4f0736dc55c389cd2d3f31365b090c9f76a414fb51552c53'],
+	[
+		['0x70696e67', BigInt(0)],
+		'0xe54a278c69f07b6b4f0736dc55c389cd2d3f31365b090c9f76a414fb51552c53',
+	],
+
+	[['0x70696e67', 10], '0x418e921c5c859d5f560b89ad03a6672907d66de336392a5178ea69281feff40a'],
+	[
+		['0x70696e67', BigInt(10)],
+		'0x418e921c5c859d5f560b89ad03a6672907d66de336392a5178ea69281feff40a',
+	],
+
+	/*
+	  //These hash values are generated using contract with function like:
+	  
+	      function func90071992547409() external pure returns (bytes32) {
+        		return keccak256(abi.encodePacked(int(90071992547409))) ;}
+	 */
 ];

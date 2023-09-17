@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"description": "Base eslint config for Web3 project.",
 	"author": "ChainSafe Systems",
+	"private": true,
 	"license": "LGPL-3.0",
 	"keywords": [
 		"eslint",

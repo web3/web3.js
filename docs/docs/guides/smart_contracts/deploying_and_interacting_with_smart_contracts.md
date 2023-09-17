@@ -205,7 +205,7 @@ node index.js
 
 If everything is working correctly, you should see the current block number logged to the console. However, if you got an error with the reason `connect ECONNREFUSED 127.0.0.1:7545` then double check that you are running Ganache locally on port `7545`.
 
-## Step 5: Deploy the smart contract to the Ganache network using web3.js
+## Step 6: Deploy the smart contract to the Ganache network using web3.js
 
 In this step, we will use web3.js to deploy the smart contract to the Ganache network.
 
@@ -282,7 +282,7 @@ Estimated gas: 142748n
 Contract deployed at address: 0x16447837D4A572d0a8b419201bdcD91E6e428Df1
 ```
 
-## Step 6: Interact with the smart contract using web3.js
+## Step 7: Interact with the smart contract using web3.js
 
 In this step, we will use web3.js to interact with the smart contract on the Ganache network.
 
@@ -351,6 +351,60 @@ If everything is working correctly, you should see the current counter value log
 my number value: 1
 Transaction Hash: 0x9825e2a2115896728d0c9c04c2deaf08dfe1f1ff634c4b0e6eeb2f504372f927
 my number updated value: 2
+```
+
+## Troubleshooting and errors
+
+If you are running into errors when executing contract methods such as `myContract.methods.call` or `myContract.deploy.estimateGas()` you might be seeing a contract execution revert error such as: `value transfer did not complete from a contract execution reverted`
+
+or response error: ResponseError: Returned error: unknown field `input`, expected one of `from`, `to`, `gasPrice`, `maxFeePerGas`, `maxPriorityFeePerGas`, `gas`, `value`, `data`, `nonce`, `chainId`, `accessList`, `type`.
+
+This could be due to the node you are connected to and is expecting the `data` property to be populated in your contract instead of `input`, for example this issue will happen with an Anvil node from Foundry. Web3 version >4.0.3 will always populate `input` when sending transactions.
+To fix this, configure the `contractDataInputFill` in `Web3Config` or when initializing your contract to specify `data` in `dataInputFill` to be filled.
+Another way to fix this is to provide `data` when using the send or call method.
+If you want both `data` and `input` filled, set the property to `both`.
+
+Here are examples:
+
+```typescript
+
+// Configuring Web3Context with `contractDataInputFill`
+import { Web3Context } from 'web3-core';
+
+const expectedProvider = 'http://127.0.0.1:8545';
+const web3Context = new Web3Context({
+	provider: expectedProvider,
+	config: {contractDataInputFill: 'data'} //  all new contracts created to populate `data` field
+});
+
+const contract = new Contract(GreeterAbi, web3Context);
+
+// data will now be populated when using the call method
+const res = await contract.methods.greet().call();
+
+// Another way to do this is to set it within the contract using `dataInputFill`
+
+const contract = new Contract(
+	erc721Abi,
+	'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
+	{ gas: '123', dataInputFill: "data" }, // methods will now be populating `data` field
+);
+
+// `data` will now be populated instead of `input`
+contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).call(),
+
+// Another way to do this is to set `data` when calling methods
+
+const contract = new Contract(
+	erc721Abi,
+	'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
+);
+
+contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).call(
+	{data: contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).encodeABI()}
+)
+
+
 ```
 
 ## Conclusion

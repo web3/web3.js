@@ -133,6 +133,19 @@ export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider
 	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
 }
 
+export type Eip1193Compatible<API extends Web3APISpec = EthExecutionAPI> = Omit<
+	// eslint-disable-next-line no-use-before-define
+	Omit<Web3BaseProvider, 'request'>,
+	'asEIP1193Provider'
+> & {
+	request<
+		Method extends Web3APIMethod<API>,
+		ResultType = Web3APIReturnType<API, Method> | unknown,
+	>(
+		request: Web3APIPayload<API, Method>,
+	): Promise<ResultType>;
+};
+
 // Provider interface compatible with EIP-1193
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
 export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI>
@@ -187,6 +200,40 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		return this.request(payload as Web3APIPayload<API, Web3APIMethod<API>>) as Promise<
 			JsonRpcResponse<R>
 		>;
+	}
+
+	/**
+	 * Modify the return type of the request method to be fully compatible with EIP-1193
+	 *
+	 * [deprecated] In the future major releases (\>= v5) all providers are supposed to be fully compatible with EIP-1193.
+	 * So this method will not be needed and would not be available in the future.
+	 *
+	 * @returns A new instance of the provider with the request method fully compatible with EIP-1193
+	 *
+	 * @example
+	 * ```ts
+	 * const provider = new Web3HttpProvider('http://localhost:8545');
+	 * const fullyCompatibleProvider = provider.asEIP1193Provider();
+	 * const result = await fullyCompatibleProvider.request({ method: 'eth_getBalance' });
+	 * console.log(result); // '0x0234c8a3397aab58' or something like that
+	 * ```
+	 */
+	public asEIP1193Provider(): Eip1193Compatible<API> {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		const newObj = Object.create(this) as Eip1193Compatible<API>;
+		// eslint-disable-next-line @typescript-eslint/unbound-method
+		const originalRequest = newObj.request;
+		newObj.request = async function request(
+			args: Web3APIPayload<API, Web3APIMethod<API>>,
+		): Promise<unknown> {
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+			const response = (await originalRequest(args)) as JsonRpcResponseWithResult<unknown>;
+			return response.result;
+		} as typeof newObj.request;
+		// @ts-expect-error the property should not be available in the new object because of using Object.create(this).
+		//	But it is available if we do not delete it.
+		newObj.asEIP1193Provider = undefined; // to prevent the user for calling this method again
+		return newObj;
 	}
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request

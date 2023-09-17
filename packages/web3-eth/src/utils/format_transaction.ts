@@ -42,13 +42,11 @@ export function formatTransaction<
 		if (!isNullish(transaction.common?.customChain))
 			formattedTransaction.common.customChain = { ...transaction.common.customChain };
 	}
-
 	formattedTransaction = format(
 		options.transactionSchema ?? transactionInfoSchema,
 		formattedTransaction,
 		returnFormat,
 	);
-
 	if (
 		!isNullish(formattedTransaction.data) &&
 		!isNullish(formattedTransaction.input) &&
