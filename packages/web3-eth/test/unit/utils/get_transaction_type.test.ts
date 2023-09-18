@@ -22,52 +22,50 @@ import { format } from 'web3-utils';
 
 import { transactionSchema } from '../../../src/schemas';
 import { getTransactionType } from '../../../src/utils/transaction_builder';
+import * as rpcMethodWrappers from '../../../src/rpc_method_wrappers';
+import { preEip1559Block, postEip1559Block } from '../../fixtures/prepare_transaction_for_signing';
+
+jest.mock('../../../src/rpc_method_wrappers');
 
 describe('getTransactionType', () => {
 	const expectedFrom = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
-	const expectedNonce = '0x42';
-	const expectedGas = BigInt(21000);
-	const expectedGasPrice = '0x4a817c800';
-	const expectedChainId = '0x1';
-	const expectedNetworkId = '0x4';
 
-	it('getTransactionType should return transaction type 0 when provider does not support type 2 transactions', async () => {
-		jest.mock('../../../src/rpc_method_wrappers', () => ({
-			getBlock: { baseFeePerGas: undefined },
-		}));
+    const transaction: Transaction = {
+        from: expectedFrom,
+        to: '0x3535353535353535353535353535353535353535',
+        value: '0x174876e800',
+        gas: BigInt(21000),
+        data: '0x',
+        nonce: 0x42,
+        chain: 'mainnet',
+        chainId: 0x1,
+        networkId: 0x4,
+    };
+    const formattedTransaction = format(transactionSchema, transaction, ETH_DATA_FORMAT);
 
-		const transaction: Transaction = {
-			from: expectedFrom,
-			to: '0x3535353535353535353535353535353535353535',
-			value: '0x174876e800',
-			gas: expectedGas,
-			gasPrice: expectedGasPrice,
-			type: '0x0',
-			data: '0x',
-			nonce: expectedNonce,
-			chain: 'mainnet',
-			hardfork: 'berlin',
-			chainId: expectedChainId,
-			networkId: expectedNetworkId,
-			common: {
-				customChain: {
-					name: 'foo',
-					networkId: expectedNetworkId,
-					chainId: expectedChainId,
-				},
-				baseChain: 'mainnet',
-				hardfork: 'berlin',
-			},
-		};
-		const input = format(transactionSchema, transaction, ETH_DATA_FORMAT);
+    const web3Context = new Web3Context<EthExecutionAPI>({
+        provider: new HttpProvider('http://127.0.0.1:80'),
+        config: {
+            defaultAccount: expectedFrom,
+        },
+    });
 
-		const web3Context = new Web3Context<EthExecutionAPI>({
-			provider: new HttpProvider('http://127.0.0.1:80'),
-			config: {
-				defaultAccount: expectedFrom,
-			},
-		});
-		const transactionType = await getTransactionType(input, web3Context);
+    afterAll(() => {
+		jest.resetAllMocks();
+	});
+
+	it('getTransactionType should return transaction type 0 when provider does not support type 2 transactions (baseFeePerGas is undefined)', async () => {
+
+        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(preEip1559Block)
+
+		const transactionType = await getTransactionType(formattedTransaction, web3Context);
 		expect(transactionType).toBe('0x0');
+	});
+
+    it('should default to 0x2 when transaction type cannot be inferred and use default transaction type', async () => {
+        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(postEip1559Block)
+
+		const transactionType = await getTransactionType(formattedTransaction, web3Context);
+		expect(transactionType).toBe('0x2');
 	});
 });

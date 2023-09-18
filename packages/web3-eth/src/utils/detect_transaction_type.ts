@@ -115,30 +115,26 @@ export const defaultTransactionTypeParser: TransactionTypeParser = async (
 	}
 
 	const givenHardfork = tx.hardfork ?? tx.common?.hardfork;
-	// If we don't have a hardfork, then we can't be sure we're post
-	// EIP-2718 where transaction types are available
-	if (givenHardfork === undefined) return undefined;
 
-	const hardforkIndex = Object.keys(HardforksOrdered).indexOf(givenHardfork);
+	if (!isNullish(givenHardfork)) {
+		const hardforkIndex = Object.keys(HardforksOrdered).indexOf(givenHardfork);
 
-	// Unknown hardfork
-	if (hardforkIndex === undefined) return undefined;
+		// givenHardfork is London or later, so EIP-2718 is supported
+		if (hardforkIndex >= Object.keys(HardforksOrdered).indexOf('london'))
+			return !isNullish(tx.gasPrice) ? '0x0' : '0x2';
 
-	// givenHardfork is London or later, so EIP-2718 is supported
-	if (hardforkIndex >= Object.keys(HardforksOrdered).indexOf('london'))
-		return !isNullish(tx.gasPrice) ? '0x0' : '0x2';
-
-	// givenHardfork is Berlin, tx.accessList is undefined, assume type is 0x0
-	if (hardforkIndex === Object.keys(HardforksOrdered).indexOf('berlin')) return '0x0';
+		// givenHardfork is Berlin, tx.accessList is undefined, assume type is 0x0
+		if (hardforkIndex === Object.keys(HardforksOrdered).indexOf('berlin')) return '0x0';
+	}
 
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, ETH_DATA_FORMAT);
-
-	// if gasprice is defined or eip 2718 isn't supported use type 0
+	// gasprice is defined or eip 1559 is not supported
 	if (!isNullish(tx.gasPrice) || isNullish(block.baseFeePerGas)) {
 		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
 		return '0x0';
 	}
 
+	// no transaction type can be inferred from properties, use default transaction type
 	return undefined;
 };
 

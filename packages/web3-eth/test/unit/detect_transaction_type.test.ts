@@ -24,18 +24,20 @@ import {
 	transactionType0x0,
 	transactionType0x1,
 	transactionType0x2,
+	transactionType0PostEIP1559,
 	transactionTypeUndefined,
 	transactionTypeValidationError,
 } from '../fixtures/detect_transaction_type';
-import { getBlock } from '../../src/rpc_method_wrappers';
+import {
+	preEip1559Block,
+	postEip1559Block,
+} from '../fixtures/prepare_transaction_for_signing'
+import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
+
+
+jest.mock('../../src/rpc_method_wrappers');
 
 describe('detectTransactionType', () => {
-	beforeAll(() => {
-		
-		jest.mock('../../src/rpc_method_wrappers');
-		// eslint-disable-next-line
-		(getBlock as jest.Mock).mockReturnValue(() => {baseFeePerGas: 1});
-	});
 	afterAll(() => {
 		jest.resetAllMocks();
 	});
@@ -51,10 +53,21 @@ describe('detectTransactionType', () => {
 	});
 
 	describe('should detect transaction type 0x0', () => {
+        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(preEip1559Block)
 		const web3Context = new Web3Context<EthExecutionAPI>({
 			provider: new HttpProvider('http://127.0.0.1:80'),
 		});
 		it.each(transactionType0x0)('%s', async transaction => {
+			expect(await detectTransactionType(transaction, web3Context)).toBe('0x0');
+		});
+	});
+
+	describe('should detect type 0x0 transaction post eip1559 block', () => {
+        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(postEip1559Block)
+		const web3Context = new Web3Context<EthExecutionAPI>({
+			provider: new HttpProvider('http://127.0.0.1:80'),
+		});
+		it.each(transactionType0PostEIP1559)('%s', async transaction => {
 			expect(await detectTransactionType(transaction, web3Context)).toBe('0x0');
 		});
 	});
@@ -78,6 +91,7 @@ describe('detectTransactionType', () => {
 	});
 
 	describe('should not be able to detect transaction type, returning undefined', () => {
+        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(postEip1559Block)
 		const web3Context = new Web3Context<EthExecutionAPI>({
 			provider: new HttpProvider('http://127.0.0.1:80'),
 		});
