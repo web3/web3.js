@@ -1995,6 +1995,18 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ## [Unreleased]
 
+### Fixed
+
+#### web3
+
+-   Fix of incorrect provider warning behaviour
+
+#### web3-eth-accounts
+
+-   Fixed "The `r` and `s` returned by `sign` to does not always consist of 64 characters" (#6411)
+
+#### web3-eth-contract
+
 ### Added
 
 #### web3-eth
@@ -2016,5 +2028,3 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth-accounts
 
 -   Fixed "The `r` and `s` returned by `sign` to does not always consist of 64 characters" (#6411)
-
-#### web3-eth-contract
