@@ -94,7 +94,13 @@ describe('contract', () => {
 				it('should transfer tokens', async () => {
 					const acc2 = await createTempAccount();
 					const value = BigInt(10);
-					await contractDeployed.methods.transfer(acc2.address, value).send(sendOptions);
+					const receipt = await contractDeployed.methods
+						.transfer(acc2.address, value)
+						.send(sendOptions);
+
+					expect(receipt.events).toBeDefined();
+					expect(receipt.events?.Transfer).toBeDefined();
+					expect(receipt.events?.Transfer.event).toBe('Transfer');
 
 					expect(await contractDeployed.methods.balanceOf(acc2.address).call()).toBe(
 						value,

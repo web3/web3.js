@@ -60,9 +60,12 @@ describe('contract', () => {
 
 		it.each(['0x1', '0x2'])('should award item %p', async type => {
 			const tempAccount = web3.eth.accounts.create();
-			await contractDeployed.methods
+			const awardReceipt = await contractDeployed.methods
 				.awardItem(tempAccount.address, 'http://my-nft-uri')
 				.send({ ...sendOptions, type });
+			expect(awardReceipt.events).toBeDefined();
+			expect(awardReceipt.events?.Transfer).toBeDefined();
+			expect(awardReceipt.events?.Transfer.event).toBe('Transfer');
 
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
@@ -77,20 +80,27 @@ describe('contract', () => {
 		it.each(['0x1', '0x2'])('should transferFrom item %p', async type => {
 			const tempAccount = await createLocalAccount(web3);
 			const toAccount = await createLocalAccount(web3);
-			await contractDeployed.methods
+			const awardReceipt = await contractDeployed.methods
 				.awardItem(tempAccount.address, 'http://my-nft-award')
 				.send({ ...sendOptions, type });
+			expect(awardReceipt.events).toBeDefined();
+			expect(awardReceipt.events?.Transfer).toBeDefined();
+			expect(awardReceipt.events?.Transfer.event).toBe('Transfer');
 
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
-			await contractDeployed.methods
+			const transferFromReceipt = await contractDeployed.methods
 				.transferFrom(tempAccount.address, toAccount.address, tokenId)
 				.send({
 					...sendOptions,
 					type,
 					from: tempAccount.address,
 				});
-
+			expect(transferFromReceipt.events).toBeDefined();
+			expect(transferFromReceipt.events?.Transfer).toBeDefined();
+			expect(transferFromReceipt.events?.Transfer.event).toBe('Transfer');
+			expect(transferFromReceipt.events?.Approval).toBeDefined();
+			expect(transferFromReceipt.events?.Approval.event).toBe('Approval');
 			expect(
 				toUpperCaseHex(
 					(await contractDeployed.methods.ownerOf(tokenId).call()) as unknown as string,
@@ -101,28 +111,43 @@ describe('contract', () => {
 		it.each(['0x1', '0x2'])('should approve and then transferFrom item %p', async type => {
 			const tempAccount = await createLocalAccount(web3);
 			const toAccount = await createLocalAccount(web3);
-			await contractDeployed.methods
+			const awardReceipt = await contractDeployed.methods
 				.awardItem(tempAccount.address, 'http://my-nft-award')
 				.send({ ...sendOptions, type });
+			expect(awardReceipt.events).toBeDefined();
+			expect(awardReceipt.events?.Transfer).toBeDefined();
+			expect(awardReceipt.events?.Transfer.event).toBe('Transfer');
 
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 
-			await contractDeployed.methods.approve(toAccount.address, tokenId).send({
-				...sendOptions,
-				type,
-				from: tempAccount.address,
-			});
+			const approveReceipt = await contractDeployed.methods
+				.approve(toAccount.address, tokenId)
+				.send({
+					...sendOptions,
+					type,
+					from: tempAccount.address,
+				});
+			expect(approveReceipt.events).toBeDefined();
+			expect(approveReceipt.events?.Approval).toBeDefined();
+			expect(approveReceipt.events?.Approval.event).toBe('Approval');
+
 			const res = await contractDeployed.methods.getApproved(tokenId).call();
 			expect(res.toString().toUpperCase()).toBe(toAccount.address.toUpperCase());
 
-			await contractDeployed.methods
+			const safeTransferFromReceipt = await contractDeployed.methods
 				.safeTransferFrom(tempAccount.address, toAccount.address, tokenId)
 				.send({
 					...sendOptions,
 					type,
 					from: toAccount.address,
 				});
+
+			expect(safeTransferFromReceipt.events).toBeDefined();
+			expect(safeTransferFromReceipt.events?.Transfer).toBeDefined();
+			expect(safeTransferFromReceipt.events?.Transfer.event).toBe('Transfer');
+			expect(safeTransferFromReceipt.events?.Approval).toBeDefined();
+			expect(safeTransferFromReceipt.events?.Approval.event).toBe('Approval');
 
 			expect(
 				toUpperCaseHex(
@@ -137,24 +162,34 @@ describe('contract', () => {
 				const tempAccount = await createLocalAccount(web3);
 				const toAccount = await createLocalAccount(web3);
 
-				await contractDeployed.methods.setApprovalForAll(toAccount.address, true).send({
-					...sendOptions,
-					type,
-					from: tempAccount.address,
-				});
-
+				const setApprovalReceipt = await contractDeployed.methods
+					.setApprovalForAll(toAccount.address, true)
+					.send({
+						...sendOptions,
+						type,
+						from: tempAccount.address,
+					});
+				expect(setApprovalReceipt.events).toBeDefined();
+				expect(setApprovalReceipt.events?.ApprovalForAll).toBeDefined();
+				expect(setApprovalReceipt.events?.ApprovalForAll.event).toBe('ApprovalForAll');
 				expect(
 					await contractDeployed.methods
 						.isApprovedForAll(tempAccount.address, toAccount.address)
 						.call(),
 				).toBe(true);
 
-				await contractDeployed.methods.setApprovalForAll(toAccount.address, false).send({
-					...sendOptions,
-					type,
-					from: tempAccount.address,
-				});
-
+				const setApprovalForAllReceipt = await contractDeployed.methods
+					.setApprovalForAll(toAccount.address, false)
+					.send({
+						...sendOptions,
+						type,
+						from: tempAccount.address,
+					});
+				expect(setApprovalForAllReceipt.events).toBeDefined();
+				expect(setApprovalForAllReceipt.events?.ApprovalForAll).toBeDefined();
+				expect(setApprovalForAllReceipt.events?.ApprovalForAll.event).toBe(
+					'ApprovalForAll',
+				);
 				expect(
 					await contractDeployed.methods
 						.isApprovedForAll(tempAccount.address, toAccount.address)

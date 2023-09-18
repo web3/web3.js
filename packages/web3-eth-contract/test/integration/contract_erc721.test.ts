@@ -81,9 +81,13 @@ describe('contract', () => {
 
 				it('should award item', async () => {
 					const tempAccount = await createTempAccount();
-					await contractDeployed.methods
+					const receipt = await contractDeployed.methods
 						.awardItem(tempAccount.address, 'http://my-nft-uri')
 						.send(sendOptions);
+
+					expect(receipt.events).toBeDefined();
+					expect(receipt.events?.Transfer).toBeDefined();
+					expect(receipt.events?.Transfer.event).toBe('Transfer');
 
 					const tokenId = toBigInt(0);
 					expect(
@@ -289,9 +293,13 @@ describe('contract', () => {
 								});
 							});
 
-							await contractDeployed.methods
+							const receipt = await contractDeployed.methods
 								.awardItem(acc2.address, 'http://my-nft-uri')
 								.send(sendOptions);
+
+							expect(receipt.events).toBeDefined();
+							expect(receipt.events?.Transfer).toBeDefined();
+							expect(receipt.events?.Transfer.event).toBe('Transfer');
 						}),
 					).resolves.toEqual({
 						from: '0x0000000000000000000000000000000000000000',
