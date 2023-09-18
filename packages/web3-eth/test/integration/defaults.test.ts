@@ -772,10 +772,12 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
+				provider: clientUrl,
 				config: {
 					defaultTransactionType: '0x4444',
 				},
 			});
+			
 			expect(eth2.defaultTransactionType).toBe('0x4444');
 
 			const res = await getTransactionType(
