@@ -61,7 +61,7 @@ export function watchTransactionForConfirmations<
 
 	// so a subscription for newBlockHeaders can be made instead of polling
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
-	if (provider.supportsSubscriptions()) {
+	if (provider && 'supportsSubscriptions' in provider && provider.supportsSubscriptions()) {
 		watchTransactionBySubscription({
 			web3Context,
 			transactionReceipt,

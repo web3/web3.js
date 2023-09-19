@@ -148,4 +148,10 @@ Documentation:
 
 -   ESM import bug (#6359)
 
+## [1.1.2]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

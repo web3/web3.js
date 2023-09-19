@@ -116,4 +116,11 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.0.6]
+
+### Changed
+
+-   Dependencies updated
+
+
 ## [Unreleased]
