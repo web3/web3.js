@@ -145,4 +145,10 @@ Documentation:
 
 -   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
 
+## [4.1.2]
+
+### Fixed
+
+-   Fix of incorrect provider warning behavior
+
 ## [Unreleased]
