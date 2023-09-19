@@ -2082,3 +2082,15 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Added
+
+#### web3-eth
+
+-   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)
+
+### Fixed
+
+#### web3-eth
+
+-   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
