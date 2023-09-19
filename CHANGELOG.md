@@ -1993,13 +1993,13 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.1.2]
 
 ### Fixed
 
 #### web3
 
--   Fix of incorrect provider warning behaviour
+-   Fix of incorrect provider warning behavior
 
 #### web3-eth-accounts
 
@@ -2007,7 +2007,15 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-contract
 
+#### web3-utils
+
+-   `soliditySha3()` with BigInt support
+
 ### Added
+
+#### web3-core
+
+-   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377) (#6400)
 
 #### web3-eth
 
@@ -2023,8 +2031,54 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   add `asEIP1193Provider` to `Web3BaseProvider` so every inherited class can have the returned value of `request` method, fully compatible with EIP-1193. (#6407)
 
-### Fixed
+### Changed
 
-#### web3-eth-accounts
+#### web3-core
 
--   Fixed "The `r` and `s` returned by `sign` to does not always consist of 64 characters" (#6411)
+-   Dependencies updated
+
+#### web3-errors
+
+-   Dependencies updated
+
+#### web3-eth-abi
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
+#### web3-providers-http
+
+-   Dependencies updated
+
+#### web3-providers-ipc
+
+-   Dependencies updated
+
+#### web3-providers-ws
+
+-   Dependencies updated
+
+#### web3-rpc-methods
+
+-   Dependencies updated
+
+#### web3-validator
+
+-   Dependencies updated
+
+## [Unreleased]
