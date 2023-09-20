@@ -36,7 +36,6 @@ export async function performBasicRpcCalls(provider: SupportedProviders) {
 		to: accounts[1],
 		from: accounts[0],
 		value: '1',
-		type: 2,
 		gas: 21000
 	});
 	expect(tx.status).toBe(BigInt(1));
