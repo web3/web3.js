@@ -165,3 +165,7 @@ Documentation:
 
 
 ## [Unreleased]
+
+### Added
+
+-   Interface `EventLog` was added. (#6410)

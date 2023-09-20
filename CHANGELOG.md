@@ -2089,8 +2089,18 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)
 
+#### web3-types
+
+-   Interface `EventLog` was added. (#6410)
+
 ### Fixed
 
 #### web3-eth
 
 -   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
+
+### Changed
+
+#### web3-eth-contract
+
+-   The `events` property was added to the `receipt` object (#6410)
