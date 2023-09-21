@@ -19,7 +19,7 @@ To provide type safety and IntelliSense for your plugin users, please refer to t
 At the minimum, your plugin should depend on `web3` package version `4.0.2`. This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/).
 
 :::important
-It is important to note that the plugin name should be structured as `@<organization>/web3-plugin-<name>`.
+It is important to note that the plugin name should be structured as `@<organization>/web3-plugin-<name>` or  `web3-plugin-<name>`.
 :::
 
 ```json
