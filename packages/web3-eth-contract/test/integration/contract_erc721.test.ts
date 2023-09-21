@@ -88,7 +88,18 @@ describe('contract', () => {
 					expect(receipt.events).toBeDefined();
 					expect(receipt.events?.Transfer).toBeDefined();
 					expect(receipt.events?.Transfer.event).toBe('Transfer');
-
+					expect(String(receipt.events?.Transfer.returnValues.from).toLowerCase()).toBe(
+						'0x0000000000000000000000000000000000000000',
+					);
+					expect(String(receipt.events?.Transfer.returnValues[0]).toLowerCase()).toBe(
+						'0x0000000000000000000000000000000000000000',
+					);
+					expect(String(receipt.events?.Transfer.returnValues.to).toLowerCase()).toBe(
+						tempAccount.address.toLowerCase(),
+					);
+					expect(String(receipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
+						tempAccount.address.toLowerCase(),
+					);
 					const tokenId = toBigInt(0);
 					expect(
 						toUpperCaseHex(
@@ -300,6 +311,18 @@ describe('contract', () => {
 							expect(receipt.events).toBeDefined();
 							expect(receipt.events?.Transfer).toBeDefined();
 							expect(receipt.events?.Transfer.event).toBe('Transfer');
+							expect(
+								String(receipt.events?.Transfer.returnValues.from).toLowerCase(),
+							).toBe('0x0000000000000000000000000000000000000000');
+							expect(
+								String(receipt.events?.Transfer.returnValues[0]).toLowerCase(),
+							).toBe('0x0000000000000000000000000000000000000000');
+							expect(
+								String(receipt.events?.Transfer.returnValues.to).toLowerCase(),
+							).toBe(acc2.address.toLowerCase());
+							expect(
+								String(receipt.events?.Transfer.returnValues[1]).toLowerCase(),
+							).toBe(acc2.address.toLowerCase());
 						}),
 					).resolves.toEqual({
 						from: '0x0000000000000000000000000000000000000000',

@@ -67,6 +67,19 @@ describe('contract', () => {
 			expect(awardReceipt.events?.Transfer).toBeDefined();
 			expect(awardReceipt.events?.Transfer.event).toBe('Transfer');
 
+			expect(String(awardReceipt.events?.Transfer.returnValues.from).toLowerCase()).toBe(
+				'0x0000000000000000000000000000000000000000',
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues[0]).toLowerCase()).toBe(
+				'0x0000000000000000000000000000000000000000',
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues.to).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 
@@ -87,6 +100,19 @@ describe('contract', () => {
 			expect(awardReceipt.events?.Transfer).toBeDefined();
 			expect(awardReceipt.events?.Transfer.event).toBe('Transfer');
 
+			expect(String(awardReceipt.events?.Transfer.returnValues.from).toLowerCase()).toBe(
+				'0x0000000000000000000000000000000000000000',
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues[0]).toLowerCase()).toBe(
+				'0x0000000000000000000000000000000000000000',
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues.to).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 			const transferFromReceipt = await contractDeployed.methods
@@ -99,8 +125,38 @@ describe('contract', () => {
 			expect(transferFromReceipt.events).toBeDefined();
 			expect(transferFromReceipt.events?.Transfer).toBeDefined();
 			expect(transferFromReceipt.events?.Transfer.event).toBe('Transfer');
+			expect(
+				String(transferFromReceipt.events?.Transfer.returnValues.from).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(String(transferFromReceipt.events?.Transfer.returnValues[0]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(String(transferFromReceipt.events?.Transfer.returnValues.to).toLowerCase()).toBe(
+				toAccount.address.toLowerCase(),
+			);
+			expect(String(transferFromReceipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
+				toAccount.address.toLowerCase(),
+			);
+			expect(transferFromReceipt.events?.Transfer.returnValues.tokenId).toBe(tokenId);
+			expect(transferFromReceipt.events?.Transfer.returnValues[2]).toBe(tokenId);
+
 			expect(transferFromReceipt.events?.Approval).toBeDefined();
 			expect(transferFromReceipt.events?.Approval.event).toBe('Approval');
+			expect(
+				String(transferFromReceipt.events?.Approval.returnValues.owner).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(String(transferFromReceipt.events?.Approval.returnValues[0]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(
+				String(transferFromReceipt.events?.Approval.returnValues.approved).toLowerCase(),
+			).toBe('0x0000000000000000000000000000000000000000');
+			expect(String(transferFromReceipt.events?.Approval.returnValues[1]).toLowerCase()).toBe(
+				'0x0000000000000000000000000000000000000000',
+			);
+			expect(transferFromReceipt.events?.Approval.returnValues.tokenId).toBe(tokenId);
+			expect(transferFromReceipt.events?.Approval.returnValues[2]).toBe(tokenId);
+
 			expect(
 				toUpperCaseHex(
 					(await contractDeployed.methods.ownerOf(tokenId).call()) as unknown as string,
@@ -117,6 +173,18 @@ describe('contract', () => {
 			expect(awardReceipt.events).toBeDefined();
 			expect(awardReceipt.events?.Transfer).toBeDefined();
 			expect(awardReceipt.events?.Transfer.event).toBe('Transfer');
+			expect(String(awardReceipt.events?.Transfer.returnValues.from).toLowerCase()).toBe(
+				'0x0000000000000000000000000000000000000000',
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues[0]).toLowerCase()).toBe(
+				'0x0000000000000000000000000000000000000000',
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues.to).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(String(awardReceipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
 
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
@@ -131,6 +199,20 @@ describe('contract', () => {
 			expect(approveReceipt.events).toBeDefined();
 			expect(approveReceipt.events?.Approval).toBeDefined();
 			expect(approveReceipt.events?.Approval.event).toBe('Approval');
+			expect(String(approveReceipt.events?.Approval.returnValues.owner).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(String(approveReceipt.events?.Approval.returnValues[0]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(
+				String(approveReceipt.events?.Approval.returnValues.approved).toLowerCase(),
+			).toBe(toAccount.address.toLowerCase());
+			expect(String(approveReceipt.events?.Approval.returnValues[1]).toLowerCase()).toBe(
+				toAccount.address.toLowerCase(),
+			);
+			expect(approveReceipt.events?.Approval.returnValues.tokenId).toBe(tokenId);
+			expect(approveReceipt.events?.Approval.returnValues[2]).toBe(tokenId);
 
 			const res = await contractDeployed.methods.getApproved(tokenId).call();
 			expect(res.toString().toUpperCase()).toBe(toAccount.address.toUpperCase());
@@ -148,6 +230,38 @@ describe('contract', () => {
 			expect(safeTransferFromReceipt.events?.Transfer.event).toBe('Transfer');
 			expect(safeTransferFromReceipt.events?.Approval).toBeDefined();
 			expect(safeTransferFromReceipt.events?.Approval.event).toBe('Approval');
+
+			expect(
+				String(safeTransferFromReceipt.events?.Transfer.returnValues.from).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(
+				String(safeTransferFromReceipt.events?.Transfer.returnValues[0]).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(
+				String(safeTransferFromReceipt.events?.Transfer.returnValues.to).toLowerCase(),
+			).toBe(toAccount.address.toLowerCase());
+			expect(
+				String(safeTransferFromReceipt.events?.Transfer.returnValues[1]).toLowerCase(),
+			).toBe(toAccount.address.toLowerCase());
+			expect(safeTransferFromReceipt.events?.Transfer.returnValues.tokenId).toBe(tokenId);
+			expect(safeTransferFromReceipt.events?.Transfer.returnValues[2]).toBe(tokenId);
+
+			expect(
+				String(safeTransferFromReceipt.events?.Approval.returnValues.owner).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(
+				String(safeTransferFromReceipt.events?.Approval.returnValues[0]).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(
+				String(
+					safeTransferFromReceipt.events?.Approval.returnValues.approved,
+				).toLowerCase(),
+			).toBe('0x0000000000000000000000000000000000000000');
+			expect(
+				String(safeTransferFromReceipt.events?.Approval.returnValues[1]).toLowerCase(),
+			).toBe('0x0000000000000000000000000000000000000000');
+			expect(safeTransferFromReceipt.events?.Approval.returnValues.tokenId).toBe(tokenId);
+			expect(safeTransferFromReceipt.events?.Approval.returnValues[2]).toBe(tokenId);
 
 			expect(
 				toUpperCaseHex(
@@ -172,6 +286,26 @@ describe('contract', () => {
 				expect(setApprovalReceipt.events).toBeDefined();
 				expect(setApprovalReceipt.events?.ApprovalForAll).toBeDefined();
 				expect(setApprovalReceipt.events?.ApprovalForAll.event).toBe('ApprovalForAll');
+
+				expect(
+					String(
+						setApprovalReceipt.events?.ApprovalForAll.returnValues.owner,
+					).toLowerCase(),
+				).toBe(tempAccount.address.toLowerCase());
+				expect(
+					String(setApprovalReceipt.events?.ApprovalForAll.returnValues[0]).toLowerCase(),
+				).toBe(tempAccount.address.toLowerCase());
+				expect(
+					String(
+						setApprovalReceipt.events?.ApprovalForAll.returnValues.operator,
+					).toLowerCase(),
+				).toBe(toAccount.address.toLowerCase());
+				expect(
+					String(setApprovalReceipt.events?.ApprovalForAll.returnValues[1]).toLowerCase(),
+				).toBe(toAccount.address.toLowerCase());
+				expect(setApprovalReceipt.events?.ApprovalForAll.returnValues.approved).toBe(true);
+				expect(setApprovalReceipt.events?.ApprovalForAll.returnValues[2]).toBe(true);
+
 				expect(
 					await contractDeployed.methods
 						.isApprovedForAll(tempAccount.address, toAccount.address)
@@ -190,6 +324,30 @@ describe('contract', () => {
 				expect(setApprovalForAllReceipt.events?.ApprovalForAll.event).toBe(
 					'ApprovalForAll',
 				);
+				expect(
+					String(
+						setApprovalForAllReceipt.events?.ApprovalForAll.returnValues.owner,
+					).toLowerCase(),
+				).toBe(tempAccount.address.toLowerCase());
+				expect(
+					String(
+						setApprovalForAllReceipt.events?.ApprovalForAll.returnValues[0],
+					).toLowerCase(),
+				).toBe(tempAccount.address.toLowerCase());
+				expect(
+					String(
+						setApprovalForAllReceipt.events?.ApprovalForAll.returnValues.operator,
+					).toLowerCase(),
+				).toBe(toAccount.address.toLowerCase());
+				expect(
+					String(
+						setApprovalForAllReceipt.events?.ApprovalForAll.returnValues[1],
+					).toLowerCase(),
+				).toBe(toAccount.address.toLowerCase());
+				expect(setApprovalForAllReceipt.events?.ApprovalForAll.returnValues.approved).toBe(
+					false,
+				);
+				expect(setApprovalForAllReceipt.events?.ApprovalForAll.returnValues[2]).toBe(false);
 				expect(
 					await contractDeployed.methods
 						.isApprovedForAll(tempAccount.address, toAccount.address)
