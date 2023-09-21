@@ -187,7 +187,16 @@ export const abiSchemaToJsonSchema = (
 				delete childSchema.minItems;
 			}
 
-			lastSchema.items = childSchema;
+			// lastSchema.items is a Schema, concat with 'childSchema'
+			if (!Array.isArray(lastSchema.items)) {
+				lastSchema.items = [lastSchema.items as JsonSchema, childSchema];
+			} // lastSchema.items is an empty Scheme array, set it to 'childSchema'
+			else if (lastSchema.items.length === 0) {
+				lastSchema.items = childSchema;
+			} // lastSchema.items is a non-empty Scheme array, append 'childSchema'
+			else {
+				lastSchema.items.push(childSchema);
+			}
 			lastSchema = childSchema;
 		}
 
@@ -237,6 +246,7 @@ export const abiSchemaToJsonSchema = (
 				...convertEthType(abiType),
 			});
 		}
+		lastSchema = schema;
 	}
 
 	return schema;
