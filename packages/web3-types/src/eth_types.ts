@@ -312,6 +312,23 @@ export interface LogBase<NumberType, ByteType> {
 export interface Log extends LogBase<Numbers, Bytes> {
 	readonly id?: string;
 }
+
+export interface EventLog {
+	readonly event: string;
+	readonly id?: string;
+	readonly logIndex?: bigint | number | string;
+	readonly transactionIndex?: bigint | number | string;
+	readonly transactionHash?: HexString32Bytes;
+	readonly blockHash?: HexString32Bytes;
+	readonly blockNumber?: bigint | number | string;
+	readonly address: string;
+	readonly topics: HexString[];
+	readonly data: HexString;
+	readonly raw?: { data: string; topics: unknown[] };
+	readonly returnValues: Record<string, unknown>;
+	readonly signature?: HexString;
+}
+
 export interface TransactionReceiptBase<numberType, hashByteType, logsBloomByteType, logsType> {
 	readonly transactionHash: hashByteType;
 	readonly transactionIndex: numberType;
@@ -328,6 +345,7 @@ export interface TransactionReceiptBase<numberType, hashByteType, logsBloomByteT
 	readonly root: hashByteType;
 	readonly status: numberType;
 	readonly type?: numberType;
+	events?: { [key: string]: EventLog };
 }
 
 export type TransactionReceipt = TransactionReceiptBase<Numbers, Bytes, Bytes, Log>;

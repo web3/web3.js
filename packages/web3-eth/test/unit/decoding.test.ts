@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,13 +14,25 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { AbiEventFragment, LogsInput } from 'web3-types';
+import { decodeEventABI } from '../../src';
+import { decodeEventABIData } from '../fixtures/decoding';
 
-import { AbiEventFragment } from 'web3-types';
-
-export const ALL_EVENTS = 'ALLEVENTS';
-export const ALL_EVENTS_ABI = {
-	name: ALL_EVENTS,
-	signature: '',
-	type: 'event',
-	inputs: [],
-} as AbiEventFragment & { signature: string };
+describe('decoding functions', () => {
+	describe('decode', () => {
+		describe('decodeEventABI', () => {
+			it.each(decodeEventABIData)(
+				'%s',
+				(event: AbiEventFragment & { signature: string }, inputs: LogsInput, output) => {
+					expect(
+						decodeEventABI(event, inputs, [
+							{ signature: event.signature } as unknown as AbiEventFragment & {
+								signature: string;
+							},
+						]),
+					).toStrictEqual(output);
+				},
+			);
+		});
+	});
+});

@@ -61,11 +61,30 @@ describe('contract', () => {
 			const acc = web3.eth.accounts.create();
 			const value = BigInt(10);
 
-			await contractDeployed.methods.transfer(acc.address, value).send({
+			const receipt = await contractDeployed.methods.transfer(acc.address, value).send({
 				...sendOptions,
 				type,
 			});
-
+			expect(receipt.events).toBeDefined();
+			expect(receipt.events?.Transfer).toBeDefined();
+			expect(receipt.events?.Transfer.event).toBe('Transfer');
+			expect(receipt.events).toBeDefined();
+			expect(receipt.events?.Transfer).toBeDefined();
+			expect(receipt.events?.Transfer.event).toBe('Transfer');
+			expect(String(receipt.events?.Transfer.returnValues.from).toLowerCase()).toBe(
+				localAccount.address.toLowerCase(),
+			);
+			expect(String(receipt.events?.Transfer.returnValues[0]).toLowerCase()).toBe(
+				localAccount.address.toLowerCase(),
+			);
+			expect(String(receipt.events?.Transfer.returnValues.to).toLowerCase()).toBe(
+				acc.address.toLowerCase(),
+			);
+			expect(String(receipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
+				acc.address.toLowerCase(),
+			);
+			expect(receipt.events?.Transfer.returnValues.value).toBe(value);
+			expect(receipt.events?.Transfer.returnValues[2]).toBe(value);
 			expect(await contractDeployed.methods.balanceOf(acc.address).call()).toBe(value);
 		});
 
@@ -74,14 +93,55 @@ describe('contract', () => {
 			const transferFromValue = BigInt(4);
 			const tempAccount = await createLocalAccount(web3);
 			// approve
-			await contractDeployed.methods
+			const approvalReceipt = await contractDeployed.methods
 				.approve(tempAccount.address, value)
 				.send({ ...sendOptions, type });
-
+			expect(approvalReceipt.events).toBeDefined();
+			expect(approvalReceipt.events?.Approval).toBeDefined();
+			expect(approvalReceipt.events?.Approval.event).toBe('Approval');
 			// transferFrom
-			await contractDeployed.methods
+			const transferFromReceipt = await contractDeployed.methods
 				.transferFrom(localAccount.address, tempAccount.address, transferFromValue)
 				.send({ ...sendOptions, from: tempAccount.address, type });
+			expect(transferFromReceipt.events).toBeDefined();
+			expect(transferFromReceipt.events?.Approval).toBeDefined();
+			expect(transferFromReceipt.events?.Approval.event).toBe('Approval');
+			expect(
+				String(transferFromReceipt.events?.Approval.returnValues.owner).toLowerCase(),
+			).toBe(localAccount.address.toLowerCase());
+			expect(String(transferFromReceipt.events?.Approval.returnValues[0]).toLowerCase()).toBe(
+				localAccount.address.toLowerCase(),
+			);
+			expect(
+				String(transferFromReceipt.events?.Approval.returnValues.spender).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(String(transferFromReceipt.events?.Approval.returnValues[1]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(transferFromReceipt.events?.Approval.returnValues.value).toBe(
+				value - transferFromValue,
+			);
+			expect(transferFromReceipt.events?.Approval.returnValues[2]).toBe(
+				value - transferFromValue,
+			);
+
+			expect(transferFromReceipt.events?.Transfer).toBeDefined();
+			expect(transferFromReceipt.events?.Transfer.event).toBe('Transfer');
+			expect(transferFromReceipt.events).toBeDefined();
+			expect(
+				String(transferFromReceipt.events?.Transfer.returnValues.from).toLowerCase(),
+			).toBe(localAccount.address.toLowerCase());
+			expect(String(transferFromReceipt.events?.Transfer.returnValues[0]).toLowerCase()).toBe(
+				localAccount.address.toLowerCase(),
+			);
+			expect(String(transferFromReceipt.events?.Transfer.returnValues.to).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(String(transferFromReceipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(transferFromReceipt.events?.Transfer.returnValues.value).toBe(transferFromValue);
+			expect(transferFromReceipt.events?.Transfer.returnValues[2]).toBe(transferFromValue);
 
 			expect(await contractDeployed.methods.balanceOf(tempAccount.address).call()).toBe(
 				transferFromValue,
@@ -101,9 +161,26 @@ describe('contract', () => {
 			const tempAccount = await createLocalAccount(web3);
 
 			// approve
-			await contractDeployed.methods
+			const approvalReceipt = await contractDeployed.methods
 				.approve(tempAccount.address, value)
 				.send({ ...sendOptions, type });
+			expect(approvalReceipt.events).toBeDefined();
+			expect(approvalReceipt.events?.Approval).toBeDefined();
+			expect(approvalReceipt.events?.Approval.event).toBe('Approval');
+			expect(String(approvalReceipt.events?.Approval.returnValues.owner).toLowerCase()).toBe(
+				localAccount.address.toLowerCase(),
+			);
+			expect(String(approvalReceipt.events?.Approval.returnValues[0]).toLowerCase()).toBe(
+				localAccount.address.toLowerCase(),
+			);
+			expect(
+				String(approvalReceipt.events?.Approval.returnValues.spender).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(String(approvalReceipt.events?.Approval.returnValues[1]).toLowerCase()).toBe(
+				tempAccount.address.toLowerCase(),
+			);
+			expect(approvalReceipt.events?.Approval.returnValues.value).toBe(value);
+			expect(approvalReceipt.events?.Approval.returnValues[2]).toBe(value);
 
 			// allowance
 			expect(
@@ -113,10 +190,33 @@ describe('contract', () => {
 			).toBe(value);
 
 			// increaseAllowance
-			await contractDeployed.methods
+			const increaseAllowanceReceipt = await contractDeployed.methods
 				.increaseAllowance(tempAccount.address, extraAmount)
 				.send({ ...sendOptions, from: localAccount.address, type, gas: '2000000' });
 
+			expect(increaseAllowanceReceipt.events).toBeDefined();
+			expect(increaseAllowanceReceipt.events?.Approval).toBeDefined();
+			expect(increaseAllowanceReceipt.events?.Approval.event).toBe('Approval');
+			expect(
+				String(increaseAllowanceReceipt.events?.Approval.returnValues.owner).toLowerCase(),
+			).toBe(localAccount.address.toLowerCase());
+			expect(
+				String(increaseAllowanceReceipt.events?.Approval.returnValues[0]).toLowerCase(),
+			).toBe(localAccount.address.toLowerCase());
+			expect(
+				String(
+					increaseAllowanceReceipt.events?.Approval.returnValues.spender,
+				).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(
+				String(increaseAllowanceReceipt.events?.Approval.returnValues[1]).toLowerCase(),
+			).toBe(tempAccount.address.toLowerCase());
+			expect(increaseAllowanceReceipt.events?.Approval.returnValues.value).toBe(
+				value + extraAmount,
+			);
+			expect(increaseAllowanceReceipt.events?.Approval.returnValues[2]).toBe(
+				value + extraAmount,
+			);
 			// check allowance
 			expect(
 				await contractDeployed.methods

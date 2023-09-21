@@ -29,7 +29,17 @@ import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 import { processAsync } from '../shared_fixtures/utils';
 
-jest.mock('web3-eth');
+jest.mock('web3-eth', () => {
+	const allAutoMocked = jest.createMockFromModule('web3-eth');
+	const actual = jest.requireActual('web3-eth');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+	return {
+		__esModules: true,
+		// @ts-expect-error ignore allAutoMocked type
+		...allAutoMocked,
+		decodeEventABI: actual.decodeEventABI,
+	};
+});
 
 describe('Contract', () => {
 	describe('constructor', () => {
@@ -746,15 +756,14 @@ describe('Contract', () => {
 				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
 			);
 
-			const spyEthCall = jest
-				.spyOn(eth, 'call')
-				.mockImplementation(async (_objInstance, _tx) => {
-					expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
-					expect(_tx.input).toBe(
-						'0x095ea7b300000000000000000000000000000000219ab540356cbb839cbe05303d7705fa0000000000000000000000000000000000000000000000000000000000000001',
-					);
-					return '0x00';
-				});
+			// @ts-expect-error fix-types
+			const spyEthCall = jest.spyOn(eth, 'call').mockImplementation((_objInstance, _tx) => {
+				expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
+				expect(_tx.input).toBe(
+					'0x095ea7b300000000000000000000000000000000219ab540356cbb839cbe05303d7705fa0000000000000000000000000000000000000000000000000000000000000001',
+				);
+				return '0x00';
+			});
 
 			await expect(
 				contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).call(),
@@ -1129,7 +1138,7 @@ describe('Contract', () => {
 				.send(sendOptions);
 
 			await expect(
-				processAsync(async (resolve, reject) => {
+				processAsync((resolve, reject) => {
 					const event = deployedContract.events.allEvents({ fromBlock: 'earliest' });
 
 					event.on('error', reject);
