@@ -22,10 +22,7 @@ import { format } from 'web3-utils';
 
 import { transactionSchema } from '../../../src/schemas';
 import { getTransactionType } from '../../../src/utils/transaction_builder';
-import * as rpcMethodWrappers from '../../../src/rpc_method_wrappers';
-import { preEip1559Block, postEip1559Block } from '../../fixtures/prepare_transaction_for_signing';
 
-jest.mock('../../../src/rpc_method_wrappers');
 
 describe('getTransactionType', () => {
 	const expectedFrom = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
@@ -50,22 +47,9 @@ describe('getTransactionType', () => {
         },
     });
 
-    afterAll(() => {
-		jest.resetAllMocks();
-	});
-
-	it('getTransactionType should return transaction type 0 when provider does not support type 2 transactions (baseFeePerGas is undefined)', async () => {
-
-        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(preEip1559Block)
-
-		const transactionType = await getTransactionType(formattedTransaction, web3Context);
-		expect(transactionType).toBe('0x0');
-	});
-
     it('should default to 0x2 when transaction type cannot be inferred and use default transaction type', async () => {
-        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(postEip1559Block)
 
-		const transactionType = await getTransactionType(formattedTransaction, web3Context);
+		const transactionType = getTransactionType(formattedTransaction, web3Context);
 		expect(transactionType).toBe('0x2');
 	});
 });

@@ -24,15 +24,9 @@ import {
 	transactionType0x0,
 	transactionType0x1,
 	transactionType0x2,
-	transactionType0PostEIP1559,
 	transactionTypeUndefined,
 	transactionTypeValidationError,
 } from '../fixtures/detect_transaction_type';
-import {
-	preEip1559Block,
-	postEip1559Block,
-} from '../fixtures/prepare_transaction_for_signing'
-import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 
 
 jest.mock('../../src/rpc_method_wrappers');
@@ -41,34 +35,13 @@ describe('detectTransactionType', () => {
 	afterAll(() => {
 		jest.resetAllMocks();
 	});
-	describe('should override detectTransactionType method', () => {
-		const web3Context = new Web3Context<EthExecutionAPI>({
-			provider: new HttpProvider('http://127.0.0.1:80'),
-		});
-		it.skip('should call override method', async () => {
-			const overrideFunction = jest.fn();
-			await detectTransactionType(transactionTypeUndefined[0], web3Context);
-			expect(overrideFunction).toHaveBeenCalledWith(transactionTypeUndefined[0]);
-		});
-	});
 
 	describe('should detect transaction type 0x0', () => {
-        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(preEip1559Block)
 		const web3Context = new Web3Context<EthExecutionAPI>({
 			provider: new HttpProvider('http://127.0.0.1:80'),
 		});
 		it.each(transactionType0x0)('%s', async transaction => {
-			expect(await detectTransactionType(transaction, web3Context)).toBe('0x0');
-		});
-	});
-
-	describe('should detect type 0x0 transaction post eip1559 block', () => {
-        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(postEip1559Block)
-		const web3Context = new Web3Context<EthExecutionAPI>({
-			provider: new HttpProvider('http://127.0.0.1:80'),
-		});
-		it.each(transactionType0PostEIP1559)('%s', async transaction => {
-			expect(await detectTransactionType(transaction, web3Context)).toBe('0x0');
+			expect(detectTransactionType(transaction, web3Context)).toBe('0x0');
 		});
 	});
 
@@ -77,7 +50,7 @@ describe('detectTransactionType', () => {
 			provider: new HttpProvider('http://127.0.0.1:80'),
 		});
 		it.each(transactionType0x1)('%s', async transaction => {
-			expect(await detectTransactionType(transaction, web3Context)).toBe('0x1');
+			expect(detectTransactionType(transaction, web3Context)).toBe('0x1');
 		});
 	});
 
@@ -86,17 +59,16 @@ describe('detectTransactionType', () => {
 			provider: new HttpProvider('http://127.0.0.1:80'),
 		});
 		it.each(transactionType0x2)('%s', async transaction => {
-			expect(await detectTransactionType(transaction, web3Context)).toBe('0x2');
+			expect(detectTransactionType(transaction, web3Context)).toBe('0x2');
 		});
 	});
 
 	describe('should not be able to detect transaction type, returning undefined', () => {
-        jest.spyOn(rpcMethodWrappers, 'getBlock').mockResolvedValue(postEip1559Block)
 		const web3Context = new Web3Context<EthExecutionAPI>({
 			provider: new HttpProvider('http://127.0.0.1:80'),
 		});
 		it.each(transactionTypeUndefined)('%s', async transaction => {
-			expect(await detectTransactionType(transaction, web3Context)).toBeUndefined();
+			expect(detectTransactionType(transaction, web3Context)).toBeUndefined();
 		});
 	});
 
@@ -107,7 +79,7 @@ describe('detectTransactionType', () => {
 		it.each(transactionTypeValidationError)('%s', async transaction => {
 			let err;
 			try {
-				await detectTransactionType(transaction, web3Context);
+				detectTransactionType(transaction, web3Context);
 			} catch (error) {
 				err = error;
 			}

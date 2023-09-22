@@ -110,11 +110,11 @@ export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	return getTransactionCount(web3Context, address, web3Context.defaultBlock, returnFormat);
 };
 
-export const getTransactionType = async (
+export const getTransactionType = (
 	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
-	const inferredType = await detectTransactionType(transaction, web3Context);
+	const inferredType = detectTransactionType(transaction, web3Context);
 	if (!isNullish(inferredType)) return inferredType;
 	if (!isNullish(web3Context.defaultTransactionType))
 		return format({ format: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
@@ -215,7 +215,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 		populatedTransaction.gasLimit = populatedTransaction.gas;
 	}
 
-	populatedTransaction.type = await getTransactionType(populatedTransaction, options.web3Context);
+	populatedTransaction.type = getTransactionType(populatedTransaction, options.web3Context);
 	if (
 		isNullish(populatedTransaction.accessList) &&
 		(populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2')

@@ -21,8 +21,6 @@ import { EthExecutionAPI, HardforksOrdered, Transaction, ETH_DATA_FORMAT } from 
 import { Web3ValidatorError, isNullish, validator } from 'web3-validator';
 import { InvalidPropertiesForTransactionTypeError } from 'web3-errors';
 
-// eslint-disable-next-line import/no-cycle
-import { getBlock } from '../rpc_method_wrappers.js';
 import { InternalTransaction } from '../types.js';
 
 // undefined is treated as null for JSON schema validator
@@ -77,9 +75,8 @@ const validateTxTypeAndHandleErrors = (
 	}
 };
 
-export const defaultTransactionTypeParser: TransactionTypeParser = async (
-	transaction,
-	web3Context,
+export const defaultTransactionTypeParser: TransactionTypeParser = (
+	transaction
 ) => {
 	const tx = transaction as unknown as Transaction;
 	if (!isNullish(tx.type)) {
@@ -127,9 +124,8 @@ export const defaultTransactionTypeParser: TransactionTypeParser = async (
 		if (hardforkIndex === Object.keys(HardforksOrdered).indexOf('berlin')) return '0x0';
 	}
 
-	const block = await getBlock(web3Context, web3Context.defaultBlock, false, ETH_DATA_FORMAT);
-	// gasprice is defined or eip 1559 is not supported
-	if (!isNullish(tx.gasPrice) || isNullish(block.baseFeePerGas)) {
+	// gasprice is defined
+	if (!isNullish(tx.gasPrice)) {
 		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
 		return '0x0';
 	}
@@ -138,13 +134,12 @@ export const defaultTransactionTypeParser: TransactionTypeParser = async (
 	return undefined;
 };
 
-export const detectTransactionType = async (
+export const detectTransactionType = (
 	transaction: InternalTransaction,
-	web3Context: Web3Context<EthExecutionAPI>,
+	web3Context?: Web3Context<EthExecutionAPI>,
 ) =>
 	(web3Context?.transactionTypeParser ?? defaultTransactionTypeParser)(
-		transaction as unknown as Record<string, unknown>,
-		web3Context,
+		transaction as unknown as Record<string, unknown>
 	);
 
 export const detectRawTransactionType = (transaction: Uint8Array) =>

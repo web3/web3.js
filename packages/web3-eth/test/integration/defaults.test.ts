@@ -780,7 +780,7 @@ describe('defaults', () => {
 			
 			expect(eth2.defaultTransactionType).toBe('0x4444');
 
-			const res = await getTransactionType(
+			const res = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -800,7 +800,7 @@ describe('defaults', () => {
 			// tx.maxPriorityFeePerGas !== undefined ||
 			// tx.hardfork === 'london' ||
 			// tx.common?.hardfork === 'london'
-			const maxFeePerGasOverride = await getTransactionType(
+			const maxFeePerGasOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -815,7 +815,7 @@ describe('defaults', () => {
 				eth2,
 			);
 			expect(maxFeePerGasOverride).toBe('0x2');
-			const maxPriorityFeePerGasOverride = await getTransactionType(
+			const maxPriorityFeePerGasOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -830,7 +830,7 @@ describe('defaults', () => {
 				eth2,
 			);
 			expect(maxPriorityFeePerGasOverride).toBe('0x2');
-			const hardforkOverride = await getTransactionType(
+			const hardforkOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -845,7 +845,7 @@ describe('defaults', () => {
 				eth2,
 			);
 			expect(hardforkOverride).toBe('0x2');
-			const commonOverride = await getTransactionType(
+			const commonOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -867,7 +867,7 @@ describe('defaults', () => {
 			// override to 0x1 if:
 			// tx.accessList !== undefined || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin'
 
-			const accessListOverride = await getTransactionType(
+			const accessListOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -888,7 +888,7 @@ describe('defaults', () => {
 			);
 			expect(accessListOverride).toBe('0x1');
 
-			const hardforkBerlinOverride = await getTransactionType(
+			const hardforkBerlinOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -904,7 +904,7 @@ describe('defaults', () => {
 			);
 			expect(hardforkBerlinOverride).toBe('0x0');
 
-			const commonBerlinOverride = await getTransactionType(
+			const commonBerlinOverride = getTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
@@ -1033,7 +1033,7 @@ describe('defaults', () => {
 				},
 			});
 			expect(eth2.transactionTypeParser).toBe(newParserMock);
-			await detectTransactionType(
+			detectTransactionType(
 				{
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 					to: '0x3535353535353535353535353535353535353535',
