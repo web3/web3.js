@@ -200,3 +200,7 @@ Documentation:
 ### Fixed
 
 -   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
+
+### Added
+
+-   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)

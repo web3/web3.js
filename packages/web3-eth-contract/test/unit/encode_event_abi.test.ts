@@ -14,8 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { AbiEventFragment } from 'web3-types';
-import { ContractOptions, encodeEventABI } from '../../src';
+import { AbiEventFragment, ContractOptions } from 'web3-types';
+import { encodeEventABI } from '../../src';
 
 const contractOptions: ContractOptions = {
 	address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',

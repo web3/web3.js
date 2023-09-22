@@ -24,6 +24,6 @@ describe('getEncodedEip712Data', () => {
 	});
 
 	it.each(erroneousTestData)('%s', (_, typedData, hashEncodedData, expectedError) => {
-		expect(() => getEncodedEip712Data(typedData, hashEncodedData)).toThrowError(expectedError);
+		expect(() => getEncodedEip712Data(typedData, hashEncodedData)).toThrow(expectedError);
 	});
 });

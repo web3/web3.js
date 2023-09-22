@@ -92,6 +92,7 @@ describe('contract', () => {
 					.setValues(1, 'string value', true)
 					.send(sendOptions);
 
+				expect(receipt.events).toBeUndefined();
 				expect(receipt).toEqual(
 					expect.objectContaining({
 						// status: BigInt(1),

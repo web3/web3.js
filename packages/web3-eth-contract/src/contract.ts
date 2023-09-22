@@ -33,8 +33,11 @@ import {
 	call,
 	estimateGas,
 	getLogs,
-	NewHeadsSubscription,
 	sendTransaction,
+	decodeEventABI,
+	NewHeadsSubscription,
+	ALL_EVENTS,
+	ALL_EVENTS_ABI,
 	SendTransactionEvents,
 } from 'web3-eth';
 import {
@@ -76,6 +79,9 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	Numbers,
 	Web3ValidationErrorObject,
+	EventLog,
+	ContractAbiWithSignature,
+	ContractOptions,
 } from 'web3-types';
 import { format, isDataFormat, keccak256, toChecksumAddress } from 'web3-utils';
 import {
@@ -85,14 +91,10 @@ import {
 	ValidationSchemaInput,
 	Web3ValidatorError,
 } from 'web3-validator';
-import { ALL_EVENTS, ALL_EVENTS_ABI } from './constants.js';
-import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding.js';
+import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding.js';
 import { LogsSubscription } from './log_subscription.js';
 import {
-	ContractAbiWithSignature,
 	ContractEventOptions,
-	ContractOptions,
-	EventLog,
 	NonPayableMethodObject,
 	NonPayableTxOptions,
 	PayableMethodObject,
@@ -707,7 +709,7 @@ export class Contract<Abi extends ContractAbi>
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		eventName: keyof ContractEvents<Abi> | 'allEvents',
+		eventName: keyof ContractEvents<Abi> | 'allEvents' | 'ALLEVENTS',
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -715,16 +717,21 @@ export class Contract<Abi extends ContractAbi>
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		eventName: keyof ContractEvents<Abi> | 'allEvents',
+		eventName: keyof ContractEvents<Abi> | 'allEvents' | 'ALLEVENTS',
 		filter: Omit<Filter, 'address'>,
 		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		param1?: keyof ContractEvents<Abi> | 'allEvents' | Omit<Filter, 'address'> | ReturnFormat,
+		param1?:
+			| keyof ContractEvents<Abi>
+			| 'allEvents'
+			| 'ALLEVENTS'
+			| Omit<Filter, 'address'>
+			| ReturnFormat,
 		param2?: Omit<Filter, 'address'> | ReturnFormat,
 		param3?: ReturnFormat,
 	): Promise<(string | EventLog)[]> {
-		const eventName = typeof param1 === 'string' ? param1 : 'allEvents';
+		const eventName = typeof param1 === 'string' ? param1 : ALL_EVENTS;
 
 		const options =
 			// eslint-disable-next-line no-nested-ternary
@@ -751,11 +758,13 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
+
 		const { fromBlock, toBlock, topics, address } = encodeEventABI(
 			this.options,
 			abi,
 			options ?? {},
 		);
+
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
 		const decodedLogs = logs.map(log =>
 			typeof log === 'string'
@@ -1076,6 +1085,7 @@ export class Contract<Abi extends ContractAbi>
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
+			contractAbi: this._jsonInterface,
 		});
 
 		// eslint-disable-next-line no-void
@@ -1117,6 +1127,7 @@ export class Contract<Abi extends ContractAbi>
 				newContract.options.address = receipt.contractAddress;
 				return newContract;
 			},
+			contractAbi: this._jsonInterface,
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
 		});
