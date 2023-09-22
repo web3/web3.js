@@ -20,7 +20,7 @@ import { decodeParameters, encodeParameters } from '../../src';
 import testsData from '../fixtures/abitestsdata.json';
 
 describe('encodeParameters decodeParameters tests should pass', () => {
-	it.each(testsData)(`unit test of encodeParameters`, async encoderTestObj => {
+	it.each(testsData)(`unit test of encodeParameters - $name`, async encoderTestObj => {
 		const encodedResult = encodeParameters([encoderTestObj.type], [encoderTestObj.value]);
 		expect(encodedResult).toEqual(encoderTestObj.encoded);
 	});

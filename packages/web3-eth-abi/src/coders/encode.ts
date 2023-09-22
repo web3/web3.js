@@ -28,7 +28,6 @@ export function encodeParameters(abi: ReadonlyArray<AbiInput>, params: unknown[]
 		});
 	}
 	const abiParams = toAbiParams(abi);
-
 	return utils.uint8ArrayToHexString(
 		encodeTuple({ type: 'tuple', name: '', components: abiParams }, params).encoded,
 	);

@@ -106,7 +106,7 @@ export function extractArrayType(param: AbiParameter): { size: number; param: Ab
 		}
 	}
 	return {
-		param: { type: arrayParamType, name: '' },
+		param: { type: arrayParamType, name: '', components: param.components },
 		size,
 	};
 }
