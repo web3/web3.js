@@ -48,7 +48,6 @@ import { bytesToHex, format } from 'web3-utils';
 import { NUMBER_DATA_FORMAT } from '../constants.js';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount, estimateGas } from '../rpc_method_wrappers.js';
-// eslint-disable-next-line import/no-cycle
 import { detectTransactionType } from './detect_transaction_type.js';
 import { transactionSchema } from '../schemas.js';
 import { InternalTransaction } from '../types.js';
