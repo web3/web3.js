@@ -18,18 +18,22 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiInput } from 'web3-types';
 import { decodeParameters, encodeParameters } from '../../src';
 import testsData from '../fixtures/abitestsdata.json';
+import { deepEqualTolerateBigInt, removeKey } from './test_utils';
 
 describe('encodeParameters decodeParameters tests should pass', () => {
-	it.each(testsData)(`unit test of encodeParameters - $name`, async encoderTestObj => {
+	it.each(testsData)(`unit test of encodeParameters - $name`, encoderTestObj => {
 		const encodedResult = encodeParameters([encoderTestObj.type], [encoderTestObj.value]);
 		expect(encodedResult).toEqual(encoderTestObj.encoded);
 	});
 
-	it.skip.each(testsData)('unit test of decodeParameters', async decoderTestObj => {
+	it.each(testsData)('unit test of decodeParameters - $name', decoderTestObj => {
 		const decodedResult = decodeParameters(
 			[decoderTestObj.type] as AbiInput[],
 			decoderTestObj.encoded,
 		);
-		expect(decodedResult).toEqual(decoderTestObj.verbose);
+
+		removeKey(decodedResult[0], '__length__');
+
+		expect(deepEqualTolerateBigInt(decodedResult[0], decoderTestObj.value)).toBeTruthy();
 	});
 });
