@@ -181,6 +181,6 @@ Documentation:
 
 ## [Unreleased]
 
-### Added
+### Changed
 
--   Transactions will now default to type 2 transactions instead of type 0, similar to 1.x version. (#6282)
+-   defaultTransactionType is now type 0x2 instead of 0x0 (#6282)
