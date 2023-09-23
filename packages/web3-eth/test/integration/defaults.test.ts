@@ -1015,7 +1015,7 @@ describe('defaults', () => {
 			});
 			expect(newBuilderMock).toHaveBeenCalled();
 		});
-		it('transactionTypeParser', async () => {
+		it('transactionTypeParser', () => {
 			// default
 			expect(web3Eth.transactionTypeParser).toBeUndefined();
 
