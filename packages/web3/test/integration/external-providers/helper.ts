@@ -24,11 +24,9 @@ import Web3 from '../../../src/index';
  */
 export async function performBasicRpcCalls(provider: SupportedProviders) {
 	const web3 = new Web3(provider);
-
 	const accounts = await web3.eth.getAccounts();
 	expect(accounts).toBeDefined();
 	expect(accounts.length).toBeGreaterThan(0);
-
 	// get the last block number
 	const blockNumber0 = await web3.eth.getBlockNumber();
 	expect(typeof blockNumber0).toBe('bigint');
@@ -38,6 +36,7 @@ export async function performBasicRpcCalls(provider: SupportedProviders) {
 		to: accounts[1],
 		from: accounts[0],
 		value: '1',
+		gas: 21000
 	});
 	expect(tx.status).toBe(BigInt(1));
 

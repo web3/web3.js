@@ -162,7 +162,7 @@ describe('contract', () => {
 						status: BigInt(0),
 						to: contractDeployed.options.address?.toLowerCase(),
 						transactionIndex: BigInt(0),
-						type: BigInt(0),
+						type: BigInt(2),
 					},
 				});
 			});

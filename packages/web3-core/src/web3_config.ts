@@ -85,7 +85,7 @@ export abstract class Web3Config
 		defaultHardfork: 'london',
 		// TODO - Check if there is a default Common
 		defaultCommon: undefined,
-		defaultTransactionType: '0x0',
+		defaultTransactionType: '0x2',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
 		enableExperimentalFeatures: {
 			useSubscriptionWhenCheckingBlockTimeout: false,
