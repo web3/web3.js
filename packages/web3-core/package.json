@@ -1,6 +1,6 @@
 {
 	"name": "web3-core",
-	"version": "4.2.0",
+	"version": "4.2.0-bigint",
 	"description": "Web3 core tools for sub-packages. This is an internal package.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
