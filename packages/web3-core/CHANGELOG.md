@@ -173,4 +173,14 @@ Documentation:
 
 -   To fix issue #6190, added the functionality to introduce different timeout value for Web3. (#6336)
 
+## [4.2.0]
+
+### Added
+
+-   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377) (#6400)
+
 ## [Unreleased]
+
+### Changed
+
+-   defaultTransactionType is now type 0x2 instead of 0x0 (#6282)

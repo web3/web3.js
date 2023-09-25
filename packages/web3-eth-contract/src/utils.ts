@@ -26,10 +26,32 @@ import {
 	NonPayableCallOptions,
 	PayableCallOptions,
 	ContractInitOptions,
+	ContractOptions,
 } from 'web3-types';
-import { isNullish, mergeDeep, toHex } from 'web3-utils';
+import { isNullish, mergeDeep } from 'web3-utils';
 import { encodeMethodABI } from './encoding.js';
-import { ContractOptions, Web3ContractContext } from './types.js';
+import { Web3ContractContext } from './types.js';
+
+const dataInputEncodeMethodHelper = (
+	txParams: TransactionCall | TransactionForAccessList,
+	abi: AbiFunctionFragment,
+	params: unknown[],
+	dataInputFill?: 'data' | 'input' | 'both',
+): { data?: HexString; input?: HexString } => {
+	const tx: { data?: HexString; input?: HexString } = {};
+	if (!isNullish(txParams.data) || dataInputFill === 'both') {
+		tx.data = encodeMethodABI(abi, params, (txParams.data ?? txParams.input) as HexString);
+	}
+	if (!isNullish(txParams.input) || dataInputFill === 'both') {
+		tx.input = encodeMethodABI(abi, params, (txParams.input ?? txParams.data) as HexString);
+	}
+	// if input and data is empty, use web3config default
+	if (isNullish(tx.input) && isNullish(tx.data)) {
+		tx[dataInputFill as 'data' | 'input'] = encodeMethodABI(abi, params);
+	}
+
+	return { data: tx.data as HexString, input: tx.input as HexString };
+};
 
 export const getSendTxParams = ({
 	abi,
@@ -43,11 +65,12 @@ export const getSendTxParams = ({
 		input?: HexString;
 		data?: HexString;
 		to?: Address;
+		dataInputFill?: 'input' | 'data' | 'both';
 	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	const deploymentCall = options?.input ?? options?.data ?? contractOptions.input;
-
+	const deploymentCall =
+		options?.input ?? options?.data ?? contractOptions.input ?? contractOptions.data;
 	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
@@ -55,7 +78,6 @@ export const getSendTxParams = ({
 	if (!options?.from && !contractOptions.from) {
 		throw new Web3ContractError('Contract "from" address not specified');
 	}
-
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -65,16 +87,12 @@ export const getSendTxParams = ({
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-
-	if (!txParams.input || abi.type === 'constructor') {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
-	}
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
+	txParams = { ...txParams, data: dataInput.data, input: dataInput.input };
 
 	return txParams;
 };
@@ -87,13 +105,15 @@ export const getEthTxCallParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address };
+	options?: (PayableCallOptions | NonPayableCallOptions) & {
+		to?: Address;
+		dataInputFill?: 'input' | 'data' | 'both';
+	};
 	contractOptions: ContractOptions;
 }): TransactionCall => {
 	if (!options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
-
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -103,14 +123,13 @@ export const getEthTxCallParams = ({
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	txParams = {
-		...txParams,
-		input: encodeMethodABI(abi, params, txParams.input ? toHex(txParams.input) : undefined),
-	};
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
+	txParams = { ...txParams, data: dataInput.data, input: dataInput.input };
 
 	return txParams;
 };
@@ -123,7 +142,9 @@ export const getEstimateGasParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: PayableCallOptions | NonPayableCallOptions;
+	options?: (PayableCallOptions | NonPayableCallOptions) & {
+		dataInputFill?: 'input' | 'data' | 'both';
+	};
 	contractOptions: ContractOptions;
 }): Partial<TransactionWithSenderAPI> => {
 	let txParams = mergeDeep(
@@ -133,14 +154,13 @@ export const getEstimateGasParams = ({
 			gasPrice: contractOptions.gasPrice,
 			from: contractOptions.from,
 			input: contractOptions.input,
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	txParams = {
-		...txParams,
-		input: encodeMethodABI(abi, params, txParams.input ? toHex(txParams.input) : undefined),
-	};
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
+	txParams = { ...txParams, data: dataInput.data, input: dataInput.input };
 
 	return txParams as TransactionWithSenderAPI;
 };
@@ -158,6 +178,7 @@ export const isContractInitOptions = (options: unknown): options is ContractInit
 		'address',
 		'jsonInterface',
 		'syncWithContext',
+		'dataInputFill',
 	].some(key => key in options);
 
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
@@ -171,7 +192,10 @@ export const getCreateAccessListParams = ({
 }: {
 	abi: AbiFunctionFragment;
 	params: unknown[];
-	options?: (PayableCallOptions | NonPayableCallOptions) & { to?: Address };
+	options?: (PayableCallOptions | NonPayableCallOptions) & {
+		to?: Address;
+		dataInputFill?: 'input' | 'data' | 'both';
+	};
 	contractOptions: ContractOptions;
 }): TransactionForAccessList => {
 	if (!options?.to && !contractOptions.address) {
@@ -191,16 +215,13 @@ export const getCreateAccessListParams = ({
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
+			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionForAccessList;
 
-	if (!txParams.input || abi.type === 'constructor') {
-		txParams = {
-			...txParams,
-			input: encodeMethodABI(abi, params, txParams.input as HexString),
-		};
-	}
+	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
+	txParams = { ...txParams, data: dataInput.data, input: dataInput.input };
 
 	return txParams;
 };

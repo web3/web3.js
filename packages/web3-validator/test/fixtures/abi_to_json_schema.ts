@@ -1536,4 +1536,126 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 			],
 		},
 	},
+	{
+		title: 'multi-dimensional array',
+		abi: {
+			fullSchema: [
+				{
+					name: 'x1',
+					type: 'uint256[][]',
+				},
+				{
+					name: 'x2',
+					type: 'uint256[][]',
+				},
+				{
+					name: 'x3',
+					type: 'uint256',
+				},
+			],
+			shortSchema: ['uint256[][]', 'uint256[][]', 'uint256'],
+			data: [
+				[
+					[1, 1],
+					[2, 2],
+				],
+				[
+					[1, 1, 1],
+					[2, 2, 2],
+					[3, 3, 3],
+				],
+				42,
+			],
+		},
+		json: {
+			fullSchema: {
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						items: [
+							{
+								type: 'array',
+								$id: 'x1',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+							},
+						],
+					},
+					{
+						type: 'array',
+						items: [
+							{
+								type: 'array',
+								$id: 'x2',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+							},
+						],
+					},
+					{
+						$id: 'x3',
+						format: 'uint256',
+						required: true,
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
+			},
+			shortSchema: {
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						items: [
+							{
+								type: 'array',
+								$id: '/0/0',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+							},
+						],
+					},
+					{
+						type: 'array',
+						items: [
+							{
+								type: 'array',
+								$id: '/0/1',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+							},
+						],
+					},
+					{
+						$id: '/0/2',
+						format: 'uint256',
+						required: true,
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
+			},
+			data: {
+				x1: [
+					[1, 1],
+					[2, 2],
+				],
+				x2: [
+					[1, 1, 1],
+					[2, 2, 2],
+					[3, 3, 3],
+				],
+				x3: 42,
+			},
+		},
+	},
 ];

@@ -50,8 +50,9 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 12. Click `Save draft`
 13. Open pull request to merge branch created in `Step 2` (`release/bumped-version`) into `4.x`
 14. Wait for all tests to pass in github CI/CD , If there are any unusual warnings or errors in logs, discuss with team
-15. When sufficient approvals have been met, merge the pull request
-16. Publish documentation changes
-17. Publish draft release created in `Step 11`
-18. Run `npx lerna publish from-package --ignore-scripts --dist-tag alpha` in the root directory to publish packages to NPM
-    - lerna will not invoke life cycle scripts before publishing and this will publish all packages to NPM public registry
+15. When sufficient approvals have been met, publish draft release created in `Step 11`
+16. Run `npx lerna publish from-package --ignore-scripts --dist-tag <<TAG>>` in the root directory to publish packages to NPM
+    - IMPORTANT: Replace `<<TAG>>` with required tag in above command, e.g. if publishing RC, use following command:
+      `npx lerna publish from-package --ignore-scripts --dist-tag rc`
+    - lerna will not invoke life cycle scripts before publishing and this will publish all packages to NPM public registry.
+17. Finally if all of above steps are completed successfully, merge release PR into `4.x` branch.

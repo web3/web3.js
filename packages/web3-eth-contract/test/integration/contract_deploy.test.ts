@@ -40,7 +40,7 @@ describe('contract', () => {
 		let pkAccount: { address: string; privateKey: string };
 		let web3Eth: Web3Eth;
 
-		beforeAll(async () => {
+		beforeAll(() => {
 			web3Eth = new Web3Eth(getSystemTestProvider());
 			deployOptions = {
 				data: GreeterBytecode,

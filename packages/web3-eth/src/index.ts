@@ -53,7 +53,9 @@ import 'setimmediate';
 import { Web3Eth } from './web3_eth.js';
 
 export * from './web3_eth.js';
+export * from './utils/decoding.js';
 export * from './schemas.js';
+export * from './constants.js';
 export * from './types.js';
 export * from './validation.js';
 export * from './rpc_method_wrappers.js';

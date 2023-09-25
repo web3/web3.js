@@ -1,6 +1,6 @@
 {
 	"name": "web3-providers-ws",
-	"version": "4.0.5",
+	"version": "4.0.6",
 	"description": "Websocket provider for Web3 4.x.x",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -48,8 +48,8 @@
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
 		"eslint": "^8.20.0",
+		"eslint-config-base-web3": "0.1.0",
 		"eslint-config-prettier": "^8.5.0",
-		"eslint-config-web3-base": "0.1.0",
 		"eslint-plugin-import": "^2.26.0",
 		"express": "^4.18.1",
 		"ganache": "^7.7.6",
@@ -63,9 +63,9 @@
 	"dependencies": {
 		"@types/ws": "8.5.3",
 		"isomorphic-ws": "^5.0.0",
-		"web3-errors": "^1.1.1",
-		"web3-types": "^1.1.1",
-		"web3-utils": "^4.0.5",
+		"web3-errors": "^1.1.2",
+		"web3-types": "^1.2.0",
+		"web3-utils": "^4.0.6",
 		"ws": "^8.8.1"
 	}
 }

@@ -21,18 +21,15 @@ import {
 	AbiConstructorFragment,
 	AbiEventFragment,
 	AbiFunctionFragment,
-	LogsInput,
 	Filter,
 	HexString,
 	Topic,
 	FMT_NUMBER,
 	FMT_BYTES,
-	DataFormat,
-	DEFAULT_RETURN_FORMAT,
+	ContractOptions,
 } from 'web3-types';
 
 import {
-	decodeLog,
 	decodeParameters,
 	encodeEventSignature,
 	encodeFunctionSignature,
@@ -42,12 +39,10 @@ import {
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
 
-import { blockSchema, logSchema } from 'web3-eth';
-
+import { blockSchema, ALL_EVENTS } from 'web3-eth';
 import { Web3ContractError } from 'web3-errors';
 
-// eslint-disable-next-line import/no-cycle
-import { ContractOptions, ContractAbiWithSignature, EventLog } from './types.js';
+export { decodeEventABI } from 'web3-eth';
 
 type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 export const encodeEventABI = (
@@ -77,14 +72,14 @@ export const encodeEventABI = (
 	} else {
 		opts.topics = [];
 		// add event signature
-		if (event && !event.anonymous && event.name !== 'ALLEVENTS') {
+		if (event && !event.anonymous && ![ALL_EVENTS, 'allEvents'].includes(event.name)) {
 			opts.topics.push(
 				event.signature ?? encodeEventSignature(jsonInterfaceMethodToString(event)),
 			);
 		}
 
 		// add event topics (indexed arguments)
-		if (event.name !== 'ALLEVENTS' && event.inputs) {
+		if (![ALL_EVENTS, 'allEvents'].includes(event.name) && event.inputs) {
 			for (const input of event.inputs) {
 				if (!input.indexed) {
 					continue;
@@ -119,75 +114,12 @@ export const encodeEventABI = (
 	return opts;
 };
 
-export const decodeEventABI = (
-	event: AbiEventFragment & { signature: string },
-	data: LogsInput,
-	jsonInterface: ContractAbiWithSignature,
-	returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
-): EventLog => {
-	let modifiedEvent = { ...event };
-
-	const result = format(logSchema, data, returnFormat);
-
-	// if allEvents get the right event
-	if (modifiedEvent.name === 'ALLEVENTS') {
-		const matchedEvent = jsonInterface.find(j => j.signature === data.topics[0]);
-		if (matchedEvent) {
-			modifiedEvent = matchedEvent as AbiEventFragment & { signature: string };
-		} else {
-			modifiedEvent = { anonymous: true } as unknown as AbiEventFragment & {
-				signature: string;
-			};
-		}
-	}
-
-	// create empty inputs if none are present (e.g. anonymous events on allEvents)
-	modifiedEvent.inputs = modifiedEvent.inputs ?? event.inputs ?? [];
-
-	// Handle case where an event signature shadows the current ABI with non-identical
-	// arg indexing. If # of topics doesn't match, event is anon.
-	if (!modifiedEvent.anonymous) {
-		let indexedInputs = 0;
-		(modifiedEvent.inputs ?? []).forEach(input => {
-			if (input.indexed) {
-				indexedInputs += 1;
-			}
-		});
-
-		if (indexedInputs > 0 && data?.topics && data?.topics.length !== indexedInputs + 1) {
-			// checks if event is anonymous
-			modifiedEvent = {
-				...modifiedEvent,
-				anonymous: true,
-				inputs: [],
-			};
-		}
-	}
-
-	const argTopics = modifiedEvent.anonymous ? data.topics : (data.topics ?? []).slice(1);
-	return {
-		...result,
-		returnValues: decodeLog([...(modifiedEvent.inputs ?? [])], data.data, argTopics),
-		event: modifiedEvent.name,
-		signature:
-			modifiedEvent.anonymous || !data.topics || data.topics.length === 0 || !data.topics[0]
-				? undefined
-				: data.topics[0],
-
-		raw: {
-			data: data.data,
-			topics: data.topics,
-		},
-	};
-};
-
 export const encodeMethodABI = (
 	abi: AbiFunctionFragment | AbiConstructorFragment,
 	args: unknown[],
 	deployData?: HexString,
 ) => {
 	const inputLength = Array.isArray(abi.inputs) ? abi.inputs.length : 0;
-
 	if (inputLength !== args.length) {
 		throw new Web3ContractError(
 			`The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`,

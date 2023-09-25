@@ -37,6 +37,7 @@ export interface Web3ConfigOptions {
 	transactionConfirmationPollingInterval?: number;
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
+	contractDataInputFill: 'data' | 'input' | 'both';
 	defaultNetworkId?: Numbers;
 	defaultChain: string;
 	defaultHardfork: string;
@@ -78,12 +79,13 @@ export abstract class Web3Config
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
+		contractDataInputFill: 'input',
 		defaultNetworkId: undefined,
 		defaultChain: 'mainnet',
 		defaultHardfork: 'london',
 		// TODO - Check if there is a default Common
 		defaultCommon: undefined,
-		defaultTransactionType: '0x0',
+		defaultTransactionType: '0x2',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
 		enableExperimentalFeatures: {
 			useSubscriptionWhenCheckingBlockTimeout: false,
@@ -124,6 +126,24 @@ export abstract class Web3Config
 	public set handleRevert(val) {
 		this._triggerConfigChange('handleRevert', val);
 		this.config.handleRevert = val;
+	}
+
+	/**
+	 * The `contractDataInputFill` options property will allow you to set the hash of the method signature and encoded parameters to the property
+	 * either `data`, `input` or both within your contract.
+	 * This will affect the contracts send, call and estimateGas methods
+	 * Default is `input`.
+	 */
+	public get contractDataInputFill() {
+		return this.config.contractDataInputFill;
+	}
+
+	/**
+	 * Will set the contractDataInputFill
+	 */
+	public set contractDataInputFill(val) {
+		this._triggerConfigChange('contractDataInputFill', val);
+		this.config.contractDataInputFill = val;
 	}
 
 	/**

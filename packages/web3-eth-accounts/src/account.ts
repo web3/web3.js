@@ -149,8 +149,8 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
 
 	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
 	const signatureBytes = signature.toCompactRawBytes();
-	const r = signature.r.toString(16);
-	const s = signature.s.toString(16);
+	const r = signature.r.toString(16).padStart(64, '0');
+	const s = signature.s.toString(16).padStart(64, '0');
 	const v = signature.recovery! + 27;
 
 	return {

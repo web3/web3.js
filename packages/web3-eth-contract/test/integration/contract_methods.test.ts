@@ -92,6 +92,7 @@ describe('contract', () => {
 					.setValues(1, 'string value', true)
 					.send(sendOptions);
 
+				expect(receipt.events).toBeUndefined();
 				expect(receipt).toEqual(
 					expect.objectContaining({
 						// status: BigInt(1),
@@ -161,7 +162,7 @@ describe('contract', () => {
 						status: BigInt(0),
 						to: contractDeployed.options.address?.toLowerCase(),
 						transactionIndex: BigInt(0),
-						type: BigInt(0),
+						type: BigInt(2),
 					},
 				});
 			});

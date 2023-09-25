@@ -185,4 +185,22 @@ Documentation:
 
 -   Added return type for `formatSubscriptionResult` in class `NewHeadsSubscription` (#6368)
 
+## [4.2.0]
+
+### Added
+
+-   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377) (#6400)
+
 ## [Unreleased]
+
+### Changed
+
+-   Transactions will now default to type 2 transactions instead of type 0, similar to 1.x version. (#6282)
+
+### Fixed
+
+-   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
+
+### Added
+
+-   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)
