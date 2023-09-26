@@ -343,7 +343,7 @@ export const recover = (
 
 	let v = parseInt(signatureOrV.substring(V_INDEX),16); // 0x + r + s + v
 	if (v > 26) {
-		v = v - 27;
+		v -= 27;
 	}
 
 	const ecPublicKey = secp256k1.Signature.fromCompact(signatureOrV.slice(2, V_INDEX))
