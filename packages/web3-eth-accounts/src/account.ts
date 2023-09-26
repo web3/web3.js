@@ -341,10 +341,13 @@ export const recover = (
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = prefixedOrR ? data : hashMessage(data);
 
-	const v = signatureOrV.substring(V_INDEX); // 0x + r + s + v
+	let v = parseInt(signatureOrV.substring(V_INDEX),16); // 0x + r + s + v
+	if (v > 26) {
+		v = v - 27;
+	}
 
 	const ecPublicKey = secp256k1.Signature.fromCompact(signatureOrV.slice(2, V_INDEX))
-		.addRecoveryBit(parseInt(v, 16) - 27)
+		.addRecoveryBit(v)
 		.recoverPublicKey(hashedMessage.replace('0x', ''))
 		.toRawBytes(false);
 

@@ -381,6 +381,11 @@ export const invalidEncryptData: [
 	],
 ];
 
+export const validRecover: [string, string][] = [
+	[ "I hereby confirm that I am the sole beneficial owner of the assets involved in the business relationship with Fiat24. \nI hereby undertake to inform Fiat24 proactively of any changes to the information contained herein.", "0xec4f73260ac14882e65995a09359896a0ae8f16bd0d28b0d9171655b4e85271e07cda040be059fdcbf52709e3c993eb50a89ce33f41617dc090dc80a583e3c4f00",], // v < 27
+	["test", "0xefb42c22baa0143b322e93b24b0903a0ef47a64b716fbb77debbea55a93dec3e4417aff7dce845723240916c6e34cf17c674828b3addfb0afad966334df5b6311b"] // v >= 27
+]
+
 export const invalidKeyStore: [[any, string]][] = [
 	[
 		// invalid keystore error, missing id field
