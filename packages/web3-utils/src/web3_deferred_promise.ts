@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { OperationTimeoutError } from 'web3-errors';
 import { Web3DeferredPromiseInterface } from 'web3-types';
-import { Timeout } from './promise_helpers';
+import { Timeout } from './promise_helpers.js';
 
 /**
  * The class is a simple implementation of a deferred promise with optional timeout functionality,
