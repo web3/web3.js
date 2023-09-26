@@ -43,7 +43,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 		}
 	}, pollingInterval);
 
-	const [timeoutId, rejectOnTimeout]: [NodeJS.Timer, Promise<never>] = rejectIfTimeout(
+	const [timeoutId, rejectOnTimeout] = rejectIfTimeout(
 		web3Context.transactionPollingTimeout,
 		new TransactionPollingTimeoutError({
 			numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
