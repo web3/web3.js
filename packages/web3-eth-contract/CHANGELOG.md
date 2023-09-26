@@ -309,3 +309,7 @@ Documentation:
 
 
 ## [Unreleased]
+
+### Changed
+
+-   The `events` property was added to the `receipt` object (#6410)

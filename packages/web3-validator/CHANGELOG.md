@@ -148,3 +148,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+## Fixed
+
+-   Multi-dimensional arrays are now handled properly when parsing ABIs

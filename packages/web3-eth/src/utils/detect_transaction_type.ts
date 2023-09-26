@@ -75,9 +75,10 @@ const validateTxTypeAndHandleErrors = (
 	}
 };
 
-export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
+export const defaultTransactionTypeParser: TransactionTypeParser = (
+	transaction
+) => {
 	const tx = transaction as unknown as Transaction;
-
 	if (!isNullish(tx.type)) {
 		let txSchema;
 		switch (tx.type) {
@@ -110,34 +111,26 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 		return '0x1';
 	}
 
-	// We don't return 0x0 here, because if gasPrice is not
-	// undefined, we still don't know if the network
-	// supports EIP-2718 (https://eips.ethereum.org/EIPS/eip-2718)
-	// and whether we should return undefined for legacy txs,
-	// or type 0x0 for legacy txs post EIP-2718
-	if (!isNullish(tx.gasPrice)) {
-		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
+	const givenHardfork = tx.hardfork ?? tx.common?.hardfork;
+
+	if (!isNullish(givenHardfork)) {
+		const hardforkIndex = Object.keys(HardforksOrdered).indexOf(givenHardfork);
+
+		// givenHardfork is London or later, so EIP-2718 is supported
+		if (hardforkIndex >= Object.keys(HardforksOrdered).indexOf('london'))
+			return !isNullish(tx.gasPrice) ? '0x0' : '0x2';
+
+		// givenHardfork is Berlin, tx.accessList is undefined, assume type is 0x0
+		if (hardforkIndex === Object.keys(HardforksOrdered).indexOf('berlin')) return '0x0';
 	}
 
-	const givenHardfork = tx.hardfork ?? tx.common?.hardfork;
-	// If we don't have a hardfork, then we can't be sure we're post
-	// EIP-2718 where transaction types are available
-	if (givenHardfork === undefined) return undefined;
+	// gasprice is defined
+	if (!isNullish(tx.gasPrice)) {
+		validateTxTypeAndHandleErrors(transactionType0x0Schema, tx, '0x0');
+		return '0x0';
+	}
 
-	const hardforkIndex = Object.keys(HardforksOrdered).indexOf(givenHardfork);
-
-	// Unknown hardfork
-	if (hardforkIndex === undefined) return undefined;
-
-	// givenHardfork is London or later, so EIP-2718 is supported
-	if (hardforkIndex >= Object.keys(HardforksOrdered).indexOf('london'))
-		return !isNullish(tx.gasPrice) ? '0x0' : '0x2';
-
-	// givenHardfork is Berlin, tx.accessList is undefined, assume type is 0x0
-	if (hardforkIndex === Object.keys(HardforksOrdered).indexOf('berlin')) return '0x0';
-
-	// For all pre-Berlin hardforks, return undefined since EIP-2718
-	// isn't supported
+	// no transaction type can be inferred from properties, use default transaction type
 	return undefined;
 };
 
@@ -146,7 +139,7 @@ export const detectTransactionType = (
 	web3Context?: Web3Context<EthExecutionAPI>,
 ) =>
 	(web3Context?.transactionTypeParser ?? defaultTransactionTypeParser)(
-		transaction as unknown as Record<string, unknown>,
+		transaction as unknown as Record<string, unknown>
 	);
 
 export const detectRawTransactionType = (transaction: Uint8Array) =>

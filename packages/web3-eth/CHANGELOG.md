@@ -193,6 +193,14 @@ Documentation:
 
 ## [Unreleased]
 
+### Changed
+
+-   Transactions will now default to type 2 transactions instead of type 0, similar to 1.x version. (#6282)
+
 ### Fixed
 
 -   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
+
+### Added
+
+-   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)

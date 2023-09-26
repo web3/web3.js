@@ -61,6 +61,7 @@ describe('Web3Eth.sendTransaction', () => {
 		};
 		const response = await web3Eth.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		expect(response.events).toBeUndefined();
 
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
@@ -84,6 +85,7 @@ describe('Web3Eth.sendTransaction', () => {
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		expect(response.events).toBeUndefined();
 
 		const minedTransactionData = await web3EthWithWallet.getTransaction(
 			response.transactionHash,
@@ -114,6 +116,7 @@ describe('Web3Eth.sendTransaction', () => {
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		expect(response.events).toBeUndefined();
 
 		const minedTransactionData = await web3EthWithWallet.getTransaction(
 			response.transactionHash,
@@ -148,6 +151,7 @@ describe('Web3Eth.sendTransaction', () => {
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		expect(response.events).toBeUndefined();
 
 		const minedTransactionData = await web3EthWithWallet.getTransaction(
 			response.transactionHash,
@@ -167,6 +171,7 @@ describe('Web3Eth.sendTransaction', () => {
 		};
 		const response = await web3Eth.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		expect(response.events).toBeUndefined();
 
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
@@ -180,6 +185,7 @@ describe('Web3Eth.sendTransaction', () => {
 		};
 		const response = await web3Eth.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		expect(response.events).toBeUndefined();
 
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
@@ -199,6 +205,7 @@ describe('Web3Eth.sendTransaction', () => {
 			};
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.status).toBe(BigInt(1));
+			expect(response.events).toBeUndefined();
 			expect(response.contractAddress).toBeDefined();
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
@@ -221,6 +228,7 @@ describe('Web3Eth.sendTransaction', () => {
 				input: contractFunctionCall,
 			};
 			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
 			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
@@ -241,6 +249,7 @@ describe('Web3Eth.sendTransaction', () => {
 				type: BigInt(0),
 			};
 			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
 			expect(response.type).toBe(BigInt(0));
 			expect(response.status).toBe(BigInt(1));
 
@@ -260,6 +269,7 @@ describe('Web3Eth.sendTransaction', () => {
 				accessList: [],
 			};
 			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
 			expect(response.type).toBe(BigInt(1));
 			expect(response.status).toBe(BigInt(1));
 
@@ -275,6 +285,7 @@ describe('Web3Eth.sendTransaction', () => {
 				type: BigInt(2),
 			};
 			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
 			expect(response.type).toBe(BigInt(2));
 			expect(response.status).toBe(BigInt(1));
 
@@ -288,9 +299,41 @@ describe('Web3Eth.sendTransaction', () => {
 				to: '0x0000000000000000000000000000000000000000',
 				data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
 				value: BigInt(1),
+				type: BigInt(0),
 			};
 			const response = await web3Eth.sendTransaction(transaction, DEFAULT_RETURN_FORMAT);
 			expect(response.type).toBe(BigInt(0));
+			expect(response.events).toBeUndefined();
+			expect(response.status).toBe(BigInt(1));
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
+		it('should send a successful autodetected type 0x0 gasprice as data', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
+				value: BigInt(1),
+				gasPrice: BigInt(2500000008),
+			};
+			const response = await web3Eth.sendTransaction(transaction, DEFAULT_RETURN_FORMAT);
+			expect(response.type).toBe(BigInt(0));
+			expect(response.status).toBe(BigInt(1));
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
+		it('should send a successful default type 0x2 transaction with data', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
+				value: BigInt(1),
+				gas: BigInt(30000),
+			};
+			const response = await web3Eth.sendTransaction(transaction, DEFAULT_RETURN_FORMAT);
+			expect(response.type).toBe(BigInt(2));
 			expect(response.status).toBe(BigInt(1));
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject(transaction);
@@ -304,6 +347,7 @@ describe('Web3Eth.sendTransaction', () => {
 			maxFeePerGas: BigInt(2500000016),
 		};
 		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.events).toBeUndefined();
 		expect(response.type).toBe(BigInt(2));
 		expect(response.status).toBe(BigInt(1));
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
@@ -318,6 +362,7 @@ describe('Web3Eth.sendTransaction', () => {
 			maxPriorityFeePerGas: BigInt(100),
 		};
 		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.events).toBeUndefined();
 		expect(response.type).toBe(BigInt(2));
 		expect(response.status).toBe(BigInt(1));
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
@@ -378,9 +423,10 @@ describe('Web3Eth.sendTransaction', () => {
 				expect(typeof data.gasUsed).toBe('bigint');
 				expect(typeof data.transactionIndex).toBe('bigint');
 				expect(data.status).toBe(BigInt(1));
-				expect(data.type).toBe(BigInt(0));
+				expect(data.type).toBe(BigInt(2));
+				expect(data.events).toBeUndefined();
 			});
-			expect.assertions(8);
+			expect.assertions(9);
 		});
 
 		it('should listen to the confirmation event', async () => {

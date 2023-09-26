@@ -26,10 +26,11 @@ import {
 	NonPayableCallOptions,
 	PayableCallOptions,
 	ContractInitOptions,
+	ContractOptions,
 } from 'web3-types';
 import { isNullish, mergeDeep } from 'web3-utils';
 import { encodeMethodABI } from './encoding.js';
-import { ContractOptions, Web3ContractContext } from './types.js';
+import { Web3ContractContext } from './types.js';
 
 const dataInputEncodeMethodHelper = (
 	txParams: TransactionCall | TransactionForAccessList,

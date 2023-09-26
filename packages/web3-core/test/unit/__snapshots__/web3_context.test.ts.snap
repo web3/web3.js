@@ -13,7 +13,7 @@ Object {
     "defaultHardfork": "london",
     "defaultMaxPriorityFeePerGas": "0x9502f900",
     "defaultNetworkId": undefined,
-    "defaultTransactionType": "0x0",
+    "defaultTransactionType": "0x2",
     "enableExperimentalFeatures": Object {
       "useRpcCallSpecification": false,
       "useSubscriptionWhenCheckingBlockTimeout": false,
