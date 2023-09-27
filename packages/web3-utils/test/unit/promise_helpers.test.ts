@@ -21,6 +21,7 @@ import {
 	isPromise,
 	pollTillDefined,
 	rejectIfConditionAtInterval,
+	pollTillDefinedAndReturnIntervalId,
 } from '../../src/promise_helpers';
 
 describe('promise helpers', () => {
@@ -118,6 +119,46 @@ describe('promise helpers', () => {
 				});
 			};
 			await expect(pollTillDefined(asyncHelper, 100)).rejects.toThrow(dummyError);
+		});
+	});
+
+	describe('pollTillDefinedAndReturnIntervalId', () => {
+		it('returns when immediately resolved', async () => {
+			const asyncHelper = async () =>
+				new Promise(resolve => {
+					resolve('resolved');
+				});
+			const [promise] = pollTillDefinedAndReturnIntervalId(asyncHelper, 100);
+			await expect(promise).resolves.toBe('resolved');
+		});
+		it('returns if later resolved', async () => {
+			let counter = 0;
+			const asyncHelper = async () => {
+				if (counter === 0) {
+					counter += 1;
+					return undefined;
+				}
+				return new Promise(resolve => {
+					resolve('resolved');
+				});
+			};
+			const [promise] = pollTillDefinedAndReturnIntervalId(asyncHelper, 100);
+			await expect(promise).resolves.toBe('resolved');
+		});
+		it('throws if later throws', async () => {
+			const dummyError = new Error('error');
+			let counter = 0;
+			const asyncHelper = async () => {
+				if (counter === 0) {
+					counter += 1;
+					return undefined;
+				}
+				return new Promise((_, reject) => {
+					reject(dummyError);
+				});
+			};
+			const [promise] = pollTillDefinedAndReturnIntervalId(asyncHelper, 100);
+			await expect(promise).rejects.toThrow(dummyError);
 		});
 	});
 
