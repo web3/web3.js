@@ -141,8 +141,9 @@ export class Validator {
 						format: string;
 					};
 
+					//
 					if (typeof value === 'undefined') {
-						message = `value at "/${schemaPath}" is required`;
+						message = `value at "/${schemaPath}" is required at "/${schemaPath}" must pass "${format}" validation`;
 					} else {
 						message = `value "${
 							// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
