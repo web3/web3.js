@@ -85,37 +85,7 @@ export async function pollTillDefined<T>(
 	func: AsyncFunction<T>,
 	interval: number,
 ): Promise<Exclude<T, undefined>> {
-	const awaitableRes = waitWithTimeout(func, interval);
-
-	let intervalId: Timer | undefined;
-	const polledRes = new Promise<Exclude<T, undefined>>((resolve, reject) => {
-		intervalId = setInterval(() => {
-			(async () => {
-				try {
-					const res = await waitWithTimeout(func, interval);
-
-					if (!isNullish(res)) {
-						clearInterval(intervalId);
-						resolve(res as unknown as Exclude<T, undefined>);
-					}
-				} catch (error) {
-					clearInterval(intervalId);
-					reject(error);
-				}
-			})() as unknown;
-		}, interval);
-	});
-
-	// If the first call to awaitableRes succeeded, return the result
-	const res = await awaitableRes;
-	if (!isNullish(res)) {
-		if (intervalId) {
-			clearInterval(intervalId);
-		}
-		return res as unknown as Exclude<T, undefined>;
-	}
-
-	return polledRes;
+	return pollTillDefinedAndReturnIntervalId(func, interval)[0];
 }
 /**
  * Enforce a timeout on a promise, so that it can be rejected if it takes too long to complete
