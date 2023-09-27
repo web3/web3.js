@@ -17,10 +17,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { JsonRpcResponse } from 'web3-types';
 import { InvalidResponseError } from 'web3-errors';
 import { EventEmitter } from 'events';
+import { Timeout } from './promise_helpers.js';
 
 export class ChunkResponseParser {
 	private lastChunk: string | undefined;
-	private lastChunkTimeout: NodeJS.Timeout | undefined;
+	private lastChunkTimeout: Timeout | undefined;
 	private _clearQueues: (() => void) | undefined;
 	private readonly eventEmitter: EventEmitter;
 	private readonly autoReconnect: boolean;
