@@ -34,7 +34,7 @@ function resolveByPolling(
 	transactionHash?: Bytes,
 ): [Promise<never>, ResourceCleaner] {
 	const pollingInterval = web3Context.transactionPollingInterval;
-	const [intervalId, promiseToError]: [NodeJS.Timer, Promise<never>] =
+	const [intervalId, promiseToError] =
 		rejectIfConditionAtInterval(async () => {
 			let lastBlockNumber;
 			try {
