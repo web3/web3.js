@@ -63,7 +63,7 @@ export type Components = {
 
 export interface AbiStruct {
 	[key: string]: unknown;
-	name?: string;
+	name: string;
 	type: string;
 }
 
