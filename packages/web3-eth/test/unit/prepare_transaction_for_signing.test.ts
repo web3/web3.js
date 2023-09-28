@@ -15,15 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI } from 'web3-types';
+import { Bytes, EthExecutionAPI } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
 import { isNullish } from 'web3-validator';
 import {
 	AccessListEIP2930Transaction,
 	FeeMarketEIP1559Transaction,
-	Transaction,
-} from 'web3-eth-accounts';
+	LegacyTransaction as Transaction,
+} from '@ethereumjs/tx';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { bytesToHex, hexToBytes } from 'web3-utils';
@@ -91,7 +91,7 @@ describe('prepareTransactionForSigning', () => {
 				expect(transactionHash).toBe(expectedTransactionHash);
 
 				// should be able to obtain expectedMessageToSign
-				const messageToSign = bytesToHex(signedTransaction.getMessageToSign());
+				const messageToSign = bytesToHex(signedTransaction.getMessageToSign() as Bytes);
 				expect(messageToSign).toBe(expectedMessageToSign);
 				// should have expected v, r, and s
 				const v = !isNullish(signedTransaction.v)

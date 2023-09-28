@@ -50,7 +50,7 @@ import {
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { format, hexToBytes, bytesToUint8Array, numberToHex } from 'web3-utils';
-import { TransactionFactory } from 'web3-eth-accounts';
+import { TransactionFactory } from '@ethereumjs/tx';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { SignatureError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';

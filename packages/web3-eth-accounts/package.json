@@ -58,7 +58,9 @@
 		"web3-providers-ipc": "^4.0.6"
 	},
 	"dependencies": {
+		"@ethereumjs/common": "^4.0.0",
 		"@ethereumjs/rlp": "^4.0.1",
+		"@ethereumjs/tx": "^5.0.0",
 		"crc-32": "^1.2.2",
 		"ethereum-cryptography": "^2.0.0",
 		"web3-errors": "^1.1.2",

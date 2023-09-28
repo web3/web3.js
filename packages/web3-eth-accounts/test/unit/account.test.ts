@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Address } from 'web3-types';
 import { Web3ValidatorError, isHexStrict } from 'web3-validator';
+import { TransactionFactory, TypedTxData } from '@ethereumjs/tx';
 import {
 	create,
 	decrypt,
@@ -43,8 +44,6 @@ import {
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
 } from '../fixtures/account';
-import { TransactionFactory } from '../../src/tx/transactionFactory';
-import { TxData } from '../../src/tx/types';
 
 describe('accounts', () => {
 	describe('create', () => {
@@ -97,7 +96,7 @@ describe('accounts', () => {
 
 			const signedResult = await signTransaction(
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				TransactionFactory.fromTxData(txData as unknown as TxData),
+				TransactionFactory.fromTxData(txData),
 				account.privateKey,
 			);
 			expect(signedResult).toBeDefined();
@@ -114,7 +113,7 @@ describe('accounts', () => {
 			const txObj = { ...txData, from: account.address };
 			const signedResult = await signTransaction(
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				TransactionFactory.fromTxData(txObj),
+				TransactionFactory.fromTxData(txObj as TypedTxData),
 				account.privateKey,
 			);
 			expect(signedResult).toBeDefined();

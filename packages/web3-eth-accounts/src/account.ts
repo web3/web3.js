@@ -59,16 +59,10 @@ import {
 } from 'web3-utils';
 
 import { isHexStrict, isNullish, isString, validator } from 'web3-validator';
+import { TransactionFactory, TypedTransaction } from '@ethereumjs/tx';
 import { secp256k1 } from './tx/constants.js';
 import { keyStoreSchema } from './schemas.js';
-import { TransactionFactory } from './tx/transactionFactory.js';
-import type {
-	SignatureObject,
-	SignTransactionResult,
-	TypedTransaction,
-	Web3Account,
-	SignResult,
-} from './types.js';
+import type { SignatureObject, SignTransactionResult, Web3Account, SignResult } from './types.js';
 
 /**
  * Get the private key Uint8Array after the validation
@@ -255,7 +249,7 @@ export const signTransaction = async (
 	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new TransactionSigningError('Signer Error');
 
-	const validationErrors = signedTx.validate(true);
+	const validationErrors = signedTx.getValidationErrors();
 
 	if (validationErrors.length > 0) {
 		let errorString = 'Signer Error ';
@@ -269,7 +263,7 @@ export const signTransaction = async (
 	const txHash = sha3Raw(rawTx); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 
 	return {
-		messageHash: bytesToHex(signedTx.getMessageToSign(true)),
+		messageHash: bytesToHex(signedTx.getMessageToSign() as Bytes),
 		v: `0x${signedTx.v.toString(16)}`,
 		r: `0x${signedTx.r.toString(16).padStart(64, '0')}`,
 		s: `0x${signedTx.s.toString(16).padStart(64, '0')}`,

@@ -18,17 +18,3 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import * as ethereumCryptography from 'ethereum-cryptography/secp256k1.js';
 
 export const secp256k1 = ethereumCryptography.secp256k1 ?? ethereumCryptography;
-/**
- * 2^64-1
- */
-export const MAX_UINT64 = BigInt('0xffffffffffffffff');
-
-/**
- * The max integer that the evm can handle (2^256-1)
- */
-export const MAX_INTEGER = BigInt(
-	'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-);
-
-export const SECP256K1_ORDER = secp256k1.CURVE.n;
-export const SECP256K1_ORDER_DIV_2 = SECP256K1_ORDER / BigInt(2);

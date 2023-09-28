@@ -26,7 +26,7 @@ import {
 } from 'web3-errors';
 import { CipherOptions, KeyStore } from 'web3-types';
 import { hexToBytes } from 'web3-utils';
-import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData } from '../../src/tx/types';
+import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TypedTxData } from '@ethereumjs/tx';
 import { sign, signTransaction, encrypt } from '../../src/account';
 
 export const validPrivateKeyToAddressData: [string, string][] = [
@@ -164,7 +164,9 @@ export const signatureRecoverData: [string, any][] = [
 	],
 ];
 
-export const transactionsTestData: [TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData][] = [
+export const transactionsTestData: [
+	TypedTxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
+][] = [
 	[
 		// 'TxLegacy'
 		{

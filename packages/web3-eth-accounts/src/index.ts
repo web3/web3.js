@@ -37,9 +37,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ```
  */
 
+export * from './common/utils.js';
 export * from './wallet.js';
 export * from './account.js';
 export * from './types.js';
 export * from './schemas.js';
-export * from './common/index.js';
-export * from './tx/index.js';
