@@ -16,7 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiError } from 'web3-errors';
-import { AbiCoder, ParamType } from '@ethersproject/abi';
 import { isNullish, leftPad, rightPad, toHex } from 'web3-utils';
 import {
 	AbiInput,
@@ -28,7 +27,6 @@ import {
 	AbiFunctionFragment,
 	AbiConstructorFragment,
 } from 'web3-types';
-import ethersAbiCoder from './ethers_abi_coder.js';
 
 export const isAbiFragment = (item: unknown): item is AbiFragment =>
 	!isNullish(item) &&
@@ -212,35 +210,6 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 		return formatOddHexstrings(hexParam as string);
 	}
 	return param;
-};
-
-// eslint-disable-next-line consistent-return
-export const modifyParams = (
-	coder: ReturnType<AbiCoder['_getCoder']>,
-	param: unknown[],
-	// eslint-disable-next-line consistent-return
-): unknown => {
-	if (coder.name === 'array') {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		return param.map(p =>
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-			modifyParams(ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))), [
-				p,
-			]),
-		);
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
-	(coder as any).coders.forEach((c: ReturnType<AbiCoder['_getCoder']>, i: number) => {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-		if (c.name === 'tuple') {
-			modifyParams(c, [param[i]]);
-		} else {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, no-param-reassign
-			param[i] = formatParam(c.name, param[i]);
-		}
-	});
-	return [];
 };
 
 /**
