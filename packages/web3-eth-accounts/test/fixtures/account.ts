@@ -24,7 +24,7 @@ import {
 	IVLengthError,
 	PBKDF2IterationsError,
 } from 'web3-errors';
-import { CipherOptions, KeyStore } from 'web3-types';
+import { CipherOptions, KeyStore, Bytes } from 'web3-types';
 import { hexToBytes } from 'web3-utils';
 import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData } from '../../src/tx/types';
 import { sign, signTransaction, encrypt } from '../../src/account';
@@ -219,6 +219,31 @@ export const invalidPrivateKeytoAccountData: [
 ][] = [
 	['', new InvalidPrivateKeyError()],
 	[new Uint8Array([]), new PrivateKeyLengthError()],
+];
+
+export const validPrivateKeyToPublicKeyData: [
+	Bytes, boolean, string // private key, isCompressed, public key
+][] = [
+	[
+		"0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f",  // test string to uncompressed publickey
+		false,
+		"0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537662dd17042e6449dc843c281067a4d6d8d1a1775a13c41901670d5de7ee6503a",
+	],
+	[
+		"0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f",  // test string to compressed publickey
+		true,
+		"0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537",
+	],
+	[
+		hexToBytes("0xd933beabed94a9f23917576596b2bc64ffeacfe5ded09a99c0feee8369bd295d"), // test uint8array to uncompressed publickey
+		false,
+		"0x7891db4ed2d26584b0fa87329c40b398c940c08e7dbeb8e3dad83f34dba284c933fb14b1edd8893fa89af3823fd827ee59044033ca068803030afc294de5f390",
+	],
+	[
+		hexToBytes("0xd933beabed94a9f23917576596b2bc64ffeacfe5ded09a99c0feee8369bd295d"), // test uint8array to compressed publickey
+		true,
+		"0x7891db4ed2d26584b0fa87329c40b398c940c08e7dbeb8e3dad83f34dba284c9",
+	],
 ];
 
 export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeyStore][] = [

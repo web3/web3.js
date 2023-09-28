@@ -138,3 +138,7 @@ Documentation:
 
 
 ## [Unreleased]
+
+### Added
+
+-   Added public function `privateKeyToPublicKey`
