@@ -14,13 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Chain, Common, Hardfork } from '../../../src/common';
+import { Chain, Common, Hardfork } from '@ethereumjs/common';
 import { Address } from '../../../src/tx/address';
 import { TransactionFactory } from '../../../src';
 
 const common = new Common({
 	chain: Chain.Mainnet,
-	hardfork: Hardfork.Merge,
+	hardfork: Hardfork.Istanbul,
 	eips: [3860],
 });
 

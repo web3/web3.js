@@ -17,15 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Numbers } from 'web3-types';
 import { bytesToHex } from 'web3-utils';
+import { Chain, Common, Hardfork } from '@ethereumjs/common';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2, secp256k1 } from './constants.js';
-import {
-	Chain,
-	Common,
-	Hardfork,
-	toUint8Array,
-	uint8ArrayToBigInt,
-	unpadUint8Array,
-} from '../common/index.js';
+import { toUint8Array, uint8ArrayToBigInt, unpadUint8Array } from '../common/utils.js';
 import type {
 	AccessListEIP2930TxData,
 	AccessListEIP2930ValuesArray,
@@ -100,7 +94,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	 *
 	 * @hidden
 	 */
-	protected DEFAULT_HARDFORK: string | Hardfork = Hardfork.Merge;
+	protected DEFAULT_HARDFORK: string | Hardfork = Hardfork.Istanbul;
 
 	public constructor(
 		txData: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,

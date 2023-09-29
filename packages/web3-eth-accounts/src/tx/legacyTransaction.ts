@@ -18,6 +18,7 @@ import { RLP } from '@ethereumjs/rlp';
 import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { bytesToHex } from 'web3-utils';
 import { validateNoLeadingZeroes } from 'web3-validator';
+import type { Common } from '@ethereumjs/common';
 import {
 	bigIntToHex,
 	bigIntToUnpaddedUint8Array,
@@ -30,7 +31,6 @@ import { MAX_INTEGER } from './constants.js';
 
 import { BaseTransaction } from './baseTransaction.js';
 
-import type { Common } from '../common/common.js';
 import type { JsonTx, TxData, TxOptions, TxValuesArray } from './types.js';
 import { Capability } from './types.js';
 

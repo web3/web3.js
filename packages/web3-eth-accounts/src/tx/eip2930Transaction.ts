@@ -18,6 +18,7 @@ import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '@ethereumjs/rlp';
 import { bytesToHex, hexToBytes, uint8ArrayConcat, uint8ArrayEquals } from 'web3-utils';
+import type { Common } from '@ethereumjs/common';
 import { MAX_INTEGER } from './constants.js';
 import {
 	getAccessListData,
@@ -41,7 +42,6 @@ import type {
 	JsonTx,
 	TxOptions,
 } from './types.js';
-import type { Common } from '../common/common.js';
 
 const TRANSACTION_TYPE = 1;
 const TRANSACTION_TYPE_UINT8ARRAY = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));

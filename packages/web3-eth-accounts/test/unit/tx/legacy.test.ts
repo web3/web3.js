@@ -16,16 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { RLP } from '@ethereumjs/rlp';
 import { bytesToHex, hexToBytes, uint8ArrayEquals } from 'web3-utils';
+import { Chain, Common, Hardfork } from '@ethereumjs/common';
 import {
-	Chain,
-	Common,
-	Hardfork,
 	intToUint8Array,
 	toUint8Array,
 	uint8ArrayToBigInt,
 	unpadUint8Array,
-} from '../../../src/common';
-
+} from '../../../src/common/utils';
 import { Transaction } from '../../../src';
 import type { TxData } from '../../../src';
 import txFixturesEip155 from '../../fixtures/json/ttTransactionTestEip155VitaliksTests.json';

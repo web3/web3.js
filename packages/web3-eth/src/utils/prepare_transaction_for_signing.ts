@@ -28,7 +28,8 @@ import {
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { toNumber } from 'web3-utils';
-import { TransactionFactory, TxOptions, Common } from 'web3-eth-accounts';
+import { TransactionFactory, TxOptions } from 'web3-eth-accounts';
+import { Common } from '@ethereumjs/common';
 import { isNullish } from 'web3-validator';
 import { validateTransactionForSigning } from '../validation.js';
 import { formatTransaction } from './format_transaction.js';

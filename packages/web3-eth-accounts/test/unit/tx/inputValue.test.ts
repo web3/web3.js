@@ -16,7 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Bytes } from 'web3-types';
 import { hexToBytes } from 'web3-utils';
-import { Chain, Common, Hardfork, toUint8Array } from '../../../src/common';
+import { Chain, Common, Hardfork } from '@ethereumjs/common';
+import { toUint8Array } from '../../../src/common/utils';
 import { Address } from '../../../src/tx/address';
 
 import {

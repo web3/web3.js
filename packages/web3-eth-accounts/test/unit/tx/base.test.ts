@@ -15,13 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { bytesToUint8Array, hexToBytes, uint8ArrayEquals } from 'web3-utils';
+import { Chain, Common, Hardfork } from '@ethereumjs/common';
 import {
 	AccessListEIP2930Transaction,
 	Capability,
 	FeeMarketEIP1559Transaction,
 	Transaction,
 } from '../../../src';
-import { Chain, Common, Hardfork, toUint8Array, uint8ArrayToBigInt } from '../../../src/common';
+import { toUint8Array, uint8ArrayToBigInt } from '../../../src/common/utils';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER, secp256k1 } from '../../../src/tx/constants';
 
 import type { BaseTransaction } from '../../../src/tx/baseTransaction';

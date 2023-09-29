@@ -62,6 +62,7 @@
 		"web3-providers-http": "^4.0.6"
 	},
 	"dependencies": {
+		"@ethereumjs/common": "^4.0.0",
 		"setimmediate": "^1.0.5",
 		"web3-core": "^4.2.0",
 		"web3-errors": "^1.1.2",
