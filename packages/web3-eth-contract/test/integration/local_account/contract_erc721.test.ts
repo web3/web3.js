@@ -58,7 +58,7 @@ describe('contract', () => {
 			expect(contractDeployed.options.address).toBeDefined();
 		});
 
-		it.only.each(['0x2'])('should award item %p', async type => {
+		it.each(['0x1', '0x2'])('should award item %p', async type => {
 			const tempAccount = web3.eth.accounts.create();
 			const awardReceipt = await contractDeployed.methods
 				.awardItem(tempAccount.address, 'http://my-nft-uri')

@@ -921,9 +921,11 @@ export class Contract<Abi extends ContractAbi>
 			const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
 				_abi => (_abi.inputs ?? []).length === params.length,
 			);
+			// eslint-disable-next-line
 			console.log(abi)
 			if (abis.length === 1 || arrayOfAbis.length === 0) {
 				abiParams = this._getAbiParams(methodAbi, params);
+				// eslint-disable-next-line
 				console.log(abiParams)
 				validator.validate(abi.inputs ?? [], abiParams);
 			} else {
