@@ -184,3 +184,4 @@ Documentation:
 ### Changed
 
 -   defaultTransactionType is now type 0x2 instead of 0x0 (#6282)
+-   Allows formatter to parse large base fee
