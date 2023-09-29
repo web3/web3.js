@@ -39,6 +39,7 @@ export class Web3Validator {
 		options: Web3ValidationOptions = { silent: false },
 	): Web3ValidationErrorObject[] | undefined {
 		const jsonSchema = ethAbiToJsonSchema(schema);
+		// eslint-disable-next-line
 		console.log(jsonSchema)
 		if (
 			Array.isArray(jsonSchema.items) &&
