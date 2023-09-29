@@ -921,9 +921,10 @@ export class Contract<Abi extends ContractAbi>
 			const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
 				_abi => (_abi.inputs ?? []).length === params.length,
 			);
-
+			console.log(abi)
 			if (abis.length === 1 || arrayOfAbis.length === 0) {
 				abiParams = this._getAbiParams(methodAbi, params);
+				console.log(abiParams)
 				validator.validate(abi.inputs ?? [], abiParams);
 			} else {
 				const errors: Web3ValidationErrorObject[] = [];
