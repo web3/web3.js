@@ -44,6 +44,7 @@ import {
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
 	validPrivateKeyToPublicKeyData,
+	validRecover,
 } from '../fixtures/account';
 import { TransactionFactory } from '../../src/tx/transactionFactory';
 import { TxData } from '../../src/tx/types';
@@ -224,5 +225,11 @@ describe('accounts', () => {
 				await expect(result).rejects.toThrow(Web3ValidatorError);
 			});
 		});
+
+		describe('valid signatures for recover', () => {
+			it.each(validRecover)('&s', (data, signature) => {
+				recover(data, signature)
+			})
+		})
 	});
 });
