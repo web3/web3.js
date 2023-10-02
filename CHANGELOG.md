@@ -592,7 +592,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
--  Update node version on actions to fix breaking mosaic test (#5354) 
+-  Update node version on actions to fix breaking mosaic test (#5354)
 -  Start incrementing jsonrpc.id from random number (#5327)
 -  `web3-eth-contract`'s `call` and `send` methods no longer mutate `options` argument (#5394)
 -  Improvement using provided gas options in web3-eth-accounts for eip-1559 transactions (#5012)
@@ -619,14 +619,14 @@ Released with 1.0.0-beta.37 code base.
 - Updated Webpack 4 to Webpack 5, more details at (#5629)
 - `crypto-browserify` module is now used only in webpack builds for polyfilling browsers (#5629)
 - Updated `ethereumjs-util` to `7.1.5` (#5629)
-- Updated `lerna` 4 to version 6 (#5680) 
+- Updated `lerna` 4 to version 6 (#5680)
 - Bump utils 0.12.0 to 0.12.5 (#5691)
 
 ### Fixed
 
 -  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
 -  Fixed Next.js builds failing on Node.js v16, Abortcontroller added if it doesn't exist globally (#5601)
--  Builds fixed by updating all typescript versions to 4.1 (#5675) 
+-  Builds fixed by updating all typescript versions to 4.1 (#5675)
 
 ### Removed
 
@@ -635,7 +635,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - `https-browserify`, `process`, `stream-browserify`, `stream-http`, `crypto-browserify` added to dev-dependencies for polyfilling (#5629)
-- Add `readable-stream` to dev-dependancies for webpack (#5629) 
+- Add `readable-stream` to dev-dependancies for webpack (#5629)
 
 ### Security
 -  `npm audit fix` for libraries update (#5726)
@@ -657,7 +657,7 @@ Released with 1.0.0-beta.37 code base.
   - Updated @types/bn.js dependency to 5.1.1 in web3, web3-core and web3-eth-contract as reason mentioned in #5640 (#5885)
   - Add description to error for failed connection on websocket (#5884)
 
-  
+
 ### Security
   - Updated dependencies (#5885)
 
@@ -689,7 +689,7 @@ Released with 1.0.0-beta.37 code base.
 - Updated type file for `submitWork` parameters, accepts 3 parameters instead of an array (#5200)
 
 ### Changed
-- Replace ethereumjs-util with @ethereumjs/util (#6283) 
+- Replace ethereumjs-util with @ethereumjs/util (#6283)
 
 
 ## [1.10.2]
@@ -699,3 +699,4 @@ Released with 1.0.0-beta.37 code base.
 - Fixed broken fetch for Node.js > 18.x and fixed double callback (#6381)
 
 ## [Unreleased]
+- `web3-eth-accounts`: Bumped `@ethereumjs` dependencies (#6457)
