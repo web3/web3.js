@@ -14,12 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { AbiError } from 'web3-errors';
-import { ParamType, Result } from '@ethersproject/abi';
-import { HexString, AbiInput, DecodedParams } from 'web3-types';
-import ethersAbiCoder from '../ethers_abi_coder.js';
-import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils.js';
+import { AbiInput, HexString } from 'web3-types';
+import { decodeParameters as decodeParametersInternal } from '../coders/decode.js';
+import { encodeParameters as encodeParametersInternal } from '../coders/encode.js';
 
 /**
  * Encodes a parameter based on its type to its ABI representation.
@@ -37,40 +35,8 @@ import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils.js'
  *  > 0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000
  * ```
  */
-export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]): string => {
-	try {
-		const modifiedTypes = mapTypes(
-			Array.isArray(abi) ? (abi as AbiInput[]) : ([abi] as unknown as AbiInput[]),
-		);
-		const modifiedParams: Array<unknown> = [];
-		for (const [index, param] of params.entries()) {
-			const item = modifiedTypes[index];
-			let type: string;
-
-			if (isAbiFragment(item) && item.type) {
-				// We may get a named type of shape {name, type}
-				type = item.type;
-			} else {
-				type = item as unknown as string;
-			}
-
-			const newParam = formatParam(type, param);
-
-			if (typeof type === 'string' && type.includes('tuple')) {
-				const coder = ethersAbiCoder._getCoder(ParamType.from(type));
-				modifyParams(coder, [newParam]);
-			}
-
-			modifiedParams.push(newParam);
-		}
-		return ethersAbiCoder.encode(
-			modifiedTypes.map(p => ParamType.from(p)),
-			modifiedParams,
-		);
-	} catch (err) {
-		throw new AbiError(`Parameter encoding error`, err as Error);
-	}
-};
+export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]): string =>
+	encodeParametersInternal(abi, params);
 
 /**
  * Encodes a parameter based on its type to its ABI representation.
@@ -130,30 +96,6 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
  */
 export const encodeParameter = (abi: AbiInput, param: unknown): string =>
 	encodeParameters([abi], [param]);
-
-// If encoded param is an array and there are mixed on integer and string keys
-const isParamRequiredToConvert = (data: Result): boolean =>
-	Array.isArray(data) &&
-	Object.keys(data).filter(k => Number.isInteger(+k)).length !== Object.keys(data).length;
-
-// Ethers-Encoder return the decoded result as an array with additional string indexes for named params
-// We want these to be converted to an object with named keys
-const formatArrayResToObject = (data: Result): DecodedParams => {
-	const returnValue: DecodedParams = {
-		__length__: 0,
-	};
-
-	for (const key of Object.keys(data)) {
-		returnValue[key] =
-			Array.isArray(data[key]) && isParamRequiredToConvert(data[key] as Result)
-				? formatArrayResToObject(data[key] as Result)
-				: data[key];
-
-		returnValue.__length__ += Number.isInteger(+key) ? 1 : 0;
-	}
-	return returnValue;
-};
-
 /**
  * Should be used to decode list of params
  */
@@ -172,14 +114,11 @@ export const decodeParametersWith = (
 					'or querying a node which is not fully synced.',
 			);
 		}
-		const res = ethersAbiCoder.decode(
-			mapTypes(abis).map(p => ParamType.from(p)),
-			`0x${bytes.replace(/0x/i, '')}`,
-			loose,
-		);
-		return formatArrayResToObject(res);
+		return decodeParametersInternal(abis, `0x${bytes.replace(/0x/i, '')}`, loose);
 	} catch (err) {
-		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
+		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`, {
+			internalErr: err,
+		});
 	}
 };
 

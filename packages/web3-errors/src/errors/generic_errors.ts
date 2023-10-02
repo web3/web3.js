@@ -83,6 +83,12 @@ export class OperationAbortError extends BaseWeb3Error {
 
 export class AbiError extends BaseWeb3Error {
 	public code = ERR_ABI_ENCODING;
+	public readonly props: Record<string, unknown> & { name?: string };
+
+	public constructor(message: string, props?: Record<string, unknown> & { name?: string }) {
+		super(message);
+		this.props = props ?? {};
+	}
 }
 
 export class ExistingPluginNamespaceError extends BaseWeb3Error {
