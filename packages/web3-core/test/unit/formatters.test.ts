@@ -537,12 +537,13 @@ describe('formatters', () => {
 		});
 
 		it('should convert "baseFeePerGas" from hex to number', () => {
+			jest.spyOn(formatters, 'outputBigIntegerFormatter').mockReturnValue(123);
 			const result = outputBlockFormatter({
 				...validBlock,
 				baseFeePerGas: 'baseFeePerGas',
 			} as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('baseFeePerGas');
+			expect(outputBigIntegerFormatter).toHaveBeenCalledWith('baseFeePerGas');
 			expect(result).toEqual(expect.objectContaining({ baseFeePerGas: hexToNumberResult }));
 		});
 	});

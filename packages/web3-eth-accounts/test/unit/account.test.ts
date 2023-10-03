@@ -28,6 +28,7 @@ import {
 	recoverTransaction,
 	sign,
 	signTransaction,
+	privateKeyToPublicKey
 } from '../../src/account';
 import {
 	invalidDecryptData,
@@ -42,6 +43,7 @@ import {
 	validHashMessageData,
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
+	validPrivateKeyToPublicKeyData,
 	validRecover,
 } from '../fixtures/account';
 import { TransactionFactory } from '../../src/tx/transactionFactory';
@@ -91,6 +93,13 @@ describe('accounts', () => {
 			});
 		});
 	});
+	describe('privateKeyToPublicKey', () => {
+		describe('valid cases', () => {
+			it.each(validPrivateKeyToPublicKeyData)('%s', (privateKey, isCompressed, output) => {
+				expect(privateKeyToPublicKey(privateKey, isCompressed)).toEqual(output);
+			});
+			})
+	})
 
 	describe('Signing and Recovery of Transaction', () => {
 		it.each(transactionsTestData)('sign transaction', async txData => {
