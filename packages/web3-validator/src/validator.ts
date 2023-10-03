@@ -102,10 +102,6 @@ export class Validator {
 		const zod = convertToZod(schema);
 		const result = zod.safeParse(data);
 		if (!result.success) {
-			// eslint-disable-next-line
-			console.log(schema)
-			// eslint-disable-next-line
-			console.log(data)
 			const errors = this.convertErrors(result.error?.issues ?? []);
 			if (errors) {
 				if (options?.silent) {
