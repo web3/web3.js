@@ -35,17 +35,14 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	const pollingInterval =
 		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
 
-	const [awaitableTransactionReceipt, IntervalId] = pollTillDefinedAndReturnIntervalId(
-		async () => {
-			try {
-				return getTransactionReceipt(web3Context, transactionHash, returnFormat);
-			} catch (error) {
-				console.warn('An error happen while trying to get the transaction receipt', error);
-				return undefined;
-			}
-		}, 
-			pollingInterval
-	);
+	const [awaitableTransactionReceipt, IntervalId] = pollTillDefinedAndReturnIntervalId(async () => {
+		try {
+			return getTransactionReceipt(web3Context, transactionHash, returnFormat);
+		} catch (error) {
+			console.warn('An error happen while trying to get the transaction receipt', error);
+			return undefined;
+		}
+	}, pollingInterval);
 
 	const [timeoutId, rejectOnTimeout] = rejectIfTimeout(
 		web3Context.transactionPollingTimeout,
