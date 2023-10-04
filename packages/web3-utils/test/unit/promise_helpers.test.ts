@@ -145,6 +145,28 @@ describe('promise helpers', () => {
 			const [promise] = pollTillDefinedAndReturnIntervalId(asyncHelper, 100);
 			await expect(promise).resolves.toBe('resolved');
 		});
+
+		it('should return interval id if not resolved in specific time', async () => {
+
+			let counter = 0;
+			const asyncHelper = async () => {
+				if (counter <= 3000000) {
+					counter += 1;
+					return undefined;
+				}
+				return "result";
+			};
+
+			const testError = new Error('Test P2 Error');
+
+			const [neverResolvePromise, intervalId] = pollTillDefinedAndReturnIntervalId(asyncHelper, 100);
+			const promiCheck = Promise.race([neverResolvePromise, rejectIfTimeout(500,testError)[1]]);
+
+			await expect(promiCheck).rejects.toThrow(testError);
+			expect(intervalId).toBeDefined();
+			clearInterval(intervalId);
+		});
+
 		it('throws if later throws', async () => {
 			const dummyError = new Error('error');
 			let counter = 0;
