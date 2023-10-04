@@ -102,7 +102,7 @@ export function pollTillDefinedAndReturnIntervalId<T>(
 					reject(error);
 				}
 			})() as unknown;
-			return intervalCallbackFunc;}() //this will immediate invoke first call
+			return intervalCallbackFunc;}() // this will immediate invoke first call
 			, interval);
 	});
 
