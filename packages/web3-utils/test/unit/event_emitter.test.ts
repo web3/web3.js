@@ -25,8 +25,6 @@ describe('EventEmitter', () => {
 
 	beforeEach(() => {
 		emitter = new EventEmitter();
-
-		//emitter.removeAllListeners('test');
 	});
 
 	describe('on', () => {

@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/* eslint-disable max-classes-per-file */
 
 import { EventEmitter as EventEmitterAtNode } from 'events';
 
@@ -31,7 +32,7 @@ const wrapFunction =
  * This class copy the behavior of Node.js EventEmitter class.
  * It is used to provide the same interface for the browser environment.
  */
-export class EventEmitterAtBrowser extends EventTarget {
+class EventEmitterAtBrowser extends EventTarget {
 	private _listeners: Record<string, [key: Callback, value: EventTargetCallback][]> = {};
 	private maxListeners = Number.MAX_SAFE_INTEGER;
 
