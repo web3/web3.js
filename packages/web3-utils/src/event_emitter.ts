@@ -107,11 +107,13 @@ export class EventEmitterAtBrowser extends EventTarget {
 }
 
 // eslint-disable-next-line import/no-mutable-exports
-export let EventEmitter: typeof EventEmitterAtNode;
+let EventEmitterType: typeof EventEmitterAtNode;
 // Check if the code is running in a Node.js environment
 if (typeof window === 'undefined') {
-	EventEmitter = EventEmitterAtNode;
+	EventEmitterType = EventEmitterAtNode;
 } else {
 	// Fallback for the browser environment
-	EventEmitter = EventEmitterAtBrowser as unknown as typeof EventEmitterAtNode;
+	EventEmitterType = EventEmitterAtBrowser as unknown as typeof EventEmitterAtNode;
 }
+
+export class EventEmitter extends EventEmitterType {}
