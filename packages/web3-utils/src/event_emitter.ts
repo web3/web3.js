@@ -43,8 +43,8 @@ class EventEmitterAtBrowser extends EventTarget {
 
 	public once(eventName: string, fn: Callback) {
 		const onceCallback = async (params: Callback) => {
-			await fn(params);
 			this.off(eventName, onceCallback);
+			await fn(params);
 		};
 		return this.on(eventName, onceCallback);
 	}
@@ -73,6 +73,14 @@ class EventEmitterAtBrowser extends EventTarget {
 	}
 
 	public removeAllListeners() {
+		Object.keys(this._listeners).forEach(event => {
+			this._listeners[event].forEach(
+				(listener: [key: Callback, value: EventTargetCallback]) => {
+					super.removeEventListener(event, listener[1] as EventListener);
+				},
+			);
+		});
+
 		this._listeners = {};
 		return this;
 	}

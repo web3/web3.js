@@ -15,12 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// this file will contain the unit test for the event emitter
+// this file will contain the unit test for the event emitter in the DOM environment
+
+/**
+ * @jest-environment jsdom
+ */
 
 import { EventEmitter } from '../../src/event_emitter';
 
-describe('EventEmitter', () => {
-	// let emitter = new EventEmitter();
+describe('EventEmitter with DOM', () => {
 	let emitter: EventEmitter;
 
 	beforeEach(() => {
