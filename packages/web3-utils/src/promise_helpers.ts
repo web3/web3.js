@@ -88,26 +88,25 @@ export function pollTillDefinedAndReturnIntervalId<T>(
 
 	let intervalId: Timer | undefined;
 	const polledRes = new Promise<Exclude<T, undefined>>((resolve, reject) => {
-		intervalId = setInterval(() => {
-			( () => {
-					
-					func()
-						.then( res =>{
-						if (!isNullish(res)) {
-							clearInterval(intervalId);
-							resolve(res as unknown as Exclude<T, undefined>);
-						}})
-						.catch(error=> {
-							clearInterval(intervalId);
-							reject(error);
-					});
-					
-			})() as unknown;
-		}, interval);
+		intervalId = setInterval(function intervalCallbackFunc(){
+			(async () => {
+				try {
+					const res = await waitWithTimeout(func, interval);
 
+					if (!isNullish(res)) {
+						clearInterval(intervalId);
+						resolve(res as unknown as Exclude<T, undefined>);
+					}
+				} catch (error) {
+					clearInterval(intervalId);
+					reject(error);
+				}
+			})() as unknown;
+			return intervalCallbackFunc;}() //this will immediate invoke first call
+			, interval);
 	});
 
-	return [polledRes, intervalId!];
+	return [polledRes as unknown as Promise<Exclude<T, undefined>>, intervalId!];
 }
 
 /**
