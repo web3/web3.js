@@ -2098,6 +2098,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth
 
 -   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
+-   Fixed `withdrawalsSchema.address` property type `bytes32` to `address` (#6470)
 
 ### Changed
 
