@@ -331,7 +331,7 @@ export const withdrawalsSchema = {
 			format: 'uint',
 		},
 		address: {
-			format: 'bytes32',
+			format: 'address',
 		},
 		amount: {
 			format: 'uint',
