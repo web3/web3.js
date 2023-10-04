@@ -450,7 +450,7 @@ export const outputBlockFormatter = (block: BlockInput): BlockOutput => {
 	}
 
 	if (block.baseFeePerGas) {
-		modifiedBlock.baseFeePerGas = hexToNumber(block.baseFeePerGas);
+		modifiedBlock.baseFeePerGas = outputBigIntegerFormatter(block.baseFeePerGas);
 	}
 
 	return modifiedBlock;

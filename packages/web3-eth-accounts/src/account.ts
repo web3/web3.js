@@ -341,10 +341,13 @@ export const recover = (
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = prefixedOrR ? data : hashMessage(data);
 
-	const v = signatureOrV.substring(V_INDEX); // 0x + r + s + v
+	let v = parseInt(signatureOrV.substring(V_INDEX),16); // 0x + r + s + v
+	if (v > 26) {
+		v -= 27;
+	}
 
 	const ecPublicKey = secp256k1.Signature.fromCompact(signatureOrV.slice(2, V_INDEX))
-		.addRecoveryBit(parseInt(v, 16) - 27)
+		.addRecoveryBit(v)
 		.recoverPublicKey(hashedMessage.replace('0x', ''))
 		.toRawBytes(false);
 
@@ -381,6 +384,25 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
 	const address = publicKeyHash.slice(-40);
 
 	return toChecksumAddress(`0x${address}`);
+};
+
+/**
+ * Get the public key from a private key
+ *
+ * @param privateKey - String or Uint8Array of 32 bytes
+ * @param isCompressed - if true, will generate a 33 byte compressed public key instead of a 65 byte public key 
+ * @returns The public key
+ * @example
+ * ```ts
+ * privateKeyToAddress("0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f", true)
+ * > "0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537662dd17042e6449dc843c281067a4d6d8d1a1775a13c41901670d5de7ee6503a" // uncompressed public key
+ * ```
+ */
+ export const privateKeyToPublicKey = (privateKey: Bytes, isCompressed: boolean): string => {
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
+
+	// Get public key from private key in compressed format
+	return `0x${bytesToHex(secp256k1.getPublicKey(privateKeyUint8Array, isCompressed)).slice(4)}`; // 0x and removing compression byte
 };
 
 /**

@@ -24,7 +24,7 @@ import {
 	IVLengthError,
 	PBKDF2IterationsError,
 } from 'web3-errors';
-import { CipherOptions, KeyStore } from 'web3-types';
+import { CipherOptions, KeyStore, Bytes } from 'web3-types';
 import { hexToBytes } from 'web3-utils';
 import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData } from '../../src/tx/types';
 import { sign, signTransaction, encrypt } from '../../src/account';
@@ -221,6 +221,31 @@ export const invalidPrivateKeytoAccountData: [
 	[new Uint8Array([]), new PrivateKeyLengthError()],
 ];
 
+export const validPrivateKeyToPublicKeyData: [
+	Bytes, boolean, string // private key, isCompressed, public key
+][] = [
+	[
+		"0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f",  // test string to uncompressed publickey
+		false,
+		"0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537662dd17042e6449dc843c281067a4d6d8d1a1775a13c41901670d5de7ee6503a",
+	],
+	[
+		"0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f",  // test string to compressed publickey
+		true,
+		"0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537",
+	],
+	[
+		hexToBytes("0xd933beabed94a9f23917576596b2bc64ffeacfe5ded09a99c0feee8369bd295d"), // test uint8array to uncompressed publickey
+		false,
+		"0x7891db4ed2d26584b0fa87329c40b398c940c08e7dbeb8e3dad83f34dba284c933fb14b1edd8893fa89af3823fd827ee59044033ca068803030afc294de5f390",
+	],
+	[
+		hexToBytes("0xd933beabed94a9f23917576596b2bc64ffeacfe5ded09a99c0feee8369bd295d"), // test uint8array to compressed publickey
+		true,
+		"0x7891db4ed2d26584b0fa87329c40b398c940c08e7dbeb8e3dad83f34dba284c9",
+	],
+];
+
 export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeyStore][] = [
 	[
 		[
@@ -380,6 +405,11 @@ export const invalidEncryptData: [
 		new PBKDF2IterationsError(),
 	],
 ];
+
+export const validRecover: [string, string][] = [
+	[ "I hereby confirm that I am the sole beneficial owner of the assets involved in the business relationship with Fiat24. \nI hereby undertake to inform Fiat24 proactively of any changes to the information contained herein.", "0xec4f73260ac14882e65995a09359896a0ae8f16bd0d28b0d9171655b4e85271e07cda040be059fdcbf52709e3c993eb50a89ce33f41617dc090dc80a583e3c4f00",], // v < 27
+	["test", "0xefb42c22baa0143b322e93b24b0903a0ef47a64b716fbb77debbea55a93dec3e4417aff7dce845723240916c6e34cf17c674828b3addfb0afad966334df5b6311b"] // v >= 27
+]
 
 export const invalidKeyStore: [[any, string]][] = [
 	[

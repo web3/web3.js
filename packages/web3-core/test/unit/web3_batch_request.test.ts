@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { JsonRpcBatchRequest, JsonRpcBatchResponse, JsonRpcOptionalRequest } from 'web3-types';
-import { jsonRpc, Web3DeferredPromise } from 'web3-utils';
+import { jsonRpc, Web3DeferredPromise, Timeout } from 'web3-utils';
 import { OperationAbortError, OperationTimeoutError } from 'web3-errors';
 import { Web3BatchRequest } from '../../src/web3_batch_request';
 
@@ -174,7 +174,7 @@ describe('Web3BatchRequest', () => {
 		});
 
 		it('should timeout if request not executed in a particular time', async () => {
-			let timerId!: NodeJS.Timeout;
+			let timerId!: Timeout;
 
 			jest.spyOn(requestManager, 'sendBatch').mockImplementation(async () => {
 				return new Promise(resolve => {
