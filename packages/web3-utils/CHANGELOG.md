@@ -159,3 +159,7 @@ Documentation:
 -   `soliditySha3()` with BigInt support
 
 ## [Unreleased]
+
+### Added
+
+-   `SocketProvider` now contains public function `getPendingRequestQueueSize` (#6451)

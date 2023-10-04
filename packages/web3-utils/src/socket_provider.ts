@@ -188,6 +188,15 @@ export abstract class SocketProvider<
 	protected _validateProviderPath(path: string): boolean {
 		return !!path;
 	}
+	
+	/**
+	 *
+	 * @returns the pendingRequestQueue size
+	 */
+	// eslint-disable-next-line class-methods-use-this
+	public getPendingRequestQueueSize()  {
+		return this._pendingRequestsQueue.size;
+	}
 
 	/**
 	 *
