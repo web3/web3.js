@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 /*
 This file is part of web3.js.
 
@@ -15,12 +19,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// this file will contain the unit test for the event emitter in the DOM environment
+// this file contains the unit test for the event emitter in the DOM environment
+// it is executed in the jsdom environment (see "@jest-environment jsdom" in the top comment of this file)
 
-/**
- * @jest-environment jsdom
- */
-
+// ignore the following rule to allow keeping `@jest-environment jsdom` on top:
+// eslint-disable-next-line header/header
 import { EventEmitter } from '../../src/event_emitter';
 
 describe('EventEmitter with DOM', () => {
