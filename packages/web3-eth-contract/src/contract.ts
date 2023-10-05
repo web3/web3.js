@@ -771,7 +771,10 @@ export class Contract<Abi extends ContractAbi>
 				? log
 				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
-
+		// eslint-disable-next-line
+		console.log(logs);
+		// eslint-disable-next-line
+		console.log(decodedLogs);
 		const filter = options?.filter ?? {};
 		const filterKeys = Object.keys(filter);
 
