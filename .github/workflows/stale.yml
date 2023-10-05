@@ -15,5 +15,5 @@ jobs:
         days-before-stale: 60
         days-before-close: 14
         operations-per-run: 100
-        exempt-pr-labels: 'work-in-progress','4.x'
-        exempt-issue-labels: 'work-in-progress','4.x'
+        exempt-pr-labels: 'work-in-progress,4.x'
+        exempt-issue-labels: 'work-in-progress,4.x'
