@@ -88,7 +88,7 @@ export type EtherUnits = keyof typeof ethUnitMap;
 export const bytesToUint8Array = (data: Bytes): Uint8Array | never => {
 	validator.validate(['bytes'], [data]);
 
-	if (data instanceof Uint8Array || data.constructor.name === 'Uint8Array') {
+	if (data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array') {
 		return data as Uint8Array;
 	}
 

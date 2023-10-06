@@ -23,7 +23,7 @@ import { isHexStrict } from './string.js';
  * checks input if typeof data is valid Uint8Array input
  */
 export const isUint8Array = (data: ValidInputTypes) =>
-	data instanceof Uint8Array || data.constructor.name === 'Uint8Array';
+	data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array';
 
 export const isBytes = (
 	value: ValidInputTypes | Uint8Array | number[],
@@ -35,7 +35,7 @@ export const isBytes = (
 		typeof value !== 'string' &&
 		!Array.isArray(value) &&
 		!(value instanceof Uint8Array) &&
-		value.constructor.name !== 'Uint8Array'
+		value?.constructor?.name !== 'Uint8Array'
 	) {
 		return false;
 	}
