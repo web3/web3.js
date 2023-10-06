@@ -193,6 +193,8 @@ describe('contract', () => {
 			);
 
 			const logs = await contractDeployed.getPastEvents('Transfer');
+			// eslint-disable-next-line
+			console.log("after")
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 
 			const approveReceipt = await contractDeployed.methods
