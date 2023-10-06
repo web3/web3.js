@@ -83,7 +83,10 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 	}
 
 	try {
-		privateKeyUint8Array = data instanceof Uint8Array ? data : bytesToUint8Array(data);
+		privateKeyUint8Array =
+			data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array'
+				? (data as Uint8Array)
+				: bytesToUint8Array(data);
 	} catch {
 		throw new InvalidPrivateKeyError();
 	}

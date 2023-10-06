@@ -104,8 +104,8 @@ export class TransactionFactory {
 	 * @param txOptions - The transaction options
 	 */
 	public static fromBlockBodyData(data: Uint8Array | Uint8Array[], txOptions: TxOptions = {}) {
-		if (data instanceof Uint8Array) {
-			return this.fromSerializedData(data, txOptions);
+		if (data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array') {
+			return this.fromSerializedData(data as Uint8Array, txOptions);
 		}
 		if (Array.isArray(data)) {
 			// It is a legacy transaction
