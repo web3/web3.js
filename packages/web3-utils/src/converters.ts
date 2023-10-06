@@ -88,8 +88,8 @@ export type EtherUnits = keyof typeof ethUnitMap;
 export const bytesToUint8Array = (data: Bytes): Uint8Array | never => {
 	validator.validate(['bytes'], [data]);
 
-	if (data instanceof Uint8Array) {
-		return data;
+	if (data instanceof Uint8Array || data.constructor.name === 'Uint8Array') {
+		return data as Uint8Array;
 	}
 
 	if (Array.isArray(data)) {
@@ -585,7 +585,11 @@ export const toChecksumAddress = (address: Address): string => {
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
 
-	const hash = utils.uint8ArrayToHexString(keccak256(utf8ToBytes(lowerCaseAddress)));
+	// calling `Uint8Array.from` because `noble-hashes` checks with `instanceof Uint8Array` that fails in some edge cases:
+	// 	https://github.com/paulmillr/noble-hashes/issues/25#issuecomment-1750106284
+	const hash = utils.uint8ArrayToHexString(
+		keccak256(Uint8Array.from(utf8ToBytes(lowerCaseAddress))),
+	);
 
 	if (
 		isNullish(hash) ||
