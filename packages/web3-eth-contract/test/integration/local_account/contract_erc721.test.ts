@@ -169,6 +169,7 @@ describe('contract', () => {
 			).toBe(toUpperCaseHex(toAccount.address));
 		});
 		it.each(['0x1', '0x2'])('should approve and then transferFrom item %p', async type => {
+			// eslint-disable-next-line
 			console.log(type)
 			const tempAccount = await createLocalAccount(web3);
 			const toAccount = await createLocalAccount(web3);
