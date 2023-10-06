@@ -1,0 +1,52 @@
+name: 'E2E Network Tests'
+on:
+    push:
+      branches:
+        - release/**
+      tags:
+        - v4.*
+
+jobs:
+  build:
+    name: Build Packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+      - run: yarn
+      - run: tar -czf /tmp/web3-16.js.tar.gz --exclude="./.git" ./
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web3-16.js.tar.gz
+          path: /tmp/web3-16.js.tar.gz
+  e2e:
+      name: E2E Network Tests
+      needs: build
+      runs-on: ubuntu-latest
+      env:
+        INFURA_SEPOLIA_HTTP: ${{ secrets.INFURA_SEPOLIA_HTTP }}
+        INFURA_MAINNET_HTTP: ${{ secrets.INFURA_MAINNET_HTTP }}
+        MODE: ${{ matrix.mode }}
+        TEST_ACCOUNT_ADDRESS: ${{ fromJSON('{"sepolia":"0xa127C5E6a7E3600Ac34A9a9928E52521677e7211","mainnet":"0x98AF911164f9d4E0f5983ed114949c3Bfe3ADc9d"}')[matrix.network] }}
+        ALLOWED_SEND_TRANSACTION: ${{ secrets.E2E_TESTS_ALLOWED_SEND_TRANSACTION }}
+        TEST_ACCOUNT_PRIVATE_KEY: ${{ secrets.TEST_ACCOUNT_PRIVATE_KEY }}
+      strategy:
+        fail-fast: false
+        matrix:
+          mode: ['http']
+          network: ['sepolia', 'mainnet']
+      steps:
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 16
+        - uses: actions/download-artifact@v3
+          with:
+            name: web3-16.js.tar.gz
+            path: /tmp
+        - run: tar -xf /tmp/web3-16.js.tar.gz -C ./
+        - run: |
+            yarn test:e2e:${{ matrix.network }}:${{ matrix.mode }}
+          shell: bash
