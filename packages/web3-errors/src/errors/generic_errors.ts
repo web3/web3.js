@@ -26,6 +26,7 @@ import {
 	ERR_PARAM,
 	ERR_EXISTING_PLUGIN_NAMESPACE,
 	ERR_INVALID_METHOD_PARAMS,
+	ERR_INSECURE_CONTEXT,
 } from '../error_codes.js';
 import { BaseWeb3Error } from '../web3_error_base.js';
 
@@ -79,6 +80,10 @@ export class OperationTimeoutError extends BaseWeb3Error {
 
 export class OperationAbortError extends BaseWeb3Error {
 	public code = ERR_OPERATION_ABORT;
+}
+
+export class InsecureContextError extends BaseWeb3Error {
+	public code = ERR_INSECURE_CONTEXT;
 }
 
 export class AbiError extends BaseWeb3Error {

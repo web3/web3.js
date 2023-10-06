@@ -22,6 +22,7 @@ import {
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2.js';
 import { scryptSync } from 'ethereum-cryptography/scrypt.js';
 import {
+	InsecureContextError,
 	InvalidKdfError,
 	InvalidPasswordError,
 	InvalidPrivateKeyError,
@@ -341,7 +342,7 @@ export const recover = (
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = prefixedOrR ? data : hashMessage(data);
 
-	let v = parseInt(signatureOrV.substring(V_INDEX),16); // 0x + r + s + v
+	let v = parseInt(signatureOrV.substring(V_INDEX), 16); // 0x + r + s + v
 	if (v > 26) {
 		v -= 27;
 	}
@@ -356,7 +357,7 @@ export const recover = (
 	const address = toChecksumAddress(`0x${publicHash.slice(-40)}`);
 
 	return address;
-};
+};;
 
 /**
  * Get the ethereum Address from a private key
@@ -390,7 +391,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * Get the public key from a private key
  *
  * @param privateKey - String or Uint8Array of 32 bytes
- * @param isCompressed - if true, will generate a 33 byte compressed public key instead of a 65 byte public key 
+ * @param isCompressed - if true, will generate a 33 byte compressed public key instead of a 65 byte public key
  * @returns The public key
  * @example
  * ```ts
@@ -398,7 +399,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * > "0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537662dd17042e6449dc843c281067a4d6d8d1a1775a13c41901670d5de7ee6503a" // uncompressed public key
  * ```
  */
- export const privateKeyToPublicKey = (privateKey: Bytes, isCompressed: boolean): string => {
+export const privateKeyToPublicKey = (privateKey: Bytes, isCompressed: boolean): string => {
 	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	// Get public key from private key in compressed format
@@ -548,6 +549,13 @@ export const encrypt = async (
 		throw new InvalidKdfError();
 	}
 
+	// https://stackoverflow.com/a/46468377/8303489
+	// > crypto.subtle is supposed to be undefined in insecure contexts
+	if (!window?.crypto?.subtle) {
+		throw new InsecureContextError(
+			'crypto.subtle is supposed to be undefined in insecure contexts',
+		);
+	}
 	const cipher = await createCipheriv(
 		privateKeyUint8Array,
 		derivedKey.slice(0, 16),
