@@ -60,6 +60,8 @@ describe('contract', () => {
 
 		it.each(['0x1', '0x2'])('should award item %p', async type => {
 			const tempAccount = web3.eth.accounts.create();
+			// eslint-disable-next-line
+			console.log("before send")
 			const awardReceipt = await contractDeployed.methods
 				.awardItem(tempAccount.address, 'http://my-nft-uri')
 				.send({ ...sendOptions, type });
@@ -79,7 +81,10 @@ describe('contract', () => {
 			expect(String(awardReceipt.events?.Transfer.returnValues[1]).toLowerCase()).toBe(
 				tempAccount.address.toLowerCase(),
 			);
-
+			// eslint-disable-next-line
+			console.log(awardReceipt)
+			// eslint-disable-next-line
+			console.log("sent ")
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 
@@ -164,6 +169,7 @@ describe('contract', () => {
 			).toBe(toUpperCaseHex(toAccount.address));
 		});
 		it.each(['0x1', '0x2'])('should approve and then transferFrom item %p', async type => {
+			console.log(type)
 			const tempAccount = await createLocalAccount(web3);
 			const toAccount = await createLocalAccount(web3);
 			const awardReceipt = await contractDeployed.methods

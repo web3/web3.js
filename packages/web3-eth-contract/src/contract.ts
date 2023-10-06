@@ -764,7 +764,8 @@ export class Contract<Abi extends ContractAbi>
 			abi,
 			options ?? {},
 		);
-
+		// eslint-disable-next-line
+		console.log(`fromBlock ${fromBlock}, toBlock ${toBlock} topics ${topics} address ${address}`)
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
 		const decodedLogs = logs.map(log =>
 			typeof log === 'string'
