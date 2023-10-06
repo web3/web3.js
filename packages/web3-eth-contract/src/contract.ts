@@ -777,6 +777,10 @@ export class Contract<Abi extends ContractAbi>
 		console.log(decodedLogs);
 		const filter = options?.filter ?? {};
 		const filterKeys = Object.keys(filter);
+		// eslint-disable-next-line
+		console.log(filter)
+		// eslint-disable-next-line
+		console.log(filterKeys)
 
 		if (filterKeys.length > 0) {
 			return decodedLogs.filter(log => {

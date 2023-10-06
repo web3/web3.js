@@ -196,7 +196,8 @@ describe('contract', () => {
 			// eslint-disable-next-line
 			console.log("after")
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
-
+			// eslint-disable-next-line
+			console.log(tokenId)
 			const approveReceipt = await contractDeployed.methods
 				.approve(toAccount.address, tokenId)
 				.send({
