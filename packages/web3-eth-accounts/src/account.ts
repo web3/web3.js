@@ -551,7 +551,7 @@ export const encrypt = async (
 
 	// https://stackoverflow.com/a/46468377/8303489
 	// > crypto.subtle is supposed to be undefined in insecure contexts
-	if (!window?.crypto?.subtle) {
+	if (typeof window !== 'undefined' && !window?.crypto?.subtle) {
 		throw new InsecureContextError(
 			'crypto.subtle is supposed to be undefined in insecure contexts',
 		);
