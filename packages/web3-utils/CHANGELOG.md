@@ -159,3 +159,5 @@ Documentation:
 -   `soliditySha3()` with BigInt support
 
 ## [Unreleased]
+
+-   As a replacment of the node EventEmitter, a custom `EventEmitter` has been implemented and exported. (#6398)
