@@ -58,7 +58,7 @@ export const isBytes = (
 		}
 		valueToCheck = new Uint8Array(value);
 	} else {
-		valueToCheck = value ;
+		valueToCheck = value;
 	}
 
 	if (options?.abiType) {
