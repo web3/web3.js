@@ -701,5 +701,5 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ### Security
-  - Updated dependencies
   - `web3-eth-accounts`: Bumped `@ethereumjs` dependencies (#6457)
+  - Updated dependencies (#6491)
