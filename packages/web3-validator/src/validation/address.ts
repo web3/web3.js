@@ -20,6 +20,7 @@ import { utf8ToBytes } from 'ethereum-cryptography/utils.js';
 import { ValidInputTypes } from '../types.js';
 import { uint8ArrayToHexString } from '../utils.js';
 import { isHexStrict } from './string.js';
+import { isUint8Array } from './bytes.js';
 
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.
@@ -47,13 +48,13 @@ export const checkAddressCheckSum = (data: string): boolean => {
  * Checks if a given string is a valid Ethereum address. It will also check the checksum, if the address has upper and lowercase letters.
  */
 export const isAddress = (value: ValidInputTypes, checkChecksum = true) => {
-	if (typeof value !== 'string' && !(value instanceof Uint8Array)) {
+	if (typeof value !== 'string' && !isUint8Array(value)) {
 		return false;
 	}
 
 	let valueToCheck: string;
 
-	if (value instanceof Uint8Array) {
+	if (isUint8Array(value)) {
 		valueToCheck = uint8ArrayToHexString(value);
 	} else if (typeof value === 'string' && !isHexStrict(value)) {
 		valueToCheck = value.toLowerCase().startsWith('0x') ? value : `0x${value}`;

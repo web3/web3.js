@@ -22,7 +22,7 @@ import { isHexStrict } from './string.js';
 /**
  * checks input if typeof data is valid Uint8Array input
  */
-export const isUint8Array = (data: ValidInputTypes) =>
+export const isUint8Array = (data: ValidInputTypes): data is Uint8Array =>
 	data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array';
 
 export const isBytes = (
@@ -31,12 +31,7 @@ export const isBytes = (
 		abiType: 'bytes',
 	},
 ) => {
-	if (
-		typeof value !== 'string' &&
-		!Array.isArray(value) &&
-		!(value instanceof Uint8Array) &&
-		value?.constructor?.name !== 'Uint8Array'
-	) {
+	if (typeof value !== 'string' && !Array.isArray(value) && !isUint8Array(value)) {
 		return false;
 	}
 
@@ -63,7 +58,7 @@ export const isBytes = (
 		}
 		valueToCheck = new Uint8Array(value);
 	} else {
-		valueToCheck = value as Uint8Array;
+		valueToCheck = value ;
 	}
 
 	if (options?.abiType) {

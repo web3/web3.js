@@ -14,6 +14,23 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+export function isUint8Array(data: unknown | Uint8Array): data is Uint8Array {
+	return (
+		data instanceof Uint8Array ||
+		(data as { constructor: { name: string } })?.constructor?.name === 'Uint8Array'
+	);
+}
+export function ensureIfUint8Array<T = any>(data: T) {
+	if (
+		!(data instanceof Uint8Array) &&
+		(data as { constructor: { name: string } })?.constructor?.name === 'Uint8Array'
+	) {
+		return Uint8Array.from(data as unknown as Uint8Array);
+	}
+	return data;
+}
+
 export function uint8ArrayConcat(...parts: Uint8Array[]): Uint8Array {
 	const length = parts.reduce((prev, part) => {
 		const agg = prev + part.length;
