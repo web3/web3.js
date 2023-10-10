@@ -928,7 +928,7 @@ export class Contract<Abi extends ContractAbi>
 				// eslint-disable-next-line
 				console.log(params)
 				abiParams = this._getAbiParams(methodAbi, params);
-				// eslint-disable-next-lines
+				// eslint-disable-next-line
 				console.log(abiParams)
 				validator.validate(abi.inputs ?? [], abiParams);
 			} else {
