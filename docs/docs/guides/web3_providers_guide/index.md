@@ -101,7 +101,7 @@ As stated above, the injected provider should be in compliance with [EIP-1193](h
 The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/web3@4.0.1-rc.1/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
 <script>
 	window.addEventListener('load', function () {
 		// Check if web3 is available
