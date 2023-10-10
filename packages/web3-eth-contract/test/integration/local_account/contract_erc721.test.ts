@@ -61,7 +61,7 @@ describe('contract', () => {
 		it.each(['0x1', '0x2'])('should award item %p', async type => {
 			const tempAccount = web3.eth.accounts.create();
 			// eslint-disable-next-line
-			console.log("before send")
+			console.log("before send award item")
 			const awardReceipt = await contractDeployed.methods
 				.awardItem(tempAccount.address, 'http://my-nft-uri')
 				.send({ ...sendOptions, type });
@@ -86,8 +86,12 @@ describe('contract', () => {
 			// eslint-disable-next-line
 			console.log("sent ")
 			const logs = await contractDeployed.getPastEvents('Transfer');
+			console.log("logs")
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
-
+			// eslint-disable-next-line
+			console.log(tokenId)
+			// eslint-disable-next-line
+			console.log("tokenId")
 			expect(
 				toUpperCaseHex(
 					(await contractDeployed.methods.ownerOf(tokenId).call()) as unknown as string,

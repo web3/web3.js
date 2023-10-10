@@ -764,8 +764,6 @@ export class Contract<Abi extends ContractAbi>
 			abi,
 			options ?? {},
 		);
-		// eslint-disable-next-line
-		console.log(`fromBlock ${fromBlock}, toBlock ${toBlock} topics ${topics} address ${address}`)
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
 		const decodedLogs = logs.map(log =>
 			typeof log === 'string'
@@ -773,14 +771,8 @@ export class Contract<Abi extends ContractAbi>
 				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
 
-		// eslint-disable-next-line
-		console.log(decodedLogs);
 		const filter = options?.filter ?? {};
 		const filterKeys = Object.keys(filter);
-		// eslint-disable-next-line
-		console.log(filter)
-		// eslint-disable-next-line
-		console.log(filterKeys)
 
 		if (filterKeys.length > 0) {
 			return decodedLogs.filter(log => {
@@ -928,9 +920,16 @@ export class Contract<Abi extends ContractAbi>
 			const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
 				_abi => (_abi.inputs ?? []).length === params.length,
 			);
-
+			// eslint-disable-next-line
+			console.log("createcontractmethod")
 			if (abis.length === 1 || arrayOfAbis.length === 0) {
+				// eslint-disable-next-line
+				console.log(abi.inputs)
+				// eslint-disable-next-line
+				console.log(params)
 				abiParams = this._getAbiParams(methodAbi, params);
+				// eslint-disable-next-lines
+				console.log(abiParams)
 				validator.validate(abi.inputs ?? [], abiParams);
 			} else {
 				const errors: Web3ValidationErrorObject[] = [];
