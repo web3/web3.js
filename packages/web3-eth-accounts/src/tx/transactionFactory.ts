@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Numbers } from 'web3-types';
 import { toUint8Array, uint8ArrayToBigInt } from '../common/utils.js';
 import { FeeMarketEIP1559Transaction } from './eip1559Transaction.js';
 import { AccessListEIP2930Transaction } from './eip2930Transaction.js';
@@ -26,12 +27,27 @@ import type {
 	TxData,
 	TxOptions,
 } from './types.js';
+import { BaseTransaction } from './baseTransaction';
+
+const extraTxTypes: Map<Numbers, typeof BaseTransaction> = new Map();
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TransactionFactory {
 	// It is not possible to instantiate a TransactionFactory object.
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, no-useless-constructor
 	private constructor() {}
+
+	public static typeToInt(txType: Numbers) {
+		return Number(uint8ArrayToBigInt(toUint8Array(txType)));
+	}
+
+	public static registerTransactionType<NewTxTypeClass extends typeof BaseTransaction>(
+		type: Numbers,
+		txClass: NewTxTypeClass,
+	) {
+		const txType = TransactionFactory.typeToInt(type);
+		extraTxTypes.set(txType, txClass);
+	}
 
 	/**
 	 * Create a transaction from a `txData` object
@@ -43,11 +59,13 @@ export class TransactionFactory {
 		txData: TxData | TypedTransaction,
 		txOptions: TxOptions = {},
 	): TypedTransaction {
+		console.log('txData', txData);
+		console.log('txOptions', txOptions);
 		if (!('type' in txData) || txData.type === undefined) {
 			// Assume legacy transaction
 			return Transaction.fromTxData(txData as TxData, txOptions);
 		}
-		const txType = Number(uint8ArrayToBigInt(toUint8Array(txData.type)));
+		const txType = TransactionFactory.typeToInt(txData.type);
 		if (txType === 0) {
 			return Transaction.fromTxData(txData as TxData, txOptions);
 		}
@@ -66,6 +84,15 @@ export class TransactionFactory {
 				txOptions,
 			);
 		}
+		const ExtraTransaction = extraTxTypes.get(txType);
+		if (ExtraTransaction) {
+			console.log('extra');
+			// @ts-ignore
+			console.log('res', ExtraTransaction.fromTxData(txData, txOptions));
+			// @ts-ignore
+			return ExtraTransaction.fromTxData(txData, txOptions);
+		}
+
 		throw new Error(`Tx instantiation with type ${txType} not supported`);
 	}
 
@@ -86,8 +113,15 @@ export class TransactionFactory {
 					return AccessListEIP2930Transaction.fromSerializedTx(data, txOptions);
 				case 2:
 					return FeeMarketEIP1559Transaction.fromSerializedTx(data, txOptions);
-				default:
+				default: {
+					const ExtraTransaction = extraTxTypes.get(data[0]);
+					if (ExtraTransaction) {
+						// @ts-ignore
+						return ExtraTransaction.fromSerializedTx(data, txOptions);
+					}
+
 					throw new Error(`TypedTransaction with ID ${data[0]} unknown`);
+				}
 			}
 		} else {
 			return Transaction.fromSerializedTx(data, txOptions);
