@@ -86,6 +86,7 @@ describe('contract', () => {
 			// eslint-disable-next-line
 			console.log("sent ")
 			const logs = await contractDeployed.getPastEvents('Transfer');
+			// eslint-disable-next-line
 			console.log("logs")
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 			// eslint-disable-next-line
