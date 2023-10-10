@@ -125,6 +125,10 @@ describe('contract', () => {
 
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+			// eslint-disable-next-line
+			console.log(logs)
+			// eslint-disable-next-line
+			console.log(tokenId)
 			const transferFromReceipt = await contractDeployed.methods
 				.transferFrom(tempAccount.address, toAccount.address, tokenId)
 				.send({
