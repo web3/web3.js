@@ -83,6 +83,7 @@ export type TransactionOutput = {
 	readonly from?: HexString;
 	readonly input: string;
 	readonly gas?: Numbers;
+	readonly gasPrice?: Numbers;
 	readonly gasLimit?: string;
 	readonly nonce: Numbers;
 	readonly value: Numbers;
