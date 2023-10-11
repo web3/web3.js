@@ -163,3 +163,7 @@ Documentation:
 ### Added
 
 -   As a replacment of the node EventEmitter, a custom `EventEmitter` has been implemented and exported. (#6398)
+
+### Fixed
+
+-   Fixed bug in chunks processing logic
