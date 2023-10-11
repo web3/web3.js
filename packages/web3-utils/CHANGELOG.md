@@ -166,4 +166,4 @@ Documentation:
 
 ### Fixed
 
--   Fixed bug in chunks processing logic
+-   Fixed bug in chunks processing logic (#6496)
