@@ -56,7 +56,7 @@ describe('sendTransaction', () => {
 			const checkRevertBeforeSendingSpy = jest.fn().mockImplementation((transaction) => {
 				expect(transaction).toBeDefined();
 
-				//verify signature part is removed before sending to revert check function
+				// verify signature part is removed before sending to revert check function
 				expect(transaction).not.toHaveProperty('v');
 				expect(transaction).not.toHaveProperty('r');
 				expect(transaction).not.toHaveProperty('s');
@@ -71,7 +71,7 @@ describe('sendTransaction', () => {
 			);
 			await sendSignedTransaction(web3Context, inputSignedTransaction, DEFAULT_RETURN_FORMAT);
 
-			//verify original tx params are intact
+			// verify original tx params are intact
 			expect(ethRpcMethods.sendRawTransaction).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputSignedTransactionFormatted,
