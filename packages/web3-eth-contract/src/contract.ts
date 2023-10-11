@@ -607,17 +607,17 @@ export class Contract<Abi extends ContractAbi>
 			} as AbiConstructorFragment;
 		}
 
-		const _input = (deployOptions?.input ?? this.options.input)? format(
+		const _input = (deployOptions?.input ?? this.options.input)!== undefined ? format(
 			{ format: 'bytes' },
 			deployOptions?.input ?? this.options.input,
 			DEFAULT_RETURN_FORMAT,
-		): '0x';
+		): undefined;
 
-		const _data = (deployOptions?.data ?? this.options.data)? format(
+		const _data = (deployOptions?.data ?? this.options.data)!== undefined ? format(
 			{ format: 'bytes' },
 			deployOptions?.data ?? this.options.data,
 			DEFAULT_RETURN_FORMAT,
-		): '0x';
+		): undefined;
 
 		if ((!_input || _input.trim() === '0x') && (!_data || _data.trim() === '0x')) {
 			throw new Web3ContractError('contract creation without any data provided.');
