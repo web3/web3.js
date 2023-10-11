@@ -833,7 +833,8 @@ export async function getLogs<ReturnFormat extends DataFormat>(
 	const formattedFilter = { ...filter, fromBlock, toBlock };
 
 	const response = await ethRpcMethods.getLogs(web3Context.requestManager, formattedFilter);
-
+	// eslint-disable-next-line
+	console.log(response)
 	const result = response.map(res => {
 		if (typeof res === 'string') {
 			return res;
@@ -841,7 +842,6 @@ export async function getLogs<ReturnFormat extends DataFormat>(
 
 		return format(logSchema, res as unknown as Log, returnFormat);
 	});
-
 	return result;
 }
 

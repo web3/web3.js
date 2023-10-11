@@ -764,16 +764,15 @@ export class Contract<Abi extends ContractAbi>
 			abi,
 			options ?? {},
 		);
+		// eslint-disable-next-line
+		console.log(topics)
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
 		// eslint-disable-next-line
-		console.log(logs)
 		const decodedLogs = logs.map(log =>
 			typeof log === 'string'
 				? log
 				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
-		// eslint-disable-next-line
-		console.log(decodedLogs)
 
 		const filter = options?.filter ?? {};
 		const filterKeys = Object.keys(filter);
@@ -924,8 +923,6 @@ export class Contract<Abi extends ContractAbi>
 			const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
 				_abi => (_abi.inputs ?? []).length === params.length,
 			);
-			// eslint-disable-next-line
-			console.log("createcontractmethod")
 			if (abis.length === 1 || arrayOfAbis.length === 0) {
 				abiParams = this._getAbiParams(methodAbi, params);
 				validator.validate(abi.inputs ?? [], abiParams);
