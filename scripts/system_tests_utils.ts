@@ -85,7 +85,7 @@ export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecution
 	} if (url.includes('ws')) {
 
 		const reconnectionOptions = {
-			delay: 100,
+			delay: 300,
 			autoReconnect: true,
 			maxAttempts: 30,
 		};
