@@ -42,6 +42,8 @@ export const decodeEventABI = (
 	const result = format(logSchema, data, returnFormat);
 	// eslint-disable-next-line
 	console.log(result)
+	// eslint-disable-next-line
+	console.log(event)
 	// if allEvents get the right event
 	if ([ALL_EVENTS, 'allEvents'].includes(modifiedEvent.name)) {
 		const matchedEvent = jsonInterface.find(j => j.signature === data.topics[0]);

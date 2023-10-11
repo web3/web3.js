@@ -765,11 +765,15 @@ export class Contract<Abi extends ContractAbi>
 			options ?? {},
 		);
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
+		// eslint-disable-next-line
+		console.log(logs)
 		const decodedLogs = logs.map(log =>
 			typeof log === 'string'
 				? log
 				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
+		// eslint-disable-next-line
+		console.log(decodedLogs)
 
 		const filter = options?.filter ?? {};
 		const filterKeys = Object.keys(filter);
