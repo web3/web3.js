@@ -82,7 +82,7 @@ export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecution
 	if (url.includes('ipc')) {
 		return new IpcProvider<API>(url);
 		
-	} else if (url.includes('ws')) {
+	} if (url.includes('ws')) {
 
 		const reconnectionOptions = {
 			delay: 100,
@@ -91,8 +91,9 @@ export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecution
 		};
 
 		return new WebSocketProvider<API>(url, {}, reconnectionOptions);
-	}
-	return url;
+	} 
+
+		return url;
 };
 
 export const getSystemTestEngine = (): string =>
