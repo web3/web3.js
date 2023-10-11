@@ -84,7 +84,7 @@ describe('contract', () => {
 			// eslint-disable-next-line
 			console.log(awardReceipt)
 			// eslint-disable-next-line
-			console.log("sent ")
+			console.log("award ")
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			// eslint-disable-next-line
 			console.log("logs")
@@ -129,6 +129,8 @@ describe('contract', () => {
 			console.log(logs)
 			// eslint-disable-next-line
 			console.log(tokenId)
+			// eslint-disable-next-line
+			console.log("after transferfrom")
 			const transferFromReceipt = await contractDeployed.methods
 				.transferFrom(tempAccount.address, toAccount.address, tokenId)
 				.send({
@@ -203,7 +205,7 @@ describe('contract', () => {
 
 			const logs = await contractDeployed.getPastEvents('Transfer');
 			// eslint-disable-next-line
-			console.log("after")
+			console.log("after transferfrom and approve")
 			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 			// eslint-disable-next-line
 			console.log(tokenId)

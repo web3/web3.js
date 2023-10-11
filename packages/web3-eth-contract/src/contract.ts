@@ -923,13 +923,7 @@ export class Contract<Abi extends ContractAbi>
 			// eslint-disable-next-line
 			console.log("createcontractmethod")
 			if (abis.length === 1 || arrayOfAbis.length === 0) {
-				// eslint-disable-next-line
-				console.log(abi.inputs)
-				// eslint-disable-next-line
-				console.log(params)
 				abiParams = this._getAbiParams(methodAbi, params);
-				// eslint-disable-next-line
-				console.log(abiParams)
 				validator.validate(abi.inputs ?? [], abiParams);
 			} else {
 				const errors: Web3ValidationErrorObject[] = [];
