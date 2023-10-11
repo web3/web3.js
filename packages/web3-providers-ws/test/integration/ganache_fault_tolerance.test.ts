@@ -241,7 +241,7 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 
 			await server.close();
 
-			//when server is not listening send request, and expect that lib will try to reconnect and at end will throw con not open error
+			// when server is not listening send request, and expect that lib will try to reconnect and at end will throw con not open error
 			await expect(
 				webSocketProvider.request(
 				{"method":"eth_getBlockByNumber","params":["0xc5043f",false],"id":1,"jsonrpc":"2.0"}
