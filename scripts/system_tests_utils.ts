@@ -50,7 +50,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Web3 from 'web3';
+import Web3, { WebSocketProvider } from 'web3';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
@@ -81,6 +81,16 @@ export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecution
 	const url = getSystemTestProviderUrl();
 	if (url.includes('ipc')) {
 		return new IpcProvider<API>(url);
+		
+	} else if (url.includes('ws')) {
+
+		const reconnectionOptions = {
+			delay: 100,
+			autoReconnect: true,
+			maxAttempts: 30,
+		};
+
+		return new WebSocketProvider<API>(url, {}, reconnectionOptions);
 	}
 	return url;
 };
