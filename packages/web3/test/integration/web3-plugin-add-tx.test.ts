@@ -35,7 +35,7 @@ class Eip4844Plugin extends Web3PluginBase {
 	}
 }
 
-describe('Plugin 4844', () => {
+describe('Add New Tx as a Plugin', () => {
 	let web3: Web3;
 	let clientUrl: string | SupportedProviders;
 	let account1: Web3Account;
@@ -48,7 +48,7 @@ describe('Plugin 4844', () => {
 		web3.eth.accounts.wallet.add(account1);
 		await waitForOpenConnection(web3.eth);
 	});
-	it('should create instance of the plugin', async () => {
+	it('should receive correct type of tx', async () => {
 		web3.registerPlugin(new Eip4844Plugin());
 		const tx = {
 			from: account1.address,
