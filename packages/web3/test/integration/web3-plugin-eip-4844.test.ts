@@ -17,25 +17,24 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
-import { SupportedProviders, Web3, Web3PluginBase } from 'web3';
-import { TransactionFactory, Web3Account } from 'web3-eth-accounts';
+import { Transaction, TransactionFactory, Web3Account } from 'web3-eth-accounts';
+import { SupportedProviders, Web3, Web3PluginBase } from '../../src';
 import {
 	createAccount,
 	createLocalAccount,
 	getSystemTestProvider,
 	waitForOpenConnection,
-} from "web3.js/scripts/system_tests_utils";
-import { BlobEIP4844Transaction } from '../fixtures/tx-type-eip484';
+} from '../shared_fixtures/system_tests_utils';
+import { SomeNewTxTypeTransaction, TRANSACTION_TYPE } from '../fixtures/tx-type-15';
 
-export class Eip4844Plugin extends Web3PluginBase {
-	public pluginNamespace = 'tx';
-
-	constructor() {
+class Eip4844Plugin extends Web3PluginBase {
+	public pluginNamespace = 'txType3';
+	public constructor() {
 		super();
-		// @ts-expect-error
-		TransactionFactory.registerTransactionType<typeof BlobEIP4844Transaction>(
-			3,
-			BlobEIP4844Transaction,
+		TransactionFactory.registerTransactionType(
+			TRANSACTION_TYPE,
+			// @ts-expect-error fix type
+			SomeNewTxTypeTransaction,
 		);
 	}
 }
@@ -55,23 +54,25 @@ describe('Plugin 4844', () => {
 	});
 	it('should create instance of the plugin', async () => {
 		web3.registerPlugin(new Eip4844Plugin());
-		const gasPrice = await web3.eth.getGasPrice();
-		const sentTx = web3.eth.sendTransaction(
-			{
-				from: account1.address,
-				to: account2.address,
-				gas: BigInt(500000),
-				gasPrice,
-				maxFeePerGas: BigInt(500000),
-				value: '0x1',
-				type: 3,
-			},
-			undefined,
-			{
-				checkRevertBeforeSending: false,
-			},
-		);
-		console.log('sentTx', sentTx);
-		console.log('sentTx res ', await sentTx);
+		const tx = {
+			from: account1.address,
+			to: account2.address,
+			value: '0x1',
+			type: TRANSACTION_TYPE,
+			maxPriorityFeePerGas: BigInt(5000000),
+			maxFeePerGas: BigInt(5000000),
+		};
+		const sub = web3.eth.sendTransaction({ ...tx }, undefined, {
+			checkRevertBeforeSending: false,
+		});
+
+		const waitForEvent: Promise<Transaction> = new Promise(resolve => {
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises
+			sub.on('sending', txData => {
+				resolve(txData as unknown as Transaction);
+			});
+		});
+		expect(Number((await waitForEvent).type)).toBe(TRANSACTION_TYPE);
+		await expect(sub).rejects.toThrow();
 	});
 });

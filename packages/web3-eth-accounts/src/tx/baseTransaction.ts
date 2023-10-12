@@ -18,14 +18,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Numbers } from 'web3-types';
 import { bytesToHex } from 'web3-utils';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2, secp256k1 } from './constants.js';
-import {
-	Chain,
-	Common,
-	Hardfork,
-	toUint8Array,
-	uint8ArrayToBigInt,
-	unpadUint8Array,
-} from '../common/index.js';
+import { toUint8Array, uint8ArrayToBigInt, unpadUint8Array } from '../common/utils.js';
+import { Common } from '../common/common.js';
+import { Hardfork, Chain } from '../common/enums.js';
 import type {
 	AccessListEIP2930TxData,
 	AccessListEIP2930ValuesArray,
@@ -565,4 +560,22 @@ export abstract class BaseTransaction<TransactionObject> {
 
 		return { r, s, v };
 	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public static fromSerializedTx(
+		// @ts-expect-error unused variable
+		serialized: Uint8Array,
+		// @ts-expect-error unused variable
+		opts: TxOptions = {},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+	): any {}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public static fromTxData(
+		// @ts-expect-error unused variable
+		txData: any,
+		// @ts-expect-error unused variable
+		opts: TxOptions = {},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+	): any {}
 }

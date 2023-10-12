@@ -69,6 +69,7 @@
 		"eslint-config-base-web3": "0.1.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-import": "^2.26.0",
+		"ethereum-cryptography": "^2.1.2",
 		"ganache": "^7.5.0",
 		"hardhat": "^2.12.2",
 		"in3": "^3.3.3",

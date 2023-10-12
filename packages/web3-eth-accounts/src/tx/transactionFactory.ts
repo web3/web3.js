@@ -27,7 +27,7 @@ import type {
 	TxData,
 	TxOptions,
 } from './types.js';
-import { BaseTransaction } from './baseTransaction';
+import { BaseTransaction } from './baseTransaction.js';
 
 const extraTxTypes: Map<Numbers, typeof BaseTransaction> = new Map();
 
@@ -59,8 +59,6 @@ export class TransactionFactory {
 		txData: TxData | TypedTransaction,
 		txOptions: TxOptions = {},
 	): TypedTransaction {
-		console.log('txData', txData);
-		console.log('txOptions', txOptions);
 		if (!('type' in txData) || txData.type === undefined) {
 			// Assume legacy transaction
 			return Transaction.fromTxData(txData as TxData, txOptions);
@@ -85,12 +83,8 @@ export class TransactionFactory {
 			);
 		}
 		const ExtraTransaction = extraTxTypes.get(txType);
-		if (ExtraTransaction) {
-			console.log('extra');
-			// @ts-ignore
-			console.log('res', ExtraTransaction.fromTxData(txData, txOptions));
-			// @ts-ignore
-			return ExtraTransaction.fromTxData(txData, txOptions);
+		if (ExtraTransaction?.fromTxData) {
+			return ExtraTransaction.fromTxData(txData, txOptions) as TypedTransaction;
 		}
 
 		throw new Error(`Tx instantiation with type ${txType} not supported`);
@@ -115,9 +109,11 @@ export class TransactionFactory {
 					return FeeMarketEIP1559Transaction.fromSerializedTx(data, txOptions);
 				default: {
 					const ExtraTransaction = extraTxTypes.get(data[0]);
-					if (ExtraTransaction) {
-						// @ts-ignore
-						return ExtraTransaction.fromSerializedTx(data, txOptions);
+					if (ExtraTransaction?.fromSerializedTx) {
+						return ExtraTransaction.fromSerializedTx(
+							data,
+							txOptions,
+						) as TypedTransaction;
 					}
 
 					throw new Error(`TypedTransaction with ID ${data[0]} unknown`);

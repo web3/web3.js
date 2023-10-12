@@ -142,6 +142,8 @@ Documentation:
 ### Added
 
 -   Added public function `privateKeyToPublicKey`
+-   Added exporting `BaseTransaction` from the package (#6493)
+-   Added exporting `txUtils` from the package (#6493)
 
 ### Fixed
 
