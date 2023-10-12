@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { SchemaError } from 'web3-errors';
 import { Web3ValidationErrorObject } from 'web3-types';
 
 import { z, ZodType, ZodIssue, ZodIssueCode, ZodTypeAny } from 'zod';
@@ -68,7 +69,7 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 
 	if (schema?.format) {
 		if (!formats[schema.format]) {
-			throw new Error(`format ${schema.format} is unsupported`);
+			throw new SchemaError(schema.format);
 		}
 
 		return z.any().refine(formats[schema.format], (value: unknown) => ({
