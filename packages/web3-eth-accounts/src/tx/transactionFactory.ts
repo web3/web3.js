@@ -29,7 +29,7 @@ import type {
 } from './types.js';
 import { BaseTransaction } from './baseTransaction.js';
 
-const extraTxTypes: Map<Numbers, typeof BaseTransaction> = new Map();
+const extraTxTypes: Map<Numbers, typeof BaseTransaction<unknown>> = new Map();
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TransactionFactory {
@@ -41,7 +41,7 @@ export class TransactionFactory {
 		return Number(uint8ArrayToBigInt(toUint8Array(txType)));
 	}
 
-	public static registerTransactionType<NewTxTypeClass extends typeof BaseTransaction>(
+	public static registerTransactionType<NewTxTypeClass extends typeof BaseTransaction<unknown>>(
 		type: Numbers,
 		txClass: NewTxTypeClass,
 	) {
