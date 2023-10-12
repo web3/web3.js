@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Validator } from '../../src/web3_validator';
-import { Json, JsonSchema, ValidationSchemaInput } from '../..';
+import { Json, JsonSchema, ValidationSchemaInput } from '../../src/types';
 
 const abi = [
 	{ indexed: true, internalType: 'address', name: 'from', type: 'address' },

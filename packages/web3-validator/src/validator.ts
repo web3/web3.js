@@ -69,7 +69,7 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 
 	if (schema?.format) {
 		if (!formats[schema.format]) {
-			throw new SchemaError(schema.format);
+			throw new SchemaFormatError(schema.format);
 		}
 
 		return z.any().refine(formats[schema.format], (value: unknown) => ({
