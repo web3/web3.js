@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ERR_SCHEMA } from '../error_codes.js';
+import { ERR_SCHEMA_FORMAT } from '../error_codes.js';
 import { BaseWeb3Error } from '../web3_error_base.js';
 
-export class SchemaError extends BaseWeb3Error {
-	public code = ERR_SCHEMA;
+export class SchemaFormatError extends BaseWeb3Error {
+	public code = ERR_SCHEMA_FORMAT;
 
 	public constructor(public format: string) {
 		super(`format ${format} is unsupported`);

@@ -164,7 +164,7 @@ export const ERR_CORE_HARDFORK_MISMATCH = 1101;
 export const ERR_CORE_CHAIN_MISMATCH = 1102;
 
 // Schema error codes
-export const ERR_SCHEMA = 1200;
+export const ERR_SCHEMA_FORMAT = 1200;
 
 // RPC error codes (EIP-1474)
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md

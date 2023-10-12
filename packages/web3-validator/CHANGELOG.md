@@ -151,5 +151,6 @@ Documentation:
 
 ## Fixed
 
--   Multi-dimensional arrays are now handled properly when parsing ABIs
--   Validator will now properly handle all valid numeric type sizes: intN / uintN where 8 <= N <= 256 and N % 8 == 0 
+-   Multi-dimensional arrays are now handled properly when parsing ABIs (#6434)
+-   Validator will now properly handle all valid numeric type sizes: intN / uintN where 8 <= N <= 256 and N % 8 == 0 (#6434)
+-   Will now throw SchemaFormatError when unsupported format is given in `convertToZod` method (#6434)
