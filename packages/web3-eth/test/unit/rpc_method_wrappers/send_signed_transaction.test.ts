@@ -28,6 +28,7 @@ import {
 	testData,
 } from './fixtures/send_signed_transaction';
 import { transactionReceiptSchema } from '../../../src/schemas';
+import { SendTxHelper } from '../../../src/utils/send_tx_helper';
 
 jest.mock('web3-rpc-methods');
 jest.mock('../../../src/utils/wait_for_transaction_receipt');
@@ -44,6 +45,42 @@ describe('sendTransaction', () => {
 	});
 
 	afterEach(() => jest.resetAllMocks());
+
+	it.each(testData)(
+		`should remove signature part in transaction before checkRevertBeforeSending`,
+		async (_, inputSignedTransaction) => {
+			(
+				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
+			).mockResolvedValueOnce(expectedTransactionReceipt);
+
+			const checkRevertBeforeSendingSpy = jest.fn().mockImplementation((transaction) => {
+				expect(transaction).toBeDefined();
+
+				// verify signature part is removed before sending to revert check function
+				expect(transaction).not.toHaveProperty('v');
+				expect(transaction).not.toHaveProperty('r');
+				expect(transaction).not.toHaveProperty('s');
+			});
+
+			SendTxHelper.prototype.checkRevertBeforeSending = checkRevertBeforeSendingSpy;
+
+			const inputSignedTransactionFormatted = format(
+				{ format: 'bytes' },
+				inputSignedTransaction,
+				DEFAULT_RETURN_FORMAT,
+			);
+			await sendSignedTransaction(web3Context, inputSignedTransaction, DEFAULT_RETURN_FORMAT);
+
+			// verify original tx params are intact
+			expect(ethRpcMethods.sendRawTransaction).toHaveBeenCalledWith(
+				web3Context.requestManager,
+				inputSignedTransactionFormatted,
+			);
+
+			expect(checkRevertBeforeSendingSpy).toHaveBeenCalledTimes(1);
+			
+		},
+	);
 
 	it.each(testData)(
 		`sending event should emit with inputSignedTransaction\n ${testMessage}`,
