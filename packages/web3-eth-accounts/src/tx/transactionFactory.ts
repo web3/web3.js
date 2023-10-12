@@ -108,7 +108,7 @@ export class TransactionFactory {
 				case 2:
 					return FeeMarketEIP1559Transaction.fromSerializedTx(data, txOptions);
 				default: {
-					const ExtraTransaction = extraTxTypes.get(data[0]);
+					const ExtraTransaction = extraTxTypes.get(Number(data[0]));
 					if (ExtraTransaction?.fromSerializedTx) {
 						return ExtraTransaction.fromSerializedTx(
 							data,
