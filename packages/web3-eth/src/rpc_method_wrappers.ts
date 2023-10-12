@@ -627,8 +627,11 @@ export function sendSignedTransaction<
 					};
 
 					try {
+						const { v , r , s, 
+								...txWithoutSigParams} = unSerializedTransactionWithFrom;
+						
 						await sendTxHelper.checkRevertBeforeSending(
-							unSerializedTransactionWithFrom as TransactionCall,
+							txWithoutSigParams as TransactionCall,
 						);
 
 						sendTxHelper.emitSending(signedTransactionFormattedHex);
