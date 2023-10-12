@@ -149,6 +149,6 @@ Documentation:
 
 ## [Unreleased]
 
-## Fixed
+### Fixed
 
 -   Multi-dimensional arrays are now handled properly when parsing ABIs
