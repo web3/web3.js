@@ -22,12 +22,10 @@ import { TxData, TxOptions } from '../../../src/tx';
 describe('Register new TX', () => {
 	it('validateCannotExceedMaxInteger()', () => {
 		const TYPE = 20;
-		// @ts-ignore
+		// @ts-expect-error not implement all methods
 		class SomeNewTxType extends BaseTransaction<any> {
-			constructor(txData: TxData, opts: TxOptions = {}) {
-				super(txData, opts);
-				// @ts-ignore
-				this._type = 20;
+			public constructor(txData: TxData, opts: TxOptions = {}) {
+				super({ ...txData, type: TYPE }, opts);
 			}
 			public static fromTxData() {
 				return 'new fromTxData';
