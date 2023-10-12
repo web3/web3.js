@@ -471,7 +471,7 @@ Follow these steps to connect to the Ethereum network with MetaMask and web3.js,
   </pre
 		>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1-alpha.5/web3.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
 		<script>
 			window.addEventListener('load', async function () {
 				// Check if web3 is available
