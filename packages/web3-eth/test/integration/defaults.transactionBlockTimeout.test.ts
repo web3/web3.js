@@ -45,8 +45,6 @@ describe('defaults', () => {
 	beforeEach(() => {
 		clientUrl = getSystemTestProvider();
 		web3 = new Web3(clientUrl);
-		// Make the test run faster by casing the polling to start after 2 blocks
-		web3.eth.transactionBlockTimeout = 2;
 
 		// Increase other timeouts so only `transactionBlockTimeout` would be reached
 		web3.eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
@@ -64,6 +62,7 @@ describe('defaults', () => {
 			account1 = await createLocalAccount(web3);
 			account2 = await createLocalAccount(web3);
 			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
+
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
@@ -81,18 +80,13 @@ describe('defaults', () => {
 			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 			// eslint-disable-next-line no-void
 			await sendFewSampleTxs(2);
+			
+			web3.eth.transactionBlockTimeout = 2;
 
-			try {
-				await sentTx;
-				throw new Error(
-					'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
-				);
-			} catch (error) {
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-			}
+			await expect(sentTx).rejects.toThrow(/was not mined within [0-9]+ blocks/);
+
+			await expect(sentTx).rejects.toThrow(TransactionBlockTimeoutError);
+
 			await closeOpenConnection(web3.eth);
 		});
 
@@ -127,6 +121,8 @@ describe('defaults', () => {
 				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 				// eslint-disable-next-line no-void, @typescript-eslint/no-unsafe-call
 				void sendFewSampleTxs(2);
+
+				web3.eth.transactionBlockTimeout = 2;
 
 				await expect(sentTx).rejects.toThrow(/was not mined within [0-9]+ blocks/);
 

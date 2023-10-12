@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import pkg from 'crc-32';
-import { EventEmitter } from 'events';
+import { EventEmitter, bytesToHex, hexToBytes, uint8ArrayConcat } from 'web3-utils';
 import type { Numbers } from 'web3-types';
-import { bytesToHex, hexToBytes, uint8ArrayConcat } from 'web3-utils';
 import { TypeOutput } from './types.js';
 import { intToUint8Array, toType, parseGethGenesis } from './utils.js';
 import goerli from './chains/goerli.js';

@@ -26,7 +26,7 @@
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
 		"prebuild": "yarn clean",
-		"build": "yarn build:cjs & yarn build:esm & yarn build:types",
+		"build": "concurrently --kill-others-on-fail \"yarn:build:*(!check)\"",
 		"build:cjs": "tsc --build tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > ./lib/commonjs/package.json",
 		"build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./lib/esm/package.json",
 		"build:types": "tsc --build tsconfig.types.json",
@@ -40,7 +40,10 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
+		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests",
+		"test:e2e:electron": "npx cypress run --headless --browser electron",
+		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
+		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
 	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
@@ -52,6 +55,7 @@
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-import": "^2.26.0",
 		"jest": "^28.1.3",
+		"jest-environment-jsdom": "^29.7.0",
 		"jest-extended": "^3.0.1",
 		"js-sha3": "^0.8.0",
 		"prettier": "^2.7.1",

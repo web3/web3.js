@@ -184,3 +184,9 @@ Documentation:
 ### Changed
 
 -   defaultTransactionType is now type 0x2 instead of 0x0 (#6282)
+-   Allows formatter to parse large base fee (#6456)
+-   The package now uses `EventEmitter` from `web3-utils` that works in node envrioment as well as in the browser. (#6398)
+
+### Fixed
+
+-   Fix the issue: "Uncaught TypeError: Class extends value undefined is not a constructor or null #6371". (#6398)
