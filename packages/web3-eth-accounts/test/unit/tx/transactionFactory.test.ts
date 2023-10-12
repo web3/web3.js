@@ -121,7 +121,7 @@ describe('[TransactionFactory]: Basic functions', () => {
 
 	it('fromBlockBodyData() -> error case', () => {
 		expect(() => {
-			// @ts-ignore
+			// @ts-expect-error incorrect param type
 			TransactionFactory.fromBlockBodyData('');
 		}).toThrow();
 	});
