@@ -333,6 +333,16 @@ Object {
 }
 `;
 
+exports[`errors SchemaFormatError should have valid json structure 1`] = `
+Object {
+  "code": 1200,
+  "format": "unsupported",
+  "innerError": undefined,
+  "message": "format unsupported is unsupported",
+  "name": "SchemaFormatError",
+}
+`;
+
 exports[`errors TransactionError should have valid json structure 1`] = `
 Object {
   "code": 400,

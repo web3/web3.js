@@ -381,4 +381,13 @@ describe('errors', () => {
 			).toMatchSnapshot();
 		});
 	});
+
+	describe('SchemaFormatError', () => {
+		it('should have valid json structure', () => {
+			expect(
+				new schemaErrors.SchemaFormatError("unsupported"
+				).toJSON(),
+			).toMatchSnapshot();
+		});
+	});
 });
