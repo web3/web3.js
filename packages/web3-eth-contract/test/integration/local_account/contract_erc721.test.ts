@@ -19,7 +19,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Account } from 'web3-eth-accounts';
-import { EventLog } from 'web3-types';
 import { Contract } from '../../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../../shared_fixtures/build/ERC721Token';
 import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
@@ -80,8 +79,7 @@ describe('contract', () => {
 				tempAccount.address.toLowerCase(),
 			);
 
-			const logs = await contractDeployed.getPastEvents('Transfer');
-			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+			const tokenId = awardReceipt.events?.Transfer.returnValues?.tokenId as string;
 
 			expect(
 				toUpperCaseHex(
@@ -113,8 +111,7 @@ describe('contract', () => {
 				tempAccount.address.toLowerCase(),
 			);
 
-			const logs = await contractDeployed.getPastEvents('Transfer');
-			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+			const tokenId = awardReceipt.events?.Transfer.returnValues?.tokenId as string;
 			const transferFromReceipt = await contractDeployed.methods
 				.transferFrom(tempAccount.address, toAccount.address, tokenId)
 				.send({
@@ -186,8 +183,7 @@ describe('contract', () => {
 				tempAccount.address.toLowerCase(),
 			);
 
-			const logs = await contractDeployed.getPastEvents('Transfer');
-			const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+			const tokenId = awardReceipt.events?.Transfer.returnValues?.tokenId as string;
 
 			const approveReceipt = await contractDeployed.methods
 				.approve(toAccount.address, tokenId)
