@@ -38,39 +38,37 @@ import {
 	InvalidUnitError,
 } from 'web3-errors';
 
-const base = BigInt(10);
-const expo10 = (expo: number) => base ** BigInt(expo);
-
 // Ref: https://ethdocs.org/en/latest/ether.html
+// Note: this could be simplified using ** operator, but babel does not handle it well (https://github.com/babel/babel/issues/13109)
 /** @internal */
 export const ethUnitMap = {
-	noether: BigInt('0'),
+	noether: BigInt(0),
 	wei: BigInt(1),
-	kwei: expo10(3),
-	Kwei: expo10(3),
-	babbage: expo10(3),
-	femtoether: expo10(3),
-	mwei: expo10(6),
-	Mwei: expo10(6),
-	lovelace: expo10(6),
-	picoether: expo10(6),
-	gwei: expo10(9),
-	Gwei: expo10(9),
-	shannon: expo10(9),
-	nanoether: expo10(9),
-	nano: expo10(9),
-	szabo: expo10(12),
-	microether: expo10(12),
-	micro: expo10(12),
-	finney: expo10(15),
-	milliether: expo10(15),
-	milli: expo10(15),
-	ether: expo10(18),
-	kether: expo10(21),
-	grand: expo10(21),
-	mether: expo10(24),
-	gether: expo10(27),
-	tether: expo10(30),
+	kwei: BigInt(1000),
+	Kwei: BigInt(1000),
+	babbage: BigInt(1000),
+	femtoether: BigInt(1000),
+	mwei: BigInt(1000000),
+	Mwei: BigInt(1000000),
+	lovelace: BigInt(1000000),
+	picoether: BigInt(1000000),
+	gwei: BigInt(1000000000),
+	Gwei: BigInt(1000000000),
+	shannon: BigInt(1000000000),
+	nanoether: BigInt(1000000000),
+	nano: BigInt(1000000000),
+	szabo: BigInt(1000000000000),
+	microether: BigInt(1000000000000),
+	micro: BigInt(1000000000000),
+	finney: BigInt(1000000000000000),
+	milliether: BigInt(1000000000000000),
+	milli: BigInt(1000000000000000),
+	ether: BigInt('1000000000000000000'),
+	kether: BigInt('1000000000000000000000'),
+	grand: BigInt('1000000000000000000000'),
+	mether: BigInt('1000000000000000000000000'),
+	gether: BigInt('1000000000000000000000000000'),
+	tether: BigInt('1000000000000000000000000000000'),
 };
 
 export type EtherUnits = keyof typeof ethUnitMap;
