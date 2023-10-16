@@ -162,5 +162,9 @@ Documentation:
 
 ### Added
 
--   As a replacement of the node EventEmitter, a custom `EventEmitter` has been implemented and exported. (#6398)
+-   As a replacment of the node EventEmitter, a custom `EventEmitter` has been implemented and exported. (#6398)
+
+### Fixed
+
 -   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
+-   Fixed bug in chunks processing logic (#6496)
