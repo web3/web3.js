@@ -58,9 +58,7 @@ describe('Add New Tx as a Plugin', () => {
 			maxPriorityFeePerGas: BigInt(5000000),
 			maxFeePerGas: BigInt(5000000),
 		};
-		const sub = web3.eth.sendTransaction({ ...tx }, undefined, {
-			checkRevertBeforeSending: false,
-		});
+		const sub = web3.eth.sendTransaction(tx);
 
 		const waitForEvent: Promise<Transaction> = new Promise(resolve => {
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
