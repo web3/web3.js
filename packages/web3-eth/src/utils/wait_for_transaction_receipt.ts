@@ -20,7 +20,7 @@ import { TransactionPollingTimeoutError } from 'web3-errors';
 import { EthExecutionAPI, Bytes, TransactionReceipt, DataFormat } from 'web3-types';
 
 // eslint-disable-next-line import/no-cycle
-import { pollTillDefined, rejectIfTimeout } from 'web3-utils';
+import { pollTillDefinedAndReturnIntervalId, rejectIfTimeout } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { rejectIfBlockTimeout } from './reject_if_block_timeout.js';
 // eslint-disable-next-line import/no-cycle
@@ -31,10 +31,11 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ): Promise<TransactionReceipt> {
+
 	const pollingInterval =
 		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
 
-	const awaitableTransactionReceipt: Promise<TransactionReceipt> = pollTillDefined(async () => {
+	const [awaitableTransactionReceipt, IntervalId] = pollTillDefinedAndReturnIntervalId(async () => {
 		try {
 			return getTransactionReceipt(web3Context, transactionHash, returnFormat);
 		} catch (error) {
@@ -64,7 +65,10 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
 	} finally {
-		clearTimeout(timeoutId);
+		if(timeoutId)
+			clearTimeout(timeoutId);
+		if(IntervalId)
+			clearInterval(IntervalId);
 		blockTimeoutResourceCleaner.clean();
 	}
 }

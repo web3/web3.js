@@ -200,6 +200,7 @@ Documentation:
 ### Fixed
 
 -   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
+-   Fixed param sent to `checkRevertBeforeSending` in `sendSignedTransaction` 
 
 ### Added
 
