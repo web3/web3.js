@@ -21,6 +21,7 @@ import { padLeft, toBigInt } from 'web3-utils';
 import { utils } from 'web3-validator';
 import { DecoderResult, EncoderResult } from '../types.js';
 import { WORD_SIZE } from '../utils.js';
+import { numberLimits } from './numbersLimits.js';
 
 // eslint-disable-next-line no-bitwise
 const mask = BigInt(1) << BigInt(256);
@@ -42,25 +43,6 @@ function uint8ArrayToBigInt(value: Uint8Array, max: bigint): bigint {
 	if (result <= max) return result;
 	return result - mask;
 }
-
-const numberLimits = new Map<string, { min: bigint; max: bigint }>();
-
-// precalculate all the limits
-for (let i = 8; i <= 256; i += 8) {
-	numberLimits.set(`uint${i}`, {
-		min: BigInt(0),
-		max: BigInt(2) ** BigInt(i) - BigInt(1),
-	});
-	numberLimits.set(`int${i}`, {
-		min: -(BigInt(2) ** BigInt(i - 1)),
-		max: BigInt(2) ** BigInt(i - 1) - BigInt(1),
-	});
-}
-
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-numberLimits.set(`int`, numberLimits.get('int256')!);
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-numberLimits.set(`uint`, numberLimits.get('uint256')!);
 
 export function encodeNumber(param: AbiParameter, input: unknown): EncoderResult {
 	let value;
