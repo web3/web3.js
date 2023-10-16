@@ -698,8 +698,10 @@ Released with 1.0.0-beta.37 code base.
 
 - Fixed broken fetch for Node.js > 18.x and fixed double callback (#6381)
 
-## [Unreleased]
+## [1.10.3]
 
 ### Security
   - `web3-eth-accounts`: Bumped `@ethereumjs` dependencies (#6457)
   - Updated dependencies (#6491)
+
+  ## [Unreleased]
