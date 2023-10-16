@@ -176,7 +176,7 @@ await web3.eth.getFeeHistory('0x1', 'latest', []);
 
 #### sending
 
--   In 1.x, the event listener would receive a `payload` object as an argument. In 4.x, just the sent transaction object is recieved
+-   In 1.x, the event listener would receive a `payload` object as an argument. In 4.x, just the sent transaction object is received
 
 ```typescript
 // in 1.x
@@ -211,7 +211,7 @@ web3.eth.sendTransaction({ ... }).on('sending', (sendTransactionObject) => { ...
 
 #### sent
 
--   In 1.x, the event listener would receive a `payload` object as an argument. In 4.x just the sent transaction object is recieved
+-   In 1.x, the event listener would receive a `payload` object as an argument. In 4.x just the sent transaction object is received
 
 ```typescript
 // in 1.x
