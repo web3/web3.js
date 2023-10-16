@@ -151,4 +151,5 @@ Documentation:
 
 ## Fixed
 
--   Multi-dimensional arrays are now handled properly when parsing ABIs
+-   Multi-dimensional arrays are now handled properly when parsing ABIs (#6435)
+-   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
