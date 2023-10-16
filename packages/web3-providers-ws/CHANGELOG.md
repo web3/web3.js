@@ -124,3 +124,7 @@ Documentation:
 
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed bug in chunks processing logic (#6496)
