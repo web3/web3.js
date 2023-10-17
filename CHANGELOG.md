@@ -2089,19 +2089,59 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)
 
+#### web3-eth-accounts
+
+-   Added public function `privateKeyToPublicKey`
+-   Added exporting `BaseTransaction` from the package (#6493)
+-   Added exporting `txUtils` from the package (#6493)
+
 #### web3-types
 
 -   Interface `EventLog` was added. (#6410)
 
+#### web3-utils
+
+-   As a replacment of the node EventEmitter, a custom `EventEmitter` has been implemented and exported. (#6398)
+
 ### Fixed
+
+#### web3-core
+
+-   Fix the issue: "Uncaught TypeError: Class extends value undefined is not a constructor or null #6371". (#6398)
 
 #### web3-eth
 
 -   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
--   Fixed `withdrawalsSchema.address` property type `bytes32` to `address` (#6470)
+-   Fixed param sent to `checkRevertBeforeSending` in `sendSignedTransaction` 
+
+#### web3-eth-accounts
+
+-   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344) 
+
+#### web3-providers-http
+
+-   Fix issue lquixada/cross-fetch#78, enabling to run web3.js in service worker (#6463)
+
+#### web3-validator
+
+-   Multi-dimensional arrays are now handled properly when parsing ABIs
 
 ### Changed
+
+#### web3-core
+
+-   defaultTransactionType is now type 0x2 instead of 0x0 (#6282)
+-   Allows formatter to parse large base fee (#6456)
+-   The package now uses `EventEmitter` from `web3-utils` that works in node envrioment as well as in the browser. (#6398)
+
+#### web3-eth
+
+-   Transactions will now default to type 2 transactions instead of type 0, similar to 1.x version. (#6282)
 
 #### web3-eth-contract
 
 -   The `events` property was added to the `receipt` object (#6410)
+
+#### web3-providers-http
+
+-   Bump cross-fetch to version 4 (#6463).

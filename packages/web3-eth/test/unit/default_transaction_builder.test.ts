@@ -457,7 +457,7 @@ describe('defaultTransactionBuilder', () => {
 	describe('should populate type', () => {
 		it('should throw UnsupportedTransactionTypeError', async () => {
 			const input = { ...transaction };
-			input.type = '0x8'; // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
+			input.type = '0x80'; // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 
 			await expect(
 				defaultTransactionBuilder({ transaction: input, web3Context, fillGasPrice: true }),
