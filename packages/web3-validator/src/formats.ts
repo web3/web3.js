@@ -41,8 +41,7 @@ const formats: { [key: string]: (data: unknown) => boolean } = {
 	string: (data: unknown) => isString(data as ValidInputTypes),
 };
 // generate formats for all numbers types
-for (let i = 3; i <= 8; i += 1) {
-	const bitSize = 2 ** i;
+for (let bitSize = 8; bitSize <= 256; bitSize += 8) {
 	formats[`int${bitSize}`] = data => isInt(data as ValidInputTypes, { bitSize });
 	formats[`uint${bitSize}`] = data => isUInt(data as ValidInputTypes, { bitSize });
 }

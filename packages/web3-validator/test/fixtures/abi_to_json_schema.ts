@@ -30,7 +30,7 @@ export type AbiToJsonSchemaCase = {
 		data: Record<string, unknown> | Array<unknown>;
 	};
 };
-export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
+const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 	{
 		title: 'single param uint',
 		abi: {
@@ -1659,3 +1659,36 @@ export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		},
 	},
 ];
+
+function generateSingleParamNumericCase(type: string, bitSize: number) {
+	return {
+		title: `single param ${type}${bitSize}`,
+		abi: {
+			fullSchema: [{ name: 'a', type: `${type}${bitSize}` }],
+			shortSchema: [`${type}${bitSize}`],
+			data: [12],
+		},
+		json: {
+			fullSchema: {
+				type: 'array',
+				items: [{ $id: 'a', format: `${type}${bitSize}`, required: true }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			shortSchema: {
+				type: 'array',
+				items: [{ $id: '/0/0', format: `${type}${bitSize}`, required: true }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			data: [12],
+		},
+	};
+}
+
+for (let i = 256; i >= 8; i -= 8) {
+	abiToJsonSchemaCases.unshift(generateSingleParamNumericCase('int', i));
+	abiToJsonSchemaCases.unshift(generateSingleParamNumericCase('uint', i));
+}
+
+export { abiToJsonSchemaCases };
