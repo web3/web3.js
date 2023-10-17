@@ -25,11 +25,12 @@ import {
 	waitForEvent,
 	describeIf,
 	getSystemTestBackend,
+	isWs,
 } from '../fixtures/system_test_utils';
 import WebSocketProvider from '../../src/index';
 
 // create helper functions to open server
-describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
+describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => {
 	describe('WebSocketProvider - ganache', () => {
 		jest.setTimeout(17000);
 		const port = 7547;
@@ -232,26 +233,21 @@ describeIf(getSystemTestBackend() === 'ganache')('ganache tests', () => {
 			const webSocketProvider = new WebSocketProvider(host, {}, reconnectionOptions);
 			await waitForSocketConnect(webSocketProvider);
 
+			webSocketProvider.on('error', (err: any) => {
+				if (err.message === `Maximum number of reconnect attempts reached! (${1})`) {
+					mockCallBack();
+				}
+			});
+
 			await server.close();
 
-			const errorPromise = new Promise(resolve => {
-				webSocketProvider.on('error', (err: any) => {
-					if (err.message === `Maximum number of reconnect attempts reached! (${1})`) {
-						mockCallBack();
-						resolve(true);
-					}
-				});
-			});
-			// send an event to be parsed and fail
-			const event = {
-				data: 'abc|--|ded',
-				type: 'websocket',
-				// @ts-expect-error run protected method
-				target: webSocketProvider._socketConnection,
-			};
-			// @ts-expect-error run protected method
-			webSocketProvider._onMessage(event);
-			await errorPromise;
+			// when server is not listening send request, and expect that lib will try to reconnect and at end will throw con not open error
+			await expect(
+				webSocketProvider.request(
+				{"method":"eth_getBlockByNumber","params":["0xc5043f",false],"id":1,"jsonrpc":"2.0"}
+				))
+				.rejects.toThrow(ConnectionNotOpenError);
+
 			expect(mockCallBack).toHaveBeenCalled();
 		});
 
