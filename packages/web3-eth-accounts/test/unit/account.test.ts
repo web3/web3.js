@@ -28,7 +28,7 @@ import {
 	recoverTransaction,
 	sign,
 	signTransaction,
-	privateKeyToPublicKey
+	privateKeyToPublicKey,
 } from '../../src/account';
 import {
 	invalidDecryptData,
@@ -98,8 +98,8 @@ describe('accounts', () => {
 			it.each(validPrivateKeyToPublicKeyData)('%s', (privateKey, isCompressed, output) => {
 				expect(privateKeyToPublicKey(privateKey, isCompressed)).toEqual(output);
 			});
-			})
-	})
+		});
+	});
 
 	describe('Signing and Recovery of Transaction', () => {
 		it.each(transactionsTestData)('sign transaction', async txData => {
@@ -228,8 +228,8 @@ describe('accounts', () => {
 
 		describe('valid signatures for recover', () => {
 			it.each(validRecover)('&s', (data, signature) => {
-				recover(data, signature)
-			})
-		})
+				recover(data, signature);
+			});
+		});
 	});
 });

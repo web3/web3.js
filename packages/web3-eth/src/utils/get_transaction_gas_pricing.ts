@@ -89,7 +89,7 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 			throw new UnsupportedTransactionTypeError(transactionType);
 
 		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
-		if (transactionType < '0x0' || transactionType > '0x7f')
+		if (Number(transactionType) < 0 || Number(transactionType) > 127)
 			throw new UnsupportedTransactionTypeError(transactionType);
 
 		if (

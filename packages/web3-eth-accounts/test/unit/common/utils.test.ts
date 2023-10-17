@@ -42,18 +42,18 @@ describe('[Utils/Parse]', () => {
 		merge: '0x013fd1b5',
 	};
 
-	it('should parse geth params file', async () => {
+	it('should parse geth params file', () => {
 		const params = parseGethGenesis(testnet, 'rinkeby');
 		expect(params.genesis.nonce).toBe('0x0000000000000042');
 	});
 
-	it('should throw with invalid Spurious Dragon blocks', async () => {
+	it('should throw with invalid Spurious Dragon blocks', () => {
 		expect(() => {
 			parseGethGenesis(invalidSpuriousDragon, 'bad_params');
 		}).toThrow();
 	});
 
-	it('should import poa network params correctly', async () => {
+	it('should import poa network params correctly', () => {
 		let params = parseGethGenesis(poa, 'poa');
 		expect(params.genesis.nonce).toBe('0x0000000000000000');
 		expect(params.consensus).toEqual({
@@ -67,18 +67,18 @@ describe('[Utils/Parse]', () => {
 		expect(params.hardfork).toEqual(Hardfork.London);
 	});
 
-	it('should generate expected hash with london block zero and base fee per gas defined', async () => {
+	it('should generate expected hash with london block zero and base fee per gas defined', () => {
 		const params = parseGethGenesis(postMerge, 'post-merge');
 		expect(params.genesis.baseFeePerGas).toEqual(postMerge.baseFeePerGas);
 	});
 
-	it('should successfully parse genesis file with no extraData', async () => {
+	it('should successfully parse genesis file with no extraData', () => {
 		const params = parseGethGenesis(noExtraData, 'noExtraData');
 		expect(params.genesis.extraData).toBe('0x');
 		expect(params.genesis.timestamp).toBe('0x10');
 	});
 
-	it('should successfully parse kiln genesis and set forkhash', async () => {
+	it('should successfully parse kiln genesis and set forkhash', () => {
 		const common = Common.fromGethGenesis(gethGenesisKiln, {
 			chain: 'customChain',
 			genesisHash: hexToBytes(
