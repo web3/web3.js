@@ -336,10 +336,10 @@ Object {
 exports[`errors SchemaFormatError should have valid json structure 1`] = `
 Object {
   "code": 1200,
-  "format": "unsupported",
   "innerError": undefined,
-  "message": "format unsupported is unsupported",
+  "message": "Format for the type unsupported is unsupported",
   "name": "SchemaFormatError",
+  "type": "unsupported",
 }
 `;
 

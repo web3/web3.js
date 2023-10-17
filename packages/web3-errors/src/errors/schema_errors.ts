@@ -21,12 +21,12 @@ import { BaseWeb3Error } from '../web3_error_base.js';
 export class SchemaFormatError extends BaseWeb3Error {
 	public code = ERR_SCHEMA_FORMAT;
 
-	public constructor(public format: string) {
-		super(`format ${format} is unsupported`);
+	public constructor(public type: string) {
+		super(`Format for the type ${type} is unsupported`);
 	}
 
 	public toJSON() {
-		return { ...super.toJSON(), format: this.format };
+		return { ...super.toJSON(), type: this.type };
 	}
 
 }
