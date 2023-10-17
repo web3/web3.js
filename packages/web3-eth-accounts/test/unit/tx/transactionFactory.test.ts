@@ -119,6 +119,13 @@ describe('[TransactionFactory]: Basic functions', () => {
 		}
 	});
 
+	it('fromBlockBodyData() -> error case', () => {
+		expect(() => {
+			// @ts-expect-error incorrect param type
+			TransactionFactory.fromBlockBodyData('');
+		}).toThrow();
+	});
+
 	it('fromTxData() -> success cases', () => {
 		for (const txType of txTypes) {
 			const tx = TransactionFactory.fromTxData({ type: txType.type }, { common });

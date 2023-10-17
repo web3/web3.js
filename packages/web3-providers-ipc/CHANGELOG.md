@@ -130,3 +130,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed bug in chunks processing logic (#6496)
