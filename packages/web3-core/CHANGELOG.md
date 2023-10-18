@@ -179,7 +179,7 @@ Documentation:
 
 -   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377) (#6400)
 
-## [Unreleased]
+## [4.3.0]
 
 ### Changed
 
@@ -190,3 +190,5 @@ Documentation:
 ### Fixed
 
 -   Fix the issue: "Uncaught TypeError: Class extends value undefined is not a constructor or null #6371". (#6398)
+
+## [Unreleased]

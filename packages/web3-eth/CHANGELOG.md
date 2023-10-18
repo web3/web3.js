@@ -191,7 +191,7 @@ Documentation:
 
 -   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377) (#6400)
 
-## [Unreleased]
+## [4.3.0]
 
 ### Changed
 
@@ -206,3 +206,5 @@ Documentation:
 ### Added
 
 -   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)
+
+## [Unreleased]
