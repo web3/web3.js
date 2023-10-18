@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { SchemaFormatError } from 'web3-errors'
 import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 import { Web3Validator } from '../../src/web3_validator';
 import { Web3ValidatorError } from '../../src/errors';
@@ -101,14 +102,32 @@ describe('web3-validator', () => {
 					),
 				).toBeUndefined();
 			});
+
+			it('should throw due to unsupported format', () => {
+				expect(() => {
+					validator.validateJSONSchema(
+						{
+							type: 'array',
+							items: [{ $id: 'a', format: 'unsupportedFormat', required: true }],
+							minItems: 1,
+							maxItems: 1,
+						},
+						['0x2df0879f1ee2b2b1f2448c64c089c29e3ad7ccc5'],
+					);
+				}).toThrow(SchemaFormatError);
+			});
 		});
 		describe('validateJsonSchema', () => {
-			it.each(abiToJsonSchemaCases.slice(0, 5))('should pass for valid data', abi => {
-				const jsonSchema = abi.json;
-				expect(
-					validator.validateJSONSchema(jsonSchema.fullSchema, jsonSchema.data),
-				).toBeUndefined();
-			});
+			// only single param test cases
+			it.each(abiToJsonSchemaCases.slice(0, 69))(
+				`$title - should pass for valid data`,
+				abi => {
+					const jsonSchema = abi.json;
+					expect(
+						validator.validateJSONSchema(jsonSchema.fullSchema, jsonSchema.data),
+					).toBeUndefined();
+				},
+			);
 
 			it('should throw', () => {
 				expect(() => {

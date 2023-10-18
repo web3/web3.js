@@ -12,7 +12,7 @@ module.exports = {
 	},
 	moduleNameMapper: {
 		'^(\\.{1,2}/.*)\\.js$': '$1',
-	  },
+	},
 	verbose: false,
 	collectCoverage: false,
 	coverageReporters: ['json'],
