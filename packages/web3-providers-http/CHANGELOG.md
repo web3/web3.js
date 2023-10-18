@@ -119,7 +119,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.1.0]
 
 ### Changed
 
@@ -128,3 +128,5 @@ Documentation:
 ### Fixed
 
 -   Fix issue lquixada/cross-fetch#78, enabling to run web3.js in service worker (#6463)
+
+## [Unreleased]
