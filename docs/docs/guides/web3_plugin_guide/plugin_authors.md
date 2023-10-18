@@ -34,6 +34,31 @@ It is important to note that the plugin name should be structured as `@<organiza
 
 When your users install your plugin, this will allow the package manager to make use of the user installed `web3` if available and if the version satisfies the version constraints instead of installing it's own version of `web3`.
 
+## Add New Transaction Type
+
+Furthermore, you have the flexibility to expand your range of transaction types, enhancing compatibility with the `web3.js` library.
+
+
+```typescript
+// create new TransactionType class which extends BaseTransaction class
+import { BaseTransaction } from 'web3-eth-accounts';
+const TRANSACTION_TYPE = 15;
+class SomeNewTxTypeTransaction extends BaseTransaction {
+    // ...
+}
+
+// create new plugin and add `SomeNewTxTypeTransaction` to the library
+import { Web3EthPluginBase } from 'web3';
+
+class SomeNewTxTypeTransactionPlugin extends Web3PluginBase {
+   public pluginNamespace = 'someNewTxTypeTransaction';
+   public constructor() {
+      super();
+      TransactionFactory.registerTransactionType(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
+   }
+}
+```
+
 ## Extending `Web3PluginBase`
 
 Your plugin class should `extend` the `Web3PluginBase` abstract class. This class `extends` [Web3Context](/api/web3-core/class/Web3Context) and when the user registers your plugin with a class, your plugin's `Web3Context` will point to the module's `Web3Context` giving your plugin access to things such as user configured [requestManager](/api/web3-core/class/Web3Context#requestManager) and [accountProvider](/api/web3-core/class/Web3Context#accountProvider).

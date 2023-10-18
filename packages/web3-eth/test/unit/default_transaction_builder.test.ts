@@ -228,7 +228,7 @@ describe('defaultTransactionBuilder', () => {
 	});
 
 	describe('should populate value', () => {
-		it('should populate with 0x', async () => {
+		it('should populate with 0x0 if not provided', async () => {
 			const input = { ...transaction };
 			delete input.value;
 			delete input.maxPriorityFeePerGas;
@@ -239,7 +239,21 @@ describe('defaultTransactionBuilder', () => {
 				web3Context,
 				fillGasPrice: true,
 			});
-			expect(result.value).toBe('0x');
+			expect(result.value).toBe('0x0');
+		});
+
+
+		it('should not populate with 0x0 if provided', async () => {
+			const input = { ...transaction };
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+				fillGasPrice: true,
+			});
+			expect(result.value).not.toBe('0x0');
 		});
 	});
 
@@ -457,7 +471,7 @@ describe('defaultTransactionBuilder', () => {
 	describe('should populate type', () => {
 		it('should throw UnsupportedTransactionTypeError', async () => {
 			const input = { ...transaction };
-			input.type = '0x8'; // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
+			input.type = '0x80'; // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 
 			await expect(
 				defaultTransactionBuilder({ transaction: input, web3Context, fillGasPrice: true }),

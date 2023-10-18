@@ -14,12 +14,11 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { BaseTransaction } from '../../../src/tx/baseTransaction';
 
-// @ethereumjs/tx version 4.1.1
-export { FeeMarketEIP1559Transaction } from './eip1559Transaction.js';
-export { AccessListEIP2930Transaction } from './eip2930Transaction.js';
-export { Transaction } from './legacyTransaction.js';
-export { TransactionFactory } from './transactionFactory.js';
-export { BaseTransaction } from './baseTransaction.js';
-export * as txUtils from './utils.js';
-export * from './types.js';
+describe('[BaseTransaction]', () => {
+	it('Initialization', () => {
+		expect(typeof BaseTransaction.fromTxData).toBe('function');
+		expect(typeof BaseTransaction.fromSerializedTx).toBe('function');
+	});
+});

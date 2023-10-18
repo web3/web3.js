@@ -465,13 +465,10 @@ export abstract class SocketProvider<
 
 	protected _onMessage(event: MessageEvent): void {
 		const responses = this._parseResponses(event);
-		if (responses.length === 0) {
-			// no responses means lost connection, autoreconnect if possible
-			if (this._reconnectOptions.autoReconnect) {
-				this._reconnect();
-			}
+		if (isNullish(responses) || responses.length === 0) {
 			return;
 		}
+		
 		for (const response of responses) {
 			if (
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&

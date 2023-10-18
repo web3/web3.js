@@ -149,6 +149,9 @@ Documentation:
 
 ## [Unreleased]
 
-## Fixed
+### Fixed
 
--   Multi-dimensional arrays are now handled properly when parsing ABIs
+-   Multi-dimensional arrays are now handled properly when parsing ABIs (#6435)
+-   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
+-   Validator will now properly handle all valid numeric type sizes: intN / uintN where 8 <= N <= 256 and N % 8 == 0 (#6434)
+-   Will now throw SchemaFormatError when unsupported format is passed to `convertToZod` method (#6434)

@@ -15,11 +15,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// @ethereumjs/tx version 4.1.1
-export { FeeMarketEIP1559Transaction } from './eip1559Transaction.js';
-export { AccessListEIP2930Transaction } from './eip2930Transaction.js';
-export { Transaction } from './legacyTransaction.js';
-export { TransactionFactory } from './transactionFactory.js';
-export { BaseTransaction } from './baseTransaction.js';
-export * as txUtils from './utils.js';
-export * from './types.js';
+import { ERR_SCHEMA_FORMAT } from '../error_codes.js';
+import { BaseWeb3Error } from '../web3_error_base.js';
+
+export class SchemaFormatError extends BaseWeb3Error {
+	public code = ERR_SCHEMA_FORMAT;
+
+	public constructor(public type: string) {
+		super(`Format for the type ${type} is unsupported`);
+	}
+
+	public toJSON() {
+		return { ...super.toJSON(), type: this.type };
+	}
+
+}
