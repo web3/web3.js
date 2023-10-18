@@ -1,6 +1,6 @@
 {
     "name": "web3-providers-ipc",
-    "version": "1.10.2",
+    "version": "1.10.3",
     "description": "Module to handle web3 RPC connections over IPC sockets.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-providers-ipc",
     "license": "LGPL-3.0",
@@ -15,7 +15,7 @@
     "main": "lib/index.js",
     "dependencies": {
         "oboe": "2.1.5",
-        "web3-core-helpers": "1.10.2"
+        "web3-core-helpers": "1.10.3"
     },
     "devDependencies": {
         "@types/node": "^12.12.6",

@@ -1,6 +1,6 @@
 {
     "name": "web3-eth2-beaconchain",
-    "version": "1.10.2",
+    "version": "1.10.3",
     "description": "Web3 ETH2 Beacon chain API wrappers.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth2-beaconchain",
     "license": "LGPL-3.0",
@@ -16,7 +16,7 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "web3-eth2-core": "1.10.2"
+        "web3-eth2-core": "1.10.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.10",
