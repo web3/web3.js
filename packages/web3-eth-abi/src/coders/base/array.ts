@@ -18,7 +18,7 @@ import { AbiError } from 'web3-errors';
 import { AbiParameter } from 'web3-types';
 import { uint8ArrayConcat } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
-import { decodeParamFromAbiParameter, encodeNumber, encodeParamFromAbiParameter } from '.';
+import { decodeParamFromAbiParameter, encodeNumber, encodeParamFromAbiParameter } from './index.js';
 import { DecoderResult, EncoderResult } from '../types.js';
 import { extractArrayType, isDynamic, WORD_SIZE } from '../utils.js';
 import { decodeNumber } from './number.js';

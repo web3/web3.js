@@ -19,7 +19,7 @@ import { AbiParameter } from 'web3-types';
 import { uint8ArrayConcat } from 'web3-utils';
 import { DecoderResult, EncoderResult } from '../types.js';
 // eslint-disable-next-line import/no-cycle
-import { decodeParamFromAbiParameter, encodeParamFromAbiParameter } from '.';
+import { decodeParamFromAbiParameter, encodeParamFromAbiParameter } from './index.js';
 import { encodeDynamicParams } from './utils.js';
 import { isDynamic } from '../utils.js';
 import { decodeNumber } from './number.js';

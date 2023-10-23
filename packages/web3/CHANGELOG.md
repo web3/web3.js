@@ -151,4 +151,14 @@ Documentation:
 
 -   Fix of incorrect provider warning behavior
 
+## [4.2.0]
+
+### Changed
+
+-   Dependencies updated
+
+### Added
+
+-   Various web3 sub packages has new functions details are in root changelog
+
 ## [Unreleased]
