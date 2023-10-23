@@ -261,6 +261,26 @@ describe('rpc', () => {
 			// TODO: after alpha release add tests for matching following (value transferred)
 			// TODO: after alpha release add tests for matching following (specify some random inputData in tx and validate in test with getTransaction)
 
+			expect(res.type).toBeDefined();
+			expect(res.hash).toBeDefined();
+			expect(res.chainId).toBeDefined();
+			expect(res.nonce).toBeDefined();
+			expect(res.blockHash).toBeDefined();
+			expect(res.blockNumber).toBeDefined();
+			expect(res.transactionIndex).toBeDefined();
+			expect(res.from).toBeDefined();
+			expect(res.to).toBeDefined();
+			expect(res.value).toBeDefined();
+			expect(res.gas).toBeDefined();
+			expect(res.input).toBeDefined();
+			expect(res.r).toBeDefined();
+			expect(res.s).toBeDefined();
+			expect(res.data).toBeDefined();
+			expect(res.maxPriorityFeePerGas).toBeDefined();
+			expect(res.maxFeePerGas).toBeDefined();
+			expect(res.gasPrice).toBeDefined();
+			expect(res.v).toBeDefined();
+			expect(res.accessList).toBeDefined();
 			validateTransaction(res as TransactionInfo);
 			expect(res?.hash).toBe(receipt.transactionHash);
 		});
