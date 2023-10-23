@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { TransactionInfoAPI } from 'web3-types';
 import Web3Eth from '../../src/index';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import {
@@ -48,7 +49,6 @@ import {
 } from '../fixtures/web3_eth_methods_with_parameters';
 
 import { testData as createAccessListTestData } from './rpc_method_wrappers/fixtures/createAccessList';
-import { TransactionInfoAPI } from 'web3-types';
 
 jest.mock('web3-rpc-methods');
 jest.mock('../../src/rpc_method_wrappers');
