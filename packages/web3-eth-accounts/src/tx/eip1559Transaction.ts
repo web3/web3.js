@@ -18,6 +18,7 @@ import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '@ethereumjs/rlp';
 import { bytesToHex, hexToBytes, uint8ArrayConcat, uint8ArrayEquals } from 'web3-utils';
+import type { AccessList, AccessListUint8Array } from 'web3-types';
 import { MAX_INTEGER } from './constants.js';
 import { BaseTransaction } from './baseTransaction.js';
 import {
@@ -34,8 +35,6 @@ import {
 	bigIntToUnpaddedUint8Array,
 } from '../common/utils.js';
 import type {
-	AccessList,
-	AccessListUint8Array,
 	FeeMarketEIP1559TxData,
 	FeeMarketEIP1559ValuesArray,
 	JsonTx,

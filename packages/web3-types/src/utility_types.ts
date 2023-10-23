@@ -59,3 +59,5 @@ export type GrowToSize<T, A extends Array<T>, N extends number> = {
 }[A['length'] extends N ? 0 : 1];
 
 export type FixedSizeArray<T, N extends number> = GrowToSize<T, [], N>;
+
+export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };

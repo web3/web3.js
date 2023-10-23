@@ -361,7 +361,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: formatTransaction(response, returnFormat, { fillInputAndData: true });
+		: formatTransaction(response as Transaction, returnFormat, { fillInputAndData: true });
 }
 
 /**
@@ -414,7 +414,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: formatTransaction(response, returnFormat, { fillInputAndData: true });
+		: formatTransaction(response as Transaction, returnFormat, { fillInputAndData: true });
 }
 
 /**
@@ -627,9 +627,8 @@ export function sendSignedTransaction<
 					};
 
 					try {
-						const { v , r , s, 
-								...txWithoutSigParams} = unSerializedTransactionWithFrom;
-						
+						const { v, r, s, ...txWithoutSigParams } = unSerializedTransactionWithFrom;
+
 						await sendTxHelper.checkRevertBeforeSending(
 							txWithoutSigParams as TransactionCall,
 						);
