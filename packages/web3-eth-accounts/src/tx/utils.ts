@@ -14,10 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { HexString, WithRequired } from 'web3-types';
+import { HexString } from 'web3-types';
 import { bytesToHex } from 'web3-utils';
-import type { AccessList, AccessListUint8Array, AccessListEntry } from 'web3-types';
 import { setLengthLeft, toUint8Array } from '../common/utils.js';
+import type { AccessList, AccessListUint8Array, AccessListItem } from './types.js';
 import { isAccessList } from './types.js';
 
 import type { Common } from '../common/common.js';
@@ -34,8 +34,6 @@ export const checkMaxInitCodeSize = (common: Common, length: number) => {
 	}
 };
 
-type AccessListItem = WithRequired<WithRequired<AccessListEntry, 'address'>, 'storageKeys'>;
-
 export const getAccessListData = (accessList: AccessListUint8Array | AccessList) => {
 	let AccessListJSON;
 	let uint8arrayAccessList;
@@ -44,7 +42,7 @@ export const getAccessListData = (accessList: AccessListUint8Array | AccessList)
 		const newAccessList: AccessListUint8Array = [];
 		// eslint-disable-next-line @typescript-eslint/prefer-for-of
 		for (let i = 0; i < accessList.length; i += 1) {
-			const item: AccessListItem = accessList[i] as AccessListItem;
+			const item: AccessListItem = accessList[i];
 			const addressBytes = toUint8Array(item.address);
 			const storageItems: Uint8Array[] = [];
 			// eslint-disable-next-line @typescript-eslint/prefer-for-of
@@ -67,7 +65,7 @@ export const getAccessListData = (accessList: AccessListUint8Array | AccessList)
 			for (let item = 0; item < data[1].length; item += 1) {
 				storageKeys.push(bytesToHex(data[1][item]));
 			}
-			const jsonItem: AccessListEntry = {
+			const jsonItem: AccessListItem = {
 				address,
 				storageKeys,
 			};

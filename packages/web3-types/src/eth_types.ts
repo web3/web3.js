@@ -362,9 +362,6 @@ export interface Common {
 	hardfork?: Hardfork;
 }
 
-export type AccessListUint8ArrayItem = [Uint8Array, Uint8Array[]];
-export type AccessListUint8Array = AccessListUint8ArrayItem[];
-
 interface TransactionBase {
 	value?: Numbers;
 	accessList?: AccessList;

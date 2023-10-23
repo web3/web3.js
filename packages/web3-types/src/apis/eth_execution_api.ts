@@ -31,7 +31,6 @@ import {
 	TransactionReceiptBase,
 	BlockBase,
 	LogBase,
-	AccessListUint8Array,
 } from '../eth_types.js';
 import { HexString, Numbers } from '../primitives_types.js';
 
@@ -121,7 +120,7 @@ export type TransactionInfoAPI = TransactionSignedAPI & {
 	readonly maxFeePerGas?: Numbers;
 	readonly gasPrice?: Numbers;
 	readonly v?: Numbers;
-	readonly accessList?: AccessList | AccessListUint8Array;
+	readonly accessList?: AccessList;
 };
 
 export interface SignedTransactionInfoAPI {

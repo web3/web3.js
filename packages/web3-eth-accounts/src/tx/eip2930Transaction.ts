@@ -18,7 +18,6 @@ import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { validateNoLeadingZeroes } from 'web3-validator';
 import { RLP } from '@ethereumjs/rlp';
 import { bytesToHex, hexToBytes, uint8ArrayConcat, uint8ArrayEquals } from 'web3-utils';
-import type { AccessList, AccessListUint8Array } from 'web3-types';
 import { MAX_INTEGER } from './constants.js';
 import {
 	getAccessListData,
@@ -35,6 +34,8 @@ import {
 } from '../common/utils.js';
 import { BaseTransaction } from './baseTransaction.js';
 import type {
+	AccessList,
+	AccessListUint8Array,
 	AccessListEIP2930TxData,
 	AccessListEIP2930ValuesArray,
 	JsonTx,
