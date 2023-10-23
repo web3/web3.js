@@ -1460,10 +1460,6 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Bug fix of `checkNetwork` in ENS (#5988)
 
-#### web3-eth-abi
-
--   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
-
 ## [4.0.1-rc.2]
 
 ### Added
@@ -2204,3 +2200,9 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+#### web3-eth-abi
+
+-   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
