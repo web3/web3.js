@@ -98,16 +98,14 @@ export interface TransactionLegacySignedAPI extends TransactionLegacyUnsignedAPI
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L144
-export type TransactionUnsignedAPI =
-	| Transaction1559UnsignedAPI
-	| Transaction2930UnsignedAPI
-	| TransactionLegacyUnsignedAPI;
+export type TransactionUnsignedAPI = Transaction1559UnsignedAPI &
+	Transaction2930UnsignedAPI &
+	TransactionLegacyUnsignedAPI;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L211
-export type TransactionSignedAPI =
-	| Transaction1559SignedAPI
-	| Transaction2930SignedAPI
-	| TransactionLegacySignedAPI;
+export type TransactionSignedAPI = Transaction1559SignedAPI &
+	Transaction2930SignedAPI &
+	TransactionLegacySignedAPI;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L216
 export type TransactionInfoAPI = TransactionSignedAPI & {
