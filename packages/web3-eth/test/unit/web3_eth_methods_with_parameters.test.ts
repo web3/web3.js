@@ -48,11 +48,12 @@ import {
 } from '../fixtures/web3_eth_methods_with_parameters';
 
 import { testData as createAccessListTestData } from './rpc_method_wrappers/fixtures/createAccessList';
+import { TransactionInfoAPI } from 'web3-types';
 
 jest.mock('web3-rpc-methods');
 jest.mock('../../src/rpc_method_wrappers');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-jest.spyOn(rpcMethodWrappers, 'getTransaction').mockResolvedValue(tx);
+jest.spyOn(rpcMethodWrappers, 'getTransaction').mockResolvedValue(tx as TransactionInfoAPI);
 jest.spyOn(rpcMethodWrappers, 'getTransactionReceipt').mockResolvedValue(txReceipt);
 
 describe('web3_eth_methods_with_parameters', () => {
