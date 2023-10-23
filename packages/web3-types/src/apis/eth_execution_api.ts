@@ -32,7 +32,7 @@ import {
 	BlockBase,
 	LogBase,
 } from '../eth_types.js';
-import { HexString, Numbers } from '../primitives_types.js';
+import { HexString } from '../primitives_types.js';
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis
@@ -116,11 +116,6 @@ export type TransactionInfoAPI = TransactionSignedAPI & {
 	readonly from: Address;
 	readonly hash: HexString32Bytes;
 	readonly transactionIndex?: Uint;
-	readonly maxPriorityFeePerGas?: Numbers;
-	readonly maxFeePerGas?: Numbers;
-	readonly gasPrice?: Numbers;
-	readonly v?: Numbers;
-	readonly accessList?: AccessList;
 };
 
 export interface SignedTransactionInfoAPI {

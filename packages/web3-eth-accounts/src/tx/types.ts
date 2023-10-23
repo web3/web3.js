@@ -14,11 +14,11 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import type { AccessList, HexString, Numbers } from 'web3-types';
+import type { HexString, Numbers } from 'web3-types';
 
 import type { Common } from '../common/common.js';
 // eslint-disable-next-line require-extensions/require-extensions
-import type { Uint8ArrayLike } from '../common/types';
+import type { Uint8ArrayLike, PrefixedHexString } from '../common/types';
 import { Address } from './address.js';
 
 /**
@@ -87,10 +87,20 @@ export interface TxOptions {
 }
 
 /*
+ * Access List types
+ */
+
+export type AccessListItem = {
+	address: PrefixedHexString;
+	storageKeys: PrefixedHexString[];
+};
+
+/*
  * An Access List as a tuple of [address: Uint8Array, storageKeys: Uint8Array[]]
  */
 export type AccessListUint8ArrayItem = [Uint8Array, Uint8Array[]];
 export type AccessListUint8Array = AccessListUint8ArrayItem[];
+export type AccessList = AccessListItem[];
 
 export function isAccessListUint8Array(
 	input: AccessListUint8Array | AccessList,
