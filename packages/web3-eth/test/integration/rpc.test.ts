@@ -294,8 +294,8 @@ describe('rpc', () => {
 			const receipt1 = await web3Eth.sendTransaction({
 				from: tempAcc.address,
 				value: '0x1',
-				maxPriorityFeePerGas: BigInt(50000),
-				maxFeePerGas: BigInt(50000),
+				maxPriorityFeePerGas: BigInt(500000000),
+				maxFeePerGas: BigInt(500000000),
 				to: tempAcc2.address,
 				type: BigInt(1),
 			});
