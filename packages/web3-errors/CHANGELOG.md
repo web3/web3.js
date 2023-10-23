@@ -154,4 +154,10 @@ Documentation:
 
 -   Dependencies updated
 
+## [1.1.3]
+
+### Fixed
+
+-   Added new SchemaFormatError (#6434)
+
 ## [Unreleased]

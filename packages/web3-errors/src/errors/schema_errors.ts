@@ -14,18 +14,19 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-const config = {
-	screenshotOnRunFailure: false,
-	video: false,
-	e2e: {
-		// We've imported your old cypress plugins here.
-		// You may want to clean this up later by importing these.
-		setupNodeEvents(on, config) {
-			return require('./cypress/plugins/index.js')(on, config);
-		},
-		specPattern: 'test/integration/**/**/*.test.ts',
-		excludeSpecPattern: ['**/contract_defaults_extra.test.ts'],
-	},
-};
 
-module.exports = config;
+import { ERR_SCHEMA_FORMAT } from '../error_codes.js';
+import { BaseWeb3Error } from '../web3_error_base.js';
+
+export class SchemaFormatError extends BaseWeb3Error {
+	public code = ERR_SCHEMA_FORMAT;
+
+	public constructor(public type: string) {
+		super(`Format for the type ${type} is unsupported`);
+	}
+
+	public toJSON() {
+		return { ...super.toJSON(), type: this.type };
+	}
+
+}
