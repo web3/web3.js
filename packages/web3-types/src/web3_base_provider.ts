@@ -243,7 +243,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		newObj.request = async function request(
 			args: Web3APIPayload<API, Web3APIMethod<API>>,
 		): Promise<unknown> {
-			// eslint-disable-next-line @typescript-eslint/no-unnece	ssary-type-assertion
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			const response = (await originalRequest(args)) as JsonRpcResponseWithResult<unknown>;
 			return response.result;
 		} as typeof newObj.request;
