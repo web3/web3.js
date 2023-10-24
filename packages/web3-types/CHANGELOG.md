@@ -171,3 +171,7 @@ Documentation:
 -   Interface `EventLog` was added. (#6410)
 
 ## [Unreleased]
+
+### Added
+
+-   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)

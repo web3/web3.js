@@ -315,3 +315,7 @@ Documentation:
 -   The `events` property was added to the `receipt` object (#6410)
 
 ## [Unreleased]
+
+### Fixed
+
+-	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)

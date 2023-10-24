@@ -23,7 +23,7 @@ import {
 	SupportedProviders,
 	Web3APISpec,
 	Web3BaseProvider,
-	MetamaskProvider,
+	MetaMaskProvider,
 } from 'web3-types';
 
 export const isWeb3Provider = <API extends Web3APISpec>(
@@ -32,7 +32,7 @@ export const isWeb3Provider = <API extends Web3APISpec>(
 
 export const isMetaMaskProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
-): provider is MetamaskProvider<API> =>{
+): provider is MetaMaskProvider<API> =>{
 return typeof provider !== 'string' &&
 'request' in provider &&
 provider.request.constructor.name === 'AsyncFunction' && 'isMetaMask' in provider && provider.isMetaMask;

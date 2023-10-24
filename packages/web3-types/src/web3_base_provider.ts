@@ -134,7 +134,7 @@ export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider
 	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
 }
 
-export interface MetamaskProvider<API extends Web3APISpec> extends SimpleProvider<API> {
+export interface MetaMaskProvider<API extends Web3APISpec> extends SimpleProvider<API> {
 	on(event: 'connect', listener: (info: ProviderInfo) => void): void;
 	on(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
 	on(event: 'message', listener: (message: ProviderMessage) => void): void;
@@ -171,13 +171,6 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	public static isWeb3Provider(provider: unknown) {
 		return (
 			provider instanceof Web3BaseProvider ||
-			Boolean(provider && (provider as { [symbol]: boolean })[symbol])
-		);
-	}
-
-	public static isMetamaskProvider(provider: unknown) {
-		return (
-			provider  && 
 			Boolean(provider && (provider as { [symbol]: boolean })[symbol])
 		);
 	}
@@ -350,7 +343,7 @@ export type SupportedProviders<API extends Web3APISpec = Web3EthExecutionAPI> =
 	| LegacySendProvider
 	| LegacySendAsyncProvider
 	| SimpleProvider<API>
-	| MetamaskProvider<API>;
+	| MetaMaskProvider<API>;
 
 export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	url: string,
