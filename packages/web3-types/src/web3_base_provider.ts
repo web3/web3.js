@@ -112,6 +112,7 @@ export type ProviderChainId = string;
 
 export type ProviderAccounts = string[];
 
+
 export type Eip1193EventName =
 	| 'connect'
 	| 'disconnect'
@@ -132,6 +133,22 @@ export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider
 	removeListener(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
 	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
 }
+
+export interface MetamaskProvider<API extends Web3APISpec> extends SimpleProvider<API> {
+	on(event: 'connect', listener: (info: ProviderInfo) => void): void;
+	on(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
+	on(event: 'message', listener: (message: ProviderMessage) => void): void;
+	on(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
+	on(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
+
+	removeListener(event: 'connect', listener: (info: ProviderInfo) => void): void;
+	removeListener(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
+	removeListener(event: 'message', listener: (message: ProviderMessage) => void): void;
+	removeListener(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
+	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
+	isMetaMask: boolean;
+}
+
 
 export type Eip1193Compatible<API extends Web3APISpec = EthExecutionAPI> = Omit<
 	// eslint-disable-next-line no-use-before-define
@@ -154,6 +171,13 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	public static isWeb3Provider(provider: unknown) {
 		return (
 			provider instanceof Web3BaseProvider ||
+			Boolean(provider && (provider as { [symbol]: boolean })[symbol])
+		);
+	}
+
+	public static isMetamaskProvider(provider: unknown) {
+		return (
+			provider  && 
 			Boolean(provider && (provider as { [symbol]: boolean })[symbol])
 		);
 	}
@@ -226,7 +250,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		newObj.request = async function request(
 			args: Web3APIPayload<API, Web3APIMethod<API>>,
 		): Promise<unknown> {
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+			// eslint-disable-next-line @typescript-eslint/no-unnece	ssary-type-assertion
 			const response = (await originalRequest(args)) as JsonRpcResponseWithResult<unknown>;
 			return response.result;
 		} as typeof newObj.request;
@@ -325,7 +349,8 @@ export type SupportedProviders<API extends Web3APISpec = Web3EthExecutionAPI> =
 	| LegacyRequestProvider
 	| LegacySendProvider
 	| LegacySendAsyncProvider
-	| SimpleProvider<API>;
+	| SimpleProvider<API>
+	| MetamaskProvider<API>;
 
 export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	url: string,
