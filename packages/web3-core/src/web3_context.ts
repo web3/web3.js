@@ -108,7 +108,6 @@ export class Web3Context<
 			| Web3ContextInitOptions<API, RegisteredSubs>,
 	) {
 		super();
-
 		// If "providerOrContext" is provided as "string" or an objects matching "SupportedProviders" interface
 		if (
 			isNullish(providerOrContext) ||

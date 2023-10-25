@@ -14,8 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import Web3 from '../../src/index';
+// import { TransactionRevertInstructionError } from 'web3-errors';
 import { SupportedProviders, Web3BaseProvider } from 'web3-types';
 import {
 	closeOpenConnection,
@@ -24,6 +23,8 @@ import {
 	isWs,
 	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
+import Web3 from '../../src/index';
+// import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 
 describe('Web3 instance', () => {
 	let provider: string | SupportedProviders;
@@ -62,7 +63,7 @@ describe('Web3 instance', () => {
 		}
 	});
 
-    it.only('should be able to create the web3config and change for default type transaction ', async () => {
+    it('should be send transaction, change for defaultTransactionType and sucesfully send transaction with different type', async () => {
 		let transaction = {
             from: accounts[0],
             to: accounts[0],
@@ -72,12 +73,44 @@ describe('Web3 instance', () => {
           const receipt = await web3.eth.sendTransaction(transaction);
           expect(receipt.type).toEqual(BigInt(2))
 
-        //   const tempWeb3 = new Web3(provider, {defaultTransactionType: "0x0"});
         web3.setConfig({defaultTransactionType: "0x0"});
-        console.log(web3.getContextObject());
-        console.log(web3.eth.getContextObject());
+        
         const receipt2 = await web3.eth.sendTransaction(transaction);
         expect(receipt2.type).toEqual(BigInt(0))
 	});
+
+    it('defaultChain should be send transaction, change for defaultTransactionType and sucesfully send transaction with different type', async () => {
+		let transaction = {
+            from: accounts[0],
+            to: accounts[0],
+            value: 100000,
+          }
+        
+          const receipt = await web3.eth.sendTransaction(transaction);
+          expect(receipt.type).toEqual(BigInt(2))
+
+        web3.setConfig({defaultTransactionType: "0x0"});
+        
+        const receipt2 = await web3.eth.sendTransaction(transaction);
+        expect(receipt2.type).toEqual(BigInt(0))
+	});
+
+    it('create contract and change contract data to input', async () => {
+		const web3 = new Web3(provider);
+		let transaction = {
+            from: accounts[0],
+            to: accounts[0],
+            value: 100000,
+          }
+        
+          const receipt = await web3.eth.sendTransaction(transaction);
+          expect(receipt.type).toEqual(BigInt(2))
+          
+        web3.setConfig({defaultTransactionType: "0x0"});
+        
+        const receipt2 = await web3.eth.sendTransaction(transaction);
+        expect(receipt2.type).toEqual(BigInt(0))
+	});
+
     
 })

@@ -168,6 +168,7 @@ export const getEstimateGasParams = ({
 export const isContractInitOptions = (options: unknown): options is ContractInitOptions =>
 	typeof options === 'object' &&
 	!isNullish(options) &&
+	Object.keys(options).length !== 0 &&
 	[
 		'input',
 		'data',
@@ -182,7 +183,8 @@ export const isContractInitOptions = (options: unknown): options is ContractInit
 	].some(key => key in options);
 
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
-	typeof options === 'object' && !isNullish(options) && !isContractInitOptions(options);
+	typeof options === 'object' && !isNullish(options) && 
+	Object.keys(options).length !== 0 && !isContractInitOptions(options);
 
 export const getCreateAccessListParams = ({
 	abi,

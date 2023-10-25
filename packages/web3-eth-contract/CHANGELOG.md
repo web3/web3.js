@@ -321,3 +321,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-	Will populate `data` for transactions in contract for metamask provider instead of `input` (#65)

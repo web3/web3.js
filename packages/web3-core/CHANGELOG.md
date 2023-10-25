@@ -192,3 +192,7 @@ Documentation:
 -   Fix the issue: "Uncaught TypeError: Class extends value undefined is not a constructor or null #6371". (#6398)
 
 ## [Unreleased]
+
+### Added
+
+-   Added to `Web3Config` property `disableSuggestedFee` allowing users to disable the suggested fee web3js recommends in metamask.
