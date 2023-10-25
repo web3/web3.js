@@ -170,3 +170,7 @@ Documentation:
 -   Fixed bug in chunks processing logic (#6496)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fix unecessary array copy when pack encoding
