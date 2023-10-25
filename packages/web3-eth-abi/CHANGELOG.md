@@ -148,8 +148,10 @@ Documentation:
 
 -   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
 
-## [Unreleased]
+## [4.1.4]
 
 ### Fixed
 
 -   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
+
+## [Unreleased]

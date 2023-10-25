@@ -161,4 +161,10 @@ Documentation:
 
 -   Various web3 sub packages has new functions details are in root changelog
 
+## [4.2.1]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
