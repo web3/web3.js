@@ -2199,10 +2199,30 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.2.1]
 
 ### Fixed
 
 #### web3-eth-abi
 
 -   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
+
+### Changed
+
+#### web3-eth-contract
+
+-   Dependencies updated
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+## [Unreleased]

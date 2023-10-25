@@ -314,4 +314,10 @@ Documentation:
 
 -   The `events` property was added to the `receipt` object (#6410)
 
+## [4.1.2]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
