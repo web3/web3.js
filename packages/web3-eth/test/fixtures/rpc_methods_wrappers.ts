@@ -58,7 +58,6 @@ export const transactionWithSender: TransactionWithSenderAPI = {
 	maxFeePerGas: '0x1475505aab',
 	maxPriorityFeePerGas: '0x7f324180',
 	accessList: [],
-	gasPrice: '0x4a817c800',
 	from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	chainId: '0x1',
 };
