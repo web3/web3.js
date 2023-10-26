@@ -91,6 +91,7 @@ export const isTransaction1559UnsignedValidData = (): [Transaction1559UnsignedAP
 			{
 				...transaction[0],
 				maxFeePerGas: '0x1',
+				gasPrice: '0x1',
 				maxPriorityFeePerGas: '0x1',
 				accessList: [],
 			},
