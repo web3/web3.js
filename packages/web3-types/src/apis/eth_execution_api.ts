@@ -68,7 +68,7 @@ export interface Transaction1559UnsignedAPI extends BaseTransactionAPI {
 	readonly maxFeePerGas: Uint;
 	readonly maxPriorityFeePerGas: Uint;
 	readonly accessList: AccessList;
-	readonly gasPrice?: never;
+	readonly gasPrice: Uint;
 }
 
 export interface Transaction1559SignedAPI extends Transaction1559UnsignedAPI {

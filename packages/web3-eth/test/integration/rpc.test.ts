@@ -289,6 +289,7 @@ describe('rpc', () => {
 			expect(res0.v).toBeDefined();
 			expect(res0.data).toBeDefined();
 			expect(res0?.hash).toBe(receipt0.transactionHash);
+
 			expect(res0.gasPrice).toBeDefined();
 
 			const receipt1 = await web3Eth.sendTransaction({
@@ -344,6 +345,7 @@ describe('rpc', () => {
 			expect(res2.maxFeePerGas).toBeDefined();
 			expect(res2.maxPriorityFeePerGas).toBeDefined();
 			expect(res2.accessList).toBeDefined();
+			expect(res2.gasPrice).toBeDefined();
 		});
 
 		itIf(getSystemTestBackend() !== 'ganache')('getPendingTransactions', async () => {
