@@ -171,3 +171,6 @@ Documentation:
 -   Interface `EventLog` was added. (#6410)
 
 ## [Unreleased]
+
+### Added
+-   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)

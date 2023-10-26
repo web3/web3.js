@@ -47,7 +47,6 @@ import {
 	TransactionForAccessList,
 	AccessListResult,
 	Eip712TypedData,
-	TransactionWithSenderAPI,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { format, hexToBytes, bytesToUint8Array, numberToHex } from 'web3-utils';
@@ -740,7 +739,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 ) {
 	const response = await ethRpcMethods.signTransaction(
 		web3Context.requestManager,
-		formatTransaction(transaction as TransactionWithSenderAPI, ETH_DATA_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT),
 	);
 	// Some clients only return the encoded signed transaction (e.g. Ganache)
 	// while clients such as Geth return the desired SignedTransactionInfoAPI object
@@ -803,7 +802,7 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 
 	const response = await ethRpcMethods.estimateGas(
 		web3Context.requestManager,
-		transactionFormatted as TransactionWithSenderAPI,
+		transactionFormatted,
 		blockNumberFormatted,
 	);
 
@@ -951,7 +950,7 @@ export async function createAccessList<ReturnFormat extends DataFormat>(
 
 	const response = (await ethRpcMethods.createAccessList(
 		web3Context.requestManager,
-		formatTransaction(transaction as TransactionWithSenderAPI, ETH_DATA_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT),
 		blockNumberFormatted,
 	)) as unknown as AccessListResult;
 
