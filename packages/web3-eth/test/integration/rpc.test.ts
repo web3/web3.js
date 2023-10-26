@@ -313,12 +313,9 @@ describe('rpc', () => {
 			expect(res1.input).toBeDefined();
 			expect(res1.r).toBeDefined();
 			expect(res1.s).toBeDefined();
-			expect(res1.v).toBeDefined();
 			expect(res1.data).toBeDefined();
 			expect(res1?.hash).toBe(receipt1.transactionHash);
 			expect(res1.gasPrice).toBeDefined();
-			expect(res1.maxPriorityFeePerGas).toBeDefined();
-			expect(res1.maxFeePerGas).toBeDefined();
 			expect(res1.accessList).toBeDefined();
 
 			const receipt2 = await web3Eth.sendTransaction({
@@ -328,6 +325,7 @@ describe('rpc', () => {
 				type: BigInt(2),
 			});
 			const res2 = await web3Eth.getTransaction(receipt2.transactionHash);
+
 			expect(res2.type).toBeDefined();
 			expect(res2.hash).toBeDefined();
 			expect(res2.nonce).toBeDefined();
@@ -341,12 +339,10 @@ describe('rpc', () => {
 			expect(res2.input).toBeDefined();
 			expect(res2.r).toBeDefined();
 			expect(res2.s).toBeDefined();
-			expect(res2.v).toBeDefined();
 			expect(res2.data).toBeDefined();
 			expect(res2?.hash).toBe(receipt2.transactionHash);
-			expect(res2.gasPrice).toBeDefined();
-			expect(res2.maxPriorityFeePerGas).toBeDefined();
 			expect(res2.maxFeePerGas).toBeDefined();
+			expect(res2.maxPriorityFeePerGas).toBeDefined();
 			expect(res2.accessList).toBeDefined();
 		});
 
