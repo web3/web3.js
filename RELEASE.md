@@ -102,5 +102,5 @@ As web3.js v4 published so everyone is requested to migrate to web3.js v4. Web3.
     -   (The build may sometimes need to be manually triggered in ReadTheDocs admin panel. If the version does not appear, create a build of a previous version to refresh the list.)
     -   Activate the new version.
     -   Set the version to default.
-10.  Run `npm run publish from-package --dist-tag legacy`, it should be `legacy` tag.
+10.  Run `npm run publish from-package -- --dist-tag legacy`, it should be `legacy` tag.
 11.  Merge release PR in `1.x` .
