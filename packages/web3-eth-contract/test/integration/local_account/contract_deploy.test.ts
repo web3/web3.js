@@ -116,30 +116,33 @@ describe('contract', () => {
 		});
 
 		it('should emit the "confirmation" event', async () => {
-			let confirmationHandler: jest.Mock;
-			const confirmationPromise = new Promise<void>((resolve) => {
-				confirmationHandler = jest.fn(() => {
-					resolve();
-				})
-			})
-			await new Promise<void>((resolve, reject) => {
-				contract
+			const confirmationHandler = jest.fn();
+			const promievent = contract
 				.deploy(deployOptions)
-				.send(sendOptions)
-				.on('receipt', () => {
-					resolve()
-				})
-				.on('confirmation', confirmationHandler)
-				.catch(reject)
+				.send(sendOptions);
+			const receiptPromise = new Promise<void>((resolve) => {
+				 // eslint-disable-next-line @typescript-eslint/no-floating-promises
+				 promievent
+					.on('receipt', () => {
+						resolve()
+					})
 			})
+
+			const confirmationPRomise = new Promise<void>((resolve) => {
+				// eslint-disable-next-line @typescript-eslint/no-floating-promises
+				promievent
+				.on('confirmation',  () => {confirmationHandler(); resolve();})
+			})
+			await promievent;
+			await receiptPromise;
 
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
 			await contract.deploy(deployOptions).send(sendOptions);
-			await confirmationPromise
-			
+
+			await confirmationPRomise;
 			// eslint-disable-next-line jest/no-standalone-expect
-			expect(confirmationHandler!).toHaveBeenCalled();
+			expect(confirmationHandler).toHaveBeenCalled();
 		});
 
 		it('should emit the "transactionHash" event', async () => {
