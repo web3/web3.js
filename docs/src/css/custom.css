@@ -28,3 +28,48 @@
   --ifm-color-primary-lightest: #f1773a;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+li[role="tab"] {
+  border-radius: 0px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+:root {
+  --javascript-official-color-black: #323330;
+  --javascript-official-color-yellow: #f7df1e;
+  --typescript-official-color-blue: #007acc;
+  --typescript-official-color-white: #ffffff;
+}
+.javascript-tab {
+  color: var(--javascript-official-color-black);
+}
+
+.javascript-tab:hover {
+  border-bottom-color: var(--javascript-official-color-black);
+}
+
+.javascript-tab[aria-selected='true'] {
+  color: var(--javascript-official-color-black);
+    background-color: var(--javascript-official-color-yellow);
+}
+
+.typescript-tab {
+  color: var(--typescript-official-color-blue);
+}
+
+.typescript-tab:hover {
+  border-bottom-color: var(--typescript-official-color-blue);
+}
+
+.typescript-tab[aria-selected='true'] {
+  color: var(--typescript-official-color-white);
+    background-color: var(--typescript-official-color-blue);
+}
+
+.tabs-container .margin-top--md {
+  border-color: var(--ifm-color-primary);
+  border-width: medium;
+  border-style: solid;
+  margin-top: 0px !important;
+}
