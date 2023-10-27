@@ -4,7 +4,7 @@ sidebar_label: 'Infer Contract Types from JSON Artifact'
 
 # Infer Contract Types from JSON Artifact
 
-Web3.js is a popular library used for interacting with EVM blockchains. One of its key features is the ability to invoke EVM smart contracts deployed on the blockchain. In this blog post, we will show how to interact with the smart contract in typescript, with a special focus on how to infer types from JSON artifact files.
+Web3.js is a popular library used for interacting with EVM blockchains. One of its key features is the ability to invoke EVM smart contracts deployed on the blockchain. In this blog post, we will show how to interact with the smart contract in **TypeScript**, with a special focus on how to infer types from JSON artifact files.
 
 Before we dive into the problem, let's take a quick look at the problem. Web3.js provides a simple and convenient way to interact with Solidity contracts. To use Web3.js to interact with a Solidity contract, you need to know the contract's address and the ABI (Application Binary Interface) of the contract. The ABI is JSON data that contains the definition of the functions in the contract, including their, name, input parameters and return values.
 
@@ -122,3 +122,7 @@ import ERC20 from './artifacts/ERC20';
 ```
 
 You can see full example at [https://github.com/web3/web3-contract-types-example](https://github.com/web3/web3-contract-types-example)
+
+:::tip
+📝 You can use a web3.js plugin called `web3-plugin-craftsman` to compile and save the ABI and ByteCode. You can find more on: https://www.npmjs.com/package/web3-plugin-craftsman#save-the-compilation-result
+:::
