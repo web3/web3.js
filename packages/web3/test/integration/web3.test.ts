@@ -20,7 +20,7 @@ import HttpProvider from 'web3-providers-http';
 import { IpcProvider } from 'web3-providers-ipc';
 import WebSocketProvider from 'web3-providers-ws';
 import { JsonRpcOptionalRequest, SupportedProviders, Web3BaseProvider } from 'web3-types';
-import {Web3} from '../../src/index';
+import { Web3 } from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { validEncodeParametersData } from '../shared_fixtures/data';
@@ -57,7 +57,7 @@ describe('Web3 instance', () => {
 	afterAll(async () => {
 		try {
 			await closeOpenConnection(web3);
-		} catch(e) {
+		} catch (e) {
 			console.warn("Failed to close open con", e)
 		}
 	});
@@ -313,7 +313,11 @@ describe('Web3 instance', () => {
 		});
 
 		afterAll(() => {
-			web3.provider?.disconnect();
+			try {
+				web3.provider?.disconnect();
+			} catch (e) {
+				// ignored
+			}
 		})
 
 		it('should update defaults on contract instance', () => {
@@ -327,7 +331,11 @@ describe('Web3 instance', () => {
 			web3.defaultHardfork = hardfork;
 
 			expect(contract.defaultHardfork).toBe(hardfork);
-			contract.provider?.disconnect();
+			try {
+				contract.provider?.disconnect();
+			} catch (e) {
+				// ignored
+			}
 		});
 
 	});
