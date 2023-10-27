@@ -20,9 +20,8 @@ import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Account } from 'web3-eth-accounts';
 import { GreeterBytecode, GreeterAbi } from '../../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, createLocalAccount, isWs } from '../../fixtures/system_test_utils';
+import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
 import { Contract } from '../../../src';
-import { sleep } from '../../shared_fixtures/utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -117,26 +116,30 @@ describe('contract', () => {
 		});
 
 		it('should emit the "confirmation" event', async () => {
-			const confirmationHandler = jest.fn();
-
-			await contract
+			let confirmationHandler: jest.Mock;
+			const confirmationPromise = new Promise<void>((resolve) => {
+				confirmationHandler = jest.fn(() => {
+					resolve();
+				})
+			})
+			await new Promise<void>((resolve, reject) => {
+				contract
 				.deploy(deployOptions)
 				.send(sendOptions)
-				.on('confirmation', confirmationHandler);
-
-			// Wait for sometime to allow the transaction to be processed
-			await sleep(500);
+				.on('receipt', () => {
+					resolve()
+				})
+				.on('confirmation', confirmationHandler)
+				.catch(reject)
+			})
 
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
 			await contract.deploy(deployOptions).send(sendOptions);
-
-			// Wait for some fraction of time to trigger the handler
-			// On http we use polling to get confirmation, so wait a bit longer
-			await sleep(isWs ? 500 : 2000);
-
+			await confirmationPromise
+			
 			// eslint-disable-next-line jest/no-standalone-expect
-			expect(confirmationHandler).toHaveBeenCalled();
+			expect(confirmationHandler!).toHaveBeenCalled();
 		});
 
 		it('should emit the "transactionHash" event', async () => {
