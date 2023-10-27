@@ -39,3 +39,46 @@ $ GIT_USER=<Your GitHub username> yarn deploy
 ```
 
 If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+
+
+### How to add tabs for Programming Languages
+
+Att the top of the `.md` file, ensure having the following: 
+
+```js
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+```
+
+Use the following snippet for tabs:
+
+<pre>
+<xmp lang=html>
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+    
+```typescript
+
+```
+	
+  </TabItem>
+</Tabs>
+</xmp>
+</pre>
+
+Notes: 
+- This will put the JavaScript tab as the default. This is chosen because a JavaScript project needs less configuration. And for that it is simpler for beginners and more suitable for tutorials. However, if the tutorial steps involves installing and configuring TypeScript, put the `default` attribute on the TypeScript tab instead.
+- The attribute `groupId="prog-lang"` ensure that whenever the user press on a tab, all other tabs in the page will switch to the same selected tab.
+- The attribute `queryString` is used to let the user easily share with the selected tab preserved.
+- The attributes `attributes={{className: "javascript-tab"}}` and `attributes={{className: "typescript-tab"}}` will give the tabes a unified design that uses the official colors of JavaScript and TypeScript.
