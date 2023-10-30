@@ -22,16 +22,14 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 
 ### Major
 
-1.  The release should get released as an `RC` version on the specified track below.
-1.  The minor `RC` version stays released for a `month` for testing purposes.
-1.  During release review, the code is frozen unless new changes are proposed, approved and merged.
-    1.  Changes should trigger a new `RC` release and set the release clock back a `week` so reviewers have the time they need to test new changes.
-1.  The project lead should manually test the `RC` against a Node project and the published
-    minified bundle in a browser context. An external reviewer should verify they have done the same.
+1.  The release should get released as an `legacy-dev` version on the specified track below.
+2.  The major `legacy-dev` version stays released for a `month` for testing purposes.
+3.  During release review, the code is frozen unless new changes are proposed, approved and merged.
+    i.  Changes should trigger a new `legacy-dev` release and set the release clock back a `week` so reviewers have the time they need to test new changes.
 
 ### Minor
 
-The `minor` release inherits the rules from the `major` release but has a smaller testing phase of one `week` and the release clock will be set back `2 days` on a change of the published code.
+The `minor` release inherits the rules from the `major` release but has a smaller testing phase of 3 days and the release clock will be set back `2 days` on a change of the published code.
 
 ### Patch
 
@@ -39,26 +37,9 @@ Since November 2019, Web3 has been following the `minor` rules for `patch` as we
 
 ## Prereleases
 
-### Release Candidate
+### Legacy-dev Release ( Release Candidate )
 
-A release candidate gets published on the `rc` track and is no longer under active development. A release candidate gets released with the version number defined in the [semver 2.0.0 specification](https://semver.org/) specification.
-
-### Beta Release
-
-A `beta` release gets published on the `beta` track and is under active developemnt. The version number of the `beta` release gets defined as specified in the [semver 2.0.0](https://semver.org/) document.
-
-## Long Term Support (LTS)
-
-> Note: This section has not yet been decided and so for now is purely informative.
-
-To provide safety over longer periods, it is important to have versions tagged as `LTS`.
-
-| Release |    Status     | Initial Release |   LTS Start   | End-of-Life |
-| :-----: | :-----------: | :-------------: | :-----------: | :---------: |
-|   1.x   |      LTS      |  24. Jul. 2017  | 23. Jul. 2019 |     TBD     |
-|   2.x   |   Deprecated  |  13. Jul. 2019  | 13. Jul. 2019 | 13. Jul. 2020 |
-|   3.x   |   Deprecated  |   9. Apr. 2021  |  9. Apr. 2021 | 26. Jan. 2022 |
-|   4.x   |  Development  |    Apr. 2022    |      TBD.     |     TBD.    |
+A Legacy-dev release gets published on the `legacy-dev` track and is no longer under active development. A release candidate gets/Legacy-dev released with the version number defined in the [semver 2.0.0 specification](https://semver.org/) specification.
 
 ## Deprecation Rules
 
@@ -72,60 +53,54 @@ Because breaking changes are always happening during the development of a projec
 
 The following describes the steps required to release a new version of `web3.js`. It is followed to adhere to community standards and expectations.
 
-## Release Candidate (RC) Release Procedure
+# 1.x Future releases
+As web3.js v4 published so everyone is requested to migrate to web3.js v4. Web3.js v1 will only get critical security updates and will follow tags:
+    - `legacy` : for v1 main releases 
+    - `legacy-dev` : for v1 test/RC releases, this is replacement of `rc` tag
 
-1.  Create a GitHub draft release.
-    1.  [Example](https://github.com/ethereum/web3.js/releases/tag/v1.2.7-rc.0) - should contain at a minimum: release notes, changelog, any other important notes.
-    1.  Request review on the draft release from a web3.js contributor ([@cgewecke](https://github.com/cgewecke)) for completeness, grammar, etc.
-1.  Create release branch (e.g. `release/1.2.7`).
-1.  Update and commit `CHANGELOG.md`.
-    1.  Move section header `[Unreleased]` to bottom.
-    1.  Add next anticipated release version number to bottom (as a placeholder for new changelog entries).
-1.  In the project root, run `npm run build` and commit changes after using a commit message like: `Build for 1.0.0-rc.0`
-    1. The next step will also build each package, but Lerna makes the tagged commit before building the packages (so they're not included)
-3.  Create release commit and tags e.g. `lerna version 1.2.7-rc.0 --no-push`
-    1.  (updates package version numbers, builds minified file (for `1.x`), creates release commit and tags.)
-4.  Push release branch to origin with tags `git push origin release/1.2.7 --follow-tags`.
-5.  Create release PR as draft ([example](https://github.com/ethereum/web3.js/pull/3351)).
-6.  Ensure CI is green / passing.
-    1.  (spend time here inspecting the CI logs to ensure everything looks valid and results were reported correctly)
-7.  Run `npm run publish from-package -- --dist-tag rc`.
-    1. Lerna can sometimes have difficulty with the number of packages we have. If the above command is unsuccessful, for every unpublished package run: `lerna publish --scope="package-name"` `npm dist-tag add <package-name>@<version> rc`)
+## Legacy Dev (Release Candidate) Release Procedure
+
+1.  `git checkout 1.x` and `git pull`: Verify you are on the `1.x` base branch.
+2.  `git checkout -b release/bumped-version`: Create release branch (e.g. `release/1.10.4`).
+3.  In the project root, run `npm i` and commit changes using a commit message like: `npm i for 1.10.4-dev.0`
+4.  Update and commit changes of `CHANGELOG.md` using a commit message like: `changelog update for 1.10.4-dev.0`.
+    4.A. Add next anticipated release version in place of `[Unreleased]`
+    4.B. Move section header `[Unreleased]` to bottom of file. 
+5.  Bump package version and build lib using learna `lerna version 1.10.4-dev.0 --no-push --no-private --no-git-tag-version`
+    - This will bump package version numbers, builds lib and minified file by invoking lifecycle scripts. 
+6.  Commit the version bump changes and builds in release branch created in `step 2`.
+7.  `git tag bumped-version`: Tag the commit with bumped version having prefix `v` , e.g. `git tag v1.0.1-dev.0`
+6.  Push release branch on github `git push origin release/1.2.7`.
+8.  Push release tag created in Step 7 to github `git push origin --tags`
+9.  Create a draft release on Github similar to [this](https://github.com/web3/web3.js/releases/tag/v1.10.3-dev.0)
+    - Select recently pushed tag in `choose a tag` drop down
+    - Check `This is a pre-release`
+    - Check `Create a discussion for this release`
+    - In the release description, copy all entries in `CHANGELOG.md` for the version being released
+    - Click `Save draft`
+10.  Create release PR ([example](https://github.com/web3/web3.js/pull/6510)).
+11.  Ensure CI is green / passing.
+    - Spend time here inspecting the CI logs to ensure everything looks valid and results were reported correctly.
+12. When sufficient approvals are given, publish draft release created in `Step 9`
+13. Publish release on npm using `npm run publish from-package -- --dist-tag legacy-dev`.
+    1. Lerna can sometimes have difficulty with the number of packages we have. If the above command is unsuccessful, for every unpublished package run: `lerna publish --scope="package-name"` `npm dist-tag add <package-name>@<version> legacy-dev`
+14. Keep same PR open for formal release after few days based on rules defined in this document. 
+
+
+## Formal Release Procedure for legacy v1 release
+
+1.  Checkout release branch (e.g. `release/1.10.4`) created during legacy-dev release `step 2`.
+2.  Verify all dependencies have been installed using `npm i` and commit changes.
+    - If you are already in release branch dir, created for `legacy-dev` and no changes are made after it, you can skip step 1 and step 2
+3.  Build library and bump versions using: `lerna version 1.10.4 --force-publish --no-push --no-private --no-git-tag-version`
+4.  Commit all changes into release branch with commit message like `build for release 1.10.4`
+5.  `git tag bumped-version`: Tag the commit with bumped version having prefix `v` , e.g. `git tag v1.10.4`
+6.  Push release branch to origin `git push origin release/1.10.4`.
+7.  Push release tag created in `Step 5` to `origin` using `git push origin --tags`
 8.  Publish the GitHub release.
 9.  A GitHub Webhook should trigger the ReadTheDocs build after the release is published.
-    1.  (The build may sometimes need to be manually triggered in ReadTheDocs admin panel. If the version does not appear, create a build of a previous version to refresh the list.)
-    1.  Activate the new version.
-10.  Request PR review from key contributors:
-    1.  Chris from EthereumJS ([@cgewecke](https://github.com/cgewecke))
-    1.  Patricio from Nomic Labs ([@alcuadrado](https://github.com/alcuadrado))
-    1.  Michael from Embark ([@michaelsbradleyjr](https://github.com/michaelsbradleyjr))
-    1.  Nicholas from Truffle ([@gnidan](https://github.com/gnidan))
-    1.  If touches or affects ENS: Nick Johnson ([@Arachnid](https://github.com/Arachnid))
-11.  Wait 1 week for community discourse and 2 reviewer approvals.
-    1.  (if release is an emergency patch, time limit may be reduced relative to severity.)
-
-## Formal Release Procedure
-
-1.  Create GitHub draft release from text of `rc` release.
-1.  Checkout release branch (e.g. `release/1.2.7`).
-1.  Create and push release commit and tags: `lerna version 1.2.7 --force-publish --no-push`
-1.  Push release branch to origin with tags `git push origin release/1.2.7 --follow-tags`.
-1.  Publish the GitHub release.
-1.  A GitHub Webhook should trigger the ReadTheDocs build after the release is published.
-    1.  (The build may sometimes need to be manually triggered in ReadTheDocs admin panel. If the version does not appear, create a build of a previous version to refresh the list.)
-    1.  Activate the new version.
-    1.  Set the version to default.
-1.  Run `npm run publish from-package`.
-1.  Merge release PR.
-1.  Share the release announcement on:
-    1.  (_Note:_ There is a delay on npm between different regions, so all may not see the release immediately.)
-    1.  Twitter
-    1.  Gitter
-    1.  Ethereum JavaScript Community (EJC) Discord
-    1.  Reddit
-    1.  Depending on release's significance to certain projects, write to:
-        1.  Fabio from 0x ([@fabioberger](https://github.com/fabioberger))
-        1.  Santiago from OpenZeppelin ([@spalladino](https://github.com/spalladino))
-        1.  Pedro from WalletConnect ([@pedrouid](https://github.com/pedrouid))
-        1.  Josh from FunFair ([@joshstevens19](https://github.com/joshstevens19))
-        1.  Truffle, Gnosis, Aragon, Embark, Alchemy, Buidler, Remix
+    -   (The build may sometimes need to be manually triggered in ReadTheDocs admin panel. If the version does not appear, create a build of a previous version to refresh the list.)
+    -   Activate the new version.
+    -   Set the version to default.
+10.  Run `npm run publish from-package -- --dist-tag legacy`, it should be `legacy` tag.
+11.  Merge release PR in `1.x` .
