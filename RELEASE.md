@@ -77,4 +77,4 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 
     - lerna will not invoke life cycle scripts before publishing and this will publish all packages to NPM public registry.
 
-16. Finally if all of above steps are completed successfully, merge release PR into `4.x` branch.
+16. After publishing logout from npm and finally if all of above steps are completed successfully, merge release PR into `4.x` branch.
