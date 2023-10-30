@@ -67,14 +67,6 @@ describe('web3config web3 tests', () => {
             expect(c1.config.contractDataInputFill).toBe("data")
             expect(c2.config.contractDataInputFill).toBe("input");
         });
-
-        it('should change defaulttransactiontype', () => {
-            const web3 = new Web3('');
-            
-            const c1 = new web3.eth.Contract([], '')
-            expect(c1.config.contractDataInputFill).toBe("input")
-            expect(true).toBeTruthy();
-        });
     })
     // TODO: finish config unit tests
 	
