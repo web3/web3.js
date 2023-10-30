@@ -179,6 +179,7 @@ export const soliditySha3InvalidData: [any, string][] = [
 
 export const encodePackData: [TypedObject[] | TypedObjectAbbreviated[], any][] = [
 	[[{ type: 'string', value: '31323334' }], '0x3331333233333334'],
+	[{ type: 'string', value: '31323334' }, '0x3331333233333334'],
 	[
 		[{ type: 'int[]', value: '01' }],
 		'0x0000000000000000000000000000000000000000000000000000000000000001',
