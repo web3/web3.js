@@ -31,7 +31,7 @@ class Eip4844Plugin extends Web3PluginBase {
 	public pluginNamespace = 'txType3';
 	public constructor() {
 		super();
-		this.registerTransaction(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
+		this.registerNewTransactionType(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
 	}
 }
 
