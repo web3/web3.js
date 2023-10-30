@@ -15,19 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// import Web3ProviderBase from '../../src/index'
-// import {ProviderOptions} from '../../types'
 import { transactionBuilder } from 'web3-eth';
 import {Web3Context} from 'web3-core'; 
 import { Web3 } from '../../src';
 
 describe('web3config web3 tests', () => {
-	// let providerOptions: ProviderOptions
 
 	beforeEach(() => {
-		// providerOptions = {
-		//     providerUrl: 'http://127.0.0.1:8545'
-		// }
 	});
     describe('web3config contract', () => {
 
@@ -45,52 +39,52 @@ describe('web3config web3 tests', () => {
             expect(web3.config.defaultTransactionType).toBe("0x0");
             expect(web3.getContextObject().config.defaultTransactionType).toBe("0x0");
     
-            // expect(web3.eth.config.defaultTransactionType).toBe("0x0");
-            // expect(web3.eth.getContextObject().config.defaultTransactionType).toBe("0x0");
-    
             web3.setConfig({contractDataInputFill:"both"});
-            const contract = new web3.eth.Contract([]);
+            const contract = new web3.eth.Contract([], "");
             expect(contract.config.contractDataInputFill).toBe("both")
             expect(contract.getContextObject().config.contractDataInputFill).toBe("both");
+        });
+        it('should change web3 config context but not contract config context', async () => {
+            const web3 = new Web3("");
+            const contract = new web3.eth.Contract([])
+            web3.setConfig({defaultTransactionType:"0x0"});
+            expect(contract.getContextObject().config.defaultTransactionType).toBe("0x2")
+            expect(web3.getContextObject().config.defaultTransactionType).toBe("0x0");
+        });
+
+
+        it('should not change web3config when changing contract config context', async () => {
+            const web3 = new Web3("");
+            const contract = new web3.eth.Contract([])
+            contract.setConfig({defaultTransactionType:"0x0"});
+            expect(contract.getContextObject().config.defaultTransactionType).toBe("0x0")
+            expect(web3.getContextObject().config.defaultTransactionType).toBe("0x2");
         });
 
         it('default', () => {
             const web3 = new Web3('http://127.0.0.1:8545');
-            // web3.setConfig({ contractDataInputFill: "data" });
     
             const c1 = new web3.eth.Contract([], '')
-            // console.log(c1.config.contractDataInputFill) // input
             expect(c1.config.contractDataInputFill).toBe("input")
-            // const web3ProviderBase = new Web3ProviderBase(providerOptions)
-            // expect(web3ProviderBase).toMatchObject({
-            //     _providerUrl: providerOptions.providerUrl
-            // })
             expect(true).toBeTruthy();
         });
 
-        it('contractDataInputFill', () => {
+        it('should change contractDataInputFill to data in contract', () => {
             const web3 = new Web3('http://127.0.0.1:8545');
+
+            expect(web3.config.contractDataInputFill).toBe("input")
+
             web3.setConfig({ contractDataInputFill: "data" });
             const c1 = new web3.eth.Contract([], '')
-            // console.log(c1.config.contractDataInputFill) // input
             expect(c1.config.contractDataInputFill).toBe("data")
-            // const web3ProviderBase = new Web3ProviderBase(providerOptions)
-            // expect(web3ProviderBase).toMatchObject({
-            //     _providerUrl: providerOptions.providerUrl
-            // })
-            expect(true).toBeTruthy();
+            expect(web3.config.contractDataInputFill).toBe("data");
         });
 
         it('defaulttransactiontype', () => {
             const web3 = new Web3('http://127.0.0.1:8545');
             
             const c1 = new web3.eth.Contract([], '')
-            // console.log(c1.config.contractDataInputFill) // input
-            expect(c1.config.contractDataInputFill).toBe("data")
-            // const web3ProviderBase = new Web3ProviderBase(providerOptions)
-            // expect(web3ProviderBase).toMatchObject({
-            //     _providerUrl: providerOptions.providerUrl
-            // })
+            expect(c1.config.contractDataInputFill).toBe("input")
             expect(true).toBeTruthy();
         });
     })
@@ -105,14 +99,6 @@ describe('web3config web3 tests', () => {
         });
         expect(web3.defaultChain).toBe('ropsten');
 
-        // set by create new instance
-        // eth2 = new web3({
-        //     provider: web3Eth.provider,
-        //     config: {
-        //         defaultChain: 'rinkeby',
-        //     },
-        // });
-        // expect(eth2.defaultChain).toBe('rinkeby');
         const res = await transactionBuilder({
             transaction: {
                 from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
@@ -120,9 +106,10 @@ describe('web3config web3 tests', () => {
                 value: '0x174876e800',
                 gas: '0x5208',
             },
-            web3Context: web3.getContextObject() as Web3Context,
+            web3Context: web3 as Web3Context,
         });
         expect(res.chain).toBe('ropsten');
     });
+    // TODO: finish config unit tests
 	
 });

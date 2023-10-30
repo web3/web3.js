@@ -413,6 +413,13 @@ export class Contract<Abi extends ContractAbi>
 			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value, returnDataFormat),
 			get: () => this._jsonInterface,
 		});
+
+		if (contractContext instanceof Web3Context) {
+			contractContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				this.setConfig({ [event.name]: event.newValue });
+			});
+		}
 	}
 
 	/**
@@ -1091,7 +1098,6 @@ export class Contract<Abi extends ContractAbi>
 			checkRevertBeforeSending: false,
 			contractAbi: this._jsonInterface,
 		});
-
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {

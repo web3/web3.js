@@ -77,40 +77,5 @@ describe('Web3 instance', () => {
         
         const receipt2 = await web3.eth.sendTransaction(transaction);
         expect(receipt2.type).toEqual(BigInt(0))
-	});
-
-    it('defaultChain should be send transaction, change for defaultTransactionType and sucesfully send transaction with different type', async () => {
-		const transaction = {
-            from: accounts[0],
-            to: accounts[0],
-            value: 100000,
-          }
-        
-          const receipt = await web3.eth.sendTransaction(transaction);
-          expect(receipt.type).toEqual(BigInt(2))
-
-        web3.setConfig({defaultTransactionType: "0x0"});
-        
-        const receipt2 = await web3.eth.sendTransaction(transaction);
-        expect(receipt2.type).toEqual(BigInt(0))
-	});
-
-    it('create contract and change contract data to input', async () => {
-		const web = new Web3(provider);
-		const transaction = {
-            from: accounts[0],
-            to: accounts[0],
-            value: 100000,
-          }
-        
-          const receipt = await web.eth.sendTransaction(transaction);
-          expect(receipt.type).toEqual(BigInt(2))
-          
-        web.setConfig({defaultTransactionType: "0x0"});
-        
-        const receipt2 = await web.eth.sendTransaction(transaction);
-        expect(receipt2.type).toEqual(BigInt(0))
-	});
-
-    
+	})
 })
