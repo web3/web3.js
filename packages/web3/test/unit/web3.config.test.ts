@@ -21,8 +21,6 @@ import { Web3 } from '../../src';
 
 describe('web3config web3 tests', () => {
 
-	beforeEach(() => {
-	});
     describe('web3config contract', () => {
 
         it('create web3context with configs and should set it for web3', async () => {
