@@ -143,7 +143,7 @@ export class Web3<
 						jsonInterface,
 						addressOrOptions,
 						options ?? {},
-						self.getContextObject() as Web3ContextObject, // self.getcontextobject is not the same as web3 get contextobject?
+						self.getContextObject() as Web3ContextObject, 
 					);
 				} else {
 					throw new InvalidMethodParamsError();
@@ -156,7 +156,7 @@ export class Web3<
 		const eth = self.use(Web3Eth);
 
 		// Eth Module
-		this.eth = Object.assign(eth, { // need to set context here
+		this.eth = Object.assign(eth, { 
 			// ENS module
 			ens: self.use(ENS, registryAddresses.main), // registry address defaults to main network
 

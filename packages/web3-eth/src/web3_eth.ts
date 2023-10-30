@@ -96,7 +96,6 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			...(providerOrContext as Web3ContextInitOptions),
 			registeredSubscriptions,
 		});
-		// super.link(providerOrContext as Web3Context);
 		
 	}
 

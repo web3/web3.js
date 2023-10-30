@@ -352,7 +352,6 @@ export class Contract<Abi extends ContractAbi>
 			registeredSubscriptions: contractSubscriptions,
 		});
 		
-		// console.log(this.getContextObject());
 		if (
 			!isNullish(options) &&
 			!isNullish(options.data) &&
@@ -383,7 +382,6 @@ export class Contract<Abi extends ContractAbi>
 				this.config.contractDataInputFill;
 		}
 		this.config.contractDataInputFill = this.getContextObject().config.contractDataInputFill;
-		// console.log(this.config)
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
 		if (!isNullish(address)) {
