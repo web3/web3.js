@@ -23,7 +23,7 @@ describe('web3config web3 tests', () => {
     describe('web3config contract', () => {
 
         it('create web3context with configs and should set it for web3', async () => {
-            const context = new Web3Context("");
+            const context = new Web3Context("http://127.0.0.1:8545");
             context.setConfig({defaultTransactionType: "0x0"});
             const web3 = new Web3(context);
             expect(web3.getContextObject().config.defaultTransactionType).toBe("0x0");
@@ -31,7 +31,7 @@ describe('web3config web3 tests', () => {
         });
     
         it('should be able to create web3 and setconfig for contracts', async () => {
-            const web3 = new Web3("");
+            const web3 = new Web3("http://127.0.0.1:8545");
             web3.setConfig({defaultTransactionType: "0x0"});
             expect(web3.getContextObject().config.defaultTransactionType).toBe("0x0");
             expect(web3.config.defaultTransactionType).toBe("0x0");
@@ -42,7 +42,7 @@ describe('web3config web3 tests', () => {
             expect(contract.getContextObject().config.contractDataInputFill).toBe("both");
         });
         it('should change web3 config context but not contract config context', async () => {
-            const web3 = new Web3("");
+            const web3 = new Web3("http://127.0.0.1:8545");
             const contract = new web3.eth.Contract([])
             web3.setConfig({defaultTransactionType:"0x0"});
             expect(contract.getContextObject().config.defaultTransactionType).toBe("0x2")
@@ -50,7 +50,7 @@ describe('web3config web3 tests', () => {
         });
 
         it('should not change web3config when changing contract config context', async () => {
-            const web3 = new Web3("");
+            const web3 = new Web3("http://127.0.0.1:8545");
             const contract = new web3.eth.Contract([])
             contract.setConfig({defaultTransactionType:"0x0"});
             expect(contract.getContextObject().config.defaultTransactionType).toBe("0x0")
@@ -58,14 +58,19 @@ describe('web3config web3 tests', () => {
         });
 
         it('should create two contracts with different configs', () => {
-            const web3 = new Web3('');
+            const web3 = new Web3('http://127.0.0.1:8545');
 
             web3.setConfig({ contractDataInputFill: "data" });
             const c1 = new web3.eth.Contract([], '')
 
             const c2 = new web3.eth.Contract([], new Web3Context({config: {contractDataInputFill: "input"}}))
+            
+            const c3 = new web3.eth.Contract([], {dataInputFill: "input"})
+            expect(web3.config.contractDataInputFill).toBe("data")
             expect(c1.config.contractDataInputFill).toBe("data")
             expect(c2.config.contractDataInputFill).toBe("input");
+            expect(c3.config.contractDataInputFill).toBe("input");
+
         });
     })
     // TODO: finish config unit tests

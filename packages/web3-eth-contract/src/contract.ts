@@ -241,7 +241,6 @@ export class Contract<Abi extends ContractAbi>
 	 * RPC provider when using contract methods.
 	 * Default is `input`
 	 */
-	private readonly _dataInputFill?: 'data' | 'input' | 'both';
 
 	private context?: Web3Context;
 	/**
@@ -370,18 +369,12 @@ export class Contract<Abi extends ContractAbi>
 			: isDataFormat(optionsOrContextOrReturnFormat)
 			? optionsOrContextOrReturnFormat
 			: returnFormat ?? DEFAULT_RETURN_FORMAT;
-
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
 
-		if (this.config.contractDataInputFill === 'both') {
-			this._dataInputFill = this.config.contractDataInputFill;
-		} else {
-			this._dataInputFill =
+			this.config.contractDataInputFill =
 				(options as ContractInitOptions)?.dataInputFill ??
 				this.config.contractDataInputFill;
-		}
-		this.config.contractDataInputFill = this.getContextObject().config.contractDataInputFill;
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
 		if (!isNullish(address)) {
@@ -510,7 +503,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
-					dataInputFill: this._dataInputFill,
+					dataInputFill: this.config.contractDataInputFill,
 				},
 				this.getContextObject(),
 			);
@@ -525,7 +518,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
-					dataInputFill: this._dataInputFill,
+					dataInputFill: this.config.contractDataInputFill,
 				},
 				this.getContextObject(),
 			);
@@ -1023,7 +1016,7 @@ export class Contract<Abi extends ContractAbi>
 			params,
 			options: {
 				...options,
-				dataInputFill: this._dataInputFill,
+				dataInputFill: this.config.contractDataInputFill,
 			},
 			contractOptions: {
 				...this.options,

@@ -193,6 +193,6 @@ Documentation:
 
 ## [Unreleased]
 
-### Added
+### Fixed
 
--   Added to `Web3Config` property `disableSuggestedFee` allowing users to disable the suggested fee web3js recommends in metamask.
+-   Fix `Web3Config` to properly update within other web3 packages (#6555)
