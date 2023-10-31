@@ -158,7 +158,7 @@ Documentation:
 
 -   `soliditySha3()` with BigInt support
 
-## [Unreleased]
+## [4.0.7]
 
 ### Added
 
@@ -168,3 +168,5 @@ Documentation:
 
 -   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
 -   Fixed bug in chunks processing logic (#6496)
+
+## [Unreleased]

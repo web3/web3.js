@@ -2081,9 +2081,13 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.2.0]
 
 ### Added
+
+#### web3
+
+-   Various web3 sub packages has new functions details are in root changelog
 
 #### web3-eth
 
@@ -2109,10 +2113,19 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Fix the issue: "Uncaught TypeError: Class extends value undefined is not a constructor or null #6371". (#6398)
 
+#### web3-errors
+
+-   Added new SchemaFormatError (#6434)
+
 #### web3-eth
 
 -   Ensure provider.supportsSubscriptions exists before watching by subscription (#6440)
 -   Fixed param sent to `checkRevertBeforeSending` in `sendSignedTransaction` 
+-   Fixed `defaultTransactionBuilder` for value issue (#6509)
+
+#### web3-eth-abi
+
+-   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
 
 #### web3-eth-accounts
 
@@ -2122,11 +2135,31 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Fix issue lquixada/cross-fetch#78, enabling to run web3.js in service worker (#6463)
 
+#### web3-providers-ipc
+
+-   Fixed bug in chunks processing logic (#6496)
+
+#### web3-providers-ws
+
+-   Fixed bug in chunks processing logic (#6496)
+
+#### web3-utils
+
+-   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
+-   Fixed bug in chunks processing logic (#6496)
+
 #### web3-validator
 
--   Multi-dimensional arrays are now handled properly when parsing ABIs
+-   Multi-dimensional arrays are now handled properly when parsing ABIs (#6435)
+-   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
+-   Validator will now properly handle all valid numeric type sizes: intN / uintN where 8 <= N <= 256 and N % 8 == 0 (#6434)
+-   Will now throw SchemaFormatError when unsupported format is passed to `convertToZod` method (#6434)
 
 ### Changed
+
+#### web3
+
+-   Dependencies updated
 
 #### web3-core
 
@@ -2142,6 +2175,59 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   The `events` property was added to the `receipt` object (#6410)
 
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
 #### web3-providers-http
 
 -   Bump cross-fetch to version 4 (#6463).
+
+#### web3-rpc-methods
+
+-   Dependencies updated
+
+## [4.2.1]
+
+### Fixed
+
+#### web3-eth-abi
+
+-   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
+
+### Changed
+
+#### web3-eth-contract
+
+-   Dependencies updated
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+## [Unreleased]
+### Added
+
+#### web3-types
+
+-   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
