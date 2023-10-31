@@ -120,4 +120,10 @@ Documentation:
 
 -   Dependencies updated
 
+## [1.1.3]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
