@@ -195,4 +195,4 @@ Documentation:
 
 ### Fixed
 
--   Fix `Web3Config` to properly update within other web3 packages (#6555)
+-   Fix `Web3Config` to properly update within other web3 packages when `setConfig` is used  (#6555)
