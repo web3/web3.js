@@ -76,7 +76,7 @@ const metamaskPayload = (payload: JsonRpcRequest) => {
 	const params = payload.params[0] as Record<string, unknown>
 	if (params.input && !params.data) {
 
-		payload = {...payload,
+		return {...payload,
 			params: [{...params,
 				data: params.data ?? params.input}]
 		}
@@ -216,6 +216,8 @@ export class Web3RequestManager<
 			if ((payload as JsonRpcRequest<ResponseType>).method === 'eth_sendTransaction'){
 				if(!jsonRpc.isBatchRequest(payload)){
 					payload = metamaskPayload(payload as JsonRpcRequest)
+				} else {
+					payload = payload.map(p => metamaskPayload(payload as JsonRpcRequest))
 				}
 			}
 		}
