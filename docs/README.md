@@ -60,7 +60,8 @@ Use the following snippet for tabs:
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
-
+const { Web3 } = require('web3');
+// ...
 ```
 
   </TabItem>
@@ -69,7 +70,8 @@ Use the following snippet for tabs:
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript
-
+import { Web3 } from 'web3';
+// ...
 ```
 
   </TabItem>
