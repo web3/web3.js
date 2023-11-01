@@ -264,6 +264,89 @@ describe('rpc', () => {
 			validateTransaction(res as TransactionInfo);
 			expect(res?.hash).toBe(receipt.transactionHash);
 		});
+		it('check get transaction fields', async () => {
+			const receipt0 = await web3Eth.sendTransaction({
+				from: tempAcc.address,
+				value: '0x1',
+				to: tempAcc2.address,
+				type: BigInt(0),
+			});
+			const res0 = await web3Eth.getTransaction(receipt0.transactionHash);
+
+			expect(res0.type).toBeDefined();
+			expect(res0.hash).toBeDefined();
+			expect(res0.nonce).toBeDefined();
+			expect(res0.blockHash).toBeDefined();
+			expect(res0.blockNumber).toBeDefined();
+			expect(res0.transactionIndex).toBeDefined();
+			expect(res0.from).toBeDefined();
+			expect(res0.to).toBeDefined();
+			expect(res0.value).toBeDefined();
+			expect(res0.gas).toBeDefined();
+			expect(res0.input).toBeDefined();
+			expect(res0.r).toBeDefined();
+			expect(res0.s).toBeDefined();
+			expect(res0.v).toBeDefined();
+			expect(res0.data).toBeDefined();
+			expect(res0?.hash).toBe(receipt0.transactionHash);
+
+			expect(res0.gasPrice).toBeDefined();
+
+			const receipt1 = await web3Eth.sendTransaction({
+				from: tempAcc.address,
+				value: '0x1',
+				maxPriorityFeePerGas: BigInt(500000000),
+				maxFeePerGas: BigInt(500000000),
+				to: tempAcc2.address,
+				type: BigInt(1),
+			});
+			const res1 = await web3Eth.getTransaction(receipt1.transactionHash);
+			expect(res1.type).toBeDefined();
+			expect(res1.hash).toBeDefined();
+			expect(res1.nonce).toBeDefined();
+			expect(res1.blockHash).toBeDefined();
+			expect(res1.blockNumber).toBeDefined();
+			expect(res1.transactionIndex).toBeDefined();
+			expect(res1.from).toBeDefined();
+			expect(res1.to).toBeDefined();
+			expect(res1.value).toBeDefined();
+			expect(res1.gas).toBeDefined();
+			expect(res1.input).toBeDefined();
+			expect(res1.r).toBeDefined();
+			expect(res1.s).toBeDefined();
+			expect(res1.data).toBeDefined();
+			expect(res1?.hash).toBe(receipt1.transactionHash);
+			expect(res1.gasPrice).toBeDefined();
+			expect(res1.accessList).toBeDefined();
+
+			const receipt2 = await web3Eth.sendTransaction({
+				from: tempAcc.address,
+				value: '0x1',
+				to: tempAcc2.address,
+				type: BigInt(2),
+			});
+			const res2 = await web3Eth.getTransaction(receipt2.transactionHash);
+
+			expect(res2.type).toBeDefined();
+			expect(res2.hash).toBeDefined();
+			expect(res2.nonce).toBeDefined();
+			expect(res2.blockHash).toBeDefined();
+			expect(res2.blockNumber).toBeDefined();
+			expect(res2.transactionIndex).toBeDefined();
+			expect(res2.from).toBeDefined();
+			expect(res2.to).toBeDefined();
+			expect(res2.value).toBeDefined();
+			expect(res2.gas).toBeDefined();
+			expect(res2.input).toBeDefined();
+			expect(res2.r).toBeDefined();
+			expect(res2.s).toBeDefined();
+			expect(res2.data).toBeDefined();
+			expect(res2?.hash).toBe(receipt2.transactionHash);
+			expect(res2.maxFeePerGas).toBeDefined();
+			expect(res2.maxPriorityFeePerGas).toBeDefined();
+			expect(res2.accessList).toBeDefined();
+			expect(res2.gasPrice).toBeDefined();
+		});
 
 		itIf(getSystemTestBackend() !== 'ganache')('getPendingTransactions', async () => {
 			const tx = web3Eth.sendTransaction({

@@ -93,7 +93,7 @@ describeIf(isSocket)('subscription', () => {
 
 			let count = 0;
 
-			const pr = new Promise((resolve: Resolve, reject) => {
+			const pr = new Promise((resolve: Resolve) => {
 				sub.on('data', (data: any) => {
 					count += 1;
 					const decodedData = decodeEventABI(
@@ -106,13 +106,12 @@ describeIf(isSocket)('subscription', () => {
 						resolve();
 					}
 				});
-				sub.on('error', reject);
+			});
 
-				makeFewTxToContract({
-					contract: contractDeployed,
-					sendOptions,
-					testDataString,
-				}).catch(e => reject(e));
+			await makeFewTxToContract({
+				contract: contractDeployed,
+				sendOptions,
+				testDataString,
 			});
 
 			await pr;

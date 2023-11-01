@@ -2226,3 +2226,8 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Dependencies updated
 
 ## [Unreleased]
+### Added
+
+#### web3-types
+
+-   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
