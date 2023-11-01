@@ -3,6 +3,9 @@ sidebar_position: 2
 sidebar_label: 'Eth Package Usage Example'
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Getting Started with `eth` Package
 
 ## Introduction
@@ -64,6 +67,11 @@ Note that we are installing the latest version of 4.x, at the time of this tutor
 
 Next, create a new file called `index.ts` in your project directory and add the following code to it:
 
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
 ```javascript
 const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
 
@@ -80,6 +88,31 @@ web3.eth
 		console.error(error);
 	});
 ```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+
+// Set up a connection to the Ganache network
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+
+// Log the current block number to the console
+web3.eth
+	.getBlockNumber()
+	.then(result => {
+		console.log('Current block number: ' + result);
+	})
+	.catch(error => {
+		console.error(error);
+	});
+```
+
+  </TabItem>
+</Tabs>
 
 This code sets up a connection to the Ganache network and logs the current block number to the console.
 
@@ -98,7 +131,12 @@ In this step, we will use web3.js to interact with the Ganache network.
 In the first example, we are going to send a simple value transaction.
 Create a file named `transaction.ts` and fill it with the following code:
 
-```typescript
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
 const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
 const fs = require('fs');
 const path = require('path');
@@ -123,7 +161,9 @@ async function interact() {
 	const transaction = {
 		from: accounts[0],
 		to: accounts[1],
-		value: web3.utils.toWei('1', 'ether'), // value should be passed in wei. For easier use and to avoid mistakes we utilize the auxiliary `toWei` function.
+		// value should be passed in wei. For easier use and to avoid mistakes, 
+		//	we utilize the auxiliary `toWei` function:
+		value: web3.utils.toWei('1', 'ether'),
 	};
 
 	//send the actual transaction
@@ -145,6 +185,64 @@ async function interact() {
 	await interact();
 })();
 ```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+import fs from 'fs';
+import path from 'path';
+
+// Set up a connection to the Ethereum network
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+web3.eth.Contract.handleRevert = true;
+
+async function interact() {
+	//fetch all the available accounts
+	const accounts = await web3.eth.getAccounts();
+	console.log(accounts);
+
+	let balance1, balance2;
+	//The initial balances of the accounts should be 100 Eth (10^18 wei)
+	balance1 = await web3.eth.getBalance(accounts[0]);
+	balance2 = await web3.eth.getBalance(accounts[1]);
+
+	console.log(balance1, balance2);
+
+	//create a transaction sending 1 Ether from account 0 to account 1
+	const transaction = {
+		from: accounts[0],
+		to: accounts[1],
+		// value should be passed in wei. For easier use and to avoid mistakes, 
+		//	we utilize the auxiliary `toWei` function:
+		value: web3.utils.toWei('1', 'ether'), 
+	};
+
+	//send the actual transaction
+	const transactionHash = await web3.eth.sendTransaction(transaction);
+	console.log('transactionHash', transactionHash);
+
+	balance1 = await web3.eth.getBalance(accounts[0]);
+	balance2 = await web3.eth.getBalance(accounts[1]);
+
+	// see the updated balances
+	console.log(balance1, balance2);
+
+	// irrelevant with the actual transaction, just to know the gasPrice
+	const gasPrice = await web3.eth.getGasPrice();
+	console.log(gasPrice);
+}
+
+(async () => {
+	await interact();
+})();
+```
+
+  </TabItem>
+</Tabs>
 
 :::note
 📝 When running a local development blockchain using Ganache, all accounts are typically unlocked by default, allowing easy access and transaction execution during development and testing. This means that the accounts are accessible without requiring a private key or passphrase. That's why we just indicate the accounts in the examples with the `from` field.
@@ -201,8 +299,13 @@ transactionHash {
 
 In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding tutotial). Create a file named `estimate.ts` and fill it with the following code:
 
-```typescript
-import Web3, { ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from 'web3';
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3, ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } = require('web3');
 
 async function estimate() {
 	// abi of our contract
@@ -265,6 +368,79 @@ async function estimate() {
 })();
 ```
 
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+
+```typescript
+import { Web3, ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from 'web3';
+
+async function estimate() {
+	// abi of our contract
+	const abi = [
+		{
+			inputs: [{ internalType: 'uint256', name: '_myNumber', type: 'uint256' }],
+			stateMutability: 'nonpayable',
+			type: 'constructor',
+		},
+		{
+			inputs: [],
+			name: 'myNumber',
+			outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [{ internalType: 'uint256', name: '_myNumber', type: 'uint256' }],
+			name: 'setMyNumber',
+			outputs: [],
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+	];
+
+	const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+
+	//get the available accounts
+	const accounts = await web3.eth.getAccounts();
+	let acc = await accounts[0];
+
+	let contract = new web3.eth.Contract(abi, undefined);
+
+	const deployment = contract.deploy({
+		data: '0x608060405234801561001057600080fd5b506040516101d93803806101d983398181016040528101906100329190610054565b806000819055505061009e565b60008151905061004e81610087565b92915050565b60006020828403121561006657600080fd5b60006100748482850161003f565b91505092915050565b6000819050919050565b6100908161007d565b811461009b57600080fd5b50565b61012c806100ad6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806323fd0e401460375780636ffd773c146051575b600080fd5b603d6069565b6040516048919060bf565b60405180910390f35b6067600480360381019060639190608c565b606f565b005b60005481565b8060008190555050565b60008135905060868160e2565b92915050565b600060208284031215609d57600080fd5b600060a9848285016079565b91505092915050565b60b98160d8565b82525050565b600060208201905060d2600083018460b2565b92915050565b6000819050919050565b60e98160d8565b811460f357600080fd5b5056fea2646970667358221220d28cf161457f7936995800eb9896635a02a559a0561bff6a09a40bfb81cd056564736f6c63430008000033',
+		// @ts-expect-error
+		arguments: [1],
+	});
+	estimatedGas = await deployment.estimateGas(
+		{
+			from: acc,
+		},
+		DEFAULT_RETURN_FORMAT, // the returned data will be formatted as a bigint
+	);
+
+	console.log(estimatedGas);
+
+	let estimatedGas = await deployment.estimateGas(
+		{
+			from: acc,
+		},
+		ETH_DATA_FORMAT, // the returned data will be formatted as a hexstring
+	);
+
+	console.log(estimatedGas);
+}
+
+(async () => {
+	await estimate();
+})();
+```
+
+  </TabItem>
+</Tabs>
+
 Run the following:
 
 ```
@@ -282,6 +458,52 @@ If everything is working correctly, you should see something like the following:
 :::
 
 In the next example we are going to sign a transaction and use `sendSignedTransaction` to send the signed transaction. Create a file named `sendSigned.ts` and fill it with the following code:
+
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3 } = require('web3');
+const web3 = new Web3('http://localhost:7545');
+
+//make sure to copy the private key from ganache
+const privateKey = '0x0fed6f64e01bc9fac9587b6e7245fd9d056c3c004ad546a17d3d029977f0930a';
+const value = web3.utils.toWei('1', 'ether');
+
+async function sendSigned() {
+	const accounts = await web3.eth.getAccounts();
+	const fromAddress = accounts[0];
+	const toAddress = accounts[1];
+	// Create a new transaction object
+	const tx = {
+		from: fromAddress,
+		to: toAddress,
+		value: value,
+		gas: 21000,
+		gasPrice: web3.utils.toWei('10', 'gwei'),
+		nonce: await web3.eth.getTransactionCount(fromAddress),
+	};
+
+	// Sign the transaction with the private key
+	const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+
+	// Send the signed transaction to the network
+	const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+	console.log('Transaction receipt:', receipt);
+}
+(async () => {
+	await sendSigned();
+})();
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
 
 ```typescript
 import { Web3 } from 'web3';
@@ -317,6 +539,9 @@ async function sendSigned() {
 	await sendSigned();
 })();
 ```
+
+  </TabItem>
+</Tabs>
 
 Run the following:
 
