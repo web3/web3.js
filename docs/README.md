@@ -39,3 +39,49 @@ $ GIT_USER=<Your GitHub username> yarn deploy
 ```
 
 If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+
+
+### How to add tabs for Programming Languages
+
+Att the top of the `.md` file, ensure having the following: 
+
+```js
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+```
+
+Use the following snippet for tabs:
+
+<pre>
+<xmp lang=html>
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3 } = require('web3');
+// ...
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+// ...
+```
+
+  </TabItem>
+</Tabs>
+</xmp>
+</pre>
+
+Notes: 
+- This will put the JavaScript tab as the default. This is chosen because a JavaScript project needs less configurations. However, if the tutorial steps involves installing and configuring TypeScript, put the `default` attribute on the TypeScript tab instead.
+- The attribute `groupId="prog-lang"` ensure that whenever the user press on a tab, all other tabs in the page will switch to the same selected tab.
+- The attribute `queryString` is used to let the user easily share with the selected tab preserved.
+- The attributes `attributes={{className: "javascript-tab"}}` and `attributes={{className: "typescript-tab"}}` will give the tabes a unified design that uses the official colors of JavaScript and TypeScript.
+- If you get an error like `Uncaught runtime errors`, after you added the tabs: be sure to delete all unnecessary spaces, namely any space after <TabItem ...> and before the code block, and keep only new-line character. This is to keep it just like the code snippet above.

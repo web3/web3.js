@@ -3,6 +3,9 @@ sidebar_position: 2
 sidebar_label: 'Providers'
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # web3.js Providers Guide
 
 ## Introduction
@@ -11,8 +14,14 @@ web3.js providers are objects responsible for enabling connectivity with the Eth
 
 Connecting to a chain happens through a provider. You can pass the provider to the constructor as in the following example:
 
-```ts
-import Web3 from 'web3';
+
+
+<Tabs groupId="prog-lang" queryString>
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3 } = require('web3');
 
 const web3 = new Web3(/* PROVIDER*/);
 
@@ -23,6 +32,28 @@ await web3.eth.sendTransaction({
 	value,
 });
 ```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+
+const web3 = new Web3(/* PROVIDER*/);
+
+// calling any method that interact with the network would involve using the early passed provider.
+await web3.eth.sendTransaction({
+	from,
+	to,
+	value,
+});
+```
+	
+	
+  </TabItem>
+</Tabs>
 
 The created Web3 instance will use the passed provider to interact with the blockchain network. This interaction happen when sending a request and receiving the response, and when possibly listen to provider events (if the provider support this).
 
@@ -64,7 +95,12 @@ The key rule for setting provider is as follows:
 
 ### Local Geth Node
 
-```ts
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
 const { Web3 } = require('web3');
 const web3 = new Web3('http://localhost:8545');
 // or
@@ -75,24 +111,76 @@ web3.setProvider('ws://localhost:8546');
 // or
 web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
+
 // Using the IPC provider in node.js
-const net = require('net');
-const web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
-// or
+const { Web3 } = require('web3');
+const { IpcProvider } = require('web3-providers-ipc');
+
 const web3 = new Web3(
-	new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net),
+  new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'),
 ); // mac os path
 // on windows the path is: "\\\\.\\pipe\\geth.ipc"
 // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
 ```
 
+  </TabItem>
+
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+const web3 = new Web3('http://localhost:8545');
+// or
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+// change provider
+web3.setProvider('ws://localhost:8546');
+// or
+web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+
+
+// Using the IPC provider in node.js
+import { Web3 } from 'web3';
+import { IpcProvider } from 'web3-providers-ipc';
+
+const web3 = new Web3(
+  new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'),
+); // mac os path
+// on windows the path is: "\\\\.\\pipe\\geth.ipc"
+// on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+```
+
+  </TabItem>
+</Tabs>
+
 ### Remote Node Provider
 
-```ts
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
 // Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
 const { Web3 } = require('web3');
 const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 ```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+// Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
+import { Web3 } from 'web3';
+const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
+```
+
+  </TabItem>
+</Tabs>
+
 
 ### Injected providers
 
