@@ -3,6 +3,9 @@ sidebar_position: 0
 sidebar_label: 'For Plugin Users'
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Plugin User Guide
 
 This guide intends to provide the necessary context for registering plugins with web3.js packages.
@@ -29,6 +32,38 @@ To add a plugin to an instance of a class sourced from web3.js' modules (such as
 
 For illustration purposes, let's assume a plugin developer has the following code for their plugin. Please note that this code should not be touched by the plugin user:
 
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+// code written by the plugin **developer**
+
+const { Web3PluginBase } = require('web3');
+
+export class PluginExample extends Web3PluginBase {
+	public pluginNamespace = 'pluginExample';
+
+	public sampleMethod() {
+		return 'simpleValue';
+	}
+}
+
+// Module Augmentation
+declare module 'web3' {
+	interface Web3Context {
+		pluginExample: PluginExample;
+	}
+}
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+
 ```typescript
 // code written by the plugin **developer**
 
@@ -50,7 +85,33 @@ declare module 'web3' {
 }
 ```
 
+  </TabItem>
+</Tabs>
+
 Here is an example of how to register the `PluginExample` onto an instance of `Web3`:
+
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+// code written by the plugin **user**
+
+const { Web3 } = require('web3');
+const { PluginExample } = require('web3-plugin-example');
+
+const web3 = new Web3('http://127.0.0.1:8545');
+web3.registerPlugin(new PluginExample(any_parameters, if_needed));
+
+web3.pluginExample.sampleMethod();
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
 
 ```typescript
 // code written by the plugin **user**
@@ -63,3 +124,6 @@ web3.registerPlugin(new PluginExample(any_parameters, if_needed));
 
 web3.pluginExample.sampleMethod();
 ```
+
+  </TabItem>
+</Tabs>
