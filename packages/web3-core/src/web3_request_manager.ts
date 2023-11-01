@@ -217,7 +217,7 @@ export class Web3RequestManager<
 				if(!jsonRpc.isBatchRequest(payload)){
 					payload = metamaskPayload(payload as JsonRpcRequest)
 				} else {
-					payload = payload.map(p => metamaskPayload(payload as JsonRpcRequest))
+					payload = payload.map(p => metamaskPayload(p as JsonRpcRequest))
 				}
 			}
 		}
