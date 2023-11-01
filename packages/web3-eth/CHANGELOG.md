@@ -207,4 +207,10 @@ Documentation:
 
 -   Added `ALL_EVENTS` and `ALL_EVENTS_ABI` constants, `SendTransactionEventsBase` type, `decodeEventABI` method (#6410)
 
+## [4.3.1]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
