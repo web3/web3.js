@@ -21,7 +21,6 @@ import {
 	Web3PromiEvent,
 	Web3ConfigEvent,
 	Web3SubscriptionManager,
-	isMetaMaskProvider,
 } from 'web3-core';
 import {
 	ContractExecutionError,
@@ -1077,22 +1076,12 @@ export class Contract<Abi extends ContractAbi>
 			input: undefined,
 			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
-		let tx;
-		if (!isNullish(this.currentProvider) && isMetaMaskProvider(this.currentProvider)) {
-			tx = getSendTxParams({
-				abi,
-				params,
-				options: { ...options, dataInputFill: "data" },
-				contractOptions: modifiedContractOptions,
-			});
-		} else {
-			tx = getSendTxParams({
-				abi,
-				params,
-				options: { ...options, dataInputFill: this.config.contractDataInputFill },
-				contractOptions: modifiedContractOptions,
-			});
-		}
+		const tx = getSendTxParams({
+			abi,
+			params,
+			options: { ...options, dataInputFill: this.config.contractDataInputFill },
+			contractOptions: modifiedContractOptions,
+		});
 		
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			// TODO Should make this configurable by the user
