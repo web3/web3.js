@@ -284,7 +284,7 @@ If everything is working correctly, you should see something like the following:
 In the next example we are going to sign a transaction and use `sendSignedTransaction` to send the signed transaction. Create a file named `sendSigned.ts` and fill it with the following code:
 
 ```typescript
-import Web3 from 'web3';
+import { Web3 } from 'web3';
 const web3 = new Web3('http://localhost:7545');
 
 //make sure to copy the private key from ganache

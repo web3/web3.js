@@ -55,8 +55,8 @@ Here is an example of how to register the `PluginExample` onto an instance of `W
 ```typescript
 // code written by the plugin **user**
 
-import Web3 from 'web3';
-import PluginExample from 'web3-plugin-example';
+import { Web3 } from 'web3';
+import { PluginExample } from 'web3-plugin-example';
 
 const web3 = new Web3('http://127.0.0.1:8545');
 web3.registerPlugin(new PluginExample(any_parameters, if_needed));

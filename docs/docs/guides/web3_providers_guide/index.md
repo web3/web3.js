@@ -12,7 +12,7 @@ web3.js providers are objects responsible for enabling connectivity with the Eth
 Connecting to a chain happens through a provider. You can pass the provider to the constructor as in the following example:
 
 ```ts
-import Web3 from 'web3';
+import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
 
