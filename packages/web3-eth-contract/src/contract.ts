@@ -1084,6 +1084,7 @@ export class Contract<Abi extends ContractAbi>
 			options: { ...options, dataInputFill: this.config.contractDataInputFill },
 			contractOptions: modifiedContractOptions,
 		});
+		
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,

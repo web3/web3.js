@@ -196,3 +196,7 @@ Documentation:
 ### Fixed
 
 -   Fix `Web3Config` to properly update within other web3 packages when `setConfig` is used  (#6555)
+
+### Added
+
+-   Added `isMetaMaskProvider` function to check if provider is metamask (#6534)
