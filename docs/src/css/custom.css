@@ -68,8 +68,5 @@ li[role="tab"] {
 }
 
 .tabs-container .margin-top--md {
-  border-color: var(--ifm-color-primary);
-  border-width: medium;
-  border-style: solid;
   margin-top: 0px !important;
 }
