@@ -37,7 +37,7 @@ For illustration purposes, let's assume a plugin developer has the following cod
   <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
-```javascript
+```typescript
 // code written by the plugin **developer**
 
 const { Web3PluginBase } = require('web3');
