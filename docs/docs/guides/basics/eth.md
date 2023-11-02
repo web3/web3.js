@@ -343,6 +343,28 @@ Transaction receipt: {
 }
 ```
 
+## Importing specific package
+To utilize functions from the web3-eth package, you have the option to import this package directly instead of relying on the global `web3` package.
+
+For example [getBalance](/api/web3-eth/function/getBalance) method:
+
+```typescript
+import Web3Eth from 'web3-eth';
+
+const eth = new Web3Eth('http://localhost:7545');
+
+async function test() {
+    const accounts = await eth.getAccounts();
+    const currentBalance = await eth.getBalance(accounts[0]);
+    console.log('Current balance:', currentBalance); // 115792089237316195423570985008687907853269984665640564039437613106102441895127n
+}
+
+(async () => {
+    await test();
+})();
+
+```
+
 ## Package methods
 
 ### createAccessList
@@ -362,7 +384,7 @@ This method returns a Promise that resolves to an object which includes accessLi
 ```typescript
 import Web3 from 'web3';
 
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const transaction = {
@@ -788,7 +810,7 @@ The [getTransaction](/api/web3-eth/function/getTransaction) function typically t
 
 ```typescript
 import Web3 from 'web3';
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const tx = await web3.eth.getTransaction('0xef602804f745ce03c5fbb7431487e4e436be094587c14675d9407f5444c7fa3f');
@@ -898,7 +920,7 @@ The [getUncle](/api/web3-eth/function/getUncle) function typically takes the fol
 
 ```typescript
 import Web3 from 'web3';
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const uncle = await web3.eth.getUncle('latest', 0);
@@ -921,7 +943,7 @@ This method returns a Promise that resolves to a boolean value indicating whethe
 
 ```typescript
 import Web3 from 'web3';
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const isMining = await web3.eth.isMining();
@@ -943,7 +965,7 @@ This method returns a Promise that resolves to an object containing information 
 
 ```typescript
 import Web3 from 'web3';
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const isSyncing = await web3.eth.isSyncing();
@@ -984,7 +1006,7 @@ This method returns a Promise that resolves to a transaction receipt, which cont
 
 ```typescript
 import Web3 from 'web3';
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const tx = {
@@ -1034,7 +1056,7 @@ This method returns a Promise that resolves to a signature.
 
 ```typescript
 import Web3 from 'web3';
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const signedData = await web3.eth.sign('0x123123', '0xf1e4df637e764eb7bd9b9f2aab391cc757b875a0');
@@ -1060,7 +1082,7 @@ This method returns a Promise that resolves to an object which includes `raw` fi
 ```typescript
 import Web3 from 'web3';
 
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const from = '0xf1e4df637e764eb7bd9b9f2aab391cc757b875a0';
@@ -1117,7 +1139,7 @@ This method returns a Promise that resolves to a transaction receipt object.
 ```typescript
 import Web3 from 'web3';
 
-const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3('http://localhost:7545');
 
 async function test() {
     const from = '0xf1e4df637e764eb7bd9b9f2aab391cc757b875a0';
