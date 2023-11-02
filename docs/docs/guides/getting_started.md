@@ -20,7 +20,7 @@ The following documentation will guide you through different use cases of Web3.j
 -    Using native BigInt instead of large BigNumber libraries
 -    More efficient ABI Encoder & Decoder
 -    Custom Output formatters
--    Incompliance with Eth EL API
+-    In compliance with Eth EL API
 
 ### Installation
 
