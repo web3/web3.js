@@ -88,7 +88,7 @@ First, install the `solc` package using npm.
 :::
 
 ```
-npm install solc@0.8.0
+npm i solc@0.8.0
 ```
 
 Next, create a new file called `compile.js` in your project directory and add the following code to it:
@@ -171,7 +171,7 @@ In this step, we will set up the web3.js library and connect to the Ganache netw
 First, install the `web3` package using npm:
 
 ```
-npm install web3@4.0.1-rc.1
+npm i web3@4.2.1
 ```
 
 Note that we are installing the latest version of 4.x, at the time of this tutorial writing. You can check the latest version at https://www.npmjs.com/package/web3?activeTab=versions
