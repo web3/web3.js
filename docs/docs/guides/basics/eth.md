@@ -978,6 +978,10 @@ The [sendTransaction](/api/web3-eth/function/sendTransaction) function typically
 
 This method returns a Promise that resolves to a transaction receipt, which contains information about the transaction, including the transaction hash, block number, gas used, and more.
 
+:::note
+[Here](/guides/basics/sign_and_send_tx/) you can find more examples how to send transaction.
+:::
+
 ```typescript
 import Web3 from 'web3';
 const web3 = new Web3('http://localhost:8545');
@@ -1105,6 +1109,10 @@ The [sendSignedTransaction](/api/web3-eth/function/sendSignedTransaction) functi
 - options ([SendTransactionOptions](/api/web3/namespace/types/#SendTransactionOptions)) - A configuration object used to change the behavior of the [sendSignedTransaction](/api/web3-eth/function/sendSignedTransaction) method.
 
 This method returns a Promise that resolves to a transaction receipt object.
+
+:::note
+[Here](/guides/basics/sign_and_send_tx/) you can find more examples how to send transaction.
+:::
 
 ```typescript
 import Web3 from 'web3';
