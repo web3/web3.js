@@ -14,7 +14,7 @@ The simplest way to sign and send transactions is using a local wallet:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -47,7 +47,7 @@ try {
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript
@@ -90,7 +90,7 @@ List of references:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -136,7 +136,7 @@ try {
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript

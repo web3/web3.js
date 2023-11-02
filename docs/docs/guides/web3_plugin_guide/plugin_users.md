@@ -34,7 +34,7 @@ For illustration purposes, let's assume a plugin developer has the following cod
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -60,7 +60,7 @@ declare module 'web3' {
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 
@@ -92,7 +92,7 @@ Here is an example of how to register the `PluginExample` onto an instance of `W
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -109,7 +109,7 @@ web3.pluginExample.sampleMethod();
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 

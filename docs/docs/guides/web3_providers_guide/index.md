@@ -17,7 +17,7 @@ Connecting to a chain happens through a provider. You can pass the provider to t
 
 
 <Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -35,7 +35,7 @@ await web3.eth.sendTransaction({
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript
@@ -97,7 +97,7 @@ The key rule for setting provider is as follows:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -125,7 +125,7 @@ const web3 = new Web3(
 
   </TabItem>
 
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript
@@ -158,7 +158,7 @@ const web3 = new Web3(
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -169,7 +169,7 @@ const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript

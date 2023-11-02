@@ -28,7 +28,7 @@ And the correct usage now is:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -39,7 +39,7 @@ const web3 = new Web3();
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript

@@ -14,7 +14,7 @@ If Ethereum node has unlocked account in its wallet you can send transaction wit
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -54,7 +54,7 @@ try {
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript
@@ -106,7 +106,7 @@ List of references:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -160,7 +160,7 @@ try {
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript

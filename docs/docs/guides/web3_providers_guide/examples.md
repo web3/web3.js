@@ -55,7 +55,7 @@ To connect to the Ethereum network using the HTTP provider, follow these steps:
 3. Install web3.js using npm:
 
     ```bash
-    npm install web3@4.0.1-rc.1
+    npm install web3
     ```
 
 4. Create a new JavaScript file called `web3-http-provider.js` in your code editor.
@@ -196,7 +196,7 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 3. Install web3.js using npm:
 
     ```bash
-     npm install web3@4.0.1-rc.1
+     npm install web3
     ```
 
 4. Create a new JavaScript file called `web3-websocket-provider.js` in your code editor.
@@ -395,7 +395,7 @@ INFO [12-10|15:10:37.127] Mapped network port		  	proto=udp extport=0 intport=30
 4. Install web3.js using npm:
 
     ```bash
-    npm install web3@4.0.1-rc.1
+    npm install web3
     ```
 
 5. Create a new JavaScript file called `web3-ipc-provider.js` in your code editor.
@@ -526,7 +526,7 @@ Here is a step-by-step example and a code snippet to connect your web applicatio
 3. Install web3.js and HTTP provider using npm:
 
     ```bash
-    npm install web3@4.0.1-rc.1 @truffle/hdwallet-provider bip39
+    npm install web3 @truffle/hdwallet-provider bip39
     ```
 
 4. Create a new JavaScript file, called `index.js`, in your code editor.

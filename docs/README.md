@@ -56,7 +56,7 @@ Use the following snippet for tabs:
 <xmp lang=html>
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
+  <TabItem value="javascript" label="JavaScript"
   	attributes={{className: "javascript-tab"}}>
 
 ```javascript
@@ -66,7 +66,7 @@ const { Web3 } = require('web3');
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript"
+  <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript
@@ -80,7 +80,7 @@ import { Web3 } from 'web3';
 </pre>
 
 Notes: 
-- This will put the JavaScript tab as the default. This is chosen because a JavaScript project needs less configurations. However, if the tutorial steps involve installing and configuring TypeScript, put the `default` attribute on the TypeScript tab instead.
+- This will put the TypeScript tab as the default. However, if the tutorial steps does not involve installing and configuring TypeScript, put the `default` attribute on the JavaScript tab instead.
 - The attribute `groupId="prog-lang"` ensure that whenever the user press on a tab, all other tabs in the page will switch to the same selected tab.
 - The attribute `queryString` is used to let the user easily share with the selected tab preserved.
 - The attributes `attributes={{className: "javascript-tab"}}` and `attributes={{className: "typescript-tab"}}` will give the tabs a unified design that uses the official colors of JavaScript and TypeScript.
