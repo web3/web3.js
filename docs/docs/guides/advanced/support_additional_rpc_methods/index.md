@@ -35,10 +35,12 @@ This will give your plugin access to [requestManager](/api/web3-core/class/Web3C
 ```javascript
 const { Web3PluginBase } = require('web3');
 
-export default class CustomRpcMethodsPlugin extends Web3PluginBase {
+class CustomRpcMethodsPlugin extends Web3PluginBase {
 	// step 1
 	// ...
 }
+
+module.exports = CustomRpcMethodsPlugin;
 ```
 
   </TabItem>
@@ -69,9 +71,11 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 ```javascript
 const { Web3PluginBase } = require('web3');
 
-export default class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods'; // step 2
+class CustomRpcMethodsPlugin extends Web3PluginBase {
+	pluginNamespace = 'customRpcMethods'; // step 2
 }
+
+module.exports = CustomRpcMethodsPlugin;
 ```
 
   </TabItem>
@@ -100,10 +104,10 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 ```javascript
 const { Web3PluginBase } = require('web3');
 
-export default class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods';
+class CustomRpcMethodsPlugin extends Web3PluginBase {
+	pluginNamespace = 'customRpcMethods';
 
-	public async customRpcMethod() {
+	async customRpcMethod() {
 		// step 3
 		return this.requestManager.send({
 			// plugin has access to web3.js internal features like request manager
@@ -112,6 +116,8 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 		});
 	}
 }
+
+module.exports = CustomRpcMethodsPlugin;
 ```
 
   </TabItem>
@@ -149,17 +155,19 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 ```javascript
 const { Web3PluginBase } = require('web3');
 
-export default class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods';
+class CustomRpcMethodsPlugin extends Web3PluginBase {
+    pluginNamespace = 'customRpcMethods';
 
-	public async customRpcMethod() {
-		return this.requestManager.send({
-			// plugin has access to web3.js internal features like request manager
-			method: 'custom_rpc_method',
-			params: [],
-		});
-	}
+    async customRpcMethod() {
+        return this.requestManager.send({
+            // plugin has access to web3.js internal features like request manager
+            method: 'custom_rpc_method',
+            params: [],
+        });
+    }
 }
+
+module.exports = CustomRpcMethodsPlugin;
 ```
 
   </TabItem>
