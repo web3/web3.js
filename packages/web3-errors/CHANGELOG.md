@@ -160,4 +160,10 @@ Documentation:
 
 -   Added new SchemaFormatError (#6434)
 
+## [1.1.4]
+
+### Fixed
+
+-   Fixed grammar and spelling in `transactionTimeoutHint` (#6559)
+
 ## [Unreleased]
