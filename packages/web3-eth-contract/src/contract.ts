@@ -315,6 +315,7 @@ export class Contract<Abi extends ContractAbi>
 			: isContractInitOptions(optionsOrContextOrReturnFormat)
 			? optionsOrContextOrReturnFormat
 			: undefined;
+
 		let contractContext;
 		if (isWeb3ContractContext(addressOrOptionsOrContext)) {
 			contractContext = addressOrOptionsOrContext;
@@ -323,6 +324,7 @@ export class Contract<Abi extends ContractAbi>
 		} else {
 			contractContext = contextOrReturnFormat;
 		}
+
 		let provider;
 		if (
 			typeof addressOrOptionsOrContext === 'object' &&
@@ -348,7 +350,6 @@ export class Contract<Abi extends ContractAbi>
 			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
-		
 		if (
 			!isNullish(options) &&
 			!isNullish(options.data) &&
@@ -360,6 +361,7 @@ export class Contract<Abi extends ContractAbi>
 				input: options.input as HexString,
 			});
 		this._overloadedMethodAbis = new Map<string, AbiFunctionFragment[]>();
+
 		// eslint-disable-next-line no-nested-ternary
 		const returnDataFormat = isDataFormat(contextOrReturnFormat)
 			? contextOrReturnFormat
@@ -1086,6 +1088,7 @@ export class Contract<Abi extends ContractAbi>
 			checkRevertBeforeSending: false,
 			contractAbi: this._jsonInterface,
 		});
+		
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {

@@ -191,7 +191,7 @@ export class Web3<
 		const eth = self.use(Web3Eth);
 
 		// Eth Module
-		this.eth = Object.assign(eth, { 
+		this.eth = Object.assign(eth, {
 			// ENS module
 			ens: self.use(ENS, registryAddresses.main), // registry address defaults to main network
 

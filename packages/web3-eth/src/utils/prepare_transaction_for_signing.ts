@@ -141,6 +141,7 @@ export const prepareTransactionForSigning = async (
 	validateTransactionForSigning(
 		formattedTransaction as unknown as FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	);
+	
 	return TransactionFactory.fromTxData(
 		getEthereumjsTxDataFromTransaction(formattedTransaction),
 		getEthereumjsTransactionOptions(formattedTransaction, web3Context),
