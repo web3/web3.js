@@ -386,7 +386,7 @@ console.log('eth.config.defaultTransactionType after', eth.config.defaultTransac
 
 ## Send different type of transactions:
 
-## Legacy transaction
+### Legacy transaction
 
 In Ethereum, a "legacy transaction" typically refers to the traditional transactions, where gas fees are set explicitly by the sender and can fluctuate based on network demand. These legacy transactions were prevalent on the Ethereum network before the implementation of Ethereum Improvement Proposal (EIP) 1559.
 
@@ -451,7 +451,7 @@ async function test() {
 })();
 ```
 
-## EIP-1559
+### EIP-1559
 Ethereum Improvement Proposal 1559 is a significant upgrade to the Ethereum network's fee market and transaction pricing mechanism. It was implemented as part of the Ethereum London hard fork, which occurred in August 2021. EIP-1559 introduces several changes to how transaction fees work on the Ethereum blockchain, with the primary goals of improving user experience and network efficiency.
 
 Here are some of the key features and changes introduced by EIP-1559:
@@ -518,7 +518,7 @@ async function test() {
 })();
 ```
 
-## EIP-2930
+### EIP-2930
 
 Ethereum Improvement Proposal 2930 is a proposal for a change to the Ethereum network that was implemented as part of the Berlin hard fork, which was activated in April 2021. EIP-2930 introduces a feature called "Transaction Type and Access List." This improvement enhances the gas efficiency of certain smart contract interactions and provides more flexibility in specifying who can access specific resources within a smart contract. Here are the key components of EIP-2930:
 
