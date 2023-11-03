@@ -29,13 +29,15 @@ import { Iban } from 'web3-eth-iban';
 import { Personal } from 'web3-eth-personal';
 import { Net } from 'web3-net';
 import * as utils from 'web3-utils';
-import { isNullish } from 'web3-utils';
+import { isNullish, isDataFormat, isContractInitOptions } from 'web3-utils';
 import {
 	Address,
 	ContractAbi,
 	ContractInitOptions,
 	EthExecutionAPI,
 	SupportedProviders,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT
 } from 'web3-types';
 import { InvalidMethodParamsError } from 'web3-errors';
 import abi from './abi.js';
@@ -117,37 +119,43 @@ export class Web3<
 
 		class ContractBuilder<Abi extends ContractAbi> extends Contract<Abi> {
 			public constructor(jsonInterface: Abi);
-			public constructor(jsonInterface: Abi, address: Address);
-			public constructor(jsonInterface: Abi, options: ContractInitOptions);
-			public constructor(jsonInterface: Abi, address: Address, options: ContractInitOptions);
+			public constructor(jsonInterface: Abi,
+				addressOrOptionsOrContext?: Address | ContractInitOptions | Web3Context,
+				);
 			public constructor(
 				jsonInterface: Abi,
-				addressOrOptions?: Address | ContractInitOptions,
-				options?: ContractInitOptions,
-			) {
-				if (typeof addressOrOptions === 'object' && typeof options === 'object') {
+				addressOrOptionsOrContext?: Address | ContractInitOptions | Web3Context,
+				optionsOrContextOrReturnFormat?: ContractInitOptions | Web3Context | DataFormat,
+			);
+			public constructor(jsonInterface: Abi,
+				addressOrOptionsOrContext?: Address | ContractInitOptions,
+				optionsOrContextOrReturnFormat?: ContractInitOptions,
+				contextOrReturnFormat?: Web3Context | DataFormat,
+				);
+			public constructor(jsonInterface: Abi,
+				addressOrOptionsOrContext?: Address | ContractInitOptions,
+				optionsOrContextOrReturnFormat?: ContractInitOptions,
+				contextOrReturnFormat?: Web3Context | DataFormat,
+				);
+			public constructor(jsonInterface: Abi,
+				addressOrOptionsOrContext?: Address | ContractInitOptions,
+				optionsOrContextOrReturnFormat?: ContractInitOptions,
+				contextOrReturnFormat?: Web3Context | DataFormat,
+				returnFormat?: DataFormat
+				)
+				  {
+				if (isContractInitOptions(addressOrOptionsOrContext) && isContractInitOptions(optionsOrContextOrReturnFormat)) {
 					throw new InvalidMethodParamsError(
 						'Should not provide options at both 2nd and 3rd parameters',
 					);
 				}
-				if (isNullish(addressOrOptions)) {
-					super(jsonInterface, options, self.getContextObject() as Web3ContextObject);
-				} else if (typeof addressOrOptions === 'object') {
-					super(
-						jsonInterface,
-						addressOrOptions,
-						self.getContextObject() as Web3ContextObject,
-					);
-				} else if (typeof addressOrOptions === 'string') {
-					super(
-						jsonInterface,
-						addressOrOptions,
-						options ?? {},
-						self.getContextObject() as Web3ContextObject, 
-					);
-				} else {
-					throw new InvalidMethodParamsError();
-				}
+
+				const address = typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined; 
+				const options = isContractInitOptions(addressOrOptionsOrContext) ? addressOrOptionsOrContext : isContractInitOptions(optionsOrContextOrReturnFormat) ? optionsOrContextOrReturnFormat : {};
+				const context = addressOrOptionsOrContext instanceof Web3Context ? addressOrOptionsOrContext : optionsOrContextOrReturnFormat instanceof Web3Context ? optionsOrContextOrReturnFormat : contextOrReturnFormat instanceof Web3Context ? contextOrReturnFormat: self.getContextObject() as Web3ContextObject; 
+				const dataFormat = returnFormat ?? isDataFormat(optionsOrContextOrReturnFormat) ? optionsOrContextOrReturnFormat as DataFormat : isDataFormat(contextOrReturnFormat) ? contextOrReturnFormat: DEFAULT_RETURN_FORMAT;
+				
+				super(jsonInterface,address, options, context, dataFormat)
 
 				super.subscribeToContextEvents(self);
 			}

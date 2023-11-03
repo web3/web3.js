@@ -28,6 +28,7 @@ describe('web3config web3 tests', () => {
             const web3 = new Web3(context);
             expect(web3.getContextObject().config.defaultTransactionType).toBe("0x0");
             expect(web3.config.defaultTransactionType).toBe("0x0");
+            expect(web3.eth.getContextObject().config.defaultTransactionType).toBe("0x0")
         });
     
         it('should be able to create web3 and setconfig for contracts', async () => {
@@ -35,11 +36,19 @@ describe('web3config web3 tests', () => {
             web3.setConfig({defaultTransactionType: "0x0"});
             expect(web3.getContextObject().config.defaultTransactionType).toBe("0x0");
             expect(web3.config.defaultTransactionType).toBe("0x0");
+            expect(web3.eth.getContextObject().config.defaultTransactionType).toBe("0x0")
     
-            web3.setConfig({contractDataInputFill:"both"});
             const contract = new web3.eth.Contract([], "");
-            expect(contract.config.contractDataInputFill).toBe("both")
+            expect(contract.config.defaultTransactionType).toBe("0x0")
+            expect(contract.getContextObject().config.defaultTransactionType).toBe("0x0");
+
+            contract.setConfig({contractDataInputFill:"both"});
             expect(contract.getContextObject().config.contractDataInputFill).toBe("both");
+
+            // web3 config shouldn't change
+            expect(web3.getContextObject().config.contractDataInputFill).toBe("input");
+            expect(web3.config.contractDataInputFill).toBe("input");
+            expect(web3.eth.getContextObject().config.contractDataInputFill).toBe("input")
         });
         it('should change web3 config context but not contract config context', async () => {
             const web3 = new Web3("http://127.0.0.1:8545");
@@ -70,6 +79,58 @@ describe('web3config web3 tests', () => {
             expect(c1.config.contractDataInputFill).toBe("data")
             expect(c2.config.contractDataInputFill).toBe("input");
             expect(c3.config.contractDataInputFill).toBe("input");
+
+        });
+
+        it('should create a contract with context properly', () => {
+            const web3 = new Web3('http://127.0.0.1:8545');
+            web3.setConfig({ contractDataInputFill: "data" });
+
+            // create contract with context in second param
+            const c1 = new web3.eth.Contract([], new Web3Context({config: {contractDataInputFill: "input"}}))
+
+            // create contract with context in third param
+            const c2 = new web3.eth.Contract([], "", new Web3Context({config: {contractDataInputFill: "both"}}))
+
+            // create contract with context in fourth param
+            const c3 = new web3.eth.Contract([], "", {gas: "gas"}, new Web3Context({config: {contractDataInputFill: "both"}}))
+
+            expect(c1.config.contractDataInputFill).toBe("input")
+            expect(c1.getContextObject().config.contractDataInputFill).toBe("input");
+
+            expect(c2.config.contractDataInputFill).toBe("both")
+            expect(c2.getContextObject().config.contractDataInputFill).toBe("both");
+
+            expect(c3.config.contractDataInputFill).toBe("both")
+            expect(c3.getContextObject().config.contractDataInputFill).toBe("both");
+        })
+
+        it('should create two contracts with different configs', () => {
+            const web3 = new Web3('http://127.0.0.1:8545');
+            web3.setConfig({ contractDataInputFill: "data" });
+
+            const c1 = new web3.eth.Contract([], '')
+
+            const c2 = new web3.eth.Contract([], new Web3Context({config: {contractDataInputFill: "input"}}))
+            
+            const c3 = new web3.eth.Contract([], {dataInputFill: "input"})
+
+            expect(web3.config.contractDataInputFill).toBe("data")
+            expect(c1.config.contractDataInputFill).toBe("data")
+            expect(c2.config.contractDataInputFill).toBe("input");
+            expect(c3.config.contractDataInputFill).toBe("input");
+
+        });
+
+        it('should populate dataInputFill properly', () => {
+            const web3 = new Web3("http://127.0.0.1:8545");
+            // create a contract with options as second parameter
+            const c1 = new web3.eth.Contract([], {dataInputFill: "both"});
+            expect((c1.config.contractDataInputFill)).toBe("both");
+
+            // create a contract with options as third parameter
+            const c2 = new web3.eth.Contract([], "", {dataInputFill: "both"});
+            expect((c2.config.contractDataInputFill)).toBe("both");
 
         });
     })
