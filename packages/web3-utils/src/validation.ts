@@ -172,7 +172,7 @@ export const compareBlockNumbers = (blockA: BlockNumberOrTag, blockB: BlockNumbe
 
 export const isContractInitOptions = (options: unknown): options is ContractInitOptions =>
 	typeof options === 'object' &&
-	!isNullish(options) &&
+	!isNullishValidator(options) &&
 	Object.keys(options).length !== 0 &&
 	[
 		'input',

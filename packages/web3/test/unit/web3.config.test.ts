@@ -82,7 +82,7 @@ describe('web3config web3 tests', () => {
 
         });
 
-        it('should create a contract with context properly', () => {
+        it('should create a contract with context properly with different parameters', () => {
             const web3 = new Web3('http://127.0.0.1:8545');
             web3.setConfig({ contractDataInputFill: "data" });
 
@@ -105,7 +105,7 @@ describe('web3config web3 tests', () => {
             expect(c3.getContextObject().config.contractDataInputFill).toBe("both");
         })
 
-        it('should create two contracts with different configs', () => {
+        it('should create contracts with different ways to configure', () => {
             const web3 = new Web3('http://127.0.0.1:8545');
             web3.setConfig({ contractDataInputFill: "data" });
 

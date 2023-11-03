@@ -149,14 +149,41 @@ export class Web3<
 						'Should not provide options at both 2nd and 3rd parameters',
 					);
 				}
+				let address: string | undefined;
+				let options: object = {};
+				let context: Web3ContextObject;
+				let dataFormat: DataFormat = DEFAULT_RETURN_FORMAT;
 
-				const address = typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined; 
-				const options = isContractInitOptions(addressOrOptionsOrContext) ? addressOrOptionsOrContext : isContractInitOptions(optionsOrContextOrReturnFormat) ? optionsOrContextOrReturnFormat : {};
-				const context = addressOrOptionsOrContext instanceof Web3Context ? addressOrOptionsOrContext : optionsOrContextOrReturnFormat instanceof Web3Context ? optionsOrContextOrReturnFormat : contextOrReturnFormat instanceof Web3Context ? contextOrReturnFormat: self.getContextObject() as Web3ContextObject; 
-				const dataFormat = returnFormat ?? isDataFormat(optionsOrContextOrReturnFormat) ? optionsOrContextOrReturnFormat as DataFormat : isDataFormat(contextOrReturnFormat) ? contextOrReturnFormat: DEFAULT_RETURN_FORMAT;
-				
+				if (typeof addressOrOptionsOrContext === 'string') {
+					address = addressOrOptionsOrContext;
+				}
+				if (isContractInitOptions(addressOrOptionsOrContext)){
+					options = addressOrOptionsOrContext as object;
+				} else if (isContractInitOptions(optionsOrContextOrReturnFormat)) {
+					options = optionsOrContextOrReturnFormat as object;
+				} else {
+					options = {}
+				}
+
+				if (addressOrOptionsOrContext instanceof Web3Context) {
+					context = addressOrOptionsOrContext;
+				} else if (optionsOrContextOrReturnFormat instanceof Web3Context) {
+					context = optionsOrContextOrReturnFormat;
+				} else if (contextOrReturnFormat instanceof Web3Context) {
+					context = contextOrReturnFormat;
+				} else {
+					context = self.getContextObject() as Web3ContextObject;
+				}
+
+				if (returnFormat){
+					dataFormat = returnFormat;
+				} else if (isDataFormat(optionsOrContextOrReturnFormat)) {
+					dataFormat = optionsOrContextOrReturnFormat as DataFormat;
+				} else if (isDataFormat(contextOrReturnFormat)) {
+					dataFormat = contextOrReturnFormat;
+				}
+
 				super(jsonInterface,address, options, context, dataFormat)
-
 				super.subscribeToContextEvents(self);
 			}
 		}
