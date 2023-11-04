@@ -23,7 +23,6 @@ import {
 	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
-// import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 
 describe('Web3 instance', () => {
 	let provider: string | SupportedProviders;
@@ -43,7 +42,11 @@ describe('Web3 instance', () => {
 		web3 = new Web3(provider);
 	});
 	afterAll(async () => {
-		await closeOpenConnection(web3);
+		try {
+			await closeOpenConnection(web3);
+		} catch (e) {
+			console.warn("Failed to close open con", e)
+		}
 	});
 
     afterEach(async () => {
