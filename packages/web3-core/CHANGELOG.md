@@ -191,7 +191,7 @@ Documentation:
 
 -   Fix the issue: "Uncaught TypeError: Class extends value undefined is not a constructor or null #6371". (#6398)
 
-## [Unreleased]
+## [4.3.1]
 
 ### Fixed
 
@@ -200,3 +200,5 @@ Documentation:
 ### Added
 
 -   Added `isMetaMaskProvider` function to check if provider is metamask (#6534)
+
+## [Unreleased]
