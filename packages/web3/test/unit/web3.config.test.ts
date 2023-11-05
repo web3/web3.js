@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ETH_DATA_FORMAT } from 'web3-types';
 import {Web3Context} from 'web3-core'; 
 import { Web3 } from '../../src';
 
@@ -103,6 +104,24 @@ describe('web3config web3 tests', () => {
 
             expect(c3.config.contractDataInputFill).toBe("both")
             expect(c3.getContextObject().config.contractDataInputFill).toBe("both");
+
+            // create contract with returnFormat in fourth param
+            new web3.eth.Contract([], "", {gas: "gas"}, ETH_DATA_FORMAT);
+            
+            // create contract with context in fourth param
+            new web3.eth.Contract([], "", {gas: "gas"}, new Web3Context({config: {contractDataInputFill: "both"}}, ETH_DATA_FORMAT))
+
+        })
+
+        it('should create a contract with returnFormat properly in different parameters', () => {
+            const web3 = new Web3('http://127.0.0.1:8545');
+            web3.setConfig({ contractDataInputFill: "data" });
+
+            // create contract with returnFormat in fourth param
+            const c1 = new web3.eth.Contract([], "", {gas: "gas"}, ETH_DATA_FORMAT)
+
+            expect(c1.config.contractDataInputFill).toBe("both")
+            expect(c1.getContextObject().config.contractDataInputFill).toBe("both");
         })
 
         it('should create contracts with different ways to configure', () => {

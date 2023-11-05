@@ -18,10 +18,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable jest/no-conditional-expect */
 
 import { InvalidBlockError } from 'web3-errors';
-import { compareBlockNumbers } from '../../src/validation';
+import { compareBlockNumbers, isContractInitOptions } from '../../src/validation';
 import {
 	compareBlockNumbersInvalidData,
 	compareBlockNumbersValidData,
+	isContractInitValidData,
+	isContractInitInvalidData
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -36,5 +38,21 @@ describe('validation', () => {
 				}
 			},
 		);
+	});
+	describe('isContractInit', () => {
+		describe('should return true', () => { 
+			it.each([...isContractInitValidData])(
+				'%s', (input) => {
+					expect(isContractInitOptions(input)).toBe(true);
+				}
+			)
+		});
+		describe('should return false', () => { 
+			it.each([...isContractInitInvalidData])(
+				'%s', (input) => {
+					expect(isContractInitOptions(input)).toBe(false);
+				}
+			)
+		});
 	});
 });
