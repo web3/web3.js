@@ -154,6 +154,11 @@ export class Web3<
 				let context: Web3ContextObject;
 				let dataFormat: DataFormat = DEFAULT_RETURN_FORMAT;
 
+				// add validation so its not a breaking change
+				if (!isNullish(addressOrOptionsOrContext) && typeof addressOrOptionsOrContext !== 'object' && typeof addressOrOptionsOrContext !== 'string') {
+					throw new InvalidMethodParamsError();
+				}
+
 				if (typeof addressOrOptionsOrContext === 'string') {
 					address = addressOrOptionsOrContext;
 				}
