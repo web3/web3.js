@@ -83,7 +83,7 @@ describe('web3config web3 tests', () => {
 
         });
 
-        it('should create a contract with context properly with different parameters', () => {
+        it('should create a contract with context and returnFormat properly with different parameters', () => {
             const web3 = new Web3('http://127.0.0.1:8545');
             web3.setConfig({ contractDataInputFill: "data" });
 
@@ -109,24 +109,13 @@ describe('web3config web3 tests', () => {
             const c4 = new web3.eth.Contract([], "", {gas: "gas"}, ETH_DATA_FORMAT);
             
             // create contract with returnFormat in fifth param
-            const c5 = new web3.eth.Contract([], "", {gas: "gas"}, new Web3Context({config: {contractDataInputFill: "data"}}, ETH_DATA_FORMAT))
+            const c5 = new web3.eth.Contract([], "", {gas: "gas"}, new Web3Context({config: {contractDataInputFill: "data"}}), ETH_DATA_FORMAT)
 
             expect(c4.config.contractDataInputFill).toBe("data")
             expect(c4.getContextObject().config.contractDataInputFill).toBe("data");
 
             expect(c5.config.contractDataInputFill).toBe("data")
             expect(c5.getContextObject().config.contractDataInputFill).toBe("data");
-        })
-
-        it('should create a contract with returnFormat properly in different parameters', () => {
-            const web3 = new Web3('http://127.0.0.1:8545');
-            web3.setConfig({ contractDataInputFill: "data" });
-
-            // create contract with returnFormat in fourth param
-            const c1 = new web3.eth.Contract([], "", {gas: "gas"}, ETH_DATA_FORMAT)
-
-            expect(c1.config.contractDataInputFill).toBe("both")
-            expect(c1.getContextObject().config.contractDataInputFill).toBe("both");
         })
 
         it('should create contracts with different ways to configure', () => {
