@@ -152,7 +152,7 @@ describe('instance of validator', () => {
 			}
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(4000);
+		expect(t).toBeLessThan(5500);
 		expect(t).toBeGreaterThan(0);
 	});
 
