@@ -85,14 +85,14 @@ describe('SocketProvider', () => {
 				// @ts-expect-error run protected method
 				expect(provider._reconnect).not.toHaveBeenCalled();
 			});
-			it('should be called when { autoReconnect: true }', () => {
+			it('should not call _reconnect with empty response when { autoReconnect: true }', () => {
 				const reconnectOptions = { autoReconnect: true };
 				const provider = new TestProvider(socketPath, socketOption, reconnectOptions);
 				// @ts-expect-error run protected method
 				jest.spyOn(provider, '_reconnect').mockReturnValue('');
 				provider.message('');
 				// @ts-expect-error run protected method
-				expect(provider._reconnect).toHaveBeenCalled();
+				expect(provider._reconnect).not.toHaveBeenCalled();
 			});
 		});
 

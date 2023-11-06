@@ -155,7 +155,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	}
 
 	if (isNullish(populatedTransaction.value)) {
-		populatedTransaction.value = '0x';
+		populatedTransaction.value = '0x0';
 	}
 
 	if (!isNullish(populatedTransaction.data)) {

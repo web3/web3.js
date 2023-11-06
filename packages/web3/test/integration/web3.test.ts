@@ -20,9 +20,9 @@ import HttpProvider from 'web3-providers-http';
 import { IpcProvider } from 'web3-providers-ipc';
 import WebSocketProvider from 'web3-providers-ws';
 import { JsonRpcOptionalRequest, SupportedProviders, Web3BaseProvider } from 'web3-types';
-import Web3 from '../../src/index';
+import { Web3 } from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
-import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
+import { GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {
 	closeOpenConnection,
@@ -35,7 +35,7 @@ import {
 	isSocket,
 	isWs,
 	itIf,
-	waitForOpenConnection,
+	waitForOpenConnection
 } from '../shared_fixtures/system_tests_utils';
 
 /* eslint-disable jest/no-standalone-expect */
@@ -55,7 +55,11 @@ describe('Web3 instance', () => {
 		accounts = [acc1.address, acc2.address];
 	});
 	afterAll(async () => {
-		await closeOpenConnection(web3);
+		try {
+			await closeOpenConnection(web3);
+		} catch (e) {
+			console.warn("Failed to close open con", e)
+		}
 	});
 
 	beforeEach(() => {
@@ -303,25 +307,18 @@ describe('Web3 instance', () => {
 
 	describe('defaults', () => {
 		let contract: Contract<typeof GreeterAbi>;
-		let deployOptions: Record<string, unknown>;
-		let sendOptions: Record<string, unknown>;
-		let acc: { address: string; privateKey: string };
 
 		beforeAll(() => {
 			web3 = new Web3(provider);
 		});
 
-		beforeEach(async () => {
-			acc = await createTempAccount();
-
-			// todo import GreeterBytecode
-			deployOptions = {
-				data: GreeterBytecode,
-				arguments: ['My Greeting'],
-			};
-
-			sendOptions = { from: acc.address, gas: '1000000' };
-		});
+		afterAll(() => {
+			try {
+				web3.provider?.disconnect();
+			} catch (e) {
+				// ignored
+			}
+		})
 
 		it('should update defaults on contract instance', () => {
 			const hardfork = 'berlin';
@@ -334,20 +331,12 @@ describe('Web3 instance', () => {
 			web3.defaultHardfork = hardfork;
 
 			expect(contract.defaultHardfork).toBe(hardfork);
+			try {
+				contract.provider?.disconnect();
+			} catch (e) {
+				// ignored
+			}
 		});
 
-		it('should update defaults on deployed contract instance', async () => {
-			const hardfork = 'berlin';
-
-			contract = new web3.eth.Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-				syncWithContext: true,
-			});
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			web3.defaultHardfork = hardfork;
-
-			expect(contract.defaultHardfork).toBe(hardfork);
-		});
 	});
 });

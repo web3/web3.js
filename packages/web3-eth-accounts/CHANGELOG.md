@@ -137,12 +137,16 @@ Documentation:
 -   Fixed "The `r` and `s` returned by `sign` to does not always consist of 64 characters" (#6411)
 
 
-## [Unreleased]
+## [4.1.0]
 
 ### Added
 
 -   Added public function `privateKeyToPublicKey`
+-   Added exporting `BaseTransaction` from the package (#6493)
+-   Added exporting `txUtils` from the package (#6493)
 
 ### Fixed
 
 -   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344) 
+
+## [Unreleased]

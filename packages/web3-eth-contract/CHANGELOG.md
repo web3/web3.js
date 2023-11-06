@@ -308,8 +308,22 @@ Documentation:
 -   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377)
 
 
-## [Unreleased]
+## [4.1.1]
 
 ### Changed
 
 -   The `events` property was added to the `receipt` object (#6410)
+
+## [4.1.2]
+
+### Changed
+
+-   Dependencies updated
+
+## [4.1.3]
+
+### Fixed
+
+-	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
+
+## [Unreleased]

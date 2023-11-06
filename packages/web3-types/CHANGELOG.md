@@ -164,8 +164,17 @@ Documentation:
 -   add `asEIP1193Provider` to `Web3BaseProvider` so every inherited class can have the returned value of `request` method, fully compatible with EIP-1193. (#6407)
 
 
-## [Unreleased]
+## [1.3.0]
 
 ### Added
 
 -   Interface `EventLog` was added. (#6410)
+
+## [1.3.1]
+
+### Added
+
+-   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
+-   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
+
+## [Unreleased]
