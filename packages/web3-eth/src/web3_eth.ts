@@ -95,7 +95,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		super({
 			...(providerOrContext as Web3ContextInitOptions),
 			registeredSubscriptions,
-		});
+		});		
 	}
 
 	/**

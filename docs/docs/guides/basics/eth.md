@@ -3,6 +3,9 @@ sidebar_position: 2
 sidebar_label: 'Eth Package Usage Example'
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Getting Started with `eth` Package
 
 ## Introduction
@@ -59,9 +62,12 @@ First, install the `web3` package using npm:
 npm i web3
 ```
 
-Note that we are installing the latest version of 4.x, at the time of this tutorial writing. You can check the latest version at https://www.npmjs.com/package/web3?activeTab=versions
-
 Next, create a new file called `index.ts` in your project directory and add the following code to it:
+
+<Tabs groupId="prog-lang" queryString>
+
+<TabItem value="javascript" label="JavaScript"
+attributes={{className: "javascript-tab"}}>
 
 ```javascript
 const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
@@ -80,6 +86,31 @@ web3.eth
 	});
 ```
 
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default 
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+
+// Set up a connection to the Ganache network
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+
+// Log the current block number to the console
+web3.eth
+	.getBlockNumber()
+	.then(result => {
+		console.log('Current block number: ' + result);
+	})
+	.catch(error => {
+		console.error(error);
+	});
+```
+
+  </TabItem>
+</Tabs>
+
 This code sets up a connection to the Ganache network and logs the current block number to the console.
 
 Run the following command to test the connection:
@@ -97,7 +128,12 @@ In this step, we will use web3.js to interact with the Ganache network.
 In the first example, we are going to send a simple value transaction.
 Create a file named `transaction.ts` and fill it with the following code:
 
-```typescript
+<Tabs groupId="prog-lang" queryString>
+
+<TabItem value="javascript" label="JavaScript"
+attributes={{className: "javascript-tab"}}>
+
+```javascript
 const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
 const fs = require('fs');
 const path = require('path');
@@ -122,7 +158,9 @@ async function interact() {
 	const transaction = {
 		from: accounts[0],
 		to: accounts[1],
-		value: web3.utils.toWei('1', 'ether'), // value should be passed in wei. For easier use and to avoid mistakes we utilize the auxiliary `toWei` function.
+		// value should be passed in wei. For easier use and to avoid mistakes,
+		//	we utilize the auxiliary `toWei` function:
+		value: web3.utils.toWei('1', 'ether'),
 	};
 
 	//send the actual transaction
@@ -144,6 +182,64 @@ async function interact() {
 	await interact();
 })();
 ```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default 
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+import fs from 'fs';
+import path from 'path';
+
+// Set up a connection to the Ethereum network
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+web3.eth.Contract.handleRevert = true;
+
+async function interact() {
+	//fetch all the available accounts
+	const accounts = await web3.eth.getAccounts();
+	console.log(accounts);
+
+	let balance1, balance2;
+	//The initial balances of the accounts should be 100 Eth (10^18 wei)
+	balance1 = await web3.eth.getBalance(accounts[0]);
+	balance2 = await web3.eth.getBalance(accounts[1]);
+
+	console.log(balance1, balance2);
+
+	//create a transaction sending 1 Ether from account 0 to account 1
+	const transaction = {
+		from: accounts[0],
+		to: accounts[1],
+		// value should be passed in wei. For easier use and to avoid mistakes,
+		//	we utilize the auxiliary `toWei` function:
+		value: web3.utils.toWei('1', 'ether'),
+	};
+
+	//send the actual transaction
+	const transactionHash = await web3.eth.sendTransaction(transaction);
+	console.log('transactionHash', transactionHash);
+
+	balance1 = await web3.eth.getBalance(accounts[0]);
+	balance2 = await web3.eth.getBalance(accounts[1]);
+
+	// see the updated balances
+	console.log(balance1, balance2);
+
+	// irrelevant with the actual transaction, just to know the gasPrice
+	const gasPrice = await web3.eth.getGasPrice();
+	console.log(gasPrice);
+}
+
+(async () => {
+	await interact();
+})();
+```
+
+  </TabItem>
+</Tabs>
 
 :::note
 📝 When running a local development blockchain using Ganache, all accounts are typically unlocked by default, allowing easy access and transaction execution during development and testing. This means that the accounts are accessible without requiring a private key or passphrase. That's why we just indicate the accounts in the examples with the `from` field.
@@ -200,8 +296,13 @@ transactionHash {
 
 In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding tutotial). Create a file named `estimate.ts` and fill it with the following code:
 
-```typescript
-import Web3, { ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from 'web3';
+<Tabs groupId="prog-lang" queryString>
+
+<TabItem value="javascript" label="JavaScript"
+attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3, ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } = require('web3');
 
 async function estimate() {
 	// abi of our contract
@@ -264,6 +365,78 @@ async function estimate() {
 })();
 ```
 
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default 
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3, ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from 'web3';
+
+async function estimate() {
+	// abi of our contract
+	const abi = [
+		{
+			inputs: [{ internalType: 'uint256', name: '_myNumber', type: 'uint256' }],
+			stateMutability: 'nonpayable',
+			type: 'constructor',
+		},
+		{
+			inputs: [],
+			name: 'myNumber',
+			outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [{ internalType: 'uint256', name: '_myNumber', type: 'uint256' }],
+			name: 'setMyNumber',
+			outputs: [],
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+	];
+
+	const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+
+	//get the available accounts
+	const accounts = await web3.eth.getAccounts();
+	let acc = await accounts[0];
+
+	let contract = new web3.eth.Contract(abi, undefined);
+
+	const deployment = contract.deploy({
+		data: '0x608060405234801561001057600080fd5b506040516101d93803806101d983398181016040528101906100329190610054565b806000819055505061009e565b60008151905061004e81610087565b92915050565b60006020828403121561006657600080fd5b60006100748482850161003f565b91505092915050565b6000819050919050565b6100908161007d565b811461009b57600080fd5b50565b61012c806100ad6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806323fd0e401460375780636ffd773c146051575b600080fd5b603d6069565b6040516048919060bf565b60405180910390f35b6067600480360381019060639190608c565b606f565b005b60005481565b8060008190555050565b60008135905060868160e2565b92915050565b600060208284031215609d57600080fd5b600060a9848285016079565b91505092915050565b60b98160d8565b82525050565b600060208201905060d2600083018460b2565b92915050565b6000819050919050565b60e98160d8565b811460f357600080fd5b5056fea2646970667358221220d28cf161457f7936995800eb9896635a02a559a0561bff6a09a40bfb81cd056564736f6c63430008000033',
+		// @ts-expect-error
+		arguments: [1],
+	});
+	estimatedGas = await deployment.estimateGas(
+		{
+			from: acc,
+		},
+		DEFAULT_RETURN_FORMAT, // the returned data will be formatted as a bigint
+	);
+
+	console.log(estimatedGas);
+
+	let estimatedGas = await deployment.estimateGas(
+		{
+			from: acc,
+		},
+		ETH_DATA_FORMAT, // the returned data will be formatted as a hexstring
+	);
+
+	console.log(estimatedGas);
+}
+
+(async () => {
+	await estimate();
+})();
+```
+
+  </TabItem>
+</Tabs>
+
 Run the following:
 
 ```
@@ -282,8 +455,13 @@ If everything is working correctly, you should see something like the following:
 
 In the next example we are going to sign a transaction and use `sendSignedTransaction` to send the signed transaction. Create a file named `sendSigned.ts` and fill it with the following code:
 
-```typescript
-import Web3 from 'web3';
+<Tabs groupId="prog-lang" queryString>
+
+<TabItem value="javascript" label="JavaScript"
+attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3 } = require('web3');
 const web3 = new Web3('http://localhost:7545');
 
 // make sure to copy the private key from ganache
@@ -317,6 +495,49 @@ async function sendSigned() {
 })();
 ```
 
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default 
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+import { Web3 } from 'web3';
+const web3 = new Web3('http://localhost:7545');
+
+//make sure to copy the private key from ganache
+const privateKey = '0x0fed6f64e01bc9fac9587b6e7245fd9d056c3c004ad546a17d3d029977f0930a';
+const value = web3.utils.toWei('1', 'ether');
+
+async function sendSigned() {
+	const accounts = await web3.eth.getAccounts();
+	const fromAddress = accounts[0];
+	const toAddress = accounts[1];
+	// Create a new transaction object
+	const tx = {
+		from: fromAddress,
+		to: toAddress,
+		value: value,
+		gas: 21000,
+		gasPrice: web3.utils.toWei('10', 'gwei'),
+		nonce: await web3.eth.getTransactionCount(fromAddress),
+	};
+
+	// Sign the transaction with the private key
+	const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+
+	// Send the signed transaction to the network
+	const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+	console.log('Transaction receipt:', receipt);
+}
+(async () => {
+	await sendSigned();
+})();
+```
+
+  </TabItem>
+</Tabs>
+
 Run the following:
 
 ```
@@ -344,26 +565,28 @@ Transaction receipt: {
 ```
 
 ## Importing specific package
+
 To harness the capabilities of the web3-eth package, you can opt to import this package directly rather than depending on the global web3 package, which will result in a reduction in the build size.
 
 ### Import web3-eth directly
+
 For example [getBalance](/api/web3-eth/function/getBalance) method:
+
 ```typescript
 import Web3Eth from 'web3-eth';
 
 const eth = new Web3Eth('http://localhost:7545');
 
 async function test() {
-    const accounts = await eth.getAccounts();
-    const currentBalance = await eth.getBalance(accounts[0]);
-    console.log('Current balance:', currentBalance); 
-    // 115792089237316195423570985008687907853269984665640564039437613106102441895127n
+	const accounts = await eth.getAccounts();
+	const currentBalance = await eth.getBalance(accounts[0]);
+	console.log('Current balance:', currentBalance);
+	// 115792089237316195423570985008687907853269984665640564039437613106102441895127n
 }
 
 (async () => {
-    await test();
+	await test();
 })();
-
 ```
 
 ### Set config directly to web3-eth package
@@ -373,16 +596,14 @@ import Web3Eth from 'web3-eth';
 
 const eth = new Web3Eth('http://localhost:8545');
 
-console.log('defaultTransactionType before', eth.config.defaultTransactionType) 
+console.log('defaultTransactionType before', eth.config.defaultTransactionType);
 // defaultTransactionType before 0x0
 
-eth.setConfig({ defaultTransactionType: '0x1' })
+eth.setConfig({ defaultTransactionType: '0x1' });
 
-console.log('eth.config.defaultTransactionType after', eth.config.defaultTransactionType) 
+console.log('eth.config.defaultTransactionType after', eth.config.defaultTransactionType);
 // defaultTransactionType before 0x1
-
 ```
-
 
 ## Send different type of transactions:
 
@@ -411,43 +632,43 @@ import Web3 from 'web3';
 const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-    const privateKey = 'YOUR PRIVATE KEY HERE';
-    // add private key to wallet to have auto-signing transactions feature
-    const account = web3.eth.accounts.privateKeyToAccount(privateKey)
-    web3.eth.accounts.wallet.add(account)
-    
-    // create transaction object
-    const tx = {
-        from: account.address,
-        to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-        value: '0x1',
-        gas: BigInt(21000),
-        gasPrice: await web3.eth.getGasPrice(),
-        type: BigInt(0) // <- specify type
-    }
-    
-    // send transaction
-    const receipt = await web3.eth.sendTransaction(tx);
-    
-    console.log('Receipt:', receipt);
-    // Receipt: {
-    //   blockHash: '0xc0f2fea359233b0843fb53255b8a7f42aa7b1aff53da7cbe78c45b5bac187ad4',
-    //   blockNumber: 21n,
-    //   cumulativeGasUsed: 21000n,
-    //   effectiveGasPrice: 2569891347n,
-    //   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
-    //   gasUsed: 21000n,
-    //   logs: [],
-    //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    //   status: 1n,
-    //   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-    //   transactionHash: '0x0ffe880776f5631e4b64caf521bd01cd816dd2cc29e533bc56f392211856cf9a',
-    //   transactionIndex: 0n,
-    //   type: 0n
-    // }
+	const privateKey = 'YOUR PRIVATE KEY HERE';
+	// add private key to wallet to have auto-signing transactions feature
+	const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+	web3.eth.accounts.wallet.add(account);
+
+	// create transaction object
+	const tx = {
+		from: account.address,
+		to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+		value: '0x1',
+		gas: BigInt(21000),
+		gasPrice: await web3.eth.getGasPrice(),
+		type: BigInt(0), // <- specify type
+	};
+
+	// send transaction
+	const receipt = await web3.eth.sendTransaction(tx);
+
+	console.log('Receipt:', receipt);
+	// Receipt: {
+	//   blockHash: '0xc0f2fea359233b0843fb53255b8a7f42aa7b1aff53da7cbe78c45b5bac187ad4',
+	//   blockNumber: 21n,
+	//   cumulativeGasUsed: 21000n,
+	//   effectiveGasPrice: 2569891347n,
+	//   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
+	//   gasUsed: 21000n,
+	//   logs: [],
+	//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+	//   status: 1n,
+	//   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+	//   transactionHash: '0x0ffe880776f5631e4b64caf521bd01cd816dd2cc29e533bc56f392211856cf9a',
+	//   transactionIndex: 0n,
+	//   type: 0n
+	// }
 }
 (async () => {
-    await test();
+	await test();
 })();
 ```
 
@@ -472,128 +693,129 @@ import Web3 from 'web3';
 const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-    const privateKey = 'YOUR PRIVATE KEY HERE';
-    // add private key to wallet to have auto-signing transactions feature
-    const account = web3.eth.accounts.privateKeyToAccount(privateKey)
-    web3.eth.accounts.wallet.add(account)
+	const privateKey = 'YOUR PRIVATE KEY HERE';
+	// add private key to wallet to have auto-signing transactions feature
+	const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+	web3.eth.accounts.wallet.add(account);
 
-    // create transaction object
-    const tx = {
-        from: account.address,
-        to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-        value: '0x1',
-        gasLimit: BigInt(21000),
-        type: BigInt(1) // <- specify type
-        // gasPrice - you can specify this property directly or web3js will fill this field automatically
-    }
+	// create transaction object
+	const tx = {
+		from: account.address,
+		to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+		value: '0x1',
+		gasLimit: BigInt(21000),
+		type: BigInt(1), // <- specify type
+		// gasPrice - you can specify this property directly or web3js will fill this field automatically
+	};
 
-    // send transaction
-    const receipt = await web3.eth.sendTransaction(tx);
+	// send transaction
+	const receipt = await web3.eth.sendTransaction(tx);
 
-    console.log('Receipt:', receipt);
-    // Receipt: {
-    //   blockHash: '0xd8f6a3638112d17b476fd1b7c4369d473bc1a484408b6f39dbf64410df44adf6',
-    //   blockNumber: 24n,
-    //   cumulativeGasUsed: 21000n,
-    //   effectiveGasPrice: 2546893579n,
-    //   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
-    //   gasUsed: 21000n,
-    //   logs: [],
-    //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    //   status: 1n,
-    //   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-    //   transactionHash: '0xd1d682b6f6467897db5b8f0a99a6be2fb788d32fbc1329b568b8f6b2c15e809a',
-    //   transactionIndex: 0n,
-    //   type: 1n
-    // }
+	console.log('Receipt:', receipt);
+	// Receipt: {
+	//   blockHash: '0xd8f6a3638112d17b476fd1b7c4369d473bc1a484408b6f39dbf64410df44adf6',
+	//   blockNumber: 24n,
+	//   cumulativeGasUsed: 21000n,
+	//   effectiveGasPrice: 2546893579n,
+	//   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
+	//   gasUsed: 21000n,
+	//   logs: [],
+	//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+	//   status: 1n,
+	//   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+	//   transactionHash: '0xd1d682b6f6467897db5b8f0a99a6be2fb788d32fbc1329b568b8f6b2c15e809a',
+	//   transactionIndex: 0n,
+	//   type: 1n
+	// }
 }
 (async () => {
-    await test();
+	await test();
 })();
 ```
+
 Here is an example of how to use an access list in a transaction.
 
 :::note
- The code of `Greeter` contract you can find [here](https://github.com/web3/web3.js/blob/4.x/fixtures/build/Greeter.ts)
+The code of `Greeter` contract you can find [here](https://github.com/web3/web3.js/blob/4.x/fixtures/build/Greeter.ts)
 :::
 
 ```typescript
 import Web3 from 'web3';
-import {GreeterAbi, GreeterBytecode} from './fixture/Greeter';
+import { GreeterAbi, GreeterBytecode } from './fixture/Greeter';
 
 const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-    const privateKey = 'YOUR PRIVATE KEY HERE';
-    // add private key to wallet to have auto-signing transactions feature
-    const account = web3.eth.accounts.privateKeyToAccount(privateKey)
-    web3.eth.accounts.wallet.add(account)
+	const privateKey = 'YOUR PRIVATE KEY HERE';
+	// add private key to wallet to have auto-signing transactions feature
+	const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+	web3.eth.accounts.wallet.add(account);
 
-    // deploy contract
-    const contract = new web3.eth.Contract(GreeterAbi);
-    const deployedContract = await contract.deploy({
-        data: GreeterBytecode,
-        arguments: ['My Greeting'],
-    }).send({ from: account.address });
-    deployedContract.defaultAccount = account.address;
+	// deploy contract
+	const contract = new web3.eth.Contract(GreeterAbi);
+	const deployedContract = await contract
+		.deploy({
+			data: GreeterBytecode,
+			arguments: ['My Greeting'],
+		})
+		.send({ from: account.address });
+	deployedContract.defaultAccount = account.address;
 
-    const transaction = {
-        from: account.address,
-        to: deployedContract.options.address,
-        data: '0xcfae3217' // greet function call data encoded
-    };
-    const {accessList} = await web3.eth.createAccessList(transaction, 'latest');
+	const transaction = {
+		from: account.address,
+		to: deployedContract.options.address,
+		data: '0xcfae3217', // greet function call data encoded
+	};
+	const { accessList } = await web3.eth.createAccessList(transaction, 'latest');
 
-    console.log('AccessList:', accessList)
-    // AccessList: [
-    //   {
-    //     address: '0xce1f86f87bd3b8f32f0fb432f88e848f3a957ed7',
-    //     storageKeys: [
-    //       '0x0000000000000000000000000000000000000000000000000000000000000001'
-    //     ]
-    //   }
-    // ]
+	console.log('AccessList:', accessList);
+	// AccessList: [
+	//   {
+	//     address: '0xce1f86f87bd3b8f32f0fb432f88e848f3a957ed7',
+	//     storageKeys: [
+	//       '0x0000000000000000000000000000000000000000000000000000000000000001'
+	//     ]
+	//   }
+	// ]
 
-    // create transaction object with accessList
-    const tx = {
-        from: account.address,
-        to: deployedContract.options.address,
-        gasLimit: BigInt(46000),
-        type: BigInt(1), // <- specify type
-        accessList,
-        data: '0xcfae3217'
-        // gasPrice - you can specify this property directly or web3js will fill this field automatically
-    }
+	// create transaction object with accessList
+	const tx = {
+		from: account.address,
+		to: deployedContract.options.address,
+		gasLimit: BigInt(46000),
+		type: BigInt(1), // <- specify type
+		accessList,
+		data: '0xcfae3217',
+		// gasPrice - you can specify this property directly or web3js will fill this field automatically
+	};
 
-    // send transaction
-    const receipt = await web3.eth.sendTransaction(tx);
+	// send transaction
+	const receipt = await web3.eth.sendTransaction(tx);
 
-    console.log('Receipt:', receipt);
-    // Receipt: {
-    //   blockHash: '0xc7b9561100c8ff6f1cde7a05916e86b7d037b2fdba86b0870e842d1814046e4b',
-    //   blockNumber: 43n,
-    //   cumulativeGasUsed: 26795n,
-    //   effectiveGasPrice: 2504325716n,
-    //   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
-    //   gasUsed: 26795n,
-    //   logs: [],
-    //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    //   status: 1n,
-    //   to: '0xce1f86f87bd3b8f32f0fb432f88e848f3a957ed7',
-    //   transactionHash: '0xa49753be1e2bd22c2a8e2530726614c808838bb0ebbed72809bbcb34f178799a',
-    //   transactionIndex: 0n,
-    //   type: 1n
-    // }
+	console.log('Receipt:', receipt);
+	// Receipt: {
+	//   blockHash: '0xc7b9561100c8ff6f1cde7a05916e86b7d037b2fdba86b0870e842d1814046e4b',
+	//   blockNumber: 43n,
+	//   cumulativeGasUsed: 26795n,
+	//   effectiveGasPrice: 2504325716n,
+	//   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
+	//   gasUsed: 26795n,
+	//   logs: [],
+	//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+	//   status: 1n,
+	//   to: '0xce1f86f87bd3b8f32f0fb432f88e848f3a957ed7',
+	//   transactionHash: '0xa49753be1e2bd22c2a8e2530726614c808838bb0ebbed72809bbcb34f178799a',
+	//   transactionIndex: 0n,
+	//   type: 1n
+	// }
 }
 (async () => {
-    await test();
+	await test();
 })();
-
-
-
 ```
 
 ### EIP-1559 Transaction
+
 Ethereum Improvement Proposal 1559 is a significant upgrade to the Ethereum network's fee market and transaction pricing mechanism. It was implemented as part of the Ethereum London hard fork, which occurred in August 2021. EIP-1559 introduces several changes to how transaction fees work on the Ethereum blockchain, with the primary goals of improving user experience and network efficiency.
 
 Here are some of the key features and changes introduced by EIP-1559:
@@ -619,47 +841,46 @@ import Web3 from 'web3';
 const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-    const privateKey = 'YOUR PRIVATE KEY HERE';
-    // add private key to wallet to have auto-signing transactions feature
-    const account = web3.eth.accounts.privateKeyToAccount(privateKey)
-    web3.eth.accounts.wallet.add(account)
+	const privateKey = 'YOUR PRIVATE KEY HERE';
+	// add private key to wallet to have auto-signing transactions feature
+	const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+	web3.eth.accounts.wallet.add(account);
 
-    // create transaction object
-    const tx = {
-        from: account.address,
-        to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-        value: '0x1',
-        gasLimit: BigInt(21000),
-        type: BigInt(2) // <- specify type
-        // maxFeePerGas - you can specify this property directly or web3js will fill this field automatically
-        // maxPriorityFeePerGas - you can specify this property directly or web3js will fill this field automatically
-    }
+	// create transaction object
+	const tx = {
+		from: account.address,
+		to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+		value: '0x1',
+		gasLimit: BigInt(21000),
+		type: BigInt(2), // <- specify type
+		// maxFeePerGas - you can specify this property directly or web3js will fill this field automatically
+		// maxPriorityFeePerGas - you can specify this property directly or web3js will fill this field automatically
+	};
 
-    // send transaction
-    const receipt = await web3.eth.sendTransaction(tx);
+	// send transaction
+	const receipt = await web3.eth.sendTransaction(tx);
 
-    console.log('Receipt:', receipt);
-    // Receipt: {
-    //   blockHash: '0xfe472084d1471720b6887071d32a793f7c4576a489098e7d2a89aef205c977fb',
-    //   blockNumber: 23n,
-    //   cumulativeGasUsed: 21000n,
-    //   effectiveGasPrice: 2546893579n,
-    //   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
-    //   gasUsed: 21000n,
-    //   logs: [],
-    //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    //   status: 1n,
-    //   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-    //   transactionHash: '0x5c7a3d2965b426a5776e55f049ee379add44652322fb0b9fc2f7f57b38fafa2a',
-    //   transactionIndex: 0n,
-    //   type: 2n
-    // }
+	console.log('Receipt:', receipt);
+	// Receipt: {
+	//   blockHash: '0xfe472084d1471720b6887071d32a793f7c4576a489098e7d2a89aef205c977fb',
+	//   blockNumber: 23n,
+	//   cumulativeGasUsed: 21000n,
+	//   effectiveGasPrice: 2546893579n,
+	//   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
+	//   gasUsed: 21000n,
+	//   logs: [],
+	//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+	//   status: 1n,
+	//   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+	//   transactionHash: '0x5c7a3d2965b426a5776e55f049ee379add44652322fb0b9fc2f7f57b38fafa2a',
+	//   transactionIndex: 0n,
+	//   type: 2n
+	// }
 }
 (async () => {
-    await test();
+	await test();
 })();
 ```
-
 
 ## Package methods
 

@@ -25,10 +25,9 @@ import {
 	Address,
 	NonPayableCallOptions,
 	PayableCallOptions,
-	ContractInitOptions,
 	ContractOptions,
 } from 'web3-types';
-import { isNullish, mergeDeep } from 'web3-utils';
+import { isNullish, mergeDeep, isContractInitOptions } from 'web3-utils';
 import { encodeMethodABI } from './encoding.js';
 import { Web3ContractContext } from './types.js';
 
@@ -165,24 +164,11 @@ export const getEstimateGasParams = ({
 	return txParams as TransactionWithSenderAPI;
 };
 
-export const isContractInitOptions = (options: unknown): options is ContractInitOptions =>
-	typeof options === 'object' &&
-	!isNullish(options) &&
-	[
-		'input',
-		'data',
-		'from',
-		'gas',
-		'gasPrice',
-		'gasLimit',
-		'address',
-		'jsonInterface',
-		'syncWithContext',
-		'dataInputFill',
-	].some(key => key in options);
+export { isContractInitOptions } from 'web3-utils';
 
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
-	typeof options === 'object' && !isNullish(options) && !isContractInitOptions(options);
+	typeof options === 'object' && !isNullish(options) && 
+	Object.keys(options).length !== 0 && !isContractInitOptions(options);
 
 export const getCreateAccessListParams = ({
 	abi,
