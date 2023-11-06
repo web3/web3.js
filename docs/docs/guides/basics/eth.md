@@ -286,8 +286,8 @@ In the next example we are going to sign a transaction and use `sendSignedTransa
 import Web3 from 'web3';
 const web3 = new Web3('http://localhost:7545');
 
-//make sure to copy the private key from ganache
-const privateKey = '0x0fed6f64e01bc9fac9587b6e7245fd9d056c3c004ad546a17d3d029977f0930a';
+// make sure to copy the private key from ganache
+const privateKey = 'YOUR PRIVATE KEY HERE';
 const value = web3.utils.toWei('1', 'ether');
 
 async function sendSigned() {
@@ -386,7 +386,7 @@ console.log('eth.config.defaultTransactionType after', eth.config.defaultTransac
 
 ## Send different type of transactions:
 
-### Legacy transaction
+### Legacy Transaction
 
 In Ethereum, a "legacy transaction" typically refers to the traditional transactions, where gas fees are set explicitly by the sender and can fluctuate based on network demand. These legacy transactions were prevalent on the Ethereum network before the implementation of Ethereum Improvement Proposal (EIP) 1559.
 
@@ -411,7 +411,7 @@ import Web3 from 'web3';
 const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-    const privateKey = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
+    const privateKey = 'YOUR PRIVATE KEY HERE';
     // add private key to wallet to have auto-signing transactions feature
     const account = web3.eth.accounts.privateKeyToAccount(privateKey)
     web3.eth.accounts.wallet.add(account)
@@ -451,7 +451,68 @@ async function test() {
 })();
 ```
 
-### EIP-1559
+### EIP-2930 Transaction
+
+Ethereum Improvement Proposal 2930 is a proposal for a change to the Ethereum network that was implemented as part of the Berlin hard fork, which was activated in April 2021. EIP-2930 introduces a feature called "Transaction Type and Access List." This improvement enhances the gas efficiency of certain smart contract interactions and provides more flexibility in specifying who can access specific resources within a smart contract. Here are the key components of EIP-2930:
+
+1. Transaction Type: EIP-2930 introduces a new transaction type called "Access List Transaction." This transaction type is designed to make certain interactions with smart contracts more efficient by allowing the sender to specify a list of addresses that may be accessed or modified during the transaction.
+
+2. Access List: The Access List is a structured data format included with the transaction. It contains a list of addresses and storage keys that are expected to be accessed or modified during the execution of the transaction. This helps in reducing the amount of gas required for these operations, as miners can check the Access List to optimize the execution.
+
+3. Gas Savings: EIP-2930 is intended to significantly reduce the gas costs for transactions that use the Access List feature. By specifying which storage slots and addresses are relevant to the transaction, it allows for a more efficient use of gas, especially in interactions with smart contracts that have a large state.
+
+4. Contract Interactions: This improvement is particularly useful when interacting with contracts that have complex state structures, as it minimizes the gas required to read from or write to specific storage slots. This can lead to cost savings for users and make certain interactions more practical.
+
+EIP-2930 is part of Ethereum's ongoing efforts to improve the network's efficiency and reduce transaction costs, making it more accessible and scalable for decentralized applications and users. It is especially beneficial for interactions with stateful contracts that rely on specific storage operations and access control mechanisms.
+
+To send EIP-2930 transaction use code below:
+
+```typescript
+import Web3 from 'web3';
+const web3 = new Web3('http://localhost:8545');
+
+async function test() {
+    const privateKey = 'YOUR PRIVATE KEY HERE';
+    // add private key to wallet to have auto-signing transactions feature
+    const account = web3.eth.accounts.privateKeyToAccount(privateKey)
+    web3.eth.accounts.wallet.add(account)
+
+    // create transaction object
+    const tx = {
+        from: account.address,
+        to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+        value: '0x1',
+        gasLimit: BigInt(21000),
+        type: BigInt(1) // <- specify type
+        // gasPrice - you can specify this property directly or web3js will fill this field automatically
+    }
+
+    // send transaction
+    const receipt = await web3.eth.sendTransaction(tx);
+
+    console.log('Receipt:', receipt);
+    // Receipt: {
+    //   blockHash: '0xd8f6a3638112d17b476fd1b7c4369d473bc1a484408b6f39dbf64410df44adf6',
+    //   blockNumber: 24n,
+    //   cumulativeGasUsed: 21000n,
+    //   effectiveGasPrice: 2546893579n,
+    //   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
+    //   gasUsed: 21000n,
+    //   logs: [],
+    //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    //   status: 1n,
+    //   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+    //   transactionHash: '0xd1d682b6f6467897db5b8f0a99a6be2fb788d32fbc1329b568b8f6b2c15e809a',
+    //   transactionIndex: 0n,
+    //   type: 1n
+    // }
+}
+(async () => {
+    await test();
+})();
+```
+
+### EIP-1559 Transaction
 Ethereum Improvement Proposal 1559 is a significant upgrade to the Ethereum network's fee market and transaction pricing mechanism. It was implemented as part of the Ethereum London hard fork, which occurred in August 2021. EIP-1559 introduces several changes to how transaction fees work on the Ethereum blockchain, with the primary goals of improving user experience and network efficiency.
 
 Here are some of the key features and changes introduced by EIP-1559:
@@ -477,7 +538,7 @@ import Web3 from 'web3';
 const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-    const privateKey = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
+    const privateKey = 'YOUR PRIVATE KEY HERE';
     // add private key to wallet to have auto-signing transactions feature
     const account = web3.eth.accounts.privateKeyToAccount(privateKey)
     web3.eth.accounts.wallet.add(account)
@@ -518,66 +579,6 @@ async function test() {
 })();
 ```
 
-### EIP-2930
-
-Ethereum Improvement Proposal 2930 is a proposal for a change to the Ethereum network that was implemented as part of the Berlin hard fork, which was activated in April 2021. EIP-2930 introduces a feature called "Transaction Type and Access List." This improvement enhances the gas efficiency of certain smart contract interactions and provides more flexibility in specifying who can access specific resources within a smart contract. Here are the key components of EIP-2930:
-
-1. Transaction Type: EIP-2930 introduces a new transaction type called "Access List Transaction." This transaction type is designed to make certain interactions with smart contracts more efficient by allowing the sender to specify a list of addresses that may be accessed or modified during the transaction.
-
-2. Access List: The Access List is a structured data format included with the transaction. It contains a list of addresses and storage keys that are expected to be accessed or modified during the execution of the transaction. This helps in reducing the amount of gas required for these operations, as miners can check the Access List to optimize the execution.
-
-3. Gas Savings: EIP-2930 is intended to significantly reduce the gas costs for transactions that use the Access List feature. By specifying which storage slots and addresses are relevant to the transaction, it allows for a more efficient use of gas, especially in interactions with smart contracts that have a large state.
-
-4. Contract Interactions: This improvement is particularly useful when interacting with contracts that have complex state structures, as it minimizes the gas required to read from or write to specific storage slots. This can lead to cost savings for users and make certain interactions more practical.
-
-EIP-2930 is part of Ethereum's ongoing efforts to improve the network's efficiency and reduce transaction costs, making it more accessible and scalable for decentralized applications and users. It is especially beneficial for interactions with stateful contracts that rely on specific storage operations and access control mechanisms.
-
-To send EIP-2930 transaction use code below:
-
-```typescript
-import Web3 from 'web3';
-const web3 = new Web3('http://localhost:8545');
-
-async function test() {
-    const privateKey = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
-    // add private key to wallet to have auto-signing transactions feature
-    const account = web3.eth.accounts.privateKeyToAccount(privateKey)
-    web3.eth.accounts.wallet.add(account)
-
-    // create transaction object
-    const tx = {
-        from: account.address,
-        to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-        value: '0x1',
-        gasLimit: BigInt(21000),
-        type: BigInt(1) // <- specify type
-        // gasPrice - you can specify this property directly or web3js will fill this field automatically
-    }
-
-    // send transaction
-    const receipt = await web3.eth.sendTransaction(tx);
-
-    console.log('Receipt:', receipt);
-    // Receipt: {
-    //   blockHash: '0xd8f6a3638112d17b476fd1b7c4369d473bc1a484408b6f39dbf64410df44adf6',
-    //   blockNumber: 24n,
-    //   cumulativeGasUsed: 21000n,
-    //   effectiveGasPrice: 2546893579n,
-    //   from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e',
-    //   gasUsed: 21000n,
-    //   logs: [],
-    //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    //   status: 1n,
-    //   to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
-    //   transactionHash: '0xd1d682b6f6467897db5b8f0a99a6be2fb788d32fbc1329b568b8f6b2c15e809a',
-    //   transactionIndex: 0n,
-    //   type: 1n
-    // }
-}
-(async () => {
-    await test();
-})();
-```
 
 ## Package methods
 
