@@ -108,7 +108,7 @@ describe('web3config web3 tests', () => {
             // create contract with returnFormat in fourth param
             const c4 = new web3.eth.Contract([], "", {gas: "gas"}, ETH_DATA_FORMAT);
             
-            // create contract with context in fourth param
+            // create contract with returnFormat in fifth param
             const c5 = new web3.eth.Contract([], "", {gas: "gas"}, new Web3Context({config: {contractDataInputFill: "data"}}, ETH_DATA_FORMAT))
 
             expect(c4.config.contractDataInputFill).toBe("data")
