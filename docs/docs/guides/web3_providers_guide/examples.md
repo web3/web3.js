@@ -55,7 +55,7 @@ To connect to the Ethereum network using the HTTP provider, follow these steps:
 3. Install web3.js using npm:
 
     ```bash
-    npm install web3
+    npm i web3
     ```
 
 4. Create a new JavaScript file called `web3-http-provider.js` in your code editor.
@@ -64,8 +64,8 @@ To connect to the Ethereum network using the HTTP provider, follow these steps:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
+<TabItem value="javascript" label="JavaScript" default
+attributes={{className: "javascript-tab"}}>
 
 ```javascript
 const { Web3 } = require('web3');
@@ -76,29 +76,29 @@ const httpProvider = new Web3.providers.HttpProvider(ganacheUrl);
 const web3 = new Web3(httpProvider);
 
 async function main() {
-    try {
-        // Get the current block number from the network
-        const currentBlockNumber = await web3.eth.getBlockNumber();
-        console.log('Current block number:', currentBlockNumber);
+	try {
+		// Get the current block number from the network
+		const currentBlockNumber = await web3.eth.getBlockNumber();
+		console.log('Current block number:', currentBlockNumber);
 
-        // Get the list of accounts in the connected node (e.g., Ganache)
-        const accounts = await web3.eth.getAccounts();
+		// Get the list of accounts in the connected node (e.g., Ganache)
+		const accounts = await web3.eth.getAccounts();
 
-        // Send a transaction to the network and wait for the transaction to be mined.
-        // Note that sending a transaction with Ganache will cause it, in its default configuration, to min a new block.
-        const transactionReceipt = await web3.eth.sendTransaction({
-            from: accounts[0],
-            to: accounts[1],
-            value: web3.utils.toWei('0.001', 'ether'),
-        });
-        console.log('Transaction Receipt:', transactionReceipt);
+		// Send a transaction to the network and wait for the transaction to be mined.
+		// Note that sending a transaction with Ganache will cause it, in its default configuration, to min a new block.
+		const transactionReceipt = await web3.eth.sendTransaction({
+			from: accounts[0],
+			to: accounts[1],
+			value: web3.utils.toWei('0.001', 'ether'),
+		});
+		console.log('Transaction Receipt:', transactionReceipt);
 
-        // Get the updated block number
-        const updatedBlockNumber = await web3.eth.getBlockNumber();
-        console.log('Updated block number:', updatedBlockNumber);
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
+		// Get the updated block number
+		const updatedBlockNumber = await web3.eth.getBlockNumber();
+		console.log('Updated block number:', updatedBlockNumber);
+	} catch (error) {
+		console.error('An error occurred:', error);
+	}
 }
 
 main();
@@ -118,29 +118,29 @@ const httpProvider = new Web3.providers.HttpProvider(ganacheUrl);
 const web3 = new Web3(httpProvider);
 
 async function main() {
-    try {
-        // Get the current block number from the network
-        const currentBlockNumber = await web3.eth.getBlockNumber();
-        console.log('Current block number:', currentBlockNumber);
+	try {
+		// Get the current block number from the network
+		const currentBlockNumber = await web3.eth.getBlockNumber();
+		console.log('Current block number:', currentBlockNumber);
 
-        // Get the list of accounts in the connected node (e.g., Ganache)
-        const accounts = await web3.eth.getAccounts();
+		// Get the list of accounts in the connected node (e.g., Ganache)
+		const accounts = await web3.eth.getAccounts();
 
-        // Send a transaction to the network and wait for the transaction to be mined.
-        // Note that sending a transaction with Ganache will cause it, in its default configuration, to min a new block.
-        const transactionReceipt = await web3.eth.sendTransaction({
-            from: accounts[0],
-            to: accounts[1],
-            value: web3.utils.toWei('0.001', 'ether'),
-        });
-        console.log('Transaction Receipt:', transactionReceipt);
+		// Send a transaction to the network and wait for the transaction to be mined.
+		// Note that sending a transaction with Ganache will cause it, in its default configuration, to min a new block.
+		const transactionReceipt = await web3.eth.sendTransaction({
+			from: accounts[0],
+			to: accounts[1],
+			value: web3.utils.toWei('0.001', 'ether'),
+		});
+		console.log('Transaction Receipt:', transactionReceipt);
 
-        // Get the updated block number
-        const updatedBlockNumber = await web3.eth.getBlockNumber();
-        console.log('Updated block number:', updatedBlockNumber);
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
+		// Get the updated block number
+		const updatedBlockNumber = await web3.eth.getBlockNumber();
+		console.log('Updated block number:', updatedBlockNumber);
+	} catch (error) {
+		console.error('An error occurred:', error);
+	}
 }
 
 main();
@@ -185,28 +185,35 @@ Follow these steps to connect to the Ethereum network using WebSocket provider:
 The first 3 steps are the same as in the pervious section. So, you may skip them if you already executed the previous section.
 :::
 
-1. Open a command prompt or terminal window and navigate to where you would like to create the folder for this example.
-2. Create a new folder and navigate to it:
+1.  Open a command prompt or terminal window and navigate to where you would like to create the folder for this example.
+2.  Create a new folder and navigate to it:
 
     ```bash
     mkdir web3-providers-tutorial
     cd web3-providers-tutorial
     ```
 
-3. Install web3.js using npm:
+3.  Install web3.js using npm:
 
-    ```bash
-     npm install web3
-    ```
+        ```bash
 
-4. Create a new JavaScript file called `web3-websocket-provider.js` in your code editor.
+    <<<<<<< HEAD
+    npm i web3
+    =======
+    npm install web3
 
-5. Copy and paste the following code into your `web3-websocket-provider.js` file and save it:
+    > > > > > > > 4.x
+
+        ```
+
+4.  Create a new JavaScript file called `web3-websocket-provider.js` in your code editor.
+
+5.  Copy and paste the following code into your `web3-websocket-provider.js` file and save it:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
+<TabItem value="javascript" label="JavaScript" default
+attributes={{className: "javascript-tab"}}>
 
 ```javascript
 const { Web3 } = require('web3');
@@ -384,28 +391,35 @@ INFO [12-10|15:10:37.122] WebSocket endpoint opened		url=ws://localhost:8546
 INFO [12-10|15:10:37.127] Mapped network port		  	proto=udp extport=0 intport=30303 interface=UPnP(UDP)
 ```
 
-2. Open a command prompt or terminal window and navigate to where you would like to create the folder for this example.
-3. Create a new folder and navigate to it:
+2.  Open a command prompt or terminal window and navigate to where you would like to create the folder for this example.
+3.  Create a new folder and navigate to it:
 
     ```bash
     mkdir web3-providers-tutorial
     cd web3-providers-tutorial
     ```
 
-4. Install web3.js using npm:
+4.  Install web3.js using npm:
 
-    ```bash
+        ```bash
+
+    <<<<<<< HEAD
+    npm i web3
+    =======
     npm install web3
-    ```
 
-5. Create a new JavaScript file called `web3-ipc-provider.js` in your code editor.
+    > > > > > > > 4.x
 
-6. Copy and paste the following code into your `web3-ipc-provider.js` file and save it:
+        ```
+
+5.  Create a new JavaScript file called `web3-ipc-provider.js` in your code editor.
+
+6.  Copy and paste the following code into your `web3-ipc-provider.js` file and save it:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
+<TabItem value="javascript" label="JavaScript" default
+attributes={{className: "javascript-tab"}}>
 
 ```javascript
 const { Web3 } = require('web3');
@@ -418,26 +432,23 @@ const ipcProvider = new IpcProvider(ipcPath);
 const web3 = new Web3(ipcProvider);
 
 async function main() {
-    try {
-        console.log(
-            'Do the provider supports subscription?:',
-            ipcProvider.supportsSubscriptions(),
-        );
+	try {
+		console.log('Do the provider supports subscription?:', ipcProvider.supportsSubscriptions());
 
-        // Get the list of accounts in the connected node which is in this case: geth in dev mode.
-        const accounts = await web3.eth.getAccounts();
-        console.log('Accounts:', accounts);
+		// Get the list of accounts in the connected node which is in this case: geth in dev mode.
+		const accounts = await web3.eth.getAccounts();
+		console.log('Accounts:', accounts);
 
-        // Send a transaction to the network
-        const transactionReceipt = await web3.eth.sendTransaction({
-            from: accounts[0],
-            to: accounts[0], // sending a self-transaction
-            value: web3.utils.toWei('0.001', 'ether'),
-        });
-        console.log('Transaction Receipt:', transactionReceipt);
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
+		// Send a transaction to the network
+		const transactionReceipt = await web3.eth.sendTransaction({
+			from: accounts[0],
+			to: accounts[0], // sending a self-transaction
+			value: web3.utils.toWei('0.001', 'ether'),
+		});
+		console.log('Transaction Receipt:', transactionReceipt);
+	} catch (error) {
+		console.error('An error occurred:', error);
+	}
 }
 
 main();
@@ -459,26 +470,23 @@ const ipcProvider = new IpcProvider(ipcPath);
 const web3 = new Web3(ipcProvider);
 
 async function main() {
-    try {
-        console.log(
-            'Do the provider supports subscription?:',
-            ipcProvider.supportsSubscriptions(),
-        );
+	try {
+		console.log('Do the provider supports subscription?:', ipcProvider.supportsSubscriptions());
 
-        // Get the list of accounts in the connected node which is in this case: geth in dev mode.
-        const accounts = await web3.eth.getAccounts();
-        console.log('Accounts:', accounts);
+		// Get the list of accounts in the connected node which is in this case: geth in dev mode.
+		const accounts = await web3.eth.getAccounts();
+		console.log('Accounts:', accounts);
 
-        // Send a transaction to the network
-        const transactionReceipt = await web3.eth.sendTransaction({
-            from: accounts[0],
-            to: accounts[0], // sending a self-transaction
-            value: web3.utils.toWei('0.001', 'ether'),
-        });
-        console.log('Transaction Receipt:', transactionReceipt);
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
+		// Send a transaction to the network
+		const transactionReceipt = await web3.eth.sendTransaction({
+			from: accounts[0],
+			to: accounts[0], // sending a self-transaction
+			value: web3.utils.toWei('0.001', 'ether'),
+		});
+		console.log('Transaction Receipt:', transactionReceipt);
+	} catch (error) {
+		console.error('An error occurred:', error);
+	}
 }
 
 main();
@@ -521,21 +529,28 @@ web3.js accepts any provider that is in compliance with [EIP-1193](https://githu
 
 Here is a step-by-step example and a code snippet to connect your web application to the Ethereum network using `@truffle/hdwallet-provider` as an example of an external provider compliant with EIP 1193.
 
-1. Open a command prompt or terminal window in a new folder.
-2. Type `npm init -y` and press Enter. This will create a `package.json` file in the current directory.
-3. Install web3.js and HTTP provider using npm:
+1.  Open a command prompt or terminal window in a new folder.
+2.  Type `npm init -y` and press Enter. This will create a `package.json` file in the current directory.
+3.  Install web3.js and HTTP provider using npm:
 
-    ```bash
+        ```bash
+
+    <<<<<<< HEAD
+    npm i web3 @truffle/hdwallet-provider bip39
+    =======
     npm install web3 @truffle/hdwallet-provider bip39
-    ```
 
-4. Create a new JavaScript file, called `index.js`, in your code editor.
-5. Copy and paste the following code into your JavaScript file, and then save the file:
+    > > > > > > > 4.x
+
+        ```
+
+4.  Create a new JavaScript file, called `index.js`, in your code editor.
+5.  Copy and paste the following code into your JavaScript file, and then save the file:
 
 <Tabs groupId="prog-lang" queryString>
 
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
+<TabItem value="javascript" label="JavaScript" default
+attributes={{className: "javascript-tab"}}>
 
 ```javascript
 const { Web3 } = require('web3');
@@ -547,20 +562,20 @@ console.log('seed phrase:', mnemonic);
 
 // Connect to the Ethereum network using an HTTP provider and WalletProvider
 const provider = new HDWalletProvider(
-    mnemonic,
-    'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+	mnemonic,
+	'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
 );
 const web3 = new Web3(provider);
 
 // Get the current block number from the network
 web3.eth
-    .getBlockNumber()
-    .then(function (blockNumber) {
-        console.log('Current block number:', blockNumber);
-    })
-    .catch(function (error) {
-        console.log('Error:', error);
-    });
+	.getBlockNumber()
+	.then(function (blockNumber) {
+		console.log('Current block number:', blockNumber);
+	})
+	.catch(function (error) {
+		console.log('Error:', error);
+	});
 ```
 
   </TabItem>
@@ -578,24 +593,24 @@ console.log('seed phrase:', mnemonic);
 
 // Connect to the Ethereum network using an HTTP provider and WalletProvider
 const provider: HDWalletProvider = new HDWalletProvider(
-    mnemonic,
-    'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+	mnemonic,
+	'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
 );
 const web3: Web3 = new Web3(provider);
 
 // Get the current block number from the network
 web3.eth
-    .getBlockNumber()
-    .then(function (blockNumber: number) {
-        console.log('Current block number:', blockNumber);
-    })
-    .catch(function (error: any) {
-        console.log('Error:', error);
-    });
+	.getBlockNumber()
+	.then(function (blockNumber: number) {
+		console.log('Current block number:', blockNumber);
+	})
+	.catch(function (error: any) {
+		console.log('Error:', error);
+	});
 ```
+
   </TabItem>
 </Tabs>
-
 
 6. Replace `'YOUR_INFURA_PROJECT_ID'` with your own Infura project ID. You can obtain an Infura project ID by signing up for a free account at https://infura.io/register. Alternatively, you can use any other URL that is compatible with HDWalletProvider, such as a local Ganache accessible at `'http://localhost:7545'`.
 
@@ -649,7 +664,7 @@ Follow these steps to connect to the Ethereum network with MetaMask and web3.js,
 4. Install the Express module and add it to your project's dependencies:
 
     ```bash
-    npm install --save express
+    npm i express
     ```
 
 5. Create a new HTML file named `index.html` in your code editor (inside `web3-browser-injected-providers`).
