@@ -108,40 +108,30 @@ describe('instance of validator', () => {
 		validator = new Web3Validator();
 	});
 
-	it('huge schema', async () => {
+	it('huge schema', () => {
 		let t = 0;
-		const pr = new Promise((resolve => {
-			expect(() => {
-				const t1 = Number(new Date());
-				validator.validateJSONSchema(hugeSchema, hugeData as object);
-				t = Number(new Date()) - t1;
-			}).not.toThrow();
-			expect(t).toBeLessThan(6000);
-			expect(t).toBeGreaterThan(0);
-			resolve("");
-			})
-		);
-		await pr;
+		expect(() => {
+			const t1 = Number(new Date());
+			validator.validateJSONSchema(hugeSchema, hugeData as object);
+			t = Number(new Date()) - t1;
+		}).not.toThrow();
+		expect(t).toBeLessThan(6000);
+		expect(t).toBeGreaterThan(0);
 	});
 
-	it('huge schema 1000', async () => {
+	it('huge schema 1000', () => {
 		let t = 0;
-		const pr = new Promise((resolve => {
-			expect(() => {
-				const t1 = Number(new Date());
-				validator.validateJSONSchema(hugeSchema1000, hugeData1000 as object);
-				t = Number(new Date()) - t1;
-			}).not.toThrow();
-			expect(t).toBeLessThan(6000);
-			expect(t).toBeGreaterThan(0);
-			resolve("")
-		}));
-	await pr;
-	})
+		expect(() => {
+			const t1 = Number(new Date());
+			validator.validateJSONSchema(hugeSchema1000, hugeData1000 as object);
+			t = Number(new Date()) - t1;
+		}).not.toThrow();
+		expect(t).toBeLessThan(6000);
+		expect(t).toBeGreaterThan(0);
+	});
 
-	it('simple schema multiple times', async () => {
+	it('simple schema multiple times', () => {
 		let t = 0;
-		const pr = new Promise((resolve => {
 		expect(() => {
 			const t1 = Number(new Date());
 			for (let i = 0; i < 500; i += 1) {
@@ -149,16 +139,12 @@ describe('instance of validator', () => {
 			}
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(4000);
+		expect(t).toBeLessThan(3000);
 		expect(t).toBeGreaterThan(0);
-		resolve("");
-		}));
-		await pr;
 	});
 
-	it('simple schema 1000 times', async () => {
+	it('simple schema 1000 times', () => {
 		let t = 0;
-		const pr = new Promise((resolve => {
 		expect(() => {
 			const t1 = Number(new Date());
 			for (let i = 0; i < 1000; i += 1) {
@@ -168,14 +154,10 @@ describe('instance of validator', () => {
 		}).not.toThrow();
 		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
-		resolve("");
-		}));
-		await pr;
 	});
 
-	it('simple JSON schema 1000 times', async () => {
+	it('simple JSON schema 1000 times', () => {
 		let t = 0;
-		const pr = new Promise((resolve => {
 		expect(() => {
 			const t1 = Number(new Date());
 			for (let i = 0; i < 1000; i += 1) {
@@ -185,14 +167,10 @@ describe('instance of validator', () => {
 		}).not.toThrow();
 		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
-		resolve("");
-		}));
-		await pr;
 	});
 
-	it('simple ABI 1000 times', async () => {
+	it('simple ABI 1000 times', () => {
 		let t = 0;
-		const pr = new Promise((resolve => {
 		expect(() => {
 			const t1 = Number(new Date());
 			for (let i = 0; i < 1000; i += 1) {
@@ -200,10 +178,7 @@ describe('instance of validator', () => {
 			}
 			t = Number(new Date()) - t1;
 		}).not.toThrow();
-		expect(t).toBeLessThan(5000);
+		expect(t).toBeLessThan(4000);
 		expect(t).toBeGreaterThan(0);
-		resolve("");
-		}));
-		await pr;
 	});
 });
