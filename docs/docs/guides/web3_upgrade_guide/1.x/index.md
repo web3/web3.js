@@ -3,6 +3,10 @@ sidebar_position: 1
 sidebar_label: 'Upgrade from 1.x'
 ---
 
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Upgrade from 1.x
 
 This upgrade guide is for upgrading from web3.js 1.x to web3.js 4.x.
@@ -22,11 +26,30 @@ const web3 = new Web3();
 
 And the correct usage now is:
 
-```ts
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript"
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
 const { Web3 } = require('web3');
 
 const web3 = new Web3();
 ```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default 
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
+const { Web3 } = require('web3');
+
+import { Web3 } from 'web3';
+```
+
+  </TabItem>
+</Tabs>
 
 ### Passing Callbacks to functions
 

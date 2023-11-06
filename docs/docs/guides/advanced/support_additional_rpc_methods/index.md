@@ -3,6 +3,9 @@ sidebar_position: 0
 sidebar_label: Add custom RPC methods
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Add custom RPC methods
 
 #### Introduction
@@ -23,7 +26,29 @@ Following tutorial will guide you through the process of creating a custom plugi
 This will give your plugin access to [requestManager](/api/web3-core/class/Web3Context#requestManager) and [accountProvider](/api/web3-core/class/Web3Context#accountProvider).
 :::caution
 
-```ts
+
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript"
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3PluginBase } = require('web3');
+
+class CustomRpcMethodsPlugin extends Web3PluginBase {
+	// step 1
+	// ...
+}
+
+module.exports = CustomRpcMethodsPlugin;
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
 import { Web3PluginBase } from 'web3';
 
 export default class CustomRpcMethodsPlugin extends Web3PluginBase {
@@ -32,9 +57,33 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 }
 ```
 
+  </TabItem>
+</Tabs>
+
 2. After that add public `pluginNamespace` property. This will be used to access your plugin, as mentioned in step number 5 code example.
 
-```ts
+
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript"
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3PluginBase } = require('web3');
+
+class CustomRpcMethodsPlugin extends Web3PluginBase {
+	pluginNamespace = 'customRpcMethods'; // step 2
+}
+
+module.exports = CustomRpcMethodsPlugin;
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
 import { Web3PluginBase } from 'web3';
 
 export default class CustomRpcMethodsPlugin extends Web3PluginBase {
@@ -42,9 +91,41 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 }
 ```
 
+  </TabItem>
+</Tabs>
+
 3. Once plugin class is created using above mentioned steps, its very easy to add new RPC methods like:
 
-```ts
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript"
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3PluginBase } = require('web3');
+
+class CustomRpcMethodsPlugin extends Web3PluginBase {
+	pluginNamespace = 'customRpcMethods';
+
+	async customRpcMethod() {
+		// step 3
+		return this.requestManager.send({
+			// plugin has access to web3.js internal features like request manager
+			method: 'custom_rpc_method',
+			params: [],
+		});
+	}
+}
+
+module.exports = CustomRpcMethodsPlugin;
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
 import { Web3PluginBase } from 'web3';
 
 export default class CustomRpcMethodsPlugin extends Web3PluginBase {
@@ -61,9 +142,40 @@ export default class CustomRpcMethodsPlugin extends Web3PluginBase {
 }
 ```
 
+  </TabItem>
+</Tabs>
+
 4. Final step is setting up module [augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation), this will allow you to access plugin on web3 object.
 
-```ts
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript"
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3PluginBase } = require('web3');
+
+class CustomRpcMethodsPlugin extends Web3PluginBase {
+    pluginNamespace = 'customRpcMethods';
+
+    async customRpcMethod() {
+        return this.requestManager.send({
+            // plugin has access to web3.js internal features like request manager
+            method: 'custom_rpc_method',
+            params: [],
+        });
+    }
+}
+
+module.exports = CustomRpcMethodsPlugin;
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
 import { Web3PluginBase } from 'web3';
 
 export default class CustomRpcMethodsPlugin extends Web3PluginBase {
@@ -88,6 +200,9 @@ declare module 'web3' {
 }
 ```
 
+  </TabItem>
+</Tabs>
+
 :::info
 After the plugin is ready, it is recommended to publish it on the NPM registry.
 :::
@@ -98,7 +213,28 @@ After the plugin is ready, it is recommended to publish it on the NPM registry.
 
 Once plugin is registered its custom methods will be available to use.
 
-```ts
+<Tabs groupId="prog-lang" queryString>
+
+  <TabItem value="javascript" label="JavaScript"
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+const { Web3 } = require('web3');
+const CustomRpcMethodsPlugin = require('web3-plugin-example');
+
+const web3 = new Web3('http://127.0.0.1:8545');
+web3.registerPlugin(new CustomRpcMethodsPlugin()); // step 5
+
+web3.customRpcMethods.customRpcMethod();
+// ...
+```
+
+  </TabItem>
+  
+  <TabItem value="typescript" label="TypeScript" default
+  	attributes={{className: "typescript-tab"}}>
+
+```typescript
 import { Web3 } from 'web3';
 import CustomRpcMethodsPlugin from 'web3-plugin-example';
 
@@ -107,6 +243,9 @@ web3.registerPlugin(new CustomRpcMethodsPlugin()); // step 5
 
 web3.customRpcMethods.customRpcMethod();
 ```
+
+  </TabItem>
+</Tabs>
 
 #### More Details of Plugin Feature
 
