@@ -54,6 +54,26 @@ There is option of modifying any of above-mentioned configuration parameter at g
 
 ```
 
+For Advance Users: Global level config can also be set using `Web3Context` object.
+
+``` ts
+import { Web3, Web3Context } from 'web3';
+
+const context = new Web3Context("http://127.0.0.1:7545");
+context.setConfig({ defaultTransactionType: "0x0" });
+
+const web3 = new Web3(context);
+
+//it will not default to 0x0 type transactions
+web3.eth.sendTransaction({
+    from: '0x18532dF2Ab835d4E9D07a8b9B759bf5F8f890f49',
+    to: '0x018e221145dE7cefAD09BD53F41c11A918Bf1Cb7',
+    value: 100,
+    gasLimit: 21000
+}).then(res => console.log(res));
+
+```
+
 ## Package level config
 
 ### Setting config in Individual Package under Web3 instance
@@ -126,5 +146,54 @@ const web3EthObj = new Web3Eth("http://127.0.0.1:7545");
         value: 100,
         gasLimit: 21000
     }).then(res => console.log(res));
+
+```
+
+## Getting Current Config
+
+For getting list of current config params `getContextObject().config` can be used as :
+
+``` ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3("http://127.0.0.1:7545");
+console.log(web3.getContextObject().config)
+
+/*
+This will give current config object:
+
+  handleRevert: false,
+  defaultAccount: undefined,
+  defaultBlock: 'latest',
+  transactionBlockTimeout: 50,
+  transactionConfirmationBlocks: 24,
+  transactionPollingInterval: 1000,
+  transactionPollingTimeout: 750000,
+  transactionReceiptPollingInterval: undefined,
+  transactionSendTimeout: 750000,
+  transactionConfirmationPollingInterval: undefined,
+  blockHeaderTimeout: 10,
+  maxListenersWarningThreshold: 100,
+  contractDataInputFill: 'input',
+  defaultNetworkId: undefined,
+  defaultChain: 'mainnet',
+  defaultHardfork: 'london',
+  defaultCommon: undefined,
+  defaultTransactionType: '0x2',
+  defaultMaxPriorityFeePerGas: '0x9502f900',
+ ...
+
+*/
+
+```
+
+For individually imported packages same approach can be used to get current config params.
+
+``` ts
+
+import { Web3Eth } from 'web3';
+
+const web3 = new Web3Eth("http://127.0.0.1:7545");
+console.log(web3.getContextObject().config)
 
 ```
