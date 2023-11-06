@@ -20,6 +20,9 @@ Here is a high-level overview of the steps we will be taking in this tutorial:
 2. Create a new project directory and initialize a new Node.js project.
 3. Set up web3.js and connect to the Ganache network
 4. Interact with the Ethereum blockchain using web3.js.
+5. Importing specific package
+6. Send different type of transactions
+7. Package methods
 
 ## Step 1: Setting up the Environment
 
@@ -121,7 +124,7 @@ npx ts-node index.ts
 
 If everything is working correctly, you should see the current block number logged to the console. However, if you got an error with the reason `connect ECONNREFUSED 127.0.0.1:7545` then double check that you are running Ganache locally on port `7545`.
 
-## Step 3: Interact with the Ethereum blockchain using web3.js
+## Step 4: Interact with the Ethereum blockchain using web3.js
 
 In this step, we will use web3.js to interact with the Ganache network.
 
@@ -564,7 +567,7 @@ Transaction receipt: {
 }
 ```
 
-## Importing specific package
+## Step 5: Importing specific package
 
 To harness the capabilities of the web3-eth package, you can opt to import this package directly rather than depending on the global web3 package, which will result in a reduction in the build size.
 
@@ -605,7 +608,7 @@ console.log('eth.config.defaultTransactionType after', eth.config.defaultTransac
 // defaultTransactionType before 0x1
 ```
 
-## Send different type of transactions:
+## Step 6: Send different type of transactions:
 
 ### Legacy Transaction
 
@@ -882,7 +885,7 @@ async function test() {
 })();
 ```
 
-## Package methods
+## Step 7: Package methods
 
 ### createAccessList
 
