@@ -241,7 +241,6 @@ export class Contract<Abi extends ContractAbi>
 	 * RPC provider when using contract methods.
 	 * Default is `input`
 	 */
-	private readonly _dataInputFill?: 'data' | 'input' | 'both';
 
 	private context?: Web3Context;
 	/**
@@ -369,17 +368,11 @@ export class Contract<Abi extends ContractAbi>
 			: isDataFormat(optionsOrContextOrReturnFormat)
 			? optionsOrContextOrReturnFormat
 			: returnFormat ?? DEFAULT_RETURN_FORMAT;
-
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
-
-		if (this.config.contractDataInputFill === 'both') {
-			this._dataInputFill = this.config.contractDataInputFill;
-		} else {
-			this._dataInputFill =
+			this.config.contractDataInputFill =
 				(options as ContractInitOptions)?.dataInputFill ??
 				this.config.contractDataInputFill;
-		}
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
 		if (!isNullish(address)) {
@@ -409,6 +402,13 @@ export class Contract<Abi extends ContractAbi>
 			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value, returnDataFormat),
 			get: () => this._jsonInterface,
 		});
+
+		if (contractContext instanceof Web3Context) {
+			contractContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				this.setConfig({ [event.name]: event.newValue });
+			});
+		}
 	}
 
 	/**
@@ -501,7 +501,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
-					dataInputFill: this._dataInputFill,
+					dataInputFill: this.config.contractDataInputFill,
 				},
 				this.getContextObject(),
 			);
@@ -516,7 +516,7 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
-					dataInputFill: this._dataInputFill,
+					dataInputFill: this.config.contractDataInputFill,
 				},
 				this.getContextObject(),
 			);
@@ -1014,7 +1014,7 @@ export class Contract<Abi extends ContractAbi>
 			params,
 			options: {
 				...options,
-				dataInputFill: this._dataInputFill,
+				dataInputFill: this.config.contractDataInputFill,
 			},
 			contractOptions: {
 				...this.options,
@@ -1088,7 +1088,7 @@ export class Contract<Abi extends ContractAbi>
 			checkRevertBeforeSending: false,
 			contractAbi: this._jsonInterface,
 		});
-
+		
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
