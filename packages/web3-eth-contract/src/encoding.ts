@@ -165,7 +165,7 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	}
 
     let value = returnValues;
-    if (typeof value !== "string") {
+    if (typeof value !== 'string') {
         value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
     }
 	const result = decodeParameters([...abi.outputs], value);
