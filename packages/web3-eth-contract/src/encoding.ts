@@ -159,11 +159,15 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 		return null;
 	}
 
-	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-	if (!abi.outputs) {
+    if (!abi.outputs) {
 		// eslint-disable-next-line no-null/no-null
 		return null;
 	}
+
+    let value = returnValues;
+    if (typeof value !== "string") {
+        value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
+    }
 	const result = decodeParameters([...abi.outputs], value);
 
 	if (result.__length__ === 1) {
