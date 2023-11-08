@@ -200,6 +200,15 @@ export abstract class SocketProvider<
 
 	/**
 	 *
+	 * @returns the sendPendingRequests size
+	 */
+	// eslint-disable-next-line class-methods-use-this
+	public getSentRequestsQueueSize() {
+		return this._sentRequestsQueue.size;
+	}
+
+	/**
+	 *
 	 * @returns `true` if the socket supports subscriptions
 	 */
 	// eslint-disable-next-line class-methods-use-this
@@ -339,6 +348,27 @@ export abstract class SocketProvider<
 		}
 		this._onDisconnect(disconnectCode, data);
 	}
+
+	/**
+	 * Safely disconnects the socket, async and waits for request size to be 0 before disconnecting
+	 * @param code - The code to be sent to the server
+	 * @param data - The data to be sent to the server
+	 */
+	public async safeDisconnect(code?: number, data?: string) {
+		const checkQueue = async () => {
+			return await new Promise(resolve => {
+				const interval = setInterval(() => {
+					if (this.getPendingRequestQueueSize() === 0 && this.getSentRequestsQueueSize() === 0) {
+						clearInterval(interval);
+						resolve(true);
+					}
+				}, 1000)
+			})
+		}
+		await checkQueue();
+		this.disconnect(code, data);
+	}
+
 
 	/**
 	 * Removes all listeners for the specified event type.
