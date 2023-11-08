@@ -197,12 +197,7 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 
         ```bash
 
-    <<<<<<< HEAD
     npm i web3
-    =======
-    npm install web3
-
-    > > > > > > > 4.x
 
         ```
 
@@ -236,7 +231,7 @@ async function main() {
 		subscription.on('data', async blockhead => {
 			console.log('New block header: ', blockhead);
 
-			// You do not need the next line if you like to keep notified for every new block
+			// You do not need the next line if you like to keep being notified for every new block
 			await subscription.unsubscribe();
 			console.log('Unsubscribed from new block headers.');
 		});
@@ -287,7 +282,7 @@ async function main() {
 		subscription.on('data', async blockhead => {
 			console.log('New block header: ', blockhead);
 
-			// You do not need the next line if you like to keep notified for every new block
+			// You do not need the next line if you like to keep being notified for every new block
 			await subscription.unsubscribe();
 			console.log('Unsubscribed from new block headers.');
 		});
@@ -403,12 +398,7 @@ INFO [12-10|15:10:37.127] Mapped network port		  	proto=udp extport=0 intport=30
 
         ```bash
 
-    <<<<<<< HEAD
     npm i web3
-    =======
-    npm install web3
-
-    > > > > > > > 4.x
 
         ```
 
@@ -433,7 +423,7 @@ const web3 = new Web3(ipcProvider);
 
 async function main() {
 	try {
-		console.log('Do the provider supports subscription?:', ipcProvider.supportsSubscriptions());
+		console.log('Does the provider support subscriptions?:', ipcProvider.supportsSubscriptions());
 
 		// Get the list of accounts in the connected node which is in this case: geth in dev mode.
 		const accounts = await web3.eth.getAccounts();
@@ -471,7 +461,7 @@ const web3 = new Web3(ipcProvider);
 
 async function main() {
 	try {
-		console.log('Do the provider supports subscription?:', ipcProvider.supportsSubscriptions());
+		console.log('Does the provider support subscriptions?:', ipcProvider.supportsSubscriptions());
 
 		// Get the list of accounts in the connected node which is in this case: geth in dev mode.
 		const accounts = await web3.eth.getAccounts();
@@ -535,12 +525,7 @@ Here is a step-by-step example and a code snippet to connect your web applicatio
 
         ```bash
 
-    <<<<<<< HEAD
     npm i web3 @truffle/hdwallet-provider bip39
-    =======
-    npm install web3 @truffle/hdwallet-provider bip39
-
-    > > > > > > > 4.x
 
         ```
 
@@ -676,30 +661,7 @@ Follow these steps to connect to the Ethereum network with MetaMask and web3.js,
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Connecting to the Ethereum network with Web3.js and MetaMask</title>
-	</head>
-	<body>
-		<h1>Connecting to the Ethereum network with Web3.js and MetaMask</h1>
-		<pre id="log">
-  You need to approve connecting this website to MetaMask.
-  Click on the MetaMask icon in the browser extension, if it did not show a popup already.
-  </pre
-		>
-
-		<script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
-		<script>
-			window.addEventListener('load', async function () {
-				// Check if web3 is available
-				if (typeof window.ethereum !== 'undefined') {
-					// Use the browser injected Ethereum provider
-					web3 = new Web3(window.ethereum);
-					// Request access to the user's MetaMask account (ethereum.enable() is deprecated)
-					// Note: Even though, you can also get the accounts from `await web3.eth.getAccounts()`,
-					// 	you still need to make a call to any MetaMask RPC to cause MetaMask to ask for concent.
-					const accounts = await window.ethereum.request({
-						method: 'eth_requestAccounts',
-					});
-					console.log('Accounts requested from MetaMask RPC: ', accounts);
+		<title>Connecting to 
 
 					document.getElementById('log').textContent =
 						'Sending a self transaction... Follow the instructions on MetaMask.';
