@@ -20,6 +20,9 @@ import { Address, EthPersonalAPI, HexString, Transaction } from 'web3-types';
 
 import * as rpcWrappers from './rpc_method_wrappers.js';
 
+/**
+ * Eth Personal allows you to interact with the Ethereum node’s accounts.
+ */
 export class Personal extends Web3Context<EthPersonalAPI> {
 	/**
 	 *Returns a list of accounts the node controls by using the provider and calling the RPC method personal_listAccounts. Using `web3.eth.accounts.create()` will not add accounts into this list. For that use `web3.eth.personal.newAccount()`.
