@@ -44,7 +44,6 @@ describe('Web3 instance', () => {
             const subscription = await web3.eth.subscribe("newBlockHeaders");
             // eslint-disable-next-line
             subscription.unsubscribe();
-            if (web3.currentProvider)
             await (web3.currentProvider as WebSocketProvider).safeDisconnect();
 		});
 
@@ -54,9 +53,8 @@ describe('Web3 instance', () => {
 
             // eslint-disable-next-line
             subscription.unsubscribe();
-            if (web3.currentProvider) {
-                (web3.currentProvider as WebSocketProvider).disconnect();
-            }
+
+            expect((web3.currentProvider as WebSocketProvider).disconnect()).toThrow();
 		});
 	});
 });
