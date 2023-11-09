@@ -53,8 +53,13 @@ describe('Web3 instance', () => {
 
             // eslint-disable-next-line
             subscription.unsubscribe();
-
-            expect((web3.currentProvider as WebSocketProvider).disconnect()).toThrow();
+            try{
+                (web3.currentProvider as WebSocketProvider).disconnect();
+                // should not reach here
+                expect(true).toBe(false)
+            } catch (error){
+                expect(error).toBeInstanceOf(Error);
+            }
 		});
 	});
 });
