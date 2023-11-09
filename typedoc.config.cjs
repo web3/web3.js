@@ -20,11 +20,12 @@ module.exports = {
     ],
     mergeModulesRenameDefaults: true, // NEW option of TypeDoc added by typedoc-plugin-merge-modules plugin
     mergeModulesMergeMode: "project", // NEW option of TypeDoc added by typedoc-plugin-merge-modules plugin
-    
+
+    hideInPageTOC: true,
+    hideBreadcrumbs: true,
+
     excludeExternals: true,
     excludeReferences: true,
-    hideBreadcrumbs: true,
-    hideInPageTOC: true,
     tsconfig: "./docs/tsconfig.docs.json",
     excludeNotDocumented: true,
     cleanOutputDir: true,
