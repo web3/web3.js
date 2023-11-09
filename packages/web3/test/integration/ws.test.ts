@@ -58,6 +58,7 @@ describe('Web3 instance', () => {
                 // should not reach here
                 expect(true).toBe(false)
             } catch (error){
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(error).toBeInstanceOf(Error);
             }
 		});
