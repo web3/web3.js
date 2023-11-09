@@ -355,8 +355,8 @@ export abstract class SocketProvider<
 	 * @param data - The data to be sent to the server
 	 */
 	public async safeDisconnect(code?: number, data?: string) {
-		const checkQueue = async () => {
-			return await new Promise(resolve => {
+		const checkQueue = async () => 
+			new Promise(resolve => {
 				const interval = setInterval(() => {
 					if (this.getPendingRequestQueueSize() === 0 && this.getSentRequestsQueueSize() === 0) {
 						clearInterval(interval);
@@ -364,7 +364,7 @@ export abstract class SocketProvider<
 					}
 				}, 1000)
 			})
-		}
+		
 		await checkQueue();
 		this.disconnect(code, data);
 	}

@@ -42,28 +42,17 @@ describe('Web3 instance', () => {
             // const web3 = new Web3(websocketProvider);
             // Subscribe to new block headers
             const subscription = await web3.eth.subscribe("newBlockHeaders");
-
-            subscription.on("data", async (blockhead: any) => {
-            console.log("New block header: ", blockhead.hash);
-            });
-            subscription.on("error", (error: any) =>
-            console.log("Error when subscribing to New block header: ", error),
-            );
+            // eslint-disable-next-line
             subscription.unsubscribe();
             if (web3.currentProvider)
             await (web3.currentProvider as WebSocketProvider).safeDisconnect();
 		});
 
-        it('should throw error when connect and disconnecting ', async () => {
+        it('should throw error when connect and disconnecting', async () => {
 
             const subscription = await web3.eth.subscribe("newBlockHeaders");
 
-            subscription.on("data", async (blockhead: any) => {
-            console.log("New block header: ", blockhead.hash);
-            });
-            subscription.on("error", (error: any) =>
-            console.log("Error when subscribing to New block header: ", error),
-            );
+            // eslint-disable-next-line
             subscription.unsubscribe();
             if (web3.currentProvider) {
                 (web3.currentProvider as WebSocketProvider).disconnect();

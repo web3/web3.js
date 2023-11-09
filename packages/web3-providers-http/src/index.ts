@@ -124,11 +124,6 @@ export default class HttpProvider<
 	public reconnect() {
 		throw new MethodNotImplementedError();
 	}
-
-	/* eslint-disable class-methods-use-this */
-	public async safeDisconnect() {
-		throw new MethodNotImplementedError();
-	}
 }
 
 export { HttpProvider };
