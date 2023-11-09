@@ -22,3 +22,5 @@ yarn-error.log*
 
 # Don't include auto generated docs of current version
 docs/api
+
+docs/libdocs
