@@ -85,6 +85,8 @@
 		"test:blackbox:infura:http": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:http --stream && yarn post-blackbox",
 		"test:blackbox:infura:ws": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream && yarn post-blackbox",
 		"test:stress:data": "scripts/stressTests/data/start.sh",
+		"test:stress:validation": "node ./scripts/stressTests/validation/load.test.js",
+		"test:stress": "yarn test:stress:data && yarn test:stress:validation",
 		"husky:install": "husky install",
 		"husky:uninstall": "husky uninstall",
 		"postinstall": "yarn build",
