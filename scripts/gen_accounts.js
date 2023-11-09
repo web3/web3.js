@@ -33,7 +33,7 @@ const addAccount = async (address, privateKey) => {
 		from: mainAcc,
 		to: address,
 		gas: 1500000,
-		value: '100000000000000000000',
+		value: '1000000000000000000',
 	});
 };
 
