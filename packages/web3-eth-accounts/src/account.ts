@@ -74,9 +74,6 @@ import type {
 	SignResult,
 } from './types.js';
 
-/**
- * @module Utils
- */
 
 /**
  * Get the private key Uint8Array after the validation
