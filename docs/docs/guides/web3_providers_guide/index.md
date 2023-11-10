@@ -55,7 +55,7 @@ await web3.eth.sendTransaction({
   </TabItem>
 </Tabs>
 
-The created Web3 instance will use the passed provider to interact with the blockchain network. This interaction happen when sending a request and receiving the response, and when possibly listen to provider events (if the provider support this).
+The created Web3 instance will use the passed provider to interact with the blockchain network. This interaction happens when sending a request and receiving the response, and possibly when listening to provider events (if the provider support this).
 
 ## Providers Types
 
