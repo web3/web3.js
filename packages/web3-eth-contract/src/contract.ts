@@ -150,6 +150,7 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 } & { [key: string]: ContractBoundMethod<any> };
 
 /**
+ * @hidden
  * The event object can be accessed from `myContract.events.myEvent`.
  *
  * \> Remember: To subscribe to an event, your provider must have support for subscriptions.

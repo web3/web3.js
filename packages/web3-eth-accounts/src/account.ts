@@ -15,6 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @module Accounts
+ */
+
 import {
 	decrypt as createDecipheriv,
 	encrypt as createCipheriv,
@@ -69,6 +73,10 @@ import type {
 	Web3Account,
 	SignResult,
 } from './types.js';
+
+/**
+ * @module Utils
+ */
 
 /**
  * Get the private key Uint8Array after the validation
