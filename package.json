@@ -40,7 +40,7 @@
 		"build:esm": "lerna run build:esm --stream",
 		"build:web": "lerna run build:web --stream",
 		"build:web:analyze": "lerna run build:web:analyze --stream",
-		"generate:docs": "typedoc --options ./typedoc.config.cjs",
+		"generate:docs": "node ./scripts/docshelper/generatedoc.js",
 		"build:docs": "yarn generate:docs && cd docs && yarn install && yarn build",
 		"changelog": "ts-node -P scripts/changelog/tsconfig.json scripts/changelog/src/index.ts",
 		"clean": "lerna run clean --stream --parallel",
