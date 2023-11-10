@@ -197,12 +197,7 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 
         ```bash
 
-    <<<<<<< HEAD
     npm i web3
-    =======
-    npm install web3
-
-    > > > > > > > 4.x
 
         ```
 
@@ -236,7 +231,7 @@ async function main() {
 		subscription.on('data', async blockhead => {
 			console.log('New block header: ', blockhead);
 
-			// You do not need the next line if you like to keep notified for every new block
+			// You do not need the next line if you like to keep being notified for every new block
 			await subscription.unsubscribe();
 			console.log('Unsubscribed from new block headers.');
 		});
@@ -287,7 +282,7 @@ async function main() {
 		subscription.on('data', async blockhead => {
 			console.log('New block header: ', blockhead);
 
-			// You do not need the next line if you like to keep notified for every new block
+			// You do not need the next line if you like to keep being notified for every new block
 			await subscription.unsubscribe();
 			console.log('Unsubscribed from new block headers.');
 		});
@@ -403,12 +398,7 @@ INFO [12-10|15:10:37.127] Mapped network port		  	proto=udp extport=0 intport=30
 
         ```bash
 
-    <<<<<<< HEAD
     npm i web3
-    =======
-    npm install web3
-
-    > > > > > > > 4.x
 
         ```
 
@@ -433,7 +423,7 @@ const web3 = new Web3(ipcProvider);
 
 async function main() {
 	try {
-		console.log('Do the provider supports subscription?:', ipcProvider.supportsSubscriptions());
+		console.log('Does the provider support subscriptions?:', ipcProvider.supportsSubscriptions());
 
 		// Get the list of accounts in the connected node which is in this case: geth in dev mode.
 		const accounts = await web3.eth.getAccounts();
@@ -471,7 +461,7 @@ const web3 = new Web3(ipcProvider);
 
 async function main() {
 	try {
-		console.log('Do the provider supports subscription?:', ipcProvider.supportsSubscriptions());
+		console.log('Does the provider support subscriptions?:', ipcProvider.supportsSubscriptions());
 
 		// Get the list of accounts in the connected node which is in this case: geth in dev mode.
 		const accounts = await web3.eth.getAccounts();
@@ -535,12 +525,7 @@ Here is a step-by-step example and a code snippet to connect your web applicatio
 
         ```bash
 
-    <<<<<<< HEAD
     npm i web3 @truffle/hdwallet-provider bip39
-    =======
-    npm install web3 @truffle/hdwallet-provider bip39
-
-    > > > > > > > 4.x
 
         ```
 
