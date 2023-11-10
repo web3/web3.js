@@ -16,7 +16,7 @@ module.exports = {
     hideBreadcrumbs: true,
     hidePageTitle: true,
 
-    //publicPath: "http://localhost:3000/libdocs/",
+    //publicPath: "https://docs.web3js.org/libdocs/",
     //filenameSeparator : "-",
     //indexTitle: "",
     //preserveAnchorCasing: true,
