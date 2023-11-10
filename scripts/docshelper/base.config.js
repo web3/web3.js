@@ -1,16 +1,7 @@
 module.exports = {
     entryPointStrategy: "expand",
-    entryPoints: [
-        "./packages/web3-eth/src/web3_eth.ts",
-        "./packages/web3-eth-accounts/src/wallet.ts",
-        //"./packages/web3-eth-accounts/src/account.ts",
-        "./packages/web3-eth-contract/src/contract.ts",
-        "./packages/web3-eth-ens/src/ens.ts",
-        "./packages/web3-eth-iban/src/iban.ts",
-        "./packages/web3-eth-personal/src/personal.ts",
-        "./packages/web3-net/src/net.ts"
-    ],
-    out: "./docs/docs/libdocs",
+    out: "./docs/docs/libdocs/",
+
     // "exclude": [
     //     "**/*.test.ts"
     // ],
@@ -18,17 +9,23 @@ module.exports = {
         "typedoc-plugin-markdown",
         "typedoc-plugin-merge-modules"
     ],
+
     mergeModulesRenameDefaults: true, // NEW option of TypeDoc added by typedoc-plugin-merge-modules plugin
-    mergeModulesMergeMode: "project", // NEW option of TypeDoc added by typedoc-plugin-merge-modules plugin
 
     hideInPageTOC: true,
     hideBreadcrumbs: true,
+    hidePageTitle: true,
+
+    //publicPath: "http://localhost:3000/libdocs/",
+    //filenameSeparator : "-",
+    //indexTitle: "",
+    //preserveAnchorCasing: true,
 
     excludeExternals: true,
     excludeReferences: true,
     tsconfig: "./docs/tsconfig.docs.json",
     excludeNotDocumented: true,
-    cleanOutputDir: true,
+    
     excludeNotDocumentedKinds: [
         "Namespace",
         "Enum",
@@ -52,6 +49,7 @@ module.exports = {
     excludeInternal: true,
     excludePrivate: true,
     excludeProtected: true,
+    
     visibilityFilters: {
         "protected": false,
         "private": false,
