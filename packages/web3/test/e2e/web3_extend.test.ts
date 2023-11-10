@@ -43,7 +43,6 @@ describe(`${getSystemTestBackend()} tests - Web3 extend`, () => {
 			],
 		});
 		
-		// @ts-ignore
 		const result = await web3.L2Module.getL2BlockInfo();
 		expect(isNumber(result)).toBeTruthy();
 

@@ -53,7 +53,6 @@ describe('Web3 extend tests', () => {
 			],
 		});
 
-		// @ts-ignore
 		await web3.myModule.getBalance('0x5b43746580AAF00A69019fA59D9ed7d9c85dDd70', 'latest');
 
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
@@ -61,7 +60,6 @@ describe('Web3 extend tests', () => {
 			params: ['0x5b43746580AAF00A69019fA59D9ed7d9c85dDd70', 'latest'],
 		});
 
-		// @ts-ignore
 		await web3.myModule.getL2Balance('0x5b43746580AAF00A69019fA59D9ed7d9c85dDd70', 'latest');
 
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
@@ -89,7 +87,6 @@ describe('Web3 extend tests', () => {
 			],
 		});
 
-		// @ts-ignore
 		await web3.getBalance('0x5b43746580AAF00A69019fA59D9ed7d9c85dDd70', 'latest');
 
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
@@ -97,7 +94,6 @@ describe('Web3 extend tests', () => {
 			params: ['0x5b43746580AAF00A69019fA59D9ed7d9c85dDd70', 'latest'],
 		});
 
-		// @ts-ignore
 		await web3.getL2Balance('0x5b43746580AAF00A69019fA59D9ed7d9c85dDd70', 'latest');
 
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
