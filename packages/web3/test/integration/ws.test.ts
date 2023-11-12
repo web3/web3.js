@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { WebSocketProvider } from 'web3-providers-ws';
 import {
-	closeOpenConnection, describeIf, getSystemTestProvider, isWs,
+	describeIf, getSystemTestProvider, isWs,
 } from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
 
