@@ -62,7 +62,7 @@ web3.provider.on('error',()=>{
 
 // ...
 
-// for every event above `once` could be used to register to the event only once
+// for every event above `once` can be used to register to the event only once
 web3.provider.once('SUPPORTED_EVENT_NAME',()=>{
   // ...
 })
@@ -104,7 +104,7 @@ web3.provider.on('chainChanged',()=>{
 })
 
 // it is possible to catch errors that could happen in the underlying connection Socket with the `error` event
-// and it is also used to catch the error when max reconnection attempts exceeded
+// and it is also used to catch the error when max reconnection attempts is exceeded
 //  as in section: /docs/guides/web3_providers_guide/#error-message
 web3.provider.on('error',()=>{
   // ...
@@ -112,7 +112,7 @@ web3.provider.on('error',()=>{
 
 // ...
 
-// for every event above `once` could be used to register to the event only once
+// for every event above `once` can be used to register to the event only once
 web3.provider.once('SUPPORTED_EVENT_NAME',()=>{
   // ...
 })
