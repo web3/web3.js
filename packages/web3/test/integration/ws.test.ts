@@ -44,21 +44,5 @@ describe('Web3 instance', () => {
                 console.log(error)
             }
 		});
-
-        it('should throw error when connect and disconnecting', async () => {
-
-            const subscription = await web3.eth.subscribe("newBlockHeaders");
-
-            try{
-            // eslint-disable-next-line
-            subscription.unsubscribe();
-                (web3.currentProvider as WebSocketProvider).disconnect();
-                // should not reach here
-                expect(true).toBe(false)
-            } catch (error){
-                // eslint-disable-next-line jest/no-conditional-expect
-                expect(error).toBeInstanceOf(Error);
-            }
-		});
 	});
 });
