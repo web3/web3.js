@@ -40,6 +40,7 @@ describe('Web3 instance', () => {
             await (web3.currentProvider as WebSocketProvider).safeDisconnect();
             } catch(error) {
                 // if it errors, fail test
+                // eslint-disable-next-line
                 expect(true).toBe(false)
             }
 		});
