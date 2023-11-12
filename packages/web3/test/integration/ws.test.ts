@@ -24,7 +24,6 @@ import Web3 from '../../src/index';
 
 
 describe('Web3 instance', () => {
-	// let provider: SupportedProviders<EthExecutionAPI> | string;
 	let web3: Web3;
 
 	beforeEach(() => {
@@ -40,8 +39,8 @@ describe('Web3 instance', () => {
             subscription.unsubscribe();
             await (web3.currentProvider as WebSocketProvider).safeDisconnect();
             } catch(error) {
-                // eslint-disable-next-line
-                console.log(error)
+                // if it errors, fail test
+                expect(true).toBe(false)
             }
 		});
 	});

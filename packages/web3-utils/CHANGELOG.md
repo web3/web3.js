@@ -173,11 +173,9 @@ Documentation:
 
 ### Added
 
--   As a replacement of the node EventEmitter, a custom `EventEmitter` has been implemented and exported. (#6398)
 -   `SocketProvider` now contains public function `getPendingRequestQueueSize`, `getSentRequestsQueueSize` (#6451)
 -   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6451) 
 
 ### Fixed
 
--   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
 -   Add `isContractInitOptions` method (#6455)
