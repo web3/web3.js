@@ -44,7 +44,7 @@ const sendRequests = () => {
                 clearInterval(intervalId);
                 reject(error);
             }
-        },600000) 
+        },600000) // every 10 minutes
     })
 
 }
@@ -53,8 +53,7 @@ const main = async () => {
 
     try {
         // You will need to set mainnet infura provider 
-        const provider = secrets.MAINNET.WS; 
-        console.log(provider)
+        const provider = secrets.MAINNET.WS;
         web3 = new Web3(provider);
         const promise = sendRequests();
         await promise;
