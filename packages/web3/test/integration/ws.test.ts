@@ -31,13 +31,6 @@ describe('Web3 instance', () => {
 		const provider = getSystemTestProvider();
 		web3 = new Web3(provider);
 	});
-	afterAll(async () => {
-        try {
-		    await closeOpenConnection(web3);
-        } catch (error) {
-            console.warn("errored trying to close connection", error)
-        }
-	});
 
 	describeIf(isWs)('web3 ws tests', () => {
 		it('should connect and disconnect using safe disconnect subscription successfully', async () => {
