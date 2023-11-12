@@ -28,7 +28,7 @@ import {
 	Uint256,
 	Web3EthExecutionAPI,
 } from 'web3-types';
-import { Eip712TypedData } from 'web3-types/src/eth_types';
+import { Eip712TypedData } from 'web3-types';
 import { validator } from 'web3-validator';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
