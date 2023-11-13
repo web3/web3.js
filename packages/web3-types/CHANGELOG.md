@@ -170,7 +170,11 @@ Documentation:
 
 -   Interface `EventLog` was added. (#6410)
 
-## [Unreleased]
+## [1.3.1]
 
 ### Added
+
+-   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
 -   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
+
+## [Unreleased]
