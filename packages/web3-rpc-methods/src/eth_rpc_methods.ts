@@ -27,7 +27,7 @@ import {
 	Uint,
 	Uint256,
 	Web3EthExecutionAPI,
-	Eip712TypedData
+	Eip712TypedData,
 } from 'web3-types';
 import { validator } from 'web3-validator';
 
