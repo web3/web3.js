@@ -1,6 +1,6 @@
 const { Web3 } = require('../../../packages/web3');
 const { IpcProvider } = require('../../../packages/web3-providers-ipc');
-const accounts = require('../../accounts.json');
+const accounts = require('../../../scripts/accounts.json');
 const contractData = require('../../../fixtures/build/Basic.json');
 
 const DATA_AMOUNT = 50 * 1024; // 50 kB
