@@ -302,6 +302,8 @@ const reconnectOptions: ReconnectOptions = {
 And here is a sample instantiation for the `IpcProvider`:
 
 ```ts
+import { IpcProvider } from 'web3-providers-ipc';
+
 const provider = new IpcProvider(
 	`path.ipc`,
 	{
@@ -318,6 +320,8 @@ const provider = new IpcProvider(
 The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined.
 
 ```ts
+import { IpcProvider } from 'web3-providers-ipc';
+
 const provider = new IpcProvider(
 	`path.ipc`,
 	{},
@@ -355,7 +359,7 @@ provider.on('error', error => {
 
 #### Legacy Event `close` has been deprecated
 
-Following EIP-1193, the `close` event has been deprecated and is superceded by `disconnect`.
+Following EIP-1193, the `close` event has been deprecated and is superseded by `disconnect`.
 In 1.x, we listen for a `close` event:
 
 ```ts

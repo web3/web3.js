@@ -157,7 +157,7 @@ export class SendTxHelper<
 		) {
 			result = {
 				...transactionFormatted,
-				// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
+				// @TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
 				// should not be included if undefined, but currently are
 				...(await getTransactionGasPricing(
 					transactionFormatted,

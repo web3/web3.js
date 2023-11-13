@@ -95,7 +95,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		super({
 			...(providerOrContext as Web3ContextInitOptions),
 			registeredSubscriptions,
-		});
+		});		
 	}
 
 	/**
@@ -959,6 +959,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	/**
 	 * @param transaction Signed transaction in one of the valid {@link Bytes} format.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @param options A configuration object used to change the behavior of the method
 	 * @returns If `await`ed or `.then`d (i.e. the promise resolves), the transaction hash is returned.
 	 * ```ts
 	 * const signedTransaction = "0xf86580843b9aca0182520894e899f0130fd099c0b896b2ce4e5e15a25b23139a0180820a95a03a42d53ca5b71f845e1cd4c65359b05446a85d16881372d3bfaab8980935cb04a0711497bc8dd3b541152e2fed14fe650a647f1f0edab0d386ad9506f0e642410f"
@@ -1076,10 +1077,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async sign<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		message: Bytes,
-		address: Address,
+		addressOrIndex: Address,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.sign(this, message, address, returnFormat);
+		return rpcMethodsWrappers.sign(this, message, addressOrIndex, returnFormat);
 	}
 
 	/**

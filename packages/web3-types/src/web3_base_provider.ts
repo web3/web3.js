@@ -112,6 +112,7 @@ export type ProviderChainId = string;
 
 export type ProviderAccounts = string[];
 
+
 export type Eip1193EventName =
 	| 'connect'
 	| 'disconnect'
@@ -132,6 +133,22 @@ export interface EIP1193Provider<API extends Web3APISpec> extends SimpleProvider
 	removeListener(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
 	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
 }
+
+export interface MetaMaskProvider<API extends Web3APISpec> extends SimpleProvider<API> {
+	on(event: 'connect', listener: (info: ProviderInfo) => void): void;
+	on(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
+	on(event: 'message', listener: (message: ProviderMessage) => void): void;
+	on(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
+	on(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
+
+	removeListener(event: 'connect', listener: (info: ProviderInfo) => void): void;
+	removeListener(event: 'disconnect', listener: (error: ProviderRpcError) => void): void;
+	removeListener(event: 'message', listener: (message: ProviderMessage) => void): void;
+	removeListener(event: 'chainChanged', listener: (chainId: ProviderChainId) => void): void;
+	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
+	isMetaMask: boolean;
+}
+
 
 export type Eip1193Compatible<API extends Web3APISpec = EthExecutionAPI> = Omit<
 	// eslint-disable-next-line no-use-before-define
@@ -325,7 +342,8 @@ export type SupportedProviders<API extends Web3APISpec = Web3EthExecutionAPI> =
 	| LegacyRequestProvider
 	| LegacySendProvider
 	| LegacySendAsyncProvider
-	| SimpleProvider<API>;
+	| SimpleProvider<API>
+	| MetaMaskProvider<API>;
 
 export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	url: string,
