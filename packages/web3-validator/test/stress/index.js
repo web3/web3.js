@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { Web3Validator } = require('../../../packages/web3-validator');
+const { Web3Validator } = require('../../lib/commonjs');
 
 const abi = [
 	{ indexed: true, internalType: 'address', name: 'from', type: 'address' },
