@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/* eslint-disable */
 const { Web3Validator } = require('../../lib/commonjs');
 
 const abi = [
@@ -130,4 +131,5 @@ console.time('simple ABI 1000 times');
 for (let i = 0; i < 1000; i += 1) {
 	validator.validate(abi, abiData);
 }
+
 console.timeLog('simple ABI 1000 times');
