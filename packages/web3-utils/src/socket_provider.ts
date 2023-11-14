@@ -351,18 +351,25 @@ export abstract class SocketProvider<
 
 	/**
 	 * Safely disconnects the socket, async and waits for request size to be 0 before disconnecting
+	 * @param forceDisconnect - If true, will clear queue after 5 attempts of waiting for both pending and sent queue to be 0  
+	 * @param ms - Determines the ms of setInterval
 	 * @param code - The code to be sent to the server
 	 * @param data - The data to be sent to the server
 	 */
-	public async safeDisconnect(code?: number, data?: string) {
+	public async safeDisconnect(forceDisconnect = false,ms:number = 1000, code?: number, data?: string) {
+		let retryAttempt = 0;
 		const checkQueue = async () => 
 			new Promise(resolve => {
 				const interval = setInterval(() => {
+					if (forceDisconnect && retryAttempt === 5) {
+						this.clearQueues();
+					}
 					if (this.getPendingRequestQueueSize() === 0 && this.getSentRequestsQueueSize() === 0) {
 						clearInterval(interval);
 						resolve(true);
 					}
-				}, 1000)
+					retryAttempt++;
+				}, ms)
 			})
 		
 		await checkQueue();
@@ -538,6 +545,10 @@ export abstract class SocketProvider<
 
 			this._sentRequestsQueue.delete(requestId);
 		}
+	}
+	
+	public clearQueues(event?: ConnectionEvent) {
+		this._clearQueues(event);
 	}
 
 	protected _clearQueues(event?: ConnectionEvent) {
