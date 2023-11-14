@@ -34,7 +34,7 @@ async function getBlockNumber() {
 getBlockNumber();
 ```
 
-With web3.js v4:
+With web3.js:
 
 ```typescript
 import { Web3 } from 'web3';
@@ -106,7 +106,7 @@ async function createWallet() {
 createWallet();
 ```
 
-In web3.js:
+With web3.js:
 
 ```typescript
 async function createWallet() {
@@ -124,13 +124,13 @@ createWallet();
 
 ### Get unlocked account
 
-In ethers.js:
+With ethers.js:
 
 ```typescript
 const signer = await provider.getSigner();
 ```
 
-In web3.js:
+With web3.js:
 
 ```typescript
 const account = (await web3.eth.getAccounts())[0];
@@ -155,7 +155,7 @@ async function sendTransaction() {
 sendTransaction();
 ```
 
-In web3.js v4:
+With web3.js:
 
 The method web3.eth.sendTransaction is helpful if you are using a browser-injected provider like metamask. Or, if you are using a local dev node, and you have some accounts already unlocked at the node. Note that it is highly risky and not recommended to unlock an account at a production or even a test node.
 
@@ -191,7 +191,7 @@ Posting a signed transaction to the node with ethers.js:
 provider.broadcastTransaction(signedTx);
 ```
 
-In web3.js v4:
+With web3.js:
 
 ```typescript
 async function sendSignedTransaction() {
@@ -202,10 +202,13 @@ async function sendSignedTransaction() {
     gas: 21000,
     type: 1,
   };
+
+  // you might also use below `web3.eth.personal.signMessage`, depending on your use case.
   const signedTransaction = await web3.eth.accounts.signTransaction(
     transaction,
     privateKey,
   );
+
   const tx = await web3.eth.sendSignedTransaction(
     signedTransaction.rawTransaction,
   );
@@ -213,28 +216,50 @@ async function sendSignedTransaction() {
   console.log(tx);
 }
 
-sendTransaction();
+sendSignedTransaction();
 ```
 
 ### Signing a string message
+
 with ethers.js:
 
 ```typescript
-signature = await signer.signMessage('Some data')
+async function signMessage() {
+  const signer = new ethers.Wallet(privateKey);
+
+  const signature = await signer.signMessage('Some data');
+  console.log(signature);
+}
+// Outputs something like:
+//  0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+signMessage();
 ```
 
-In web3.js v4:
+With web3.js:
 
 ```typescript
 
-// web3 (using a private key)
-const signature = web3.eth.accounts.sign('Some data', privateKey).signature;
+// sign with web3.js, using a private key:
+async function signMessageWithPrivateKey() {
+  const signature = web3.eth.accounts.sign('Some data', privateKey).signature;
+  console.log(signature);
+}
+// Outputs something like:
+//  0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+signMessageWithPrivateKey();
 
 // Using an unlocked account managed by connected RPC client or a browser-injected provider
-const signature = await web3.eth.sign(
+async function signMessageByProvider() {
+  // you might also use below `web3.eth.personal.sign`, depending on your use case.
+  const signature = await web3.eth.sign(
     web3.utils.utf8ToHex('Some data'), // data to be signed (4.x only supports Hex Strings)
-    '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe' // the address that its private key would be used to sign
+    '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4', // the address that its private key would be used to sign
   );
+  console.log(signature);
+}
+// Outputs something like:
+//  0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+signMessageByProvider();
 ```
 
 
@@ -277,5 +302,63 @@ const event = contract.events.SomeEvent({
 event.on('data', resolve);
 event.on('error', reject);
 ```
+
+
+## Utilities
+
+### Hashing
+Here is how to compute `keccak256` hash of a UTF-8 string with web3 and ethers.
+
+
+With ethers.js:
+
+```typescript
+// hash of a string
+ethers.utils.id('hello world')
+// hash of binary data
+ethers.utils.keccak256('0x4242')
+```
+
+With web3.js:
+
+```typescript
+// computes the Keccak-256 hash of the input and returns a hexstring:
+// the `utils.sha3` accepts: string and Uint8Array 
+web3.utils.sha3('hello world');
+// the `utils.keccak256` accepts: string, Uint8Array, Numbers and ReadonlyArray<number>
+web3.utils.keccak256('hello world');
+```
+
+### Ethers Conversion
+
+Here is how to convert from and to ether units.
+
+With ethers.js:
+
+```typescript
+const fromWieToEther = ethers.formatEther('1000000000000000000');
+// outputs: 1.0
+console.log(fromWieToEther);
+
+const fromEtherToWie = ethers.parseEther('1.0');
+// outputs: 1000000000000000000n
+console.log(fromEtherToWie);
+```
+
+With web3.js:
+
+```typescript
+// the second parameter is "the unit to convert to"
+const fromWieToEther = Web3.utils.fromWei('1000000000000000000', 'ether');
+// outputs: 1
+console.log(fromWieToEther);
+
+// the second parameter is "the unit of the number passed"
+const fromEtherToWie = Web3.utils.toWei('1.0', 'ether');
+// outputs: 1000000000000000000
+console.log(fromEtherToWie);
+```
+
+## Conclusion
 
 This guide should provide a starting point for migrating from ethers.js to web3.js version 4.x. Remember to adapt the example code to your actual use case and verify the function arguments and setup as you migrate your application. The official documentation of web3.js [documentation](https://docs.web3js.org/) will be your go-to resource for detailed information and updates.
