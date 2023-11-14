@@ -390,6 +390,23 @@ export class Web3Context<
 	}
 }
 
+/**
+ * Extend this class when creating a plugin that either doesn't require {@link EthExecutionAPI},
+ * or interacts with a RPC node that doesn't fully implement {@link EthExecutionAPI}.
+ *
+ * To add type support for RPC methods to the {@link Web3RequestManager},
+ * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
+ *
+ * @example
+ * ```ts
+ * type CustomRpcApi = {
+ *	custom_rpc_method: () => string;
+ *	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
+ * };
+ *
+ * class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
+ * ```
+ */
  export abstract class Web3PluginBase<
  API extends Web3APISpec = Web3APISpec,
 > extends Web3Context<API> {
