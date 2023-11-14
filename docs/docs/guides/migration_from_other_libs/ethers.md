@@ -263,21 +263,113 @@ signMessageByProvider();
 ```
 
 
-## Interacting with Contracts
+## Contracts
+
+### Contracts Deployment
+
+To deploy a contract in ethers.js you might have something like:
+
+```typescript
+const signer = provider.getSigner();
+const factory = new ethers.ContractFactory(abi, bytecode, signer);
+const contract = await factory.deploy("constructor param");
+console.log('contract address', contract.address);
+
+// wait for contract creation transaction to be mined
+await contract.deployTransaction.wait();
+```
+
+In web3.js:
+
+```typescript
+const contractObject = new web3.eth.Contract(abi);
+const deployedContract = await contractObject.deploy({
+   data: bytecode,
+   arguments: ["constructor param"]
+}).send({
+   from: "0x12598d2Fd88B420ED571beFDA8dD112624B5E730",
+    gas: '1000000',
+    // other transaction's params
+});
+
+console.log('contract address', deployedContract.options.address) 
+```
+
+:::tip
+📝 To get the smart contract ABI, you are advised to check: [Compile the Solidity code using the Solidity Compiler and get its ABI and Bytecode](/guides/smart_contracts/deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) and [Infer Contract Types from JSON Artifact](/guides/smart_contracts/infer_contract_types_guide/) 
+:::
+
+
+### Calling Contracts' Methods
 
 To interact with contracts in ethers.js:
 
 ```typescript
-const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, wallet);
+const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, providerOrSigner);
 const result = await contract.someFunction();
 ```
 
-In web3.js v4:
+In web3.js:
 
 ```typescript
+const web3 = new Web3(provider);
 const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-const result = await contract.methods.someFunction().call(); 
+
+// If the method was only to read form the Blockchain: 
+const result = await contract.methods.someFunction().call();
+// Or, if the method would need a transaction to be sent: 
+const result = await contract.methods.someFunction().send();
 ```
+
+#### Contracts Overloaded Methods
+
+In ethers.js:
+
+```typescript
+// ethers
+const abi = [
+  "function getMessage(string) public view returns (string)",
+  "function getMessage() public view returns (string)"
+]
+const contract = new ethers.Contract(address, abi, signer);
+
+// for ambiguous functions (two functions with the same
+// name), the signature must also be specified
+message = await contract['getMessage(string)']('nice');
+// and to call the overladed method without a parameter:
+message = await contract['getMessage()']();
+
+// in ethers.js v6
+contract.foo(Typed.string('nice'))
+```
+
+In web3.js:
+
+```typescript
+// in web3.js the overloaded method implementation is automatically picked based on the passed datatype 
+message = await contract.methods.getMessage('nice').call();
+// To call the overladed method without a parameter:
+message = await contract.methods.getMessage().call();
+```
+
+### Gas Estimation
+
+To interact with contracts in ethers.js:
+
+```typescript
+// Estimate the gas
+contract.myMethod.estimateGas(123)
+```
+
+In web3.js:
+
+```typescript
+// Estimate the gas
+const gasAmount = await myContract.methods.myMethod(123).estimateGas(
+  { gas: 5000000, from: transactionSenderAddress } // optional 
+);
+```
+
 
 ## Handling Events
 
@@ -285,18 +377,18 @@ Handling events with ethers.js:
 
 ```typescript
 contract.on('SomeEvent', (arg1, arg2, event) => {
-  // event handling
+	// event handling
 });
 ```
 
-In web3.js v4:
+With web3.js:
 
 ```typescript
 const event = contract.events.SomeEvent({
-  filter: {
-	filter: { val: 100 },
+	filter: {
+		filter: { val: 100 },
 	},
-  fromBlock: 0  
+	fromBlock: 0,
 });
 
 event.on('data', resolve);
@@ -304,7 +396,7 @@ event.on('error', reject);
 ```
 
 
-## Utilities
+## Utility methods
 
 ### Hashing
 Here is how to compute `keccak256` hash of a UTF-8 string with web3 and ethers.
@@ -361,4 +453,4 @@ console.log(fromEtherToWie);
 
 ## Conclusion
 
-This guide should provide a starting point for migrating from ethers.js to web3.js version 4.x. Remember to adapt the example code to your actual use case and verify the function arguments and setup as you migrate your application. The official documentation of web3.js [documentation](https://docs.web3js.org/) will be your go-to resource for detailed information and updates.
+This guide should provide a starting point for migrating from ethers.js to web3.js version 4.x. Remember to adapt the example code to your actual use case and verify the function arguments and setup as you migrate your application. And the official documentation of web3.js is your go-to resource for detailed information and updates.
