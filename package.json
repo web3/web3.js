@@ -86,7 +86,7 @@
 		"test:blackbox:infura:ws": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream && yarn post-blackbox",
 		"test:stress:data": "packages/web3/test/stress/startData.sh",
 		"test:stress:requests": "packages/web3/test/stress/startRequests.sh",
-		"test:stress:validation": "node packages/web3-validator/test/stress/index.js",
+		"test:stress:validation": "node packages/web3/test/stress/validator.js",
 		"test:stress": "yarn test:stress:data && yarn test:stress:validation && test:stress:requests",
 		"husky:install": "husky install",
 		"husky:uninstall": "husky uninstall",
