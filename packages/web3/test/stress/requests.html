@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.2.2/web3.min.js"/>
+
+<script>
+    console.log('12312')
+</script>
+<div>
+    Log:
+    <div id="log"></div>
+</div>
+<script>
+    const log = (l) => {
+        document.getElementById("log").innerHTML = (document.getElementById("log").innerHTML || '') + '<br/>' + (l || '');
+    }
+    const testScope = (providerString, n) => {
+        const isWs = providerString.startsWith('ws');
+        const isIpc = providerString.includes('ipc');
+        const contractData = {
+            "abi": [
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_val",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "_stringValue",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "nonpayable",
+                    "type": "constructor"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": false,
+                            "internalType": "string",
+                            "name": "str",
+                            "type": "string"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "uint256",
+                            "name": "val",
+                            "type": "uint256"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "bool",
+                            "name": "flag",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "MultiValueEvent",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": false,
+                            "internalType": "string",
+                            "name": "str",
+                            "type": "string"
+                        },
+                        {
+                            "indexed": true,
+                            "internalType": "uint256",
+                            "name": "val",
+                            "type": "uint256"
+                        },
+                        {
+                            "indexed": true,
+                            "internalType": "bool",
+                            "name": "flag",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "MultiValueIndexedEvent",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "internalType": "string",
+                            "name": "str",
+                            "type": "string"
+                        },
+                        {
+                            "indexed": true,
+                            "internalType": "uint256",
+                            "name": "val",
+                            "type": "uint256"
+                        },
+                        {
+                            "indexed": true,
+                            "internalType": "bool",
+                            "name": "flag",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "MultiValueIndexedEventWithStringIndexed",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": false,
+                            "internalType": "string",
+                            "name": "str",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "StringEvent",
+                    "type": "event"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "str",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "val",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "flag",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "firesMultiValueEvent",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "str",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "val",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "flag",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "firesMultiValueIndexedEvent",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "str",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "val",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "flag",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "firesMultiValueIndexedEventWithStringIndexed",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_str",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "firesStringEvent",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getBoolValue",
+                    "outputs": [
+                        {
+                            "internalType": "bool",
+                            "name": "",
+                            "type": "bool"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getIntValue",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getStringValue",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getValues",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "",
+                            "type": "bool"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "requireWithReason",
+                    "outputs": [],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "requireWithoutReason",
+                    "outputs": [],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "reverts",
+                    "outputs": [],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_value",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "_stringValue",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "_boolValue",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "setValues",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ],
+            "evm": {
+                "bytecode": {
+                    "object": "60806040523480156200001157600080fd5b5060405162001068380380620010688339818101604052810190620000379190620002e7565b816000819055508060019080519060200190620000569291906200005f565b505050620003b1565b8280546200006d906200037c565b90600052602060002090601f016020900481019282620000915760008555620000dd565b82601f10620000ac57805160ff1916838001178555620000dd565b82800160010185558215620000dd579182015b82811115620000dc578251825591602001919060010190620000bf565b5b509050620000ec9190620000f0565b5090565b5b808211156200010b576000816000905550600101620000f1565b5090565b6000604051905090565b600080fd5b600080fd5b6000819050919050565b620001388162000123565b81146200014457600080fd5b50565b60008151905062000158816200012d565b92915050565b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b620001b38262000168565b810181811067ffffffffffffffff82111715620001d557620001d462000179565b5b80604052505050565b6000620001ea6200010f565b9050620001f88282620001a8565b919050565b600067ffffffffffffffff8211156200021b576200021a62000179565b5b620002268262000168565b9050602081019050919050565b60005b838110156200025357808201518184015260208101905062000236565b8381111562000263576000848401525b50505050565b6000620002806200027a84620001fd565b620001de565b9050828152602081018484840111156200029f576200029e62000163565b5b620002ac84828562000233565b509392505050565b600082601f830112620002cc57620002cb6200015e565b5b8151620002de84826020860162000269565b91505092915050565b6000806040838503121562000301576200030062000119565b5b6000620003118582860162000147565b925050602083015167ffffffffffffffff8111156200033557620003346200011e565b5b6200034385828601620002b4565b9150509250929050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b600060028204905060018216806200039557607f821691505b602082108103620003ab57620003aa6200034d565b5b50919050565b610ca780620003c16000396000f3fe608060405234801561001057600080fd5b50600436106100b45760003560e01c8063844d6a3211610071578063844d6a3214610157578063939d7c4e14610161578063ae012ede1461017d578063b7a8238a14610187578063d7af8ac1146101a3578063e8256ea0146101bf576100b4565b806319eb4a90146100b95780632bfc4c69146100d95780633bccbbc9146100f75780635a018657146101015780637cfbdcf01461011d578063828909bd14610139575b600080fd5b6100c16101dd565b6040516100d093929190610680565b60405180910390f35b6100e161028e565b6040516100ee91906106be565b60405180910390f35b6100ff610320565b005b61011b60048036038101906101169190610881565b61035b565b005b61013760048036038101906101329190610950565b61039b565b005b6101416103e9565b60405161014e91906109c4565b60405180910390f35b61015f6103f2565b005b61017b60048036038101906101769190610881565b610435565b005b610185610475565b005b6101a1600480360381019061019c91906109df565b610482565b005b6101bd60048036038101906101b89190610a28565b6104bc565b005b6101c76104f9565b6040516101d49190610a97565b60405180910390f35b60006060600080546001600260009054906101000a900460ff1681805461020390610ae1565b80601f016020809104026020016040519081016040528092919081815260200182805461022f90610ae1565b801561027c5780601f106102515761010080835404028352916020019161027c565b820191906000526020600020905b81548152906001019060200180831161025f57829003601f168201915b50505050509150925092509250909192565b60606001805461029d90610ae1565b80601f01602080910402602001604051908101604052809291908181526020018280546102c990610ae1565b80156103165780601f106102eb57610100808354040283529160200191610316565b820191906000526020600020905b8154815290600101906020018083116102f957829003601f168201915b5050505050905090565b6040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161035290610b5e565b60405180910390fd5b7fa8297798732ff8a80a23cf22707934835a9d5b03536598708f7414646a1b95b383838360405161038e93929190610b7e565b60405180910390a1505050565b8015158285856040516103af929190610bec565b60405180910390207f5b5730af07e266d8b4845f404beb3b193085c686b0edd8e8e20cd4b3fc2b6cd560405160405180910390a450505050565b60008054905090565b6000610433576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161042a90610c51565b60405180910390fd5b565b801515827f553c4a49a36d26504ba0880f2f9bfe9ac7db4b81a893bde296546cd96ae0b33c8560405161046891906106be565b60405180910390a3505050565b600061048057600080fd5b565b7f617cf8a4400dd7963ed519ebe655a16e8da1282bb8fea36a21f634af912f54ab816040516104b191906106be565b60405180910390a150565b8260008190555081600190805190602001906104d9929190610510565b5080600260006101000a81548160ff021916908315150217905550505050565b6000600260009054906101000a900460ff16905090565b82805461051c90610ae1565b90600052602060002090601f01602090048101928261053e5760008555610585565b82601f1061055757805160ff1916838001178555610585565b82800160010185558215610585579182015b82811115610584578251825591602001919060010190610569565b5b5090506105929190610596565b5090565b5b808211156105af576000816000905550600101610597565b5090565b6000819050919050565b6105c6816105b3565b82525050565b600081519050919050565b600082825260208201905092915050565b60005b838110156106065780820151818401526020810190506105eb565b83811115610615576000848401525b50505050565b6000601f19601f8301169050919050565b6000610637826105cc565b61064181856105d7565b93506106518185602086016105e8565b61065a8161061b565b840191505092915050565b60008115159050919050565b61067a81610665565b82525050565b600060608201905061069560008301866105bd565b81810360208301526106a7818561062c565b90506106b66040830184610671565b949350505050565b600060208201905081810360008301526106d8818461062c565b905092915050565b6000604051905090565b600080fd5b600080fd5b600080fd5b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6107368261061b565b810181811067ffffffffffffffff82111715610755576107546106fe565b5b80604052505050565b60006107686106e0565b9050610774828261072d565b919050565b600067ffffffffffffffff821115610794576107936106fe565b5b61079d8261061b565b9050602081019050919050565b82818337600083830152505050565b60006107cc6107c784610779565b61075e565b9050828152602081018484840111156107e8576107e76106f9565b5b6107f38482856107aa565b509392505050565b600082601f8301126108105761080f6106f4565b5b81356108208482602086016107b9565b91505092915050565b610832816105b3565b811461083d57600080fd5b50565b60008135905061084f81610829565b92915050565b61085e81610665565b811461086957600080fd5b50565b60008135905061087b81610855565b92915050565b60008060006060848603121561089a576108996106ea565b5b600084013567ffffffffffffffff8111156108b8576108b76106ef565b5b6108c4868287016107fb565b93505060206108d586828701610840565b92505060406108e68682870161086c565b9150509250925092565b600080fd5b600080fd5b60008083601f8401126109105761090f6106f4565b5b8235905067ffffffffffffffff81111561092d5761092c6108f0565b5b602083019150836001820283011115610949576109486108f5565b5b9250929050565b6000806000806060858703121561096a576109696106ea565b5b600085013567ffffffffffffffff811115610988576109876106ef565b5b610994878288016108fa565b945094505060206109a787828801610840565b92505060406109b88782880161086c565b91505092959194509250565b60006020820190506109d960008301846105bd565b92915050565b6000602082840312156109f5576109f46106ea565b5b600082013567ffffffffffffffff811115610a1357610a126106ef565b5b610a1f848285016107fb565b91505092915050565b600080600060608486031215610a4157610a406106ea565b5b6000610a4f86828701610840565b935050602084013567ffffffffffffffff811115610a7057610a6f6106ef565b5b610a7c868287016107fb565b9250506040610a8d8682870161086c565b9150509250925092565b6000602082019050610aac6000830184610671565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b60006002820490506001821680610af957607f821691505b602082108103610b0c57610b0b610ab2565b5b50919050565b7f5245564552544544205749544820524556455254000000000000000000000000600082015250565b6000610b486014836105d7565b9150610b5382610b12565b602082019050919050565b60006020820190508181036000830152610b7781610b3b565b9050919050565b60006060820190508181036000830152610b98818661062c565b9050610ba760208301856105bd565b610bb46040830184610671565b949350505050565b600081905092915050565b6000610bd38385610bbc565b9350610be08385846107aa565b82840190509392505050565b6000610bf9828486610bc7565b91508190509392505050565b7f5245564552544544205749544820524551554952450000000000000000000000600082015250565b6000610c3b6015836105d7565b9150610c4682610c05565b602082019050919050565b60006020820190508181036000830152610c6a81610c2e565b905091905056fea2646970667358221220ca8ff7a2edb3cb30dd9de0ed5a0665fd7ee39e4680760776b264f55d8f5ef51c64736f6c634300080d0033"
+                }
+            }
+        }
+
+        const contracts = {};
+
+        const deployContracts = async (web3, accounts) => {
+            const prs = [];
+            for (let i = 0; i < accounts.length; i++) {
+                const account = accounts[i];
+                const sendOptions = {from: account.address};
+                const deployOptions = {
+                    data: contractData.evm.bytecode.object,
+                    arguments: [123, ''],
+                    gas: BigInt(9000000000000),
+                    gasLimit: BigInt(9000000000000),
+                    type: BigInt(0),
+                };
+                const c = new web3.eth.Contract(contractData.abi);
+                prs.push(
+                    c
+                        .deploy(deployOptions)
+                        .send(sendOptions)
+                        .then(contract => {
+                            contracts[account.address] = contract;
+                        }),
+                );
+            }
+            await Promise.all(prs);
+        };
+
+        const addAccount = async (web3, mainAcc, address, privateKey, nonce) => {
+            web3.eth.accounts.wallet.add(privateKey);
+            return web3.eth.sendTransaction({
+                from: mainAcc,
+                to: address,
+                nonce,
+                gas: 1500000,
+                value: '1000000000000000000',
+            });
+        };
+
+        const prepareAccounts = async (web3, n = 1000) => {
+            const prs = [];
+            const list = await web3.eth.personal.getAccounts();
+            const mainAcc = list[0];
+            const accountList = [];
+            const nonce = await web3.eth.getTransactionCount(mainAcc);
+            for (let i = 0; i < n; i++) {
+                const acc = web3.eth.accounts.create();
+                prs.push(addAccount(web3, mainAcc, acc.address, acc.privateKey, Number(nonce) + i));
+                accountList.push(acc);
+            }
+            await Promise.all(prs);
+            return accountList;
+        };
+
+        const sendData = async (web3, account) => {
+            const contract = contracts[account.address];
+            return contract.methods
+                .firesStringEvent(`String event: ${account.address}`)
+                .send({from: account.address});
+        };
+
+        const getData = async (web3, account) => {
+            const contract = contracts[account.address];
+            await contract.methods.getStringValue().call();
+        };
+
+        const receivedEvents = {};
+        const subscribeContract = acc => {
+            const contract = contracts[acc.address];
+            const event = contract.events.StringEvent();
+
+            event.on('data', res => {
+                if (res.returnValues.str !== `String event: ${acc.address}`) {
+                    throw new Error('Event is not correct');
+                }
+                receivedEvents[acc.address] = res;
+            });
+        };
+        const contractSubscriptions = (web3, accounts) => {
+            log(`Subscribe to ${accounts.length} contracts events`);
+            for (const acc of accounts) {
+                subscribeContract(acc);
+            }
+        };
+        const test = async () => {
+            log(`Start test with provider: ${providerString}`);
+            const provider = isWs
+                    ? new Web3.providers.WebsocketProvider(providerString)
+                    : new Web3.providers.HttpProvider(providerString);
+            const web3 = new Web3(provider);
+
+            log(`Prepare ${n} accounts in parallel`);
+            const accounts = await prepareAccounts(web3, n);
+
+            log(`Deploy ${n} contracts in parallel`);
+            await deployContracts(web3, accounts);
+            // if socket subscribe to events
+            if (isIpc || isWs) {
+                contractSubscriptions(web3, accounts);
+            }
+
+            log(`Send data from ${n} accounts in parallel`);
+            const sendPrs = [];
+            for (let i = 0; i < n; i++) {
+                sendPrs.push(sendData(web3, accounts[i]));
+            }
+            await Promise.all(sendPrs);
+
+            if (isIpc || isWs) {
+                if (Object.keys(receivedEvents).length !== accounts.length) {
+                    throw new Error('Incorrect event count');
+                }
+            }
+
+            log(`Get data from ${n} accounts in parallel`);
+            const getPrs = [];
+            for (let i = 0; i < n; i++) {
+                getPrs.push(getData(web3, accounts[i]));
+            }
+            await Promise.all(getPrs);
+            if (isIpc || isWs) {
+                web3.provider.disconnect();
+            }
+        };
+
+        return test().catch(console.error);
+    }
+    (async () => {
+        await testScope('http://localhost:8545', 500)
+        await testScope('ws://localhost:8545', 2000)
+    })()
+
+</script>
+</body>
+</html>
