@@ -37,6 +37,7 @@ describe('Web3 instance', () => {
             const subscription = await web3.eth.subscribe("newBlockHeaders");
             // eslint-disable-next-line
             subscription.unsubscribe();
+            // eslint-disable-next-line
             await (web3.currentProvider as WebSocketProvider).safeDisconnect();
             } catch(error) {
                 // if it errors, fail test

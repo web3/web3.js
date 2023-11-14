@@ -356,7 +356,7 @@ export abstract class SocketProvider<
 	 * @param code - The code to be sent to the server
 	 * @param data - The data to be sent to the server
 	 */
-	public async safeDisconnect(forceDisconnect = false,ms:number = 1000, code?: number, data?: string) {
+	public async safeDisconnect(code?: number, data?: string, forceDisconnect = false,ms = 1000) {
 		let retryAttempt = 0;
 		const checkQueue = async () => 
 			new Promise(resolve => {
@@ -368,7 +368,7 @@ export abstract class SocketProvider<
 						clearInterval(interval);
 						resolve(true);
 					}
-					retryAttempt++;
+					retryAttempt+=1;
 				}, ms)
 			})
 		
