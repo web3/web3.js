@@ -449,20 +449,49 @@ export function uint8ArrayToHexString(uint8Array: Uint8Array): string {
 	return hexString;
 }
 
+// for optimized technique for hex to bytes conversion
+const charCodeMap = {
+	zero: 48,
+	nine: 57,
+	A: 65,
+	F: 70,
+	a: 97,
+	f: 102,
+  } as const
+
+  function charCodeToBase16(char: number) {
+	if (char >= charCodeMap.zero && char <= charCodeMap.nine)
+	  return char - charCodeMap.zero
+	if (char >= charCodeMap.A && char <= charCodeMap.F)
+	  return char - (charCodeMap.A - 10)
+	if (char >= charCodeMap.a && char <= charCodeMap.f)
+	  return char - (charCodeMap.a - 10)
+	return undefined
+  }
+
 export function hexToUint8Array(hex: string): Uint8Array {
-	let value;
+	let offset = 0;
 	if (hex.toLowerCase().startsWith('0x')) {
-		value = hex.slice(2);
-	} else {
-		value = hex;
+		offset = 2;
 	}
-	if (value.length % 2 !== 0) {
+	if (hex.length % 2 !== 0) {
 		throw new InvalidBytesError(`hex string has odd length: ${hex}`);
 	}
-	const bytes = new Uint8Array(Math.ceil(value.length / 2));
-	for (let i = 0; i < bytes.length; i += 1) {
-		const byte = parseInt(value.substring(i * 2, i * 2 + 2), 16);
-		bytes[i] = byte;
+	const length = Math.ceil((hex.length-offset) / 2);
+	const bytes = new Uint8Array(length);
+	for (let index = 0, j = offset; index < length; index+=1) {
+	  // eslint-disable-next-line no-plusplus
+	  const nibbleLeft = charCodeToBase16(hex.charCodeAt(j++))
+	  // eslint-disable-next-line no-plusplus
+	  const nibbleRight = charCodeToBase16(hex.charCodeAt(j++))
+	  if (nibbleLeft === undefined || nibbleRight === undefined) {
+		throw new InvalidBytesError(
+			`Invalid byte sequence ("${hex[j - 2]}${
+				hex[j - 1]
+			  }" in "${hex}").`,
+		)
+	  }
+	  bytes[index] = nibbleLeft * 16 + nibbleRight
 	}
-	return bytes;
+	return bytes
 }
