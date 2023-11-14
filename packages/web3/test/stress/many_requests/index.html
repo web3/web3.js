@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.2.2/web3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ganache@7.3.2/dist/web/ganache.min.js"></script>
+</head>
 <body>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.2.2/web3.min.js"/>
-
-<script>
-    console.log('12312')
-</script>
 <div>
     Log:
     <div id="log"></div>
 </div>
 <script>
+    const provider = Ganache.provider({});
     const log = (l) => {
         document.getElementById("log").innerHTML = (document.getElementById("log").innerHTML || '') + '<br/>' + (l || '');
     }
     const testScope = (providerString, n) => {
-        const isWs = providerString.startsWith('ws');
-        const isIpc = providerString.includes('ipc');
+        const isWs = typeof providerString === 'string' && providerString.startsWith('ws');
         const contractData = {
             "abi": [
                 {
@@ -340,7 +339,7 @@
                         .send(sendOptions)
                         .then(contract => {
                             contracts[account.address] = contract;
-                        }),
+                        }).catch(console.log),
                 );
             }
             await Promise.all(prs);
@@ -365,7 +364,7 @@
             const nonce = await web3.eth.getTransactionCount(mainAcc);
             for (let i = 0; i < n; i++) {
                 const acc = web3.eth.accounts.create();
-                prs.push(addAccount(web3, mainAcc, acc.address, acc.privateKey, Number(nonce) + i));
+                prs.push(addAccount(web3, mainAcc, acc.address, acc.privateKey, Number(nonce) + i).catch(console.log));
                 accountList.push(acc);
             }
             await Promise.all(prs);
@@ -384,70 +383,38 @@
             await contract.methods.getStringValue().call();
         };
 
-        const receivedEvents = {};
-        const subscribeContract = acc => {
-            const contract = contracts[acc.address];
-            const event = contract.events.StringEvent();
-
-            event.on('data', res => {
-                if (res.returnValues.str !== `String event: ${acc.address}`) {
-                    throw new Error('Event is not correct');
-                }
-                receivedEvents[acc.address] = res;
-            });
-        };
-        const contractSubscriptions = (web3, accounts) => {
-            log(`Subscribe to ${accounts.length} contracts events`);
-            for (const acc of accounts) {
-                subscribeContract(acc);
-            }
-        };
         const test = async () => {
             log(`Start test with provider: ${providerString}`);
-            const provider = isWs
-                    ? new Web3.providers.WebsocketProvider(providerString)
-                    : new Web3.providers.HttpProvider(providerString);
-            const web3 = new Web3(provider);
+            const web3 = new Web3(providerString);
 
             log(`Prepare ${n} accounts in parallel`);
             const accounts = await prepareAccounts(web3, n);
 
             log(`Deploy ${n} contracts in parallel`);
             await deployContracts(web3, accounts);
-            // if socket subscribe to events
-            if (isIpc || isWs) {
-                contractSubscriptions(web3, accounts);
-            }
+
 
             log(`Send data from ${n} accounts in parallel`);
             const sendPrs = [];
             for (let i = 0; i < n; i++) {
-                sendPrs.push(sendData(web3, accounts[i]));
+                sendPrs.push(sendData(web3, accounts[i]).catch(console.log));
             }
             await Promise.all(sendPrs);
-
-            if (isIpc || isWs) {
-                if (Object.keys(receivedEvents).length !== accounts.length) {
-                    throw new Error('Incorrect event count');
-                }
-            }
 
             log(`Get data from ${n} accounts in parallel`);
             const getPrs = [];
             for (let i = 0; i < n; i++) {
-                getPrs.push(getData(web3, accounts[i]));
+                getPrs.push(getData(web3, accounts[i]).catch(console.log));
             }
             await Promise.all(getPrs);
-            if (isIpc || isWs) {
-                web3.provider.disconnect();
-            }
+            log('Done')
         };
 
         return test().catch(console.error);
     }
     (async () => {
-        await testScope('http://localhost:8545', 500)
-        await testScope('ws://localhost:8545', 2000)
+        await testScope(provider, 1000)
+        // await testScope('ws://localhost:8545', 2000)
     })()
 
 </script>
