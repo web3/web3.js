@@ -507,7 +507,7 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 					);
-
+					
 					try {
 						transactionFormatted = await sendTxHelper.populateGasPrice({
 							transaction,
@@ -627,9 +627,8 @@ export function sendSignedTransaction<
 					};
 
 					try {
-						const { v , r , s, 
-								...txWithoutSigParams} = unSerializedTransactionWithFrom;
-						
+						const { v, r, s, ...txWithoutSigParams } = unSerializedTransactionWithFrom;
+
 						await sendTxHelper.checkRevertBeforeSending(
 							txWithoutSigParams as TransactionCall,
 						);

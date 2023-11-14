@@ -2199,10 +2199,58 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.2.1]
 
 ### Fixed
 
 #### web3-eth-abi
 
 -   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
+
+### Changed
+
+#### web3-eth-contract
+
+-   Dependencies updated
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-personal
+
+-   Dependencies updated
+
+## [4.2.2]
+### Added
+
+#### web3-core
+
+-   Added `isMetaMaskProvider` function to check if provider is metamask (#6534)
+
+#### web3-types
+
+-   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
+-   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
+
+### Changed
+
+#### web3
+
+-   Dependencies updated
+
+### Fixed
+
+#### web3-errors
+
+-   Fixed grammar and spelling in `transactionTimeoutHint` (#6559)
+
+#### web3-eth-contract
+
+-	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
+
+## [Unreleased]

@@ -171,6 +171,10 @@ Documentation:
 
 ## [Unreleased]
 
+### Added
+
+-   Add `isContractInitOptions` method (#6455)
+
 ### Fixed
 
 -   Fix unecessary array copy when pack encoding

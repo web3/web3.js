@@ -97,12 +97,15 @@ export abstract class Web3Config
 
 	public constructor(options?: Partial<Web3ConfigOptions>) {
 		super();
-
 		this.setConfig(options ?? {});
 	}
 
 	public setConfig(options: Partial<Web3ConfigOptions>) {
 		// TODO: Improve and add key check
+		const keys = Object.keys(options) as (keyof Web3ConfigOptions)[];
+		for (const key of keys) {
+			this._triggerConfigChange(key, options[key])
+		}
 		Object.assign(this.config, options);
 	}
 
