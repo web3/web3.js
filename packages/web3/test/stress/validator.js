@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-const { Web3Validator } = require('../../lib/commonjs');
+const { Web3Validator } = require('../../../web3-validator/lib/commonjs');
 
 const abi = [
 	{ indexed: true, internalType: 'address', name: 'from', type: 'address' },
