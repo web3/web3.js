@@ -16,10 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-const { Web3 } = require('../../lib/commonjs');
-const { IpcProvider } = require('../../../web3-providers-ipc/lib/commonjs');
-const accounts = require('../../../../scripts/accounts.json');
-const contractData = require('../../../../fixtures/build/Basic.json');
+const { Web3 } = require('../../../lib/commonjs');
+const { IpcProvider } = require('../../../../web3-providers-ipc/lib/commonjs');
+const accounts = require('../../../../../scripts/accounts.json');
+const contractData = require('../../../../../fixtures/build/Basic.json');
 
 const DATA_AMOUNT = 50 * 1024; // 50 kB
 

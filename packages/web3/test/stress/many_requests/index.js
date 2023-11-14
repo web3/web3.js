@@ -16,9 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-const { Web3 } = require('../../lib/commonjs');
-const { IpcProvider } = require('../../../web3-providers-ipc/lib/commonjs');
-const contractData = require('../../../../fixtures/build/Basic.json');
+const { Web3 } = require('../../../lib/commonjs');
+const { IpcProvider } = require('../../../../web3-providers-ipc/lib/commonjs');
+const contractData = require('../../../../../fixtures/build/Basic.json');
 
 const providerString = process.env.WEB3_SYSTEM_TEST_PROVIDER;
 const isWs = providerString.startsWith('ws');
