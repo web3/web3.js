@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const lightCodeTheme = require('prism-react-renderer').themes.github;
+const darkCodeTheme = require('prism-react-renderer').themes.dracula;
 const { join } = require('path');
 
 const packages = [
@@ -65,7 +65,7 @@ const config = {
 	plugins: [
 		'@docusaurus/theme-live-codeblock',
 		[
-			'@mpetrunic/docusaurus-plugin-typedoc-api',
+			'docusaurus-plugin-typedoc-api',
 			{
 				projectRoot: join(__dirname, '..'),
 				// Monorepo
