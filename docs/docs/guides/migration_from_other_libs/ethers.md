@@ -24,9 +24,12 @@ With ethers.js, you would initialize like:
 import { ethers } from 'ethers';
 
 async function getBlockNumber() {
-	const provider = new ethers.JsonRpcProvider(
-		'https://mainnet.infura.io/v3/ec907b4a35c64ea1852711ba1cd42415',
-	);
+  // in v5:
+  const provider = new ethers.providers.JsonRpcProvider(url);
+
+  // in v6:
+	const provider = new ethers.JsonRpcProvider(url);
+
 	const ts = provider.getBlockNumber();
 	ts.then(console.log);
 }
@@ -40,7 +43,7 @@ With web3.js:
 import { Web3 } from 'web3';
 
 async function getBlockNumber() {
-	const web3 = new Web3('https://mainnet.infura.io/v3/ec907b4a35c64ea1852711ba1cd42415');
+	const web3 = new Web3(url);
 	const ts = web3.eth.getBlockNumber();
 	ts.then(console.log);
 }
@@ -53,11 +56,11 @@ getBlockNumber();
 With ethers.js:
 
 ```typescript
-// v5
-provider = new ethers.providers.Web3Provider(window.ethereum);
+// in v5
+const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-// v6:
-provider = new ethers.BrowserProvider(window.ethereum);
+// in v6
+const provider = new ethers.BrowserProvider(window.ethereum);
 ```
 
 With web3.js:
@@ -122,6 +125,15 @@ async function createWallet() {
 createWallet();
 ```
 
+:::info
+  In  web3.js, if you want to use a private key to later sign and send transactions, you first need to add this private key to the accounts with, for example, one of the methods:
+  `web3.eth.accounts.create()`, or `web3.eth.accounts.wallet.add(privateKey)`.
+  
+  And then whenever you provide the the public address of that private key, web3.js will use that private key to sign. For example, you would pass the public key at `web3.eth.sendTransaction({from: publicAddress,...})` and web3.`eth.signTransaction({from: publicAddress,...})` then the privateKey of that publicAddress will be lookup and used to sign.
+
+  However, it is not advised to use the privatekey directly. And you are advised to use a secret storage or a vault instead.
+:::
+
 ### Get unlocked account
 
 With ethers.js:
@@ -157,7 +169,13 @@ sendTransaction();
 
 With web3.js:
 
-The method web3.eth.sendTransaction is helpful if you are using a browser-injected provider like metamask. Or, if you are using a local dev node, and you have some accounts already unlocked at the node. Note that it is highly risky and not recommended to unlock an account at a production or even a test node.
+:::info
+The method `web3.eth.sendTransaction` will use the account that you pass the public address at `from` to sign the transaction.
+
+So, the `from` needs to be the public address of a private key that you added previously to the web3.eth.accounts. Or, else, it would pass it to the provider where an unlocked account would be used. 
+
+And for the case when you did not add the private key early, and so the `from` was just passed to the provider. Then if the provider was a browser-injected provider like metamask, for example, it will ask the user to sign. And, if you are using a local dev node as a provider, it should be one of the accounts that were already unlocked at the node. However, note that it is highly risky and not recommended to unlock an account at a production or even a test node.
+:::
 
 ```typescript
 async function sendTransaction() {
@@ -167,6 +185,10 @@ async function sendTransaction() {
 	//  Or, if you are using a local dev node like ganache; and you have some accounts already unlocked at the node.
 	//  And this is how you would get the first unlocked account from a local node (not advised for production or even on test node to use unlock accounts on the node).
 	const account = (await web3.eth.getAccounts())[0];
+  
+	// Alternative to the above, here is how to add wallet to be used as a signer later:
+	const wallet = web3.eth.accounts.wallet.add(privateKey);
+	const account = wallet[0].address;
 
 	const tx = await web3.eth.sendTransaction({
 		from: account,
@@ -184,10 +206,10 @@ sendTransaction();
 Posting a signed transaction to the node with ethers.js:
 
 ```typescript
-// v5
-// provider.sendTransaction(signedTx)
+// in v5
+provider.sendTransaction(signedTx)
 
-// v6
+// in v6
 provider.broadcastTransaction(signedTx);
 ```
 
@@ -339,7 +361,7 @@ message = await contract['getMessage(string)']('nice');
 // and to call the overladed method without a parameter:
 message = await contract['getMessage()']();
 
-// in ethers.js v6
+// in v6
 contract.foo(Typed.string('nice'))
 ```
 
