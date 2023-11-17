@@ -33,7 +33,7 @@ async function getBlockNumber() {
 	const ts = provider.getBlockNumber();
 	ts.then(console.log);
 }
-// outputs something like: 18561956n
+// outputs something like: 18561956
 getBlockNumber();
 ```
 
@@ -47,7 +47,7 @@ async function getBlockNumber() {
 	const ts = web3.eth.getBlockNumber();
 	ts.then(console.log);
 }
-// outputs something like: 18561956
+// outputs something like: 18561956n
 getBlockNumber();
 ```
 
@@ -99,7 +99,7 @@ In ethers.js:
 async function createWallet() {
 	const wallet = new ethers.Wallet(
 		// A private key that you might had generated with:
-		//  ethers.Wallet.createRandom().privateKey
+		// ethers.Wallet.createRandom().privateKey
 		privateKey,
 	);
 
@@ -129,7 +129,7 @@ createWallet();
   In  web3.js, if you want to use a private key to later sign and send transactions, you first need to add this private key to the accounts with, for example, one of the methods:
   `web3.eth.accounts.create()`, or `web3.eth.accounts.wallet.add(privateKey)`.
   
-  And then whenever you provide the the public address of that private key, web3.js will use that private key to sign. For example, you would pass the public key at `web3.eth.sendTransaction({from: publicAddress,...})` and web3.`eth.signTransaction({from: publicAddress,...})` then the privateKey of that publicAddress will be lookup and used to sign.
+  And then whenever you provide the public address of that private key, web3.js will use that private key to sign. For example, you would pass the public key at `web3.eth.sendTransaction({from: publicAddress,...})` and web3.`eth.signTransaction({from: publicAddress,...})` then the privateKey of that publicAddress will be lookup and used to sign.
 
   However, it is not advised to use the privatekey directly. And you are advised to use a secret storage or a vault instead.
 :::
@@ -182,8 +182,8 @@ async function sendTransaction() {
 	const web3 = new Web3('http://localhost:8545');
 
 	// The method web3.eth.sendTransaction is helpful if you are using a browser-injected provider like metamask.
-	//  Or, if you are using a local dev node like ganache; and you have some accounts already unlocked at the node.
-	//  And this is how you would get the first unlocked account from a local node (not advised for production or even on test node to use unlock accounts on the node).
+	// Or, if you are using a local dev node like ganache; and you have some accounts already unlocked at the node.
+	// And this is how you would get the first unlocked account from a local node (not advised for production or even on test node to use unlock accounts on the node).
 	const account = (await web3.eth.getAccounts())[0];
   
 	// Alternative to the above, here is how to add wallet to be used as a signer later:
@@ -253,7 +253,7 @@ async function signMessage() {
   console.log(signature);
 }
 // Outputs something like:
-//  0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
 signMessage();
 ```
 
@@ -267,7 +267,7 @@ async function signMessageWithPrivateKey() {
   console.log(signature);
 }
 // Outputs something like:
-//  0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
 signMessageWithPrivateKey();
 
 // Using an unlocked account managed by connected RPC client or a browser-injected provider
@@ -280,7 +280,7 @@ async function signMessageByProvider() {
   console.log(signature);
 }
 // Outputs something like:
-//  0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
 signMessageByProvider();
 ```
 
@@ -306,10 +306,10 @@ In web3.js:
 ```typescript
 const contractObject = new web3.eth.Contract(abi);
 const deployedContract = await contractObject.deploy({
-   data: bytecode,
-   arguments: ["constructor param"]
+    data: bytecode,
+    arguments: ["constructor param"]
 }).send({
-   from: "0x12598d2Fd88B420ED571beFDA8dD112624B5E730",
+    from: "0x12598d2Fd88B420ED571beFDA8dD112624B5E730",
     gas: '1000000',
     // other transaction's params
 });
