@@ -471,13 +471,13 @@ const charCodeMap = {
 
 export function hexToUint8Array(hex: string): Uint8Array {
 	let offset = 0;
-	if (hex.toLowerCase().startsWith('0x')) {
+	if (hex[0] === '0' && (hex[1] === 'x' || hex[1] === 'X')) {
 		offset = 2;
 	}
 	if (hex.length % 2 !== 0) {
 		throw new InvalidBytesError(`hex string has odd length: ${hex}`);
 	}
-	const length = Math.ceil((hex.length-offset) / 2);
+	const length = (hex.length - offset) / 2;
 	const bytes = new Uint8Array(length);
 	for (let index = 0, j = offset; index < length; index+=1) {
 	  // eslint-disable-next-line no-plusplus
