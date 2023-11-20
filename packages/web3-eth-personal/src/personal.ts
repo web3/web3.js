@@ -20,6 +20,9 @@ import { Address, EthPersonalAPI, HexString, Transaction } from 'web3-types';
 
 import * as rpcWrappers from './rpc_method_wrappers.js';
 
+/**
+ * Eth Personal allows you to interact with the Ethereum node’s accounts.
+ */
 export class Personal extends Web3Context<EthPersonalAPI> {
 	/**
 	 *Returns a list of accounts the node controls by using the provider and calling the RPC method personal_listAccounts. Using `web3.eth.accounts.create()` will not add accounts into this list. For that use `web3.eth.personal.newAccount()`.
@@ -143,9 +146,9 @@ export class Personal extends Web3Context<EthPersonalAPI> {
 	/**
 	 * Signs a transaction. This account needs to be unlocked.
 	 * **_NOTE:_** Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
-	 * @param tx - The transaction data to sign. See {@link sendTransaction}  for more information.
+	 * @param tx - The transaction data to sign. See sendTransaction  for more information.
 	 * @param passphrase - The password of the `from` account, to sign the transaction with.
-	 * @returns - The RLP encoded transaction. The `raw` property can be used to send the transaction using {@link sendSignedTransaction}.
+	 * @returns - The RLP encoded transaction. The `raw` property can be used to send the transaction using  sendSignedTransaction.
 	 * @example
 	 * ```ts
 	 * const tx = personal

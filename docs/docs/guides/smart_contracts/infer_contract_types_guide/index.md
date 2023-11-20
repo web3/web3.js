@@ -128,6 +128,11 @@ import ERC20 from './artifacts/ERC20';
 
 You can see full example at [https://github.com/web3/web3-contract-types-example](https://github.com/web3/web3-contract-types-example)
 
+
 :::tip
 📝 You can use a web3.js plugin called `web3-plugin-craftsman` to compile and save the ABI and ByteCode. You can find more on: https://www.npmjs.com/package/web3-plugin-craftsman#save-the-compilation-result
+:::
+
+:::tip
+📝 If you are developing smart contracts using Hardhat, you can use [@chainsafe/hardhat-ts-artifact-plugin](https://github.com/ChainSafe/hardhat-ts-artifacts-plugin) to generate typescript files containing typed ABI JSON for each artifact.
 :::
