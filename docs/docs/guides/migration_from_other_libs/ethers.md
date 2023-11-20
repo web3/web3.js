@@ -28,10 +28,10 @@ async function getBlockNumber() {
   const provider = new ethers.providers.JsonRpcProvider(url);
 
   // in v6:
-	const provider = new ethers.JsonRpcProvider(url);
+  const provider = new ethers.JsonRpcProvider(url);
 
-	const ts = provider.getBlockNumber();
-	ts.then(console.log);
+  const ts = provider.getBlockNumber();
+  ts.then(console.log);
 }
 // outputs something like: 18561956
 getBlockNumber();
@@ -43,9 +43,9 @@ With web3.js:
 import { Web3 } from 'web3';
 
 async function getBlockNumber() {
-	const web3 = new Web3(url);
-	const ts = web3.eth.getBlockNumber();
-	ts.then(console.log);
+  const web3 = new Web3(url);
+  const ts = web3.eth.getBlockNumber();
+  ts.then(console.log);
 }
 // outputs something like: 18561956n
 getBlockNumber();
@@ -97,13 +97,13 @@ In ethers.js:
 
 ```typescript
 async function createWallet() {
-	const wallet = new ethers.Wallet(
-		// A private key that you might had generated with:
-		// ethers.Wallet.createRandom().privateKey
-		privateKey,
-	);
+  const wallet = new ethers.Wallet(
+    // A private key that you might had generated with:
+    // ethers.Wallet.createRandom().privateKey
+    privateKey,
+  );
 
-	console.log(wallet.address);
+  console.log(wallet.address);
 }
 // outputs: 0x6f7D735dFB514AA1778E8D97EaCE72BfECE71865
 createWallet();
@@ -113,13 +113,13 @@ With web3.js:
 
 ```typescript
 async function createWallet() {
-	const web3 = new Web3();
-	const wallet = web3.eth.accounts.wallet.add(
-		// you can generate a private key using web3.eth.accounts.create().privateKey
-		privateKey,
-	);
+  const web3 = new Web3();
+  const wallet = web3.eth.accounts.wallet.add(
+    // you can generate a private key using web3.eth.accounts.create().privateKey
+    privateKey,
+  );
 
-	console.log(wallet[0].address);
+  console.log(wallet[0].address);
 }
 // outputs: 0x6f7D735dFB514AA1778E8D97EaCE72BfECE71865
 createWallet();
@@ -179,23 +179,23 @@ And for the case when you did not add the private key early, and so the `from` w
 
 ```typescript
 async function sendTransaction() {
-	const web3 = new Web3('http://localhost:8545');
+  const web3 = new Web3('http://localhost:8545');
 
-	// The method web3.eth.sendTransaction is helpful if you are using a browser-injected provider like metamask.
-	// Or, if you are using a local dev node like ganache; and you have some accounts already unlocked at the node.
-	// And this is how you would get the first unlocked account from a local node (not advised for production or even on test node to use unlock accounts on the node).
-	const account = (await web3.eth.getAccounts())[0];
+  // The method web3.eth.sendTransaction is helpful if you are using a browser-injected provider like metamask.
+  // Or, if you are using a local dev node like ganache; and you have some accounts already unlocked at the node.
+  // And this is how you would get the first unlocked account from a local node (not advised for production or even on test node to use unlock accounts on the node).
+  const account = (await web3.eth.getAccounts())[0];
   
-	// Alternative to the above, here is how to add wallet to be used as a signer later:
-	const wallet = web3.eth.accounts.wallet.add(privateKey);
-	const account = wallet[0].address;
+  // Alternative to the above, here is how to add wallet to be used as a signer later:
+  const wallet = web3.eth.accounts.wallet.add(privateKey);
+  const account = wallet[0].address;
 
-	const tx = await web3.eth.sendTransaction({
-		from: account,
-		to: '0x92d3267215Ec56542b985473E73C8417403B15ac',
-		value: web3.utils.toWei('0.00000000001', 'ether'),
-	});
-	console.log(tx);
+  const tx = await web3.eth.sendTransaction({
+    from: account,
+    to: '0x92d3267215Ec56542b985473E73C8417403B15ac',
+    value: web3.utils.toWei('0.00000000001', 'ether'),
+  });
+  console.log(tx);
 }
 
 sendTransaction();
@@ -399,7 +399,7 @@ Handling events with ethers.js:
 
 ```typescript
 contract.on('SomeEvent', (arg1, arg2, event) => {
-	// event handling
+  // event handling
 });
 ```
 
@@ -407,10 +407,10 @@ With web3.js:
 
 ```typescript
 const event = contract.events.SomeEvent({
-	filter: {
-		filter: { val: 100 },
-	},
-	fromBlock: 0,
+  filter: {
+    filter: { val: 100 },
+  },
+  fromBlock: 0,
 });
 
 event.on('data', resolve);
