@@ -31,10 +31,10 @@ const provider = new ethers.providers.JsonRpcProvider(url);
 // in v6:
 const provider = new ethers.JsonRpcProvider(url);
 
-const ts = provider.getBlockNumber();
+const blockNumber = provider.getBlockNumber();
 
 // outputs something like: 18561956
-ts.then(console.log);
+blockNumber.then(console.log);
 ```
 
 With web3.js, you would get the last block number from a provider like this:
@@ -43,11 +43,33 @@ With web3.js, you would get the last block number from a provider like this:
 import { Web3 } from 'web3';
 
 const web3 = new Web3(url);
-const ts = web3.eth.getBlockNumber();
+const blockNumber = web3.eth.getBlockNumber();
 
 // outputs something like: 18561956n
-ts.then(console.log);
+blockNumber.then(console.log);
 ```
+
+:::tip
+📝 web3.js uses `bigint` as the default type for all big numbers returned. For, this you see above the blocknumber has the `n` at its end (`18561956n`). However, you can change the returned type by passing an optional parameter like: 
+```ts
+import { Web3, DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3';
+
+const blockNumber = web3.eth.getBlockNumber({
+  ...DEFAULT_RETURN_FORMAT,
+  number: FMT_NUMBER.HEX, // to get the block number in hex format
+});
+// outputs something like: 0x11B3BA4
+blockNumber.then(console.log);
+
+
+const blockNumber = web3.eth.getBlockNumber({
+  ...DEFAULT_RETURN_FORMAT,
+  number: FMT_NUMBER.STR, // to get the block number as a string
+});
+// the value would like: '18561956'
+blockNumber.then(console.log);
+```
+:::
 
 ### Use browser-injected provider
 
