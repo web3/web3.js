@@ -16,42 +16,40 @@ First, install the latest version of web3.js:
 npm install web3
 ```
 
-## Initialization and getting the last block number
+## Providers
 
-With ethers.js, you would initialize like:
+### Initialization and Calling RPC Methods
+
+With ethers.js, you would get the last block number from a provider like this:
 
 ```typescript
 import { ethers } from 'ethers';
 
-async function getBlockNumber() {
-  // in v5:
-  const provider = new ethers.providers.JsonRpcProvider(url);
+// in v5:
+const provider = new ethers.providers.JsonRpcProvider(url);
 
-  // in v6:
-  const provider = new ethers.JsonRpcProvider(url);
+// in v6:
+const provider = new ethers.JsonRpcProvider(url);
 
-  const ts = provider.getBlockNumber();
-  ts.then(console.log);
-}
+const ts = provider.getBlockNumber();
+
 // outputs something like: 18561956
-getBlockNumber();
+ts.then(console.log);
 ```
 
-With web3.js:
+With web3.js, you would get the last block number from a provider like this:
 
 ```typescript
 import { Web3 } from 'web3';
 
-async function getBlockNumber() {
-  const web3 = new Web3(url);
-  const ts = web3.eth.getBlockNumber();
-  ts.then(console.log);
-}
+const web3 = new Web3(url);
+const ts = web3.eth.getBlockNumber();
+
 // outputs something like: 18561956n
-getBlockNumber();
+ts.then(console.log);
 ```
 
-## Use browser-injected provider
+### Use browser-injected provider
 
 With ethers.js:
 
@@ -69,7 +67,10 @@ With web3.js:
 const web3 = new Web3(window.ethereum);
 ```
 
-## Generate Private Key
+
+## Wallets and Accounts
+
+### Generate Private Key
 
 With ethers.js:
 
@@ -88,41 +89,32 @@ With web3.js:
 // (Be sure to store it encrypted in a safe place)
 const privateKey = web3.eth.accounts.create().privateKey;
 ```
-
-## Wallets and Accounts
-
 ### Create a wallet
 
 In ethers.js:
 
 ```typescript
-async function createWallet() {
-  const wallet = new ethers.Wallet(
-    // A private key that you might had generated with:
-    // ethers.Wallet.createRandom().privateKey
-    privateKey,
-  );
+const wallet = new ethers.Wallet(
+  // A private key that you might had generated with:
+  // ethers.Wallet.createRandom().privateKey
+  privateKey,
+);
 
-  console.log(wallet.address);
-}
 // outputs: 0x6f7D735dFB514AA1778E8D97EaCE72BfECE71865
-createWallet();
+console.log(wallet.address);
 ```
 
 With web3.js:
 
 ```typescript
-async function createWallet() {
-  const web3 = new Web3();
-  const wallet = web3.eth.accounts.wallet.add(
-    // you can generate a private key using web3.eth.accounts.create().privateKey
-    privateKey,
-  );
+const web3 = new Web3();
+const wallet = web3.eth.accounts.wallet.add(
+  // you can generate a private key using web3.eth.accounts.create().privateKey
+  privateKey,
+);
 
-  console.log(wallet[0].address);
-}
 // outputs: 0x6f7D735dFB514AA1778E8D97EaCE72BfECE71865
-createWallet();
+console.log(wallet[0].address);
 ```
 
 :::info
@@ -149,22 +141,56 @@ const account = (await web3.eth.getAccounts())[0];
 ```
 
 
-## Sending Transactions
+### Signing a string message
+
+with ethers.js:
+
+```typescript
+const signer = new ethers.Wallet(privateKey);
+
+const signature = await signer.signMessage('Some data');
+// Outputs something like:
+// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+console.log(signature);
+
+```
+
+With web3.js:
+
+```typescript
+
+// Sign with web3.js, using a private key:
+const signature = web3.eth.accounts.sign('Some data', privateKey).signature;
+
+// Outputs something like:
+// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+console.log(signature);
+
+// Sign using an account managed by the connected provider (for example the RPC client or a browser-injected provider)
+const signature = await web3.eth.sign(
+  web3.utils.utf8ToHex('Some data'), // data to be signed (4.x only supports Hex Strings)
+  '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4', // the address that its private key would be used to sign
+);
+
+// Outputs something like:
+// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
+console.log(signature);
+```
+
+## Signing and Sending Transactions
+
+### Sending Transactions
 
 Sending a transaction with ethers.js:
 
 ```typescript
-async function sendTransaction() {
-  const signer = new ethers.Wallet(privateKey, provider);
+const signer = new ethers.Wallet(privateKey, provider);
 
-  const tx = await signer.sendTransaction({
-    to: '0x92d3267215Ec56542b985473E73C8417403B15ac',
-    value: ethers.parseUnits('0.001', 'ether'),
-  });
-  console.log(tx);
-}
-
-sendTransaction();
+const tx = await signer.sendTransaction({
+  to: '0x92d3267215Ec56542b985473E73C8417403B15ac',
+  value: ethers.parseUnits('0.001', 'ether'),
+});
+console.log(tx);
 ```
 
 With web3.js:
@@ -178,30 +204,26 @@ And for the case when you did not add the private key early, and so the `from` w
 :::
 
 ```typescript
-async function sendTransaction() {
-  const web3 = new Web3('http://localhost:8545');
+const web3 = new Web3(url);
 
-  // The method web3.eth.sendTransaction is helpful if you are using a browser-injected provider like metamask.
-  // Or, if you are using a local dev node like ganache; and you have some accounts already unlocked at the node.
-  // And this is how you would get the first unlocked account from a local node (not advised for production or even on test node to use unlock accounts on the node).
-  const account = (await web3.eth.getAccounts())[0];
-  
-  // Alternative to the above, here is how to add wallet to be used as a signer later:
-  const wallet = web3.eth.accounts.wallet.add(privateKey);
-  const account = wallet[0].address;
+// The method web3.eth.sendTransaction is helpful if you are using a browser-injected provider like metamask.
+// Or, if you are using a local dev node like ganache; and you have some accounts already unlocked at the node.
+// And this is how you would get the first unlocked account from a local node (not advised for production or even on test node to use unlock accounts on the node).
+const account = (await web3.eth.getAccounts())[0];
 
-  const tx = await web3.eth.sendTransaction({
-    from: account,
-    to: '0x92d3267215Ec56542b985473E73C8417403B15ac',
-    value: web3.utils.toWei('0.00000000001', 'ether'),
-  });
-  console.log(tx);
-}
+// Alternative to the above, here is how to add wallet to be used as a signer later:
+const wallet = web3.eth.accounts.wallet.add(privateKey);
+const account = wallet[0].address;
 
-sendTransaction();
+const tx = await web3.eth.sendTransaction({
+  from: account,
+  to: '0x92d3267215Ec56542b985473E73C8417403B15ac',
+  value: web3.utils.toWei('0.00000000001', 'ether'),
+});
+console.log(tx);
 ```
 
-## Sending a Signed Transactions
+### Sending a Signed Transactions
 
 Posting a signed transaction to the node with ethers.js:
 
@@ -216,73 +238,27 @@ provider.broadcastTransaction(signedTx);
 With web3.js:
 
 ```typescript
-async function sendSignedTransaction() {
-  const transaction: Transaction = {
-    from: senderPublicAddress,
-    to: receiverPublicAddress,
-    value: 1,
-    gas: 21000,
-    type: 0,
-  };
+const transaction: Transaction = {
+  from: senderPublicAddress,
+  to: receiverPublicAddress,
+  value: 1,
+  gas: 21000,
+  type: 0,
+};
 
-  // you might also use below `web3.eth.personal.signMessage`, depending on your use case.
-  const signedTransaction = await web3.eth.accounts.signTransaction(
-    transaction,
-    privateKey,
-  );
+// you might also use below `web3.eth.personal.signMessage`, depending on your use case.
+const signedTransaction = await web3.eth.accounts.signTransaction(
+  transaction,
+  privateKey,
+);
 
-  const tx = await web3.eth.sendSignedTransaction(
-    signedTransaction.rawTransaction,
-  );
+const tx = await web3.eth.sendSignedTransaction(
+  signedTransaction.rawTransaction,
+);
 
-  console.log(tx);
-}
-
-sendSignedTransaction();
+console.log(tx);
 ```
 
-### Signing a string message
-
-with ethers.js:
-
-```typescript
-async function signMessage() {
-  const signer = new ethers.Wallet(privateKey);
-
-  const signature = await signer.signMessage('Some data');
-  console.log(signature);
-}
-// Outputs something like:
-// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
-signMessage();
-```
-
-With web3.js:
-
-```typescript
-
-// sign with web3.js, using a private key:
-async function signMessageWithPrivateKey() {
-  const signature = web3.eth.accounts.sign('Some data', privateKey).signature;
-  console.log(signature);
-}
-// Outputs something like:
-// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
-signMessageWithPrivateKey();
-
-// Using an unlocked account managed by connected RPC client or a browser-injected provider
-async function signMessageByProvider() {
-  // you might also use below `web3.eth.personal.sign`, depending on your use case.
-  const signature = await web3.eth.sign(
-    web3.utils.utf8ToHex('Some data'), // data to be signed (4.x only supports Hex Strings)
-    '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4', // the address that its private key would be used to sign
-  );
-  console.log(signature);
-}
-// Outputs something like:
-// 0xb475e02218d7d6a16f3575de789996d0a57f900f240d73ed792672256d63913840c1da0dd3e7fe2e79485b7a1d81e8cc163f405c3df22d496f28f1dd148faebf1b
-signMessageByProvider();
-```
 
 
 ## Contracts
@@ -393,7 +369,7 @@ const gasAmount = await myContract.methods.myMethod(123).estimateGas(
 ```
 
 
-## Handling Events
+### Handling Events
 
 Handling events with ethers.js:
 
