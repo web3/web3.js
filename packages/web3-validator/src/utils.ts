@@ -471,7 +471,7 @@ const charCodeMap = {
 
 export function hexToUint8Array(hex: string): Uint8Array {
 	let offset = 0;
-	if (hex[0] === '0' && (hex[1] === 'x' || hex[1] === 'X')) {
+	if (hex.startsWith('0') && (hex[1] === 'x' || hex[1] === 'X')) {
 		offset = 2;
 	}
 	if (hex.length % 2 !== 0) {
