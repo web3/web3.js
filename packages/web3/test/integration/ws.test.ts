@@ -34,6 +34,7 @@ describe('Web3 instance', () => {
 	describeIf(isWs)('web3 ws tests', () => {
 		it('should connect and disconnect using safe disconnect subscription successfully', async () => {
             const subscription = await web3.eth.subscribe("newBlockHeaders");
+            // eslint-disable-next-line
             subscription.unsubscribe();
             // eslint-disable-next-line
             await expect((web3.currentProvider as WebSocketProvider).safeDisconnect()).resolves.not.toThrow();
