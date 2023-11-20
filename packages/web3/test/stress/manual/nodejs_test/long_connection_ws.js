@@ -60,7 +60,7 @@ const main = async () => {
         end = new Date();
         console.log("websocket test successful")
     } catch (e) {
-        // console.warn("error occured during ws test, on attempt: ", attempt, "program ran for: ", attempt ,"minutes with error: ", e)
+        console.warn("error occured during ws test, on attempt: ", attempt, "program ran for: ", attempt ,"minutes with error: ", e)
     }
     console.log("start", start)
     console.log("end", end)
