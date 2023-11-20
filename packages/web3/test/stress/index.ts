@@ -16,43 +16,42 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-const { Web3 } = require('../../lib/commonjs');
-const { IpcProvider } = require('../../../web3-providers-ipc/lib/commonjs');
-const accounts = require('../../../../scripts/accounts.json');
-const contractData = require('../../../../fixtures/build/Basic.json');
-
+import { Web3 } from 'web3';
+import { IpcProvider } from 'web3-providers-ipc';
+import accounts from '../shared_fixtures/accounts.json';
+// @ts-ignore
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic.ts';
+import WebSocketProvider from 'web3-providers-ws';
 const DATA_AMOUNT = 50 * 1024; // 50 kB
 
-const sendAndGetData = async (web3, i) => {
+const sendAndGetData = async (web3: Web3, i: number) => {
 	const sendOptions = { from: accounts[i].address };
 	const deployOptions = {
-		data: contractData.evm.bytecode.object,
-		arguments: [123, ''],
+		data: BasicBytecode,
+		arguments: [0, ''] as [number, string],
 		gasPrice: await web3.eth.getGasPrice(),
 		gas: BigInt(9000000000000),
 		gasLimit: BigInt(9000000000000),
 		type: BigInt(0),
 	};
-	const c = new web3.eth.Contract(contractData.abi);
+	const c = new web3.eth.Contract<typeof BasicAbi>(BasicAbi);
+	// @ts-ignore
 	const contract = await c.deploy(deployOptions).send(sendOptions);
 
-	console.time(`Send huge data [${i}]`);
-	const receipt = await contract.methods
+	await contract.methods
+		// @ts-ignore
 		.setValues(1, 'A'.repeat(DATA_AMOUNT), true)
 		.send({ from: accounts[i].address });
-	console.timeLog(`Send huge data [${i}]`, receipt.transactionHash);
 
-	console.time(`Get huge data [${i}]`);
 	await contract.methods.getStringValue().call();
-	console.timeLog(`Get huge data [${i}]`);
 };
 
 const test = async () => {
-	const providerString = process.env.WEB3_SYSTEM_TEST_PROVIDER;
+	const providerString = String(process.env.WEB3_SYSTEM_TEST_PROVIDER);
 	console.log(`Start test with provider: ${providerString}`);
 	const provider = providerString.includes('ipc')
 		? new IpcProvider(providerString)
-		: new Web3.providers.WebsocketProvider(providerString);
+		: providerString;
 	const web3 = new Web3(provider);
 
 	for (const a of accounts) {
@@ -65,7 +64,7 @@ const test = async () => {
 		prs.push(sendAndGetData(web3, i));
 	}
 	await Promise.all(prs);
-	web3.provider.disconnect();
+	(web3.provider as unknown as WebSocketProvider).disconnect();
 };
 
 test().catch(console.error);
