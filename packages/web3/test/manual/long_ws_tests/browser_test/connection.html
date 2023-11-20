@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual browser tests</title>
+    <!-- To Run -->
+    <script src="../../../../dist/web3.min.js">
+    </script>
+</head>
+<body>
+    
+    <p> Manual browser test - for this test you will need to provide an ws infura endpoint in this html page. This will test the web3js ws provider by sending a request every 10 minutes for 10 hours </p>
+    <p> Have this html test open in a browser of your choice</p>
+    <p> Keep dev console open in case of any unintended errors occur </p>
+    <!-- Display start date -->
+    <p>Start time: <span id="startTime"></span></p>
+
+    <!-- Display end date -->
+    <p>End Time: <span id="endTime"></span></p>
+
+    <!-- Display attempts made -->
+    <p>Number of requests sent: <span id="attempts"></span></p>
+
+    <!-- How long it has ran for -->
+    <p>Has ran for <span id="minutes"></span> minutes</p>
+
+    <!-- Display block number -->
+    <p>Block number: <span id="call"></span></p>
+
+    <!-- Display result -->
+    <p>Result: <span id="result"></span></p>
+
+    <script>
+
+        let web3;
+        let attempt = 0;
+        let intervalId;
+        let start;
+        let end;
+        let result;
+        // You will need to set mainnet infura provider 
+        web3 = new Web3(""); 
+
+// constantly send requests through WS for 10 hours
+const sendRequests = () => {
+    return new Promise((resolve, reject) => {
+        // send a request in intervals of 10 minutes
+        intervalId = setInterval( async() => {
+            try{
+                const block = await web3.eth.getBlock()
+                attempt++;
+                document.getElementById("attempts").innerText = attempt.toString();
+                document.getElementById("call").innerText = block.number;
+                document.getElementById("minutes").innerText = attempt*10;
+                if (attempt === 144) { // after 10 hours
+                    clearInterval(intervalId);
+                    resolve("");
+                    document.getElementById("result").innerText = "success";
+                }
+            } catch (error) {
+                clearInterval(intervalId);
+                document.getElementById("result").innerText = "Error";
+                reject(error);
+            }
+        },60000) // every 10 minutes
+    })
+
+}
+
+const main = async () => {
+
+    try {
+        start = new Date();
+        document.getElementById("startTime").innerText = start.toTimeString();
+        document.getElementById("attempts").innerText = attempt.toString();
+        document.getElementById("endTime").innerText = "Currently running";
+        const promise = sendRequests();
+        await promise;
+    } catch (e) {
+        console.warn("error")
+    }
+    end = new Date();
+    document.getElementById("endDate").innerText = new Date().toTimeString();
+
+}
+main();
+    </script>
+
+    <!-- You can include additional scripts at the end of the body section if needed -->
+
+
+</body>
+</html>
