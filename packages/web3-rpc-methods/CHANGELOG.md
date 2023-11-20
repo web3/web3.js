@@ -127,3 +127,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fix web3-types import #6590 (#6589)

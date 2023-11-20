@@ -10,7 +10,7 @@ import TabItem from '@theme/TabItem';
 
 This guide intends to provide the necessary context for registering plugins with web3.js packages.
 
-To help you get started, take a look at a list of useful plugins at <https://web3js.org/plugins>
+To help you get started, take a look at a list of useful plugins at [https://web3js.org/plugins](https://web3js.org/plugins)
 
 ## Installing the Plugin
 
