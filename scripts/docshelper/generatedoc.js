@@ -50,6 +50,8 @@ function postProcessFunctionsDocs(configOptions) {
   copyDir(packagesPath, configOptions.out);
   cleanDir(packagesPath);
 
+  removeFile("./docs/docs/libdocs/README.md");
+
 }
 
 ///// utils
@@ -60,6 +62,14 @@ async function generateDocs(config) {
 
   if (project) {
     await app.generateDocs(project, config.out);
+  }
+}
+
+function removeFile(filePath){
+  const stats = fs.statSync(filePath);
+  if (stats.isFile()) {
+    // If it's a file, delete it
+    fs.unlinkSync(filePath);
   }
 }
 
