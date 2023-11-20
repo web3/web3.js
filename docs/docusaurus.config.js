@@ -117,6 +117,12 @@ const config = {
 					{
 						to: '/',
 						activeBasePath: '/',
+						label: 'Guides & Tutorials',
+						position: 'left',
+					},
+					{
+						to: '/libdocs/Accounts',
+						activeBasePath: '/libdocs/',
 						label: 'Documentation',
 						position: 'left',
 					},

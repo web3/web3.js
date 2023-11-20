@@ -19,6 +19,9 @@ import { DataFormat, DEFAULT_RETURN_FORMAT, Web3NetAPI } from 'web3-types';
 
 import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
 
+/**
+ * Net class allows you to interact with an Ethereum node’s network properties.
+ */
 export class Net extends Web3Context<Web3NetAPI> {
 	/**
 	 * Gets the current network ID
