@@ -4,7 +4,7 @@ sidebar_label: 'Migration from ethers.js'
 title: 'Migration from ethers.js'
 ---
 
-Follow this guide, if you're currently using the ethers.js library to interact with the Ethereum blockchain and want to migrate to web3.js.
+Follow this guide, if you're currently using the ethers.js library to interact with the Ethereum blockchain and want to migrate to web3.js. This guide is for ethers v5 and v6. And, if there are differences, code for both would be provided. And, if you find something missing, or worth adding, feel free to open a PR, please.
 
 However, migrating from a library to another would usually need careful changes. But, ethers.js have lots of similarities with web3.js and migration would usually be easy and straightforward. However, you still need to check your code for possible tweaks as needed.
 

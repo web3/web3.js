@@ -169,7 +169,6 @@ import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to the Ethereum node and unlock it
-// IMPORTANT: never unlock an account on the mainnet. Use this only with your local dev node.
 const account = {
 	privateKey: '0xb45b02f408a0dd0996aab2b55a54f4ed7735f82b133c0786a9ff372ffaaf11bd',
 	address: '0xe4beef667408b99053dc147ed19592ada0d77f59',
