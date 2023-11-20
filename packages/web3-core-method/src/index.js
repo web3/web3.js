@@ -657,7 +657,10 @@ Method.prototype.buildCall = function () {
                     if (typeof err.data === 'object') {
                         // Ganache has no `originalError` sub-object unlike others
                         var originalError = err.data.originalError ?? err.data;
-                        reasonData = originalError.data.substring(10);
+                        // on Pologon PoS there is no error raison data for insufficient funds
+                        if (typeof originalError.data === 'string') {
+                            reasonData = originalError.data.substring(10);
+                        }
                     }
                     else {
                         reasonData = err.data.substring(10);
