@@ -86,7 +86,7 @@ yarn add web3
 | test             | Uses `jest` to run unit tests in each package                      |
 | test:integration | Uses `jest` to run tests under `/test/integration` in each package |
 | test:unit        | Uses `jest` to run tests under `/test/unit` in each package        |
-| test:manual      | Runs manual tests under `test/stress` in the web3 package          |
+| test:manual      | Runs manual tests under `test/manual` in the web3 package          |
 
 [npm-url]: https://npmjs.org/package/web3
 [downloads-image]: https://img.shields.io/npm/dm/web3?label=npm%20downloads
