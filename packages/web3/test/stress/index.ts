@@ -19,8 +19,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3 } from 'web3';
 import { IpcProvider } from 'web3-providers-ipc';
 import accounts from '../shared_fixtures/accounts.json';
-// @ts-ignore
-import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic.ts';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import WebSocketProvider from 'web3-providers-ws';
 const DATA_AMOUNT = 50 * 1024; // 50 kB
 
@@ -35,7 +34,6 @@ const sendAndGetData = async (web3: Web3, i: number) => {
 		type: BigInt(0),
 	};
 	const c = new web3.eth.Contract<typeof BasicAbi>(BasicAbi);
-	// @ts-ignore
 	const contract = await c.deploy(deployOptions).send(sendOptions);
 
 	await contract.methods
