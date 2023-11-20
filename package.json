@@ -85,7 +85,7 @@
 		"test:blackbox:geth:ws": "yarn pre-blackbox && yarn geth:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:geth:ws --stream && yarn post-blackbox:geth",
 		"test:blackbox:infura:http": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:http --stream && yarn post-blackbox",
 		"test:blackbox:infura:ws": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream && yarn post-blackbox",
-		"test:manual:stress:data": "packages/web3/stress/large_request_data/start.sh",
+		"test:manual:stress:data": "packages/web3/test/stress/large_request_data/start.sh",
 		"test:manual:stress:requests": "packages/web3/test/stress/many_requests/start.sh",
 		"test:manual:stress:validation": "npx ts-node packages/web3/test/stress/large_validator_data/index.ts",
 		"test:manual:stress": "yarn test:manual:stress:data && yarn test:manual:stress:validation && yarn test:stress:requests",

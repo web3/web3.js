@@ -16,33 +16,34 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-const { Web3 } = require('../../../lib/commonjs');
-const { IpcProvider } = require('../../../../web3-providers-ipc/lib/commonjs');
-const contractData = require('../../../../../fixtures/build/Basic.json');
+import { Web3, Contract, Numbers, EventLog } from 'web3';
+import { IpcProvider } from 'web3-providers-ipc';
+import { BasicBytecode, BasicAbi } from '../../shared_fixtures/build/Basic';
+import { Web3Account } from 'web3-eth-accounts';
 
-const providerString = process.env.WEB3_SYSTEM_TEST_PROVIDER;
+const providerString = String(process.env.WEB3_SYSTEM_TEST_PROVIDER);
 const isWs = providerString.startsWith('ws');
 const isIpc = providerString.includes('ipc');
-const contracts = {};
+const contracts: { [key: string]: Contract<typeof BasicAbi> } = {};
 
-const deployContracts = async (web3, accounts) => {
+const deployContracts = async (web3: Web3, accounts: Web3Account[]) => {
 	const prs = [];
 	for (let i = 0; i < accounts.length; i++) {
 		const account = accounts[i];
 		const sendOptions = { from: account.address };
 		const deployOptions = {
-			data: contractData.evm.bytecode.object,
-			arguments: [123, ''],
+			data: BasicBytecode,
+			arguments: [123, ''] as [number, string],
 			gas: BigInt(9000000000000),
 			gasLimit: BigInt(9000000000000),
 			type: BigInt(0),
 		};
-		const c = new web3.eth.Contract(contractData.abi);
+		const c = new web3.eth.Contract<typeof BasicAbi>(BasicAbi);
 		prs.push(
 			c
 				.deploy(deployOptions)
 				.send(sendOptions)
-				.then(contract => {
+				.then((contract: typeof c) => {
 					contracts[account.address] = contract;
 				}),
 		);
@@ -50,7 +51,13 @@ const deployContracts = async (web3, accounts) => {
 	await Promise.all(prs);
 };
 
-const addAccount = async (web3, mainAcc, address, privateKey, nonce) => {
+const addAccount = async (
+	web3: Web3,
+	mainAcc: string,
+	address: string,
+	privateKey: string,
+	nonce: Numbers,
+) => {
 	web3.eth.accounts.wallet.add(privateKey);
 	return web3.eth.sendTransaction({
 		from: mainAcc,
@@ -61,11 +68,11 @@ const addAccount = async (web3, mainAcc, address, privateKey, nonce) => {
 	});
 };
 
-const prepareAccounts = async (web3, n = 1000) => {
+const prepareAccounts = async (web3: Web3, n = 1000) => {
 	const prs = [];
 	const list = await web3.eth.personal.getAccounts();
 	const mainAcc = list[0];
-	const accountList = [];
+	const accountList: Web3Account[] = [];
 	const nonce = await web3.eth.getTransactionCount(mainAcc);
 	for (let i = 0; i < n; i++) {
 		const acc = web3.eth.accounts.create();
@@ -76,20 +83,20 @@ const prepareAccounts = async (web3, n = 1000) => {
 	return accountList;
 };
 
-const sendData = async (web3, account) => {
+const sendData = async (account: Web3Account) => {
 	const contract = contracts[account.address];
 	return contract.methods
 		.firesStringEvent(`String event: ${account.address}`)
 		.send({ from: account.address });
 };
 
-const getData = async (web3, account) => {
+const getData = async (account: Web3Account) => {
 	const contract = contracts[account.address];
 	await contract.methods.getStringValue().call();
 };
 
-const receivedEvents = {};
-const subscribeContract = acc => {
+const receivedEvents: { [key: string]: EventLog } = {};
+const subscribeContract = (acc: Web3Account) => {
 	const contract = contracts[acc.address];
 	const event = contract.events.StringEvent();
 
@@ -100,7 +107,7 @@ const subscribeContract = acc => {
 		receivedEvents[acc.address] = res;
 	});
 };
-const contractSubscriptions = (web3, accounts) => {
+const contractSubscriptions = (accounts: Web3Account[]) => {
 	console.log(`Subscribe to ${accounts.length} contracts events`);
 	for (const acc of accounts) {
 		subscribeContract(acc);
@@ -123,13 +130,13 @@ const test = async () => {
 	await deployContracts(web3, accounts);
 	// if socket subscribe to events
 	if (isIpc || isWs) {
-		contractSubscriptions(web3, accounts);
+		contractSubscriptions(accounts);
 	}
 
 	console.log(`Send data from ${n} accounts in parallel`);
 	const sendPrs = [];
 	for (let i = 0; i < n; i++) {
-		sendPrs.push(sendData(web3, accounts[i]));
+		sendPrs.push(sendData(accounts[i]));
 	}
 	await Promise.all(sendPrs);
 
@@ -142,11 +149,11 @@ const test = async () => {
 	console.log(`Get data from ${n} accounts in parallel`);
 	const getPrs = [];
 	for (let i = 0; i < n; i++) {
-		getPrs.push(getData(web3, accounts[i]));
+		getPrs.push(getData(accounts[i]));
 	}
 	await Promise.all(getPrs);
 	if (isIpc || isWs) {
-		web3.provider.disconnect();
+		(web3.provider as IpcProvider).disconnect();
 	}
 };
 

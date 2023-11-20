@@ -16,11 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-<<<<<<<< HEAD:packages/web3/test/stress/large_validator_data/index.js
-const { Web3Validator } = require('../../../../web3-validator/lib/commonjs');
-========
 import { Web3Validator, JsonSchema, Json } from 'web3-validator';
->>>>>>>> ok/5563-Stress-Tests-2---QA-Tests:packages/web3/test/stress/validator.ts
 
 const abi = [
 	{ indexed: true, internalType: 'address', name: 'from', type: 'address' },
@@ -107,34 +103,24 @@ const { schema: hugeSchema1000, data: hugeData1000 } = createHugeSchema(
 	1000,
 );
 
-const index = new Web3Validator();
+const validator = new Web3Validator();
 
-<<<<<<<< HEAD:packages/web3/test/stress/large_validator_data/index.js
-console.time('huge schema');
-index.validateJSONSchema(hugeSchema, hugeData);
-console.timeLog('huge schema');
-
-console.time('huge schema 1000');
-index.validateJSONSchema(hugeSchema1000, hugeData1000);
-console.timeLog('huge schema 1000');
-========
 validator.validateJSONSchema(hugeSchema, hugeData as object);
 
 validator.validateJSONSchema(hugeSchema1000, hugeData1000 as object);
->>>>>>>> ok/5563-Stress-Tests-2---QA-Tests:packages/web3/test/stress/validator.ts
 
 for (let i = 0; i < 500; i += 1) {
-	index.validateJSONSchema(simpleSchema, simpleData);
+	validator.validateJSONSchema(simpleSchema, simpleData);
 }
 
 for (let i = 0; i < 1000; i += 1) {
-	index.validateJSONSchema(simpleSchema, simpleData);
+	validator.validateJSONSchema(simpleSchema, simpleData);
 }
 
 for (let i = 0; i < 1000; i += 1) {
-	index.validateJSONSchema(abiJsonSchema, abiData);
+	validator.validateJSONSchema(abiJsonSchema, abiData);
 }
 
 for (let i = 0; i < 1000; i += 1) {
-	index.validate(abi, abiData);
+	validator.validate(abi, abiData);
 }

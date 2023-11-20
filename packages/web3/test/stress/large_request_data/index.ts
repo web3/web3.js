@@ -16,19 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-<<<<<<<< HEAD:packages/web3/test/stress/large_request_data/index.js
-const { Web3 } = require('../../../lib/commonjs');
-const { IpcProvider } = require('../../../../web3-providers-ipc/lib/commonjs');
-const accounts = require('../../../../../scripts/accounts.json');
-const contractData = require('../../../../../fixtures/build/Basic.json');
-
-========
 import { Web3 } from 'web3';
 import { IpcProvider } from 'web3-providers-ipc';
-import accounts from '../shared_fixtures/accounts.json';
-import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
+import accounts from '../../shared_fixtures/accounts.json';
+import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import WebSocketProvider from 'web3-providers-ws';
->>>>>>>> ok/5563-Stress-Tests-2---QA-Tests:packages/web3/test/stress/index.ts
+
 const DATA_AMOUNT = 50 * 1024; // 50 kB
 
 const sendAndGetData = async (web3: Web3, i: number) => {
