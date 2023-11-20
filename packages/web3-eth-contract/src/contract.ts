@@ -245,7 +245,7 @@ export class Contract<Abi extends ContractAbi>
 
 	private context?: Web3Context;
 	/**
-	 * Creates a new contract instance with all its methods and events defined in its {@doclink glossary/json_interface | json interface} object.
+	 * Creates a new contract instance with all its methods and events defined in its ABI provided.
 	 *
 	 * ```ts
 	 * new web3.eth.Contract(jsonInterface[, address][, options])
@@ -467,7 +467,7 @@ export class Contract<Abi extends ContractAbi>
 	 * });
 	 * ```
 	 *
-	 * @returns - Either returns {@link PayableMethodObject} or {@link NonPayableMethodObject} based on the definitions of the {@doclink glossary/json_interface | json interface} of that contract.
+	 * @returns - Either returns {@link PayableMethodObject} or {@link NonPayableMethodObject} based on the definitions of the ABI of that contract.
 	 */
 	public get methods() {
 		return this._methods;
