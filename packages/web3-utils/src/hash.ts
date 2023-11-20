@@ -15,6 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @module Utils
+ */
+
 import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { utf8ToBytes } from 'ethereum-cryptography/utils.js';
 import {
@@ -45,6 +49,7 @@ import {
 	utf8ToHex,
 } from './converters.js';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation.js';
+
 
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
@@ -325,8 +330,7 @@ export const processSolidityEncodePackedArgs = (arg: Sha3Input): string => {
  * Encode packed arguments to a hexstring
  */
 export const encodePacked = (...values: Sha3Input[]): string => {
-	const args = Array.prototype.slice.call(values);
-	const hexArgs = args.map(processSolidityEncodePackedArgs);
+	const hexArgs = values.map(processSolidityEncodePackedArgs);
 	return `0x${hexArgs.join('').toLowerCase()}`;
 };
 
