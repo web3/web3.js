@@ -176,3 +176,7 @@ Documentation:
 -   `SocketProvider` now contains public function `getPendingRequestQueueSize`, `getSentRequestsQueueSize` and `clearQueues` (#6479)
 -   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6479) 
 -   Add `isContractInitOptions` method (#6555)
+
+### Fixed
+
+-   Fix unecessary array copy when pack encoding (#6553)
