@@ -222,7 +222,7 @@ async function sendSignedTransaction() {
     to: receiverPublicAddress,
     value: 1,
     gas: 21000,
-    type: 1,
+    type: 0,
   };
 
   // you might also use below `web3.eth.personal.signMessage`, depending on your use case.
