@@ -16,7 +16,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
+<<<<<<<< HEAD:packages/web3/test/stress/large_validator_data/index.js
 const { Web3Validator } = require('../../../../web3-validator/lib/commonjs');
+========
+import { Web3Validator, JsonSchema, Json } from 'web3-validator';
+>>>>>>>> ok/5563-Stress-Tests-2---QA-Tests:packages/web3/test/stress/validator.ts
 
 const abi = [
 	{ indexed: true, internalType: 'address', name: 'from', type: 'address' },
@@ -69,15 +73,19 @@ const simpleData = {
 	data: '0xafea',
 };
 
-const createHugeSchema = (schema, data, n = 3) => {
+const createHugeSchema = (
+	schema: JsonSchema,
+	data: Json,
+	n = 3,
+): { schema: JsonSchema; data: Json } => {
 	if (n > 0) {
 		const { data: resultData, schema: resultSchema } = createHugeSchema(
 			{ ...simpleSchema },
-			{ ...simpleData },
+			{ ...simpleData } as unknown as Json,
 			n - 1,
 		);
 		return {
-			data: { ...data, simple: resultData },
+			data: { ...(typeof data === 'object' ? data : { data }), simple: resultData },
 			schema: { ...schema, properties: { ...schema.properties, simple: resultSchema } },
 		};
 	}
@@ -89,18 +97,19 @@ const createHugeSchema = (schema, data, n = 3) => {
 
 const { schema: hugeSchema, data: hugeData } = createHugeSchema(
 	{ ...simpleSchema },
-	{ ...simpleData },
+	{ ...simpleData } as unknown as Json,
 	500,
 );
 
 const { schema: hugeSchema1000, data: hugeData1000 } = createHugeSchema(
 	{ ...simpleSchema },
-	{ ...simpleData },
+	{ ...simpleData } as unknown as Json,
 	1000,
 );
 
 const index = new Web3Validator();
 
+<<<<<<<< HEAD:packages/web3/test/stress/large_validator_data/index.js
 console.time('huge schema');
 index.validateJSONSchema(hugeSchema, hugeData);
 console.timeLog('huge schema');
@@ -108,28 +117,24 @@ console.timeLog('huge schema');
 console.time('huge schema 1000');
 index.validateJSONSchema(hugeSchema1000, hugeData1000);
 console.timeLog('huge schema 1000');
+========
+validator.validateJSONSchema(hugeSchema, hugeData as object);
 
-console.time('simple schema multiple times');
+validator.validateJSONSchema(hugeSchema1000, hugeData1000 as object);
+>>>>>>>> ok/5563-Stress-Tests-2---QA-Tests:packages/web3/test/stress/validator.ts
+
 for (let i = 0; i < 500; i += 1) {
 	index.validateJSONSchema(simpleSchema, simpleData);
 }
-console.timeLog('simple schema multiple times');
 
-console.time('simple schema 1000 times');
 for (let i = 0; i < 1000; i += 1) {
 	index.validateJSONSchema(simpleSchema, simpleData);
 }
-console.timeLog('simple schema 1000 times');
 
-console.time('simple JSON schema 1000 times');
 for (let i = 0; i < 1000; i += 1) {
 	index.validateJSONSchema(abiJsonSchema, abiData);
 }
-console.timeLog('simple JSON schema 1000 times');
 
-console.time('simple ABI 1000 times');
 for (let i = 0; i < 1000; i += 1) {
 	index.validate(abi, abiData);
 }
-
-console.timeLog('simple ABI 1000 times');
