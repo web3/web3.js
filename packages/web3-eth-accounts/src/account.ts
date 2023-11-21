@@ -16,7 +16,30 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
+ * The web3 accounts package contains functions to generate Ethereum accounts and sign transactions & data.
+ * 
+ * For using accounts functions, first install Web3 package using `npm i web3` or `yarn add web3` based on your package manager usage.
+ * After that, Accounts functions will be available as mentioned in following snippet. 
+ * ```ts
+ * import {Web3} from 'web3';
+ * 
+ * const web3 = new Web3();
+ * const account = web3.eth.accounts.create();
+ * const result = web3.eth.accounts.hashMessage("Test Message");
+ * 
+ * ```
+ * 
+ * For using individual package install `web3-eth-accounts` package using `npm i web3-eth-accounts` or `yarn add web3-eth-accounts` and only import required functions.
+ * This is more efficient approach for building lightweight applications. 
+ * ```ts
+ * import {create,hashMessage} from 'web3-eth-accounts';
+ * 
+ * const account = create();
+ * const result = hashMessage("Test Message");
+ * 
+ * ```
  * @module Accounts
+ * 
  */
 
 import {
@@ -76,7 +99,23 @@ import type {
 
 
 /**
- * Get the private key Uint8Array after the validation
+ * Get the private key Uint8Array after the validation. <br/>
+ * Note: This function is not exported through main web3 package, so for using it directly import from accounts package. 
+ * @param data - Private key
+ * @param ignoreLength - Optional, ignore length check during validation 
+ * @returns The Uint8Array private key
+ *
+ * ```ts
+ * parseAndValidatePrivateKey("0x08c673022000ece7964ea4db2d9369c50442b2869cbd8fc21baaca59e18f642c")
+ * 
+ * > Uint8Array(32) [
+ * 186,  26, 143, 168, 235, 179,  90,  75,
+ * 101,  63,  84, 221, 152, 150,  30, 203,
+ *   8, 113,  94, 226,  53, 213, 216,   5,
+ * 194, 159,  17,  53, 219,  97, 121, 248
+ * ]
+ * 
+ * ```
  */
 export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Uint8Array => {
 	let privateKeyUint8Array: Uint8Array;
@@ -101,15 +140,19 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 
 /**
  *
- * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message and hashed using keccak256.
+ * Hashes the given message. The data will be `UTF-8 HEX` decoded and enveloped as follows: <br/>
+ * `"\\x19Ethereum Signed Message:\\n" + message.length + message` and hashed using keccak256.
  *
  * @param message - A message to hash, if its HEX it will be UTF8 decoded.
  * @returns The hashed message
  *
  * ```ts
- * hashMessage("Hello world")
+ * web3.eth.accounts.hashMessage("Hello world")
+ * 
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
- * hashMessage(utf8ToHex("Hello world")) // Will be hex decoded in hashMessage
+ * 
+ * web3.eth.accounts.hashMessage(web3.utils.utf8ToHex("Hello world")) // Will be hex decoded in hashMessage
+ * 
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
  * ```
  */
@@ -306,23 +349,29 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  *
  * @param data - Either a signed message, hash, or the {@link signatureObject}
  * @param signature - The raw RLP encoded signature
- * @param signatureOrV - signatureOrV
- * @param prefixedOrR - prefixedOrR
- * @param s - s
- * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with "\\x19Ethereum Signed Message:\\n" + message.length + message, and assumed to be already prefixed.
+ * @param signatureOrV - signature or V
+ * @param prefixedOrR - prefixed or R
+ * @param s - S value in signature
+ * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with `"\\x19Ethereum Signed Message:\\n" + message.length + message`, and assumed to be already prefixed.
  * @returns The Ethereum address used to sign this data
+ * 
  * ```ts
- * sign('Some data', '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
+ * const data = 'Some data';
+ * const sigObj = web3.eth.accounts.sign(data, '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728')
+ * 
  * > {
- * message: 'Some data',
- * messageHash: '0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655',
- * v: '0x1b',
- * r: '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f9',
- * s: '0x53e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb150',
- * signature: '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b'
+ *   message: 'Some data',
+ *   messageHash: '0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655',
+ *   v: '0x1b',
+ *   r: '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f9',
+ *   s: '0x53e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb150',
+ *   signature: '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b'
  * }
- * recover('0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b');
- * > '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0'
+ * 
+ * // now recover
+ * web3.eth.accounts.recover(data, sigObj.v, sigObj.r, sigObj.s)
+ * 
+ * > 0xEB014f8c8B418Db6b45774c326A0E64C78914dC0
  * ```
  */
 export const recover = (
@@ -371,7 +420,8 @@ export const recover = (
  * @returns The Ethereum address
  * @example
  * ```ts
- * privateKeyToAddress("0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728")
+ * web3.eth.accounts.privateKeyToAddress("0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728")
+ * 
  * > "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0"
  * ```
  */
@@ -399,7 +449,8 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * @returns The public key
  * @example
  * ```ts
- * privateKeyToAddress("0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f", true)
+ * web3.eth.accounts.privateKeyToPublicKey("0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f", true)
+ * 
  * > "0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537662dd17042e6449dc843c281067a4d6d8d1a1775a13c41901670d5de7ee6503a" // uncompressed public key
  * ```
  */
@@ -420,17 +471,18 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * @param options - Options to configure to encrypt the keystore either scrypt or pbkdf2
  * @returns Returns a V3 JSON Keystore
  *
- *
- * Encrypt using scrypt options
+ * Encrypt using scrypt options:
  * ```ts
- * encrypt('0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
- * '123',
- * {
- *   n: 8192,
- *	 iv: web3.utils.hexToBytes('0xbfb43120ae00e9de110f8325143a2709'),
- *	 salt: web3.utils.hexToBytes('0x210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd'),
- *	),
- * }).then(console.log)
+ * 
+ * web3.eth.accounts.encrypt(
+ *    '0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
+ *    '123',
+ *    {
+ *        n: 8192,
+ *	    iv: web3.utils.hexToBytes('0xbfb43120ae00e9de110f8325143a2709'),
+ *	    salt: web3.utils.hexToBytes('0x210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd'),
+ *	}).then(console.log)
+ *
  * > {
  * version: 3,
  * id: 'c0cb0a94-4702-4492-b6e6-eb2ac404344a',
@@ -451,9 +503,10 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * }
  *}
  *```
- * Encrypting using pbkdf2 options
+ *
+ * Encrypting using pbkdf2 options:
  * ```ts
- * encrypt('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+ * web3.eth.accounts.encrypt('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
  *'123',
  *{
  *	iv: 'bfb43120ae00e9de110f8325143a2709',
@@ -461,6 +514,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  *	c: 262144,
  *	kdf: 'pbkdf2',
  *}).then(console.log)
+ *
  * >
  * {
  *   version: 3,
@@ -587,11 +641,13 @@ export const encrypt = async (
  * @param ignoreLength - if true, will not error check length
  * @returns A Web3Account object
  *
- * The `Web3Account.signTransaction` is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
- * Use {@link Web3.eth.accounts.signTransaction} instead.
+ * :::info
+ * The `Web3Account.signTransaction` is not stateful if directly imported from accounts package and used. Network access is required to get the account `nonce` and `chainId` to sign the transaction, so use {@link Web3.eth.accounts.signTransaction} for signing transactions.
+ * ::::
  *
  * ```ts
- * privateKeyToAccount("0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
+ * web3.eth.accounts.privateKeyToAccount("0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
+ * 
  * >    {
  * 			address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
  * 			privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
@@ -653,7 +709,7 @@ export const create = (): Web3Account => {
  * Decrypting scrypt
  *
  * ```ts
- * decrypt({
+ * web3.eth.accounts.decrypt({
  *   version: 3,
  *   id: 'c0cb0a94-4702-4492-b6e6-eb2ac404344a',
  *   address: 'cda9a91875fc35c8ac1320e098e584495d66e47c',
@@ -671,7 +727,9 @@ export const create = (): Web3Account => {
  *      },
  *      mac: 'efbf6d3409f37c0084a79d5fdf9a6f5d97d11447517ef1ea8374f51e581b7efd'
  *    }
- *   }, '123').then(console.log)
+ *   }, '123').then(console.log);
+ * 
+ * 
  * > {
  * address: '0xcdA9A91875fc35c8Ac1320E098e584495d66e47c',
  * privateKey: '67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
