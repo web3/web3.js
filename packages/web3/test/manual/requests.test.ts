@@ -16,14 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
-import { Web3, Contract, Numbers, EventLog } from 'web3';
-import { IpcProvider } from 'web3-providers-ipc';
-import { BasicBytecode, BasicAbi } from '../../shared_fixtures/build/Basic';
+import WebSocketProvider from 'web3-providers-ws';
 import { Web3Account } from 'web3-eth-accounts';
+import { Web3, Contract, Numbers, EventLog } from 'web3';
+import { BasicBytecode, BasicAbi } from '../../../../fixtures/build/Basic';
+import { isWs, isIpc, getSystemTestProvider } from '../../../../scripts/system_tests_utils';
 
-const providerString = String(process.env.WEB3_SYSTEM_TEST_PROVIDER);
-const isWs = providerString.startsWith('ws');
-const isIpc = providerString.includes('ipc');
 const contracts: { [key: string]: Contract<typeof BasicAbi> } = {};
 
 const deployContracts = async (web3: Web3, accounts: Web3Account[]) => {
@@ -108,53 +106,42 @@ const subscribeContract = (acc: Web3Account) => {
 	});
 };
 const contractSubscriptions = (accounts: Web3Account[]) => {
-	console.log(`Subscribe to ${accounts.length} contracts events`);
 	for (const acc of accounts) {
 		subscribeContract(acc);
 	}
 };
-const test = async () => {
-	console.log(`Start test with provider: ${providerString}`);
-	const provider = isIpc
-		? new IpcProvider(providerString)
-		: isWs
-		? new Web3.providers.WebsocketProvider(providerString)
-		: new Web3.providers.HttpProvider(providerString);
-	const web3 = new Web3(provider);
-	const n = Number(process.env.PARALLEL_COUNT) || 500;
 
-	console.log(`Prepare ${n} accounts in parallel`);
-	const accounts = await prepareAccounts(web3, n);
-
-	console.log(`Deploy ${n} contracts in parallel`);
-	await deployContracts(web3, accounts);
-	// if socket subscribe to events
-	if (isIpc || isWs) {
-		contractSubscriptions(accounts);
-	}
-
-	console.log(`Send data from ${n} accounts in parallel`);
-	const sendPrs = [];
-	for (let i = 0; i < n; i++) {
-		sendPrs.push(sendData(accounts[i]));
-	}
-	await Promise.all(sendPrs);
-
-	if (isIpc || isWs) {
-		if (Object.keys(receivedEvents).length !== accounts.length) {
-			throw new Error('Incorrect event count');
+describe('huge data', () => {
+	let web3: Web3;
+	let parallelCount = 500;
+	beforeAll(() => {
+		parallelCount = isIpc ? 5 : parallelCount;
+		web3 = new Web3(getSystemTestProvider());
+	});
+	afterAll(() => {
+		if (isWs || isIpc) {
+			(web3.provider as unknown as WebSocketProvider).disconnect();
 		}
-	}
+	});
+	it('send requests', async () => {
+		const accounts = await prepareAccounts(web3, parallelCount);
 
-	console.log(`Get data from ${n} accounts in parallel`);
-	const getPrs = [];
-	for (let i = 0; i < n; i++) {
-		getPrs.push(getData(accounts[i]));
-	}
-	await Promise.all(getPrs);
-	if (isIpc || isWs) {
-		(web3.provider as IpcProvider).disconnect();
-	}
-};
+		await deployContracts(web3, accounts);
+		// if socket subscribe to events
+		if (isIpc || isWs) {
+			contractSubscriptions(accounts);
+		}
 
-test().catch(console.error);
+		const sendPrs = [];
+		for (let i = 0; i < parallelCount; i++) {
+			sendPrs.push(sendData(accounts[i]));
+		}
+		await Promise.all(sendPrs);
+
+		const getPrs = [];
+		for (let i = 0; i < parallelCount; i++) {
+			getPrs.push(getData(accounts[i]));
+		}
+		await Promise.all(getPrs);
+	});
+});

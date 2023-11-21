@@ -24,7 +24,9 @@ const addAccount = async (address, privateKey) => {
 
 	if (!accountList.find(acc => acc.address === address)) {
 		await web3Personal.importRawKey(
-			getSystemTestBackend() === 'geth' ? privateKey.slice(2) : privateKey,
+			['geth', 'geth-manual'].includes(getSystemTestBackend())
+				? privateKey.slice(2)
+				: privateKey,
 			'123456',
 		);
 	}
