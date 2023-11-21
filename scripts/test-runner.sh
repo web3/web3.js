@@ -56,7 +56,7 @@ fi
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
     if [[ $TEST_OPTION == "manual" ]]; then
-    	TEST_COMMAND="test:manual"
+    	TEST_COMMAND="test:integration:manual"
 	elif [[ $TEST_OPTION == "coverage" ]]; then
 		TEST_COMMAND="test:coverage:integration"
 	elif [[ $BACKEND == "sepolia" || $BACKEND == "mainnet" ]]; then
@@ -65,7 +65,11 @@ if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 		TEST_COMMAND="test:integration"
 	fi
 else
-	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
+     if [[ $TEST_OPTION == "manual" ]]; then
+        TEST_COMMAND="lerna run test:e2e:$ENGINE:manual --stream"
+    else
+	    TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
+	fi
 fi
 
 

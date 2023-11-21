@@ -14,11 +14,18 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+const config = {
+	screenshotOnRunFailure: false,
+	video: false,
+	e2e: {
+		// We've imported your old cypress plugins here.
+		// You may want to clean this up later by importing these.
+		setupNodeEvents(on, config) {
+			return require('./cypress/plugins/index.js')(on, config);
+		},
+		specPattern: 'test/e2e_manual/**/**/*.test.ts',
+		excludeSpecPattern: [],
+	},
+};
 
-// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('../config/setup');
-
-const jestTimeout = 300000;
-
-jest.setTimeout(jestTimeout);
+module.exports = config;
