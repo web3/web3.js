@@ -330,8 +330,7 @@ export const processSolidityEncodePackedArgs = (arg: Sha3Input): string => {
  * Encode packed arguments to a hexstring
  */
 export const encodePacked = (...values: Sha3Input[]): string => {
-	const args = Array.prototype.slice.call(values);
-	const hexArgs = args.map(processSolidityEncodePackedArgs);
+	const hexArgs = values.map(processSolidityEncodePackedArgs);
 	return `0x${hexArgs.join('').toLowerCase()}`;
 };
 
