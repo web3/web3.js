@@ -1077,7 +1077,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async sign<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		message: Bytes,
-		addressOrIndex: Address,
+		addressOrIndex: Address | number,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.sign(this, message, addressOrIndex, returnFormat);

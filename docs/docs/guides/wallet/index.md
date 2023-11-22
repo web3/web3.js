@@ -7,11 +7,25 @@ sidebar_label: 'Web3 Wallet'
 
 ## Introduction
 
-Following is a list of Wallet [methods] ( /api/web3-eth-accounts/class/Wallet#Methods) ) in the web3-eth-accounts package with description and example usage. 
+### Local wallets
 
-- [Add]( /api/web3-eth-accounts/class/Wallet/#add)
-- [Clear]( /api/web3-eth-accounts/class/Wallet/#clear)
-- [Create]( /api/web3-eth-accounts/class/Wallet/#create)
+Local wallets are an in-memory [wallet](/api/web3-eth-accounts/class/Wallet/) that can hold multiple accounts.
+Wallets are a convenient way to sign and send transactions in web3.js.
+
+:::warning
+
+If used within the browser, wallets are not saved anywhere and disappear when the page is refreshed.
+If used within your application, wallets will disappear after the program is completed.
+
+:::
+
+### Methods
+
+Following is a list of Wallet [methods]( /api/web3-eth-accounts/class/Wallet#Methods) in the web3-eth-accounts package with description and example usage: 
+
+- [add]( /api/web3-eth-accounts/class/Wallet/#add)
+- [clear]( /api/web3-eth-accounts/class/Wallet/#clear)
+- [create]( /api/web3-eth-accounts/class/Wallet/#create)
 - [decrypt]( /api/web3-eth-accounts/class/Wallet/#decrypt)
 - [encrypt]( /api/web3-eth-accounts/class/Wallet/#encrypt)
 - [get]( /api/web3-eth-accounts/class/Wallet/#get)
@@ -21,10 +35,12 @@ Following is a list of Wallet [methods] ( /api/web3-eth-accounts/class/Wallet#Me
 - [getStorage]( /api/web3-eth-accounts/class/Wallet/#getStorage) 
 
 
-## Guide to creating a local wallet
+## Creating a local wallet
 
 ```ts
-web3.eth.accounts.create()
+
+// creating a new wallet
+web3.eth.accounts.create() 
 > Wallet(0) [
   _accountProvider: {
     create: [Function: createWithContext],
@@ -34,176 +50,31 @@ web3.eth.accounts.create()
   _addressMap: Map(0) {},
   _defaultKeyName: 'web3js_wallet'
 ]
+
+// add a wallet using a private key
+web3.eth.accounts.wallet.add("PrivateKey");
 ```
 
-
-Sign wallet example
-
-import the package
-## Global level Config
-
-There is option of modifying any of above-mentioned configuration parameter at global level when instantiating Web3, and it will be available to all packages. 
-
-``` ts
-    import { Web3 } from 'web3';
-
-    const web3 = new Web3({
-        provider:  "https://mainnet.infura.io/v3/YOURID",
-        config: {
-            defaultTransactionType: "0x0"
-        }}
-       );
-
-    //now default transaction type will be 0x0 so using following function in eth will send type 0x0 transaction
-
-    web3.eth.sendTransaction({
-        from: '0x18532dF2Ab835d4E9D07a8b9B759bf5F8f890f49',
-        to: '0xB2f70d8965e754cc07D343a9b5332876D3070155',
-        value: 100,
-        gasLimit: 21000
-    }).then(res => console.log(res));;
-
-
-```
-
-For Advance Users: Global level config can also be set using `Web3Context` object.
-
-``` ts
-import { Web3, Web3Context } from 'web3';
-
-const context = new Web3Context("http://127.0.0.1:7545");
-context.setConfig({ defaultTransactionType: "0x0" });
-
-const web3 = new Web3(context);
-
-//it will not default to 0x0 type transactions
-web3.eth.sendTransaction({
-    from: '0x18532dF2Ab835d4E9D07a8b9B759bf5F8f890f49',
-    to: '0x018e221145dE7cefAD09BD53F41c11A918Bf1Cb7',
-    value: 100,
-    gasLimit: 21000
-}).then(res => console.log(res));
-
-```
-
-## Package level config
-
-### Setting config in Individual Package under Web3 instance
-Some configuration options that effects selected packages can be modified using `setConfig(...)` function.
-
-``` ts
-    import { Web3 } from 'web3';
-
-    const web3 = new Web3( "https://mainnet.infura.io/v3/YOURID");
-
-    web3.eth.setConfig({
-        defaultTransactionType: "0x0"
-    });
-
-    web3.eth.sendTransaction({
-        from: '0x18532dF2Ab835d4E9D07a8b9B759bf5F8f890f49',
-        to: '0xB2f70d8965e754cc07D343a9b5332876D3070155',
-        value: 100,
-        gasLimit: 21000
-    }).then(res => console.log(res));;
-
-```
-
-### Setting config in Individually imported Packages
-
-If an individual package is being imported instead of whole web3.js, there is option of setting config params by passing config in constructors or by using `setConfig(...)` function:
-
-For example if only web3Eth package is installed using:
-
-``` ts
-npm i web3-eth
-```
-
-Configuration options can be set by passing in constructor:
-
-``` ts
-import { Web3Eth } from 'web3-eth';
-
-const web3EthObj = new Web3Eth(
-    {
-        provider: "http://127.0.0.1:7545",
-        config: {
-            defaultTransactionType: 0x0
-        }
-    });
-
-    web3EthObj.sendTransaction({
-        from: '0x18532dF2Ab835d4E9D07a8b9B759bf5F8f890f49',
-        to: '0x018e221145dE7cefAD09BD53F41c11A918Bf1Cb7',
-        value: 100,
-        gasLimit: 21000
-    }).then(res => console.log(res));
-
-```
-
-Another way of setting config for individually imported package is by using `setConfig(...)` function.
-
-``` ts
-import { Web3Eth } from 'web3-eth';
-
-const web3EthObj = new Web3Eth("http://127.0.0.1:7545");
-
-    web3EthObj.setConfig({
-        defaultTransactionType: 0x0
-    });
-
-    web3EthObj.sendTransaction({
-        from: '0x18532dF2Ab835d4E9D07a8b9B759bf5F8f890f49',
-        to: '0x018e221145dE7cefAD09BD53F41c11A918Bf1Cb7',
-        value: 100,
-        gasLimit: 21000
-    }).then(res => console.log(res));
-
-```
-
-## Getting Current Config
-
-For getting list of current config params `getContextObject().config` can be used as :
-
-``` ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3("http://127.0.0.1:7545");
-console.log(web3.getContextObject().config)
-
-/*
-This will give current config object:
-  handleRevert: false,
-  defaultAccount: undefined,
-  defaultBlock: 'latest',
-  transactionBlockTimeout: 50,
-  transactionConfirmationBlocks: 24,
-  transactionPollingInterval: 1000,
-  transactionPollingTimeout: 750000,
-  transactionReceiptPollingInterval: undefined,
-  transactionSendTimeout: 750000,
-  transactionConfirmationPollingInterval: undefined,
-  blockHeaderTimeout: 10,
-  maxListenersWarningThreshold: 100,
-  contractDataInputFill: 'input',
-  defaultNetworkId: undefined,
-  defaultChain: 'mainnet',
-  defaultHardfork: 'london',
-  defaultCommon: undefined,
-  defaultTransactionType: '0x2',
-  defaultMaxPriorityFeePerGas: '0x9502f900',
- ...
-*/
-
-```
-
-For individually imported packages same approach can be used to get current config params.
+## Signing a message using a wallet
 
 ``` ts
 
-import { Web3Eth } from 'web3';
+import Web3 from 'web3';
 
-const web3 = new Web3Eth("http://127.0.0.1:7545");
-console.log(web3.getContextObject().config)
+web3.eth.accounts.wallet.create(1);
 
+const message = web3.utils.utf8ToHex('Hello world'); // sign only takes hexstrings, so turn message to hexstring
+web3.eth.sign(message, 0).then(console.log); // 0 refers to using the first index of the wallet to sign the message
+> {
+  message: '0x48656c6c6f20776f726c64',
+  messageHash: '0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede',
+  v: '0x1c',
+  r: '0x3a420906f331896cb5db1366cdaeef1f0b14f9f71d72c178e87b76f8b31f3f36',
+  s: '0x32ffccc78638c1d7e46dbf16041ddaef90ab50a85eeeaa46f8c496a39237831a',
+  signature: '0x3a420906f331896cb5db1366cdaeef1f0b14f9f71d72c178e87b76f8b31f3f3632ffccc78638c1d7e46dbf16041ddaef90ab50a85eeeaa46f8c496a39237831a1c'
+}
 ```
+
+## Sending a transaction using a local wallet
+
+We have written a guide for sending transactions using [local wallets](/guides/basics/sign_and_send_tx/local_wallet) and [node wallets](/guides/basics/sign_and_send_tx/wallet_of_eth_node).
