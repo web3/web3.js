@@ -323,7 +323,7 @@ describe('SocketProvider', () => {
 
 				// @ts-expect-error run protected method
 				expect(provider._sentRequestsQueue.size).toBe(1);
-				expect(provider.getSentRequestsQueueSize).toBe(1);
+				expect(provider.getSentRequestsQueueSize()).toBe(1);
 
 				provider.on('error', () => {
 					// nothing
@@ -335,7 +335,7 @@ describe('SocketProvider', () => {
 				expect(provider.getPendingRequestQueueSize()).toBe(0);
 				// @ts-expect-error run protected method
 				expect(provider._sentRequestsQueue.size).toBe(0);
-				expect(provider.getSentRequestsQueueSize).toBe(0);
+				expect(provider.getSentRequestsQueueSize()).toBe(0);
 			});
 		});
 	});
