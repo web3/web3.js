@@ -13,9 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The receiptInfo Status will now be be an unsigned integer instead of boolean value to comply with the specification.
 
-<https://github.com/ethereum/execution-apis/blob/773ffd230ae5cd037e32415855cf8d4f1e729b2d/src/schemas/receipt.yaml#L94-L97>
+[https://github.com/ethereum/execution-apis/blob/773ffd230ae5cd037e32415855cf8d4f1e729b2d/src/schemas/receipt.yaml#L94-L97](https://github.com/ethereum/execution-apis/blob/773ffd230ae5cd037e32415855cf8d4f1e729b2d/src/schemas/receipt.yaml#L94-L97)
 
-<details><summary>1.x</summary>
+<details>
+<summary>
+1.x
+</summary>
 <p>
 
 ```ts
@@ -30,7 +33,9 @@ myContract.methods
 </p>
 </details>
 
-<details><summary>4.x</summary>
+<details><summary>
+4.x
+</summary>
 <p>
 
 ```ts
@@ -51,7 +56,9 @@ myContract.methods
 
 In 1.x when following was executed `deploy().send().on(‘sending’, payload => {})`. The `payload` was the complete the JSON-RPC Payload. In 4.x it will just be the transaction which is about to be transmitted. Earlier it was accessible by from `payload.params[0]`, now will be available directly to event handler.
 
-<details><summary>1.x</summary>
+<details><summary>
+1.x
+</summary>
 <p>
 
 ```ts
@@ -67,7 +74,9 @@ myContract
 </p>
 </details>
 
-<details><summary>4.x</summary>
+<details><summary>
+4.x
+</summary>
 <p>
 
 ```ts
@@ -87,7 +96,9 @@ myContract
 
 In 1.x, the `confirmations` handler was invoked with multiple parameters. But in `4.x` there will be one parameter as object but with all the same properties.
 
-<details><summary>1.x</summary>
+<details><summary>
+1.x
+</summary>
 <p>
 
 ```ts
@@ -97,7 +108,9 @@ myContract .send().on(‘confirmation’, (confirmations: number, receipt: objec
 </p>
 </details>
 
-<details><summary>4.x</summary>
+<details><summary>
+4.x
+</summary>
 <p>
 
 ```ts
@@ -118,7 +131,9 @@ myContract .send().on(‘confirmation’, ({confirmations: bigint, receipt: obje
 
 The error message will be different if you try to create a contract object without a `new` keyword.
 
-<details><summary>1.x</summary>
+<details><summary>
+1.x
+</summary>
 <p>
 
 ```ts
@@ -128,7 +143,9 @@ Please use the "new" keyword to instantiate a web3.eth.Contract() object!
 </p>
 </details>
 
-<details><summary>4.x</summary>
+<details><summary>
+4.x
+</summary>
 <p>
 
 ```ts
@@ -150,7 +167,9 @@ In `4.x` you will not get any warning. But `toBlock` still have no effect.
 
 In `1.x` the contract `.send` method was always resolved with `transactionHash`. That enforces user to make an extra call to get any further information. In `4.x` the `.send` function will resolve with `receipt` object.
 
-<details><summary>1.x</summary>
+<details><summary>
+1.x
+</summary>
 <p>
 
 ```ts
@@ -160,7 +179,9 @@ const transactionHash = await myContract.method.MyMethod().send();
 </p>
 </details>
 
-<details><summary>4.x</summary>
+<details><summary>
+4.x
+</summary>
 <p>
 
 ```ts

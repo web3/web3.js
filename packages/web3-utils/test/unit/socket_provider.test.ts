@@ -312,7 +312,7 @@ describe('SocketProvider', () => {
 				});
 				// @ts-expect-error run protected method
 				expect(provider._pendingRequestsQueue.size).toBe(1);
-
+				expect(provider.getPendingRequestQueueSize()).toBe(1);
 				const payload2 = { id: 2, method: 'some_rpc_method' };
 				provider.setStatus('connected');
 				const req2 = provider.request(payload2);
@@ -323,6 +323,7 @@ describe('SocketProvider', () => {
 
 				// @ts-expect-error run protected method
 				expect(provider._sentRequestsQueue.size).toBe(1);
+				expect(provider.getSentRequestsQueueSize()).toBe(1);
 
 				provider.on('error', () => {
 					// nothing
@@ -331,8 +332,10 @@ describe('SocketProvider', () => {
 				provider._clearQueues();
 				// @ts-expect-error run protected method
 				expect(provider._pendingRequestsQueue.size).toBe(0);
+				expect(provider.getPendingRequestQueueSize()).toBe(0);
 				// @ts-expect-error run protected method
 				expect(provider._sentRequestsQueue.size).toBe(0);
+				expect(provider.getSentRequestsQueueSize()).toBe(0);
 			});
 		});
 	});
