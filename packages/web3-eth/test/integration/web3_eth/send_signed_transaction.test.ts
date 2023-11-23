@@ -33,6 +33,7 @@ import { isHexStrict } from 'web3-validator';
 import { Web3Eth, InternalTransaction, transactionSchema } from '../../../src';
 import {
 	closeOpenConnection,
+	createNewAccount,
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
@@ -53,6 +54,72 @@ describe('Web3Eth.sendSignedTransaction', () => {
 
 	afterAll(async () => {
 		await closeOpenConnection(web3Eth);
+	});
+
+	describe('Should catch errors', () => {
+		it('send ether from account without balance', async () => {
+			let onErrorReceived = false;
+			let catchErrorReceived = false;
+			const from = await createNewAccount({
+				unlock: true,
+				refill: false,
+			});
+			let pr;
+			try {
+				const promiEvent = web3Eth.sendTransaction({
+					to: tempAcc.address,
+					from: from.address,
+				});
+				pr = new Promise(resolve => {
+					promiEvent.on('error', () => {
+						onErrorReceived = true;
+						resolve(true);
+					});
+				});
+				await promiEvent;
+			} catch (e) {
+				catchErrorReceived = true;
+			}
+			await pr;
+			expect(onErrorReceived).toBe(true);
+			expect(catchErrorReceived).toBe(true);
+		});
+		it('send and wait timeout', async () => {
+			let onErrorReceived = false;
+			let catchErrorReceived = false;
+			const from = await createNewAccount({
+				unlock: true,
+				refill: true,
+			});
+
+			web3Eth.setConfig({
+				transactionReceiptPollingInterval: 10,
+				transactionPollingTimeout: 1000,
+			});
+
+			const currentNonce = await web3Eth.getTransactionCount(from.address);
+			let pr;
+			try {
+				const promiEvent = web3Eth.sendTransaction({
+					to: tempAcc.address,
+					from: from.address,
+					value: '0x1',
+					nonce: currentNonce + BigInt(1000),
+				});
+				pr = new Promise(resolve => {
+					promiEvent.on('error', () => {
+						onErrorReceived = true;
+						resolve(true);
+					});
+				});
+				await promiEvent;
+			} catch (e) {
+				catchErrorReceived = true;
+			}
+			await pr;
+			expect(onErrorReceived).toBe(true);
+			expect(catchErrorReceived).toBe(true);
+		});
 	});
 
 	describe('Transaction Types', () => {
