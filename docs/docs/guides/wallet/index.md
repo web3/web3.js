@@ -7,6 +7,59 @@ sidebar_label: 'Web3 Wallet'
 
 ## Introduction
 
+The web3-eth-accounts package contains functions to generate Ethereum accounts and sign transactions and data.
+
+
+## web3-eth-accounts
+
+### Methods
+
+The following is a list of web3-eth-account [methods]( /api/web3-eth-accounts/class/Wallet#Methods) with descriptions and examples of usage: 
+
+- [create](https://docs.web3js.org/libdocs/Accounts#create)
+- [privateKeytoAccount](https://docs.web3js.org/libdocs/Accounts#privatekeytoaccount)
+- [privateKeytoAddress](https://docs.web3js.org/libdocs/Accounts#privatekeytoaddress)
+- [privateKeytoPublicKey](https://docs.web3js.org/libdocs/Accounts#privatekeytopublickey)
+- [parseAndValidatePrivateKey](https://docs.web3js.org/libdocs/Accounts#parseandvalidateprivatekey)
+- [sign](https://docs.web3js.org/libdocs/Accounts#sign)
+- [signTransaction](https://docs.web3js.org/libdocs/Accounts#signtransaction)
+- [recoverTransaction](https://docs.web3js.org/libdocs/Accounts#recovertransaction)
+- [hashMessage](https://docs.web3js.org/libdocs/Accounts#hashmessage)
+- [recover](https://docs.web3js.org/libdocs/Accounts#recover)
+- [encrypt](https://docs.web3js.org/libdocs/Accounts#encrypt)
+- [decrypt](https://docs.web3js.org/libdocs/Accounts#decrypt)
+
+
+### Creating a Web3Account with web3 package and signing a message
+
+``` ts
+import web3 from 'web3';
+
+const account = web3.eth.accounts.create();
+{
+address: '0xbD504f977021b5E5DdccD8741A368b147B3B38bB',
+privateKey: 'privateKey',
+signTransaction: [Function: signTransaction],
+sign: [Function: sign],
+encrypt: [AsyncFunction: encrypt]
+}
+
+account.sign("hello world");
+{
+  message: 'hello world',
+  messageHash: '0xd9eba16ed0ecae432b71fe008c98cc872bb4cc214d3220a36f365326cf807d68',
+  v: '0x1b',
+  r: '0xe4fce466ef18f6cd8b4f4175a9a04cd2872a1a6a8cfc2ff67fb0cfd6d78ec758',
+  s: '0x37ca3a789976f1854d16e50a04caf2e06ee14b0ac4a5878b43929767f2008288',
+  signature: '0xe4fce466ef18f6cd8b4f4175a9a04cd2872a1a6a8cfc2ff67fb0cfd6d78ec75837ca3a789976f1854d16e50a04caf2e06ee14b0ac4a5878b43929767f20082881b'
+}
+
+```
+### Creating a Web3Account with web3-eth-accounts package and signing a transaction 
+
+``` ts
+
+```
 ### Local wallets
 
 Local wallets are an in-memory [wallet](/api/web3-eth-accounts/class/Wallet/) that can hold multiple accounts.
@@ -21,7 +74,7 @@ If used within your application, wallets will disappear after the program is com
 
 ### Methods
 
-Following is a list of Wallet [methods]( /api/web3-eth-accounts/class/Wallet#Methods) in the web3-eth-accounts package with description and example usage: 
+The following is a list of Wallet [methods]( /api/web3-eth-accounts/class/Wallet#Methods) in the web3-eth-accounts package with description and example usage: 
 
 - [add]( /api/web3-eth-accounts/class/Wallet/#add)
 - [clear]( /api/web3-eth-accounts/class/Wallet/#clear)
