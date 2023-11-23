@@ -313,9 +313,9 @@ describe('Contract', () => {
 				.mockImplementation((_objInstance, _tx) => {
 					const newContract = contract.clone();
 					newContract.options.address = deployedAddr;
-					expect(_tx.input).toBeDefined();
+					expect(_tx.data).toBeDefined();
 					if (
-						_tx.input ===
+						_tx.data ===
 						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
 					) {
 						// eslint-disable-next-line
@@ -330,7 +330,7 @@ describe('Contract', () => {
 
 			const deployedContract = await contract
 				.deploy({
-					input: GreeterBytecode,
+					data: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
@@ -340,7 +340,7 @@ describe('Contract', () => {
 			spyTx.mockClear();
 		});
 
-		it('send method on deployed contract should work using data', async () => {
+		it('send method on deployed contract should work using data (default)', async () => {
 			const arg = 'Hello';
 			const contract = new Contract(GreeterAbi);
 			sendOptions = {
@@ -537,13 +537,13 @@ describe('Contract', () => {
 
 			const spyEthCall = jest.spyOn(eth, 'call').mockImplementation((_objInstance, _tx) => {
 				expect(_tx.to).toStrictEqual(deployedAddr);
-				expect(_tx.input).toBe('0xcfae3217');
+				expect(_tx.data).toBe('0xcfae3217');
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return Promise.resolve(encodedArg) as any; // contract class should decode encodedArg
 			});
 			const deployedContract = await contract
 				.deploy({
-					input: GreeterBytecode,
+					data: GreeterBytecode,
 					arguments: ['My Greeting'],
 				})
 				.send(sendOptions);
@@ -759,7 +759,7 @@ describe('Contract', () => {
 			// @ts-expect-error fix-types
 			const spyEthCall = jest.spyOn(eth, 'call').mockImplementation((_objInstance, _tx) => {
 				expect(_tx.to).toBe('0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
-				expect(_tx.input).toBe(
+				expect(_tx.data).toBe(
 					'0x095ea7b300000000000000000000000000000000219ab540356cbb839cbe05303d7705fa0000000000000000000000000000000000000000000000000000000000000001',
 				);
 				return '0x00';
@@ -1449,7 +1449,7 @@ describe('Contract', () => {
 				.spyOn(eth, 'createAccessList')
 				.mockImplementation((_objInstance, _tx) => {
 					expect(_tx.to).toStrictEqual(deployedAddr);
-					expect(_tx.input).toBe('0xcfae3217');
+					expect(_tx.data).toBe('0xcfae3217');
 					expect(_tx.from).toBe(fromAddr);
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 					return Promise.resolve(result) as any; // contract class should decode encodedArg
