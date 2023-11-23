@@ -23,7 +23,7 @@ const { Web3 } = require('web3');
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const account = web3.eth.accounts.wallet.add("Put Private key here").get(0);
+const account = web3.eth.accounts.wallet.add("privateKey").get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
 
