@@ -15,28 +15,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
+import { ExistingPluginNamespaceError } from 'web3-errors';
 import {
-	Web3APISpec,
-	Web3BaseWallet,
-	Web3BaseWalletAccount,
-	Web3AccountProvider,
-	SupportedProviders,
-	HexString,
 	EthExecutionAPI,
-	Web3BaseProvider,
-	Transaction,
+	HexString, Numbers, SupportedProviders, Transaction, Web3AccountProvider, Web3APISpec, Web3BaseProvider, Web3BaseWallet,
+	Web3BaseWalletAccount
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
-import { ExistingPluginNamespaceError } from 'web3-errors';
-
+import { BaseTransaction, TransactionFactory } from 'web3-eth-accounts';
 import { isSupportedProvider } from './utils.js';
+// eslint-disable-next-line import/no-cycle
+import { ExtensionObject } from './types.js';
+import { Web3BatchRequest } from './web3_batch_request.js';
 // eslint-disable-next-line import/no-cycle
 import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config.js';
 import { Web3RequestManager } from './web3_request_manager.js';
 import { Web3SubscriptionConstructor } from './web3_subscriptions.js';
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
-import { Web3BatchRequest } from './web3_batch_request.js';
-import { ExtensionObject } from './types.js';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
@@ -395,16 +390,6 @@ export class Web3Context<
 	}
 }
 
-// To avoid cycle dependency declare this type in this file
-export type TransactionBuilder<API extends Web3APISpec = unknown> = <
-	ReturnType = Transaction,
->(options: {
-	transaction: Transaction;
-	web3Context: Web3Context<API>;
-	privateKey?: HexString | Uint8Array;
-	fillGasPrice?: boolean;
-}) => Promise<ReturnType>;
-
 /**
  * Extend this class when creating a plugin that either doesn't require {@link EthExecutionAPI},
  * or interacts with a RPC node that doesn't fully implement {@link EthExecutionAPI}.
@@ -422,29 +407,44 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
  * class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
  * ```
  */
-export abstract class Web3PluginBase<
-	API extends Web3APISpec = Web3APISpec,
+ export abstract class Web3PluginBase<
+ API extends Web3APISpec = Web3APISpec,
 > extends Web3Context<API> {
-	public abstract pluginNamespace: string;
+ public abstract pluginNamespace: string;
+
+ // eslint-disable-next-line class-methods-use-this
+ protected registerNewTransactionType<NewTxTypeClass extends typeof BaseTransaction<unknown>>(type: Numbers, txClass: NewTxTypeClass): void {
+    TransactionFactory.registerTransactionType(type, txClass);
+ }
 }
 
 /**
- * Extend this class when creating a plugin that makes use of {@link EthExecutionAPI},
- * or depends on other Web3 packages (such as `web3-eth-contract`) that depend on {@link EthExecutionAPI}.
- *
- * To add type support for RPC methods to the {@link Web3RequestManager} (in addition to {@link EthExecutionAPI}),
- * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
- *
- * @example
- * ```ts
- * type CustomRpcApi = {
- *	custom_rpc_method: () => string;
- *	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
- * };
- *
- * class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
- * ```
- */
+* Extend this class when creating a plugin that makes use of {@link EthExecutionAPI},
+* or depends on other Web3 packages (such as `web3-eth-contract`) that depend on {@link EthExecutionAPI}.
+*
+* To add type support for RPC methods to the {@link Web3RequestManager} (in addition to {@link EthExecutionAPI}),
+* define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
+*
+* @example
+* ```ts
+* type CustomRpcApi = {
+*	custom_rpc_method: () => string;
+*	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
+* };
+*
+* class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
+* ```
+*/
 export abstract class Web3EthPluginBase<API extends Web3APISpec = unknown> extends Web3PluginBase<
-	API & EthExecutionAPI
+ API & EthExecutionAPI
 > {}
+
+// To avoid cycle dependency declare this type in this file
+export type TransactionBuilder<API extends Web3APISpec = unknown> = <
+	ReturnType = Transaction,
+>(options: {
+	transaction: Transaction;
+	web3Context: Web3Context<API>;
+	privateKey?: HexString | Uint8Array;
+	fillGasPrice?: boolean;
+}) => Promise<ReturnType>;
