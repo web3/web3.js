@@ -61,7 +61,7 @@ import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const privateKeyString = 'PrivateKey';
+const privateKeyString = 'privateKey';
 const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
@@ -110,7 +110,7 @@ const { Web3 } = require('web3');
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const privateKeyString = 'PrivateKey';
+const privateKeyString = 'privateKey';
 const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
@@ -165,7 +165,7 @@ import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const privateKeyString = 'PrivateKey';
+const privateKeyString = 'privateKey';
 const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction

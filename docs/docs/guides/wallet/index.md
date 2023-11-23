@@ -30,12 +30,15 @@ The following is a list of web3-eth-account [methods]( /api/web3-eth-accounts/cl
 - [decrypt](https://docs.web3js.org/libdocs/Accounts#decrypt)
 
 
-### Creating a Web3Account with web3 package and signing a message
+### Creating a Web3Account with the web3-eth-accounts package and signing a message
+
 
 ``` ts
-import web3 from 'web3';
+import { create } from 'web3-eth-accounts';
 
-const account = web3.eth.accounts.create();
+
+// the create method returns a Web3Account object. It contains an address and private key and allows you to be able to encrypt, sign and signTransaction.
+const account = create();
 {
 address: '0xbD504f977021b5E5DdccD8741A368b147B3B38bB',
 privateKey: 'privateKey',
@@ -55,9 +58,30 @@ account.sign("hello world");
 }
 
 ```
-### Creating a Web3Account with web3-eth-accounts package and signing a transaction 
+### import a private key and sign a transaction with the web3 package
 
 ``` ts
+import Web3 from 'web3';
+
+const web3 = new Web3("provider");
+
+const account = web3.eth.accounts.privateKeyToAccount("privateKey");
+
+signedTransaction = await account.signTransaction({
+        from: a.address,
+        to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
+        value: '0x1',
+        gas: '300000',
+        gasPrice: await web3.eth.getGasPrice()
+    })
+> {
+  messageHash: '0xfad22c3ab5ecbb6eec934a21243ee1866fbbd3786f4e8e8ec631b917ef65174d',
+  v: '0xf4f6',
+  r: '0xc0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11',
+  s: '0x4944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
+  rawTransaction: '0xf866808477359400830493e094e4beef667408b99053dc147ed19592ada0d77f59018082f4f6a0c0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11a04944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
+  transactionHash: '0xa3fed275c97abc4a160cd9bef3ec90206686f32821a8fd4e01a04130bff35c1a'
+}
 
 ```
 ### Local wallets

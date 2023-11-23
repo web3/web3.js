@@ -24,7 +24,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to the Ethereum node and unlock it
 const account = {
-	privateKey: 'Private key here',
+	privateKey: 'privateKey',
 	address: '0xe4beef667408b99053dc147ed19592ada0d77f59',
 };
 
@@ -64,7 +64,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to the Ethereum node and unlock it
 const account = {
-	privateKey: 'Private key here',
+	privateKey: 'privateKey',
 	address: '0xe4beef667408b99053dc147ed19592ada0d77f59',
 };
 
@@ -116,7 +116,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to the Ethereum node and unlock it
 const account = {
-	privateKey: 'Private key here',
+	privateKey: 'privateKey',
 	address: '0xe4beef667408b99053dc147ed19592ada0d77f59',
 };
 
@@ -170,7 +170,7 @@ const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to the Ethereum node and unlock it
 const account = {
-	privateKey: 'Private key here',
+	privateKey: 'privateKey',
 	address: '0xe4beef667408b99053dc147ed19592ada0d77f59',
 };
 
