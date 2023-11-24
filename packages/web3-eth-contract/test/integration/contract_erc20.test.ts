@@ -136,6 +136,7 @@ describe('contract', () => {
 							.send({ ...sendOptions, from: test.address });
 
 						catchErrorPromise = new Promise(resolve => {
+							// eslint-disable-next-line @typescript-eslint/no-floating-promises
 							promiEvent.on('error', err => {
 								// Returned error: insufficient funds for gas * price + value: balance 0, tx cost 25000327300000000, overshot 25000327300000000
 								resolve(err);
@@ -164,6 +165,7 @@ describe('contract', () => {
 							.send({ ...sendOptions, from: test.address });
 
 						catchErrorPromise = new Promise(resolve => {
+							// eslint-disable-next-line @typescript-eslint/no-floating-promises
 							promiEvent.on('error', err => {
 								// Transaction has been reverted by the EVM
 								resolve(err);

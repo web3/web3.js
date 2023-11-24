@@ -71,6 +71,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 					from: from.address,
 				});
 				pr = new Promise(resolve => {
+					// eslint-disable-next-line @typescript-eslint/no-floating-promises
 					promiEvent.on('error', () => {
 						onErrorReceived = true;
 						resolve(true);
@@ -107,6 +108,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 					nonce: currentNonce + BigInt(1000),
 				});
 				pr = new Promise(resolve => {
+					// eslint-disable-next-line @typescript-eslint/no-floating-promises
 					promiEvent.on('error', () => {
 						onErrorReceived = true;
 						resolve(true);
