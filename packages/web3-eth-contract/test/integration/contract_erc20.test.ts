@@ -121,7 +121,7 @@ describe('contract', () => {
 					);
 				});
 
-				it('send tokens from account which does not have ether', async () => {
+				it('send tokens from the account that does not have ether', async () => {
 					const tempAccount = await createTempAccount();
 					const test = await createNewAccount({
 						unlock: true,
@@ -150,7 +150,7 @@ describe('contract', () => {
 					expect(await catchErrorPromise).toBeDefined();
 					expect(catchError).toBe(true);
 				});
-				it('send tokens from account which does not have tokens', async () => {
+				it('send tokens from the account that does not have tokens', async () => {
 					const tempAccount = await createTempAccount();
 					const test = await createNewAccount({
 						unlock: true,

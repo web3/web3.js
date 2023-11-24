@@ -57,7 +57,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 	});
 
 	describe('Should catch errors', () => {
-		it('send ether from account without balance', async () => {
+		it('send ether from the account that does not have ether', async () => {
 			let onErrorReceived = false;
 			let catchErrorReceived = false;
 			const from = await createNewAccount({
