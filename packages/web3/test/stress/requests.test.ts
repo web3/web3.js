@@ -131,7 +131,7 @@ describe('huge data', () => {
 		for (let i = 0; i < parallelCount; i++) {
 			sendPrs.push(sendData(accounts[i]));
 		}
-		expect(await Promise.all(sendPrs)).resolves.toBeDefined();
+		await expect(Promise.all(sendPrs)).resolves.toBeDefined();
 		// if socket subscribe to events
 		if (isIpc || isWs) {
 			contractSubscriptions(accounts);
