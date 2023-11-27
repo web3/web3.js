@@ -704,4 +704,8 @@ Released with 1.0.0-beta.37 code base.
   - `web3-eth-accounts`: Bumped `@ethereumjs` dependencies (#6457)
   - Updated dependencies (#6491)
 
-  ## [Unreleased]
+
+## [Unreleased]
+
+### Fixed
+- Fixed uncaught exception _"TypeError: (intermediate value).data is undefined"_ calling a contract's function with insufficient funds on Polygon PoS (#6611).
