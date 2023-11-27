@@ -71,6 +71,10 @@ export const registeredSubscriptions = {
 	newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
 };
 
+/**
+ * 
+ * The Web3Eth allows you to interact with an Ethereum blockchain.
+ */
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
 	public constructor(
 		providerOrContext?: SupportedProviders<any> | Web3ContextInitOptions | string,
@@ -95,7 +99,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		super({
 			...(providerOrContext as Web3ContextInitOptions),
 			registeredSubscriptions,
-		});		
+		});
 	}
 
 	/**
