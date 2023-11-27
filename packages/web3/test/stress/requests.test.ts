@@ -126,12 +126,12 @@ describe('huge data', () => {
 			(web3.provider as unknown as WebSocketProvider).disconnect();
 		}
 	});
-	it('send requests', async () => {
+	it('send requests large number of requests', async () => {
 		const sendPrs = [];
 		for (let i = 0; i < parallelCount; i++) {
 			sendPrs.push(sendData(accounts[i]));
 		}
-		await Promise.all(sendPrs);
+		expect(await Promise.all(sendPrs)).resolves.toBeDefined();
 		// if socket subscribe to events
 		if (isIpc || isWs) {
 			contractSubscriptions(accounts);
@@ -142,6 +142,6 @@ describe('huge data', () => {
 		for (let i = 0; i < parallelCount; i++) {
 			getPrs.push(getData(accounts[i]));
 		}
-		await Promise.all(getPrs);
+		await expect(Promise.all(getPrs)).resolves.toBeDefined();
 	});
 });

@@ -4,8 +4,8 @@ const base = require('../config/jest.config');
 
 module.exports = {
 	...base,
-	setupFilesAfterEnv: ['<rootDir>/test/manual/setup.js'],
-	testMatch: ['<rootDir>/test/manual/**/*.(spec|test).(js|ts)'],
+	setupFilesAfterEnv: ['<rootDir>/test/stress/setup.js'],
+	testMatch: ['<rootDir>/test/stress/**/*.(spec|test).(js|ts)'],
 	/**
 	 * restoreMocks [boolean]
 	 *
