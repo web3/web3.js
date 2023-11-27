@@ -116,7 +116,7 @@ describe('huge data', () => {
 	let parallelCount = 100;
 	let accounts: Web3Account[] = [];
 	beforeAll(async () => {
-		parallelCount = isIpc ? 5 : parallelCount;
+		parallelCount = parallelCount;
 		web3 = new Web3(getSystemTestProvider());
 		accounts = await prepareAccounts(web3, parallelCount);
 		await deployContracts(web3, accounts);

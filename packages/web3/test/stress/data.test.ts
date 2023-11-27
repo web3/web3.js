@@ -19,8 +19,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3 } from 'web3';
 import WebSocketProvider from 'web3-providers-ws';
 import accounts from '../../../../scripts/accounts.json';
-import { isWs, isIpc, getSystemTestProvider } from '../../../../scripts/system_tests_utils';
 import { BasicAbi, BasicBytecode } from '../../../../fixtures/build/Basic';
+import { getSystemTestProvider, isWs, isIpc } from '../shared_fixtures/system_tests_utils';
 
 const DATA_AMOUNT = 50 * 1024; // 50 kB
 
