@@ -45,11 +45,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * With `web3-eth` you can also subscribe (if supported by provider) to events in the Ethereum Blockchain, using the `subscribe` function. See more at the {@link Web3Eth.subscribe} function.
  */
-/**
- *
- */
-import 'setimmediate';
-
 import { Web3Eth } from './web3_eth.js';
 
 export * from './web3_eth.js';

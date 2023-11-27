@@ -49,7 +49,7 @@ import {
 	Eip712TypedData,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { format, hexToBytes, bytesToUint8Array, numberToHex } from 'web3-utils';
+import { format, hexToBytes, bytesToUint8Array, numberToHex, setImmediate } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { SignatureError } from 'web3-errors';

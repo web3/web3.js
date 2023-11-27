@@ -30,5 +30,6 @@ export * from './web3_deferred_promise.js';
 export * from './chunk_response_parser.js';
 export * from './uuid.js';
 export * from './web3_eip1193_provider.js';
+export { setImmediate, clearImmediate } from './setImmediate.js';
 export * from './socket_provider.js';
 export * from './uint8array.js';

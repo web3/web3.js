@@ -41,7 +41,7 @@ import {
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
-import { toChecksumAddress, isNullish } from 'web3-utils';
+import { toChecksumAddress, isNullish, setImmediate } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
