@@ -79,7 +79,7 @@ export abstract class Web3Config
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
-		contractDataInputFill: 'input',
+		contractDataInputFill: 'data',
 		defaultNetworkId: undefined,
 		defaultChain: 'mainnet',
 		defaultHardfork: 'london',

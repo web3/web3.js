@@ -348,3 +348,7 @@ Documentation:
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
 ## [Unreleased]
+
+### Changed
+
+-	`contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
