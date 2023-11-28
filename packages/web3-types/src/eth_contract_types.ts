@@ -114,7 +114,8 @@ export interface ContractOptions {
 	readonly data?: Bytes;
 
 	/**
-	 * The JSON interface object derived from the ABI of this contract.
+	 * The {@doclink glossary/json_interface | json interface} object derived from the [ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) of this contract.
+	 *
 	 * Re-setting this will regenerate the methods and events of the contract instance.
 	 *
 	 * @example
