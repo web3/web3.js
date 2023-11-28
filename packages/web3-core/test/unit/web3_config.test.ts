@@ -105,6 +105,22 @@ describe('Web3Config', () => {
 		},
 	);
 
+	it('set default chain error', () => {
+		const obj = new MyConfigObject();
+
+		obj.setConfig({
+			// @ts-expect-error incorrect object
+			defaultCommon: {
+				baseChain: 'mainnet',
+			},
+		});
+		expect(() => {
+			obj.defaultChain = 'test';
+		}).toThrow(
+			'Web3Config chain doesnt match in defaultHardfork mainnet and common.hardfork test',
+		);
+	});
+
 	it('Updating transactionPollingInterval should update transactionReceiptPollingInterval and transactionConfirmationPollingInterval', () => {
 		const obj = new MyConfigObject();
 		const configChange = jest.fn();

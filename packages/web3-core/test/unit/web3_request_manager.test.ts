@@ -66,7 +66,31 @@ describe('Web3RequestManager', () => {
 			expect(manager).toBeInstanceOf(Web3RequestManager);
 		});
 	});
+	describe('isMetaMaskProvider', () => {
+		it('check params', () => {
+			const request = {
+				constructor: {
+					name: 'AsyncFunction',
+				},
+			};
 
+			expect(
+				utils.isMetaMaskProvider({
+					// @ts-expect-error incorrect param
+					request,
+					isMetaMask: true,
+				}),
+			).toBe(true);
+		});
+	});
+	describe('isSupportSubscriptions', () => {
+		it('check params', () => {
+			// @ts-expect-error incorrect param
+			expect(utils.isSupportSubscriptions({ supportsSubscriptions: () => true })).toBe(true);
+			// @ts-expect-error incorrect param
+			expect(utils.isSupportSubscriptions({})).toBe(false);
+		});
+	});
 	describe('providers', () => {
 		it('should return providers on instance', () => {
 			const manager = new Web3RequestManager();
