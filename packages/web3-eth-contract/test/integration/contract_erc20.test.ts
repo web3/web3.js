@@ -49,7 +49,7 @@ describe('contract', () => {
 			};
 		});
 
-		it.skip('should deploy the contract', async () => {
+		it('should deploy the contract', async () => {
 			const acc = await createTempAccount();
 			const sendOptionsLocal = { from: acc.address, gas: '10000000' };
 			await expect(
