@@ -5,7 +5,7 @@ sidebar_position: 4
 # Smart Contracts
 
 :::info
-This guide expects you to have some basic knowledge. If you are just starting, it is recommended to first check out this [Tutorial: Deploying and Interacting with Smart Contracts](/deploying_and_interacting_with_smart_contracts).
+This guide expects you to have some basic knowledge. If you are just starting, it is recommended to first check out this [Tutorial: Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts).
 :::
 
 ## Contract class
@@ -69,7 +69,7 @@ When you instantiate a `Contract`, you primarily provide one or two parameters, 
 1. **ABI (Application Binary Interface):** The ABI tells the `Contract` how to format calls and transactions so that the contract can understand them.
 
 :::tip
-If you do not know how to get the contract ABI, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](https://docs.web3js.org/guides/smart_contracts/deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial. And to look into the guide: [Infer Contract Types from JSON Artifact](https://docs.web3js.org/guides/smart_contracts/infer_contract_types_guide/).
+If you do not know how to get the contract ABI, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial. And to look into the guide: [Infer Contract Types from JSON Artifact](./infer_contract_types_guide/).
 :::
 
 2. (optional) **Contract Address:** The Ethereum address at which your contract is deployed. If the contract is not deployed yet, do not pass a second parameter or pass `undefined` to it.
@@ -225,7 +225,7 @@ The `Contract` class comes equipped with a range of properties and methods for c
     console.log('Contract deployed at address: ' + tx.options.address);
     ```
 :::tip
-If you do not know how to get the contract bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](https://docs.web3js.org/guides/smart_contracts/deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
+If you do not know how to get the contract bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
 :::
 
 - **getPastEvents**: Gets past events for this contract. It differs from `events` properties that it returns the past events as an array, rather than allowing to subscribe to them like when using `events` properties. More on the [API documentation](/api/web3-eth-contract/class/Contract#getPastEvents)
@@ -299,7 +299,7 @@ const bytecode = '0x60806040523480156100115760006000fd5b506040516102243803806102
 
 :::info
 And as mentioned in the tips inside pervious sections: 
-If you do not know how to get the contract ABI and bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](https://docs.web3js.org/guides/smart_contracts/deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
+If you do not know how to get the contract ABI and bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
 :::
 
 ### Do I always need the contract ByteCode?
