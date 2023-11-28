@@ -29,13 +29,13 @@ import { isNullish } from 'web3-validator';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { bytesToHex, hexToBytes } from 'web3-utils';
-import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
-import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 import {
 	AccessListEIP2930Transaction,
 	FeeMarketEIP1559Transaction,
 	Transaction,
 } from 'web3-eth-accounts';
+import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
+import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 
 describe('prepareTransactionForSigning', () => {
 	const web3Context = new Web3Context<EthExecutionAPI>({
@@ -50,8 +50,6 @@ describe('prepareTransactionForSigning', () => {
 				config: { defaultNetworkId: '0x1' },
 			});
 			context.defaultChain = 'mainnet';
-			// context.setConfig({ defaultHardfork: 'london' });
-			// @ts-ignore
 			context.defaultCommon = {
 				customChain: {
 					name: 'test',
@@ -68,31 +66,24 @@ describe('prepareTransactionForSigning', () => {
 				fillGasPrice?: boolean;
 				fillGasLimit?: boolean;
 			}): Promise<ReturnType> {
-				if (isNullish(options.transaction.common)) {
+				const tx = { ...options.transaction };
+
+				if (isNullish(tx.common)) {
 					if (options.web3Context.defaultCommon) {
 						const common = options.web3Context.defaultCommon as unknown as Common;
 						const chainId = common.customChain.chainId as string;
 						const networkId = common.customChain.networkId as string;
 						const name = common.customChain.name as string;
-						options.transaction.common = {
+						tx.common = {
 							...common,
 							customChain: { chainId, networkId, name },
 						};
 					}
 				}
-				return options.transaction as unknown as ReturnType;
+				return tx as unknown as ReturnType;
 			}
 
-			// @ts-ignore
 			context.transactionBuilder = transactionBuilder;
-
-			// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-			jest.spyOn(ethRpcMethods, 'estimateGas').mockImplementation(
-				// @ts-expect-error - Mocked implementation doesn't have correct method signature
-				() => expectedTransaction.gas,
-			);
-			// @ts-expect-error - Mocked implementation doesn't have correct method signature
-			jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockImplementation(() => mockBlock);
 
 			const ethereumjsTx = await prepareTransactionForSigning(
 				{
