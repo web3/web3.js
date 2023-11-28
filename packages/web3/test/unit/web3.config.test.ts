@@ -47,9 +47,9 @@ describe('web3config web3 tests', () => {
             expect(contract.getContextObject().config.contractDataInputFill).toBe("both");
 
             // web3 config shouldn't change
-            expect(web3.getContextObject().config.contractDataInputFill).toBe("input");
-            expect(web3.config.contractDataInputFill).toBe("input");
-            expect(web3.eth.getContextObject().config.contractDataInputFill).toBe("input")
+            expect(web3.getContextObject().config.contractDataInputFill).toBe("data");
+            expect(web3.config.contractDataInputFill).toBe("data");
+            expect(web3.eth.getContextObject().config.contractDataInputFill).toBe("data")
         });
         it('should change web3 config context but not contract config context', async () => {
             const web3 = new Web3("http://127.0.0.1:8545");

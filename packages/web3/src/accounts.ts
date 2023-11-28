@@ -30,6 +30,9 @@ import {
 	signTransaction,
 	sign,
 	Wallet,
+	privateKeyToAddress, 
+	parseAndValidatePrivateKey, 
+	privateKeyToPublicKey,
 } from 'web3-eth-accounts';
 
 /**
@@ -99,5 +102,8 @@ export const initAccountsForContext = (context: Web3Context<EthExecutionAPI>) =>
 		recover,
 		encrypt,
 		wallet,
-	};
+		privateKeyToAddress, 
+		parseAndValidatePrivateKey, 
+		privateKeyToPublicKey,
+	}
 };

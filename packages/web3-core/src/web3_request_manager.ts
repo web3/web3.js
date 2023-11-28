@@ -42,7 +42,6 @@ import {
 	Web3APISpec,
 	Web3BaseProvider,
 	Web3BaseProviderConstructor,
-	JsonRpcRequest
 } from 'web3-types';
 import { isNullish, isPromise, jsonRpc, isResponseRpcError } from 'web3-utils';
 import {
@@ -51,7 +50,6 @@ import {
 	isLegacySendAsyncProvider,
 	isLegacySendProvider,
 	isWeb3Provider,
-	isMetaMaskProvider,
 } from './utils.js';
 import { Web3EventEmitter } from './web3_event_emitter.js';
 
@@ -67,24 +65,6 @@ const availableProviders: {
 	HttpProvider: HttpProvider as Web3BaseProviderConstructor,
 	WebsocketProvider: WSProvider as Web3BaseProviderConstructor,
 };
-
-
-// if input was provided in params, change to data due to metamask only accepting data
-const metamaskPayload = (payload: JsonRpcRequest) => {
-	
-	if(Array.isArray(payload.params)) {
-	const params = payload.params[0] as Record<string, unknown>
-	if (params.input && !params.data) {
-
-		return {...payload,
-			params: [{...params,
-				data: params.data ?? params.input}]
-		}
-	}
-}
-return payload;
-
-}
 
 export class Web3RequestManager<
 	API extends Web3APISpec = EthExecutionAPI,
@@ -208,20 +188,10 @@ export class Web3RequestManager<
 			);
 		}
 		
-		let payload = jsonRpc.isBatchRequest(request)
-			? jsonRpc.toBatchPayload(request)
+		const payload = jsonRpc.isBatchRequest(request)
+		? jsonRpc.toBatchPayload(request)
 			: jsonRpc.toPayload(request);
 			
-		if(isMetaMaskProvider(provider)){ // metamask send_transaction accepts data and not input, so we change it
-			if ((payload as JsonRpcRequest<ResponseType>).method === 'eth_sendTransaction'){
-				if(!jsonRpc.isBatchRequest(payload)){
-					payload = metamaskPayload(payload as JsonRpcRequest)
-				} else {
-					payload = payload.map(p => metamaskPayload(p as JsonRpcRequest))
-				}
-			}
-		}
-		
 		if (isWeb3Provider(provider)) {
 			let response;
 
