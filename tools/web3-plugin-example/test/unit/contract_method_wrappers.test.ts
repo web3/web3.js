@@ -72,7 +72,7 @@ describe('ContractMethodWrappersPlugin', () => {
 				method: 'eth_call',
 				params: [
 					expect.objectContaining({
-						input: '0x70a082310000000000000000000000008da5e39ec14b57fb9bcd9aa2b4500e909119795d',
+						data: '0x70a082310000000000000000000000008da5e39ec14b57fb9bcd9aa2b4500e909119795d',
 						to: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
 					}),
 					'latest',
@@ -106,7 +106,7 @@ describe('ContractMethodWrappersPlugin', () => {
 				method: 'eth_sendTransaction',
 				params: [
 					expect.objectContaining({
-						input: '0xa9059cbb0000000000000000000000004f641def1e7845caab95ac717c80416082430d0d000000000000000000000000000000000000000000000000000000000000002a',
+						data: '0xa9059cbb0000000000000000000000004f641def1e7845caab95ac717c80416082430d0d000000000000000000000000000000000000000000000000000000000000002a',
 						from: sender,
 						gasPrice: expectedGasPrice,
 						maxFeePerGas: undefined,

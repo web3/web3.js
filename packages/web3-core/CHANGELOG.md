@@ -202,3 +202,7 @@ Documentation:
 -   Added `isMetaMaskProvider` function to check if provider is metamask (#6534)
 
 ## [Unreleased]
+
+### Changed
+
+-	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)

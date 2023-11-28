@@ -33,7 +33,7 @@ const defaultConfig = {
 		useRpcCallSpecification: false,
 	},
 	handleRevert: false,
-	contractDataInputFill: 'input',
+	contractDataInputFill: 'data',
 	maxListenersWarningThreshold: 100,
 	transactionBlockTimeout: 50,
 	transactionConfirmationBlocks: 24,
