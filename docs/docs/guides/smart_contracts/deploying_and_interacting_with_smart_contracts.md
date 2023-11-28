@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Deploying and Interacting with Smart Contracts'
+sidebar_label: 'Tutorial: Deploying and Interacting with Smart Contracts'
 ---
 
 import Tabs from '@theme/Tabs';
@@ -340,20 +340,20 @@ async function deploy() {
 	const defaultAccount = providersAccounts[0];
 	console.log('deployer account:', defaultAccount);
 
-	const deployedContract = myContract.deploy({
+	const contractDeployer = myContract.deploy({
 		data: '0x' + bytecode,
 		arguments: [1],
 	});
 
 	// optionally, estimate the gas that will be used for development and log it
-	const gas = await deployedContract.estimateGas({
+	const gas = await contractDeployer.estimateGas({
 		from: defaultAccount,
 	});
 	console.log('estimated gas:', gas);
 
 	try {
 		// Deploy the contract to the Ganache network
-		const tx = await deployedContract.send({
+		const tx = await contractDeployer.send({
 			from: defaultAccount,
 			gas,
 			gasPrice: 10000000000,
@@ -396,18 +396,18 @@ async function deploy(): Promise<void> {
 	const defaultAccount: string = providersAccounts[0];
 	console.log('deployer account:', defaultAccount);
 
-	const deployedContract: any = myContract.deploy({
+	const contractDeployer: any = myContract.deploy({
 		data: '0x' + bytecode,
 		arguments: [1],
 	});
 
-	const gas: number = await deployedContract.estimateGas({
+	const gas: number = await contractDeployer.estimateGas({
 		from: defaultAccount,
 	});
 	console.log('estimated gas:', gas);
 
 	try {
-		const tx: any = await deployedContract.send({
+		const tx: any = await contractDeployer.send({
 			from: defaultAccount,
 			gas,
 			gasPrice: 10000000000,

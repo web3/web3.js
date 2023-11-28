@@ -103,7 +103,7 @@ export class Web3Context<
 			| Web3ContextInitOptions<API, RegisteredSubs>,
 	) {
 		super();
-		
+
 		// If "providerOrContext" is provided as "string" or an objects matching "SupportedProviders" interface
 		if (
 			isNullish(providerOrContext) ||
@@ -364,7 +364,7 @@ export class Web3Context<
 
 	/**
 	 * This method allows extending the web3 modules.
-	 * Note: This method is only for backward compatibility, and It is recommended to use Web3 v4 Plugin feature for extending web3.js functionality if you are developing some thing new.
+	 * Note: This method is only for backward compatibility, and It is recommended to use Web3 v4 Plugin feature for extending web3.js functionality if you are developing something new.
 	 */
 	public extend(extendObj: ExtensionObject) {
 		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
