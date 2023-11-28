@@ -17,10 +17,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable */
 import { Web3 } from 'web3';
-import { IpcProvider } from 'web3-providers-ipc';
-import accounts from '../shared_fixtures/accounts.json';
-import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import WebSocketProvider from 'web3-providers-ws';
+import accounts from '../../../../scripts/accounts.json';
+import { BasicAbi, BasicBytecode } from '../../../../fixtures/build/Basic';
+import { getSystemTestProvider, isWs, isIpc } from '../shared_fixtures/system_tests_utils';
+
 const DATA_AMOUNT = 50 * 1024; // 50 kB
 
 const sendAndGetData = async (web3: Web3, i: number) => {
@@ -36,33 +37,36 @@ const sendAndGetData = async (web3: Web3, i: number) => {
 	const c = new web3.eth.Contract<typeof BasicAbi>(BasicAbi);
 	const contract = await c.deploy(deployOptions).send(sendOptions);
 
-	await contract.methods
-		// @ts-ignore
-		.setValues(1, 'A'.repeat(DATA_AMOUNT), true)
-		.send({ from: accounts[i].address });
+	await expect(
+		contract.methods
+			.setValues(1, 'A'.repeat(DATA_AMOUNT), true)
+			.send({ from: accounts[i].address }),
+	).resolves.toBeDefined();
 
-	await contract.methods.getStringValue().call();
+	await expect(contract.methods.getStringValue().call()).resolves.toBe('A'.repeat(DATA_AMOUNT));
 };
 
-const test = async () => {
-	const providerString = String(process.env.WEB3_SYSTEM_TEST_PROVIDER);
-	console.log(`Start test with provider: ${providerString}`);
-	const provider = providerString.includes('ipc')
-		? new IpcProvider(providerString)
-		: providerString;
-	const web3 = new Web3(provider);
+describe('huge data', () => {
+	let web3: Web3;
+	beforeAll(() => {
+		web3 = new Web3(getSystemTestProvider());
+	});
+	afterAll(() => {
+		if (isWs || isIpc) {
+			(web3.provider as unknown as WebSocketProvider).disconnect();
+		}
+	});
 
-	for (const a of accounts) {
-		const acc = web3.eth.accounts.privateKeyToAccount(a.privateKey);
-		web3.eth.accounts.wallet.add(acc);
-	}
+	it('send and get large data', async () => {
+		for (const a of accounts) {
+			const acc = web3.eth.accounts.privateKeyToAccount(a.privateKey);
+			web3.eth.accounts.wallet.add(acc);
+		}
 
-	const prs = [];
-	for (let i = 0; i < 15; i++) {
-		prs.push(sendAndGetData(web3, i));
-	}
-	await Promise.all(prs);
-	(web3.provider as unknown as WebSocketProvider).disconnect();
-};
-
-test().catch(console.error);
+		const prs = [];
+		for (let i = 0; i < 15; i++) {
+			prs.push(sendAndGetData(web3, i));
+		}
+		await expect(Promise.all(prs)).resolves.toBeDefined();
+	});
+});
