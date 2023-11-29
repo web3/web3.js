@@ -21,8 +21,25 @@ import { Address, EthPersonalAPI, HexString, Transaction } from 'web3-types';
 import * as rpcWrappers from './rpc_method_wrappers.js';
 
 /**
- * Eth Personal allows you to interact with the Ethereum node’s accounts.
- */
+* Eth Personal allows you to interact with the Ethereum node’s accounts.<br/><br/>
+* For using Eth Personal package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager.<br/>
+* ```ts
+* 
+*import { Web3 } from 'web3';
+*  const web3 = new Web3('http://127.0.0.1:7545');
+*
+*  console.log(await web3.eth.personal.getAccounts());
+* 
+* ```
+* For using individual package install `web3-eth-personal` packages using: `npm i web3-eth-personal` or `yarn add web3-eth-personal`.<br/>
+*
+* ```ts
+* import {Personal} from 'web3-eth-personal';
+* 
+* const personal = new Personal('http://127.0.0.1:7545');
+* console.log(await personal.getAccounts());
+* ```
+*/
 export class Personal extends Web3Context<EthPersonalAPI> {
 	/**
 	 *Returns a list of accounts the node controls by using the provider and calling the RPC method personal_listAccounts. Using `web3.eth.accounts.create()` will not add accounts into this list. For that use `web3.eth.personal.newAccount()`.
@@ -92,6 +109,7 @@ export class Personal extends Web3Context<EthPersonalAPI> {
 	 * await personal.lockAccount(
 	 * 	"0x0d4aa485ecbc499c70860feb7e5aaeaf5fd8172e"
 	 * );
+	 * ```
 	 */
 	public async lockAccount(address: Address) {
 		return rpcWrappers.lockAccount(this.requestManager, address);
@@ -201,7 +219,7 @@ export class Personal extends Web3Context<EthPersonalAPI> {
 	 * @returns - The signature.
 	 * @example
 	 * ```ts
-	 * const sig = await personal .sign("Hello world", "0x0D4Aa485ECbC499c70860fEb7e5AaeAf5fd8172E", "123456")
+	 * const sig = await personal.sign("Hello world", "0x0D4Aa485ECbC499c70860fEb7e5AaeAf5fd8172E", "123456")
 	 * console.log(sig)
 	 * > 0x5d21d01b3198ac34d0585a9d76c4d1c8123e5e06746c8962318a1c08ffb207596e6fce4a6f377b7c0fc98c5f646cd73438c80e8a1a95cbec55a84c2889dca0301b
 	 * ```
