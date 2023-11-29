@@ -18,7 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable max-classes-per-file */
 
 import { Web3Error } from 'web3-types';
-import { MultipleErrors } from './errors/generic_errors';
+// eslint-disable-next-line import/no-cycle
+import { MultipleErrors } from './errors/generic_errors.js';
 
 /**
  * Base class for Web3 errors.
@@ -36,9 +37,8 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 	public get innerError(): Error | Error[] | undefined {
 		if (this.cause instanceof MultipleErrors) {
 			return this.cause.errors;
-		} else {
-			return this.cause;
 		}
+		return this.cause;
 	}
 	/**
 	 * @deprecated Use the `cause` property instead.

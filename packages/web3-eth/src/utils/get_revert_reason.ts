@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context } from 'web3-core';
-import { ContractExecutionError, Eip838ExecutionError, InvalidResponseError } from 'web3-errors';
+import { ContractExecutionError, Eip838ExecutionError, InvalidResponseError , MultipleErrors } from 'web3-errors';
 import { decodeContractErrorData, isAbiErrorFragment } from 'web3-eth-abi';
 import {
 	AbiErrorFragment,
@@ -30,7 +30,6 @@ import {
 // eslint-disable-next-line import/no-cycle
 import { call } from '../rpc_method_wrappers.js';
 import { RevertReason, RevertReasonWithCustomError } from '../types.js';
-import { MultipleErrors } from 'web3-errors';
 
 export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi) => {
 	if (error instanceof ContractExecutionError && error.cause instanceof Eip838ExecutionError) {

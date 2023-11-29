@@ -109,7 +109,6 @@ import {
 	isContractInitOptions,
 	isWeb3ContractContext,
 } from './utils.js';
-import { Eip838ExecutionError } from 'web3-errors';
 
 type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
@@ -1028,7 +1027,7 @@ export class Contract<Abi extends ContractAbi>
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeContractErrorData(errorsAbi, error.cause as Eip838ExecutionError);
+				decodeContractErrorData(errorsAbi, error.cause);
 			}
 			throw error;
 		}

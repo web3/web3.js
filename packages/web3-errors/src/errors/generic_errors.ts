@@ -28,6 +28,7 @@ import {
 	ERR_INVALID_METHOD_PARAMS,
 	ERR_MULTIPLE_ERRORS,
 } from '../error_codes.js';
+// eslint-disable-next-line import/no-cycle
 import { BaseWeb3Error } from '../web3_error_base.js';
 
 export class InvalidNumberOfParamsError extends BaseWeb3Error {
@@ -102,7 +103,7 @@ export class ExistingPluginNamespaceError extends BaseWeb3Error {
 
 export class MultipleErrors extends BaseWeb3Error {
 	public code = ERR_MULTIPLE_ERRORS;
-	errors: Error[];
+	public errors: Error[];
 
 	public constructor(errors: Error[]) {
 		super(`Multiple errors occurred: [${errors.map(e => e.message).join('], [')}]`);
