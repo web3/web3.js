@@ -121,6 +121,11 @@ describe('Web3RequestManager', () => {
 				});
 			});
 
+			it('should unset provider', () => {
+				const manager = new Web3RequestManager();
+				manager.setProvider(undefined);
+				expect(manager.provider).toBeUndefined();
+			});
 			it('should detect and set http provider', () => {
 				const providerString = 'http://mydomain.com';
 
@@ -259,10 +264,44 @@ describe('Web3RequestManager', () => {
 
 		it('should throw error if no provider is set', async () => {
 			const manager = new Web3RequestManager();
-
 			await expect(manager.send(request)).rejects.toThrow('Provider not available');
 		});
 
+		it('promise of legacy provider should be resolved', async () => {
+			const manager = new Web3RequestManager(undefined, undefined);
+			const pr = new Promise(resolve => {
+				resolve('test');
+			});
+			const myProvider = {
+				request: jest.fn().mockImplementation(async () => pr),
+			} as any;
+			manager.setProvider(myProvider);
+			await manager.send(request);
+			expect(myProvider.request).toHaveBeenCalledTimes(1);
+			expect(await pr).toBe('test');
+		});
+		it('Got a "nullish" response from provider', async () => {
+			const manager = new Web3RequestManager(undefined, undefined);
+			const myProvider = {
+				send: jest.fn().mockImplementation((_, cb: (error?: any, data?: any) => void) => {
+					cb(undefined, undefined);
+				}),
+			} as any;
+			manager.setProvider(myProvider);
+
+			await expect(async () => manager.send(request)).rejects.toThrow(
+				'Got a "nullish" response from provider',
+			);
+		});
+		it('Provider does not have a request or send method to use', async () => {
+			const manager = new Web3RequestManager(undefined, undefined);
+			const myProvider = {} as any;
+			manager.setProvider(myProvider);
+
+			await expect(async () => manager.send(request)).rejects.toThrow(
+				'Provider does not have a request or send method to use.',
+			);
+		});
 		describe('test rpc errors', () => {
 			it('should pass request to provider and reject with a generic rpc error when rpc call specification flag is undefined', async () => {
 				const parseErrorResponse = {
