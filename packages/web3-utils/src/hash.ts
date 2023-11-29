@@ -342,7 +342,6 @@ export const encodePacked = (...values: Sha3Input[]): string => {
  *
  * @example
  * ```ts
- *  console.log([{ type: 'string', value: '31323334' }]);
  * console.log(web3.utils.soliditySha3({ type: "string", value: "31323334" }));
  * > 0xf15f8da2ad27e486d632dc37d24912f634398918d6f9913a0a0ff84e388be62b
  * ```
