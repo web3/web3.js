@@ -19,7 +19,6 @@ component_management:
       - type: patch
         target: 80%
 
-
   individual_components:
     - component_id: "web3"
       paths:
