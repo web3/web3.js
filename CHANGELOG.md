@@ -2226,6 +2226,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Dependencies updated
 
 ## [4.2.2]
+
 ### Added
 
 #### web3-core
@@ -2252,5 +2253,81 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth-contract
 
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
+
+## [4.4.0]
+
+### Changed
+
+#### web3-core
+
+-	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+
+#### web3-eth-abi
+
+-   Dependencies updated
+
+#### web3-eth-accounts
+
+-   Dependencies updated
+
+#### web3-eth-contracts
+
+-	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+
+#### web3-eth-ens
+
+-   Dependencies updated
+
+#### web3-eth-iban
+
+-   Dependencies updated
+
+#### web3-eth
+
+-   Dependencies updated
+
+#### web3-net
+
+-   Dependencies updated
+
+#### web3-providers-http
+
+-   Dependencies updated
+
+#### web3-providers-ipc
+
+-   Dependencies updated
+
+#### web3-providers-ws
+
+-   Dependencies updated
+
+### Added
+
+#### web3-eth-accounts
+
+-   Added public function `privateKeyToPublicKey`
+-   Added exporting `BaseTransaction` from the package (#6493)
+-   Added exporting `txUtils` from the package (#6493)
+
+#### web3-utils
+
+-   `SocketProvider` now contains public function `getPendingRequestQueueSize`, `getSentRequestsQueueSize` and `clearQueues` (#6479)
+-   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6479) 
+-   Add `isContractInitOptions` method (#6555)
+
+### Fixed
+
+#### web3-eth-accounts
+
+-   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344) 
+
+#### web3-rpc-methods
+
+-   Fix web3-types import #6590 (#6589)
+
+#### web3-utils
+
+-   Fix unecessary array copy when pack encoding (#6553)
 
 ## [Unreleased]

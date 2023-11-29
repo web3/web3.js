@@ -347,8 +347,10 @@ Documentation:
 
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
-## [Unreleased]
+## [4.2.0]
 
 ### Changed
 
--	`contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+-	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+
+## [Unreleased]

@@ -213,4 +213,10 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.4.0]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

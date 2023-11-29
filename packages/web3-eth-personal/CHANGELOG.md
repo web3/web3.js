@@ -147,4 +147,10 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.0.9]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

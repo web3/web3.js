@@ -149,4 +149,8 @@ Documentation:
 
 -   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344) 
 
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]
