@@ -154,10 +154,4 @@ Documentation:
 
 -   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
 
-## [4.1.5]
-
-### Changed
-
--   Dependencies updated
-
 ## [Unreleased]
