@@ -109,6 +109,7 @@ import {
 	isContractInitOptions,
 	isWeb3ContractContext,
 } from './utils.js';
+import { Eip838ExecutionError } from 'web3-errors';
 
 type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
@@ -371,9 +372,8 @@ export class Contract<Abi extends ContractAbi>
 			: returnFormat ?? DEFAULT_RETURN_FORMAT;
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
-			this.config.contractDataInputFill =
-				(options as ContractInitOptions)?.dataInputFill ??
-				this.config.contractDataInputFill;
+		this.config.contractDataInputFill =
+			(options as ContractInitOptions)?.dataInputFill ?? this.config.contractDataInputFill;
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
 		if (!isNullish(address)) {
@@ -1028,7 +1028,7 @@ export class Contract<Abi extends ContractAbi>
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeContractErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.cause as Eip838ExecutionError);
 			}
 			throw error;
 		}
@@ -1058,7 +1058,7 @@ export class Contract<Abi extends ContractAbi>
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeContractErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.cause);
 			}
 			throw error;
 		}
@@ -1083,18 +1083,18 @@ export class Contract<Abi extends ContractAbi>
 			options: { ...options, dataInputFill: this.config.contractDataInputFill },
 			contractOptions: modifiedContractOptions,
 		});
-		
+
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
 			contractAbi: this._jsonInterface,
 		});
-		
+
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeContractErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.cause);
 			}
 		});
 		return transactionToSend;

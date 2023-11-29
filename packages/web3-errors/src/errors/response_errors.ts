@@ -23,6 +23,7 @@ import {
 	JsonRpcResponseWithError,
 } from 'web3-types';
 import { BaseWeb3Error } from '../web3_error_base.js';
+import { MultipleErrors } from './generic_errors.js';
 import { ERR_INVALID_RESPONSE, ERR_RESPONSE } from '../error_codes.js';
 
 // To avoid circular package dependency, copied to code here. If you update this please update same function in `json_rpc.ts`
@@ -74,7 +75,11 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 			errorOrErrors = response.map(r => r.error) as JsonRpcError[];
 		}
 
-		this.innerError = errorOrErrors as Error | Error[] | undefined;
+		if (Array.isArray(errorOrErrors)) {
+			this.cause = new MultipleErrors(errorOrErrors as unknown as Error[]);
+		} else {
+			this.cause = errorOrErrors as Error | undefined;
+		}
 	}
 
 	public toJSON() {
@@ -98,7 +103,10 @@ export class InvalidResponseError<ErrorType = unknown, RequestType = unknown> ex
 		} else if (result instanceof Array) {
 			errorOrErrors = result.map(r => r.error) as JsonRpcError[];
 		}
-
-		this.innerError = errorOrErrors as Error | Error[] | undefined;
+		if (Array.isArray(errorOrErrors)) {
+			this.cause = new MultipleErrors(errorOrErrors as unknown as Error[]);
+		} else {
+			this.cause = errorOrErrors as Error | undefined;
+		}
 	}
 }

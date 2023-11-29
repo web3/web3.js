@@ -30,41 +30,39 @@ import {
 // eslint-disable-next-line import/no-cycle
 import { call } from '../rpc_method_wrappers.js';
 import { RevertReason, RevertReasonWithCustomError } from '../types.js';
+import { MultipleErrors } from 'web3-errors';
 
 export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi) => {
-	if (
-		error instanceof ContractExecutionError &&
-		error.innerError instanceof Eip838ExecutionError
-	) {
+	if (error instanceof ContractExecutionError && error.cause instanceof Eip838ExecutionError) {
 		if (contractAbi !== undefined) {
 			const errorsAbi = contractAbi.filter(abi =>
 				isAbiErrorFragment(abi),
 			) as unknown as AbiErrorFragment[];
-			decodeContractErrorData(errorsAbi, error.innerError);
+			decodeContractErrorData(errorsAbi, error.cause);
 
 			return {
-				reason: error.innerError.message,
-				signature: error.innerError.data?.slice(0, 10),
-				data: error.innerError.data?.substring(10),
-				customErrorName: error.innerError.errorName,
-				customErrorDecodedSignature: error.innerError.errorSignature,
-				customErrorArguments: error.innerError.errorArgs,
+				reason: error.cause.message,
+				signature: error.cause.data?.slice(0, 10),
+				data: error.cause.data?.substring(10),
+				customErrorName: error.cause.errorName,
+				customErrorDecodedSignature: error.cause.errorSignature,
+				customErrorArguments: error.cause.errorArgs,
 			} as RevertReasonWithCustomError;
 		}
 
 		return {
-			reason: error.innerError.message,
-			signature: error.innerError.data?.slice(0, 10),
-			data: error.innerError.data?.substring(10),
+			reason: error.cause.message,
+			signature: error.cause.data?.slice(0, 10),
+			data: error.cause.data?.substring(10),
 		} as RevertReason;
 	}
 
 	if (
 		error instanceof InvalidResponseError &&
-		!Array.isArray(error.innerError) &&
-		error.innerError !== undefined
+		!Array.isArray((error.cause as MultipleErrors)?.errors) &&
+		error.cause !== undefined
 	) {
-		return error.innerError.message;
+		return error.cause.message;
 	}
 
 	throw error;
