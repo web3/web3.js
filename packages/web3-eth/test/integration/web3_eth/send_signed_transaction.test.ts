@@ -340,7 +340,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 
 			const expectedThrownError = {
 				name: 'TransactionRevertInstructionError',
-				innerError: undefined,
+				cause: undefined,
 				reason:
 					getSystemTestBackend() === 'geth'
 						? expect.stringContaining(
@@ -376,7 +376,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			const expectedThrownError = {
 				name: 'TransactionRevertInstructionError',
 				message: 'Transaction has been reverted by the EVM',
-				innerError: undefined,
+				cause: undefined,
 				reason:
 					getSystemTestBackend() === 'geth'
 						? expect.stringContaining(
@@ -531,7 +531,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 
 			const expectedThrownError = {
 				name: 'TransactionRevertInstructionError',
-				innerError: undefined,
+				cause: undefined,
 				reason:
 					getSystemTestBackend() === 'geth'
 						? 'execution reverted: This is a send revert'

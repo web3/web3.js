@@ -71,10 +71,12 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 		if (`error` in response) {
 			errorOrErrors = response.error as JsonRpcError;
 		} else if (response instanceof Array) {
-			errorOrErrors = response.map(r => r.error) as JsonRpcError[];
+			errorOrErrors = response
+				.filter(r => r.error != undefined && r.error != null)
+				.map(r => r.error) as JsonRpcError[];
 		}
 
-		if (Array.isArray(errorOrErrors)) {
+		if (Array.isArray(errorOrErrors) && errorOrErrors.length > 0) {
 			this.cause = new MultipleErrors(errorOrErrors as unknown as Error[]);
 		} else {
 			this.cause = errorOrErrors as Error | undefined;
