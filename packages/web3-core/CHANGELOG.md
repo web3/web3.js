@@ -201,7 +201,7 @@ Documentation:
 
 -   Added `isMetaMaskProvider` function to check if provider is metamask (#6534)
 
-## [4.4.0]
+## [4.3.2]
 
 ### Changed
 

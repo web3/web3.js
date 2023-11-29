@@ -2316,11 +2316,11 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6479) 
 -   Add `isContractInitOptions` method (#6555)
 
+#### web3
+
+-   Added methods (privateKeyToAddress, parseAndValidatePrivateKey, and privateKeyToPublicKey) to web3.eth.accounts (#6620)
+
 ### Fixed
-
-#### web3-eth-accounts
-
--   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344) 
 
 #### web3-rpc-methods
 

@@ -347,7 +347,7 @@ Documentation:
 
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
-## [4.2.0]
+## [4.1.4]
 
 ### Changed
 
