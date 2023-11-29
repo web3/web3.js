@@ -26,9 +26,7 @@ import {
 	ERR_PARAM,
 	ERR_EXISTING_PLUGIN_NAMESPACE,
 	ERR_INVALID_METHOD_PARAMS,
-	ERR_MULTIPLE_ERRORS,
 } from '../error_codes.js';
-// eslint-disable-next-line import/no-cycle
 import { BaseWeb3Error } from '../web3_error_base.js';
 
 export class InvalidNumberOfParamsError extends BaseWeb3Error {
@@ -98,15 +96,5 @@ export class ExistingPluginNamespaceError extends BaseWeb3Error {
 
 	public constructor(pluginNamespace: string) {
 		super(`A plugin with the namespace: ${pluginNamespace} has already been registered.`);
-	}
-}
-
-export class MultipleErrors extends BaseWeb3Error {
-	public code = ERR_MULTIPLE_ERRORS;
-	public errors: Error[];
-
-	public constructor(errors: Error[]) {
-		super(`Multiple errors occurred: [${errors.map(e => e.message).join('], [')}]`);
-		this.errors = errors;
 	}
 }

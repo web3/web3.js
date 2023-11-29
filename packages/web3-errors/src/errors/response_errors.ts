@@ -22,8 +22,7 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithError,
 } from 'web3-types';
-import { BaseWeb3Error } from '../web3_error_base.js';
-import { MultipleErrors } from './generic_errors.js';
+import { BaseWeb3Error, MultipleErrors } from '../web3_error_base.js';
 import { ERR_INVALID_RESPONSE, ERR_RESPONSE } from '../error_codes.js';
 
 // To avoid circular package dependency, copied to code here. If you update this please update same function in `json_rpc.ts`
