@@ -129,10 +129,4 @@ Documentation:
 
 -   Fix issue lquixada/cross-fetch#78, enabling to run web3.js in service worker (#6463)
 
-## [4.1.1]
-
-### Changed
-
--   Dependencies updated
-
 ## [Unreleased]

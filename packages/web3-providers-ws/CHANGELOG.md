@@ -129,10 +129,4 @@ Documentation:
 
 -   Fixed bug in chunks processing logic (#6496)
 
-## [4.0.8]
-
-### Changed
-
--   Dependencies updated
-
 ## [Unreleased]

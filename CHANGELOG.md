@@ -2238,6 +2238,12 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
 -   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
 
+#### web3-eth-accounts
+
+-   Added public function `privateKeyToPublicKey`
+-   Added exporting `BaseTransaction` from the package (#6493)
+-   Added exporting `txUtils` from the package (#6493)
+
 ### Changed
 
 #### web3
@@ -2262,53 +2268,12 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
 
-#### web3-eth-abi
-
--   Dependencies updated
-
-#### web3-eth-accounts
-
--   Dependencies updated
-
 #### web3-eth-contracts
 
 -	By default, contracts will fill `data` instead of `input` within method calls (#6622)
 
-#### web3-eth-ens
-
--   Dependencies updated
-
-#### web3-eth-iban
-
--   Dependencies updated
-
-#### web3-eth
-
--   Dependencies updated
-
-#### web3-net
-
--   Dependencies updated
-
-#### web3-providers-http
-
--   Dependencies updated
-
-#### web3-providers-ipc
-
--   Dependencies updated
-
-#### web3-providers-ws
-
--   Dependencies updated
-
 ### Added
 
-#### web3-eth-accounts
-
--   Added public function `privateKeyToPublicKey`
--   Added exporting `BaseTransaction` from the package (#6493)
--   Added exporting `txUtils` from the package (#6493)
 
 #### web3-utils
 
