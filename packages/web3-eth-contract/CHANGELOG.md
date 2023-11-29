@@ -351,6 +351,6 @@ Documentation:
 
 ### Changed
 
--	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+-	By default, contracts will fill `data` instead of `input` within method calls (#6622)
 
 ## [Unreleased]

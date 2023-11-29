@@ -2254,7 +2254,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
-## [4.4.0]
+## [4.3.0]
 
 ### Changed
 
@@ -2272,7 +2272,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-contracts
 
--	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+-	By default, contracts will fill `data` instead of `input` within method calls (#6622)
 
 #### web3-eth-ens
 
