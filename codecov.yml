@@ -1,5 +1,5 @@
 ignore:
-    - "**/formatters.ts"  # ignore folders and all its contents
+    - "/packages/web3-core/src/formatters.ts"  # ignore folders and all its contents
 coverage:
   status:
     project:
