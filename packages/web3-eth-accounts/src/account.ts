@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * The web3 accounts package contains functions to generate Ethereum accounts and sign transactions & data.
+ * The web3 accounts package contains functions to generate Ethereum accounts and sign transactions & data. <br/><br/>
  * 
  * For using accounts functions, first install Web3 package using `npm i web3` or `yarn add web3` based on your package manager usage.
  * After that, Accounts functions will be available as mentioned in following snippet. 
