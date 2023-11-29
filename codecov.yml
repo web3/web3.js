@@ -1,5 +1,7 @@
 ignore:
-    - "/packages/web3-core/src/formatters.ts"  # ignore deprecated formatters from coverage report
+    - "./packages/web3-core/src/formatters.ts"  # ignore deprecated formatters from coverage report
+    - "./src/formatters.ts"  # ignore deprecated formatters from coverage report
+    - "**/src/formatters.ts"  # ignore deprecated formatters from coverage report
 coverage:
   status:
     project:
