@@ -172,8 +172,10 @@ export const hashMessage = (message: string): string => {
 
 /**
  * Signs arbitrary data with a given private key.
- * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message
- *
+ * :::info
+ * The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message
+ * :::
+
  * @param data - The data to sign
  * @param privateKey - The 32 byte private key to sign with
  * @returns The signature Object containing the message, messageHash, signature r, s, v
@@ -224,16 +226,18 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  *
  * Signing a legacy transaction
  * ```ts
- * signTransaction({
+ * import {signTransaction, Transaction} from 'web3-eth-accounts';
+ * 
+ * signTransaction(new Transaction({
  *	to: '0x118C2E5F57FD62C2B5b46a5ae9216F4FF4011a07',
  *	value: '0x186A0',
  *	gasLimit: '0x520812',
  *	gasPrice: '0x09184e72a000',
  *	data: '',
  *	chainId: 1,
- *	nonce: 0,
- * }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318'))
- * }
+ *	nonce: 0 }),
+ * '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+ * 
  * > {
  * messageHash: '0x28b7b75f7ba48d588a902c1ff4d5d13cc0ca9ac0aaa39562368146923fb853bf',
  * v: '0x25',
@@ -242,9 +246,12 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * rawTransaction: '0xf869808609184e72a0008352081294118c2e5f57fd62c2b5b46a5ae9216f4ff4011a07830186a08025a00601b0017b0e20dd0eeda4b895fbc1a9e8968990953482214f880bae593e71b5a0690d984493560552e3ebdcc19a65b9c301ea9ddc82d3ab8cfde60485fd5722ce',
  * transactionHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
  * ```
+ * 
  * Signing an eip 1559 transaction
  * ```ts
- * signTransaction({
+ * import {signTransaction, Transaction} from 'web3-eth-accounts';
+ * 
+ * signTransaction(new Transaction({
  *	to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
  *	maxPriorityFeePerGas: '0x3B9ACA00',
  *	maxFeePerGas: '0xB2D05E00',
@@ -252,8 +259,8 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  *	value: '0x186A0',
  *	data: '',
  *	chainId: 1,
- *	nonce: 0,
- * },"0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318")
+ *	nonce: 0}),
+ * "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318")
  * > {
  *  messageHash: '0x5744f24d5f0aff6c70487c8e85adf07d8564e50b08558788f00479611d7bae5f',
  * v: '0x25',
@@ -263,9 +270,12 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * transactionHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
  * }
  * ```
+ * 
  * Signing an eip 2930 transaction
  * ```ts
- * signTransaction({
+ * import {signTransaction, Transaction} from 'web3-eth-accounts';
+ * 
+ * signTransaction(new Transaction ({
  *	chainId: 1,
  *	nonce: 0,
  *	gasPrice: '0x09184e72a000',
@@ -282,7 +292,8 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  *			],
  *		},
  *	],
- * },"0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318")
+ * }),"0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318")
+ * 
  * > {
  * messageHash: '0xc55ea24bdb4c379550a7c9a6818ac39ca33e75bc78ddb862bd82c31cc1c7a073',
  * v: '0x26',
@@ -332,7 +343,7 @@ export const signTransaction = async (
  * @param rawTransaction - The hex string having RLP encoded transaction
  * @returns The Ethereum address used to sign this transaction
  * ```ts
- * recoverTransaction('0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68');
+ * web3.eth.accounts.recoverTransaction('0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68');
  * > "0x2c7536E3605D9C16a7a3D7b1898e529396a65c23"
  * ```
  */
