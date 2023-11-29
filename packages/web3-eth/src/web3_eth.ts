@@ -73,7 +73,27 @@ export const registeredSubscriptions = {
 
 /**
  * 
- * The Web3Eth allows you to interact with an Ethereum blockchain.
+ * The Web3Eth allows you to interact with an Ethereum blockchain. <br/><br/>
+ *  
+ * For using Web3 Eth functions, first install Web3 package using `npm i web3` or `yarn add web3` based on your package manager usage.
+ * After that, Web3 Eth functions will be available as mentioned in following snippet. 
+ * ```ts
+ * import { Web3 } from 'web3';
+ * const web3 = new Web3('https://mainnet.infura.io/v3/<YOURPROJID>');
+ * 
+ * const block = await web3.eth.getBlock(0);
+ * 
+ * ```
+ * 
+ * For using individual package install `web3-eth` package using `npm i web3-eth` or `yarn add web3-eth` and only import required functions.
+ * This is more efficient approach for building lightweight applications. 
+ * ```ts
+ * import { Web3Eth } from 'web3-eth';
+ * 
+ * const eth = new Web3Eth('https://mainnet.infura.io/v3/<YOURPROJID>');
+ * const block = await eth.getBlock(0);
+ * 
+ * ```
  */
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
 	public constructor(
