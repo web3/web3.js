@@ -71,9 +71,7 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 		if (`error` in response) {
 			errorOrErrors = response.error as JsonRpcError;
 		} else if (response instanceof Array) {
-			errorOrErrors = response
-				.filter(r => r.error != undefined && r.error != null)
-				.map(r => r.error) as JsonRpcError[];
+			errorOrErrors = response.filter(r => r.error).map(r => r.error) as JsonRpcError[];
 		}
 
 		if (Array.isArray(errorOrErrors) && errorOrErrors.length > 0) {

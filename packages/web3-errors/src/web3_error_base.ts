@@ -34,6 +34,7 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 	 * @deprecated Use the `cause` property instead.
 	 */
 	public get innerError(): Error | Error[] | undefined {
+		// eslint-disable-next-line no-use-before-define
 		if (this.cause instanceof MultipleErrors) {
 			return this.cause.errors;
 		}
@@ -44,6 +45,7 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 	 */
 	public set innerError(cause: Error | Error[] | undefined) {
 		if (Array.isArray(cause)) {
+			// eslint-disable-next-line no-use-before-define
 			this.cause = new MultipleErrors(cause);
 		} else {
 			this.cause = cause;
@@ -54,6 +56,7 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 		super(msg);
 
 		if (Array.isArray(cause)) {
+			// eslint-disable-next-line no-use-before-define
 			this.cause = new MultipleErrors(cause);
 		} else {
 			this.cause = cause;
