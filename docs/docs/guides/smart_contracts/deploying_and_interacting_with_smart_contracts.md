@@ -108,9 +108,9 @@ Next, create a new file called `compile.js` in your project directory and add th
 // This code will compile smart contract and generate its ABI and bytecode
 // Alternatively, you can use something like `npm i solc && npx solcjs MyContract.sol --bin --abi`
 
-import solc from 'solc';
-import path from 'path';
-import fs from 'fs';
+const solc = require( 'solc');
+const path = require('path');
+const fs = require('fs');
 
 const fileName = 'MyContract.sol';
 const contractName = 'MyContract';
