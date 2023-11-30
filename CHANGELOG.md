@@ -2238,12 +2238,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
 -   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
 
-#### web3-eth-accounts
-
--   Added public function `privateKeyToPublicKey`
--   Added exporting `BaseTransaction` from the package (#6493)
--   Added exporting `txUtils` from the package (#6493)
-
 ### Changed
 
 #### web3
