@@ -1,3 +1,5 @@
+ignore:
+    - "./packages/web3-core/src/formatters.ts"  # ignore deprecated formatters from coverage report
 coverage:
   status:
     project:
@@ -75,4 +77,4 @@ comment:
   behavior: 'default'
   require_changes: false
   require_base: no
-  require_head: no       
+  require_head: no
