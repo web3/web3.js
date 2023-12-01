@@ -187,11 +187,11 @@ export class Web3RequestManager<
 				'Provider not available. Use `.setProvider` or `.provider=` to initialize the provider.',
 			);
 		}
-		
+
 		const payload = jsonRpc.isBatchRequest(request)
-		? jsonRpc.toBatchPayload(request)
+			? jsonRpc.toBatchPayload(request)
 			: jsonRpc.toPayload(request);
-			
+
 		if (isWeb3Provider(provider)) {
 			let response;
 
@@ -292,7 +292,7 @@ export class Web3RequestManager<
 
 					if (isNullish(response)) {
 						throw new ResponseError(
-							'' as never,
+							{} as never,
 							'Got a "nullish" response from provider.',
 						);
 					}
