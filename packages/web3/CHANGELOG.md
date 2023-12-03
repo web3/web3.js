@@ -174,3 +174,7 @@ Documentation:
 -   Dependencies updated ( details are in root changelog )
 
 ## [Unreleased]
+
+### Added
+
+- Added methods (privateKeyToAddress, parseAndValidatePrivateKey, and privateKeyToPublicKey) to web3.eth.accounts (#6620)

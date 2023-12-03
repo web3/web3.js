@@ -77,7 +77,7 @@ yarn add web3
 ## Package.json Scripts
 
 | Script           | Description                                                        |
-| ---------------- | ------------------------------------------------------------------ |
+| ---------------- |--------------------------------------------------------------------|
 | clean            | Uses `rimraf` to remove `dist/`                                    |
 | build            | Uses `tsc` to build all packages                                   |
 | lint             | Uses `eslint` to lint all packages                                 |
@@ -86,6 +86,8 @@ yarn add web3
 | test             | Uses `jest` to run unit tests in each package                      |
 | test:integration | Uses `jest` to run tests under `/test/integration` in each package |
 | test:unit        | Uses `jest` to run tests under `/test/unit` in each package        |
+| test:manual:long-connection-ws      | Runs manual tests for keeping a long WebSocket connection        |
+| test:manual      | Runs manual tests under `test/manual` in the web3 package          |
 
 [npm-url]: https://npmjs.org/package/web3
 [downloads-image]: https://img.shields.io/npm/dm/web3?label=npm%20downloads
