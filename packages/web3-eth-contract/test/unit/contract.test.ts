@@ -1378,6 +1378,39 @@ describe('Contract', () => {
 			spyEstimateGas.mockClear();
 		});
 
+		it('estimateGas should work for contract method even with no ABI', async () => {
+			const contract = new Contract([], deployedAddr);
+
+			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
+				const newContract = contract.clone();
+				newContract.options.address = deployedAddr;
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return Promise.resolve(newContract) as any;
+			});
+
+			const spyEstimateGas = jest
+				.spyOn(eth, 'estimateGas')
+				.mockImplementationOnce((_objInstance, _tx, _block) => {
+					expect(_block).toBe('latest');
+					expect(_tx.to).toStrictEqual(deployedAddr);
+					expect(_tx.from).toStrictEqual(sendOptions.from);
+					expect(_tx.data).toBe(
+						'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
+					);
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(BigInt(36916)) as any;
+				});
+
+			// This produces an error at runtime.
+			// This needs investigation and fixing.
+			const result = await contract.methods.setGreeting().estimateGas(sendOptions);
+			expect(result).toStrictEqual(BigInt(36916));
+
+			spyTx.mockClear();
+			spyEstimateGas.mockClear();
+		});
+
 		it('encodeABI should work for contract method', async () => {
 			const arg = 'Hello';
 
