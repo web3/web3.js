@@ -35,8 +35,10 @@ import { encodeParameters as encodeParametersInternal } from '../coders/encode.j
  *  > 0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000
  * ```
  */
-export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]): string =>
-	encodeParametersInternal(abi, params);
+export const encodeParameters = (
+	abi: ReadonlyArray<AbiInput> | undefined,
+	params: unknown[],
+): string => encodeParametersInternal(abi, params);
 
 /**
  * Encodes a parameter based on its type to its ABI representation.

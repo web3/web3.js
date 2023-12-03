@@ -15,19 +15,50 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiError } from 'web3-errors';
-import { AbiInput } from 'web3-types';
+import { AbiInput, AbiParameter } from 'web3-types';
+import { toHex } from 'web3-utils';
 import { utils } from 'web3-validator';
 import { encodeTuple } from './base/index.js';
 import { toAbiParams } from './utils.js';
 
-export function encodeParameters(abi: ReadonlyArray<AbiInput>, params: unknown[]): string {
-	if (abi.length !== params.length) {
+/**
+ * @param params - The params to infer the ABI from
+ * @returns The inferred ABI
+ * @throws If the params cannot be inferred
+ * @example
+ * ```
+ * inferParamsAbi([1, 'hello', '0x1234', ])
+ * ```
+ * > [{ type: 'uint256' }, { type: 'string' }, { type: 'bytes' }]
+ * ```
+ */
+function inferParamsAbi(params: unknown[]): AbiParameter[] {
+	const abi: AbiParameter[] = [];
+	params.forEach(param => {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+		abi.push({ type: toHex(param as any, true) } as AbiParameter);
+	});
+	return abi;
+}
+
+export function encodeParameters(
+	abi: ReadonlyArray<AbiInput> | undefined,
+	params: unknown[],
+): string {
+	if (abi && abi?.length !== params.length) {
 		throw new AbiError('Invalid number of values received for given ABI', {
-			expected: abi.length,
+			expected: abi?.length,
 			received: params.length,
 		});
 	}
-	const abiParams = toAbiParams(abi);
+
+	let abiParams;
+	if (abi !== undefined) {
+		abiParams = toAbiParams(abi);
+	} else {
+		abiParams = inferParamsAbi(params);
+	}
+
 	return utils.uint8ArrayToHexString(
 		encodeTuple({ type: 'tuple', name: '', components: abiParams }, params).encoded,
 	);
