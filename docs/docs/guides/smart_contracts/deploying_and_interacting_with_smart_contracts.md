@@ -24,6 +24,12 @@ Here is a high-level overview of the steps we will be taking in this tutorial:
 6. Deploy the smart contract to the Ganache network using web3.js.
 7. Interact with the smart contract using web3.js.
 
+:::tip
+📝 **Community support:**
+If you encounter any issues while following this guide or have questions, don't hesitate to seek assistance. Our friendly community is ready to help you out!
+Join our [Discord](https://discord.gg/F4NUfaCC) server and head to the **#web3js-general** channel to connect with other developers and get the support you need. 
+:::
+
 ## Step 1: Setting up the Environment
 
 Before we start writing and deploying our contract, we need to set up our environment. For that, we need to install the following:
