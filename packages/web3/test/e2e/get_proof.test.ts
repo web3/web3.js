@@ -70,7 +70,7 @@ describe(`${getSystemTestBackend()} tests - getProof`, () => {
 			expect(result).toEqual(expectedProof);
 		} 
 		else if(block === 'pending') {
-			expect(result).toMatchObject<AccountObject>({
+			expect(result).toMatchObject({
 				balance: expect.any(BigInt),
 				codeHash: expect.any(String),
 				nonce: expect.any(BigInt),
