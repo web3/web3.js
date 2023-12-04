@@ -21,6 +21,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Eip712TypedData } from 'web3-types';
 import { isNullish, keccak256 } from 'web3-utils';
+import { AbiError } from 'web3-errors';
 import { encodeParameters } from './coders/encode.js';
 
 const TYPE_REGEX = /^\w+/;
@@ -138,12 +139,17 @@ const encodeValue = (
 		const length = Number(match[2]) || undefined;
 
 		if (!Array.isArray(data)) {
-			throw new Error('Cannot encode data: value is not of array type');
+			throw new AbiError('Cannot encode data: value is not of array type', {
+				data,
+			});
 		}
 
 		if (length && data.length !== length) {
-			throw new Error(
+			throw new AbiError(
 				`Cannot encode data: expected length of ${length}, but got ${data.length}`,
+				{
+					data,
+				},
 			);
 		}
 
@@ -182,7 +188,10 @@ const encodeData = (
 	const [types, values] = typedData.types[type].reduce<[string[], unknown[]]>(
 		([_types, _values], field) => {
 			if (isNullish(data[field.name]) || isNullish(data[field.name])) {
-				throw new Error(`Cannot encode data: missing data for '${field.name}'`);
+				throw new AbiError(`Cannot encode data: missing data for '${field.name}'`, {
+					data,
+					field,
+				});
 			}
 
 			const value = data[field.name];
