@@ -21,6 +21,7 @@ import {
 	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
 	InvalidResponseError,
+	TransactionPollingTimeoutError,
 } from 'web3-errors';
 import {
 	FormatType,
@@ -50,6 +51,7 @@ export type SendTransactionEventsBase<ReturnFormat extends DataFormat, TxType> =
 		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionPollingTimeoutError
 		| InvalidResponseError
 		| ContractExecutionError;
 };
