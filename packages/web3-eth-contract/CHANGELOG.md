@@ -352,3 +352,4 @@ Documentation:
 ### Changed
 
 -	`contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+-	Allow the `deploy` function to accept parameters, even when no ABI was provided to the `Contract`(#6635)
