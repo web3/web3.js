@@ -155,3 +155,7 @@ Documentation:
 -   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
 
 ## [Unreleased]
+
+### Changed
+
+-   Use `AbiError` instead of `Error` for errors at web3-eth-abi (#6641).
