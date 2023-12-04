@@ -37,6 +37,7 @@ import { isNullish } from 'web3-validator';
 import {
 	ContractExecutionError,
 	InvalidResponseError,
+	TransactionPollingTimeoutError,
 	TransactionRevertedWithoutReasonError,
 	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
@@ -243,7 +244,8 @@ export class SendTxHelper<
 				_error instanceof ContractExecutionError ||
 				_error instanceof TransactionRevertWithCustomError ||
 				_error instanceof TransactionRevertedWithoutReasonError ||
-				_error instanceof TransactionRevertInstructionError) &&
+				_error instanceof TransactionRevertInstructionError ||
+				_error instanceof TransactionPollingTimeoutError) &&
 			this.promiEvent.listenerCount('error') > 0
 		) {
 			this.promiEvent.emit('error', _error);

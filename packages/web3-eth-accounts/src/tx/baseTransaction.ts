@@ -421,10 +421,12 @@ export abstract class BaseTransaction<TransactionObject> {
 		}
 		// No chain ID provided
 		// -> return Common provided or create new default Common
-		return (
-			common?.copy() ??
-			new Common({ chain: this.DEFAULT_CHAIN, hardfork: this.DEFAULT_HARDFORK })
-		);
+
+		if (common?.copy && typeof common?.copy === 'function') {
+			return common.copy();
+		}
+
+		return new Common({ chain: this.DEFAULT_CHAIN, hardfork: this.DEFAULT_HARDFORK });
 	}
 
 	/**

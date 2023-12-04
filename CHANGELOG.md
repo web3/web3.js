@@ -2254,3 +2254,36 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
 ## [Unreleased]
+
+### Added
+
+#### web3
+
+
+#### web3-eth
+
+-   Catch `TransactionPollingTimeoutError` was added to send transaction events (#6623)
+
+#### web3-utils
+
+-   `SocketProvider` now contains public function `getPendingRequestQueueSize`, `getSentRequestsQueueSize` and `clearQueues` (#6479)
+-   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6479) 
+-   Add `isContractInitOptions` method (#6555)
+
+### Changed
+
+#### web3-core
+
+
+#### web3-eth-contract
+
+
+### Fixed
+
+#### web3-rpc-methods
+
+-   Fix web3-types import #6590 (#6589)
+
+#### web3-utils
+
+-   Fix unecessary array copy when pack encoding (#6553)
