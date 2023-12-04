@@ -347,9 +347,15 @@ Documentation:
 
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
+## [4.1.4]
+
+### Changed
+
+-	By default, contracts will fill `data` instead of `input` within method calls (#6622)
+
+
 ## [Unreleased]
 
 ### Changed
 
--	`contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
 -	Allow the `deploy` function to accept parameters, even when no ABI was provided to the `Contract`(#6635)
