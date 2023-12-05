@@ -40,6 +40,7 @@ import {
 	toChecksumAddress,
 	bytesToUint8Array,
 	toBigInt,
+	toBool,
 } from '../../src/converters';
 
 import {
@@ -71,6 +72,8 @@ import {
 	toBigIntInvalidData,
 	toCheckSumInvalidData,
 	numberToHexstrictValidData,
+	toBoolValidData,
+	toBoolInvalidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -400,6 +403,20 @@ describe('converters', () => {
 		describe('invalid cases', () => {
 			it.each(toBigIntInvalidData)('%s', (input, output) => {
 				expect(() => toBigInt(input)).toThrow(output);
+			});
+		});
+	});
+
+	describe('toBool', () => {
+		describe('valid cases', () => {
+			it.each(toBoolValidData)('%s', (input, output) => {
+				expect(toBool(input)).toEqual(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(toBoolInvalidData)('%s', (input, output) => {
+				expect(() => toBool(input)).toThrow(output);
 			});
 		});
 	});
