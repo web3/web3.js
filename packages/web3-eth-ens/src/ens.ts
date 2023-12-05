@@ -33,8 +33,8 @@ import { Registry } from './registry.js';
 import { Resolver } from './resolver.js';
 
 /**
- * This class is designed to interact with the ENS system on the Ethereum blockchain. <br/><br/>
-* For using ENS package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used as mentioned in following snippet.<br/>
+ * This class is designed to interact with the ENS system on the Ethereum blockchain.
+* For using ENS package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used as mentioned in following snippet.
 * ```ts
 * 
 * import { Web3 } from 'web3';
@@ -43,7 +43,7 @@ import { Resolver } from './resolver.js';
 * 
 * console.log(await web3.eth.ens.getAddress('ethereum.eth'))
 * ```
-* For using individual package install `web3-eth-ens` packages using: `npm i web3-eth-ens` or `yarn add web3-eth-ens`. This is more efficient approach for building lightweight applications.<br/>
+* For using individual package install `web3-eth-ens` packages using: `npm i web3-eth-ens` or `yarn add web3-eth-ens`. This is more efficient approach for building lightweight applications.
 *
 * ```ts
 *import { ENS } from 'web3-eth-ens';

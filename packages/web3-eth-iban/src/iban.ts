@@ -22,8 +22,8 @@ import { InvalidAddressError } from 'web3-errors';
 import { IbanOptions } from './types.js';
 
 /**
- * Converts Ethereum addresses to IBAN or BBAN addresses and vice versa.<br/><br/>
-* For using Iban package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used.<br/>
+ * Converts Ethereum addresses to IBAN or BBAN addresses and vice versa.
+* For using Iban package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used.
 * ```ts
 * 
 * import { Web3 } from 'web3';
@@ -33,7 +33,7 @@ import { IbanOptions } from './types.js';
 *  console.log(iban.checksum());
 
 * ```
-* For using individual package install `web3-eth-iban` packages using: `npm i web3-eth-iban` or `yarn add web3-eth-iban`.<br/>
+* For using individual package install `web3-eth-iban` packages using: `npm i web3-eth-iban` or `yarn add web3-eth-iban`.
 *
 * ```ts
 * import {Iban} from 'web3-eth-iban';

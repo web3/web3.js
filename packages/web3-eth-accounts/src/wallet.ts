@@ -23,7 +23,7 @@ type BrowserError = { code: number; name: string };
 
 /**
  * Wallet is an in memory `wallet` that can hold multiple accounts.
- * These accounts can be used when using web3.eth.sendTransaction() or web3.eth.contract.methods.contractfunction().send(); <br/>
+ * These accounts can be used when using web3.eth.sendTransaction() or web3.eth.contract.methods.contractfunction().send();
  *
  * For using Wallet functionality, install Web3 package using `npm i web3` or `yarn add web3`.
  * After that, Wallet functionality will be available as mentioned below. 

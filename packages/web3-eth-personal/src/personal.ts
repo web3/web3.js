@@ -21,8 +21,8 @@ import { Address, EthPersonalAPI, HexString, Transaction } from 'web3-types';
 import * as rpcWrappers from './rpc_method_wrappers.js';
 
 /**
-* Eth Personal allows you to interact with the Ethereum node’s accounts.<br/><br/>
-* For using Eth Personal package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager.<br/>
+* Eth Personal allows you to interact with the Ethereum node’s accounts.
+* For using Eth Personal package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager.
 * ```ts
 * 
 *import { Web3 } from 'web3';
@@ -31,7 +31,7 @@ import * as rpcWrappers from './rpc_method_wrappers.js';
 *  console.log(await web3.eth.personal.getAccounts());
 * 
 * ```
-* For using individual package install `web3-eth-personal` packages using: `npm i web3-eth-personal` or `yarn add web3-eth-personal`.<br/>
+* For using individual package install `web3-eth-personal` packages using: `npm i web3-eth-personal` or `yarn add web3-eth-personal`.
 *
 * ```ts
 * import {Personal} from 'web3-eth-personal';

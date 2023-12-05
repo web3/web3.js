@@ -73,7 +73,7 @@ export const registeredSubscriptions = {
 
 /**
  * 
- * The Web3Eth allows you to interact with an Ethereum blockchain. <br/><br/>
+ * The Web3Eth allows you to interact with an Ethereum blockchain.
  *  
  * For using Web3 Eth functions, first install Web3 package using `npm i web3` or `yarn add web3` based on your package manager usage.
  * After that, Web3 Eth functions will be available as mentioned in following snippet. 

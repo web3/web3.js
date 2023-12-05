@@ -20,8 +20,8 @@ import { DataFormat, DEFAULT_RETURN_FORMAT, Web3NetAPI } from 'web3-types';
 import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
 
 /**
- * Net class allows you to interact with an Ethereum node’s network properties.<br/><br/>
-* For using Net package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that Net features can be used.<br/>
+ * Net class allows you to interact with an Ethereum node’s network properties.
+* For using Net package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that Net features can be used.
 * ```ts
 * 
 * import { Web3 } from 'web3';
@@ -30,7 +30,7 @@ import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
 * console.log(await web3.eth.net.getId());
 * 
 * ```
-* For using individual package install `web3-net` packages using: `npm i web3-net` or `yarn add web3-net`.<br/>
+* For using individual package install `web3-net` packages using: `npm i web3-net` or `yarn add web3-net`.
 *
 * ```ts
 * import {Net} from 'web3-net';

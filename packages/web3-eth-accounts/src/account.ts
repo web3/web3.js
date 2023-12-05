@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * The web3 accounts package contains functions to generate Ethereum accounts and sign transactions & data. <br/><br/>
+ * The web3 accounts package contains functions to generate Ethereum accounts and sign transactions & data.
  * 
  * For using accounts functions, first install Web3 package using `npm i web3` or `yarn add web3` based on your package manager usage.
  * After that, Accounts functions will be available as mentioned in following snippet. 
@@ -99,7 +99,7 @@ import type {
 
 
 /**
- * Get the private key Uint8Array after the validation. <br/>
+ * Get the private key Uint8Array after the validation.
  * Note: This function is not exported through main web3 package, so for using it directly import from accounts package. 
  * @param data - Private key
  * @param ignoreLength - Optional, ignore length check during validation 
@@ -140,7 +140,7 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 
 /**
  *
- * Hashes the given message. The data will be `UTF-8 HEX` decoded and enveloped as follows: <br/>
+ * Hashes the given message. The data will be `UTF-8 HEX` decoded and enveloped as follows:
  * `"\\x19Ethereum Signed Message:\\n" + message.length + message` and hashed using keccak256.
  *
  * @param message - A message to hash, if its HEX it will be UTF8 decoded.

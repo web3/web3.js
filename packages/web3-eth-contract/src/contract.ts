@@ -191,8 +191,8 @@ const contractSubscriptions = {
 };
 
 /**
-* The `web3.eth.Contract` makes it easy to interact with smart contracts on the ethereum blockchain. <br/><br/>
-* For using contract package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that contracts features can be used as mentioned in following snippet.<br/>
+* The `web3.eth.Contract` makes it easy to interact with smart contracts on the ethereum blockchain.
+* For using contract package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that contracts features can be used as mentioned in following snippet.
 * ```ts
 * 
 * import { Web3 } from 'web3';
@@ -203,7 +203,7 @@ const contractSubscriptions = {
 * let contract = new web3.eth.Contract(abi,'0xdAC17F958D2ee523a2206206994597C13D831ec7');
 * await contract.methods.balanceOf('0xdAC17F958D2ee523a2206206994597C13D831ec7').call();
 * ```
-* For using individual package install `web3-eth-contract` and `web3-core` packages using: `npm i web3-eth-contract web3-core` or `yarn add web3-eth-contract web3-core`. This is more efficient approach for building lightweight applications.<br/>
+* For using individual package install `web3-eth-contract` and `web3-core` packages using: `npm i web3-eth-contract web3-core` or `yarn add web3-eth-contract web3-core`. This is more efficient approach for building lightweight applications.
 * ```ts
 * 
 * import { Web3Context } from 'web3-core';
@@ -259,7 +259,7 @@ const contractSubscriptions = {
 * This will execute smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
 * 
 * #### Parameters
-* options?: PayableCallOptions | NonPayableCallOptions, <br/>
+* options?: PayableCallOptions | NonPayableCallOptions,
 * block?: BlockNumberOrTag,
 * 
 * #### Returns
@@ -277,7 +277,7 @@ const contractSubscriptions = {
 * Returns the amount of gas consumed by executing the method in EVM without creating a new transaction on the blockchain. The returned amount can be used as a gas estimate for executing the transaction publicly. The actual gas used can be different when sending the transaction later, as the state of the smart contract can be different at that time.
 * 
 * #### Parameters
-* options?: PayableCallOptions, <br/>
+* options?: PayableCallOptions,
 * returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 * 
 * #### Returns
@@ -308,10 +308,10 @@ const contractSubscriptions = {
 * 
 * ### createAccessList
 * This will create an access list a method execution will access when executed in the EVM.
-* <br/> Note: You must specify a from address and gas if it’s not specified in options when instantiating parent contract object.
+* Note: You must specify a from address and gas if it’s not specified in options when instantiating parent contract object.
 * 
 * #### Parameters
-* options?: PayableCallOptions | NonPayableCallOptions, <br/>
+* options?: PayableCallOptions | NonPayableCallOptions,
 * block?: BlockNumberOrTag,
 * 
 * #### Returns

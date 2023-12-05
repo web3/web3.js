@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * This package provides utility functions for Ethereum dapps and other web3.js packages. <br/><br/>
+ * This package provides utility functions for Ethereum dapps and other web3.js packages.
  * 
  * For using Utils functions, first install Web3 package using `npm i web3` or `yarn add web3`.
  * After that, Web3 Utils functions will be available as mentioned below. 

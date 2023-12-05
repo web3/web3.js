@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * The web3.eth.abi functions let you encode and decode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).<br/><br/>
+ * The web3.eth.abi functions let you encode and decode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
  * 
  *  For using Web3 ABI functions, first install Web3 package using `npm i web3` or `yarn add web3`.
  * After that, Web3 ABI functions will be available. 
