@@ -34,8 +34,25 @@ import { Resolver } from './resolver.js';
 
 /**
  * This class is designed to interact with the ENS system on the Ethereum blockchain.
- *
- */
+* For using ENS package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used as mentioned in following snippet.
+* ```ts
+* 
+* import { Web3 } from 'web3';
+* 
+* const web3 = new Web3('https://127.0.0.1:4545');
+* 
+* console.log(await web3.eth.ens.getAddress('ethereum.eth'))
+* ```
+* For using individual package install `web3-eth-ens` packages using: `npm i web3-eth-ens` or `yarn add web3-eth-ens`. This is more efficient approach for building lightweight applications.
+*
+* ```ts
+*import { ENS } from 'web3-eth-ens';
+*
+* const ens = new ENS(undefined,'https://127.0.0.1:4545');
+*
+* console.log(await ens.getAddress('vitalik.eth'));
+* ```
+*/
 export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * The registryAddress property can be used to define a custom registry address when you are connected to an unknown chain. It defaults to the main registry address.

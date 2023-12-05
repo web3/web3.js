@@ -15,9 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * The web3.eth.abi functions let you encode and decode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
- */
 export * from './api/errors_api.js';
 export * from './api/events_api.js';
 export * from './api/functions_api.js';
