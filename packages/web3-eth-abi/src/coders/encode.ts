@@ -27,9 +27,9 @@ import { toAbiParams } from './utils.js';
  * @throws If the params cannot be inferred
  * @example
  * ```
- * inferParamsAbi([1, 'hello', '0x1234', ])
+ * inferParamsAbi([1, -1, 'hello', '0x1234', ])
  * ```
- * > [{ type: 'uint256' }, { type: 'string' }, { type: 'bytes' }]
+ * > [{ type: 'int256' }, { type: 'uint256' }, { type: 'string' }, { type: 'bytes' }]
  * ```
  */
 function inferParamsAbi(params: unknown[]): AbiParameter[] {
@@ -42,7 +42,7 @@ function inferParamsAbi(params: unknown[]): AbiParameter[] {
 }
 
 export function encodeParameters(
-	abi: ReadonlyArray<AbiInput> | undefined,
+	abi: ReadonlyArray<AbiInput> | 'infer-types',
 	params: unknown[],
 ): string {
 	if (abi && abi?.length !== params.length) {
@@ -53,7 +53,7 @@ export function encodeParameters(
 	}
 
 	let abiParams;
-	if (abi !== undefined) {
+	if (abi !== 'infer-types') {
 		abiParams = toAbiParams(abi);
 	} else {
 		abiParams = inferParamsAbi(params);

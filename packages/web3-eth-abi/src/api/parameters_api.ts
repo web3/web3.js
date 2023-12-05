@@ -36,7 +36,7 @@ import { encodeParameters as encodeParametersInternal } from '../coders/encode.j
  * ```
  */
 export const encodeParameters = (
-	abi: ReadonlyArray<AbiInput> | undefined,
+	abi: ReadonlyArray<AbiInput> | 'infer-types',
 	params: unknown[],
 ): string => encodeParametersInternal(abi, params);
 

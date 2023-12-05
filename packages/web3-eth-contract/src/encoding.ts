@@ -128,7 +128,7 @@ export const encodeMethodABI = (
 
 	const params = encodeParameters(
 		// eslint-disable-next-line no-nested-ternary
-		abi.inputs ? (Array.isArray(abi.inputs) ? abi.inputs : []) : undefined,
+		abi.inputs ? (Array.isArray(abi.inputs) ? abi.inputs : []) : 'infer-types',
 		args,
 	).replace('0x', '');
 
