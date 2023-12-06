@@ -23,6 +23,10 @@ import { Web3Context } from 'web3-core';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
+import {
+	GreeterWithOverloadingAbi,
+	GreeterWithOverloadingBytecode,
+} from '../shared_fixtures/build/GreeterWithOverloading';
 import { AllGetPastEventsData, getLogsData, getPastEventsData } from '../fixtures/unitTestFixtures';
 import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
@@ -336,6 +340,53 @@ describe('Contract', () => {
 				.send(sendOptions);
 			const receipt = await deployedContract.methods.setGreeting(arg).send(sendOptions);
 			expect(receipt.status).toBe('0x1');
+
+			spyTx.mockClear();
+		});
+
+		it('test solidity method overloading', async () => {
+			const arg = 'Hello';
+			const contract = new Contract(GreeterWithOverloadingAbi);
+			sendOptions = {
+				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
+				gas: '1000000',
+			};
+			const spyTx = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx) => {
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+					expect(_tx.data).toBeDefined();
+					if (
+						_tx.data ===
+							'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000' ||
+						_tx.data ===
+							'0x4495ef8a00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
+					) {
+						// eslint-disable-next-line
+						expect(_tx.to).toStrictEqual(deployedAddr);
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+						return { status: '0x1', on: () => {} } as any;
+					}
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return Object.assign(Promise.resolve(newContract), { on: () => {} }) as any;
+				});
+
+			const deployedContract = await contract
+				.deploy({
+					data: GreeterWithOverloadingBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+
+			const receipt = await deployedContract.methods.setGreeting(arg).send(sendOptions);
+			expect(receipt.status).toBe('0x1');
+
+			const receipt2 = await deployedContract.methods
+				.setGreeting(arg, true)
+				.send(sendOptions);
+			expect(receipt2.status).toBe('0x1');
 
 			spyTx.mockClear();
 		});
