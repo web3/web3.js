@@ -19,6 +19,7 @@ import * as eth from 'web3-eth';
 import { ValidChains, Hardfork, AccessListResult, Address, ETH_DATA_FORMAT } from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
 import { Web3Context } from 'web3-core';
+import { Web3ValidatorError } from 'web3-validator';
 
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
@@ -344,7 +345,7 @@ describe('Contract', () => {
 			spyTx.mockClear();
 		});
 
-		it('test solidity method overloading', async () => {
+		it('test calling overloaded solidity method', async () => {
 			const arg = 'Hello';
 			const contract = new Contract(GreeterWithOverloadingAbi);
 			sendOptions = {
@@ -387,6 +388,78 @@ describe('Contract', () => {
 				.setGreeting(arg, true)
 				.send(sendOptions);
 			expect(receipt2.status).toBe('0x1');
+
+			spyTx.mockClear();
+		});
+
+		it('test calling overloaded solidity method with incompatible parameters', async () => {
+			const arg = 'Hello';
+			const contract = new Contract(GreeterWithOverloadingAbi);
+			sendOptions = {
+				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
+				gas: '1000000',
+			};
+			const spyTx = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx) => {
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+					expect(_tx.data).toBeDefined();
+					if (
+						_tx.data ===
+							'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000' ||
+						_tx.data ===
+							'0x4495ef8a00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
+					) {
+						// eslint-disable-next-line
+						expect(_tx.to).toStrictEqual(deployedAddr);
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+						return { status: '0x1', on: () => {} } as any;
+					}
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return Object.assign(Promise.resolve(newContract), { on: () => {} }) as any;
+				});
+
+			const deployedContract = await contract
+				.deploy({
+					data: GreeterWithOverloadingBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+
+			const receipt = await deployedContract.methods.setGreeting(arg).send(sendOptions);
+			expect(receipt.status).toBe('0x1');
+
+			// calling with correct parameters should pass
+			const receipt2 = await deployedContract.methods
+				.setGreeting(arg, true)
+				.send(sendOptions);
+			expect(receipt2.status).toBe('0x1');
+
+			// calling with wrong parameters should throw
+			try {
+				await (deployedContract.methods.setGreeting as any)(arg, 'test').send(sendOptions);
+				expect(true).toBe(false);
+			} catch (error) {
+				expect(error).toBeInstanceOf(Web3ValidatorError);
+				expect((error as Web3ValidatorError).message).toBe(
+					'Web3 validator found 1 error[s]:\nWeb3 validator found 1 error[s]:\nvalue "test" at "/1" must pass "bool" validation',
+				);
+			}
+
+			// calling with wrong parameters should throw
+			try {
+				await (deployedContract.methods.setGreeting as any)(arg, true, 'test').send(
+					sendOptions,
+				);
+				expect(true).toBe(false);
+			} catch (error) {
+				expect(error).toBeInstanceOf(Web3ValidatorError);
+				expect((error as Web3ValidatorError).message).toBe(
+					'Web3 validator found 1 error[s]:\nmust NOT have more than 1 items',
+				);
+			}
 
 			spyTx.mockClear();
 		});
