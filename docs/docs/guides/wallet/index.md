@@ -9,6 +9,16 @@ sidebar_label: 'Web3 Wallet'
 
 The web3-eth-accounts package contains functions to generate Ethereum accounts and sign transactions and data.
 
+:::tip
+In Ethereum, a private key is a crucial component of the cryptographic key pair used for securing and controlling ownership of Ethereum addresses. Ethereum uses a public-key cryptography system, where each Ethereum address has a corresponding pair of public and private keys. This key pair will allow you to have ownership associated with the ethereum address, store and access funds and send transactions.
+
+Be sure to have your private key stored and encrypted in a safe place, as losing or sharing it may result in permament loss of access to the asscoiated Ethereum address and funds.
+
+To generate a private key: `const privateKey = web3.eth.accounts.create().privateKey;`
+
+Learn more about wallets [here](https://ethereum.org/en/wallets/)
+:::
+
 
 ## web3-eth-accounts
 
@@ -58,7 +68,7 @@ account.sign("hello world");
 }
 
 ```
-### import a private key and sign a transaction with the web3 package
+### Import a private key and sign a transaction with the web3 package
 
 ``` ts
 import Web3 from 'web3';
@@ -152,6 +162,105 @@ web3.eth.sign(message, 0).then(console.log); // 0 refers to using the first inde
 }
 ```
 
-## Sending a transaction using a local wallet
+## Browser injection - Sending a transaction with Metamask
 
-We have written a guide for sending transactions using [local wallets](/guides/basics/sign_and_send_tx/local_wallet) and [node wallets](/guides/basics/sign_and_send_tx/wallet_of_eth_node).
+This is an example html file that will send a transaction when the button element is clicked.
+
+To run this example you'll need Metamask, the `index.html` file below in your folder and you'll need a local server:
+
+`npm i http-server`
+
+`npx http-server`
+
+Afterwards your file will be served on a local port, which will usually be on `http://127.0.0.1:8080`
+
+### index.html
+``` html
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Send Transaction Example</title>
+	<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+</head>
+
+<body>
+	<button id="sendButton">Send Transaction</button>
+	<script>
+
+		// Wrap the code inside an async function
+		(async function () {
+			try {
+				// Check if MetaMask is installed and connected
+				if (typeof window.ethereum === 'undefined') {
+					throw new Error('MetaMask is not installed or not properly configured');
+				}
+
+				// Connect to the Ethereum network using MetaMask
+				const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        
+				const web3 = new Web3(window.ethereum);
+        
+				// Add event listener to the Send Transaction button
+				const sendButton = document.getElementById('sendButton');
+				sendButton.addEventListener('click', async () => {
+					try {
+						await web3.eth.sendTransaction({from: accounts[0],to:"0x38E2fb54587208f29B1452Bb8136d271BE0912EF"})
+					} catch (error) {
+						console.error(error);
+					}
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		})();
+	</script>
+</body>
+
+</html>
+
+```
+
+## Sending a transaction using a local wallet with contract methods
+
+``` ts
+// First step: initialize `web3` instance
+import { Web3 } from 'web3';
+const web3 = new Web3(/* PROVIDER*/);
+
+// Second step: add an account to wallet
+const privateKeyString = 'Private key';
+const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
+
+// Make sure the account has enough eth on balance to send the transaction
+
+// fill ContractAbi and ContractBytecode with your contract's abi and bytecode
+
+async function contractMethod() {
+	try {
+
+    // add the contract details of which method you want to call, using the contract abi and contract address
+		const contract = new web3.eth.Contract(ContractAbi, "contract address");
+		
+		// call contract method and send 
+		await contractDeployed.methods
+			.method('0xe2597eb05cf9a87eb1309e86750c903ec38e527e')
+			.send({
+				from: account?.address,
+				gas: '1000000',
+				// other transaction's params
+			});
+	} catch (error) {
+		// catch transaction error
+		console.error(error);
+	}
+}
+
+(async () => {
+	await contractMethod();
+})();
+
+```

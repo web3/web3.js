@@ -159,7 +159,13 @@ async function deploy() {
   <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
+
 ```typescript
+
+:::warning
+Using `web3.eth.personal`  web3.eth.personal is not considered secure and is strongly discouraged. The personal RPC endpoints have been deprecated due to significant security issues.
+:::
+
 // First step: initialize `web3` instance
 import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
