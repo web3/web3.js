@@ -411,7 +411,7 @@ describe('Contract', () => {
 						_tx.data ===
 							'0x4495ef8a00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
 					) {
-						// eslint-disable-next-line
+						// eslint-disable-next-line jest/no-conditional-expect
 						expect(_tx.to).toStrictEqual(deployedAddr);
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
 						return { status: '0x1', on: () => {} } as any;
@@ -439,10 +439,13 @@ describe('Contract', () => {
 
 			// calling with wrong parameters should throw
 			try {
-				await (deployedContract.methods.setGreeting as any)(arg, 'test').send(sendOptions);
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				await(deployedContract.methods.setGreeting as any)(arg, 'test').send(sendOptions);
 				expect(true).toBe(false);
 			} catch (error) {
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error).toBeInstanceOf(Web3ValidatorError);
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Web3ValidatorError).message).toBe(
 					'Web3 validator found 1 error[s]:\nWeb3 validator found 1 error[s]:\nvalue "test" at "/1" must pass "bool" validation',
 				);
@@ -450,12 +453,15 @@ describe('Contract', () => {
 
 			// calling with wrong parameters should throw
 			try {
-				await (deployedContract.methods.setGreeting as any)(arg, true, 'test').send(
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				await(deployedContract.methods.setGreeting as any)(arg, true, 'test').send(
 					sendOptions,
 				);
 				expect(true).toBe(false);
 			} catch (error) {
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error).toBeInstanceOf(Web3ValidatorError);
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Web3ValidatorError).message).toBe(
 					'Web3 validator found 1 error[s]:\nmust NOT have more than 1 items',
 				);
