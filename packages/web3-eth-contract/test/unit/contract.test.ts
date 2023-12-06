@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import * as eth from 'web3-eth';
 import { ValidChains, Hardfork, AccessListResult, Address, ETH_DATA_FORMAT , DEFAULT_RETURN_FORMAT } from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
-import { Web3Context } from 'web3-core';
+import { Web3Context , Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
 
 import { Contract } from '../../src';
@@ -508,6 +508,24 @@ describe('Contract', () => {
 			expect(receipt.status).toBe('0x1');
 
 			spyTx.mockClear();
+		});
+
+		it('should config change if the linked web3config emitted a config change event', async () => {
+			const expectedProvider = 'http://127.0.0.1:8545';
+			const web3Context = new Web3Context({
+				provider: expectedProvider,
+				config: {
+					contractDataInputFill: 'data',
+					defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa',
+				},
+			});
+			const contract = new Contract(GreeterAbi, web3Context);
+			web3Context.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+				name: 'contractDataInputFill',
+				oldValue: 'data',
+				newValue: 'input',
+			});
+			expect(contract.config.contractDataInputFill).toBe('input');
 		});
 
 		it('should send method on deployed contract should work with data using web3config', async () => {
