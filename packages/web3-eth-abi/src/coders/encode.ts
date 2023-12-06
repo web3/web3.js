@@ -45,7 +45,7 @@ export function encodeParameters(
 	abi: ReadonlyArray<AbiInput> | 'infer-types',
 	params: unknown[],
 ): string {
-	if (abi && abi?.length !== params.length) {
+	if (abi !== 'infer-types' && abi?.length !== params.length) {
 		throw new AbiError('Invalid number of values received for given ABI', {
 			expected: abi?.length,
 			received: params.length,
