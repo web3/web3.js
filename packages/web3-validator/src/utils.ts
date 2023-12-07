@@ -450,6 +450,7 @@ export function uint8ArrayToHexString(uint8Array: Uint8Array): string {
 }
 
 // for optimized technique for hex to bytes conversion
+// many thanks to @noble/hashes and viem from where this implementation is taken <3
 const charCodeMap = {
 	zero: 48,
 	nine: 57,
