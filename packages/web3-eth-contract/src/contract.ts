@@ -1324,7 +1324,6 @@ export class Contract<Abi extends ContractAbi>
 						if (logs) {
 							logs.forEach(log => sub.emit('data', log as EventLog));
 						}
-						logs.forEach(log => sub.emit('data', log as EventLog));
 					})
 					.catch((error: Error) => {
 						sub.emit(

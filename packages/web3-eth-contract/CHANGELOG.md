@@ -357,4 +357,4 @@ Documentation:
 
 ### Fixed
 
--	Fix and error that happem when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
+-	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
