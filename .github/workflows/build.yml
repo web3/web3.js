@@ -258,7 +258,7 @@ jobs:
               uses: benchmark-action/github-action-benchmark@v1
               with:
                   # What benchmark tool the output.txt came from
-                  tool: 'js'
+                  tool: 'benchmarkjs'
                   # Where the output from the benchmark tool is stored
                   output-file-path: ./packages/web3-eth/output.txt
                   # Where the previous data file is stored
