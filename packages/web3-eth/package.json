@@ -44,12 +44,14 @@
 		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit --coverage=true --coverage-reporters=text",
 		"test:e2e:electron": "npx cypress run --headless --browser electron",
 		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
-		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
+		"test:e2e:firefox": "npx cypress run --headless --browser firefox",
+		"test:benchmark": "npx ts-node test/benchmark/benchmark.ts | tee output.txt"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
+		"benchmark": "^2.1.4",
 		"eslint": "^8.20.0",
 		"eslint-config-base-web3": "0.1.0",
 		"eslint-config-prettier": "^8.5.0",
