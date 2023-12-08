@@ -45,7 +45,7 @@
 		"test:e2e:electron": "npx cypress run --headless --browser electron",
 		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
 		"test:e2e:firefox": "npx cypress run --headless --browser firefox",
-		"test:benchmark": "npx ts-node test/benchmark/benchmark.ts | tee output.txt"
+		"test:benchmark": "npx ts-node test/benchmark/benchmark.ts | tee ../../output.txt"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
