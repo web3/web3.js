@@ -62,14 +62,13 @@ export function encodeParameters(
 	}
 
 	if (abi === 'infer-types') {
-		const abiParams = inferParamsAbi(params);
 		try {
+			const abiParams = inferParamsAbi(params);
 			return utils.uint8ArrayToHexString(
 				encodeTuple({ type: 'tuple', name: '', components: abiParams }, params).encoded,
 			);
 		} catch (e) {
 			// throws If the inferred params type caused an error
-			// this would typically happen if the params was an array but the inferred type would be tuple
 			throw new AbiError('Could not infer types from given params', {
 				params,
 			});
