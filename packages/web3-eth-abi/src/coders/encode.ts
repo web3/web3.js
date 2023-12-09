@@ -24,7 +24,6 @@ import { toAbiParams } from './utils.js';
 /**
  * @param params - The params to infer the ABI from
  * @returns The inferred ABI
- * @throws If the params cannot be inferred
  * @example
  * ```
  * inferParamsAbi([1, -1, 'hello', '0x1234', ])
@@ -32,11 +31,21 @@ import { toAbiParams } from './utils.js';
  * > [{ type: 'int256' }, { type: 'uint256' }, { type: 'string' }, { type: 'bytes' }]
  * ```
  */
-function inferParamsAbi(params: unknown[]): AbiParameter[] {
+function inferParamsAbi(params: unknown[]): ReadonlyArray<AbiParameter> {
 	const abi: AbiParameter[] = [];
 	params.forEach(param => {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		abi.push({ type: toHex(param as any, true) } as AbiParameter);
+		if (Array.isArray(param)) {
+			const inferredParams = inferParamsAbi(param);
+			abi.push({
+				type: 'tuple',
+				components: inferredParams,
+				name: '',
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			} as AbiParameter);
+		} else {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			abi.push({ type: toHex(param as any, true) } as AbiParameter);
+		}
 	});
 	return abi;
 }
@@ -52,13 +61,22 @@ export function encodeParameters(
 		});
 	}
 
-	let abiParams;
-	if (abi !== 'infer-types') {
-		abiParams = toAbiParams(abi);
-	} else {
-		abiParams = inferParamsAbi(params);
+	if (abi === 'infer-types') {
+		const abiParams = inferParamsAbi(params);
+		try {
+			return utils.uint8ArrayToHexString(
+				encodeTuple({ type: 'tuple', name: '', components: abiParams }, params).encoded,
+			);
+		} catch (e) {
+			// throws If the inferred params type caused an error
+			// this would typically happen if the params was an array but the inferred type would be tuple
+			throw new AbiError('Could not infer types from given params', {
+				params,
+			});
+		}
 	}
 
+	const abiParams = toAbiParams(abi);
 	return utils.uint8ArrayToHexString(
 		encodeTuple({ type: 'tuple', name: '', components: abiParams }, params).encoded,
 	);

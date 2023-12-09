@@ -26,6 +26,17 @@ describe('encodeParameters decodeParameters tests should pass', () => {
 		expect(encodedResult).toEqual(encoderTestObj.encoded);
 	});
 
+	it.each(testsData)(`unit test of encodeParameters - $name`, encoderTestObj => {
+		// skip for types that are not supported by infer-types
+		// the unsupported types are uint(other than 256), int(other than 256), bytes(that has a number like bytes1 or bytes2), and arrays
+		if (/((?<!u)int)|((?<!uint\d)uint(?!256))|(bytes\d)|(\[.*?\])/.test(encoderTestObj.type)) {
+			return;
+		}
+
+		const encodedResult = encodeParameters('infer-types', [encoderTestObj.value]);
+		expect(encodedResult).toEqual(encoderTestObj.encoded);
+	});
+
 	it.each(testsData)('unit test of decodeParameters - $name', decoderTestObj => {
 		const decodedResult = decodeParameters(
 			[decoderTestObj.type] as AbiInput[],
