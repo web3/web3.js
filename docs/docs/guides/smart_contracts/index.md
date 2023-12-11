@@ -2,7 +2,12 @@
 sidebar_position: 4
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Smart Contracts
+
+
 
 :::info
 This guide expects you to have some basic knowledge. If you are just starting, it is recommended to first check out this [Tutorial: Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts).
@@ -18,22 +23,55 @@ To use the `Contract` class, you'll need to import it from one of two packages: 
 
 Here's an example of importing from each:
 
+<Tabs groupId="prog-lang" queryString>
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+```javascript
+// Importing from web3-eth-contract package
+const { Contract } = require("web3-eth-contract");
+const contract = new Contract(...);         
+
+// Importing from the main web3 package
+const { Contract } = require("web3");
+const contract = new Contract(...);
+
+// Importing from the main web3 package from inside `web3.eth` namespace
+const { Web3 } = require("web3");
+const web3 = new Web3("http://127.0.0.1:8545");
+const contract = new web3.eth.Contract(...);
+
+// to set the provider for the contract instance:
+contract.setProvider('http://127.0.0.1:7545');
+```
+
+  </TabItem>
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+
+
 ```ts
 // Importing from web3-eth-contract package
-import { Contract } from 'web3-eth-contract';
+import { Contract } from "web3-eth-contract";
 const contract = new Contract(...);
 
 // Importing from the main web3 package
 import { Contract } from 'web3';
 const contract = new Contract(...);
 
-// Importing from the main web3 package from inside `Web3.eth` namespace
+// Importing from the main web3 package from inside `web3.eth` namespace
 import { Web3 } from 'web3';
-const contract = new Web3.eth.Contract(...);
+const web3 = new Web3("http://127.0.0.1:8545");
+const contract = new web3.eth.Contract(...);
 
 // to set the provider for the contract instance:
-contract.setProvider('yourProvider');
+contract.setProvider('http://127.0.0.1:7545');
 ```
+
+  </TabItem>
+</Tabs>
+
 
 ### `Contract` vs `web3.eth.Contract`
 
@@ -47,20 +85,57 @@ Note the difference between `Web3.eth.Contract` and `web3instance.eth.Contract` 
 
 Examples:
 
-```ts
-import { Web3 } from 'web3';
+<Tabs groupId="prog-lang" queryString>
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
 
-// Instantiating Contract directly with provider URL
-const contract = new Web3.eth.Contract(abi, address, { provider: 'ws://localhost:8546' }); // not the capital 'W' in Web3 here
+```javascript
+const { Contract } = require("web3-eth-contract");
+
+// instantiating Contract directly with provider URL from Contract package
+// alternatively, you can instantiate the Contract without a provider and set it later using contract.setProvider()
+const abi = [{...}];
+const address = '0x...';
+const contract = new Contract(abi, address { provider: "http://127.0.0.1:8545" }); 
+
 // the provider can be set like this if not provided at the constructor:
-contract.setProvider('yourProvider');
+contract.setProvider('http://127.0.0.1:7545');
 
-// Using Contract from a web3 instance
-const web3 = new Web3('ws://localhost:8546');
-const contract = new web3.eth.Contract(abi, address); // not the small 'w' in web3 here
+// using Contract from a web3 instance
+const web3 = new Web3('http://localhost:8545');
+const contract = new web3.eth.Contract(abi, address);
 // no need to pass the provider to this contract instance.
 // because it will have the same provider of the web3 instance.
 ```
+
+  </TabItem>
+  <TabItem value="typescript" label="TypeScript"
+  	attributes={{className: "typescript-tab"}}>
+
+
+
+```ts
+import { Contract } from "web3-eth-contract";
+
+// instantiating Contract directly with provider URL from Contract package
+// alternatively, you can instantiate the Contract without a provider and set it later using contract.setProvider()
+const abi = [{...}];
+const address = '0x...';
+const contract = new Contract(abi, address { provider: "http://127.0.0.1:8545" }); 
+
+// the provider can be set like this if not provided at the constructor:
+contract.setProvider('http://127.0.0.1:7545');
+
+// using Contract from a web3 instance
+const web3 = new Web3('http://localhost:8545');
+const contract = new web3.eth.Contract(abi, address);
+// no need to pass the provider to this contract instance.
+// because it will have the same provider of the web3 instance.
+```
+
+  </TabItem>
+</Tabs>
+
 
 ### Constructor Parameters
 
@@ -78,7 +153,7 @@ If you do not know how to get the contract ABI, we recommend you to check the St
 3. (optional) **Contract Options:** you can provide contract options as a third parameter.
 
 ```ts
-const abi = /* obtained ABI */;
+const abi = [{...}]; /* obtained ABI as an array */;
 const address = '0x...'; // Deployed address of the contract
 
 const myContract = new Contract(abi, address, {
@@ -97,133 +172,178 @@ The `Contract` class comes equipped with a range of properties and methods for c
 - **config**: The set of configurations for the contract instance that is defaults to the same values as the `web3` object instance. But, it allows for using a different configurations for a specific contract instance. So, in most cases, you would use `web3.eth.Contract` and keep the configurations of the parent context (from the `web3` instance). Except if there is something you need to handle differently for only a specific contract instance.
     
     Here is an example on how to set a value of a specific config variable on a contract instance:
-    ```ts
-    // Set up a connection to the Ethereum network
-    const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
-    // Create a new contract object using the ABI and bytecode
-    const abi = require('./MyContractAbi.json');
-    const myContract = new web3.eth.Contract(abi);
+<Tabs groupId="prog-lang" queryString>
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+
+```javascript
+const {Web3} = require('web3');
+
+// Set up a connection to a testnet or Ethereum network
+const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545')); //or new Web3('http://127.0.0.1:8545')
+
+// Create a new contract object using the ABI and bytecode
+const abi = [{...}]
+const myContract = new web3.eth.Contract(abi);
+console.log(myContract.config.handleRevert); //false
+    
+// This will set `handleRevert` to `true` only on `myContract` instance:
+myContract.handleRevert = true; // same as: myContract.config.handleRevert
+console.log(myContract.config.handleRevert); //true
+
+```
+
+</TabItem>
+<TabItem value="typescript" label="TypeScript"
+attributes={{className: "typescript-tab"}}>
+
+```ts
+import {Web3} from 'web3';
+
+// Set up a connection to a testnet or Ethereum network
+const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545')); //or new Web3('http://127.0.0.1:8545')
+
+// Create a new contract object using the ABI and bytecode
+const abi = [{...}]
+const myContract = new web3.eth.Contract(abi);
+console.log(myContract.config.handleRevert); //false
+    
+// This will set `handleRevert` to `true` only on `myContract` instance:
+myContract.handleRevert = true; // same as: myContract.config.handleRevert
+console.log(myContract.config.handleRevert); //true
+
+```
+
+  </TabItem>
+</Tabs>
 
     
-    // This will set `handleRevert` to `true` only on `myContract` instance:
-    myContract.handleRevert = true; // same as: myContract.config.handleRevert
-    ```
-
-    More on the `config` properties in the [API documentation](/api/web3/namespace/core/#Web3ConfigOptions)
+More on the `config` properties in the [API documentation](/api/web3/namespace/core/#Web3ConfigOptions)
 
 
 - **options**: The set of options for the contract instance.
     This options can be passed as the third parameter to the constructor. And can be accessed also later with contractInstance.options.
 
-    ```ts
-    myContract.options = {
-        address: '0x1234567890123456789012345678901234567891',
-        from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
-        gasPrice: '10000000000000',
-        gas: 1000000
-    }
+```ts
+myContract.options = {
+    address: '0x1234567890123456789012345678901234567891',
+    from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
+    gasPrice: '10000000000000',
+    gas: 1000000
+}
 
-    // If the smart contract is already deployed, you can set it.
-    // this is the same as the second parameter in the constructor.
-    // If the smart contract is not deployed yet, this property will be filled automatically after deployment succeed.
-    myContract.options.address = '0x1234567890123456789012345678901234567891';
+// If the smart contract is not deployed yet, the property `address` will be filled automatically after deployment succeed.
+// If the smart contract is already deployed, you can set the `address`:
+myContract.options.address = '0x1234567890123456789012345678901234567891';
+// this is the same as the second parameter in the constructor:
+// new Contract(abi, `address`); 
 
-    // default from address
-    myContract.options.from = '0x1234567890123456789012345678901234567891'; 
-    // default gas price in wei
-    myContract.options.gasPrice = '20000000000000';
-    // the gas limit
-    myContract.options.gas = 5000000;
-        
-    // you can also use this to update the ABI of the contract
-    // this is the same as the first parameter in the Contract constructor
-    myContract.options.jsonInterface = [...]; // ABI
-    ```
+// set default from address
+myContract.options.from = '0x1234567890123456789012345678901234567891'; 
+// set default gas price in wei
+myContract.options.gasPrice = '20000000000000';
+// set the gas limit
+myContract.options.gas = 5000000;
+    
+// you can also use this to update the ABI of the contract
+myContract.options.jsonInterface = [{...}]; // ABI
+// this is the same as the first parameter in the Contract constructor:
+// new Contract(`abi`, address)
+```
 
 - **methods**: An object mapping your contract's methods for easy calling.
     This property provide a strongly typed methods depending on the passed ABI. And here is how to use it:
-    ```ts
-    // note that the bellow METHOD_NAME and METHOD_PARAMETERS are 
-    // according to the early provided ABI.
-    // And TypeScript intellisense will help you with.
 
-    // to call a method by sending a transaction 
-    contract.methods.METHOD_NAME(METHOD_PARAMETERS).send();
+```ts
+// note that the bellow METHOD_NAME and METHOD_PARAMETERS are 
+// according to the early provided ABI.
+// And TypeScript intellisense will help you with.
 
+// to call a method by sending a transaction 
+contract.methods.METHOD_NAME(METHOD_PARAMETERS).send();
+// you need to specify the account (from) that will be used to sign and send the transaction
+contract.methods.METHOD_NAME(METHOD_PARAMETERS).send({from: "0x..."});
 
-    // to call a view or pure method that does not send a transaction
-    contract.methods.METHOD_NAME(METHOD_PARAMETERS).call();
-    ```
+// to call a view or pure method that does not send a transaction
+contract.methods.METHOD_NAME(METHOD_PARAMETERS).call();
+```
 
 - **events**: An object mapping your contract's events, allowing you to subscribe to them.
 
     And here is an example on how to use it:
-	```ts
-    const options: ContractEventOptions = {
-        // the following means all events where `myNumber` is `12` or `13`
-        filter: myNumber: [12,13];
-        // you can specify the block from where you like to start
-        // listing to events
-        fromBlock: 'earliest';
-        
-        // You can also manually set the topics for the event filter.
-        // If given the filter property and event signature, 
-        // (topic[0]) will not be set automatically.
-        // Each topic can also be a nested array of topics that behaves 
-        // as `or` operation between the given nested topics.
-        topics?: ['0x617cf8a4400dd7963ed519ebe655a16e8da1282bb8fea36a21f634af912f54ab'];
-    }
 
-    // if you would like to not filter, do not pass `options`.
-	const event = await myContract.events.MyEvent(options);
+```ts
+//If you want to filter events, create `options`:
+const options: ContractEventOptions = {
+    // the following means all events where `myNumber` is `12` or `13`
+    filter: myNumber: [12,13];
+    // you can specify the block from where you like to start
+    // listing to events
+    fromBlock: 'earliest';
+    
+    // You can also manually set the topics for the event filter.
+    // If given the filter property and event signature, 
+    // (topic[0]) will not be set automatically.
+    // Each topic can also be a nested array of topics that behaves 
+    // as `or` operation between the given nested topics.
+    topics?: ['0x617cf8a4400dd7963ed519ebe655a16e8da1282bb8fea36a21f634af912f54ab'];
+}
 
-    event.on('data', (data) => {
-        console.log(data)
-    });
-    event.on('error', (err: Error) => {
-        console.log(err);
-    });
-	```
-	
-    To subscribe all events use the special `allEvents`:
+// if you would like to not filter, don't pass `options`.
+const event = await myContract.events.MyEvent(options);
 
-    ```ts
-	const event = await myContract.events.allEvents(options);
-	```
+event.on('data', (data) => {
+    console.log(data)
+});
+event.on('error', (err: Error) => {
+    console.log(err);
+});
+```
+
+To subscribe all events use the special `allEvents`:
+
+```ts
+const event = await myContract.events.allEvents(options);
+```
 	
 #### Methods include
 
 - **deploy**: For deploying a new contract instance.
 
-    ```ts
-    // this will give you the accounts from the connected provider
-    // For example, if you are using MetaMask, it will be the account available.
-	const providersAccounts = await web3.eth.getAccounts();
-	const defaultAccount = providersAccounts[0];
-	console.log('deployer account:', defaultAccount);
+```ts
+// this will give you the accounts from the connected provider
+// For example, if you are using MetaMask, it will be the account available.
+const providersAccounts = await web3.eth.getAccounts();
+const defaultAccount = providersAccounts[0];
+console.log('deployer account:', defaultAccount);
 
-    // this is how to obtain the deployer function,
-    // so you can estimate its needed gas and deploy it.
-	const contractDeployer = myContract.deploy({
-		data: bytecode, // prefix the bytecode with '0x' if it is note already
-		arguments: [1],
-	});
+// NOTE: If you want to manually unlock an account with a private key, you can use wallet.add(privateKey).
+// however, exercise caution and ensure the security of your private keys.
 
-	// optionally, estimate the gas that will be used for development and log it
-	const gas = await contractDeployer.estimateGas({
-		from: defaultAccount,
-	});
-	console.log('estimated gas:', gas);
+// this is how to obtain the deployer function,
+// so you can estimate its needed gas and deploy it.
+const contractDeployer = myContract.deploy({
+    data: bytecode, // prefix the bytecode with '0x' if it is note already
+    arguments: [1], // provide the parameters in an array; in this case, it's the number `1`.
+});
 
-    // Deploy the contract to the Ganache network
-    const tx = await contractDeployer.send({
-        from: defaultAccount,
-        gas,
-        gasPrice: 10000000000,
-    });
-    console.log('Contract deployed at address: ' + tx.options.address);
-    ```
+// optionally, estimate the gas that will be used for development and log it
+const gas = await contractDeployer.estimateGas({
+    from: defaultAccount,
+});
+console.log('estimated gas:', gas);
+
+// Deploy the contract to the Ganache network
+const tx = await contractDeployer.send({
+    from: defaultAccount,
+    gas,
+    gasPrice: 10000000000,
+});
+console.log('Contract deployed at address: ' + tx.options.address);
+```
+
 :::tip
 If you do not know how to get the contract bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
 :::
@@ -233,6 +353,24 @@ If you do not know how to get the contract bytecode, we recommend you to check t
 
 - **setProvider**: This allows you to set a specific provider for a contract instance. As highlighted early in this guide, this is especially handy if you are importing the `Contract` object from `web3-eth-contract` and then you will need to set the provider while there is no `web3` context to read the provider from.
 
+<Tabs groupId="prog-lang" queryString>
+  <TabItem value="javascript" label="JavaScript" default 
+  	attributes={{className: "javascript-tab"}}>
+
+
+```javascript
+// Importing from web3-eth-contract package
+const { Contract } = require('web3-eth-contract');
+const contract = new Contract(...);
+
+// to set the provider for the contract instance
+contract.setProvider('yourProvider');
+```
+
+</TabItem>
+<TabItem value="typescript" label="TypeScript"
+attributes={{className: "typescript-tab"}}>
+
 ```ts
 // Importing from web3-eth-contract package
 import { Contract } from 'web3-eth-contract';
@@ -241,6 +379,10 @@ const contract = new Contract(...);
 // to set the provider for the contract instance
 contract.setProvider('yourProvider');
 ```
+
+  </TabItem>
+</Tabs>
+
 
 ## ABI and Bytecode
 
@@ -298,7 +440,7 @@ const bytecode = '0x60806040523480156100115760006000fd5b506040516102243803806102
 ```
 
 :::info
-And as mentioned in the tips inside pervious sections: 
+And as mentioned in the tips inside previous sections: 
 If you do not know how to get the contract ABI and bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
 :::
 
@@ -307,6 +449,8 @@ The short answer is yes, only if you need to deploy the smart contract yourself.
 
 Basically, with every Contract instance, there are 2 cases. First case is when you want to deploy a smart contract. And in this case, you will need to provide the bytecode of this smart contract. 
 ```ts
+import {Contract} from 'web3-eth-contract';
+
 const myContract = new Contract(abi, undefined, options);
 // if there is no options to be passed you can write:
 const myContract = new Contract(abi);
@@ -328,21 +472,21 @@ myContract.options.address
 And the other case, is when you want to interact with an already deployed smart contract. In this scenario, you will need to provide the address of the already deployed smart contract.
 
 ```ts
+import {Contract} from 'web3-eth-contract';
+
 const myContract = new Contract(abi, smartContractAddress, options);
 // if there is no options to be passed you can write:
 const myContract = new Contract(abi, smartContractAddress);
 ```
 
 ### Do I always need the contract ABI?
-The answer is that you need it only if you like to enjoy the typescript intellisense. And we strongly recommend that. However, if you do not want to provide the ABI. You just need to pass an empty array to the Contract constructor.
+The answer is yes, you need the ABI, especially if you want to enjoy TypeScript IntelliSense, and we strongly recommend doing so. The ABI informs your development environment about the contract's structure, allowing for improved code suggestions and type checking.
 
-Basically, with every Contract instance, there are 2 cases. First case is when you want to deploy a smart contract. And in this case, you will need to provide the bytecode of this smart contract. 
+If you choose not to provide the ABI, you won't be able to interact with the contract's methods correctly, and you'll miss out on IntelliSense support.
+
+
 ```ts
-const myContract = new Contract([], address, options);
-
-// if there is no address yet but you need to pass some options:
-const myContract = new Contract([], undefined, options);
-
-// if there is no address yet and also no options:
-const myContract = new Contract([]);
+const myContract = new Contract(abi, address || undefined, options);
+// remember that address can be empty if the contract is not deployed yet.
+// or you can set the address to directly interact with the contract.
 ```
