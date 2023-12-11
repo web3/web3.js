@@ -31,6 +31,7 @@ class Eip4844Plugin extends Web3PluginBase {
 	public pluginNamespace = 'txType3';
 	public constructor() {
 		super();
+		// eslint-disable-next-line
 		this.registerNewTransactionType(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
 	}
 }
