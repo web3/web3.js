@@ -1,13 +1,12 @@
 ---
-sidebar_position: 4
+sidebar_position: 2
+sidebar_label: 'Mastering Smart Contracts'
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Smart Contracts
-
-
+# Mastering Smart Contracts
 
 :::info
 This guide expects you to have some basic knowledge. If you are just starting, it is recommended to first check out this [Tutorial: Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts).
