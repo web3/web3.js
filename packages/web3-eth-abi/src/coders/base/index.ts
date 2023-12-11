@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter } from 'web3-types';
+import { AbiError } from 'web3-errors';
 import { EncoderResult, DecoderResult } from '../types.js';
 import { decodeAddress, encodeAddress } from './address.js';
 import { decodeBool, encodeBoolean } from './bool.js';
@@ -59,7 +60,10 @@ export function encodeParamFromAbiParameter(param: AbiParameter, value: unknown)
 	if (param.type.startsWith('uint') || param.type.startsWith('int')) {
 		return encodeNumber(param, value);
 	}
-	throw new Error('Unsupported');
+	throw new AbiError('Unsupported', {
+		param,
+		value,
+	});
 }
 
 export function decodeParamFromAbiParameter(param: AbiParameter, bytes: Uint8Array): DecoderResult {
@@ -84,5 +88,8 @@ export function decodeParamFromAbiParameter(param: AbiParameter, bytes: Uint8Arr
 	if (param.type.startsWith('uint') || param.type.startsWith('int')) {
 		return decodeNumber(param, bytes);
 	}
-	throw new Error('Unsupported');
+	throw new AbiError('Unsupported', {
+		param,
+		bytes,
+	});
 }

@@ -267,7 +267,7 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 			const errorPromise = new Promise(resolve => {
 				webSocketProvider.on('error', (err: any) => {
 					expect(err).toBeInstanceOf(InvalidResponseError);
-					if (err.innerError.message === 'Chunk timeout') {
+					if (err.cause.message === 'Chunk timeout') {
 						resolve(true);
 					}
 				});

@@ -26,7 +26,7 @@ import * as rpcMethodWrappers from '../../../src/rpc_method_wrappers';
 import * as WaitForTransactionReceipt from '../../../src/utils/wait_for_transaction_receipt';
 
 import * as WatchTransactionForConfirmations from '../../../src/utils/watch_transaction_for_confirmations';
-import * as WatchTransactionByPolling from '../../../src/utils/watch_transaction_by_pooling';
+import * as WatchTransactionByPolling from '../../../src/utils/watch_transaction_by_polling';
 import * as WatchTransactionBySubscription from '../../../src/utils/watch_transaction_by_subscription';
 import {
 	expectedTransactionReceipt,
@@ -38,7 +38,7 @@ import { SendSignedTransactionEvents } from '../../../src/types';
 
 jest.mock('web3-rpc-methods');
 jest.mock('../../../src/utils/wait_for_transaction_receipt');
-jest.mock('../../../src/utils/watch_transaction_by_pooling');
+jest.mock('../../../src/utils/watch_transaction_by_polling');
 jest.mock('../../../src/utils/watch_transaction_by_subscription');
 
 const testMessage =
@@ -164,7 +164,7 @@ describe('watchTransactionForConfirmations', () => {
 		);
 	});
 
-	describe('should call watchTransactionByPooling when the provider does not support subscription', () => {
+	describe('should call watchTransactionByPolling when the provider does not support subscription', () => {
 		let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 		beforeAll(() => {

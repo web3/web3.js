@@ -1179,7 +1179,7 @@ describe('Contract', () => {
 				}),
 			).rejects.toThrow(
 				expect.objectContaining({
-					innerError: expect.any(Error),
+					cause: expect.any(Error),
 				}),
 			);
 
