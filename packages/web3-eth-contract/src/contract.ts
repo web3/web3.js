@@ -524,10 +524,6 @@ export class Contract<Abi extends ContractAbi>
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
 		if (contractContext instanceof Web3Context) {
 			this.subscribeToContextEvents(contractContext);
-			contractContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-				this.setConfig({ [event.name]: event.newValue });
-			});
 		}
 		Object.defineProperty(this.options, 'address', {
 			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
@@ -538,6 +534,13 @@ export class Contract<Abi extends ContractAbi>
 			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value, returnDataFormat),
 			get: () => this._jsonInterface,
 		});
+
+		if (contractContext instanceof Web3Context) {
+			contractContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				this.setConfig({ [event.name]: event.newValue });
+			});
+		}
 	}
 
 	/**
