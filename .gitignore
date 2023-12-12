@@ -42,3 +42,6 @@ tmp/
 
 # Incubed (in3) nodelist
 packages/web3/.in3/
+
+# benchmark results
+benchmark.txt

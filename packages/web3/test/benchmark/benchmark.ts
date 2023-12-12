@@ -22,6 +22,8 @@ import { processingTx } from './processingTx';
 import { processingContractTx } from './processingContractTx';
 import { abiEncode } from './abiEncode';
 import { abiDecode } from './abiDecode';
+import { sign } from './sign';
+import { verify } from './verify';
 
 const suite = new Benchmark.Suite();
 const results: any[] = [];
@@ -30,6 +32,8 @@ suite
 	.add('processingContractTx', processingContractTx)
 	.add('abiEncode', abiEncode)
 	.add('abiDecode', abiDecode)
+	.add('sign', sign)
+	.add('verify', verify)
 	.on('cycle', (event: any) => {
 		results.push(String(event.target));
 	})
