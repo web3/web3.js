@@ -28,7 +28,7 @@ import { transactionReceiptSchema } from '../schemas.js';
 import {
 	watchTransactionByPolling,
 	Web3PromiEventEventTypeBase,
-} from './watch_transaction_by_pooling.js';
+} from './watch_transaction_by_polling.js';
 import { watchTransactionBySubscription } from './watch_transaction_by_subscription.js';
 
 export function watchTransactionForConfirmations<

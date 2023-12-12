@@ -24,6 +24,7 @@ describe('Web3PromiEvent', () => {
 		});
 
 		await expect(p).resolves.toBe('Resolved Value');
+		expect(() => p.removeAllListeners()).not.toThrow();
 	});
 
 	it('should initialize and reject promise', async () => {
@@ -69,12 +70,16 @@ describe('Web3PromiEvent', () => {
 			};
 
 			const p = func();
-
-			// eslint-disable-next-line no-void
-			void p.on('data', data => {
+			const eventFunc = (data: string) => {
 				expect(data).toBe('emitted data');
 				done(undefined);
-			});
+				expect(() => p.off('data', eventFunc)).not.toThrow();
+			};
+			// eslint-disable-next-line no-void
+			void p.on('data', eventFunc);
+			expect(p.listenerCount('data')).toBe(1);
+			expect(p.listeners('data')).toHaveLength(1);
+			expect(p.eventNames()).toEqual(['data']);
 		});
 	});
 
@@ -121,5 +126,28 @@ describe('Web3PromiEvent', () => {
 		p.setMaxListenerWarningThreshold(3);
 
 		expect(p.getMaxListeners()).toBe(3);
+	});
+
+	it('finally', async () => {
+		const p = new Web3PromiEvent(resolve => {
+			return resolve('reason');
+		});
+
+		const f = jest.fn();
+		p.finally(f);
+		await p;
+		expect(f).toHaveBeenCalled();
+	});
+	it('catch', async () => {
+		const f = jest.fn();
+		const p = new Web3PromiEvent((_, reject) => {
+			return reject(new Error('reason'));
+		});
+
+		p.catch(f);
+
+		await expect(p).rejects.toThrow('reason');
+
+		expect(f).toHaveBeenCalledWith(new Error('reason'));
 	});
 });

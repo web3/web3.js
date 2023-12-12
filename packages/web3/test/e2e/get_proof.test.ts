@@ -68,7 +68,17 @@ describe(`${getSystemTestBackend()} tests - getProof`, () => {
 
 		if (block === 'blockHash' || block === 'blockNumber') {
 			expect(result).toEqual(expectedProof);
-		} else {
+		} 
+		else if(block === 'pending') {
+			expect(result).toMatchObject({
+				balance: expect.any(BigInt),
+				codeHash: expect.any(String),
+				nonce: expect.any(BigInt),
+				storageHash: expect.any(String),
+				storageProof: expect.any(Array<string>),
+			});
+		}
+		else {
 			expect(result).toMatchObject<AccountObject>({
 				accountProof: expect.any(Array<string>),
 				balance: expect.any(BigInt),

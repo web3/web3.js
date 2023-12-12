@@ -22,7 +22,7 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithError,
 } from 'web3-types';
-import { BaseWeb3Error } from '../web3_error_base.js';
+import { BaseWeb3Error, MultipleErrors } from '../web3_error_base.js';
 import { ERR_INVALID_RESPONSE, ERR_RESPONSE } from '../error_codes.js';
 
 // To avoid circular package dependency, copied to code here. If you update this please update same function in `json_rpc.ts`
@@ -71,10 +71,14 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 		if (`error` in response) {
 			errorOrErrors = response.error as JsonRpcError;
 		} else if (response instanceof Array) {
-			errorOrErrors = response.map(r => r.error) as JsonRpcError[];
+			errorOrErrors = response.filter(r => r.error).map(r => r.error) as JsonRpcError[];
 		}
 
-		this.innerError = errorOrErrors as Error | Error[] | undefined;
+		if (Array.isArray(errorOrErrors) && errorOrErrors.length > 0) {
+			this.cause = new MultipleErrors(errorOrErrors as unknown as Error[]);
+		} else {
+			this.cause = errorOrErrors as Error | undefined;
+		}
 	}
 
 	public toJSON() {
@@ -98,7 +102,10 @@ export class InvalidResponseError<ErrorType = unknown, RequestType = unknown> ex
 		} else if (result instanceof Array) {
 			errorOrErrors = result.map(r => r.error) as JsonRpcError[];
 		}
-
-		this.innerError = errorOrErrors as Error | Error[] | undefined;
+		if (Array.isArray(errorOrErrors)) {
+			this.cause = new MultipleErrors(errorOrErrors as unknown as Error[]);
+		} else {
+			this.cause = errorOrErrors as Error | undefined;
+		}
 	}
 }

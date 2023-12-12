@@ -15,10 +15,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('../config/setup');
+import { AbiError } from 'web3-errors';
+import {
+	decodeParamFromAbiParameter,
+	encodeParamFromAbiParameter,
+} from '../../../../src/coders/base';
 
-const jestTimeout = 300000;
-
-jest.setTimeout(jestTimeout);
+describe('abi - coder - base - invalid', () => {
+	describe('invalid type', () => {
+		it('invalid should cause `decodeParamFromAbiParameter` to throw', () => {
+			expect(() =>
+				decodeParamFromAbiParameter({ type: 'invalid', name: '' }, new Uint8Array()),
+			).toThrow(AbiError);
+		});
+		it('invalid should cause `encodeParamFromAbiParameter` to throw', () => {
+			expect(() =>
+				encodeParamFromAbiParameter({ type: 'invalid', name: '' }, 'something'),
+			).toThrow(AbiError);
+		});
+	});
+});
