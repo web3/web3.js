@@ -260,7 +260,7 @@ jobs:
                   # What benchmark tool the output.txt came from
                   tool: 'benchmarkjs'
                   # Where the output from the benchmark tool is stored
-                  output-file-path: output.txt
+                  output-file-path: benchmark.txt
                   # Where the previous data file is stored
                   external-data-json-path: ./cache/benchmark-data.json
                   # Workflow will fail when an alert happens
