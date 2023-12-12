@@ -33,7 +33,7 @@ describe('decodeContractErrorData', () => {
 				expect(err.errorSignature).toEqual(output.errorSignature);
 				expect(err.errorArgs?.message).toEqual(output.errorArgs?.message);
 				expect(Number(err.errorArgs?.code)).toEqual(output.errorArgs?.code);
-				expect(err.innerError?.code).toEqual(output.innerError?.code);
+				expect(err.cause?.code).toEqual(output.cause?.code);
 			},
 		);
 	});

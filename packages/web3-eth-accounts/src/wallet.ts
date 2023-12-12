@@ -23,24 +23,27 @@ type BrowserError = { code: number; name: string };
 
 /**
  * Wallet is an in memory `wallet` that can hold multiple accounts.
- * These accounts can be used when using web3.eth.sendTransaction().
+ * These accounts can be used when using web3.eth.sendTransaction() or web3.eth.contract.methods.contractfunction().send();
  *
- * ### Parameters
- *  Web3AccountProvider - AccountProvider for the wallet
- *
+ * For using Wallet functionality, install Web3 package using `npm i web3` or `yarn add web3`.
+ * After that, Wallet functionality will be available as mentioned below. 
+ * 
  * ```ts
- * import Web3 from 'web3';
- * const web3 = new Web3("https://localhost:8454")
- * web3.eth.accounts.wallet
- * > Wallet(0) [
- *   _accountProvider: {
- *     create: [Function: create],
- *     privateKeyToAccount: [Function: privateKeyToAccount],
- *     decrypt: [Function: decrypt]
- *   },
- *   _addressMap: Map(0) {},
- *   _defaultKeyName: 'web3js_wallet'
- * ]
+ * import { Web3 } from 'web3';
+ * const web3 = new Web3('http://127.0.0.1:7545');
+ * 
+ * const wallet = await web3.eth.accounts.wallet.create(2);
+ * 
+ * const signature = wallet.at(0).sign("Test Data"); // use wallet
+ * 
+ * // fund account before sending following transaction ...
+ * 
+ * const receipt = await web3.eth.sendTransaction({ // internally sign transaction using wallet
+ *    from: wallet.at(0).address,
+ *    to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+ *    value: 1
+ *    //....
+ * });
  * ```
  */
 export class Wallet<

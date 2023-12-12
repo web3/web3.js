@@ -688,7 +688,7 @@ describe('Web3RequestManager', () => {
 					err = error;
 				} finally {
 					expect(err).toBeInstanceOf(ResponseError);
-					expect(err.innerError).toEqual(rpcErrorResponse.error);
+					expect(err.cause).toEqual(rpcErrorResponse.error);
 				}
 			});
 		});

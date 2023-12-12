@@ -16,11 +16,56 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * @note This code was taken from: https://github.com/Mrtenz/eip-712/tree/master
+ * The web3.eth.abi functions let you encode and decode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
+ * 
+ *  For using Web3 ABI functions, first install Web3 package using `npm i web3` or `yarn add web3`.
+ * After that, Web3 ABI functions will be available. 
+ * ```ts
+ * import { Web3 } from 'web3';
+ * 
+ * const web3 = new Web3();
+ * const encoded = web3.eth.abi.encodeFunctionSignature({
+ *     name: 'myMethod',
+ *     type: 'function',
+ *     inputs: [{
+ *         type: 'uint256',
+ *         name: 'myNumber'
+ *     },{
+ *         type: 'string',
+ *         name: 'myString'
+ *     }]
+ * });
+ * 
+ * ```
+ * 
+ * For using individual package install `web3-eth-abi` package using `npm i web3-eth-abi` or `yarn add web3-eth-abi` and only import required functions.
+ * This is more efficient approach for building lightweight applications. 
+ * ```ts
+ * import { encodeFunctionSignature } from 'web3-eth-abi';
+ * 
+ * const encoded = encodeFunctionSignature({
+ *     name: 'myMethod',
+ *     type: 'function',
+ *     inputs: [{
+ *         type: 'uint256',
+ *         name: 'myNumber'
+ *     },{
+ *         type: 'string',
+ *         name: 'myString'
+ *     }]
+ * });
+ * 
+ * ```
+ * 
+ *  @module ABI
  */
+
+
+// This code was taken from: https://github.com/Mrtenz/eip-712/tree/master
 
 import { Eip712TypedData } from 'web3-types';
 import { isNullish, keccak256 } from 'web3-utils';
+import { AbiError } from 'web3-errors';
 import { encodeParameters } from './coders/encode.js';
 
 const TYPE_REGEX = /^\w+/;
@@ -138,12 +183,17 @@ const encodeValue = (
 		const length = Number(match[2]) || undefined;
 
 		if (!Array.isArray(data)) {
-			throw new Error('Cannot encode data: value is not of array type');
+			throw new AbiError('Cannot encode data: value is not of array type', {
+				data,
+			});
 		}
 
 		if (length && data.length !== length) {
-			throw new Error(
+			throw new AbiError(
 				`Cannot encode data: expected length of ${length}, but got ${data.length}`,
+				{
+					data,
+				},
 			);
 		}
 
@@ -182,7 +232,10 @@ const encodeData = (
 	const [types, values] = typedData.types[type].reduce<[string[], unknown[]]>(
 		([_types, _values], field) => {
 			if (isNullish(data[field.name]) || isNullish(data[field.name])) {
-				throw new Error(`Cannot encode data: missing data for '${field.name}'`);
+				throw new AbiError(`Cannot encode data: missing data for '${field.name}'`, {
+					data,
+					field,
+				});
 			}
 
 			const value = data[field.name];

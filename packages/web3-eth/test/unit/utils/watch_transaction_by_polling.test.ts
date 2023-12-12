@@ -21,7 +21,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 import * as rpcMethodWrappers from '../../../src/rpc_method_wrappers';
 import * as WaitForTransactionReceipt from '../../../src/utils/wait_for_transaction_receipt';
 
-import * as WatchTransactionByPolling from '../../../src/utils/watch_transaction_by_pooling';
+import * as WatchTransactionByPolling from '../../../src/utils/watch_transaction_by_polling';
 import {
 	expectedTransactionReceipt,
 	expectedTransactionHash,

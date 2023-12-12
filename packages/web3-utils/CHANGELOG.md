@@ -169,7 +169,7 @@ Documentation:
 -   Fix issue with default config with babel (and React): "TypeError: Cannot convert a BigInt value to a number #6187" (#6506)
 -   Fixed bug in chunks processing logic (#6496)
 
-## [Unreleased]
+## [4.1.0]
 
 ### Added
 
@@ -180,3 +180,5 @@ Documentation:
 ### Fixed
 
 -   Fix unecessary array copy when pack encoding (#6553)
+
+## [Unreleased]
