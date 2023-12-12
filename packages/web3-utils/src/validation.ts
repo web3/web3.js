@@ -15,6 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @module Utils
+ */
+
 import { InvalidBlockError } from 'web3-errors';
 import {
 	checkAddressCheckSum as checkAddressCheckSumValidator,
