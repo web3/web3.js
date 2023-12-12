@@ -35,6 +35,7 @@ import {
 	encodeFunctionSignature,
 	encodeParameter,
 	encodeParameters,
+	inferTypesAndEncodeParameters,
 	isAbiConstructorFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
@@ -126,11 +127,16 @@ export const encodeMethodABI = (
 		);
 	}
 
-	const params = encodeParameters(
-		// eslint-disable-next-line no-nested-ternary
-		abi.inputs ? (Array.isArray(abi.inputs) ? abi.inputs : []) : 'infer-types',
-		args,
-	).replace('0x', '');
+	let params: string;
+	if (abi.inputs) {
+		params = encodeParameters(Array.isArray(abi.inputs) ? abi.inputs : [], args).replace(
+			'0x',
+			'',
+		);
+	} else {
+		params = inferTypesAndEncodeParameters(args).replace('0x', '');
+	}
+
 
 	if (isAbiConstructorFragment(abi)) {
 		if (!deployData)

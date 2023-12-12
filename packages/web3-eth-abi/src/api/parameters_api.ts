@@ -23,28 +23,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { AbiError } from 'web3-errors';
 import { AbiInput, HexString } from 'web3-types';
 import { decodeParameters as decodeParametersInternal } from '../coders/decode.js';
-import { encodeParameters as encodeParametersInternal } from '../coders/encode.js';
+import { encodeParameters } from '../coders/encode.js';
 
-/**
- * Encodes a parameter based on its type to its ABI representation.
- * @param abi - An array of {@link AbiInput}. See [Solidity's documentation](https://solidity.readthedocs.io/en/v0.5.3/abi-spec.html#json) for more details.
- * @param params - The actual parameters to encode.
- * @returns - The ABI encoded parameters
- * @example
- * ```ts
- * const res = web3.eth.abi.encodeParameters(
- *    ["uint256", "string"],
- *    ["2345675643", "Hello!%"]
- *  );
- *
- *  console.log(res);
- *  > 0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000
- * ```
- */
-export const encodeParameters = (
-	abi: ReadonlyArray<AbiInput> | 'infer-types',
-	params: unknown[],
-): string => encodeParametersInternal(abi, params);
+export { encodeParameters, inferTypesAndEncodeParameters } from '../coders/encode.js';
+
 
 /**
  * Encodes a parameter based on its type to its ABI representation.
