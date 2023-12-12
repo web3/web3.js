@@ -1031,7 +1031,7 @@ export const validDecodeContractErrorData: {
 				code: 42,
 				message: 'This is an error with params',
 			},
-			innerError: {
+			cause: {
 				code: -32000,
 			},
 		},
@@ -1067,7 +1067,7 @@ export const validDecodeContractErrorData: {
 				code: 42,
 				message: 'This is an error with params',
 			},
-			innerError: {
+			cause: {
 				code: 3,
 			},
 		},

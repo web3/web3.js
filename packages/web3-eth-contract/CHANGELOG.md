@@ -347,8 +347,14 @@ Documentation:
 
 -	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
-## [Unreleased]
+## [4.1.4]
 
 ### Changed
 
--	`contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+-	By default, contracts will fill `data` instead of `input` within method calls (#6622)
+
+## [Unreleased]
+
+### Fixed
+
+-	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
