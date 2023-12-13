@@ -61,7 +61,7 @@
 		"test:blackbox:infura:http": "./scripts/black_box_test.sh infura http",
 		"test:blackbox:infura:ws": "./scripts/black_box_test.sh infura ws",
 		"test:e2e:chrome:stress": "npx cypress run --headless --browser chrome",
-		"test:benchmark": "npx ts-node-esm --preferTsExts ../web3/test/benchmark/benchmark.ts"
+		"test:benchmark": "npx ts-node --preferTsExts ../web3/test/benchmark/benchmark.ts"
 	},
 	"devDependencies": {
 		"@truffle/hdwallet-provider": "^2.0.12",
