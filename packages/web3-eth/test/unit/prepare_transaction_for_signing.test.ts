@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	Common,
+	// Common,
 	EthExecutionAPI,
 	HexString,
 	Web3NetAPI,
@@ -33,6 +33,7 @@ import {
 	AccessListEIP2930Transaction,
 	FeeMarketEIP1559Transaction,
 	Transaction,
+	Hardfork,
 } from 'web3-eth-accounts';
 import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
 import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
@@ -70,7 +71,7 @@ describe('prepareTransactionForSigning', () => {
 
 				if (isNullish(tx.common)) {
 					if (options.web3Context.defaultCommon) {
-						const common = options.web3Context.defaultCommon as unknown as Common;
+						const common = options.web3Context.defaultCommon;
 						const chainId = common.customChain.chainId as string;
 						const networkId = common.customChain.networkId as string;
 						const name = common.customChain.name as string;
@@ -102,6 +103,55 @@ describe('prepareTransactionForSigning', () => {
 			expect(ethereumjsTx.common.chainName()).toBe('test');
 		});
 	});
+
+	it('use read Hardfork from context.defaultHardfork', async () => {
+		const context = new Web3Context<EthExecutionAPI>({
+			provider: new HttpProvider('http://127.0.0.1'),
+			config: { defaultNetworkId: '0x9' },
+		});
+		context.defaultChain = 'mainnet';
+		context.defaultCommon = {
+			customChain: {
+				name: 'test',
+				networkId: 457,
+				chainId: 1458,
+			},
+		} as any;
+		context.defaultHardfork = Hardfork.Istanbul;
+
+		// context.defaultChain = 'sepolia';
+
+		async function transactionBuilder<ReturnType = TransactionType>(options: {
+			transaction: TransactionType;
+			web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
+			privateKey?: HexString | Uint8Array;
+			fillGasPrice?: boolean;
+			fillGasLimit?: boolean;
+		}): Promise<ReturnType> {
+			const tx = { ...options.transaction };
+			return tx as unknown as ReturnType;
+		}
+
+		context.transactionBuilder = transactionBuilder;
+
+		const ethereumjsTx = await prepareTransactionForSigning(
+			{
+				chainId: 1458,
+				nonce: 1,
+				gasPrice: BigInt(20000000000),
+				gas: BigInt(21000),
+				to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+				from: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+				value: '1000000000',
+				input: '',
+				networkId: 457,
+				// chain: 'sepolia',
+			},
+			context,
+		);
+		expect(ethereumjsTx.common.hardfork()).toBe(Hardfork.Istanbul);
+	});
+
 	describe('should return an web3-utils/tx instance with expected properties', () => {
 		it.each(validTransactions)(
 			'mockBlock: %s\nexpectedTransaction: %s\nexpectedPrivateKey: %s\nexpectedAddress: %s\nexpectedRlpEncodedTransaction: %s\nexpectedTransactionHash: %s\nexpectedMessageToSign: %s\nexpectedV: %s\nexpectedR: %s\nexpectedS: %s',
