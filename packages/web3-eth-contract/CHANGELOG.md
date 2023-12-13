@@ -354,3 +354,8 @@ Documentation:
 -	By default, contracts will fill `data` instead of `input` within method calls (#6622)
 
 ## [Unreleased]
+
+### Fixed
+
+-	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
+-	Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
