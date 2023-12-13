@@ -81,7 +81,7 @@ describe('contract', () => {
 					// eslint-disable-next-line jest/no-standalone-expect
 					expect(error).toBeDefined();
 					// eslint-disable-next-line jest/no-standalone-expect
-					expect(error?.innerError.message).toContain('REVERTED WITH REVERT');
+					expect(error?.cause.message).toContain('REVERTED WITH REVERT');
 				});
 			});
 		});

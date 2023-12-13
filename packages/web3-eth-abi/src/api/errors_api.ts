@@ -15,6 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * 
+ *  @module ABI
+ */
+
 import { sha3Raw } from 'web3-utils';
 import { AbiError } from 'web3-errors';
 import { AbiErrorFragment } from 'web3-types';

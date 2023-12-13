@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
-import { Transaction, TransactionFactory, Web3Account } from 'web3-eth-accounts';
+import { Transaction, Web3Account } from 'web3-eth-accounts';
 import { SupportedProviders, Web3, Web3PluginBase } from '../../src';
 import {
 	createAccount,
@@ -31,7 +31,8 @@ class Eip4844Plugin extends Web3PluginBase {
 	public pluginNamespace = 'txType3';
 	public constructor() {
 		super();
-		TransactionFactory.registerTransactionType(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
+		// eslint-disable-next-line
+		this.registerNewTransactionType(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
 	}
 }
 

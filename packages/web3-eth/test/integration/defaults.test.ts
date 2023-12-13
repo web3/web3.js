@@ -584,7 +584,7 @@ describe('defaults', () => {
 						confirmations: bigint;
 						receipt: { status: bigint };
 					}) => {
-						// Being able to get 2 confirmations means the pooling for new blocks works
+						// Being able to get 2 confirmations means the polling for new blocks works
 						if (confirmations >= 2) {
 							sentTx.removeAllListeners();
 							resolve(status);

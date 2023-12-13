@@ -220,6 +220,7 @@ export const hexToNumberString = (data: HexString): string => hexToNumber(data).
  * ```ts
  * console.log(utf8ToHex('web3.js'));
  * > "0x776562332e6a73"
+ * ```
  *
  */
 export const utf8ToHex = (str: string): HexString => {

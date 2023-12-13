@@ -18,16 +18,50 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable max-classes-per-file */
 
 import { Web3Error } from 'web3-types';
+import { ERR_MULTIPLE_ERRORS } from './error_codes.js';
 
+/**
+ * Base class for Web3 errors.
+ */
 export abstract class BaseWeb3Error extends Error implements Web3Error {
 	public readonly name: string;
 	public abstract readonly code: number;
 	public stack: string | undefined;
-	public innerError: Error | Error[] | undefined;
 
-	public constructor(msg?: string, innerError?: Error | Error[]) {
+	public cause: Error | undefined;
+
+	/**
+	 * @deprecated Use the `cause` property instead.
+	 */
+	public get innerError(): Error | Error[] | undefined {
+		// eslint-disable-next-line no-use-before-define
+		if (this.cause instanceof MultipleErrors) {
+			return this.cause.errors;
+		}
+		return this.cause;
+	}
+	/**
+	 * @deprecated Use the `cause` property instead.
+	 */
+	public set innerError(cause: Error | Error[] | undefined) {
+		if (Array.isArray(cause)) {
+			// eslint-disable-next-line no-use-before-define
+			this.cause = new MultipleErrors(cause);
+		} else {
+			this.cause = cause;
+		}
+	}
+
+	public constructor(msg?: string, cause?: Error | Error[]) {
 		super(msg);
-		this.innerError = innerError;
+
+		if (Array.isArray(cause)) {
+			// eslint-disable-next-line no-use-before-define
+			this.cause = new MultipleErrors(cause);
+		} else {
+			this.cause = cause;
+		}
+
 		this.name = this.constructor.name;
 
 		if (typeof Error.captureStackTrace === 'function') {
@@ -57,8 +91,20 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 			name: this.name,
 			code: this.code,
 			message: this.message,
-			innerError: this.innerError,
+			cause: this.cause,
+			// deprecated
+			innerError: this.cause,
 		};
+	}
+}
+
+export class MultipleErrors extends BaseWeb3Error {
+	public code = ERR_MULTIPLE_ERRORS;
+	public errors: Error[];
+
+	public constructor(errors: Error[]) {
+		super(`Multiple errors occurred: [${errors.map(e => e.message).join('], [')}]`);
+		this.errors = errors;
 	}
 }
 

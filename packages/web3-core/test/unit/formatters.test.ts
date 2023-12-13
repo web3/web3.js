@@ -23,6 +23,7 @@ import {
 	inputBlockNumberFormatter,
 	inputDefaultBlockNumberFormatter,
 	inputPostFormatter,
+	inputTopicFormatter,
 	outputBigIntegerFormatter,
 	outputBlockFormatter,
 	outputLogFormatter,
@@ -79,6 +80,17 @@ describe('formatters', () => {
 				balance: hexToNumberStringResult,
 				nonce: hexToNumberStringResult,
 			});
+		});
+	});
+
+	describe('inputTopicFormatter', () => {
+		it('check params', () => {
+			expect(inputTopicFormatter('0x09d7bD9E185fbC2d265D8DBe81e5e888E391688b')).toBe(
+				'0x09d7bD9E185fbC2d265D8DBe81e5e888E391688b',
+			);
+			// @ts-expect-error invalid param
+			// eslint-disable-next-line no-null/no-null
+			expect(inputTopicFormatter(null)).toBeNull();
 		});
 	});
 
@@ -320,6 +332,12 @@ describe('formatters', () => {
 	describe('outputTransactionReceiptFormatter', () => {
 		const validReceipt = { cumulativeGasUsed: '0x1234', gasUsed: '0x4567' };
 
+		it('should be FormatterError', () => {
+			// @ts-expect-error invalid param
+			expect(() => outputTransactionReceiptFormatter(1)).toThrow(
+				`Received receipt is invalid: 1`,
+			);
+		});
 		it('should convert "blockNumber" from hex to number', () => {
 			const result = outputTransactionReceiptFormatter({
 				...validReceipt,
@@ -379,6 +397,11 @@ describe('formatters', () => {
 
 			expect(formatters.outputLogFormatter).toHaveBeenCalledWith(logs[1], 1, logs);
 			expect(result.logs).toEqual(['outputLogFormatterResult', 'outputLogFormatterResult']);
+		});
+
+		it('when log doesn`t have id', () => {
+			const res = formatters.outputLogFormatter({ blockHash: '0x1', logIndex: '0x1' });
+			expect(res.id).toBeUndefined();
 		});
 
 		it('should convert "contractAddress" to checksum address', () => {

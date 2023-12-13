@@ -68,7 +68,7 @@ describe('contract errors', () => {
 					'Error happened while trying to execute a function inside a smart contract',
 				),
 				code: ERR_CONTRACT_EXECUTION_REVERTED,
-				innerError: {
+				cause: {
 					errorName: 'Unauthorized',
 					errorSignature: 'Unauthorized()',
 				},
@@ -80,7 +80,7 @@ describe('contract errors', () => {
 				name: 'ContractExecutionError',
 				code: ERR_CONTRACT_EXECUTION_REVERTED,
 				receipt: undefined,
-				innerError: {
+				cause: {
 					code: 3,
 					data: '0x82b42900',
 					errorName: 'Unauthorized',
@@ -113,7 +113,7 @@ describe('contract errors', () => {
 					'Error happened while trying to execute a function inside a smart contract',
 				),
 				code: ERR_CONTRACT_EXECUTION_REVERTED,
-				innerError: {
+				cause: {
 					errorName: 'CustomError',
 					errorSignature: 'CustomError(string)',
 					errorArgs: {
@@ -128,7 +128,7 @@ describe('contract errors', () => {
 				name: 'ContractExecutionError',
 				code: ERR_CONTRACT_EXECUTION_REVERTED,
 				receipt: undefined,
-				innerError: {
+				cause: {
 					code: 3,
 					data: '0x8d6ea8be0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001b7265766572746564207573696e6720637573746f6d204572726f720000000000',
 					errorName: 'CustomError',

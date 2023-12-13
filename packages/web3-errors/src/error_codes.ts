@@ -28,7 +28,8 @@ export const ERR_OPERATION_ABORT = 204;
 export const ERR_ABI_ENCODING = 205;
 export const ERR_EXISTING_PLUGIN_NAMESPACE = 206;
 export const ERR_INVALID_METHOD_PARAMS = 207;
-export const ERR_INSECURE_CONTEXT = 208;
+export const ERR_MULTIPLE_ERRORS = 208;
+export const ERR_INSECURE_CONTEXT = 209;
 
 // Contract error codes
 export const ERR_CONTRACT = 300;

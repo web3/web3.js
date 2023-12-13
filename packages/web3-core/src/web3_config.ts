@@ -79,7 +79,7 @@ export abstract class Web3Config
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
-		contractDataInputFill: 'input',
+		contractDataInputFill: 'data',
 		defaultNetworkId: undefined,
 		defaultChain: 'mainnet',
 		defaultHardfork: 'london',
@@ -104,7 +104,7 @@ export abstract class Web3Config
 		// TODO: Improve and add key check
 		const keys = Object.keys(options) as (keyof Web3ConfigOptions)[];
 		for (const key of keys) {
-			this._triggerConfigChange(key, options[key])
+			this._triggerConfigChange(key, options[key]);
 		}
 		Object.assign(this.config, options);
 	}

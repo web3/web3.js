@@ -120,6 +120,66 @@ describe('contract', () => {
 						value,
 					);
 				});
+
+				it('send tokens from the account that does not have ether', async () => {
+					const tempAccount = await createTempAccount();
+					const test = await createNewAccount({
+						unlock: true,
+						refill: false,
+					});
+
+					let catchError = false;
+					let catchErrorPromise;
+					try {
+						const promiEvent = contractDeployed.methods
+							.transfer(tempAccount.address, '0x1')
+							.send({ ...sendOptions, from: test.address });
+
+						catchErrorPromise = new Promise(resolve => {
+							// eslint-disable-next-line @typescript-eslint/no-floating-promises
+							promiEvent.on('error', err => {
+								// Returned error: insufficient funds for gas * price + value: balance 0, tx cost 25000327300000000, overshot 25000327300000000
+								resolve(err);
+							});
+						});
+						await promiEvent;
+					} catch (e) {
+						// Returned error: insufficient funds for gas * price + value: balance 0, tx cost 25000327300000000, overshot 25000327300000000
+						catchError = true;
+					}
+					expect(await catchErrorPromise).toBeDefined();
+					expect(catchError).toBe(true);
+				});
+				it('send tokens from the account that does not have tokens', async () => {
+					const tempAccount = await createTempAccount();
+					const test = await createNewAccount({
+						unlock: true,
+						refill: true,
+					});
+
+					let catchError = false;
+					let catchErrorPromise;
+					try {
+						const promiEvent = contractDeployed.methods
+							.transfer(tempAccount.address, '0x1')
+							.send({ ...sendOptions, from: test.address });
+
+						catchErrorPromise = new Promise(resolve => {
+							// eslint-disable-next-line @typescript-eslint/no-floating-promises
+							promiEvent.on('error', err => {
+								// Transaction has been reverted by the EVM
+								resolve(err);
+							});
+						});
+						await promiEvent;
+					} catch (e) {
+						// Transaction has been reverted by the EVM
+						catchError = true;
+					}
+					expect(await catchErrorPromise).toBeDefined();
+					expect(catchError).toBe(true);
+				});
+
 				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
 					'should transfer tokens with local wallet %p',
 					async signAndSendContractMethod => {
