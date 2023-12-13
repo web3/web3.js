@@ -483,6 +483,15 @@ export class Contract<Abi extends ContractAbi>
 			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
+
+		// Init protected properties
+		if ((contractContext as Web3Context)?.wallet) {
+			this._wallet = (contractContext as Web3Context).wallet;
+		}
+		if ((contractContext as Web3Context)?.accountProvider) {
+			this._accountProvider = (contractContext as Web3Context).accountProvider;
+		}
+
 		if (
 			!isNullish(options) &&
 			!isNullish(options.data) &&
