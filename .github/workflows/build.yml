@@ -275,9 +275,10 @@ jobs:
                   # Enable alert commit comment
                   comment-on-alert: true
               # Upload the updated cache file for the next job by actions/cache
+          -   run: cat benchmark-data.txt
           -   name: Cache benchmark results
               uses: actions/cache/save@v3
-              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+#              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
               with:
-                  path: ./benchmark-data.txt
+                  path: benchmark-data.txt
                   key: main-benchmark-data.txt
