@@ -121,7 +121,7 @@ const config = {
 						position: 'left',
 					},
 					{
-						to: '/libdocs/Accounts',
+						to: '/libdocs/ABI',
 						activeBasePath: '/libdocs/',
 						label: 'Documentation',
 						position: 'left',
