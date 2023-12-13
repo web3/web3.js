@@ -43,5 +43,5 @@ suite
 	})
 	.run({ async: true })
 	.on('complete', () => {
-		fs.writeFileSync(path.join('..', '..', 'benchmark.txt'), results.join('\n'));
+		fs.writeFileSync(path.join('..', '..', 'benchmark-data.txt'), results.join('\n'));
 	});

@@ -254,16 +254,20 @@ jobs:
                   path: /tmp
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn test:benchmark
-
-          -   name: Store benchmark result
+          -   name: Restore main branch benchmark results from cache
+              uses: actions/cache/restore@v3
+              with:
+                 path: ./cache/benchmark-data.txt
+                 key: main-benchmark-data.txt
+          -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
                   # What benchmark tool the output.txt came from
                   tool: 'benchmarkjs'
                   # Where the output from the benchmark tool is stored
-                  output-file-path: benchmark.txt
+                  output-file-path: benchmark-data.txt
                   # Where the previous data file is stored
-                  external-data-json-path: ./cache/benchmark-data.json
+                  external-data-json-path: ./cache/benchmark-data.txt
                   # Workflow will fail when an alert happens
                   fail-on-alert: true
                   # GitHub API token to make a commit comment
@@ -273,7 +277,7 @@ jobs:
               # Upload the updated cache file for the next job by actions/cache
           -   name: Cache benchmark results
               uses: actions/cache/save@v3
-              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+#              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
               with:
                   path: ./benchmark.txt
-                  key: ./cache/benchmark-data.json
+                  key: main-benchmark-data.txt

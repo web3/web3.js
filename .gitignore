@@ -44,4 +44,4 @@ tmp/
 packages/web3/.in3/
 
 # benchmark results
-benchmark.txt
+benchmark-data.txt

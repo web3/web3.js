@@ -24,8 +24,8 @@ export const abiDecode = async () => {
 	);
 };
 export const abiEncode = async () => {
-	encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
-	encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
-	encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
+	// encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
+	// encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
+	// encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
 	return encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
 };
