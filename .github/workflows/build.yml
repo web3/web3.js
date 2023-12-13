@@ -257,8 +257,9 @@ jobs:
           -   name: Restore main branch benchmark results from cache
               uses: actions/cache/restore@v3
               with:
-                 path: ./cache/benchmark-data.txt
+                 path: main-benchmark-data.txt
                  key: main-benchmark-data.txt
+          -   run: cat main-benchmark-data.txt
           -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
@@ -267,7 +268,7 @@ jobs:
                   # Where the output from the benchmark tool is stored
                   output-file-path: benchmark-data.txt
                   # Where the previous data file is stored
-                  external-data-json-path: ./cache/benchmark-data.txt
+                  external-data-json-path: main-benchmark-data.txt
                   # Workflow will fail when an alert happens
                   fail-on-alert: true
                   # GitHub API token to make a commit comment
