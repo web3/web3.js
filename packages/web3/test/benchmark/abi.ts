@@ -15,11 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Contract } from 'web3-eth-contract';
-import { context } from './helpers';
-import { BasicAbi } from '../shared_fixtures/build/Basic';
+import { decodeParameters, encodeParameters } from 'web3-eth-abi';
 
-export const processingContractTx = async () => {
-	const c = new Contract(BasicAbi, context);
-	return c.methods.firesMultiValueIndexedEvent('test', 1, true).encodeABI();
+export const abiDecode = async () => {
+	return decodeParameters(
+		['uint256', 'string'],
+		'0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000',
+	);
+};
+export const abiEncode = async () => {
+	return encodeParameters(['uint256', 'string'], ['2345675643', 'Hello!%']);
 };
