@@ -13,11 +13,11 @@ MODE=${ORIGARGS[1]}
 ENGINE=${ORIGARGS[2]}
 TEST_OPTION=${ORIGARGS[3]}
 
-SUPPORTED_BACKENDS=("geth" "ganache" "sepolia" "mainnet")
+SUPPORTED_BACKENDS=("geth" "ganache" "sepolia" "mainnet" "geth-manual")
 SUPPORTED_MODE=("http" "ws" "ipc")
 # if you will add a new browser please also add it in the system_test_utils.ts => isBrowser
 SUPPORTED_ENGINES=("node" "electron" "firefox" "chrome" "")
-SUPPORTED_TEST_OPTIONS=("coverage" "sync" "")
+SUPPORTED_TEST_OPTIONS=("coverage" "sync" "manual" "")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then
 	helpFunction
@@ -47,11 +47,17 @@ TEST_COMMAND=""
 
 if [[ $MODE == "ipc" ]]; then
         export WEB3_SYSTEM_TEST_PROVIDER=$IPC_PATH
-        BACKEND=geth-binary
+        if [[ $BACKEND != "geth-manual" ]]; then
+                BACKEND=geth-binary
+        fi
 fi
 
+
+
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
-	if [[ $TEST_OPTION == "coverage" ]]; then
+    if [[ $TEST_OPTION == "manual" ]]; then
+    	TEST_COMMAND="test:integration:stress"
+	elif [[ $TEST_OPTION == "coverage" ]]; then
 		TEST_COMMAND="test:coverage:integration"
 	elif [[ $BACKEND == "sepolia" || $BACKEND == "mainnet" ]]; then
 		TEST_COMMAND="lerna run test:e2e:$BACKEND"
@@ -59,11 +65,15 @@ if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 		TEST_COMMAND="test:integration"
 	fi
 else
-	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
+     if [[ $TEST_OPTION == "manual" ]]; then
+        TEST_COMMAND="lerna run test:e2e:$ENGINE:stress --stream"
+    else
+	    TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
+	fi
 fi
 
 
-if [[ $BACKEND == "geth" || $BACKEND == "ganache" || $BACKEND == "geth-binary" ]]; then
+if [[ $BACKEND == "geth" || $BACKEND == "ganache" || $BACKEND == "geth-binary" || $BACKEND == "geth-manual" ]]; then
 	yarn "$BACKEND:start:background" && yarn generate:accounts && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
 else
 	yarn $TEST_COMMAND

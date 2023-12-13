@@ -71,7 +71,7 @@ web3.eth.sendTransaction({...})
         // at Generator.next (<anonymous>)
         // at fulfilled (.../web3_request_manager.js:5:58)
         // at processTicksAndRejections (node:internal/process/task_queues:96:5) {
-        //             innerError: { code: -32000, message: 'exceeds block gas limit' },
+        //             cause: { code: -32000, message: 'exceeds block gas limit' },
         //             code: 101,
         //             data: undefined,
         //             request: {

@@ -132,7 +132,7 @@ export type ProviderErrorData =
 	| { originalError: { data: HexString } };
 
 /**
- * This class is expected to be set as an `innerError` inside ContractExecutionError
+ * This class is expected to be set as an `cause` inside ContractExecutionError
  * The properties would be typically decoded from the `data` if it was encoded according to EIP-838
  */
 export class Eip838ExecutionError extends Web3ContractError {
@@ -144,7 +144,7 @@ export class Eip838ExecutionError extends Web3ContractError {
 	public errorArgs?: { [K in string]: unknown };
 
 	// eslint-disable-next-line no-use-before-define
-	public innerError: Eip838ExecutionError | undefined;
+	public cause: Eip838ExecutionError | undefined;
 
 	public constructor(error: JsonRpcError<ProviderErrorData> | Eip838ExecutionError) {
 		super(error.message || 'Error');
@@ -166,9 +166,7 @@ export class Eip838ExecutionError extends Web3ContractError {
 				originalError = error.data;
 			}
 			this.data = originalError.data;
-			this.innerError = new Eip838ExecutionError(
-				originalError as JsonRpcError<ProviderErrorData>,
-			);
+			this.cause = new Eip838ExecutionError(originalError as JsonRpcError<ProviderErrorData>);
 		} else {
 			this.data = error.data;
 		}
@@ -192,7 +190,8 @@ export class Eip838ExecutionError extends Web3ContractError {
 			name: string;
 			code: number;
 			message: string;
-			innerError: Error | Error[] | undefined;
+			innerError: Eip838ExecutionError | undefined;
+			cause: Eip838ExecutionError | undefined;
 			data: string;
 			errorName?: string;
 			errorSignature?: string;
@@ -216,12 +215,12 @@ export class Eip838ExecutionError extends Web3ContractError {
  * The data is expected to be encoded according to EIP-848.
  */
 export class ContractExecutionError extends Web3ContractError {
-	public innerError: Eip838ExecutionError;
+	public cause: Eip838ExecutionError;
 
 	public constructor(rpcError: JsonRpcError) {
 		super('Error happened while trying to execute a function inside a smart contract');
 		this.code = ERR_CONTRACT_EXECUTION_REVERTED;
-		this.innerError = new Eip838ExecutionError(rpcError as JsonRpcError<ProviderErrorData>);
+		this.cause = new Eip838ExecutionError(rpcError as JsonRpcError<ProviderErrorData>);
 	}
 }
 

@@ -23,7 +23,25 @@ import { IbanOptions } from './types.js';
 
 /**
  * Converts Ethereum addresses to IBAN or BBAN addresses and vice versa.
- */
+* For using Iban package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used.
+* ```ts
+* 
+* import { Web3 } from 'web3';
+*  const web3 = new Web3('https://mainnet.infura.io/v3/<YOURPROJID>');
+* 
+*  const iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+*  console.log(iban.checksum());
+
+* ```
+* For using individual package install `web3-eth-iban` packages using: `npm i web3-eth-iban` or `yarn add web3-eth-iban`.
+*
+* ```ts
+* import {Iban} from 'web3-eth-iban';
+* 
+*  const iban = new Iban("XE81ETHXREGGAVOFYORK");
+*  console.log(iban.checksum());
+* ```
+*/
 export class Iban {
 	private readonly _iban: string;
 

@@ -39,9 +39,11 @@ describe('Web3BatchRequest', () => {
 	});
 
 	describe('constructor', () => {
-		it('should create batch request object with empty list of requests', () => {
+		it('should create batch request object with empty list of requests', async () => {
 			expect(batchRequest).toBeInstanceOf(Web3BatchRequest);
 			expect(batchRequest.requests).toEqual([]);
+			expect(batchRequest.requests).toHaveLength(0);
+			expect(await batchRequest.execute()).toEqual([]);
 		});
 	});
 

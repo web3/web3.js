@@ -341,7 +341,7 @@ export class MissingGasError extends InvalidValueError {
 			}`,
 			'"gas" is missing',
 		);
-		this.innerError = new MissingGasInnerError();
+		this.cause = new MissingGasInnerError();
 	}
 }
 
@@ -372,7 +372,7 @@ export class TransactionGasMismatchError extends InvalidValueError {
 			}`,
 			'transaction must specify legacy or fee market gas properties, not both',
 		);
-		this.innerError = new TransactionGasMismatchInnerError();
+		this.cause = new TransactionGasMismatchInnerError();
 	}
 }
 

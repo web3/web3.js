@@ -20,7 +20,7 @@ import { format, setImmediate } from 'web3-utils';
 import { DataFormat } from 'web3-types';
 import { NewHeadsSubscription } from '../web3_subscriptions.js';
 import { transactionReceiptSchema } from '../schemas.js';
-import { WaitProps, watchTransactionByPolling } from './watch_transaction_by_pooling.js';
+import { WaitProps, watchTransactionByPolling } from './watch_transaction_by_polling.js';
 
 /**
  * This function watches a Transaction by subscribing to new heads.
