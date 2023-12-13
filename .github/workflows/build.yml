@@ -254,6 +254,7 @@ jobs:
                   path: /tmp
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn test:benchmark
+
           -   name: Store benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
@@ -265,5 +266,10 @@ jobs:
                   external-data-json-path: ./cache/benchmark-data.json
                   # Workflow will fail when an alert happens
                   fail-on-alert: true
-          # Upload the updated cache file for the next job by actions/cache
-
+              # Upload the updated cache file for the next job by actions/cache
+          -   name: Cache benchmark results
+              uses: actions/cache/save@v3
+              #              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+              with:
+                  path: ./benchmark.txt
+                  key: ./cache/benchmark-data.json
