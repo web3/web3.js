@@ -485,10 +485,10 @@ export class Contract<Abi extends ContractAbi>
 		});
 
 		// Init protected properties
-		if ((contractContext as Web3Context).wallet) {
+		if ((contractContext as Web3Context)?.wallet) {
 			this._wallet = (contractContext as Web3Context).wallet;
 		}
-		if ((contractContext as Web3Context).accountProvider) {
+		if ((contractContext as Web3Context)?.accountProvider) {
 			this._accountProvider = (contractContext as Web3Context).accountProvider;
 		}
 
