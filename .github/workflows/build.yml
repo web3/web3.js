@@ -259,7 +259,7 @@ jobs:
               with:
                  path: main-benchmark-data.txt
                  key: main-benchmark-data.txt
-          -   run: cat main-benchmark-data.txt
+#          -   run: cat main-benchmark-data.txt
           -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
