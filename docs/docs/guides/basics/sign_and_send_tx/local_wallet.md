@@ -23,8 +23,7 @@ const { Web3 } = require('web3');
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
-const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
+const account = web3.eth.accounts.wallet.add("privateKey").get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
 
@@ -62,7 +61,7 @@ import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
+const privateKeyString = 'privateKey';
 const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
@@ -111,7 +110,7 @@ const { Web3 } = require('web3');
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
+const privateKeyString = 'privateKey';
 const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
@@ -160,13 +159,19 @@ async function deploy() {
   <TabItem value="typescript" label="TypeScript" default 
   	attributes={{className: "typescript-tab"}}>
 
+
 ```typescript
+
+:::warning
+Using `web3.eth.personal`  web3.eth.personal is not considered secure and is strongly discouraged. The personal RPC endpoints have been deprecated due to significant security issues.
+:::
+
 // First step: initialize `web3` instance
 import { Web3 } from 'web3';
 const web3 = new Web3(/* PROVIDER*/);
 
 // Second step: add an account to wallet
-const privateKeyString = '0x1f953dc9b6437fb94fcafa5dabe3faa0c34315b954dd66f41bf53273339c6d26';
+const privateKeyString = 'privateKey';
 const account = web3.eth.accounts.wallet.add(privateKeyString).get(0);
 
 // Make sure the account has enough eth on balance to send the transaction
