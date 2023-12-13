@@ -28,7 +28,7 @@ import {
 	ContractOptions,
 } from 'web3-types';
 import { isNullish, mergeDeep, isContractInitOptions } from 'web3-utils';
-import { encodeMethodABI } from './encoding.js';
+import { encodeMethodABI } from './encoding';
 import { Web3ContractContext } from './types.js';
 
 const dataInputEncodeMethodHelper = (
