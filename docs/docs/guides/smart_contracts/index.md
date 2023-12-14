@@ -79,7 +79,9 @@ There is a way to create a contract object, other than the ones listed above. Th
 Actually, the `web3.eth.Contract` is typically how you access the class through a web3 instance that already has a provider setup and that may already has customized configurations.
 
 :::tip
-Note the difference between `Web3.eth.Contract` and `web3instance.eth.Contract` (that is usually named `web3.eth.Contract`) is that the `Web3` (with capital `W`) is used to access the objects organized in namespaces. While `web3instance`, that is usually named `web3`, is to access the properties of this instance. 
+1. Importing the `web3-eth-contract` module can be beneficial if you want to reduce the size of your application instead of importing the whole `Web3` module.
+
+2. Note the difference between `Web3.eth.Contract` and `web3instance.eth.Contract` (that is usually named `web3.eth.Contract`) is that the `Web3` (with capital `W`) is used to access the objects organized in namespaces. While `web3instance`, that is usually named `web3`, is to access the properties of this instance. 
 :::
 
 Examples:
