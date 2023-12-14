@@ -295,7 +295,7 @@ jobs:
               with:
                   node-version: ${{ matrix.node }}
           -   run: ls -la
-          -   run: echo "processingTx x 10,987 ops/sec ±6.14% (92 runs sampled)">benchmark-data.txt
+          -   run: echo "processingTx x 820,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
           -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
