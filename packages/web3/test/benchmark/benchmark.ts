@@ -19,11 +19,11 @@ import fs from 'fs';
 import path from 'path';
 
 import { processingTx } from './processingTx';
-import {
-	processingContractDeploy,
-	// 	processingContractMethodSend,
-	// 	processingContractMethodCall,
-} from './processingContract';
+// import {
+// processingContractDeploy,
+// 	processingContractMethodSend,
+// 	processingContractMethodCall,
+// } from './processingContract';
 import { abiEncode, abiDecode } from './abi';
 import { sign, verify } from './wallet';
 
@@ -31,7 +31,7 @@ const suite = new Benchmark.Suite();
 const results: any[] = [];
 suite
 	.add('processingTx', processingTx)
-	.add('processingContractDeploy', processingContractDeploy)
+	// .add('processingContractDeploy', processingContractDeploy)
 	// .add('processingContractMethodSend', processingContractMethodSend)
 	// .add('processingContractMethodCall', processingContractMethodCall)
 	.add('abiEncode', abiEncode)

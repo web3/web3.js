@@ -27,7 +27,7 @@ jobs:
       - run: yarn prebuild
       - run: yarn build:cjs
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
@@ -42,7 +42,7 @@ jobs:
 #          -   uses: actions/setup-node@v3
 #              with:
 #                node-version: ${{ matrix.node }}
-#          -   uses: actions/download-artifact@v3
+#          -   uses: actions/download-artifact@v4
 #              with:
 #                name: web3-${{ matrix.node }}.js.tar.gz
 #                path: /tmp
@@ -59,7 +59,7 @@ jobs:
 #          -   uses: actions/setup-node@v3
 #              with:
 #                node-version: ${{ matrix.node }}
-#          -   uses: actions/download-artifact@v3
+#          -   uses: actions/download-artifact@v4
 #              with:
 #                name: web3-${{ matrix.node }}.js.tar.gz
 #                path: /tmp
@@ -73,7 +73,7 @@ jobs:
 #          -   uses: actions/setup-node@v3
 #              with:
 #                node-version: 18
-#          -   uses: actions/download-artifact@v3
+#          -   uses: actions/download-artifact@v4
 #              with:
 #                name: web3-18.js.tar.gz
 #                path: /tmp
@@ -88,7 +88,7 @@ jobs:
 #        -   uses: actions/setup-node@v3
 #            with:
 #              node-version: 18
-#        -   uses: actions/download-artifact@v3
+#        -   uses: actions/download-artifact@v4
 #            with:
 #              name: web3-18.js.tar.gz
 #              path: /tmp
@@ -128,7 +128,7 @@ jobs:
 #      - uses: actions/setup-node@v3
 #        with:
 #          node-version: ${{ matrix.node }}
-#      - uses: actions/download-artifact@v3
+#      - uses: actions/download-artifact@v4
 #        with:
 #          name: web3-${{ matrix.node }}.js.tar.gz
 #          path: /tmp
@@ -158,7 +158,7 @@ jobs:
 #      - uses: actions/setup-node@v3
 #        with:
 #          node-version: ${{ matrix.node }}
-#      - uses: actions/download-artifact@v3
+#      - uses: actions/download-artifact@v4
 #        with:
 #          name: web3-${{ matrix.node }}.js.tar.gz
 #          path: /tmp
@@ -183,7 +183,7 @@ jobs:
 #      -   uses: actions/setup-node@v3
 #          with:
 #            node-version: ${{ matrix.node }}
-#      -   uses: actions/download-artifact@v3
+#      -   uses: actions/download-artifact@v4
 #          with:
 #            name: web3-${{ matrix.node }}.js.tar.gz
 #            path: /tmp
@@ -206,7 +206,7 @@ jobs:
 #            node-version: ${{ matrix.node }}
 #      - uses: browser-actions/setup-firefox@latest
 #        if: matrix.browser == 'firefox'
-#      - uses: actions/download-artifact@v3
+#      - uses: actions/download-artifact@v4
 #        with:
 #          name: web3-${{ matrix.node }}.js.tar.gz
 #          path: /tmp
@@ -230,7 +230,7 @@ jobs:
 #        -   uses: actions/setup-node@v3
 #            with:
 #                node-version: ${{ matrix.node }}
-#        -   uses: actions/download-artifact@v3
+#        -   uses: actions/download-artifact@v4
 #            with:
 #                name: web3-${{ matrix.node }}.js.tar.gz
 #                path: /tmp
@@ -248,12 +248,12 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v3
+          -   uses: actions/download-artifact@v4
               with:
                   name: web3-${{ matrix.node }}.js.tar.gz
                   path: /tmp
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#          -   uses: actions/download-artifact@v3
+#          -   uses: actions/download-artifact@v4
 #              with:
 #                  name: web3-benchmark-main.json
 #                  path: /tmp/web3-benchmark-main.json
@@ -290,7 +290,7 @@ jobs:
                   alert-threshold: '200%'
                   comment-always: false
 
-          - uses: actions/upload-artifact@v3
+          - uses: actions/upload-artifact@v4
             #if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
             with:
                 name: web3-benchmark-main.json
