@@ -239,7 +239,7 @@ jobs:
 
   benchmark:
       name: Benchmark Tests
-#      needs: build
+      needs: build
       runs-on: ubuntu-latest
       strategy:
           matrix:
@@ -253,7 +253,7 @@ jobs:
                   name: web3-${{ matrix.node }}.js.tar.gz
                   path: /tmp
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#          -   name: Restore
+#          -   name: Restore main branch benchmark data
 #              uses: actions/cache/restore@v3
 #              with:
 #                  path: web3-benchmark-main.json
@@ -290,37 +290,9 @@ jobs:
                   # Enable alert commit comment
                   alert-threshold: '200%'
                   comment-always: false
-          -   name: Save results to cache
+          -   name: Save main branch benchmark data
               uses: actions/cache/save@v3
-              # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+#              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
               with:
                 path: web3-benchmark-main.json
                 key: ${{ runner.os }}-web3-benchmark-main.json-${{ github.sha }}
-
-#  test:
-#      name: Benchmark Tests
-##      needs: build
-#      runs-on: ubuntu-latest
-#      strategy:
-#          matrix:
-#              node: [ 18 ]
-#      steps:
-#          -   uses: actions/setup-node@v3
-#              with:
-#                  node-version: ${{ matrix.node }}
-##          -   run: echo "text" > benchmark-data.txt
-##          -   run: ls -la
-##          -   name: Save
-##              uses: actions/cache/save@v3
-##              with:
-##                  path: benchmark-data.txt
-##                  key: ${{ runner.os }}-my-cache-key-benchmark-data.txt
-##          -   run: rm benchmark-data.txt
-#          -   run: ls -la
-#          -   name: Restore
-#              uses: actions/cache/restore@v3
-#              with:
-#                  path: benchmark-data.txt
-#                  key: ${{ runner.os }}-my-cache-key-benchmark-data.txt
-#          -   run: ls -la
-#          -   run: cat benchmark-data.txt
