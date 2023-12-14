@@ -253,11 +253,11 @@ jobs:
                   name: web3-${{ matrix.node }}.js.tar.gz
                   path: /tmp
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#          -   name: Restore main branch benchmark data
-#              uses: actions/cache/restore@v3
-#              with:
-#                  path: web3-benchmark-main.json
-#                  key: ${{ runner.os }}-web3-benchmark-main.json
+          -   name: Restore main branch benchmark data
+              uses: actions/cache/restore@v3
+              with:
+                  path: web3-benchmark-main.json
+                  key: ${{ runner.os }}-web3-benchmark-main.json
           -   run: yarn test:benchmark
           -   name: Compare benchmark result and make comment
               uses: benchmark-action/github-action-benchmark@v1
@@ -292,7 +292,7 @@ jobs:
                   comment-always: false
           -   name: Save main branch benchmark data
               uses: actions/cache/save@v3
-#              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
               with:
                 path: web3-benchmark-main.json
                 key: ${{ runner.os }}-web3-benchmark-main.json
