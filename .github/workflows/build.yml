@@ -303,7 +303,7 @@ jobs:
                   # Where the output from the benchmark tool is stored
                   output-file-path: benchmark-data1.txt
                   # Where the previous data file is stored
-                  external-data-json-path: benchmark-data-restored.txt
+                  external-data-json-path: ./cache/benchmark-data.json
                   # Workflow will fail when an alert happens
                   fail-on-alert: true
                   # GitHub API token to make a commit comment
@@ -321,7 +321,7 @@ jobs:
                   # Where the output from the benchmark tool is stored
                   output-file-path: benchmark-data2.txt
                   # Where the previous data file is stored
-                  external-data-json-path: benchmark-data-restored.txt
+                  external-data-json-path: ./cache/benchmark-data.json
                   # Workflow will fail when an alert happens
                   fail-on-alert: true
                   # GitHub API token to make a commit comment
