@@ -316,11 +316,11 @@ jobs:
                   save-data-file: true
           -   run: ls -la
           -   run: cat benchmark-restore.json
-          -   run: echo "${{github.sha}}"
+          -   run: echo "${{github.event.pull_request.head.sha}}"
           -   run: echo "${{github.event.number}}"
 
           -   run: npm install --ignore-scripts --force
-          -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.sha}} ${{github.event.number}}
+          -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.event.pull_request.head.sha}} ${{github.event.number}}
 
 #          -   name: comment PR
 #              uses: machine-learning-apps/pr-comment@master

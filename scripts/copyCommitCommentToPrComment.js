@@ -25,7 +25,7 @@ const owner = 'web3';
 const repo = 'web3.js';
 
 const octokit = new Octokit({
-	// auth: token,
+	auth: token,
 });
 
 const run = async () => {
@@ -40,7 +40,7 @@ const run = async () => {
 			},
 		},
 	);
-
+	console.log(list);
 	const body = list.data[list.data.length - 1].body;
 	console.log('body', body);
 	await octokit.request(`POST /repos/${owner}/${repo}/issues/${prNumber}/comments`, {
