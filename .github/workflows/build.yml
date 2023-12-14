@@ -311,12 +311,12 @@ jobs:
               uses: actions/cache/save@v3
               with:
                   path: /tmp/benchmark-data.txt
-                  key: my-cache-key-benchmark-data.txt
+                  key: ${{ runner.os }}-my-cache-key-benchmark-data.txt
           -   name: Restore
               uses: actions/cache/restore@v3
               with:
                   path: /tmp/benchmark-data-restore.txt
-                  key: my-cache-key-benchmark-data.txt
+                  key: ${{ runner.os }}-my-cache-key-benchmark-data.txt
           -   run: cd /tmp && ls -la
           -   run: cat /tmp/benchmark-data.txt
           -   run: cat /tmp/benchmark-data-restore.txt
