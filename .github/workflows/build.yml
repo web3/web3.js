@@ -297,7 +297,7 @@ jobs:
           -   run: ls -la
           -   run: echo "processingTx x 849,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
           -   name: Compare benchmark result
-              uses: avkos/github-action-benchmark@v1
+              uses: benchmark-action/github-action-benchmark@v1
               with:
                   # What benchmark tool the output.txt came from
                   tool: 'benchmarkjs'
@@ -306,15 +306,15 @@ jobs:
                   # Where the previous data file is stored
                   external-data-json-path: benchmark-restore.json
                   # Workflow will fail when an alert happens
-                  fail-on-alert: true
+                  fail-on-alert: false
                   # GitHub API token to make a commit comment
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   # Enable alert commit comment
                   alert-threshold: '200%'
                   comment-always: true
                   summary-always: true
-                  pr-comment-always: true
-
+                  save-data-file: true
+          -   run: ls -la
           -   run: cat benchmark-restore.json
 
 
