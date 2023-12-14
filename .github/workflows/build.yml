@@ -316,6 +316,12 @@ jobs:
                   save-data-file: true
           -   run: ls -la
           -   run: cat benchmark-restore.json
+          -   name: comment PR
+              uses: machine-learning-apps/pr-comment@master
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                path: benchmark-data.txt
 
 
 
