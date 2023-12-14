@@ -295,7 +295,7 @@ jobs:
               with:
                   node-version: ${{ matrix.node }}
           -   run: ls -la
-          -   run: echo "processingTx x 849,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
+          -   run: echo "processingTx x 850,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
           -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
@@ -319,12 +319,5 @@ jobs:
           -   run: echo "${{github.event.pull_request.head.sha}}"
           -   run: echo "${{github.event.number}}"
 
-          -   run: npm install --ignore-scripts --force
+          -   run: npm install @octokit/core --no-save --ignore-scripts --force
           -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.event.pull_request.head.sha}} ${{github.event.number}}
-
-#          -   name: comment PR
-#              uses: machine-learning-apps/pr-comment@master
-#              env:
-#                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#              with:
-#                path: benchmark-data.txt

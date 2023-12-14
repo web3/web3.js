@@ -40,18 +40,47 @@ const run = async () => {
 			},
 		},
 	);
-	console.log(list);
+	// get latest commit comment body
 	const body = list.data[list.data.length - 1].body;
-	console.log('body', body);
-	await octokit.request(`POST /repos/${owner}/${repo}/issues/${prNumber}/comments`, {
-		owner,
-		repo,
-		issue_number: prNumber,
-		body,
-		headers: {
-			'X-GitHub-Api-Version': '2022-11-28',
+
+	// find if there is already a comment in PR
+	const comments = await octokit.request(
+		`GET /repos/${owner}/${repo}/issues/${prNumber}/comments`,
+		{
+			owner,
+			repo,
+			issue_number: prNumber,
+			headers: {
+				'X-GitHub-Api-Version': '2022-11-28',
+			},
 		},
-	});
+	);
+	const benchMarkComment = comments.data.find(c => c.body.includes(`# Benchmark`));
+	if (benchMarkComment) {
+		console.log('update benchMarkComment', benchMarkComment.id);
+		// update benchMarkComment
+		await octokit.request(`PATCH /repos/${owner}/${repo}/issues/comments/${prNumber}`, {
+			owner,
+			repo,
+			comment_id: benchMarkComment.id,
+			body,
+			headers: {
+				'X-GitHub-Api-Version': '2022-11-28',
+			},
+		});
+	} else {
+		console.log('create new comment in PR');
+		// create new comment in PR
+		await octokit.request(`POST /repos/${owner}/${repo}/issues/${prNumber}/comments`, {
+			owner,
+			repo,
+			issue_number: prNumber,
+			body,
+			headers: {
+				'X-GitHub-Api-Version': '2022-11-28',
+			},
+		});
+	}
 };
 
 run().catch(console.error);
