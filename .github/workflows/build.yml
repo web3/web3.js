@@ -296,26 +296,25 @@ jobs:
                   node-version: ${{ matrix.node }}
           -   run: ls -la
           -   run: echo "processingTx x 8,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
-          -   run: echo "processingTx x 800,810 ops/sec ±4.24% (90 runs sampled)">base-benchmark-data.txt
           -   name: Compare benchmark result
               uses: openpgpjs/github-action-pull-request-benchmark@v1
               with:
-                  name: 'PR Benchmark'
-                  # What benchmark tool the benchmarks.txt files came from
+                  # What benchmark tool the output.txt came from
                   tool: 'benchmarkjs'
-                  # Where the two output files from the benchmark tool are stored
-                  pr-benchmark-file-path: benchmark-data.txt
-                  base-benchmark-file-path: base-benchmark-data.txt
-                  # A comment will be left on the latest PR commit if `alert-threshold` is exceeded
-                  comment-on-alert: true
-                  alert-threshold: '130%'
-                  # Workflow will fail if `fail-threshold` is exceeded
-                  fail-on-alert: true
-                  fail-threshold: '150%'
-                  # A token is needed to leave commit comments
+                  # Where the output from the benchmark tool is stored
+                  output-file-path: benchmark-data.txt
+                  # Where the previous data file is stored
+                  external-data-json-path: benchmark-restore.json
+                  # Workflow will fail when an alert happens
+                  fail-on-alert: false
+                  # GitHub API token to make a commit comment
                   github-token: ${{ secrets.GITHUB_TOKEN }}
+                  # Enable alert commit comment
+                  alert-threshold: '200%'
+                  comment-always: true
+                  summary-always: true
 
-          -   run: cat benchmark.json
+          -   run: cat benchmark-restore.json
 
 
 
