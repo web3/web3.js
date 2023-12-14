@@ -295,7 +295,7 @@ jobs:
                   comment-always: false
           -   name: Save main branch benchmark data
               uses: actions/cache/save@v3
-              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+         #     if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
               with:
                 path: web3-benchmark-main.json
                 key: ${{ runner.os }}-web3-benchmark-main.json

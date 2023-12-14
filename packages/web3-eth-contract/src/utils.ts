@@ -163,8 +163,6 @@ export const getEstimateGasParams = ({
 	return txParams as TransactionWithSenderAPI;
 };
 
-export { isContractInitOptions } from 'web3-utils';
-
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
 	typeof options === 'object' &&
 	!isNullish(options) &&
