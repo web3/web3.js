@@ -312,6 +312,7 @@ jobs:
                   # Enable alert commit comment
                   comment-on-alert: true
                   alert-threshold: '200%'
+                  auto-push: true
 
           -   run: cat benchmark-restore.json
 
