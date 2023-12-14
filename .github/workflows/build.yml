@@ -295,7 +295,7 @@ jobs:
               with:
                   node-version: ${{ matrix.node }}
           -   run: ls -la
-          -   run: echo "processingTx x 8,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
+          -   run: echo "processingTx x 80,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
           -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
@@ -313,6 +313,7 @@ jobs:
                   alert-threshold: '200%'
                   comment-always: true
                   summary-always: true
+                  pr-comment-always: true
 
           -   run: cat benchmark-restore.json
 
