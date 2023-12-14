@@ -304,7 +304,7 @@ jobs:
                   tool: 'benchmarkjs'
                   # Where the two output files from the benchmark tool are stored
                   pr-benchmark-file-path: benchmark-data.txt
-                  base-benchmark-file-path: benchmark-restore.json
+                  base-benchmark-file-path: benchmark.json
                   # A comment will be left on the latest PR commit if `alert-threshold` is exceeded
                   comment-on-alert: true
                   alert-threshold: '130%'
@@ -314,7 +314,7 @@ jobs:
                   # A token is needed to leave commit comments
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
-          -   run: cat benchmark-restore.json
+          -   run: cat benchmark.json
 
 
 
