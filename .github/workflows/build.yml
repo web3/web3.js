@@ -295,7 +295,8 @@ jobs:
               with:
                   node-version: ${{ matrix.node }}
           -   run: ls -la
-          -   run: echo "processingTx x 820,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
+          -   run: echo "processingTx x 8,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
+          -   run: echo "processingTx x 800,810 ops/sec ±4.24% (90 runs sampled)">base-benchmark-data.txt
           -   name: Compare benchmark result
               uses: openpgpjs/github-action-pull-request-benchmark@v1
               with:
@@ -304,7 +305,7 @@ jobs:
                   tool: 'benchmarkjs'
                   # Where the two output files from the benchmark tool are stored
                   pr-benchmark-file-path: benchmark-data.txt
-                  base-benchmark-file-path: benchmark.json
+                  base-benchmark-file-path: base-benchmark-data.txt
                   # A comment will be left on the latest PR commit if `alert-threshold` is exceeded
                   comment-on-alert: true
                   alert-threshold: '130%'
