@@ -277,6 +277,7 @@ jobs:
                   # Enable alert commit comment
                   comment-always: true
                   save-data-file: false
+              # copy comment from commit to Pull Request
           -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.event.pull_request.head.sha}} ${{github.event.number}}
           -   name: Compare benchmark result and fail if threshold is reached
               uses: benchmark-action/github-action-benchmark@v1
