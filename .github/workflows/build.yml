@@ -306,17 +306,26 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
-          -   run: echo "text" > /tmp/benchmark-data.txt
+          -   run: echo "text" > benchmark-data.txt
+          -   run: ls -la
           -   name: Save
               uses: actions/cache/save@v3
               with:
-                  path: /tmp/benchmark-data.txt
+                  path: benchmark-data.txt
                   key: ${{ runner.os }}-my-cache-key-benchmark-data.txt
+          -   run: rm benchmark-data.txt
+          -   run: ls -la
           -   name: Restore
               uses: actions/cache/restore@v3
               with:
-                  path: /tmp/benchmark-data-restore.txt
+                  path: benchmark-data.txt
                   key: ${{ runner.os }}-my-cache-key-benchmark-data.txt
-          -   run: cd /tmp && ls -la
-          -   run: cat /tmp/benchmark-data.txt
-          -   run: cat /tmp/benchmark-data-restore.txt
+          -   run: ls -la
+          -   run: cat benchmark-data.txt
+
+#          -   name: Restore default branch stats
+#              if: github.event_name != 'push'
+#              uses: actions/cache/restore@v3
+#              with:
+#                path: packages/web3/dist/4.x.json
+#                key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
