@@ -11,26 +11,26 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-#  build:
-#    strategy:
-#      matrix:
-#        node: [18]
-#    name: Build CJS
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: ${{ matrix.node }}
-#          cache: yarn
-#      - run: yarn install --ignore-scripts
-#      - run: yarn prebuild
-#      - run: yarn build:cjs
-#      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: web3-${{ matrix.node }}.js.tar.gz
-#          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+  build:
+    strategy:
+      matrix:
+        node: [18]
+    name: Build CJS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+      - run: yarn install --ignore-scripts
+      - run: yarn prebuild
+      - run: yarn build:cjs
+      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web3-${{ matrix.node }}.js.tar.gz
+          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
 #  build-esm:
 #      name: Build ESM
 #      needs: build
@@ -237,66 +237,28 @@ jobs:
 #        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
 #        -   run: yarn build:docs
 
-#  benchmark:
-#      name: Benchmark Tests
-#      needs: build
-#      runs-on: ubuntu-latest
-#      strategy:
-#          matrix:
-#              node: [ 18 ]
-#      steps:
-#          -   uses: actions/setup-node@v3
-#              with:
-#                  node-version: ${{ matrix.node }}
-#          -   uses: actions/download-artifact@v3
-#              with:
-#                  name: web3-${{ matrix.node }}.js.tar.gz
-#                  path: /tmp
-#          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#          -   run: yarn test:benchmark
-#          -   name: Restore main branch benchmark results from cache
-#              uses: actions/cache/restore@v3
-#              with:
-#                 path: ./main-benchmark-data.txt
-#                 key: main-benchmark-data.txt
-#          -   run: ls -la
-#          -   name: Compare benchmark result
-#              uses: benchmark-action/github-action-benchmark@v1
-#              with:
-#                  # What benchmark tool the output.txt came from
-#                  tool: 'benchmarkjs'
-#                  # Where the output from the benchmark tool is stored
-#                  output-file-path: benchmark-data.txt
-#                  # Where the previous data file is stored
-#                  external-data-json-path: main-benchmark-data.txt
-#                  # Workflow will fail when an alert happens
-#                  fail-on-alert: true
-#                  # GitHub API token to make a commit comment
-#                  github-token: ${{ secrets.GITHUB_TOKEN }}
-#                  # Enable alert commit comment
-#                  comment-on-alert: true
-#              # Upload the updated cache file for the next job by actions/cache
-#          -   run: cat benchmark-data.txt
-#          -   name: Cache benchmark results
-#              uses: actions/cache/save@v3
-##              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
-#              with:
-#                  path: ./benchmark-data.txt
-#                  key: main-benchmark-data.txt
   benchmark:
       name: Benchmark Tests
+      needs: build
       runs-on: ubuntu-latest
       strategy:
           matrix:
               node: [ 18 ]
       steps:
-          -   uses: actions/checkout@v3
           -   uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
-          -   run: ls -la
-          -   run: echo "processingTx x 850,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
-          -   name: Compare benchmark result
+          -   uses: actions/download-artifact@v3
+              with:
+                  name: web3-${{ matrix.node }}.js.tar.gz
+                  path: /tmp
+          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          -   uses: actions/download-artifact@v3
+              with:
+                  name: web3-benchmark-main.json
+                  path: ./web3-benchmark-main.json
+          -   run: yarn test:benchmark
+          -   name: Compare benchmark result and make comment
               uses: benchmark-action/github-action-benchmark@v1
               with:
                   # What benchmark tool the output.txt came from
@@ -304,20 +266,32 @@ jobs:
                   # Where the output from the benchmark tool is stored
                   output-file-path: benchmark-data.txt
                   # Where the previous data file is stored
-                  external-data-json-path: benchmark-restore.json
+                  external-data-json-path: web3-benchmark-main.json
                   # Workflow will fail when an alert happens
                   fail-on-alert: false
                   # GitHub API token to make a commit comment
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   # Enable alert commit comment
-                  alert-threshold: '200%'
                   comment-always: true
-                  summary-always: true
-                  save-data-file: true
-          -   run: ls -la
-          -   run: cat benchmark-restore.json
-          -   run: echo "${{github.event.pull_request.head.sha}}"
-          -   run: echo "${{github.event.number}}"
-
-          -   run: npm install @octokit/core --no-save --ignore-scripts --force
+                  save-data-file: false
           -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.event.pull_request.head.sha}} ${{github.event.number}}
+          -   name: Compare benchmark result and fail if threshold is reached
+              uses: benchmark-action/github-action-benchmark@v1
+              with:
+                  # What benchmark tool the output.txt came from
+                  tool: 'benchmarkjs'
+                  # Where the output from the benchmark tool is stored
+                  output-file-path: benchmark-data.txt
+                  # Where the previous data file is stored
+                  external-data-json-path: web3-benchmark-main.json
+                  # Workflow will fail when an alert happens
+                  fail-on-alert: true
+                  # Enable alert commit comment
+                  alert-threshold: '200%'
+                  comment-always: false
+
+          - uses: actions/upload-artifact@v3
+            #if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+            with:
+                name: web3-benchmark-main.json
+                path: ./web3-benchmark-main.json

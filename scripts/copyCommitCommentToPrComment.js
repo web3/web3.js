@@ -57,7 +57,6 @@ const run = async () => {
 	);
 	const benchMarkComment = comments.data.find(c => c.body.includes(`# Benchmark`));
 	if (benchMarkComment) {
-		console.log('update benchMarkComment', benchMarkComment.id);
 		// update benchMarkComment
 		await octokit.request(
 			`PATCH /repos/${owner}/${repo}/issues/comments/${benchMarkComment.id}`,
@@ -72,7 +71,6 @@ const run = async () => {
 			},
 		);
 	} else {
-		console.log('create new comment in PR');
 		// create new comment in PR
 		await octokit.request(`POST /repos/${owner}/${repo}/issues/${prNumber}/comments`, {
 			owner,
