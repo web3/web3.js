@@ -284,7 +284,7 @@ jobs:
 #                  path: ./benchmark-data.txt
 #                  key: main-benchmark-data.txt
 
-    benchmark:
+    build:
         name: Benchmark Tests
         runs-on: ubuntu-latest
         strategy:
