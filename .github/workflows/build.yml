@@ -253,10 +253,10 @@ jobs:
                   name: web3-${{ matrix.node }}.js.tar.gz
                   path: /tmp
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#          -   uses: actions/download-artifact@v4
-#              with:
-#                  name: web3-benchmark-main.json
-#                  path: /tmp/web3-benchmark-main.json
+          -   uses: actions/download-artifact@v4
+              with:
+                  name: web3-benchmark-main.json
+                  path: /tmp/web3-benchmark-main.json
           -   run: yarn test:benchmark
           -   name: Compare benchmark result and make comment
               uses: benchmark-action/github-action-benchmark@v1
