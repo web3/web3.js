@@ -59,15 +59,18 @@ const run = async () => {
 	if (benchMarkComment) {
 		console.log('update benchMarkComment', benchMarkComment.id);
 		// update benchMarkComment
-		await octokit.request(`PATCH /repos/${owner}/${repo}/issues/comments/${prNumber}`, {
-			owner,
-			repo,
-			comment_id: benchMarkComment.id,
-			body,
-			headers: {
-				'X-GitHub-Api-Version': '2022-11-28',
+		await octokit.request(
+			`PATCH /repos/${owner}/${repo}/issues/comments/${benchMarkComment.id}`,
+			{
+				owner,
+				repo,
+				comment_id: benchMarkComment.id,
+				body,
+				headers: {
+					'X-GitHub-Api-Version': '2022-11-28',
+				},
 			},
-		});
+		);
 	} else {
 		console.log('create new comment in PR');
 		// create new comment in PR
