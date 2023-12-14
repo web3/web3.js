@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Deploying and Interacting with Smart Contracts'
+sidebar_label: 'Tutorial: Deploying and Interacting with Smart Contracts'
 ---
 
 import Tabs from '@theme/Tabs';
@@ -23,6 +23,12 @@ Here is a high-level overview of the steps we will be taking in this tutorial:
 5. Set up the web3.js library and connect to the Ganache network.
 6. Deploy the smart contract to the Ganache network using web3.js.
 7. Interact with the smart contract using web3.js.
+
+:::tip
+📝 **Community support:**
+If you encounter any issues while following this guide or have questions, don't hesitate to seek assistance. Our friendly community is ready to help you out!
+Join our [Discord](https://discord.gg/F4NUfaCC) server and head to the **#web3js-general** channel to connect with other developers and get the support you need. 
+:::
 
 ## Step 1: Setting up the Environment
 
@@ -108,9 +114,9 @@ Next, create a new file called `compile.js` in your project directory and add th
 // This code will compile smart contract and generate its ABI and bytecode
 // Alternatively, you can use something like `npm i solc && npx solcjs MyContract.sol --bin --abi`
 
-import solc from 'solc';
-import path from 'path';
-import fs from 'fs';
+const solc = require( 'solc');
+const path = require('path');
+const fs = require('fs');
 
 const fileName = 'MyContract.sol';
 const contractName = 'MyContract';
@@ -340,20 +346,20 @@ async function deploy() {
 	const defaultAccount = providersAccounts[0];
 	console.log('deployer account:', defaultAccount);
 
-	const deployedContract = myContract.deploy({
+	const contractDeployer = myContract.deploy({
 		data: '0x' + bytecode,
 		arguments: [1],
 	});
 
 	// optionally, estimate the gas that will be used for development and log it
-	const gas = await deployedContract.estimateGas({
+	const gas = await contractDeployer.estimateGas({
 		from: defaultAccount,
 	});
 	console.log('estimated gas:', gas);
 
 	try {
 		// Deploy the contract to the Ganache network
-		const tx = await deployedContract.send({
+		const tx = await contractDeployer.send({
 			from: defaultAccount,
 			gas,
 			gasPrice: 10000000000,
@@ -396,18 +402,18 @@ async function deploy(): Promise<void> {
 	const defaultAccount: string = providersAccounts[0];
 	console.log('deployer account:', defaultAccount);
 
-	const deployedContract: any = myContract.deploy({
+	const contractDeployer: any = myContract.deploy({
 		data: '0x' + bytecode,
 		arguments: [1],
 	});
 
-	const gas: number = await deployedContract.estimateGas({
+	const gas: number = await contractDeployer.estimateGas({
 		from: defaultAccount,
 	});
 	console.log('estimated gas:', gas);
 
 	try {
-		const tx: any = await deployedContract.send({
+		const tx: any = await contractDeployer.send({
 			from: defaultAccount,
 			gas,
 			gasPrice: 10000000000,
