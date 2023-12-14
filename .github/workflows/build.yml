@@ -297,7 +297,7 @@ jobs:
           -   run: ls -la
           -   run: echo "processingTx x 8,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
           -   name: Compare benchmark result
-              uses: openpgpjs/github-action-pull-request-benchmark@v1
+              uses: benchmark-action/github-action-benchmark@v1
               with:
                   # What benchmark tool the output.txt came from
                   tool: 'benchmarkjs'
@@ -306,7 +306,7 @@ jobs:
                   # Where the previous data file is stored
                   external-data-json-path: benchmark-restore.json
                   # Workflow will fail when an alert happens
-                  fail-on-alert: false
+                  fail-on-alert: true
                   # GitHub API token to make a commit comment
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   # Enable alert commit comment
