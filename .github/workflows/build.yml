@@ -312,7 +312,7 @@ jobs:
                   comment-on-alert: true
                   alert-threshold: '200%'
 
-          -   run: echo "processingTx x 24,987 ops/sec ±4.14% (93 runs sampled)">benchmark-data2.txt
+          -   run: echo "processingTx x 1,987 ops/sec ±4.14% (93 runs sampled)">benchmark-data2.txt
           -   name: Compare benchmark result2
               uses: benchmark-action/github-action-benchmark@v1
               with:
@@ -329,6 +329,7 @@ jobs:
                   # Enable alert commit comment
                   comment-on-alert: true
                   alert-threshold: '200%'
+          -   run: cat ./cache/benchmark-data.json
 
 
 
