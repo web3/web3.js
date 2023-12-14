@@ -41,8 +41,9 @@ const run = async () => {
 		},
 	);
 	// get latest commit comment body
-	const body = list.data[list.data.length - 1].body;
-
+	let body = list.data[list.data.length - 1].body;
+	// remove <details> tag
+	body = body.replace('<details>', '').replace('</details>', '');
 	// find if there is already a comment in PR
 	const comments = await octokit.request(
 		`GET /repos/${owner}/${repo}/issues/${prNumber}/comments`,
