@@ -317,6 +317,6 @@ jobs:
               with:
                   path: /tmp/benchmark-data-restore.txt
                   key: my-cache-key-benchmark-data.txt
-          -   run: cd tmp && ls -la
+          -   run: cd /tmp && ls -la
           -   run: cat /tmp/benchmark-data.txt
           -   run: cat /tmp/benchmark-data-restore.txt
