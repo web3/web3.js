@@ -296,7 +296,6 @@ jobs:
                   node-version: ${{ matrix.node }}
           -   run: ls -la
           -   run: echo "processingTx x 10,987 ops/sec ±6.14% (92 runs sampled)">benchmark-data.txt
-          -   run: cp ./benchmark-restore.json /cache/benchmark-data.json
           -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
@@ -305,7 +304,7 @@ jobs:
                   # Where the output from the benchmark tool is stored
                   output-file-path: benchmark-data.txt
                   # Where the previous data file is stored
-                  external-data-json-path: /cache/benchmark-data.json
+                  external-data-json-path: benchmark-restore.json
                   # Workflow will fail when an alert happens
                   fail-on-alert: true
                   # GitHub API token to make a commit comment
@@ -314,7 +313,7 @@ jobs:
                   comment-on-alert: true
                   alert-threshold: '200%'
 
-          -   run: cat ./cache/benchmark-data.json
+          -   run: cat benchmark-restore.json
 
 
 
