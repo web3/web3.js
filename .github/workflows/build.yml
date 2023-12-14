@@ -294,17 +294,22 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
-          -   run: echo "test info inside file">benchmark-test-data.txt
-          -   run: ls -la
-          -   uses: actions/cache/save@v3
+          -   run: echo "processingTx x 24,987 ops/sec ±4.14% (93 runs sampled)">benchmark-data.txt
+          -   run: echo "processingTx x 84,987 ops/sec ±6.14% (92 runs sampled)">benchmark-data-restored.txt
+          -   name: Compare benchmark result
+              uses: benchmark-action/github-action-benchmark@v1
               with:
-                  path: ./benchmark-test-data.txt
-                  key: test-benchmark-data.txt
-          -   run: mkdir ttt
-          -   uses: actions/cache/restore@v3
-              with:
-                  path: ./ttt/benchmark-test-data-restored.txt
-                  key: test-benchmark-data.txt
-          -   run: ls -la
-          -   run: cd ttt && ls -la
+                  # What benchmark tool the output.txt came from
+                  tool: 'benchmarkjs'
+                  # Where the output from the benchmark tool is stored
+                  output-file-path: benchmark-data.txt
+                  # Where the previous data file is stored
+                  external-data-json-path: benchmark-data-restored.txt
+                  # Workflow will fail when an alert happens
+                  fail-on-alert: true
+                  # GitHub API token to make a commit comment
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  # Enable alert commit comment
+                  comment-on-alert: true
+                  alert-threshold: '200%'
 
