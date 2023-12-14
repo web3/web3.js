@@ -301,6 +301,7 @@ jobs:
                   path: ./benchmark-test-data.txt
                   key: test-benchmark-data.txt
           -   run: mkdir ttt
+          -   uses: actions/cache/restore@v3
               with:
                   path: ./ttt/benchmark-test-data-restored.txt
                   key: test-benchmark-data.txt
