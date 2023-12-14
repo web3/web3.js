@@ -305,7 +305,6 @@ jobs:
               with:
                   path: ./ttt/benchmark-test-data-restored.txt
                   key: test-benchmark-data.txt
-
           -   run: ls -la
           -   run: cd ttt
           -   run: ls -la
