@@ -297,7 +297,7 @@ jobs:
           -   run: ls -la
           -   run: echo "processingTx x 849,810 ops/sec ±5.24% (91 runs sampled)">benchmark-data.txt
           -   name: Compare benchmark result
-              uses: benchmark-action/github-action-benchmark@v1
+              uses: avkos/github-action-benchmark@v1
               with:
                   # What benchmark tool the output.txt came from
                   tool: 'benchmarkjs'
