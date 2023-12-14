@@ -11,26 +11,26 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        node: [18]
-    name: Build CJS
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-      - run: yarn install --ignore-scripts
-      - run: yarn prebuild
-      - run: yarn build:cjs
-      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-      - uses: actions/upload-artifact@v4
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+#  build:
+#    strategy:
+#      matrix:
+#        node: [18]
+#    name: Build CJS
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: actions/setup-node@v3
+#        with:
+#          node-version: ${{ matrix.node }}
+#          cache: yarn
+#      - run: yarn install --ignore-scripts
+#      - run: yarn prebuild
+#      - run: yarn build:cjs
+#      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: web3-${{ matrix.node }}.js.tar.gz
+#          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
 #  build-esm:
 #      name: Build ESM
 #      needs: build
@@ -239,7 +239,7 @@ jobs:
 
   benchmark:
       name: Benchmark Tests
-      needs: build
+#      needs: build
       runs-on: ubuntu-latest
       strategy:
           matrix:
