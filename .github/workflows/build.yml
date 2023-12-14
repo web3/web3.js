@@ -11,26 +11,26 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        node: [18]
-    name: Build CJS
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-      - run: yarn install --ignore-scripts
-      - run: yarn prebuild
-      - run: yarn build:cjs
-      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-      - uses: actions/upload-artifact@v3
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+#  build:
+#    strategy:
+#      matrix:
+#        node: [18]
+#    name: Build CJS
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: actions/setup-node@v3
+#        with:
+#          node-version: ${{ matrix.node }}
+#          cache: yarn
+#      - run: yarn install --ignore-scripts
+#      - run: yarn prebuild
+#      - run: yarn build:cjs
+#      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: web3-${{ matrix.node }}.js.tar.gz
+#          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
 #  build-esm:
 #      name: Build ESM
 #      needs: build
@@ -283,7 +283,6 @@ jobs:
 #              with:
 #                  path: ./benchmark-data.txt
 #                  key: main-benchmark-data.txt
-
   benchmark:
       name: Benchmark Tests
       runs-on: ubuntu-latest
@@ -295,8 +294,9 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
+          -   run: ls -la
           -   run: echo "processingTx x 10,987 ops/sec ±6.14% (92 runs sampled)">benchmark-data.txt
-          -   run: cp benchmark-restore.json ./cache/benchmark-data.json
+          -   run: cp ./benchmark-restore.json ./cache/benchmark-data.json
           -   name: Compare benchmark result
               uses: benchmark-action/github-action-benchmark@v1
               with:
