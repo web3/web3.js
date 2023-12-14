@@ -286,7 +286,6 @@ jobs:
 
     benchmark:
         name: Benchmark Tests
-        needs: build
         runs-on: ubuntu-latest
         strategy:
             matrix:
