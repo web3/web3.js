@@ -11,26 +11,26 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-#  build:
-#    strategy:
-#      matrix:
-#        node: [18, 16]
-#    name: Build CJS
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: ${{ matrix.node }}
-#          cache: yarn
-#      - run: yarn install --ignore-scripts
-#      - run: yarn prebuild
-#      - run: yarn build:cjs
-#      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: web3-${{ matrix.node }}.js.tar.gz
-#          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+  build:
+    strategy:
+      matrix:
+        node: [18]
+    name: Build CJS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+      - run: yarn install --ignore-scripts
+      - run: yarn prebuild
+      - run: yarn build:cjs
+      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web3-${{ matrix.node }}.js.tar.gz
+          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
 #  build-esm:
 #      name: Build ESM
 #      needs: build
@@ -284,30 +284,27 @@ jobs:
 #                  path: ./benchmark-data.txt
 #                  key: main-benchmark-data.txt
 
-    build:
-        name: Benchmark Tests
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [ 18 ]
-        steps:
-            -   uses: actions/setup-node@v3
-                with:
-                    node-version: ${{ matrix.node }}
+  benchmark:
+      name: Benchmark Tests
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              node: [ 18 ]
+      steps:
+          -   uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node }}
+          -   run: echo "test info inside file">benchmark-test-data.txt
+          -   run: ls -la
+          -   uses: actions/cache/save@v3
+              with:
+                  path: ./benchmark-test-data.txt
+                  key: test-benchmark-data.txt
 
-            -   run:  echo "test info inside file">benchmark-test-data.txt
-            -   run: ls -la
-                name: Save cache
-                uses: actions/cache/save@v3
-                with:
-                    path: ./benchmark-test-data.txt
-                    key: test-benchmark-data.txt
+          -   uses: actions/cache/restore@v3
+              with:
+                  path: ./benchmark-test-data-restored.txt
+                  key: test-benchmark-data.txt
 
-            -   name: Restore cache
-                uses: actions/cache/restore@v3
-                with:
-                    path: ./benchmark-test-data-restored.txt
-                    key: test-benchmark-data.txt
-
-            -   run: ls -la
+          -   run: ls -la
 
