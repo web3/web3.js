@@ -104,7 +104,6 @@
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.12.0",
 		"@droppedcode/typedoc-plugin-relative-includes": "^1.0.2",
-		"@octokit/core": "^5.0.2",
 		"@openzeppelin/contracts": "^4.7.1",
 		"@types/node": "^18.11.9",
 		"@types/webpack": "^5.28.0",
