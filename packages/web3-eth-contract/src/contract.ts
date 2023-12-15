@@ -742,7 +742,6 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			abi = {
 				type: 'constructor',
-				inputs: [],
 				stateMutability: '',
 			} as AbiConstructorFragment;
 		}

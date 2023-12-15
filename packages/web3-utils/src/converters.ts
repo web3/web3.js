@@ -27,6 +27,7 @@ import {
 	isHex,
 	isHexStrict,
 	isInt,
+	isUInt,
 	isNullish,
 	utils,
 	utils as validatorUtils,
@@ -372,8 +373,11 @@ export const toHex = (
 		if (isHexStrict(value)) {
 			return returnType ? 'bytes' : value;
 		}
-		if (isHex(value) && !isInt(value)) {
+		if (isHex(value) && !isInt(value) && !isUInt(value)) {
 			return returnType ? 'bytes' : `0x${value}`;
+		}
+		if (isHex(value) && !isInt(value) && isUInt(value)) {
+			return returnType ? 'uint' : numberToHex(value);
 		}
 
 		if (!Number.isFinite(value)) {
