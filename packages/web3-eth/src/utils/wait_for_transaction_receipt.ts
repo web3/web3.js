@@ -22,7 +22,7 @@ import { EthExecutionAPI, Bytes, TransactionReceipt, DataFormat } from 'web3-typ
 // eslint-disable-next-line import/no-cycle
 import { pollTillDefinedAndReturnIntervalId, rejectIfTimeout } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
-import { rejectIfBlockTimeout } from './reject_if_block_timeout.js';
+import { RejectIfBlockTimeout } from './reject_if_block_timeout.js';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionReceipt } from '../rpc_method_wrappers.js';
 
@@ -31,18 +31,20 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ): Promise<TransactionReceipt> {
-
 	const pollingInterval =
 		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
 
-	const [awaitableTransactionReceipt, IntervalId] = pollTillDefinedAndReturnIntervalId(async () => {
-		try {
-			return getTransactionReceipt(web3Context, transactionHash, returnFormat);
-		} catch (error) {
-			console.warn('An error happen while trying to get the transaction receipt', error);
-			return undefined;
-		}
-	}, pollingInterval);
+	const [awaitableTransactionReceipt, IntervalId] = pollTillDefinedAndReturnIntervalId(
+		async () => {
+			try {
+				return getTransactionReceipt(web3Context, transactionHash, returnFormat);
+			} catch (error) {
+				console.warn('An error happen while trying to get the transaction receipt', error);
+				return undefined;
+			}
+		},
+		pollingInterval,
+	);
 
 	const [timeoutId, rejectOnTimeout] = rejectIfTimeout(
 		web3Context.transactionPollingTimeout,
@@ -52,10 +54,9 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 		}),
 	);
 
-	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
-		web3Context,
-		transactionHash,
-	);
+	const rejectIfBlockTimeout = new RejectIfBlockTimeout();
+	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] =
+		await rejectIfBlockTimeout.rejectIfBlockTimeout(web3Context, transactionHash);
 
 	try {
 		// If an error happened here, do not catch it, just clear the resources before raising it to the caller function.
@@ -65,10 +66,9 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
 	} finally {
-		if(timeoutId)
-			clearTimeout(timeoutId);
-		if(IntervalId)
-			clearInterval(IntervalId);
+		if (timeoutId) clearTimeout(timeoutId);
+		if (IntervalId) clearInterval(IntervalId);
 		blockTimeoutResourceCleaner.clean();
+		rejectIfBlockTimeout.ensureTermination();
 	}
 }

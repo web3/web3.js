@@ -20,7 +20,7 @@ import { AsyncFunction, rejectIfTimeout } from 'web3-utils';
 import { TransactionSendTimeoutError } from 'web3-errors';
 
 // eslint-disable-next-line import/no-cycle
-import { rejectIfBlockTimeout } from './reject_if_block_timeout.js';
+import { RejectIfBlockTimeout } from './reject_if_block_timeout.js';
 
 /**
  * An internal function to send a transaction or throws if sending did not finish during the timeout during the blocks-timeout.
@@ -41,11 +41,9 @@ export async function trySendTransaction(
 			transactionHash,
 		}),
 	);
-
-	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
-		web3Context,
-		transactionHash,
-	);
+	const rejectIfBlockTimeout = new RejectIfBlockTimeout();
+	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] =
+		await rejectIfBlockTimeout.rejectIfBlockTimeout(web3Context, transactionHash);
 
 	try {
 		// If an error happened here, do not catch it, just clear the resources before raising it to the caller function.
@@ -57,5 +55,6 @@ export async function trySendTransaction(
 	} finally {
 		clearTimeout(timeoutId);
 		blockTimeoutResourceCleaner.clean();
+		rejectIfBlockTimeout.ensureTermination();
 	}
 }
