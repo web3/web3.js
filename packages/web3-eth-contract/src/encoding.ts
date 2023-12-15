@@ -35,6 +35,7 @@ import {
 	encodeFunctionSignature,
 	encodeParameter,
 	encodeParameters,
+	inferTypesAndEncodeParameters,
 	isAbiConstructorFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
@@ -120,16 +121,22 @@ export const encodeMethodABI = (
 	deployData?: HexString,
 ) => {
 	const inputLength = Array.isArray(abi.inputs) ? abi.inputs.length : 0;
-	if (inputLength !== args.length) {
+	if (abi.inputs && inputLength !== args.length) {
 		throw new Web3ContractError(
 			`The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`,
 		);
 	}
 
-	const params = encodeParameters(Array.isArray(abi.inputs) ? abi.inputs : [], args).replace(
-		'0x',
-		'',
-	);
+	let params: string;
+	if (abi.inputs) {
+		params = encodeParameters(Array.isArray(abi.inputs) ? abi.inputs : [], args).replace(
+			'0x',
+			'',
+		);
+	} else {
+		params = inferTypesAndEncodeParameters(args).replace('0x', '');
+	}
+
 
 	if (isAbiConstructorFragment(abi)) {
 		if (!deployData)

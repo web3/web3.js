@@ -326,12 +326,21 @@ export type ContractConstructor<Abis extends ContractAbi> = {
 	};
 }['constructor'];
 
-export type ContractConstructorArgs<Abis extends ContractAbi> = {
-	[Abi in FilterAbis<
-		Abis,
-		AbiConstructorFragment & { type: 'constructor' }
-	> as 'constructor']: ContractMethodInputParameters<Abi['inputs']>;
-}['constructor'];
+export type ContractConstructorArgs<Abis extends ContractAbi> = FilterAbis<
+	Abis,
+	AbiConstructorFragment & {
+		type: 'constructor';
+	}
+> extends never
+	? any
+	: {
+			[Abi in FilterAbis<
+				Abis,
+				AbiConstructorFragment & {
+					type: 'constructor';
+				}
+			> as 'constructor']: ContractMethodInputParameters<Abi['inputs']>;
+	  }['constructor'];
 
 export type ContractMethod<Abi extends AbiFunctionFragment> = {
 	readonly Abi: Abi;
