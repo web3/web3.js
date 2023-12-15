@@ -43,9 +43,9 @@ const web3 = new Web3();
   	attributes={{className: "typescript-tab"}}>
 
 ```typescript
-const { Web3 } = require('web3');
-
 import { Web3 } from 'web3';
+
+const web3 = new Web3();
 ```
 
   </TabItem>
