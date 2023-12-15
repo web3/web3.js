@@ -291,7 +291,7 @@ jobs:
                   # Workflow will fail when an alert happens
                   fail-on-alert: true
                   # Enable alert commit comment
-                  alert-threshold: '200%'
+                  alert-threshold: '100%'
                   comment-always: false
           -   name: Save main branch benchmark data
               uses: actions/cache/save@v3
