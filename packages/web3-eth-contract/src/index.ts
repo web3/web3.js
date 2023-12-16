@@ -47,5 +47,6 @@ export * from './encoding.js';
 export * from './contract.js';
 export * from './log_subscription.js';
 export * from './types.js';
+export * from './utils.js';
 
 export default Contract;

@@ -83,7 +83,7 @@ import {
 	ContractAbiWithSignature,
 	ContractOptions,
 } from 'web3-types';
-import { format, isDataFormat, keccak256, toChecksumAddress } from 'web3-utils';
+import { format, isDataFormat, keccak256, toChecksumAddress , isContractInitOptions } from 'web3-utils';
 import {
 	isNullish,
 	validator,
@@ -106,7 +106,6 @@ import {
 	getEstimateGasParams,
 	getEthTxCallParams,
 	getSendTxParams,
-	isContractInitOptions,
 	isWeb3ContractContext,
 } from './utils.js';
 
