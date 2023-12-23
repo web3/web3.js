@@ -1,6 +1,6 @@
 ---
-sidebar_position: 1
-sidebar_label: 'Event Listening'
+sidebar_position: 2
+sidebar_label: 'Providers event listening'
 ---
 
 import Tabs from '@theme/Tabs';

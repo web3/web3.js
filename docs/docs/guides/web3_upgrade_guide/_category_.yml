@@ -1,4 +1,5 @@
 label: 'Upgrading'
 collapsible: true
-collapsed: false
+collapsed: true
 link: null
+position: 9

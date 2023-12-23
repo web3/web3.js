@@ -1,6 +1,6 @@
 ---
-sidebar_position: 2
-sidebar_label: 'Providers'
+sidebar_position: 1
+sidebar_label: 'Introduction'
 ---
 
 import Tabs from '@theme/Tabs';

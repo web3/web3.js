@@ -1,7 +1,7 @@
 ---
 slug: /
 sidebar_position: 1
-sidebar_label: Getting Started
+sidebar_label: Getting started
 ---
 
 # Getting Started
