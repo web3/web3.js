@@ -11,6 +11,17 @@ Web3.js is a robust and flexible collection of libraries for **TypeScript and Ja
 
 The following documentation will guide you through different use cases of Web3.js, upgrading from older versions, as well as providing an API reference documentation with examples.
 
+## Features of Web3.js v4
+
+-    Web3.js [Plugins Feature](/guides/web3_plugin_guide/) for extending functionality ( [List of Existing Plugins](https://web3js.org/plugins) )
+-    ECMAScript (ESM) and CommonJS (CJS) builds 
+-    [Tree shakable with ESM](/guides/advanced/web3_tree_shaking_support_guide/)
+-    [Contracts dynamic types](/guides/smart_contracts/infer_contract_types_guide/) & full API in TypeScript
+-    Using native BigInt instead of large BigNumber libraries
+-    More efficient ABI Encoder & Decoder
+-    Custom Output formatters
+-    In compliance with Eth EL API
+
 ## Packages
 
 Web3.js is modular, consisting of several packages, each serving specific functionalities. If you have specific tasks in mind, you don't need to install the entire Web3 library. Instead, selectively install the package that suits your requirements for a more efficient development experience. Here is an overview of the available packages:
@@ -34,13 +45,14 @@ Web3.js is modular, consisting of several packages, each serving specific functi
 
 - [**Web3Eth:**](/libdocs/Web3Eth) The `web3-eth` is your main tool for interacting with the Ethereum blockchain. It's like the control center for managing your interactions with Ethereum.
 
-## Features of Web3.js v4
+### Additional supporting packages
 
--    Web3.js [Plugins Feature](/guides/web3_plugin_guide/) for extending functionality ( [List of Existing Plugins](https://web3js.org/plugins) )
--    ECMAScript (ESM) and CommonJS (CJS) builds 
--    [Tree shakable with ESM](/guides/advanced/web3_tree_shaking_support_guide/)
--    [Contracts dynamic types](/guides/smart_contracts/infer_contract_types_guide/) & full API in TypeScript
--    Using native BigInt instead of large BigNumber libraries
--    More efficient ABI Encoder & Decoder
--    Custom Output formatters
--    In compliance with Eth EL API
+- **Web3 Types:** This package has common typescript types. 
+
+- **Web3 Validator:** This package offers functionality for validation using provided Schema. 
+
+- **Web3 Core:** Web3 Core has configuration, Subscriptions and Requests management functionality used by other Web3 packages. 
+
+- **Web3 Errors:** Web3 Errors has error codes and common error classes that are used by other Web3 packages. 
+
+- **Web3 RPC Methods:** This is for advanced uses for building more lightweight applications. It has functions for making RPC requests to Ethereum using a given provider.
