@@ -181,15 +181,19 @@ const uniswapToken = new web3.eth.Contract(abi, address);
 ### Read-methods
 
 ```ts
+//make the call to the contract
 const symbol = await uniswapToken.methods.symbol().call();
 
 console.log("Uniswap symbol:",symbol);
 // ↳ Uniswap symbol: UNI
 
+//make the call to the contract
 const totalSupply = await uniswapToken.methods.totalSupply().call();
+
 console.log("Uniswap Total supply:", totalSupply);
 // ↳ Uniswap Total Supply: 1000000000000000000000000000n
 
+//use web3 utils to format the units
 console.log(web3.utils.fromWei(totalSupply, "ether"))
 // ↳ 1000000000
 ```
@@ -203,6 +207,7 @@ const to = "0xcf185f2F3Fe19D82bFdcee59E3330FD7ba5f27ce";
 //value to transfer (1 with 18 decimals)
 const value = web3.utils.toWei("1","ether");
 
+//send the transaction => return the Tx receipt
 const txReceipt = await uniswapToken.methods.transfer(to,value).send({from: account[0].address});
 
 console.log("Tx hash:",txReceipt.transactionHash);
@@ -240,5 +245,5 @@ const subscription = uniswapToken.events.Transfer();
 
 //listen to the events
 subscription.on("data",console.log);
-// ↳ live events will be printed in the console
+// ↳ [{...},{...}, ...] live events will be printed in the console
 ```
