@@ -1,12 +1,9 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Introduction'
+sidebar_label: 'Mastering Providers'
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-# web3.js Providers Guide
+# Web3js providers overview
 
 ## Introduction
 
@@ -14,64 +11,88 @@ web3.js providers are objects responsible for enabling connectivity with the Eth
 
 Connecting to a chain happens through a provider. You can pass the provider to the constructor as in the following example:
 
+:::tip
+If you want to subscribe to live events in the blockchain, you should use [`WebSocket provider`](#websocket-provider) or [`IPC provider`](#ipc-provider)
+:::
 
-
-<Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript"
-  	attributes={{className: "javascript-tab"}}>
-
-```javascript
-const { Web3 } = require('web3');
-
-const web3 = new Web3(/* PROVIDER*/);
-
-// calling any method that interact with the network would involve using the early passed provider.
-await web3.eth.sendTransaction({
-	from,
-	to,
-	value,
-});
-```
-
-  </TabItem>
-  
-  <TabItem value="typescript" label="TypeScript" default 
-  	attributes={{className: "typescript-tab"}}>
-
-```typescript
+```typescript title="Initialize a provider"
 import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
 
-// calling any method that interact with the network would involve using the early passed provider.
-await web3.eth.sendTransaction({
-	from,
-	to,
-	value,
-});
+//calling any method that interact with the network would use the previous passed provider.
+await web3.eth.getBlockNumber();
 ```
-	
-	
-  </TabItem>
-</Tabs>
 
-The created Web3 instance will use the passed provider to interact with the blockchain network. This interaction happens when sending a request and receiving the response, and possibly when listening to provider events (if the provider support this).
+The created `Web3` instance will use the passed provider to interact with the blockchain network. This interaction happens when sending a request and receiving the response, and possibly when listening to provider events (if the provider support this).
 
 ## Providers Types
 
-Actually, the provider could be any of the following:
+web3.js supports several types of providers, each with its own unique features or specific use cases. Here are the main types:
 
--   An instance of [HttpProvider](/api/web3-providers-http/class/HttpProvider)
--   An instance of [WebSocketProvider](/api/web3-providers-ws/class/WebSocketProvider)
--   An instance of [IpcProvider](/api/web3-providers-ipc/class/IpcProvider)
--   A string containing string url for `http`/`https` or `ws`/`wss` protocol. And when a string is passed, an instance of the compatible class above will be created accordingly. ex. WebSocketProvider instance will be created for string containing `ws` or `wss`. And you access this instance by calling `web3.provider` to read the provider and possibly register an event listener.
--   Any provider object that adhere to [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193). And it has been tested with Ganache provider, Hardhat provider, and Incubed (IN3) as a provider.
+1. [HTTP Provider](/api/web3-providers-http/class/HttpProvider)
+2. [WebSocket Provider](/api/web3-providers-ws/class/WebSocketProvider)
+3. [IPC Provider (for Node.js)](/api/web3-providers-ipc/class/IpcProvider)
+4. [Third-party Providers (Compliant with EIP 1193)](https://eips.ethereum.org/EIPS/eip-1193)
 
-For both [WebSocketProvider](/api/web3-providers-ws/class/WebSocketProvider) and [IpcProvider](/api/web3-providers-ipc/class/IpcProvider) the user can listen to emitted events. More on this is at [Providers Events Listening](events_listening).
+A string containing string url for `http`/`https` or `ws`/`wss` protocol. And when a string is passed, an instance of the compatible class above will be created accordingly. ex. WebSocketProvider instance will be created for string containing `ws` or `wss`. And you access this instance by calling `web3.provider` to read the provider and possibly register an event listener.
 
 :::tip
 The passed provider can be either type `string` or one of the [`SupportedProviders`](/api/web3-core#SupportedProviders). And if it is passed as a string, then internally the compatible provider object will be created and used.
 :::
+
+### HTTP Provider
+
+``` ts title="Initialize HTTP Provider"
+import { Web3, HttpProvider } from 'web3';
+
+//highlight-next-line
+const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_ID');
+
+await web3.eth.getBlockNumber()
+// ↳ 18849658n
+
+// or
+
+//highlight-next-line
+const web3_2 = new Web3(new HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_ID'));
+
+await web3.eth.getBlockNumber()
+// ↳ 18849658n
+```
+
+### WebSocket provider
+
+``` ts title="Initialize WS Provider"
+import { Web3, WebSocketProvider } from 'web3';
+
+//highlight-next-line
+const web3 = new Web3('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID');
+
+await web3.eth.getBlockNumber();	
+// ↳ 18849658n
+
+// or
+//highlight-next-line
+const web3_2 = new Web3(new WebSocketProvider('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID'));
+
+await web3.eth.getBlockNumber();
+// ↳ 18849658n
+```
+
+### IPC Provider
+
+``` ts title="Initialize IPC Provider"
+import { Web3 } from 'web3';
+//highlight-next-line
+import { IpcProvider } from 'web3-providers-ipc';
+
+//highlight-next-line
+const web3 = new Web3(new IpcProvider('/users/myuser/.ethereum/geth.ipc'));
+
+await web3.eth.getBlockNumber();
+// ↳ 18849658n
+```
 
 ## Providers Priorities
 
@@ -91,164 +112,110 @@ The key rule for setting provider is as follows:
 
 ---
 
-## Examples
+## Usage Scenarios
 
 ### Local Geth Node
 
-<Tabs groupId="prog-lang" queryString>
-
-  <TabItem value="javascript" label="JavaScript"
-  	attributes={{className: "javascript-tab"}}>
-
-```javascript
-const { Web3 } = require('web3');
-const web3 = new Web3('http://localhost:8545');
-// or
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-
-// change provider
-web3.setProvider('ws://localhost:8546');
-// or
-web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
-
-
-// Using the IPC provider in node.js
-const { Web3 } = require('web3');
-const { IpcProvider } = require('web3-providers-ipc');
-
-const web3 = new Web3(
-  new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'),
-); // mac os path
-// on windows the path is: "\\\\.\\pipe\\geth.ipc"
-// on linux the path is: "/users/myuser/.ethereum/geth.ipc"
-```
-
-  </TabItem>
-
-  <TabItem value="typescript" label="TypeScript" default 
-  	attributes={{className: "typescript-tab"}}>
-
-```typescript
-import { Web3 } from 'web3';
-const web3 = new Web3('http://localhost:8545');
-// or
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-
-// change provider
-web3.setProvider('ws://localhost:8546');
-// or
-web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
-
-
-// Using the IPC provider in node.js
+```typescript title="IPC, HTTP and WS provider"
 import { Web3 } from 'web3';
 import { IpcProvider } from 'web3-providers-ipc';
 
-const web3 = new Web3(
-  new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'),
-); // mac os path
+//highlight-next-line
+//IPC provider
+const web3 = new Web3(new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'));//mac os path
 // on windows the path is: "\\\\.\\pipe\\geth.ipc"
 // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
-```
 
-  </TabItem>
-</Tabs>
+//highlight-next-line
+//HTTP provider
+web3.setProvider('http://localhost:8545');
+// or
+web3.setProvider(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+//highlight-next-line
+//WebSocket provider
+web3.setProvider('ws://localhost:8546');
+// or
+web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+```
 
 ### Remote Node Provider
 
-<Tabs groupId="prog-lang" queryString>
-
-  <TabItem value="javascript" label="JavaScript"
-  	attributes={{className: "javascript-tab"}}>
-
-```javascript
-// Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
-const { Web3 } = require('web3');
-const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
-```
-
-  </TabItem>
-  
-  <TabItem value="typescript" label="TypeScript" default 
-  	attributes={{className: "typescript-tab"}}>
-
-```typescript
-// Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
+```ts title="Alchemy, Infura, etc"
+// like Alchemy (https://www.alchemyapi.io/supernode)
+// or infura (https://mainnet.infura.io/v3/your_infura_key)
 import { Web3 } from 'web3';
 const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 ```
 
-  </TabItem>
-</Tabs>
-
-
-### Injected providers
+### Injected Provider
 
 As stated above, the injected provider should be in compliance with [EIP-1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md). And it is tested with Ganache provider, Hardhat provider, and Incubed (IN3) as a provider.
 
 The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+```html title="E.g, Metamask"
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 <script>
-	window.addEventListener('load', function () {
-		// Check if web3 is available
-		if (typeof window.ethereum !== 'undefined') {
-			// Use the browser injected Ethereum provider
-			web3 = new Web3(window.ethereum);
-			// Request access to the user's MetaMask account
-			window.ethereum.enable();
-			// Get the user's accounts
-			web3.eth.getAccounts().then(function (accounts) {
-				// Show the first account
-				document.getElementById('log').innerHTML =
-					'Connected with MetaMask account: ' + accounts[0];
-			});
-		} else {
-			// If web3 is not available, give instructions to install MetaMask
-			document.getElementById('log').innerHTML =
-				'Please install MetaMask to connect with the Ethereum network';
-		}
-	});
+ window.addEventListener('load', function () {
+ // Check if web3 is available
+  if (typeof window.ethereum !== 'undefined') {
+	
+    //highlight-start
+    // Use the browser injected Ethereum provider
+    web3 = new Web3(window.ethereum);
+    //highlight-end
+
+    // Request access to the user's MetaMask account
+    window.ethereum.enable();
+
+    // Get the user's accounts
+    web3.eth.getAccounts().then(function (accounts) {
+     // Show the first account
+     document.getElementById('log').innerHTML = 'Connected with MetaMask account: ' + accounts[0];
+    });
+  } else {
+    // If web3 is not available, give instructions to install MetaMask
+    document.getElementById('log').innerHTML = 'Please install MetaMask to connect with the Ethereum network';
+  }
+ });
 </script>
 ```
 
 Note that the above code should be hosted in a web server (that could be a simple local web server), because many browser does not support this feature for static files located on your machine.
 
-### Provider Options
+## Provider Options
 
 There are differences in the objects that could be passed in the Provider constructors.
 
-#### HttpProvider
+### HttpProvider
 
 The options is of type `HttpProviderOptions`, which is an object with a single key named `providerOptions` and its value is an object of type `RequestInit`.
 Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html).
 
-For example:
-
-```ts
+```ts title="HTTP Provider example"
 const httpOptions = {
-	providerOptions: {
-		body: undefined,
-		cache: 'force-cache',
-		credentials: 'same-origin',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		integrity: 'foo',
-		keepalive: true,
-		method: 'GET',
-		mode: 'same-origin',
-		redirect: 'error',
-		referrer: 'foo',
-		referrerPolicy: 'same-origin',
-		signal: undefined,
-		window: undefined,
-	} as RequestInit,
+    providerOptions: {
+        body: undefined,
+        cache: 'force-cache',
+        credentials: 'same-origin',
+        headers: {
+             'Content-Type': 'application/json',
+        },
+        integrity: 'foo',
+        keepalive: true,
+        method: 'GET',
+        mode: 'same-origin',
+        redirect: 'error',
+        referrer: 'foo',
+        referrerPolicy: 'same-origin',
+        signal: undefined,
+        window: undefined,
+    } as RequestInit,
 };
 ```
 
-#### WebSocketProvider
+### WebSocketProvider
 
 Use WebSocketProvider to connect to a Node using a WebSocket connection, i.e. over the `ws` or `wss` protocol.
 
@@ -256,65 +223,62 @@ The options object is of type `ClientRequestArgs` or of `ClientOptions`. See [he
 
 The second option parameter can be given regarding reconnecting. And here is its type:
 
-```ts
+```ts title="WebSocket Provider example"
 // this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
-	autoReconnect: boolean; // default: `true`
-	delay: number; // default: `5000`
-	maxAttempts: number; // default: `5`
+  autoReconnect: boolean, // default: `true`
+  delay: number, // default: `5000`
+  maxAttempts: number, // default: `5`
 };
+
 ```
 
-And here is a sample instantiation for the `WebSocketProvider`:
-
-```ts
+```ts title="Instantiation of WebSocket Provider"
 const provider = new WebSocketProvider(
-	`ws://localhost:8545`,
-	{
-		headers: {
-			// to provide the API key if the Node requires the key to be inside the `headers` for example:
-			'x-api-key': '<Api key>',
-		},
-	},
-	{
-		delay: 500,
-		autoReconnect: true,
-		maxAttempts: 10,
-	},
+  `ws://localhost:8545`,
+  {
+    headers: {
+      // to provide the API key if the Node requires the key to be inside the `headers` for example:
+      "x-api-key": "<Api key>",
+    },
+  },
+  {
+    delay: 500,
+    autoReconnect: true,
+    maxAttempts: 10,
+  }
 );
 ```
 
 The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined, like in the following example:
 
-```ts
+```ts title="Instantiation of WebSocket Provider"
 const provider = new WebSocketProvider(
-	`ws://localhost:8545`,
-	{},
-	{
-		delay: 500,
-		autoReconnect: true,
-		maxAttempts: 10,
-	},
+  `ws://localhost:8545`,
+  {},
+  {
+    delay: 500,
+    autoReconnect: true,
+    maxAttempts: 10,
+  }
 );
 ```
 
-##### Options example
-
 Below is an example for the passed options:
 
-```ts
+```ts title="WS Provider options example"
 let clientOptions: ClientOptions = {
-	// Useful for credentialed urls, e.g: ws://username:password@localhost:8546
-	headers: {
-		authorization: 'Basic username:password',
-	},
-	maxPayload: 100000000,
+  // Useful for credentialed urls, e.g: ws://username:password@localhost:8546
+  headers: {
+    authorization: "Basic username:password",
+  },
+  maxPayload: 100000000,
 };
 
 const reconnectOptions: ReconnectOptions = {
-	autoReconnect: true,
-	delay: 5000,
-	maxAttempts: 5,
+  autoReconnect: true,
+  delay: 5000,
+  maxAttempts: 5,
 };
 ```
 
@@ -324,13 +288,13 @@ The IPC Provider could be used in node.js dapps when running a local node. And i
 
 It accepts a second parameter called `socketOptions`. And, its type is `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
 
-```ts
-// for more check: https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html
+```ts title="IPC Provider options"
+// for more check https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html
 interface SocketConstructorOpts {
-	fd?: number | undefined;
-	allowHalfOpen?: boolean | undefined;
-	readable?: boolean | undefined;
-	writable?: boolean | undefined;
+  fd?: number | undefined;
+  allowHalfOpen?: boolean | undefined;
+  readable?: boolean | undefined;
+  writable?: boolean | undefined;
 }
 ```
 
@@ -339,17 +303,15 @@ And, the third parameter is called `reconnectOptions` that is of the type `Recon
 ```ts
 // this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
-	autoReconnect: boolean; // default: `true`
-	delay: number; // default: `5000`
-	maxAttempts: number; // default: `5`
+  autoReconnect: boolean, // default: `true`
+  delay: number, // default: `5000`
+  maxAttempts: number, // default: `5`
 };
 ```
 
-##### Options examples
-
 Below is an example for the passed options for each version:
 
-```ts
+```ts title="Options Example"
 let clientOptions: SocketConstructorOpts = {
 	allowHalfOpen: false;
 	readable: true;
@@ -365,35 +327,33 @@ const reconnectOptions: ReconnectOptions = {
 
 And here is a sample instantiation for the `IpcProvider`:
 
-```ts
+```ts title="IPC Provider example"
 const provider = new IpcProvider(
-	`path.ipc`,
-	{
-		writable: false,
-	},
-	{
-		delay: 500,
-		autoReconnect: true,
-		maxAttempts: 10,
-	},
+  `path.ipc`,
+  {
+    writable: false,
+  },
+  {
+    delay: 500,
+    autoReconnect: true,
+    maxAttempts: 10,
+  }
 );
 ```
 
 The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined.
 
-```ts
+```ts title="IPC Provider example"
 const provider = new IpcProvider(
-	`path.ipc`,
-	{},
-	{
-		delay: 500,
-		autoReconnect: true,
-		maxAttempts: 10,
-	},
+  `path.ipc`,
+  {},
+  {
+    delay: 500,
+    autoReconnect: true,
+    maxAttempts: 10,
+  }
 );
 ```
-
-#### Error message for reconnect attempts
 
 :::info
 This section applies for both `IpcProvider` and `WebSocketProvider`.
@@ -405,11 +365,11 @@ The error message, for the max reconnect attempts, will contain the value of the
 
 And here is how to catch the error, if max attempts reached when there is auto reconnecting:
 
-```ts
-provider.on('error', error => {
-	if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
-		// the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
-		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
-	}
+```ts title="Error message for reconnect attempts"
+provider.on("error", (error) => {
+  if (error.message.startsWith("Maximum number of reconnect attempts reached!")) {
+    // the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
+    // the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
+  }
 });
 ```
