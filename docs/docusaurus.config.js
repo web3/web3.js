@@ -116,7 +116,7 @@ const config = {
 				items: [
 					{
 						to: '/',
-						activeBasePath: '/',
+						activeBaseRegex: '/guides',
 						label: 'Guides & Tutorials',
 						position: 'left',
 					},
