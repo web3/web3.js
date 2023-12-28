@@ -22,7 +22,6 @@ Here is a high-level overview of the steps we will be taking in this tutorial:
 4. [Interact with the Ethereum blockchain using web3.js](#step-4-interact-with-the-ethereum-blockchain-using-web3js)
 5. [Importing specific package](#step-5-importing-specific-package)
 6. [Send different type of transactions](#step-6-send-different-type-of-transactions)
-7. [Package methods](#step-7-package-methods)
 
 ## Step 1: Setting up the Environment
 
