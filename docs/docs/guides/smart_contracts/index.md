@@ -1,10 +1,7 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 sidebar_label: 'Mastering Smart Contracts'
 ---
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 # Mastering Smart Contracts
 
@@ -21,34 +18,6 @@ The `Contract` class is the main object exported by the `web3-eth-contract` pack
 To use the `Contract` class, you'll need to import it from one of two packages: directly from the `web3-eth-contract` package or from the `web3` package.
 
 Here's an example of importing from each:
-
-<Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
-
-```javascript
-// Importing from web3-eth-contract package
-const { Contract } = require("web3-eth-contract");
-const contract = new Contract(...);         
-
-// Importing from the main web3 package
-const { Contract } = require("web3");
-const contract = new Contract(...);
-
-// Importing from the main web3 package from inside `web3.eth` namespace
-const { Web3 } = require("web3");
-const web3 = new Web3("http://127.0.0.1:8545");
-const contract = new web3.eth.Contract(...);
-
-// to set the provider for the contract instance:
-contract.setProvider('http://127.0.0.1:7545');
-```
-
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript"
-  	attributes={{className: "typescript-tab"}}>
-
-
 
 ```ts
 // Importing from web3-eth-contract package
@@ -68,9 +37,6 @@ const contract = new web3.eth.Contract(...);
 contract.setProvider('http://127.0.0.1:7545');
 ```
 
-  </TabItem>
-</Tabs>
-
 
 ### `Contract` vs `web3.eth.Contract`
 
@@ -85,35 +51,6 @@ Actually, the `web3.eth.Contract` is typically how you access the class through 
 :::
 
 Examples:
-
-<Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
-
-```javascript
-const { Contract } = require("web3-eth-contract");
-
-// instantiating Contract directly with provider URL from Contract package
-// alternatively, you can instantiate the Contract without a provider and set it later using contract.setProvider()
-const abi = [{...}];
-const address = '0x...';
-const contract = new Contract(abi, address { provider: "http://127.0.0.1:8545" }); 
-
-// the provider can be set like this if not provided at the constructor:
-contract.setProvider('http://127.0.0.1:7545');
-
-// using Contract from a web3 instance
-const web3 = new Web3('http://localhost:8545');
-const contract = new web3.eth.Contract(abi, address);
-// no need to pass the provider to this contract instance.
-// because it will have the same provider of the web3 instance.
-```
-
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript"
-  	attributes={{className: "typescript-tab"}}>
-
-
 
 ```ts
 import { Contract } from "web3-eth-contract";
@@ -133,10 +70,6 @@ const contract = new web3.eth.Contract(abi, address);
 // no need to pass the provider to this contract instance.
 // because it will have the same provider of the web3 instance.
 ```
-
-  </TabItem>
-</Tabs>
-
 
 ### Constructor Parameters
 
@@ -172,33 +105,7 @@ The `Contract` class comes equipped with a range of properties and methods for c
 
 - **config**: The set of configurations for the contract instance that is defaults to the same values as the `web3` object instance. But, it allows for using a different configurations for a specific contract instance. So, in most cases, you would use `web3.eth.Contract` and keep the configurations of the parent context (from the `web3` instance). Except if there is something you need to handle differently for only a specific contract instance.
     
-    Here is an example on how to set a value of a specific config variable on a contract instance:
-
-<Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
-
-
-```javascript
-const {Web3} = require('web3');
-
-// Set up a connection to a testnet or Ethereum network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545')); //or new Web3('http://127.0.0.1:8545')
-
-// Create a new contract object using the ABI and bytecode
-const abi = [{...}]
-const myContract = new web3.eth.Contract(abi);
-console.log(myContract.config.handleRevert); //false
-    
-// This will set `handleRevert` to `true` only on `myContract` instance:
-myContract.handleRevert = true; // same as: myContract.config.handleRevert
-console.log(myContract.config.handleRevert); //true
-
-```
-
-</TabItem>
-<TabItem value="typescript" label="TypeScript"
-attributes={{className: "typescript-tab"}}>
+Here is an example on how to set a value of a specific config variable on a contract instance:
 
 ```ts
 import {Web3} from 'web3';
@@ -216,10 +123,6 @@ myContract.handleRevert = true; // same as: myContract.config.handleRevert
 console.log(myContract.config.handleRevert); //true
 
 ```
-
-  </TabItem>
-</Tabs>
-
     
 More on the `config` properties in the [API documentation](/api/web3/namespace/core/#Web3ConfigOptions)
 
@@ -354,24 +257,6 @@ If you do not know how to get the contract bytecode, we recommend you to check t
 
 - **setProvider**: This allows you to set a specific provider for a contract instance. As highlighted early in this guide, this is especially handy if you are importing the `Contract` object from `web3-eth-contract` and then you will need to set the provider while there is no `web3` context to read the provider from.
 
-<Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
-
-
-```javascript
-// Importing from web3-eth-contract package
-const { Contract } = require('web3-eth-contract');
-const contract = new Contract(...);
-
-// to set the provider for the contract instance
-contract.setProvider('yourProvider');
-```
-
-</TabItem>
-<TabItem value="typescript" label="TypeScript"
-attributes={{className: "typescript-tab"}}>
-
 ```ts
 // Importing from web3-eth-contract package
 import { Contract } from 'web3-eth-contract';
@@ -381,9 +266,6 @@ const contract = new Contract(...);
 contract.setProvider('yourProvider');
 ```
 
-  </TabItem>
-</Tabs>
-
 
 ## ABI and Bytecode
 
@@ -392,7 +274,7 @@ The ABI is the Application Binary Interface ( ABI ) of a smart contract. Which d
 
  For example, for the following solidity code:
 
-```js
+```ts
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.0;
 
@@ -408,7 +290,9 @@ contract MyContract {
     }
 }
 ```
+
 Its ABI would be:
+
 ```ts
 const abi = [
     {
@@ -449,6 +333,7 @@ If you do not know how to get the contract ABI and bytecode, we recommend you to
 The short answer is yes, only if you need to deploy the smart contract yourself. And below is more elaboration on this.
 
 Basically, with every Contract instance, there are 2 cases. First case is when you want to deploy a smart contract. And in this case, you will need to provide the bytecode of this smart contract. 
+
 ```ts
 import {Contract} from 'web3-eth-contract';
 
