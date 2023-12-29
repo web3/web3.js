@@ -50,8 +50,9 @@ blockNumber.then(console.log);
 ```
 
 :::tip
-📝 web3.js uses `bigint` as the default type for all big numbers returned. For, this you see above the blocknumber has the `n` at its end (`18561956n`). However, you can change the returned type by passing an optional parameter like: 
-```ts
+📝 web3.js uses `bigint` as the default type for all big numbers returned. For, this you see above the blocknumber has the `n` at its end (`18561956n`). However, you can change the returned type by passing an optional parameter like:
+::: 
+```ts title="BigInt Tip"
 import { Web3, DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3';
 
 const blockNumber = web3.eth.getBlockNumber({
@@ -69,7 +70,6 @@ const blockNumber = web3.eth.getBlockNumber({
 // the value would like: '18561956'
 blockNumber.then(console.log);
 ```
-:::
 
 ### Use browser-injected provider
 
