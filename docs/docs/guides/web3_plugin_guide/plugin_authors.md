@@ -1,13 +1,13 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 sidebar_label: 'For Plugin Developers'
 ---
 
-# web3.js Plugin Developer Guide
+# Plugin Developer Guide
 
 This guide intends to provide the necessary context for developing plugins for web3.js.
 
-Feel free to explore some of [the already built plugins](https://github.com/chainSafe?q=web3.js-plugin) and/or
+Feel free to explore some of [the already built plugins](https://web3js.org/plugins) and/or
 use this [template](https://github.com/ChainSafe/web3.js-plugin-template) to start with development of your Web3.js plugin.
 
 :::caution
@@ -41,21 +41,21 @@ Furthermore, you have the flexibility to expand your range of transaction types,
 
 ```typescript
 // create new TransactionType class which extends BaseTransaction class
-import { BaseTransaction } from 'web3-eth-accounts';
+import { BaseTransaction } from "web3-eth-accounts";
 const TRANSACTION_TYPE = 15;
 class SomeNewTxTypeTransaction extends BaseTransaction {
-    // ...
+  // ...
 }
 
 // create new plugin and add `SomeNewTxTypeTransaction` to the library
-import { Web3EthPluginBase } from 'web3';
+import { Web3EthPluginBase } from "web3";
 
 class SomeNewTxTypeTransactionPlugin extends Web3PluginBase {
-   public pluginNamespace = 'someNewTxTypeTransaction';
-   public constructor() {
-      super();
-      TransactionFactory.registerTransactionType(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
-   }
+  public pluginNamespace = "someNewTxTypeTransaction";
+  public constructor() {
+    super();
+    TransactionFactory.registerTransactionType(TRANSACTION_TYPE, SomeNewTxTypeTransaction);
+  }
 }
 ```
 
@@ -87,14 +87,14 @@ The following represents your plugin code:
 
 ```typescript
 // custom_rpc_methods_plugin.ts
-import { Web3PluginBase } from 'web3';
+import { Web3PluginBase } from "web3";
 
 export class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods';
+  public pluginNamespace = "customRpcMethods";
 
-	public someMethod() {
-		return 'someValue';
-	}
+  public someMethod() {
+    return "someValue";
+  }
 }
 ```
 
@@ -102,11 +102,11 @@ The following represents the plugin user's code:
 
 ```typescript
 // registering_a_plugin.ts
-import { Web3Context } from 'web3';
+import { Web3Context } from "web3";
 
-import { CustomRpcMethodsPlugin } from './custom_rpc_methods_plugin';
+import { CustomRpcMethodsPlugin } from "./custom_rpc_methods_plugin";
 
-const web3Context = new Web3Context('http://127.0.0.1:8545');
+const web3Context = new Web3Context("http://127.0.0.1:8545");
 web3Context.registerPlugin(new CustomRpcMethodsPlugin());
 
 await web3Context.customRpcMethods.someMethod();
@@ -117,17 +117,17 @@ await web3Context.customRpcMethods.someMethod();
 Below is an example of `CustomRpcMethodsPlugin` making use of `this.requestManager` which will have access to an Ethereum provider if one was configured by the user. In the event that no `provider` was set by the user, the below code will throw a [ProviderError](/api/web3-errors/class/ProviderError) if `customRpcMethod` was to be called:
 
 ```typescript
-import { Web3PluginBase } from 'web3';
+import { Web3PluginBase } from "web3";
 
 export class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods';
+  public pluginNamespace = "customRpcMethods";
 
-	public async customRpcMethod() {
-		return this.requestManager.send({
-			method: 'custom_rpc_method',
-			params: [],
-		});
-	}
+  public async customRpcMethod() {
+    return this.requestManager.send({
+      method: "custom_rpc_method",
+      params: [],
+    });
+  }
 }
 ```
 
@@ -158,21 +158,21 @@ ProviderError: Provider not available. Use `.setProvider` or `.provider=` to ini
 If needed, you can provide an API type (that follows the [Web3ApiSpec](/api/web3-types#Web3APISpec) pattern) as a generic to `Web3PluginBase` that will add type hinting to the `requestManager` when developing your plugin. In the below code, this is the `CustomRpcApi` type that's being passed as `Web3PluginBase<CustomRpcApi>`
 
 ```typescript
-import { Web3PluginBase } from 'web3';
+import { Web3PluginBase } from "web3";
 
 type CustomRpcApi = {
-	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
+  custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
 };
 
 export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
-	public pluginNamespace = 'customRpcMethods';
+  public pluginNamespace = "customRpcMethods";
 
-	public async customRpcMethodWithParameters(parameter1: string, parameter2: number) {
-		return this.requestManager.send({
-			method: 'custom_rpc_method_with_parameters',
-			params: [parameter1, parameter2],
-		});
-	}
+  public async customRpcMethodWithParameters(parameter1: string, parameter2: number) {
+    return this.requestManager.send({
+      method: "custom_rpc_method_with_parameters",
+      params: [parameter1, parameter2],
+    });
+  }
 }
 ```
 
@@ -185,44 +185,37 @@ There currently exists [an issue](https://github.com/web3/web3.js/issues/5492) w
 A workaround for this issue is available, below is an example of it:
 
 ```typescript
-import { Contract, ContractAbi, Web3Context, Web3PluginBase, types, utils } from 'web3';
+import { Contract, ContractAbi, Web3Context, Web3PluginBase, types, utils } from "web3";
 
-import { ERC20TokenAbi } from './ERC20Token';
+import { ERC20TokenAbi } from "./ERC20Token";
 
 export class ContractMethodWrappersPlugin extends Web3PluginBase {
-	public pluginNamespace = 'contractMethodWrappersPlugin';
+  public pluginNamespace = "contractMethodWrappersPlugin";
 
-	private readonly _contract: Contract<typeof ERC20TokenAbi>;
+  private readonly _contract: Contract<typeof ERC20TokenAbi>;
 
-	public constructor(abi: ContractAbi, address: types.Address) {
-		super();
-		this._contract = new Contract(abi, address);
-	}
+  public constructor(abi: ContractAbi, address: types.Address) {
+    super();
+    this._contract = new Contract(abi, address);
+  }
 
-	/**
-	 * This method overrides the inherited `link` method from
-	 * `Web3PluginBase` to add a configured `RequestManager`
-	 * to the Contract instance when `Web3.registerPlugin`
-	 * is called.
-	 *
-	 * @param parentContext - The context to be added to the instance of `ChainlinkPlugin`,
-	 * and by extension, the instance of `Contract`.
-	 */
-	public link(parentContext: Web3Context) {
-		super.link(parentContext);
-		this._contract.link(parentContext);
-	}
+  /**
+   * This method overrides the inherited `link` method from
+   * `Web3PluginBase` to add a configured `RequestManager`
+   * to the Contract instance when `Web3.registerPlugin`
+   * is called.
+   *
+   * @param parentContext - The context to be added to the instance of `ChainlinkPlugin`,
+   * and by extension, the instance of `Contract`.
+   */
+  public link(parentContext: Web3Context) {
+    super.link(parentContext);
+    this._contract.link(parentContext);
+  }
 
-	public async getFormattedBalance<ReturnFormat extends types.DataFormat>(
-		address: types.Address,
-		returnFormat?: ReturnFormat,
-	) {
-		return utils.format(
-			{ eth: 'unit' },
-			await this._contract.methods.balanceOf(address).call(),
-			returnFormat ?? types.DEFAULT_RETURN_FORMAT,
-		);
-	}
+  public async getFormattedBalance<ReturnFormat extends types.DataFormat>(address: types.Address, returnFormat?: ReturnFormat) {
+    return utils.format({ eth: "unit" }, await this._contract.methods.balanceOf(address).call(), returnFormat ?? types.DEFAULT_RETURN_FORMAT);
+  }
 }
 ```
 
@@ -252,23 +245,23 @@ When registering a plugin, you're adding additional methods and/or classes to th
 
 ```typescript
 // custom_rpc_methods_plugin.ts
-import { Web3PluginBase } from 'web3';
+import { Web3PluginBase } from "web3";
 
 export class CustomRpcMethodsPlugin extends Web3PluginBase {
-	public pluginNamespace = 'customRpcMethods';
+  public pluginNamespace = "customRpcMethods";
 
-	public someMethod() {
-		return 'someValue';
-	}
+  public someMethod() {
+    return "someValue";
+  }
 }
 
 // Module Augmentation
-declare module 'web3' {
-	// Here is where you're adding your plugin's
-	// class inside Web3Context class
-	interface Web3Context {
-		customRpcMethods: CustomRpcMethodsPlugin;
-	}
+declare module "web3" {
+  // Here is where you're adding your plugin's
+  // class inside Web3Context class
+  interface Web3Context {
+    customRpcMethods: CustomRpcMethodsPlugin;
+  }
 }
 ```
 
@@ -296,40 +289,40 @@ But, the user who does not call `.registerPlugin`, before accessing your plugin,
 
     Module Augmentation:
 
-    ```typescript
-    // code written by the plugin **developer**
+```typescript
+// code written by the plugin **developer**
 
-    declare module 'web3' {
-    	// Here is where you're adding your plugin inside Web3Context
-    	interface Web3Context {
-    		customRpcMethods: CustomRpcMethodsPlugin;
-    	}
-    }
-    ```
+declare module "web3" {
+  // Here is where you're adding your plugin inside Web3Context
+  interface Web3Context {
+    customRpcMethods: CustomRpcMethodsPlugin;
+  }
+}
+```
 
-    Your the plugin class:
+Your the plugin class:
 
-    ```typescript
-    // code written by the plugin **developer**
+```typescript
+// code written by the plugin **developer**
 
-    export class CustomRpcMethodsPlugin extends Web3PluginBase {
-    	public pluginNamespace = 'customRpcMethods';
+export class CustomRpcMethodsPlugin extends Web3PluginBase {
+  public pluginNamespace = "customRpcMethods";
 
-    	...
-    }
-    ```
+  //...
+}
+```
 
-    This is because `.registerPlugin` will use the `pluginNamespace` property provided by the plugin as the property name when it registers the plugin with the class instance that the **plugin user** will call `.registerPlugin` on:
+This is because `.registerPlugin` will use the `pluginNamespace` property provided by the plugin as the property name when it registers the plugin with the class instance that the **plugin user** will call `.registerPlugin` on:
 
-    ```typescript
-    // code written by the plugin **user**
+```typescript
+// code written by the plugin **user**
 
-    const web3 = new Web3('http://127.0.0.1:8545');
-    web3.registerPlugin(new CustomRpcMethodsPlugin());
-    // Now customRpcMethods (i.e. the pluginNamespace) is available
-    // on the instance of Web3
-    web3.customRpcMethods;
-    ```
+const web3 = new Web3("http://127.0.0.1:8545");
+web3.registerPlugin(new CustomRpcMethodsPlugin());
+// Now customRpcMethods (i.e. the pluginNamespace) is available
+// on the instance of Web3
+web3.customRpcMethods;
+```
 
 ## Complete Example
 
