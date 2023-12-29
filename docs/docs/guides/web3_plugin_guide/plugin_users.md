@@ -1,5 +1,5 @@
 ---
-sidebar_position: 0
+sidebar_position: 3
 sidebar_label: 'For Plugin Users'
 ---
 
@@ -40,21 +40,21 @@ For illustration purposes, let's assume a plugin developer has the following cod
 ```typescript
 // code written by the plugin **developer**
 
-const { Web3PluginBase } = require('web3');
+const { Web3PluginBase } = require("web3");
 
 export class PluginExample extends Web3PluginBase {
-	public pluginNamespace = 'pluginExample';
+  public pluginNamespace = "pluginExample";
 
-	public sampleMethod() {
-		return 'simpleValue';
-	}
+  public sampleMethod() {
+    return "simpleValue";
+  }
 }
 
 // Module Augmentation
-declare module 'web3' {
-	interface Web3Context {
-		pluginExample: PluginExample;
-	}
+declare module "web3" {
+  interface Web3Context {
+    pluginExample: PluginExample;
+  }
 }
 ```
 
@@ -67,21 +67,21 @@ declare module 'web3' {
 ```typescript
 // code written by the plugin **developer**
 
-import { Web3PluginBase } from 'web3';
+import { Web3PluginBase } from "web3";
 
 export class PluginExample extends Web3PluginBase {
-	public pluginNamespace = 'pluginExample';
+  public pluginNamespace = "pluginExample";
 
-	public sampleMethod() {
-		return 'simpleValue';
-	}
+  public sampleMethod() {
+    return "simpleValue";
+  }
 }
 
 // Module Augmentation
-declare module 'web3' {
-	interface Web3Context {
-		pluginExample: PluginExample;
-	}
+declare module "web3" {
+  interface Web3Context {
+    pluginExample: PluginExample;
+  }
 }
 ```
 
@@ -98,10 +98,10 @@ Here is an example of how to register the `PluginExample` onto an instance of `W
 ```javascript
 // code written by the plugin **user**
 
-const { Web3 } = require('web3');
-const { PluginExample } = require('web3-plugin-example');
+const { Web3 } = require("web3");
+const { PluginExample } = require("web3-plugin-example");
 
-const web3 = new Web3('http://127.0.0.1:8545');
+const web3 = new Web3("http://127.0.0.1:8545");
 web3.registerPlugin(new PluginExample(any_parameters, if_needed));
 
 web3.pluginExample.sampleMethod();
@@ -116,10 +116,10 @@ web3.pluginExample.sampleMethod();
 ```typescript
 // code written by the plugin **user**
 
-import { Web3 } from 'web3';
-import { PluginExample } from 'web3-plugin-example';
+import { Web3 } from "web3";
+import { PluginExample } from "web3-plugin-example";
 
-const web3 = new Web3('http://127.0.0.1:8545');
+const web3 = new Web3("http://127.0.0.1:8545");
 web3.registerPlugin(new PluginExample(any_parameters, if_needed));
 
 web3.pluginExample.sampleMethod();
