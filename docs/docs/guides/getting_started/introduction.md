@@ -15,8 +15,8 @@ The following documentation will guide you through different use cases of Web3.j
 
 -    Web3.js [Plugins Feature](/guides/web3_plugin_guide/) for extending functionality ( [List of Existing Plugins](https://web3js.org/plugins) )
 -    ECMAScript (ESM) and CommonJS (CJS) builds 
--    [Tree shakable with ESM](/guides/advanced/web3_tree_shaking_support_guide/)
--    [Contracts dynamic types](/guides/smart_contracts/infer_contract_types_guide/) & full API in TypeScript
+-    [Tree shakable with ESM](/guides/advanced/tree_shaking)
+-    [Contracts dynamic types](/guides/smart_contracts/infer_contract_types/) & full API in TypeScript
 -    Using native BigInt instead of large BigNumber libraries
 -    More efficient ABI Encoder & Decoder
 -    Custom Output formatters

@@ -1,14 +1,35 @@
 ---
-title: JSON Interface
+sidebar_position: 13
+sidebar_label: '📖 Glossary'
+title: Glossary
 ---
+
+
+## Provider
+
+In web3.js, a `provider` is an object responsible for enabling connectivity with the Ethereum network in various ways. Providers facilitate the connection of your web application to an Ethereum node, different provider types are available in web3.js(HTTP, WebSocket and IPC), each with its own features and use cases. **It's important to note that a provider itself only provides read-only access to the blockchain.** It does not use any private keys or accounts for interaction. This read-only functionality is particularly useful for querying data and making calls to the blockchain without the need for private key authorization.
+
+## Accounts
+
+In web3.js, an `account` allows you to perform operations on the blockchain, such as sending transactions, signing data, and interacting with contracts. It serves as the key component for **using a private key** directly to execute various blockchain operations. In other libraries, this concept is often referred to as a `signer`. This versatility in terminology doesn't change its fundamental purpose, providing a secure and straightforward means to manage Ethereum-related operations.
+
+
+## Wallet
+
+A `wallet` in web3.js can store multiple `accounts`. This feature allows you to manage various private keys for different operations. When using methods such as `web3.eth.sendTransaction()` or `web3.eth.contract.methods.doSomething().send({})`, the web3.js library handles these transactions using the wallet accounts under the hood. Essentially, the wallet makes it easier to coordinate multiple accounts for smoother Ethereum operations.
+
+
+## Contract
+
+The `Contract` class is an important class in the `web3-eth-contract` package, also available in the `web3` package. It serves as an abstraction representing a connection to a specific contract on the Ethereum Network, enabling applications to interact with it as a typical JavaScript object. Through the `Contract` class, you can execute functions and listen to events associated with the smart contract (e.g, `contract.methods.doSomething().call()`)
+
+## JSON Interface (ABI)
 
 The JSON interface is a `JSON` object describing the [Application Binary Interface (ABI)](https://docs.soliditylang.org/en/develop/abi-spec.html) for an Ethereum smart contract.
 
 Using this JSON interface, web3.js is able to create a JavaScript object representing the smart contract , its methods and events using the `web3.eth.Contract` object.
 
-### Specification
-
-#### Functions
+### Functions
 
 -   `type`: `"function"`, `"constructor"` (can be omitted, defaulting to `"function"`; `"fallback"` also possible but not relevant in web3.js);
 -   `name`: the name of the function (only present for function types);
@@ -20,7 +41,7 @@ Using this JSON interface, web3.js is able to create a JavaScript object represe
     -- `type`: the canonical type of the parameter.
 -   `outputs`: an `Array of objects`, same as inputs, can be omitted if no outputs exist.
 
-#### Events
+### Events
 
 -   `type`: always `"event"`
 -   `name`: the name of the event;

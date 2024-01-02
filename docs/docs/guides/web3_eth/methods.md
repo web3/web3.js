@@ -116,5 +116,5 @@ The [signTransaction](/api/web3-eth/function/signTransaction) method is used to 
 The [sendSignedTransaction](/api/web3-eth/function/sendSignedTransaction) method is used to send a signed Ethereum transaction to the Ethereum network. Before sending a transaction, you need to sign it using a private key, and then you can use this method to broadcast the signed transaction to the network.
 
 :::note
-[Here](/guides/basics/sign_and_send_tx/) you can find more examples how to send transaction.
+[Here](/guides/wallet/transactions) you can find more examples how to send transaction.
 :::

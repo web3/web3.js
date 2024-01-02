@@ -6,7 +6,7 @@ sidebar_label: 'Mastering Smart Contracts'
 # Mastering Smart Contracts
 
 :::info
-This guide expects you to have some basic knowledge. If you are just starting, it is recommended to first check out this [Tutorial: Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts).
+This guide expects you to have some basic knowledge. If you are just starting, it is recommended to first check out this [Tutorial: Deploying and Interacting with Smart Contracts](./smart_contracts_guide.md).
 :::
 
 ## Contract class
@@ -78,7 +78,7 @@ When you instantiate a `Contract`, you primarily provide one or two parameters, 
 1. **ABI (Application Binary Interface):** The ABI tells the `Contract` how to format calls and transactions so that the contract can understand them.
 
 :::tip
-If you do not know how to get the contract ABI, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial. And to look into the guide: [Infer Contract Types from JSON Artifact](./infer_contract_types_guide/).
+If you do not know how to get the contract ABI, we recommend you to check the Step 4 at the [# Step 4: Deploying and Interacting with Smart Contracts](./smart_contracts_guide/#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial. And to look into the guide: [Infer Contract Types from JSON Artifact](./infer_contract_types).
 :::
 
 2. (optional) **Contract Address:** The Ethereum address at which your contract is deployed. If the contract is not deployed yet, do not pass a second parameter or pass `undefined` to it.

@@ -316,7 +316,7 @@ console.log('contract address', deployedContract.options.address)
 ```
 
 :::tip
-📝 To get the smart contract ABI, you are advised to check: [Compile the Solidity code using the Solidity Compiler and get its ABI and Bytecode](/guides/smart_contracts/deploying_and_interacting_with_smart_contracts#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) and [Infer Contract Types from JSON Artifact](/guides/smart_contracts/infer_contract_types_guide/) 
+📝 To get the smart contract ABI, you are advised to check: [#Step 4: Compile the Solidity code using the Solidity Compiler and get its ABI and Bytecode](/guides/smart_contracts/smart_contracts_guide#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) and [Infer Contract Types from JSON Artifact](/guides/smart_contracts/infer_contract_types/) 
 :::
 
 
