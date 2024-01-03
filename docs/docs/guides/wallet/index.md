@@ -12,7 +12,7 @@ The web3-eth-accounts package contains functions to generate Ethereum accounts a
 :::tip
 In Ethereum, a private key is a crucial component of the cryptographic key pair used for securing and controlling ownership of Ethereum addresses. Ethereum uses a public-key cryptography system, where each Ethereum address has a corresponding pair of public and private keys. This key pair will allow you to have ownership associated with the ethereum address, store and access funds and send transactions.
 
-Be sure to have your private key stored and encrypted in a safe place, as losing or sharing it may result in permament loss of access to the asscoiated Ethereum address and funds.
+Be sure to have your private key stored and encrypted in a safe place, as losing or sharing it may result in permanent loss of access to the associated Ethereum address and funds.
 
 To generate a private key: `const privateKey = web3.eth.accounts.create().privateKey;`
 
