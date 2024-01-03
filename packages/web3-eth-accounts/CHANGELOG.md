@@ -150,3 +150,7 @@ Documentation:
 -   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344) 
 
 ## [Unreleased]
+
+### Fixed
+
+-   Send Transaction config used to be ignored if the passed `common` did not have a `copy()` and the `chainId` was not provided (#6663)
