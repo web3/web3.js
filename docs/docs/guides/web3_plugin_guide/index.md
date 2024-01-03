@@ -9,6 +9,8 @@ Welcome to the web3.js Plugins Guide, an exciting new feature introduced in web3
 
 - [Plugin Developer Guide (For Creators)](/guides/web3_plugin_guide/plugin_authors)
 - [Plugin User Guide (Usage)](/guides/web3_plugin_guide/plugin_users)
+- [Plugin List](https://web3js.org/plugins)
+
 
 ## Plugin Showcase
 
