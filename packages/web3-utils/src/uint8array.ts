@@ -21,6 +21,8 @@ export function isUint8Array(data: unknown | Uint8Array): data is Uint8Array {
 		(data as { constructor: { name: string } })?.constructor?.name === 'Uint8Array'
 	);
 }
+
+// @TODO: Remove this function and its usages once all sub dependencies uses version 1.3.3 or above of @noble/hashes
 export function ensureIfUint8Array<T = any>(data: T) {
 	if (
 		!(data instanceof Uint8Array) &&
