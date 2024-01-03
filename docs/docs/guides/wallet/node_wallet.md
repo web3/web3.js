@@ -8,7 +8,7 @@ sidebar_label: 'Tutorial: Node Wallet'
 If Ethereum node has unlocked account in its wallet you can send transaction without need of signing locally in web3.js
 
 :::danger
-Using `web3.eth.personal` is not considered secure and is strongly discouraged. The personal RPC endpoints have been deprecated due to significant security issues.
+Using `web3.eth.personal` is not considered secure and is strongly discouraged. The personal RPC endpoints have been deprecated due to significant security issues. More info: [geth.ethereum.org](https://geth.ethereum.org/docs/interacting-with-geth/rpc/ns-personal)
 :::
 
 ## Transaction
