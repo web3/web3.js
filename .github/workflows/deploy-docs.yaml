@@ -1,5 +1,5 @@
 name: Docs CloudFlare Deploy
-on: 
+on:
   push:
     branches-ignore:
       - "1.x"

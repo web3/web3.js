@@ -48,7 +48,6 @@ const dataInputEncodeMethodHelper = (
 	if (isNullish(tx.input) && isNullish(tx.data)) {
 		tx[dataInputFill as 'data' | 'input'] = encodeMethodABI(abi, params);
 	}
-
 	return { data: tx.data as HexString, input: tx.input as HexString };
 };
 
@@ -164,11 +163,11 @@ export const getEstimateGasParams = ({
 	return txParams as TransactionWithSenderAPI;
 };
 
-export { isContractInitOptions } from 'web3-utils';
-
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
-	typeof options === 'object' && !isNullish(options) && 
-	Object.keys(options).length !== 0 && !isContractInitOptions(options);
+	typeof options === 'object' &&
+	!isNullish(options) &&
+	Object.keys(options).length !== 0 &&
+	!isContractInitOptions(options);
 
 export const getCreateAccessListParams = ({
 	abi,

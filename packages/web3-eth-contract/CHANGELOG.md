@@ -355,6 +355,11 @@ Documentation:
 
 ## [Unreleased]
 
+### Changed
+
+-	Allow the `deploy` function to accept parameters, even when no ABI was provided to the `Contract`(#6635)
+
 ### Fixed
 
 -	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
+-	Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
