@@ -2287,7 +2287,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
--   Fix unecessary array copy when pack encoding (#6553)
+-   Fix unnecessary array copy when pack encoding (#6553)
 
 ## [Unreleased]
 
@@ -2322,4 +2322,4 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
--   Fix unecessary array copy when pack encoding (#6553)
+-   Fix unnecessary array copy when pack encoding (#6553)

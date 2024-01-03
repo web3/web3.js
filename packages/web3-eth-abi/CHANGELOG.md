@@ -159,3 +159,7 @@ Documentation:
 ### Changed
 
 -   Use `AbiError` instead of `Error` for errors at web3-eth-abi (#6641).
+
+### Fixed
+
+-   Fixed an issue with detecting Uint8Array (#6486)
