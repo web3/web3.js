@@ -20,7 +20,7 @@ Learn more about wallets [here](https://ethereum.org/en/wallets/)
 You can sign and send transactions in different ways.
 
 -   [Local wallet](./local_wallet) **(Highly recommended)**
--   [Node Wallet](./node_wallet) **Deprecated**
+-   [Node Wallet](./node_wallet) **(Deprecated)**
 
 For each of them you can use [Web3PromiEvent](./promi_event) to catch extra transaction's events.
 
