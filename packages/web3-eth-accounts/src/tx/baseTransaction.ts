@@ -389,6 +389,8 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * @param chainId - Chain ID from tx options (typed txs) or signature (legacy tx)
 	 */
 	protected _getCommon(common?: Common, chainId?: Numbers) {
+		// TODO: this function needs to be reviewed and the code to be more clean
+		// check issue https://github.com/web3/web3.js/issues/6666
 		// Chain ID provided
 		if (chainId !== undefined) {
 			const chainIdBigInt = uint8ArrayToBigInt(toUint8Array(chainId));
@@ -425,6 +427,9 @@ export abstract class BaseTransaction<TransactionObject> {
 		if (common?.copy && typeof common?.copy === 'function') {
 			return common.copy();
 		}
+		// TODO: Recheck this next block when working on https://github.com/web3/web3.js/issues/6666
+		// This block is to handle when `chainId` was not passed and the `common` object does not have `copy()`
+		// If it was meant to be unsupported to process `common` in this case, an exception should be thrown instead of the following block
 		if (common) {
 			const hardfork =
 				typeof common.hardfork === 'function'

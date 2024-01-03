@@ -16,7 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	// Common,
 	EthExecutionAPI,
 	HexString,
 	Web3NetAPI,
