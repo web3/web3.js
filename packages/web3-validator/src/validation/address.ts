@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { keccak256 } from 'ethereum-cryptography/keccak.js';
 import { utf8ToBytes } from 'ethereum-cryptography/utils.js';
 import { ValidInputTypes } from '../types.js';
-import { uint8ArrayToHexString } from '../utils.js';
+import { ensureIfUint8Array, uint8ArrayToHexString } from '../utils.js';
 import { isHexStrict } from './string.js';
 import { isUint8Array } from './bytes.js';
 
@@ -30,7 +30,7 @@ export const checkAddressCheckSum = (data: string): boolean => {
 	const address = data.slice(2);
 	const updatedData = utf8ToBytes(address.toLowerCase());
 
-	const addressHash = uint8ArrayToHexString(keccak256(updatedData)).slice(2);
+	const addressHash = uint8ArrayToHexString(keccak256(ensureIfUint8Array(updatedData))).slice(2);
 
 	for (let i = 0; i < 40; i += 1) {
 		// the nth letter should be uppercase if the nth digit of casemap is 1
