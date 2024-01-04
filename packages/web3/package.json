@@ -60,13 +60,16 @@
 		"test:blackbox:geth:ws": "./scripts/black_box_test.sh geth ws",
 		"test:blackbox:infura:http": "./scripts/black_box_test.sh infura http",
 		"test:blackbox:infura:ws": "./scripts/black_box_test.sh infura ws",
-		"test:e2e:chrome:stress": "npx cypress run --headless --browser chrome"
+		"test:e2e:chrome:stress": "npx cypress run --headless --browser chrome",
+		"test:benchmark": "npx ts-node --preferTsExts ../web3/test/benchmark/benchmark.ts"
 	},
 	"devDependencies": {
 		"@truffle/hdwallet-provider": "^2.0.12",
+		"@types/benchmark": "^2.1.5",
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
+		"benchmark": "^2.1.4",
 		"eslint": "^8.20.0",
 		"eslint-config-base-web3": "0.1.0",
 		"eslint-config-prettier": "^8.5.0",
