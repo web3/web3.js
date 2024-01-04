@@ -15,6 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @module Utils
+ */
+
 import { Numbers } from 'web3-types';
 import { NibbleWidthError } from 'web3-errors';
 import { isHexStrict, validator, utils as validatorUtils, bigintPower } from 'web3-validator';
@@ -134,7 +138,7 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
  *
  * @example
  * ```ts
- * console.log(web3.utils.fromTwosComplement(''0x0000000000000000000000000000000d', 32'));
+ * console.log(web3.utils.fromTwosComplement('0x0000000000000000000000000000000d', 32'));
  * > 13
  *
  * console.log(web3.utils.fromTwosComplement('0x00000000000000000020000000000000', 32));

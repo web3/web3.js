@@ -27,7 +27,7 @@ jobs:
       - run: yarn prebuild
       - run: yarn build:cjs
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
@@ -42,7 +42,7 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v3
+          -   uses: actions/download-artifact@v4
               with:
                 name: web3-${{ matrix.node }}.js.tar.gz
                 path: /tmp
@@ -59,7 +59,7 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v3
+          -   uses: actions/download-artifact@v4
               with:
                 name: web3-${{ matrix.node }}.js.tar.gz
                 path: /tmp
@@ -73,7 +73,7 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: 18
-          -   uses: actions/download-artifact@v3
+          -   uses: actions/download-artifact@v4
               with:
                 name: web3-18.js.tar.gz
                 path: /tmp
@@ -88,7 +88,7 @@ jobs:
         -   uses: actions/setup-node@v3
             with:
               node-version: 18
-        -   uses: actions/download-artifact@v3
+        -   uses: actions/download-artifact@v4
             with:
               name: web3-18.js.tar.gz
               path: /tmp
@@ -128,7 +128,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
@@ -158,7 +158,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
@@ -183,7 +183,7 @@ jobs:
       -   uses: actions/setup-node@v3
           with:
             node-version: ${{ matrix.node }}
-      -   uses: actions/download-artifact@v3
+      -   uses: actions/download-artifact@v4
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
@@ -206,7 +206,7 @@ jobs:
             node-version: ${{ matrix.node }}
       - uses: browser-actions/setup-firefox@latest
         if: matrix.browser == 'firefox'
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
@@ -230,9 +230,72 @@ jobs:
         -   uses: actions/setup-node@v3
             with:
                 node-version: ${{ matrix.node }}
-        -   uses: actions/download-artifact@v3
+        -   uses: actions/download-artifact@v4
             with:
                 name: web3-${{ matrix.node }}.js.tar.gz
                 path: /tmp
         -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         -   run: yarn build:docs
+
+  benchmark:
+      name: Benchmark Tests
+      needs: build
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              node: [ 18 ]
+      steps:
+          -   uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node }}
+          -   uses: actions/download-artifact@v4
+              with:
+                  name: web3-${{ matrix.node }}.js.tar.gz
+                  path: /tmp
+          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+              # @octokit/core not supported on node 16, so I can't add it to the package.json
+          -   run: npm install --no-package-lock --no-save --force @octokit/core
+          -   name: Restore main branch benchmark data
+              uses: actions/cache/restore@v3
+              with:
+                  path: web3-benchmark-main.json
+                  key: ${{ runner.os }}-web3-benchmark-main.json
+          -   run: yarn test:benchmark
+          -   name: Compare benchmark result and make comment
+              uses: benchmark-action/github-action-benchmark@v1
+              with:
+                  # What benchmark tool the output.txt came from
+                  tool: 'benchmarkjs'
+                  # Where the output from the benchmark tool is stored
+                  output-file-path: benchmark-data.txt
+                  # Where the previous data file is stored
+                  external-data-json-path: web3-benchmark-main.json
+                  # Workflow will fail when an alert happens
+                  fail-on-alert: false
+                  # GitHub API token to make a commit comment
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  # Enable alert commit comment
+                  comment-always: true
+                  save-data-file: false
+              # copy comment from commit to Pull Request
+          -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.event.pull_request.head.sha}} ${{github.event.number}}
+          -   name: Compare benchmark result and fail if threshold is reached
+              uses: benchmark-action/github-action-benchmark@v1
+              with:
+                  # What benchmark tool the output.txt came from
+                  tool: 'benchmarkjs'
+                  # Where the output from the benchmark tool is stored
+                  output-file-path: benchmark-data.txt
+                  # Where the previous data file is stored
+                  external-data-json-path: web3-benchmark-main.json
+                  # Workflow will fail when an alert happens
+                  fail-on-alert: true
+                  # Enable alert commit comment
+                  alert-threshold: '100%'
+                  comment-always: false
+          -   name: Save main branch benchmark data
+              uses: actions/cache/save@v3
+              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+              with:
+                path: web3-benchmark-main.json
+                key: ${{ runner.os }}-web3-benchmark-main.json

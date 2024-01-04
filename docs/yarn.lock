@@ -3772,10 +3772,10 @@ dns-packet@^5.2.2:
   dependencies:
     "@leichtgewicht/ip-codec" "^2.0.1"
 
-docusaurus-lunr-search@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/docusaurus-lunr-search/-/docusaurus-lunr-search-3.3.0.tgz#b79af937d28ff2ab4d766d2e42c1e4bcff50e0a6"
-  integrity sha512-F2fSAA+6vRCHxF4R+rV8xSg1cYY7pXFKdbBNlTX6+dyKdwCWcnrmTXJmlCkN4DT65ntNU9iTd+mZ8lZzH3Lncg==
+docusaurus-lunr-search@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/docusaurus-lunr-search/-/docusaurus-lunr-search-3.3.1.tgz#4ee77853b21c1f6a652c9545d8ba8dc3bd8b3ab9"
+  integrity sha512-EWUeHlTf+wVDLYLvgxeqavhww59elc9XfvlC9ZEHdeBT+kEbDdCdcC0CnHHeHVqePbMoHYfA8RhsXKYcLp6qgw==
   dependencies:
     autocomplete.js "^0.37.0"
     clsx "^1.2.1"
@@ -3787,7 +3787,6 @@ docusaurus-lunr-search@^3.3.0:
     lunr-languages "^1.4.0"
     mark.js "^8.11.1"
     minimatch "^3.0.4"
-    object-assign "^4.1.1"
     rehype-parse "^7.0.1"
     to-vfile "^6.1.0"
     unified "^9.0.0"
@@ -7206,13 +7205,21 @@ pretty-time@^1.1.0:
   resolved "https://registry.npmjs.org/pretty-time/-/pretty-time-1.1.0.tgz#ffb7429afabb8535c346a34e41873adf3d74dd0e"
   integrity sha512-28iF6xPQrP8Oa6uxE6a1biz+lWeTOAPKggvjB8HAs6nVMKZwf5bG++632Dx614hIWgUPkgivRfG+a8uAXGTIbA==
 
-prism-react-renderer@^2.0.6, prism-react-renderer@^2.1.0, prism-react-renderer@^2.2.0:
+prism-react-renderer@^2.0.6, prism-react-renderer@^2.1.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/prism-react-renderer/-/prism-react-renderer-2.2.0.tgz#f199b15716e0b8d0ccfd1986ff6fa226fb7ff2b1"
   integrity sha512-j4AN0VkEr72598+47xDvpzeYyeh/wPPRNTt9nJFZqIZUxwGKwYqYgt7RVigZ3ZICJWJWN84KEuMKPNyypyhNIw==
   dependencies:
     "@types/prismjs" "^1.26.0"
     clsx "^1.2.1"
+
+prism-react-renderer@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-2.3.0.tgz#5f8f615af6af8201a0b734bd8c946df3d818ea54"
+  integrity sha512-UYRg2TkVIaI6tRVHC5OJ4/BxqPUxJkJvq/odLT/ykpt1zGYXooNperUxQcCvi87LyRnR4nCh81ceOA+e7nrydg==
+  dependencies:
+    "@types/prismjs" "^1.26.0"
+    clsx "^2.0.0"
 
 prismjs@^1.29.0:
   version "1.29.0"

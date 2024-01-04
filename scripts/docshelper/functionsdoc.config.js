@@ -9,6 +9,10 @@ module.exports =  {
         //utils
         "./packages/web3-utils/src/converters.ts",
         "./packages/web3-utils/src/hash.ts",
+        "./packages/web3-utils/src/validation.ts",
+        "./packages/web3-utils/src/random.ts",
+        "./packages/web3-utils/src/string_manipulation.ts",
+        "./packages/web3-utils/src/uuid.ts",
         //ABI
          "./packages/web3-eth-abi/src/api/functions_api.ts",
          "./packages/web3-eth-abi/src/eip_712.ts",
