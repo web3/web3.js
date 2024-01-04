@@ -11359,10 +11359,10 @@ shell-quote@^1.8.1:
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.8.1.tgz#6dbf4db75515ad5bac63b4f1894c3a154c766680"
   integrity sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==
 
-shiki@^0.14.1:
-  version "0.14.5"
-  resolved "https://registry.npmjs.org/shiki/-/shiki-0.14.5.tgz#375dd214e57eccb04f0daf35a32aa615861deb93"
-  integrity sha512-1gCAYOcmCFONmErGTrS1fjzJLA7MGZmKzrBNX7apqSwhyITJg2O102uFzXUeBxNnEkDA9vHIKLyeKq0V083vIw==
+shiki@^0.14.7:
+  version "0.14.7"
+  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.14.7.tgz#c3c9e1853e9737845f1d2ef81b31bcfb07056d4e"
+  integrity sha512-dNPAPrxSc87ua2sKJ3H5dQ/6ZaY8RNnaAqK+t0eG7p0Soi2ydiqbGOTaZCqaYvA/uZYfS1LJnemt3Q+mSfcPCg==
   dependencies:
     ansi-sequence-parser "^1.1.0"
     jsonc-parser "^3.2.0"
@@ -12325,15 +12325,15 @@ typedoc-plugin-merge-modules@^5.1.0:
   resolved "https://registry.npmjs.org/typedoc-plugin-merge-modules/-/typedoc-plugin-merge-modules-5.1.0.tgz#53ac37f4ab40caac8ee23da1e26042d3a103c4a8"
   integrity sha512-jXH27L/wlxFjErgBXleh3opVgjVTXFEuBo68Yfl18S9Oh/IqxK6NV94jlEJ9hl4TXc9Zm2l7Rfk41CEkcCyvFQ==
 
-typedoc@^0.25.3:
-  version "0.25.3"
-  resolved "https://registry.npmjs.org/typedoc/-/typedoc-0.25.3.tgz#53c6d668e1001b3d488e9a750fcdfb05433554c0"
-  integrity sha512-Ow8Bo7uY1Lwy7GTmphRIMEo6IOZ+yYUyrc8n5KXIZg1svpqhZSWgni2ZrDhe+wLosFS8yswowUzljTAV/3jmWw==
+typedoc@^0.25.6:
+  version "0.25.6"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.25.6.tgz#1505538aecea511dd669652c71d042a2427bd4fc"
+  integrity sha512-1rdionQMpOkpA58qfym1J+YD+ukyA1IEIa4VZahQI2ZORez7dhOvEyUotQL/8rSoMBopdzOS+vAIsORpQO4cTA==
   dependencies:
     lunr "^2.3.9"
     marked "^4.3.0"
     minimatch "^9.0.3"
-    shiki "^0.14.1"
+    shiki "^0.14.7"
 
 "typescript@^3 || ^4":
   version "4.9.5"

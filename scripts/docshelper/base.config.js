@@ -20,7 +20,7 @@ module.exports = {
     //filenameSeparator : "-",
     //indexTitle: "",
     //preserveAnchorCasing: true,
-
+    disableSources:true,
     excludeExternals: true,
     excludeReferences: true,
     tsconfig: "./docs/tsconfig.docs.json",
