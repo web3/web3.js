@@ -71,10 +71,10 @@ npm i web3
 Next, create a new file called `index.ts` in your project directory and add the following code to it:
 
 ```ts
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
 // Set up a connection to the Ganache network
-const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 /* NOTE:
 instead of using ganache, you can also interact with a testnet/mainnet using another provider
 https://app.infura.io/
@@ -85,7 +85,7 @@ or use a public provider https://chainlist.org/
 // Log the current block number to the console
 const block = await web3.eth.getBlockNumber();
 
-console.log("Last block:", block);
+console.log('Last block:', block);
 // ↳ Last block: 4975299n
 ```
 
@@ -107,12 +107,12 @@ In the first example, we are going to send a simple value transaction.
 Create a file named `transaction.ts` and fill it with the following code:
 
 ```typescript
-import { Web3 } from "web3";
-import fs from "fs";
-import path from "path";
+import { Web3 } from 'web3';
+import fs from 'fs';
+import path from 'path';
 
 // Set up a connection to the Ethereum network
-const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 web3.eth.Contract.handleRevert = true;
 
 async function interact() {
@@ -133,12 +133,12 @@ async function interact() {
     to: accounts[1],
     // value should be passed in wei. For easier use and to avoid mistakes,
     //	we utilize the auxiliary `toWei` function:
-    value: web3.utils.toWei("1", "ether"),
+    value: web3.utils.toWei('1', 'ether'),
   };
 
   //send the actual transaction
   const transactionHash = await web3.eth.sendTransaction(transaction);
-  console.log("transactionHash", transactionHash);
+  console.log('transactionHash', transactionHash);
 
   balance1 = await web3.eth.getBalance(accounts[0]);
   balance2 = await web3.eth.getBalance(accounts[1]);
@@ -212,33 +212,33 @@ transactionHash {
 In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding tutotial). Create a file named `estimate.ts` and fill it with the following code:
 
 ```typescript
-import { Web3, ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from "web3";
+import { Web3, ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from 'web3';
 
 async function estimate() {
   // abi of our contract
   const abi = [
     {
-      inputs: [{ internalType: "uint256", name: "_myNumber", type: "uint256" }],
-      stateMutability: "nonpayable",
-      type: "constructor",
+      inputs: [{ internalType: 'uint256', name: '_myNumber', type: 'uint256' }],
+      stateMutability: 'nonpayable',
+      type: 'constructor',
     },
     {
       inputs: [],
-      name: "myNumber",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function",
+      name: 'myNumber',
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+      stateMutability: 'view',
+      type: 'function',
     },
     {
-      inputs: [{ internalType: "uint256", name: "_myNumber", type: "uint256" }],
-      name: "setMyNumber",
+      inputs: [{ internalType: 'uint256', name: '_myNumber', type: 'uint256' }],
+      name: 'setMyNumber',
       outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
+      stateMutability: 'nonpayable',
+      type: 'function',
     },
   ];
 
-  const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+  const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
   //get the available accounts
   const accounts = await web3.eth.getAccounts();
@@ -247,7 +247,7 @@ async function estimate() {
   let contract = new web3.eth.Contract(abi);
 
   const deployment = contract.deploy({
-    data: "0x608060405234801561001057600080fd5b506040516101d93803806101d983398181016040528101906100329190610054565b806000819055505061009e565b60008151905061004e81610087565b92915050565b60006020828403121561006657600080fd5b60006100748482850161003f565b91505092915050565b6000819050919050565b6100908161007d565b811461009b57600080fd5b50565b61012c806100ad6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806323fd0e401460375780636ffd773c146051575b600080fd5b603d6069565b6040516048919060bf565b60405180910390f35b6067600480360381019060639190608c565b606f565b005b60005481565b8060008190555050565b60008135905060868160e2565b92915050565b600060208284031215609d57600080fd5b600060a9848285016079565b91505092915050565b60b98160d8565b82525050565b600060208201905060d2600083018460b2565b92915050565b6000819050919050565b60e98160d8565b811460f357600080fd5b5056fea2646970667358221220d28cf161457f7936995800eb9896635a02a559a0561bff6a09a40bfb81cd056564736f6c63430008000033",
+    data: '0x608060405234801561001057600080fd5b506040516101d93803806101d983398181016040528101906100329190610054565b806000819055505061009e565b60008151905061004e81610087565b92915050565b60006020828403121561006657600080fd5b60006100748482850161003f565b91505092915050565b6000819050919050565b6100908161007d565b811461009b57600080fd5b50565b61012c806100ad6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806323fd0e401460375780636ffd773c146051575b600080fd5b603d6069565b6040516048919060bf565b60405180910390f35b6067600480360381019060639190608c565b606f565b005b60005481565b8060008190555050565b60008135905060868160e2565b92915050565b600060208284031215609d57600080fd5b600060a9848285016079565b91505092915050565b60b98160d8565b82525050565b600060208201905060d2600083018460b2565b92915050565b6000819050919050565b60e98160d8565b811460f357600080fd5b5056fea2646970667358221220d28cf161457f7936995800eb9896635a02a559a0561bff6a09a40bfb81cd056564736f6c63430008000033',
     // @ts-expect-error
     arguments: [1],
   });
@@ -255,12 +255,12 @@ async function estimate() {
   let estimatedGas = await deployment.estimateGas({ from: acc }, DEFAULT_RETURN_FORMAT);
   // the returned data will be formatted as a bigint
 
-  console.log("Default format:", estimatedGas);
+  console.log('Default format:', estimatedGas);
 
   estimatedGas = await deployment.estimateGas({ from: acc }, ETH_DATA_FORMAT);
   // the returned data will be formatted as a hexstring
 
-  console.log("Eth format:", estimatedGas);
+  console.log('Eth format:', estimatedGas);
 }
 
 (async () => {
@@ -288,12 +288,12 @@ Eth format: 0x22568
 In the next example we are going to sign a transaction and use `sendSignedTransaction` to send the signed transaction. Create a file named `sendSigned.ts` and fill it with the following code:
 
 ```typescript
-import { Web3 } from "web3";
-const web3 = new Web3("http://localhost:7545");
+import { Web3 } from 'web3';
+const web3 = new Web3('http://localhost:7545');
 
 //make sure to copy the private key from ganache
-const privateKey = "0x0fed6f64e01bc9fac9587b6e7245fd9d056c3c004ad546a17d3d029977f0930a";
-const value = web3.utils.toWei("1", "ether");
+const privateKey = '0x0fed6f64e01bc9fac9587b6e7245fd9d056c3c004ad546a17d3d029977f0930a';
+const value = web3.utils.toWei('1', 'ether');
 
 async function sendSigned() {
   const accounts = await web3.eth.getAccounts();
@@ -305,7 +305,7 @@ async function sendSigned() {
     to: toAddress,
     value: value,
     gas: 21000,
-    gasPrice: web3.utils.toWei("10", "gwei"),
+    gasPrice: web3.utils.toWei('10', 'gwei'),
     nonce: await web3.eth.getTransactionCount(fromAddress),
   };
 
@@ -315,7 +315,7 @@ async function sendSigned() {
   // Send the signed transaction to the network
   const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 
-  console.log("Transaction receipt:", receipt);
+  console.log('Transaction receipt:', receipt);
 }
 (async () => {
   await sendSigned();
@@ -393,7 +393,7 @@ console.log('eth.config.defaultTransactionType after', eth.config.defaultTransac
 
 ### Legacy Transaction
 
-In Ethereum, a "legacy transaction" typically refers to the traditional transactions, where gas fees are set explicitly by the sender and can fluctuate based on network demand. These legacy transactions were prevalent on the Ethereum network before the implementation of Ethereum Improvement Proposal (EIP) 1559.
+In Ethereum, a 'legacy transaction' typically refers to the traditional transactions, where gas fees are set explicitly by the sender and can fluctuate based on network demand. These legacy transactions were prevalent on the Ethereum network before the implementation of Ethereum Improvement Proposal (EIP) 1559.
 
 Key characteristics of legacy transactions include:
 
@@ -405,19 +405,19 @@ Key characteristics of legacy transactions include:
 
 4. Manual Fee Estimation: Users are responsible for manually estimating the appropriate gas price to include in their legacy transactions to ensure timely processing. This process can be challenging, as setting gas prices too low may result in slow confirmation, while setting them too high may lead to overpaying.
 
-5. EIP-1559, as described below, introduced changes to Ethereum's transaction fee system, making it more user-friendly and predictable. With EIP-1559, the concept of a "base fee" replaces the manual setting of gas prices, which has reduced some of the uncertainties associated with legacy transactions.
+5. EIP-1559, as described below, introduced changes to Ethereum's transaction fee system, making it more user-friendly and predictable. With EIP-1559, the concept of a 'base fee' replaces the manual setting of gas prices, which has reduced some of the uncertainties associated with legacy transactions.
 
 While EIP-1559 has significantly improved the user experience, legacy transactions are still supported on the Ethereum network, and users can continue to send transactions with manually specified gas prices and gas limits if they prefer. However, the EIP-1559 mechanism is now the recommended approach for most transactions, as it simplifies the process and reduces the likelihood of overpaying for fees.
 
 To send Legacy transaction use code below:
 
 ```typescript
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
-const web3 = new Web3("http://localhost:8545");
+const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-  const privateKey = "YOUR PRIVATE KEY HERE";
+  const privateKey = 'YOUR PRIVATE KEY HERE';
   // add private key to wallet to have auto-signing transactions feature
   const account = web3.eth.accounts.privateKeyToAccount(privateKey);
   web3.eth.accounts.wallet.add(account);
@@ -425,8 +425,8 @@ async function test() {
   // create transaction object
   const tx = {
     from: account.address,
-    to: "0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab",
-    value: "0x1",
+    to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+    value: '0x1',
     gas: BigInt(21000),
     gasPrice: await web3.eth.getGasPrice(),
     type: BigInt(0), // <- specify type
@@ -435,7 +435,7 @@ async function test() {
   // send transaction
   const receipt = await web3.eth.sendTransaction(tx);
 
-  console.log("Receipt:", receipt);
+  console.log('Receipt:', receipt);
   // Receipt: {
   //   blockHash: '0xc0f2fea359233b0843fb53255b8a7f42aa7b1aff53da7cbe78c45b5bac187ad4',
   //   blockNumber: 21n,
@@ -459,9 +459,9 @@ async function test() {
 
 ### EIP-2930 Transaction
 
-Ethereum Improvement Proposal 2930 is a proposal for a change to the Ethereum network that was implemented as part of the Berlin hard fork, which was activated in April 2021. EIP-2930 introduces a feature called "Transaction Type and Access List." This improvement enhances the gas efficiency of certain smart contract interactions and provides more flexibility in specifying who can access specific resources within a smart contract. Here are the key components of EIP-2930:
+Ethereum Improvement Proposal 2930 is a proposal for a change to the Ethereum network that was implemented as part of the Berlin hard fork, which was activated in April 2021. EIP-2930 introduces a feature called 'Transaction Type and Access List.' This improvement enhances the gas efficiency of certain smart contract interactions and provides more flexibility in specifying who can access specific resources within a smart contract. Here are the key components of EIP-2930:
 
-1. Transaction Type: EIP-2930 introduces a new transaction type called "Access List Transaction." This transaction type is designed to make certain interactions with smart contracts more efficient by allowing the sender to specify a list of addresses that may be accessed or modified during the transaction.
+1. Transaction Type: EIP-2930 introduces a new transaction type called 'Access List Transaction.' This transaction type is designed to make certain interactions with smart contracts more efficient by allowing the sender to specify a list of addresses that may be accessed or modified during the transaction.
 
 2. Access List: The Access List is a structured data format included with the transaction. It contains a list of addresses and storage keys that are expected to be accessed or modified during the execution of the transaction. This helps in reducing the amount of gas required for these operations, as miners can check the Access List to optimize the execution.
 
@@ -474,12 +474,12 @@ EIP-2930 is part of Ethereum's ongoing efforts to improve the network's efficien
 To send EIP-2930 transaction use code below:
 
 ```typescript
-import {Web3} from "web3";
+import {Web3} from 'web3';
 
-const web3 = new Web3("http://localhost:8545");
+const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-  const privateKey = "YOUR PRIVATE KEY HERE";
+  const privateKey = 'YOUR PRIVATE KEY HERE';
   // add private key to wallet to have auto-signing transactions feature
   const account = web3.eth.accounts.privateKeyToAccount(privateKey);
   web3.eth.accounts.wallet.add(account);
@@ -487,8 +487,8 @@ async function test() {
   // create transaction object
   const tx = {
     from: account.address,
-    to: "0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab",
-    value: "0x1",
+    to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+    value: '0x1',
     gasLimit: BigInt(21000),
     type: BigInt(1), // <- specify type
     // gasPrice - you can specify this property directly or web3js will fill this field automatically
@@ -497,7 +497,7 @@ async function test() {
   // send transaction
   const receipt = await web3.eth.sendTransaction(tx);
 
-  console.log("Receipt:", receipt);
+  console.log('Receipt:', receipt);
   // Receipt: {
   //   blockHash: '0xd8f6a3638112d17b476fd1b7c4369d473bc1a484408b6f39dbf64410df44adf6',
   //   blockNumber: 24n,
@@ -526,14 +526,14 @@ The code of `Greeter` contract you can find [here](https://github.com/web3/web3.
 :::
 
 ```typescript
-import {Web3} from "web3";
+import {Web3} from 'web3';
 
-import { GreeterAbi, GreeterBytecode } from "./fixture/Greeter";
+import { GreeterAbi, GreeterBytecode } from './fixture/Greeter';
 
-const web3 = new Web3("http://localhost:8545");
+const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-  const privateKey = "YOUR PRIVATE KEY HERE";
+  const privateKey = 'YOUR PRIVATE KEY HERE';
   // add private key to wallet to have auto-signing transactions feature
   const account = web3.eth.accounts.privateKeyToAccount(privateKey);
   web3.eth.accounts.wallet.add(account);
@@ -543,7 +543,7 @@ async function test() {
   const deployedContract = await contract
     .deploy({
       data: GreeterBytecode,
-      arguments: ["My Greeting"],
+      arguments: ['My Greeting'],
     })
     .send({ from: account.address });
   deployedContract.defaultAccount = account.address;
@@ -551,11 +551,11 @@ async function test() {
   const transaction = {
     from: account.address,
     to: deployedContract.options.address,
-    data: "0xcfae3217", // greet function call data encoded
+    data: '0xcfae3217', // greet function call data encoded
   };
-  const { accessList } = await web3.eth.createAccessList(transaction, "latest");
+  const { accessList } = await web3.eth.createAccessList(transaction, 'latest');
 
-  console.log("AccessList:", accessList);
+  console.log('AccessList:', accessList);
   // AccessList: [
   //   {
   //     address: '0xce1f86f87bd3b8f32f0fb432f88e848f3a957ed7',
@@ -572,14 +572,14 @@ async function test() {
     gasLimit: BigInt(46000),
     type: BigInt(1), // <- specify type
     accessList,
-    data: "0xcfae3217",
+    data: '0xcfae3217',
     // gasPrice - you can specify this property directly or web3js will fill this field automatically
   };
 
   // send transaction
   const receipt = await web3.eth.sendTransaction(tx);
 
-  console.log("Receipt:", receipt);
+  console.log('Receipt:', receipt);
   // Receipt: {
   //   blockHash: '0xc7b9561100c8ff6f1cde7a05916e86b7d037b2fdba86b0870e842d1814046e4b',
   //   blockNumber: 43n,
@@ -607,13 +607,13 @@ Ethereum Improvement Proposal 1559 is a significant upgrade to the Ethereum netw
 
 Here are some of the key features and changes introduced by EIP-1559:
 
-1. Base Fee: EIP-1559 introduces a concept called the "base fee." The base fee is the minimum fee required for a transaction to be included in a block. It is determined algorithmically by the network and adjusts dynamically based on network congestion. When the network is busy, the base fee increases, and when it's less congested, the base fee decreases.
+1. Base Fee: EIP-1559 introduces a concept called the 'base fee.' The base fee is the minimum fee required for a transaction to be included in a block. It is determined algorithmically by the network and adjusts dynamically based on network congestion. When the network is busy, the base fee increases, and when it's less congested, the base fee decreases.
 
-2. Inclusion Fee: In addition to the base fee, users can voluntarily include a "tip" or "inclusion fee" to incentivize miners to include their transactions in the next block. This allows users to expedite their transactions by offering a tip to miners.
+2. Inclusion Fee: In addition to the base fee, users can voluntarily include a 'tip' or 'inclusion fee' to incentivize miners to include their transactions in the next block. This allows users to expedite their transactions by offering a tip to miners.
 
 3. Predictable Fees: With EIP-1559, users have a more predictable way to estimate transaction fees. They can set the maximum fee they are willing to pay, which includes the base fee and the tip. This eliminates the need for users to guess the appropriate gas price.
 
-4. Burn Mechanism: EIP-1559 introduces a mechanism by which the base fee is "burned" from circulation, reducing the overall supply of Ether (ETH). This deflationary mechanism can help address some of the concerns related to the increasing supply of ETH and potentially make it a better store of value.
+4. Burn Mechanism: EIP-1559 introduces a mechanism by which the base fee is 'burned' from circulation, reducing the overall supply of Ether (ETH). This deflationary mechanism can help address some of the concerns related to the increasing supply of ETH and potentially make it a better store of value.
 
 5. Improved Fee Auctions: Under EIP-1559, fee auctions are more efficient. Users specify the maximum fee they are willing to pay, and the protocol automatically adjusts the tip to ensure transactions get processed promptly without overpaying.
 
@@ -624,12 +624,12 @@ EIP-1559 has been well-received for its potential to create a more user-friendly
 To send EIP-1559 transaction use code below:
 
 ```typescript
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
-const web3 = new Web3("http://localhost:8545");
+const web3 = new Web3('http://localhost:8545');
 
 async function test() {
-  const privateKey = "YOUR PRIVATE KEY HERE";
+  const privateKey = 'YOUR PRIVATE KEY HERE';
   // add private key to wallet to have auto-signing transactions feature
   const account = web3.eth.accounts.privateKeyToAccount(privateKey);
   web3.eth.accounts.wallet.add(account);
@@ -637,8 +637,8 @@ async function test() {
   // create transaction object
   const tx = {
     from: account.address,
-    to: "0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab",
-    value: "0x1",
+    to: '0x27aa427c1d668ddefd7bc93f8857e7599ffd16ab',
+    value: '0x1',
     gasLimit: BigInt(21000),
     type: BigInt(2), // <- specify type
     // maxFeePerGas - you can specify this property directly or web3js will fill this field automatically
@@ -648,7 +648,7 @@ async function test() {
   // send transaction
   const receipt = await web3.eth.sendTransaction(tx);
 
-  console.log("Receipt:", receipt);
+  console.log('Receipt:', receipt);
   // Receipt: {
   //   blockHash: '0xfe472084d1471720b6887071d32a793f7c4576a489098e7d2a89aef205c977fb',
   //   blockNumber: 23n,

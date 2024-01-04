@@ -62,7 +62,7 @@ After instantiating the `web3` instance with a `new Web3 provider`, we can acces
 
 ```ts
 // get the balance of an address
-await web3.eth.getBalance("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
+await web3.eth.getBalance('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045');
 // ↳ 114438180989009447638n
 
 // get last block number
@@ -74,7 +74,7 @@ await web3.eth.getChainId();
 // ↳ 1n
 
 // get the nonce of an address
-await web3.eth.getTransactionCount("0x37826D8B5F4B175517A0f42c886f8Fca38C55Fe7");
+await web3.eth.getTransactionCount('0x37826D8B5F4B175517A0f42c886f8Fca38C55Fe7');
 // ↳ 7n
 
 // get the current gas price
@@ -118,7 +118,7 @@ Wallet(1)
 
 ```ts
 //the private key must start with the '0x' prefix
-const account = web3.eth.accounts.wallet.add("0x50d349f5cf627d44858d6fcb6fbf15d27457d35c58ba2d5cfeaf455f25db5bec");
+const account = web3.eth.accounts.wallet.add('0x50d349f5cf627d44858d6fcb6fbf15d27457d35c58ba2d5cfeaf455f25db5bec');
 
 console.log(account[0].address);
 //↳ 0xcE6A5235d6033341972782a15289277E85E5b305
@@ -131,21 +131,21 @@ console.log(account[0].privateKey);
 
 ```ts title='Sending value'
 //add an account to a wallet
-const account = web3.eth.accounts.wallet.add("0x50d349f5cf627d44858d6fcb6fbf15d27457d35c58ba2d5cfeaf455f25db5bec");
+const account = web3.eth.accounts.wallet.add('0x50d349f5cf627d44858d6fcb6fbf15d27457d35c58ba2d5cfeaf455f25db5bec');
 
 //create transaction object to send 1 eth to '0xa32...c94' address from the account[0]
 const tx = 
 { 
     from: account[0].address,
-    to: "0xa3286628134bad128faeef82f44e99aa64085c94", 
-    value: web3.utils.toWei("1", "ether")
+    to: '0xa3286628134bad128faeef82f44e99aa64085c94', 
+    value: web3.utils.toWei('1', 'ether')
 };
 //the `from` address must match the one previously added with wallet.add
 
 //send the transaction
 const txReceipt = await web3.eth.sendTransaction(tx);
 
-console.log("Tx hash:", txReceipt.transactionHash)
+console.log('Tx hash:', txReceipt.transactionHash)
 // ↳ Tx hash: 0x03c844b069646e08af1b6f31519a36e3e08452b198ef9f6ce0f0ccafd5e3ae0e
 ```
 
@@ -157,20 +157,20 @@ The first step to interact with a contract is to instantiate the contract, for w
 
 ```ts
 //Uniswap token address in mainnet
-const address = "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+const address = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'
 
 //you can find the complete ABI in etherscan.io
 const ABI = 
 [
     {
-      name: "symbol",
-      outputs: [{ type: "string" }],
-      type: "function",
+      name: 'symbol',
+      outputs: [{ type: 'string' }],
+      type: 'function',
     },
     {
-      name: "totalSupply",
-      outputs: [{ type: "uint256" }],
-      type: "function",
+      name: 'totalSupply',
+      outputs: [{ type: 'uint256' }],
+      type: 'function',
     },
 ];
 
@@ -184,17 +184,17 @@ const uniswapToken = new web3.eth.Contract(abi, address);
 //make the call to the contract
 const symbol = await uniswapToken.methods.symbol().call();
 
-console.log("Uniswap symbol:",symbol);
+console.log('Uniswap symbol:',symbol);
 // ↳ Uniswap symbol: UNI
 
 //make the call to the contract
 const totalSupply = await uniswapToken.methods.totalSupply().call();
 
-console.log("Uniswap Total supply:", totalSupply);
+console.log('Uniswap Total supply:', totalSupply);
 // ↳ Uniswap Total Supply: 1000000000000000000000000000n
 
 //use web3 utils to format the units
-console.log(web3.utils.fromWei(totalSupply, "ether"))
+console.log(web3.utils.fromWei(totalSupply, 'ether'))
 // ↳ 1000000000
 ```
 
@@ -202,15 +202,15 @@ console.log(web3.utils.fromWei(totalSupply, "ether"))
 
 ```ts
 //address to send the token
-const to = "0xcf185f2F3Fe19D82bFdcee59E3330FD7ba5f27ce";
+const to = '0xcf185f2F3Fe19D82bFdcee59E3330FD7ba5f27ce';
 
 //value to transfer (1 with 18 decimals)
-const value = web3.utils.toWei("1","ether");
+const value = web3.utils.toWei('1','ether');
 
 //send the transaction => return the Tx receipt
 const txReceipt = await uniswapToken.methods.transfer(to,value).send({from: account[0].address});
 
-console.log("Tx hash:",txReceipt.transactionHash);
+console.log('Tx hash:',txReceipt.transactionHash);
 // ↳ Tx hash: 0x14273c2b5781cc8f1687906c68bfc93482c603026d01b4fd37a04adb6217ad43
 ```
 
@@ -218,7 +218,7 @@ console.log("Tx hash:",txReceipt.transactionHash);
 
 ```ts
 //get past `Transfer` events from block 18850576
-const eventTransfer = await uniswapToken.getPastEvents("Transfer", { fromBlock: 18850576 });
+const eventTransfer = await uniswapToken.getPastEvents('Transfer', { fromBlock: 18850576 });
 
 console.log(eventTransfer);
 // ↳ [{...},{...}, ...] array with all the events emitted
@@ -235,15 +235,15 @@ You MUST initialize the `Web3 provider` with a WebSocket endpoint to subscribe t
 import { Web3 } from 'web3';
 
 //WebSocket provider
-const web3 = new Web3("wss://ethereum.publicnode.com");
+const web3 = new Web3('wss://ethereum.publicnode.com');
 
 //instantiate contract
 const uniswapToken = new web3.eth.Contract(abi, address)
 
-//create the subcription to all the "Transfer" events
+//create the subcription to all the 'Transfer' events
 const subscription = uniswapToken.events.Transfer();
 
 //listen to the events
-subscription.on("data",console.log);
+subscription.on('data',console.log);
 // ↳ [{...},{...}, ...] live events will be printed in the console
 ```

@@ -13,12 +13,12 @@ The simplest way to sign and send transactions is using a local wallet:
 
 ```typescript
 // 1st step: initialize `web3` instance
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
 
 // 2nd step: add an account to wallet
-const privateKey = "0x7b907534ec13b19c67c2a738fdaa69014298c71f2221d7e5dec280232e996610";
+const privateKey = '0x7b907534ec13b19c67c2a738fdaa69014298c71f2221d7e5dec280232e996610';
 const account = web3.eth.accounts.wallet.add(privateKey).get(0);
 // Make sure the account has enough eth on balance to send the transaction
 
@@ -27,9 +27,9 @@ const account = web3.eth.accounts.wallet.add(privateKey).get(0);
 // Magic happens behind sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed.
 const receipt = await web3.eth.sendTransaction({
   from: account?.address,
-  to: "0xe4beef667408b99053dc147ed19592ada0d77f59",
-  value: "0x1",
-  gas: "300000",
+  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
+  value: '0x1',
+  gas: '300000',
   // other transaction's params
 });
 //highlight-end
@@ -38,18 +38,18 @@ const receipt = await web3.eth.sendTransaction({
 ## Sending a raw transaction
 
 ```ts 
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
 // 1st - initialize the provider
-const web3 = new Web3("https://ethereum-sepolia.publicnode.com");
+const web3 = new Web3('https://ethereum-sepolia.publicnode.com');
 
 // 2nd - create an account
-const account = web3.eth.accounts.privateKeyToAccount("0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba");
+const account = web3.eth.accounts.privateKeyToAccount('0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba');
 
 // 3rd - create a raw transaction object
 const rawTransaction = {
   from: account.address,
-  to: "0x5875da5854c2adadbc1a7a448b5b2a09b26baff8", //random wallet
+  to: '0x5875da5854c2adadbc1a7a448b5b2a09b26baff8', //random wallet
   value: 1, //1 wei
   gasPrice: await web3.eth.getGasPrice(),
   gasLimit: 300000,
@@ -62,7 +62,7 @@ const signedTransaction = await web3.eth.accounts.signTransaction(rawTransaction
 // 5th - send the signed transaction
 const txReceipt = await web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
 
-console.log("Transaction Receipt:", txReceipt);
+console.log('Transaction Receipt:', txReceipt);
 /* ↳
 Transaction Receipt: {
   blockHash: '0xd73a824348ebb8c1895fbe7b2c506c287cfaadc8104628a140e7b39d7e41d50f',
@@ -100,35 +100,35 @@ Afterwards your file will be served on a local port, which will usually be on `h
 
 ``` html
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <title>Send Transaction Example</title>
-    <script src="https://cdn.jsdelivr.net/npm/web3@4.3.0/+esm"></script>
+    <script src='https://cdn.jsdelivr.net/npm/web3@4.3.0/+esm'></script>
   </head>
 
   <body>
-    <button id="sendButton">Send Transaction</button>
+    <button id='sendButton'>Send Transaction</button>
     <script>
       // Wrap the code inside an async function
       (async function () {
         try {
           // Check if MetaMask is installed and connected
-          if (typeof window.ethereum === "undefined") {
-            throw new Error("MetaMask is not installed or not properly configured");
+          if (typeof window.ethereum === 'undefined') {
+            throw new Error('MetaMask is not installed or not properly configured');
           }
 
           // Connect to the Ethereum network using MetaMask
-          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
           const web3 = new Web3(window.ethereum);
 
           // Add event listener to the Send Transaction button
-          const sendButton = document.getElementById("sendButton");
-          sendButton.addEventListener("click", async () => {
+          const sendButton = document.getElementById('sendButton');
+          sendButton.addEventListener('click', async () => {
             try {
-              await web3.eth.sendTransaction({ from: accounts[0], to: "0x38E2fb54587208f29B1452Bb8136d271BE0912EF" });
+              await web3.eth.sendTransaction({ from: accounts[0], to: '0x38E2fb54587208f29B1452Bb8136d271BE0912EF' });
             } catch (error) {
               console.error(error);
             }
@@ -145,14 +145,14 @@ Afterwards your file will be served on a local port, which will usually be on `h
 
 ## Contract Deployment
 
-```typescript title="Deploy a contract"
+```typescript title='Deploy a contract'
 // 1st step: initialize `web3` instance
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
 
 // 2nd step: add an account to wallet
-const privateKey = "0x7b907534ec13b19c67c2a738fdaa69014298c71f2221d7e5dec280232e996610";
+const privateKey = '0x7b907534ec13b19c67c2a738fdaa69014298c71f2221d7e5dec280232e996610';
 const account = web3.eth.accounts.wallet.add(privateKey).get(0);
 // Make sure the account has enough eth on balance to send the transaction
 
@@ -168,18 +168,18 @@ async function deploy() {
     const contractDeployed = await contract
       .deploy({
         input: ContractBytecode,
-        arguments: ["Constructor param1", "Constructor param2"],
+        arguments: ['Constructor param1', 'Constructor param2'],
       })
       .send({
         from: account?.address,
-        gas: "1000000",
+        gas: '1000000',
         // other transaction's params
       });
 
     // call method
-    await contractDeployed.methods.transfer("0xe2597eb05cf9a87eb1309e86750c903ec38e527e", "0x1").send({
+    await contractDeployed.methods.transfer('0xe2597eb05cf9a87eb1309e86750c903ec38e527e', '0x1').send({
       from: account?.address,
-      gas: "1000000",
+      gas: '1000000',
       // other transaction's params
     });
   } catch (error) {
@@ -196,14 +196,14 @@ async function deploy() {
 
 ## Interacting with contract methods
 
-``` ts title="Interact with contracts using a wallet under the hood"
+``` ts title='Interact with contracts using a wallet under the hood'
 // 1st step: initialize `web3` instance
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
 
 // 2nd step: add an account to wallet
-const privateKeyString = "0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba";
+const privateKeyString = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba';
 
 const wallet = web3.eth.accounts.wallet.add(privateKeyString);
 // Make sure the account has enough eth on balance to send the transaction
@@ -216,7 +216,7 @@ async function contractMethod() {
     // 4th step: call contract method and send the tx
     await myContract.methods.doSomething().send({
       from: wallet[0].address,
-      gas: "1000000",
+      gas: '1000000',
       // other transaction's params
     });
   } catch (error) {
@@ -232,14 +232,14 @@ async function contractMethod() {
 
 ## Sending a transaction and listening to the events
 
-```ts title="Transactions with Web3PromiEvent"
-import { Web3 } from "web3";
+```ts title='Transactions with Web3PromiEvent'
+import { Web3 } from 'web3';
 
 // 1st - initialize the provider
 const web3 = new Web3(/* PROVIDER*/);
 
 // 2nd - add an account to wallet
-const privateKey = "0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba";
+const privateKey = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba';
 const account = web3.eth.accounts.wallet.add(privateKey).get(0);
 // Make sure the account has enough eth on balance to send the transaction
 
@@ -247,34 +247,34 @@ const account = web3.eth.accounts.wallet.add(privateKey).get(0);
 // Magic happens behind sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed.
 const transaction = web3.eth.sendTransaction({
   from: account?.address,
-  to: "0xe4beef667408b99053dc147ed19592ada0d77f59",
-  value: "0x1",
-  gas: "300000",
+  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
+  value: '0x1',
+  gas: '300000',
   // other transaction's params
 });
 
 // highlight-start
 // 4th - listen to the transaction events
 transaction
-  .on("sending", (sending) => {
+  .on('sending', (sending) => {
     // Sending example
-    console.log("Sending:", sending);
+    console.log('Sending:', sending);
   })
-  .on("sent", (sent) => {
+  .on('sent', (sent) => {
     // Sent example
-    console.log("Sent:", sent);
+    console.log('Sent:', sent);
   })
-  .on("transactionHash", (transactionHash) => {
+  .on('transactionHash', (transactionHash) => {
     // Transaction hash example
-    console.log("Transaction Hash:", transactionHash);
+    console.log('Transaction Hash:', transactionHash);
   })
-  .on("confirmation", (confirmation) => {
+  .on('confirmation', (confirmation) => {
     // Confirmation example
-    console.log("Confirmation:", confirmation);
+    console.log('Confirmation:', confirmation);
   })
-  .on("error", (error) => {
+  .on('error', (error) => {
     // Error example
-    console.error("Error:", error);
+    console.error('Error:', error);
   });
 // highlight-end
 /* ↳

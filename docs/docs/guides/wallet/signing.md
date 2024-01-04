@@ -10,10 +10,10 @@ In this guide, we'll cover how to sign `data` and `transactions` using web3.js. 
 
 ## Sign Data With an `Account`
 
-In this example we are creating a random account `web3.eth.account.create()`, but you can also import a specific account by using `web3.eth.accounts.privateKeyToAccount("0x...")`
+In this example we are creating a random account `web3.eth.account.create()`, but you can also import a specific account by using `web3.eth.accounts.privateKeyToAccount('0x...')`
 
 ``` ts
-import { create } from "web3-eth-accounts";
+import { create } from 'web3-eth-accounts';
 
 // the create method returns a `Web3Account` object
 // the account contains an `address` and `privateKey` and allows you to be able to encrypt, signData and signTransaction.
@@ -29,7 +29,7 @@ encrypt: [AsyncFunction: encrypt]
 }
 */
 
-account.sign("hello world");
+account.sign('hello world');
 /* ↳ 
 {
   message: 'hello world',
@@ -44,49 +44,49 @@ account.sign("hello world");
 
 ## Sign a Transaction With an `Account`
 
-In this example we are importing a specific account by using `web3.eth.accounts.privateKeyToAccount("0x...")` but you can also create a random account by using `web3.eth.account.create()`.
+In this example we are importing a specific account by using `web3.eth.accounts.privateKeyToAccount('0x...')` but you can also create a random account by using `web3.eth.account.create()`.
 
 ``` ts
 import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER */);
 
-const privateKey = "0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba"
+const privateKey = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba'
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 
 signedTransaction = await account.signTransaction({
   from: account.address,
-  to: "0xe4beef667408b99053dc147ed19592ada0d77f59",
-  value: "0x1",
-  gas: "300000",
+  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
+  value: '0x1',
+  gas: '300000',
   gasPrice: await web3.eth.getGasPrice(),
 });
 
 console.log(signedTransaction);
 /* ↳
 {
-messageHash: "0xfad22c3ab5ecbb6eec934a21243ee1866fbbd3786f4e8e8ec631b917ef65174d",
-v: "0xf4f6",
-r: "0xc0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11",
-s: "0x4944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d",
+messageHash: '0xfad22c3ab5ecbb6eec934a21243ee1866fbbd3786f4e8e8ec631b917ef65174d',
+v: '0xf4f6',
+r: '0xc0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11',
+s: '0x4944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
 rawTransaction:
-    "0xf866808477359400830493e094e4beef667408b99053dc147ed19592ada0d77f59018082f4f6a0c0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11a04944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d",
-transactionHash: "0xa3fed275c97abc4a160cd9bef3ec90206686f32821a8fd4e01a04130bff35c1a",
+    '0xf866808477359400830493e094e4beef667408b99053dc147ed19592ada0d77f59018082f4f6a0c0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11a04944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
+transactionHash: '0xa3fed275c97abc4a160cd9bef3ec90206686f32821a8fd4e01a04130bff35c1a',
 };
 */
 ```
 
 ## Signing data/messages using a wallet
 
-``` ts title="Signing with a wallet"
-import { Web3 } from "web3";
+``` ts title='Signing with a wallet'
+import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER */);
 
 // create a `Wallet` with 1 account inside
 const wallet = web3.eth.accounts.wallet.create(1);
 
-const message = web3.utils.utf8ToHex("Hello world"); // sign only takes hexstrings, so turn message to hexstring
+const message = web3.utils.utf8ToHex('Hello world'); // sign only takes hexstrings, so turn message to hexstring
 
 const signedMessage = web3.eth.sign(message, wallet[0].address);
 
@@ -105,14 +105,14 @@ console.log(signedMessage);
 
 ## Signing data/messages using a privateKey
 
-```ts title= "Signing with a private key"
-import { Web3 } from "web3";
+```ts title= 'Signing with a private key'
+import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER */);
 
-const privateKey = "0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba";
+const privateKey = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba';
 
-const message = "Hello world";
+const message = 'Hello world';
 const signedMessage = web3.eth.accounts.sign(message, privateKey);
 
 console.log(signedMessage);

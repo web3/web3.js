@@ -1,6 +1,6 @@
 ---
 sidebar_position: 5
-sidebar_label: "Tutorial: IPC Provider"
+sidebar_label: 'Tutorial: IPC Provider'
 ---
 
 # Tutorial: IPC Provider
@@ -76,33 +76,33 @@ npm i web3
 
 6.  Copy and paste the following code into your `web3-ipc-provider.js` file and save it:
 
-```typescript title="IPC Provider"
-import { Web3 } from "web3";
-import { IpcProvider } from "web3-providers-ipc";
+```typescript title='IPC Provider'
+import { Web3 } from 'web3';
+import { IpcProvider } from 'web3-providers-ipc';
 
 // Connect to the Ethereum network using IPC provider
-const ipcPath = "<path>"; // Replace with your actual IPC path
+const ipcPath = '<path>'; // Replace with your actual IPC path
 const ipcProvider = new IpcProvider(ipcPath);
 
 const web3 = new Web3(ipcProvider);
 
 async function main() {
   try {
-    console.log("Does the provider support subscriptions?:", ipcProvider.supportsSubscriptions());
+    console.log('Does the provider support subscriptions?:', ipcProvider.supportsSubscriptions());
 
     // Get the list of accounts in the connected node which is in this case: geth in dev mode.
     const accounts = await web3.eth.getAccounts();
-    console.log("Accounts:", accounts);
+    console.log('Accounts:', accounts);
 
     // Send a transaction to the network
     const transactionReceipt = await web3.eth.sendTransaction({
       from: accounts[0],
       to: accounts[0], // sending a self-transaction
-      value: web3.utils.toWei("0.001", "ether"),
+      value: web3.utils.toWei('0.001', 'ether'),
     });
-    console.log("Transaction Receipt:", transactionReceipt);
+    console.log('Transaction Receipt:', transactionReceipt);
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error('An error occurred:', error);
   }
 }
 

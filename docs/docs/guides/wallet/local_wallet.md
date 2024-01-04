@@ -15,7 +15,7 @@ If used within your application, wallets will disappear after the program is com
 
 ## Create an account and add it to an empty `Wallet`
 
-```ts title="Creating an Account and Adding it to an Empty Wallet"
+```ts title='Creating an Account and Adding it to an Empty Wallet'
 import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER */);
@@ -76,7 +76,7 @@ Wallet(1) [
 
 ## Import a privateKey and add it to an empty `Wallet`
 
-```ts title="Creating a wallet and adding an account with a private key"
+```ts title='Creating a wallet and adding an account with a private key'
 import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER */);
@@ -98,7 +98,7 @@ console.log(wallet);
 */
 
 // 2nd - add an account to the wallet using a private key
-const privateKey = "0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba"
+const privateKey = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba'
 web3.eth.accounts.wallet.add(privateKey);
 
 console.log(wallet);

@@ -52,7 +52,7 @@ blockNumber.then(console.log);
 :::tip
 📝 web3.js uses `bigint` as the default type for all big numbers returned. For, this you see above the blocknumber has the `n` at its end (`18561956n`). However, you can change the returned type by passing an optional parameter like:
 ::: 
-```ts title="BigInt Tip"
+```ts title='BigInt Tip'
 import { Web3, DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3';
 
 const blockNumber = web3.eth.getBlockNumber({
@@ -292,7 +292,7 @@ To deploy a contract in ethers.js you might have something like:
 ```typescript
 const signer = provider.getSigner();
 const factory = new ethers.ContractFactory(abi, bytecode, signer);
-const contract = await factory.deploy("constructor param");
+const contract = await factory.deploy('constructor param');
 console.log('contract address', contract.address);
 
 // wait for contract creation transaction to be mined
@@ -305,9 +305,9 @@ In web3.js:
 const contractObject = new web3.eth.Contract(abi);
 const deployedContract = await contractObject.deploy({
     data: bytecode,
-    arguments: ["constructor param"]
+    arguments: ['constructor param']
 }).send({
-    from: "0x12598d2Fd88B420ED571beFDA8dD112624B5E730",
+    from: '0x12598d2Fd88B420ED571beFDA8dD112624B5E730',
     gas: '1000000',
     // other transaction's params
 });
@@ -348,8 +348,8 @@ In ethers.js:
 ```typescript
 // ethers
 const abi = [
-  "function getMessage(string) public view returns (string)",
-  "function getMessage() public view returns (string)"
+  'function getMessage(string) public view returns (string)',
+  'function getMessage() public view returns (string)'
 ]
 const contract = new ethers.Contract(address, abi, signer);
 
@@ -460,12 +460,12 @@ console.log(fromEtherToWie);
 With web3.js:
 
 ```typescript
-// the second parameter is "the unit to convert to"
+// the second parameter is 'the unit to convert to'
 const fromWieToEther = Web3.utils.fromWei('1000000000000000000', 'ether');
 // outputs: 1
 console.log(fromWieToEther);
 
-// the second parameter is "the unit of the number passed"
+// the second parameter is 'the unit of the number passed'
 const fromEtherToWie = Web3.utils.toWei('1.0', 'ether');
 // outputs: 1000000000000000000
 console.log(fromEtherToWie);

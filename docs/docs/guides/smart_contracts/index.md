@@ -21,7 +21,7 @@ Here's an example of importing from each:
 
 ```ts
 // Importing from web3-eth-contract package
-import { Contract } from "web3-eth-contract";
+import { Contract } from 'web3-eth-contract';
 const contract = new Contract(...);
 
 // Importing from the main web3 package
@@ -30,7 +30,7 @@ const contract = new Contract(...);
 
 // Importing from the main web3 package from inside `web3.eth` namespace
 import { Web3 } from 'web3';
-const web3 = new Web3("http://127.0.0.1:8545");
+const web3 = new Web3('http://127.0.0.1:8545');
 const contract = new web3.eth.Contract(...);
 
 // to set the provider for the contract instance:
@@ -53,13 +53,13 @@ Actually, the `web3.eth.Contract` is typically how you access the class through 
 Examples:
 
 ```ts
-import { Contract } from "web3-eth-contract";
+import { Contract } from 'web3-eth-contract';
 
 // instantiating Contract directly with provider URL from Contract package
 // alternatively, you can instantiate the Contract without a provider and set it later using contract.setProvider()
 const abi = [{...}];
 const address = '0x...';
-const contract = new Contract(abi, address { provider: "http://127.0.0.1:8545" }); 
+const contract = new Contract(abi, address { provider: 'http://127.0.0.1:8545' }); 
 
 // the provider can be set like this if not provided at the constructor:
 contract.setProvider('http://127.0.0.1:7545');
@@ -168,7 +168,7 @@ myContract.options.jsonInterface = [{...}]; // ABI
 // to call a method by sending a transaction 
 contract.methods.METHOD_NAME(METHOD_PARAMETERS).send();
 // you need to specify the account (from) that will be used to sign and send the transaction
-contract.methods.METHOD_NAME(METHOD_PARAMETERS).send({from: "0x..."});
+contract.methods.METHOD_NAME(METHOD_PARAMETERS).send({from: '0x...'});
 
 // to call a view or pure method that does not send a transaction
 contract.methods.METHOD_NAME(METHOD_PARAMETERS).call();

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 6
-sidebar_label: "Tutorial: Truffle"
+sidebar_label: 'Tutorial: Truffle'
 ---
 
 # Tutorial: Truffle 
@@ -44,26 +44,26 @@ npm i web3 @truffle/hdwallet-provider bip39
 4.  Create a new JavaScript file, called `index.js`, in your code editor.
 5.  Copy and paste the following code into your JavaScript file, and then save the file:
 
-```typescript title="EIP1193 Provider (Truffle)"
-import { Web3 } from "web3";
-import HDWalletProvider from "@truffle/hdwallet-provider";
-import bip39 from "bip39";
+```typescript title='EIP1193 Provider (Truffle)'
+import { Web3 } from 'web3';
+import HDWalletProvider from '@truffle/hdwallet-provider';
+import bip39 from 'bip39';
 
 const mnemonic: string = bip39.generateMnemonic(); // generates seed phrase
-console.log("seed phrase:", mnemonic);
+console.log('seed phrase:', mnemonic);
 
 // Connect to the Ethereum network using an HTTP provider and WalletProvider
-const provider: HDWalletProvider = new HDWalletProvider(mnemonic, "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID");
+const provider: HDWalletProvider = new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
 const web3: Web3 = new Web3(provider);
 
 // Get the current block number from the network
 web3.eth
   .getBlockNumber()
   .then(function (blockNumber: number) {
-    console.log("Current block number:", blockNumber);
+    console.log('Current block number:', blockNumber);
   })
   .catch(function (error: any) {
-    console.log("Error:", error);
+    console.log('Error:', error);
   });
 ```
 
@@ -128,54 +128,54 @@ npm i express
 
 ```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
   <head>
-    <meta charset="UTF-8" />
+    <meta charset='UTF-8' />
     <title>Connecting to the Ethereum network with Web3.js and MetaMask</title>
   </head>
   <body>
     <h1>Connecting to the Ethereum network with Web3.js and MetaMask</h1>
-    <pre id="log">
+    <pre id='log'>
   You need to approve connecting this website to MetaMask.
   Click on the MetaMask icon in the browser extension, if it did not show a popup already.
   </pre
     >
 
-    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js'></script>
     <script>
-      window.addEventListener("load", async function () {
+      window.addEventListener('load', async function () {
         // Check if web3 is available
-        if (typeof window.ethereum !== "undefined") {
+        if (typeof window.ethereum !== 'undefined') {
           // Use the browser injected Ethereum provider
           web3 = new Web3(window.ethereum);
           // Request access to the user's MetaMask account (ethereum.enable() is deprecated)
           // Note: Even though, you can also get the accounts from `await web3.eth.getAccounts()`,
           // 	you still need to make a call to any MetaMask RPC to cause MetaMask to ask for concent.
           const accounts = await window.ethereum.request({
-            method: "eth_requestAccounts",
+            method: 'eth_requestAccounts',
           });
-          console.log("Accounts requested from MetaMask RPC: ", accounts);
+          console.log('Accounts requested from MetaMask RPC: ', accounts);
 
-          document.getElementById("log").textContent = "Sending a self transaction... Follow the instructions on MetaMask.";
+          document.getElementById('log').textContent = 'Sending a self transaction... Follow the instructions on MetaMask.';
 
           try {
             // Send a transaction to the network and wait for the transaction to be mined.
             const transactionReceipt = await web3.eth.sendTransaction({
               from: accounts[0],
               to: accounts[0], // sending a self-transaction
-              value: web3.utils.toWei("0.001", "ether"),
+              value: web3.utils.toWei('0.001', 'ether'),
             });
 
-            document.getElementById("log").textContent = "Sending a self transaction succeeded";
-            document.getElementById("log").textContent += `\n  Transaction hash: ${transactionReceipt.transactionHash}`;
-            document.getElementById("log").textContent += `\n  Gas Used: ${transactionReceipt.gasUsed} gwei`;
+            document.getElementById('log').textContent = 'Sending a self transaction succeeded';
+            document.getElementById('log').textContent += `\n  Transaction hash: ${transactionReceipt.transactionHash}`;
+            document.getElementById('log').textContent += `\n  Gas Used: ${transactionReceipt.gasUsed} gwei`;
           } catch (error) {
-            console.log("error", error);
-            document.getElementById("log").textContent = "Error happened: " + JSON.stringify(error, null, "  ");
+            console.log('error', error);
+            document.getElementById('log').textContent = 'Error happened: ' + JSON.stringify(error, null, '  ');
           }
         } else {
           // If web3 is not available, give instructions to install MetaMask
-          document.getElementById("log").innerHTML = "Please install MetaMask to connect to the Ethereum network.";
+          document.getElementById('log').innerHTML = 'Please install MetaMask to connect to the Ethereum network.';
         }
       });
     </script>
@@ -187,14 +187,14 @@ npm i express
 8. Copy and paste the following code into `server.js`, and save it after:
 
 ```js
-const express = require("express");
+const express = require('express');
 const app = express();
-const path = require("path");
+const path = require('path');
 
-app.use(express.static(path.join(__dirname, ".")));
+app.use(express.static(path.join(__dirname, '.')));
 
 app.listen(8097, () => {
-  console.log("Server started on port 8097");
+  console.log('Server started on port 8097');
 });
 ```
 

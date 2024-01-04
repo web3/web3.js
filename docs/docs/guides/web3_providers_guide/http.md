@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-sidebar_label: "Tutorial: HTTP Provider"
+sidebar_label: 'Tutorial: HTTP Provider'
 ---
 
 # Tutorial: HTTP Provider
@@ -53,11 +53,11 @@ npm i web3
 
 5. Copy and paste the following code into your `web3-http-provider.js` file and save it:
 
-```typescript title="HTTP Provider"
-import { Web3 } from "web3";
+```typescript title='HTTP Provider'
+import { Web3 } from 'web3';
 
 // Connect to the Ethereum network using the HTTP provider
-const ganacheUrl = "http://localhost:7545";
+const ganacheUrl = 'http://localhost:7545';
 const httpProvider = new Web3.providers.HttpProvider(ganacheUrl);
 const web3 = new Web3(httpProvider);
 
@@ -65,7 +65,7 @@ async function main() {
   try {
     // Get the current block number from the network
     const currentBlockNumber = await web3.eth.getBlockNumber();
-    console.log("Current block number:", currentBlockNumber);
+    console.log('Current block number:', currentBlockNumber);
 
     // Get the list of accounts in the connected node (e.g., Ganache)
     const accounts = await web3.eth.getAccounts();
@@ -75,15 +75,15 @@ async function main() {
     const transactionReceipt = await web3.eth.sendTransaction({
       from: accounts[0],
       to: accounts[1],
-      value: web3.utils.toWei("0.001", "ether"),
+      value: web3.utils.toWei('0.001', 'ether'),
     });
-    console.log("Transaction Receipt:", transactionReceipt);
+    console.log('Transaction Receipt:', transactionReceipt);
 
     // Get the updated block number
     const updatedBlockNumber = await web3.eth.getBlockNumber();
-    console.log("Updated block number:", updatedBlockNumber);
+    console.log('Updated block number:', updatedBlockNumber);
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error('An error occurred:', error);
   }
 }
 

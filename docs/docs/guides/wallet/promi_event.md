@@ -7,7 +7,7 @@ sidebar_label: 'Transactions Events Listening'
 
 You can use `Web3PromiEvent` when you send transaction via `web3.eth.sendTransaction`, `web3.eth.sendSignedTransaction`, `contractDeployed.methods['methodName'](...methodParams).send` functions
 
-```ts title="Transaction Promise Events"
+```ts title='Transaction Promise Events'
 web3.eth.sendTransaction({...})
     .on('sending', (sending) => {
         // Sending example

@@ -15,7 +15,7 @@ Connecting to a chain happens through a provider. You can pass the provider to t
 If you want to subscribe to live events in the blockchain, you should use [`WebSocket provider`](#websocket-provider) or [`IPC provider`](#ipc-provider)
 :::
 
-```typescript title="Initialize a provider"
+```typescript title='Initialize a provider'
 import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
@@ -43,7 +43,7 @@ The passed provider can be either type `string` or one of the [`SupportedProvide
 
 ### HTTP Provider
 
-``` ts title="Initialize HTTP Provider"
+``` ts title='Initialize HTTP Provider'
 import { Web3, HttpProvider } from 'web3';
 
 //highlight-next-line
@@ -63,7 +63,7 @@ await web3.eth.getBlockNumber()
 
 ### WebSocket provider
 
-``` ts title="Initialize WS Provider"
+``` ts title='Initialize WS Provider'
 import { Web3, WebSocketProvider } from 'web3';
 
 //highlight-next-line
@@ -82,7 +82,7 @@ await web3.eth.getBlockNumber();
 
 ### IPC Provider
 
-``` ts title="Initialize IPC Provider"
+``` ts title='Initialize IPC Provider'
 import { Web3 } from 'web3';
 //highlight-next-line
 import { IpcProvider } from 'web3-providers-ipc';
@@ -116,15 +116,15 @@ The key rule for setting provider is as follows:
 
 ### Local Geth Node
 
-```typescript title="IPC, HTTP and WS provider"
+```typescript title='IPC, HTTP and WS provider'
 import { Web3 } from 'web3';
 import { IpcProvider } from 'web3-providers-ipc';
 
 //highlight-next-line
 //IPC provider
 const web3 = new Web3(new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'));//mac os path
-// on windows the path is: "\\\\.\\pipe\\geth.ipc"
-// on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+// on windows the path is: '\\\\.\\pipe\\geth.ipc'
+// on linux the path is: '/users/myuser/.ethereum/geth.ipc'
 
 //highlight-next-line
 //HTTP provider
@@ -141,7 +141,7 @@ web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
 ### Remote Node Provider
 
-```ts title="Alchemy, Infura, etc"
+```ts title='Alchemy, Infura, etc'
 // like Alchemy (https://www.alchemyapi.io/supernode)
 // or infura (https://mainnet.infura.io/v3/your_infura_key)
 import { Web3 } from 'web3';
@@ -154,8 +154,8 @@ As stated above, the injected provider should be in compliance with [EIP-1193](h
 
 The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
 
-```html title="E.g, Metamask"
-<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+```html title='E.g, Metamask'
+<script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
 <script>
  window.addEventListener('load', function () {
  // Check if web3 is available
@@ -193,7 +193,7 @@ There are differences in the objects that could be passed in the Provider constr
 The options is of type `HttpProviderOptions`, which is an object with a single key named `providerOptions` and its value is an object of type `RequestInit`.
 Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html).
 
-```ts title="HTTP Provider example"
+```ts title='HTTP Provider example'
 const httpOptions = {
     providerOptions: {
         body: undefined,
@@ -223,7 +223,7 @@ The options object is of type `ClientRequestArgs` or of `ClientOptions`. See [he
 
 The second option parameter can be given regarding reconnecting. And here is its type:
 
-```ts title="WebSocket Provider example"
+```ts title='WebSocket Provider example'
 // this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
   autoReconnect: boolean, // default: `true`
@@ -233,13 +233,13 @@ type ReconnectOptions = {
 
 ```
 
-```ts title="Instantiation of WebSocket Provider"
+```ts title='Instantiation of WebSocket Provider'
 const provider = new WebSocketProvider(
   `ws://localhost:8545`,
   {
     headers: {
       // to provide the API key if the Node requires the key to be inside the `headers` for example:
-      "x-api-key": "<Api key>",
+      'x-api-key': '<Api key>',
     },
   },
   {
@@ -252,7 +252,7 @@ const provider = new WebSocketProvider(
 
 The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined, like in the following example:
 
-```ts title="Instantiation of WebSocket Provider"
+```ts title='Instantiation of WebSocket Provider'
 const provider = new WebSocketProvider(
   `ws://localhost:8545`,
   {},
@@ -266,11 +266,11 @@ const provider = new WebSocketProvider(
 
 Below is an example for the passed options:
 
-```ts title="WS Provider options example"
+```ts title='WS Provider options example'
 let clientOptions: ClientOptions = {
   // Useful for credentialed urls, e.g: ws://username:password@localhost:8546
   headers: {
-    authorization: "Basic username:password",
+    authorization: 'Basic username:password',
   },
   maxPayload: 100000000,
 };
@@ -288,7 +288,7 @@ The IPC Provider could be used in node.js dapps when running a local node. And i
 
 It accepts a second parameter called `socketOptions`. And, its type is `SocketConstructorOpts`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html) for full details. And here is its interface:
 
-```ts title="IPC Provider options"
+```ts title='IPC Provider options'
 // for more check https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html
 interface SocketConstructorOpts {
   fd?: number | undefined;
@@ -311,7 +311,7 @@ type ReconnectOptions = {
 
 Below is an example for the passed options for each version:
 
-```ts title="Options Example"
+```ts title='Options Example'
 let clientOptions: SocketConstructorOpts = {
 	allowHalfOpen: false;
 	readable: true;
@@ -327,7 +327,7 @@ const reconnectOptions: ReconnectOptions = {
 
 And here is a sample instantiation for the `IpcProvider`:
 
-```ts title="IPC Provider example"
+```ts title='IPC Provider example'
 const provider = new IpcProvider(
   `path.ipc`,
   {
@@ -343,7 +343,7 @@ const provider = new IpcProvider(
 
 The second and the third parameters are both optional. And, for example, the second parameter could be an empty object or undefined.
 
-```ts title="IPC Provider example"
+```ts title='IPC Provider example'
 const provider = new IpcProvider(
   `path.ipc`,
   {},
@@ -365,9 +365,9 @@ The error message, for the max reconnect attempts, will contain the value of the
 
 And here is how to catch the error, if max attempts reached when there is auto reconnecting:
 
-```ts title="Error message for reconnect attempts"
-provider.on("error", (error) => {
-  if (error.message.startsWith("Maximum number of reconnect attempts reached!")) {
+```ts title='Error message for reconnect attempts'
+provider.on('error', (error) => {
+  if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
     // the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
     // the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
   }

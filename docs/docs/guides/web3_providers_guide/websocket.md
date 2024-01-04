@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-sidebar_label: "Tutorial: WebSocket Provider"
+sidebar_label: 'Tutorial: WebSocket Provider'
 ---
 
 # Tutorial: WebSocket Provider
@@ -57,29 +57,29 @@ npm i web3
 
 5.  Copy and paste the following code into your `web3-websocket-provider.js` file and save it:
 
-```typescript title="WebSocket Provider"
-import { Web3 } from "web3";
+```typescript title='WebSocket Provider'
+import { Web3 } from 'web3';
 
 // Connect to the Ethereum network using WebSocket provider
-const ganacheUrl = "ws://localhost:8545";
+const ganacheUrl = 'ws://localhost:8545';
 const wsProvider = new Web3.providers.WebsocketProvider(ganacheUrl);
 const web3 = new Web3(wsProvider);
 
 async function main() {
   try {
-    console.log("Does the provider support subscriptions?:", wsProvider.supportsSubscriptions());
+    console.log('Does the provider support subscriptions?:', wsProvider.supportsSubscriptions());
 
     // Subscribe to new block headers
-    const subscription = await web3.eth.subscribe("newBlockHeaders");
+    const subscription = await web3.eth.subscribe('newBlockHeaders');
 
-    subscription.on("data", async (blockhead) => {
-      console.log("New block header: ", blockhead);
+    subscription.on('data', async (blockhead) => {
+      console.log('New block header: ', blockhead);
 
       // You do not need the next line if you like to keep being notified for every new block
       await subscription.unsubscribe();
-      console.log("Unsubscribed from new block headers.");
+      console.log('Unsubscribed from new block headers.');
     });
-    subscription.on("error", (error) => console.log("Error when subscribing to New block header: ", error));
+    subscription.on('error', (error) => console.log('Error when subscribing to New block header: ', error));
 
     // Get the list of accounts in the connected node which is in this case: Ganache.
     const accounts = await web3.eth.getAccounts();
@@ -87,9 +87,9 @@ async function main() {
     const transactionReceipt = await web3.eth.sendTransaction({
       from: accounts[0],
       to: accounts[1],
-      value: web3.utils.toWei("0.001", "ether"),
+      value: web3.utils.toWei('0.001', 'ether'),
     });
-    console.log("Transaction Receipt:", transactionReceipt);
+    console.log('Transaction Receipt:', transactionReceipt);
   } catch (error) {
     console.error(error);
   }

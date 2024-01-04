@@ -50,7 +50,7 @@ You need to specify the exact data that will be passed to the provider. You do t
 ```ts
 protected _buildSubscriptionParams() {
   // the `someCustomSubscription` below is the name of the subscription provided by the node you are connected to.
-  return ["someCustomSubscription", this.args];
+  return ['someCustomSubscription', this.args];
 }
 ```
 
@@ -58,7 +58,7 @@ With the implementation above, the call that will be made to the provider will b
 
 ```ts
 {
-  id: "[GUID-STRING]", // something like: '3f839900-afdd-4553-bca7-b4e2b835c687'
+  id: '[GUID-STRING]', // something like: '3f839900-afdd-4553-bca7-b4e2b835c687'
   jsonrpc: '2.0',
   method: 'eth_subscribe',
   // The `someCustomSubscription` below is the name of the subscription provided by the node you are connected to.
@@ -130,11 +130,11 @@ const web3 = new Web3({
 // subscribe at the provider:
 // Note: this will internally initialize a new instance of `MyCustomSubscription`,
 // call `_buildSubscriptionParams`, and then send the `eth_subscribe` RPC call.
-const sub = web3.subscriptionManager.subscribe("custom", args);
+const sub = web3.subscriptionManager.subscribe('custom', args);
 
 // listen to the emitted event:
 // Note: the data will be optionally formatted at `formatSubscriptionResult`, before it is emitted here.
-sub.on("data", (result) => {
+sub.on('data', (result) => {
   // This will be called every time a new data arrived from the provider to this subscription
 });
 ```
@@ -164,7 +164,7 @@ class MyCustomSubscription extends Web3Subscription<
 > {
   protected _buildSubscriptionParams() {
     // the `someCustomSubscription` below is the name of the subscription provided by the node your are connected to.
-    return ["someCustomSubscription", this.args];
+    return ['someCustomSubscription', this.args];
   }
 
   protected formatSubscriptionResult(data: string) {
@@ -187,7 +187,7 @@ class MyCustomSubscription extends Web3Subscription<
 // Usage
 
 const args = {
-  customArg: "hello custom",
+  customArg: 'hello custom',
 };
 
 const CustomSubscriptions = {
@@ -204,9 +204,9 @@ const web3 = new Web3({
   registeredSubscriptions: CustomSubscriptions,
 });
 
-const sub = web3.subscriptionManager.subscribe("custom", args);
+const sub = web3.subscriptionManager.subscribe('custom', args);
 
-sub.on("data", (result) => {
+sub.on('data', (result) => {
   // New data
 });
 

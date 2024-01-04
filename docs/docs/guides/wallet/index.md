@@ -28,7 +28,7 @@ For each of them you can use [Web3PromiEvent](./promi_event) to catch extra tran
 
 An **account** in web3.js is an `object`, it refers to an individual Ethereum address with its associated public and private keys. While a wallet is a higher-level construct for managing multiple accounts, an individual Ethereum address is considered an account.
 
-```ts title="Create a new account"
+```ts title='Create a new account'
 const account = web3.eth.accounts.create();
 
 console.log(account)
@@ -45,7 +45,7 @@ console.log(account)
 
 A **wallet** in web3.js is an `array` that holds multiple Ethereum accounts. It provides a convenient way to manage and interact with a collection of accounts. Think of it as a digital wallet that you use to store and organize your various Ethereum addresses.
 
-```ts title="Create a new wallet"
+```ts title='Create a new wallet'
 //create a wallet with `1` random account
 const wallet = web3.eth.accounts.wallet.create(1);
 
@@ -82,19 +82,19 @@ To learn more about the `wallet` methods, please visit [web3.js wallet API](/lib
 
 The shortest way to do this, is by creating a `Wallet` directly by adding a private key (the private key must start with '0x' and it must have funds to execute the transaction)
 
-```ts title="Sending a transaction adding a privateKey"
-import { Web3 } from "web3";
+```ts title='Sending a transaction adding a privateKey'
+import { Web3 } from 'web3';
 
-const web3 = new Web3("https://ethereum-sepolia.publicnode.com");
+const web3 = new Web3('https://ethereum-sepolia.publicnode.com');
 
 //this will create an array `Wallet` with 1 account with this privateKey
 //it will generate automatically a public key for it
 //make sure you have funds in this accounts
 //highlight-next-line
-const wallet = web3.eth.accounts.wallet.add("0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5");
+const wallet = web3.eth.accounts.wallet.add('0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5');
 
-const _to = "0xc7203efeb54846c149f2c79b715a8927f7334e74";
-const _value = "1"; //1 wei
+const _to = '0xc7203efeb54846c149f2c79b715a8927f7334e74';
+const _value = '1'; //1 wei
 
 //the `from` address in the transaction must match the address stored in our `Wallet` array
 //that's why we explicitly access it using `wallet[0].address` to ensure accuracy
@@ -106,7 +106,7 @@ const receipt = await web3.eth.sendTransaction({
 //if you have more than 1 account, you can change the address by accessing to another account
 //e.g, `from: wallet[1].address`
 
-console.log("Tx receipt:", receipt);
+console.log('Tx receipt:', receipt);
 /* ↳
 Tx receipt: {
   blockHash: '0xa43b43b6e13ba47f2283b4afc15271ba07d1bba0430bd0c430f770ba7c98d054',
@@ -132,20 +132,20 @@ Tx receipt: {
 
 To interact with functions that modify or update data in smart contracts(writing-functions), we need to create a `Wallet`. This `Wallet` must holds at least 1 account with the necessary funds to execute these operations on the blockchain.
 
-```ts title="Interacting with writing-functions of a smart contract"
-import { Web3 } from "web3";
+```ts title='Interacting with writing-functions of a smart contract'
+import { Web3 } from 'web3';
 
-const web3 = new Web3("https://ethereum-sepolia.publicnode.com");
+const web3 = new Web3('https://ethereum-sepolia.publicnode.com');
 
 //create a wallet
 //highlight-next-line
-const wallet = web3.eth.accounts.wallet.add("0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5");
+const wallet = web3.eth.accounts.wallet.add('0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5');
 
 //this is how we can access to the first account of the wallet
-console.log("Account 1:", wallet[0]);
+console.log('Account 1:', wallet[0]);
 /* ↳
 Account 1: {
-  address: "0x57CaabD59a5436F0F1b2B191b1d070e58E6449AE",
+  address: '0x57CaabD59a5436F0F1b2B191b1d070e58E6449AE',
   privateKey: '0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5',
   ...
 }
@@ -155,11 +155,11 @@ Account 1: {
 const myContract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 
 //interact with the contract
-//wallet[0].address == "0x57CaabD59a5436F0F1b2B191b1d070e58E6449AE"
+//wallet[0].address == '0x57CaabD59a5436F0F1b2B191b1d070e58E6449AE'
 //highlight-next-line
 const txReceipt = await myContract.methods.doSomething().send({ from: wallet[0].address });
 
-console.log("Transaction receipt:", txReceipt);
+console.log('Transaction receipt:', txReceipt);
 /* ↳
   Transaction receipt: {...}
 */
@@ -169,11 +169,11 @@ console.log("Transaction receipt:", txReceipt);
 
 To interact with smart contracts `view public/external returns`, we don't need to instantiate a `Wallet`, we can do it just by instantiating the smart contract and the provider.
 
-```ts title="Interacting with reading-functions of a smart contract"
-import { Web3 } from "web3";
+```ts title='Interacting with reading-functions of a smart contract'
+import { Web3 } from 'web3';
 
 //instantiate the provider
-const web3 = new Web3("https://ethereum-sepolia.publicnode.com");
+const web3 = new Web3('https://ethereum-sepolia.publicnode.com');
 
 //instantiate the contract
 const myContract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
@@ -182,7 +182,7 @@ const myContract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 //highlight-next-line
 const result = await myContract.methods.doSomething().call();
 
-console.log("Result:", result)
+console.log('Result:', result)
 /* ↳
   Result: ...
 */
