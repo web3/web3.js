@@ -29,6 +29,24 @@ web3.utils.toWei('0.1');
 web3.utils.toWei('0.1', 'ether');
 ```
 
+## Conversion to Hex
+
+The `toHex` behave exactly the same in both v1.x and 4.x, except for a string that contains only numbers. In 1.x if a number was provided inside a string like `123` it used to be treated as a number. While in 4.x it will be treated as a string, except if it was prefixed with `0x`. For more clarity, check below: 
+
+```ts
+// 1.x
+new Web3().utils.toHex(0x1) // returns  0x1
+new Web3().utils.toHex('0x1') // returns  0x1
+new Web3().utils.toHex(1) // returns  0x1
+new Web3().utils.toHex('1') // returns  0x1
+
+// 4.x
+new Web3().utils.toHex(0x1) // returns  0x1
+new Web3().utils.toHex('0x1') // returns  0x1
+new Web3().utils.toHex(1) // returns  0x1
+new Web3().utils.toHex('1') // returns  0x31
+```
+
 ## Validation functions
 
 Validation functions has been moved to the new package `web3-validator`. Actually, you can still import them from `web3-util`. But they are marked as "deprecated" and you are encouraged to import them from `web3-validator`.
