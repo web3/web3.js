@@ -1116,6 +1116,7 @@ export class Contract<Abi extends ContractAbi>
 					}),
 
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
+				decodeABI: (data?: string) => decodeMethodReturn(methodAbi, data),
 
 				createAccessList: async (
 					options?: PayableCallOptions | NonPayableCallOptions,
