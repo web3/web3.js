@@ -25,102 +25,152 @@ describe('waitForTransactionReceipt unit test', () => {
 	it(`waitForTransactionReceipt should throw error after block timeout`, async () => {
 		let blockNum = 1;
 
-		web3Context = new Web3Context(
-			{
-				request: async (payload: any) => {
-					let response: { jsonrpc: string; id: any; result: string } | undefined;
+		web3Context = new Web3Context({
+			request: async (payload: any) => {
+				let response: { jsonrpc: string; id: any; result: string } | undefined;
 
-					switch (payload.method) {
-						case 'eth_blockNumber':
-							blockNum += 50;
-							response = {
-								jsonrpc: '2.0',
-								id: payload.id,
-								result: `0x${blockNum.toString(16)}`,
-							};
-							break;
+				switch (payload.method) {
+					case 'eth_blockNumber':
+						blockNum += 50;
+						response = {
+							jsonrpc: '2.0',
+							id: payload.id,
+							result: `0x${blockNum.toString(16)}`,
+						};
+						break;
 
-						case 'eth_getTransactionReceipt':
-							response = undefined;
-							break;
+					case 'eth_getTransactionReceipt':
+						response = undefined;
+						break;
 
-						default:
-							throw new Error(`Unknown payload ${payload}`);
-					}
+					default:
+						throw new Error(`Unknown payload ${payload}`);
+				}
 
-					return new Promise(resolve => {
-						resolve(response as any);
-					});
-				},
-				supportsSubscriptions: () => false,
+				return new Promise(resolve => {
+					resolve(response as any);
+				});
 			},
-		);
+			supportsSubscriptions: () => false,
+		});
 
 		await expect(async () =>
 			waitForTransactionReceipt(
 				web3Context,
 				'0x0430b701e657e634a9d5480eae0387a473913ef29af8e60c38a3cee24494ed54',
-				DEFAULT_RETURN_FORMAT
-			)
+				DEFAULT_RETURN_FORMAT,
+			),
 		).rejects.toThrow(TransactionBlockTimeoutError);
-
 	});
 
-	it(`waitForTransactionReceipt should resolve immediatly if receipt is avalible`, async () => {
+	it(`waitForTransactionReceipt should resolve immediately if receipt is available`, async () => {
 		let blockNum = 1;
 		const txHash = '0x85d995eba9763907fdf35cd2034144dd9d53ce32cbec21349d4b12823c6860c5';
 		const blockHash = '0xa957d47df264a31badc3ae823e10ac1d444b098d9b73d204c40426e57f47e8c3';
 
-		web3Context = new Web3Context(
-			{
-				request: async (payload: any) => {
-					const response = {
-						jsonrpc: '2.0',
-						id: payload.id,
-						result: {},
-					};
+		web3Context = new Web3Context({
+			request: async (payload: any) => {
+				const response = {
+					jsonrpc: '2.0',
+					id: payload.id,
+					result: {},
+				};
 
-					switch (payload.method) {
-						case 'eth_blockNumber':
-							blockNum += 10;
-							response.result = `0x${blockNum.toString(16)}`;
-							break;
+				switch (payload.method) {
+					case 'eth_blockNumber':
+						blockNum += 10;
+						response.result = `0x${blockNum.toString(16)}`;
+						break;
 
-						case 'eth_getTransactionReceipt':
-							response.result = {
-								blockHash,
-								blockNumber: `0x1`,
-								cumulativeGasUsed: '0xa12515',
-								from: payload.from,
-								gasUsed: payload.gasLimit,
-								status: '0x1',
-								to: payload.to,
-								transactionHash: txHash,
-								transactionIndex: '0x66',
+					case 'eth_getTransactionReceipt':
+						response.result = {
+							blockHash,
+							blockNumber: `0x1`,
+							cumulativeGasUsed: '0xa12515',
+							from: payload.from,
+							gasUsed: payload.gasLimit,
+							status: '0x1',
+							to: payload.to,
+							transactionHash: txHash,
+							transactionIndex: '0x66',
+						};
+						break;
 
-							};
-							break;
+					default:
+						throw new Error(`Unknown payload ${payload}`);
+				}
 
-						default:
-							throw new Error(`Unknown payload ${payload}`);
-					}
-
-					return new Promise(resolve => {
-						resolve(response as any);
-					});
-				},
-				supportsSubscriptions: () => false,
+				return new Promise(resolve => {
+					resolve(response as any);
+				});
 			},
-		);
+			supportsSubscriptions: () => false,
+		});
 
 		const res = await waitForTransactionReceipt(
 			web3Context,
 			'0x0430b701e657e634a9d5480eae0387a473913ef29af8e60c38a3cee24494ed54',
-			DEFAULT_RETURN_FORMAT
+			DEFAULT_RETURN_FORMAT,
 		);
 
 		expect(res).toBeDefined();
 		expect(res.transactionHash).toStrictEqual(txHash);
 		expect(res.blockHash).toStrictEqual(blockHash);
 	});
-})
+
+	it(`waitForTransactionReceipt should resolve immediately if receipt is available - when subscription is enabled`, async () => {
+		let blockNum = 1;
+		const txHash = '0x85d995eba9763907fdf35cd2034144dd9d53ce32cbec21349d4b12823c6860c5';
+		const blockHash = '0xa957d47df264a31badc3ae823e10ac1d444b098d9b73d204c40426e57f47e8c3';
+
+		web3Context = new Web3Context({
+			request: async (payload: any) => {
+				const response = {
+					jsonrpc: '2.0',
+					id: payload.id,
+					result: {},
+				};
+
+				switch (payload.method) {
+					case 'eth_blockNumber':
+						blockNum += 10;
+						response.result = `0x${blockNum.toString(16)}`;
+						break;
+
+					case 'eth_getTransactionReceipt':
+						response.result = {
+							blockHash,
+							blockNumber: `0x1`,
+							cumulativeGasUsed: '0xa12515',
+							from: payload.from,
+							gasUsed: payload.gasLimit,
+							status: '0x1',
+							to: payload.to,
+							transactionHash: txHash,
+							transactionIndex: '0x66',
+						};
+						break;
+
+					default:
+						throw new Error(`Unknown payload ${payload}`);
+				}
+
+				return new Promise(resolve => {
+					resolve(response as any);
+				});
+			},
+			supportsSubscriptions: () => true,
+		});
+		web3Context.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;
+
+		const res = await waitForTransactionReceipt(
+			web3Context,
+			'0x0430b701e657e634a9d5480eae0387a473913ef29af8e60c38a3cee24494ed54',
+			DEFAULT_RETURN_FORMAT,
+		);
+
+		expect(res).toBeDefined();
+		expect(res.transactionHash).toStrictEqual(txHash);
+		expect(res.blockHash).toStrictEqual(blockHash);
+	});
+});
