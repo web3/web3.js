@@ -2,9 +2,7 @@ name: 'Black Box Tests'
 on:
     push:
       branches:
-        - release/**
-      tags:
-        - v4.*
+        - '4.x'
 
 jobs:
   build:
