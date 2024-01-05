@@ -16,13 +16,24 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiInput } from 'web3-types';
-import { decodeParameters, encodeParameters } from '../../src';
+import { decodeParameters, encodeParameters, inferTypesAndEncodeParameters } from '../../src';
 import testsData from '../fixtures/abitestsdata.json';
 import { deepEqualTolerateBigInt, removeKey } from './test_utils';
 
 describe('encodeParameters decodeParameters tests should pass', () => {
 	it.each(testsData)(`unit test of encodeParameters - $name`, encoderTestObj => {
 		const encodedResult = encodeParameters([encoderTestObj.type], [encoderTestObj.value]);
+		expect(encodedResult).toEqual(encoderTestObj.encoded);
+	});
+
+	it.each(testsData)(`unit test of encodeParameters - $name`, encoderTestObj => {
+		// skip for types that are not supported by infer-types
+		// the unsupported types are uint(other than 256), int(other than 256), bytes(that has a number like bytes1 or bytes2), and arrays
+		if (/((?<!u)int)|((?<!uint\d)uint(?!256))|(bytes\d)|(\[.*?\])/.test(encoderTestObj.type)) {
+			return;
+		}
+
+		const encodedResult = inferTypesAndEncodeParameters([encoderTestObj.value]);
 		expect(encodedResult).toEqual(encoderTestObj.encoded);
 	});
 
