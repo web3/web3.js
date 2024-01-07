@@ -1,5 +1,5 @@
 ---
-sidebar_position: 0
+sidebar_position: 3
 sidebar_label: 'For Plugin Users'
 ---
 
@@ -32,10 +32,10 @@ To add a plugin to an instance of a class sourced from web3.js' modules (such as
 
 For illustration purposes, let's assume a plugin developer has the following code for their plugin. Please note that this code should not be touched by the plugin user:
 
-<Tabs groupId="prog-lang" queryString>
+<Tabs groupId='prog-lang' queryString>
 
-  <TabItem value="javascript" label="JavaScript"
-  	attributes={{className: "javascript-tab"}}>
+  <TabItem value='javascript' label='JavaScript'
+  	attributes={{className: 'javascript-tab'}}>
 
 ```typescript
 // code written by the plugin **developer**
@@ -43,25 +43,25 @@ For illustration purposes, let's assume a plugin developer has the following cod
 const { Web3PluginBase } = require('web3');
 
 export class PluginExample extends Web3PluginBase {
-	public pluginNamespace = 'pluginExample';
+  public pluginNamespace = 'pluginExample';
 
-	public sampleMethod() {
-		return 'simpleValue';
-	}
+  public sampleMethod() {
+    return 'simpleValue';
+  }
 }
 
 // Module Augmentation
 declare module 'web3' {
-	interface Web3Context {
-		pluginExample: PluginExample;
-	}
+  interface Web3Context {
+    pluginExample: PluginExample;
+  }
 }
 ```
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript" default 
-  	attributes={{className: "typescript-tab"}}>
+  <TabItem value='typescript' label='TypeScript' default 
+  	attributes={{className: 'typescript-tab'}}>
 
 
 ```typescript
@@ -70,18 +70,18 @@ declare module 'web3' {
 import { Web3PluginBase } from 'web3';
 
 export class PluginExample extends Web3PluginBase {
-	public pluginNamespace = 'pluginExample';
+  public pluginNamespace = 'pluginExample';
 
-	public sampleMethod() {
-		return 'simpleValue';
-	}
+  public sampleMethod() {
+    return 'simpleValue';
+  }
 }
 
 // Module Augmentation
 declare module 'web3' {
-	interface Web3Context {
-		pluginExample: PluginExample;
-	}
+  interface Web3Context {
+    pluginExample: PluginExample;
+  }
 }
 ```
 
@@ -90,10 +90,10 @@ declare module 'web3' {
 
 Here is an example of how to register the `PluginExample` onto an instance of `Web3`:
 
-<Tabs groupId="prog-lang" queryString>
+<Tabs groupId='prog-lang' queryString>
 
-  <TabItem value="javascript" label="JavaScript"
-  	attributes={{className: "javascript-tab"}}>
+  <TabItem value='javascript' label='JavaScript'
+  	attributes={{className: 'javascript-tab'}}>
 
 ```javascript
 // code written by the plugin **user**
@@ -109,8 +109,8 @@ web3.pluginExample.sampleMethod();
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript" default 
-  	attributes={{className: "typescript-tab"}}>
+  <TabItem value='typescript' label='TypeScript' default 
+  	attributes={{className: 'typescript-tab'}}>
 
 
 ```typescript

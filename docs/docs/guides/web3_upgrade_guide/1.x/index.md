@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Upgrade from 1.x'
+sidebar_label: 'Introduction'
 ---
 
 

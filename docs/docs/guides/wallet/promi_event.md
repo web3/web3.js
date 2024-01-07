@@ -1,13 +1,13 @@
 ---
-sidebar_position: 3
-sidebar_label: 'Web3PromiEvent'
+sidebar_position: 2
+sidebar_label: 'Transactions Events Listening'
 ---
 
-# PromiEvent
+# Promise Event
 
-You can use Web3PromiEvent when you send transaction via `web3.eth.sendTransaction`, `web3.eth.sendSignedTransaction`, `contractDeployed.methods['methodName'](...methodParams).send` functions
+You can use `Web3PromiEvent` when you send transaction via `web3.eth.sendTransaction`, `web3.eth.sendSignedTransaction`, `contractDeployed.methods['methodName'](...methodParams).send` functions
 
-```ts
+```ts title='Transaction Promise Events'
 web3.eth.sendTransaction({...})
     .on('sending', (sending) => {
         // Sending example
@@ -83,8 +83,6 @@ web3.eth.sendTransaction({...})
         //             ]
         // }
     });
-
-
 ```
 
 List of references:
