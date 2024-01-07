@@ -25,10 +25,6 @@ Before we get started, make sure you have a basic understanding of JavaScript an
 
     Alternatively, you can use **yarn** instead of **npm** by following the instructions here: [https://classic.yarnpkg.com/lang/en/docs/getting-started/](https://classic.yarnpkg.com/lang/en/docs/getting-started/).
 
-4. **Geth** (Optional, used only at the IPC provider example)
-
-    Geth (go-ethereum) is an Ethereum execution client meaning it handles transactions, deployment and execution of smart contracts and contains an embedded computer known as the Ethereum Virtual Machine. You can install it by following the instructions here: [https://geth.ethereum.org/docs/getting-started/installing-geth](https://geth.ethereum.org/docs/getting-started/installing-geth)
-
 ## WebSocket Provider
 
 WebSocket Provider allows us to communicate with the Ethereum node via WebSocket protocol, which is useful when we want continuous updates on our subscribed items. This provider is ideal for real-time applications that require constant updates from the Ethereum network.

@@ -25,10 +25,6 @@ Before we get started, make sure you have a basic understanding of JavaScript an
 
     Alternatively, you can use **yarn** instead of **npm** by following the instructions here: [https://classic.yarnpkg.com/lang/en/docs/getting-started/](https://classic.yarnpkg.com/lang/en/docs/getting-started/).
 
-4. **Geth** (Optional, used only at the IPC provider example)
-
-    Geth (go-ethereum) is an Ethereum execution client meaning it handles transactions, deployment and execution of smart contracts and contains an embedded computer known as the Ethereum Virtual Machine. You can install it by following the instructions here: [https://geth.ethereum.org/docs/getting-started/installing-geth](https://geth.ethereum.org/docs/getting-started/installing-geth)
-
 ## HTTP Provider
 
 The HTTP Provider allows you to connect to a publicly available Ethereum node, making it easy and straightforward to communicate with the Ethereum network from your web application.
