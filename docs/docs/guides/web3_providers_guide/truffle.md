@@ -3,7 +3,7 @@ sidebar_position: 7
 sidebar_label: 'Tutorial: Third Party Provider'
 ---
 
-# Tutorial: Truffle 
+# Truffle 
 
 The Truffle HDWallet Provider will be used as an example of a third party provider that is EIP 1193 compatible.
 
