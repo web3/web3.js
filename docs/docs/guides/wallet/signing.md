@@ -54,6 +54,7 @@ const web3 = new Web3(/* PROVIDER */);
 const privateKey = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba'
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 
+// Magic happens inside signTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed using that account.
 signedTransaction = await account.signTransaction({
   from: account.address,
   to: '0xe4beef667408b99053dc147ed19592ada0d77f59',

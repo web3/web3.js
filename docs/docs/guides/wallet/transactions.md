@@ -24,7 +24,7 @@ const account = web3.eth.accounts.wallet.add(privateKey).get(0);
 
 // 3rd step: sign and send the transaction
 //highlight-start
-// Magic happens behind sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed.
+// Magic happens inside sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed using that account.
 const receipt = await web3.eth.sendTransaction({
   from: account?.address,
   to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
