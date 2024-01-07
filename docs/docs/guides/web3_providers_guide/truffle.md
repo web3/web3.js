@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-sidebar_label: 'Tutorial: Truffle (EIP1193)'
+sidebar_label: 'Tutorial: Third Party Provider'
 ---
 
 # Tutorial: Truffle 
