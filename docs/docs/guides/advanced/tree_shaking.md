@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 1. Use the `production` mode configuration option to enable various optimizations including minification and tree shaking. Set your webpack.config:
 
 ```js
-"mode":"production"
+'mode':'production'
 ```
 
 ## Step 2: Configure sideEffects Property
@@ -42,10 +42,10 @@ For further information about `sideEffects` see [webpack docs](https://webpack.j
 
     For example, if you need `web.eth`:
 
-<Tabs groupId="prog-lang" queryString>
+<Tabs groupId='prog-lang' queryString>
 
-  <TabItem value="javascript" label="JavaScript"
-  	attributes={{className: "javascript-tab"}}>
+  <TabItem value='javascript' label='JavaScript'
+  	attributes={{className: 'javascript-tab'}}>
 
 ```javascript
 const { Web3Eth } = require('web3-eth');
@@ -54,8 +54,8 @@ const { Web3Eth } = require('web3-eth');
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript" default
-  	attributes={{className: "typescript-tab"}}>
+  <TabItem value='typescript' label='TypeScript' default
+  	attributes={{className: 'typescript-tab'}}>
 
 ```typescript
 import { Web3Eth } from 'web3-eth';
@@ -67,10 +67,10 @@ import { Web3Eth } from 'web3-eth';
 
 If you only need a few functions from `web3-utils`:
 
-<Tabs groupId="prog-lang" queryString>
+<Tabs groupId='prog-lang' queryString>
 
-  <TabItem value="javascript" label="JavaScript"
-  	attributes={{className: "javascript-tab"}}>
+  <TabItem value='javascript' label='JavaScript'
+  	attributes={{className: 'javascript-tab'}}>
 
 ```javascript
 const { numberToHex, hexToNumber } = require('web3-utils');
@@ -79,8 +79,8 @@ const { numberToHex, hexToNumber } = require('web3-utils');
 
   </TabItem>
   
-  <TabItem value="typescript" label="TypeScript" default
-  	attributes={{className: "typescript-tab"}}>
+  <TabItem value='typescript' label='TypeScript' default
+  	attributes={{className: 'typescript-tab'}}>
 
 ```typescript
 import { numberToHex, hexToNumber } from 'web3-utils';
