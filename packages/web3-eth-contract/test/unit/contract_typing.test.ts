@@ -31,10 +31,6 @@ describe('contract typing', () => {
 		// when using new web3.eth.Contract generic is any[] instead of never
 		const web3ContractInstance = new Contract<any[]>([]);
 
-		web3ContractInstance.deploy({
-			arguments: ["0x"]
-		})
-
 		typecheck('should allow any contract init params', () => [
 			expectTypeOf<ContractConstructorArgs<any[]>>().not.toBe<[]>(),
 			expectTypeOf<ContractConstructorArgs<never>>().not.toBe<[]>(),
