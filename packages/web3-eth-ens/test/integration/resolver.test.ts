@@ -28,7 +28,7 @@ import { namehash } from '../../src/utils';
 
 import {
 	closeOpenConnection,
-	getSystemTestAccounts,
+	createTempAccount,
 	getSystemTestProvider,
 	getSystemTestProviderUrl,
 	isIpc,
@@ -60,7 +60,6 @@ describe('ens', () => {
 
 	let web3Eth: Web3Eth;
 
-	let accounts: string[];
 	let ens: ENS;
 	let defaultAccount: string;
 	let accountOne: string;
@@ -73,9 +72,10 @@ describe('ens', () => {
 	const DEFAULT_COIN_TYPE = 60;
 
 	beforeAll(async () => {
-		accounts = await getSystemTestAccounts();
-
-		[defaultAccount, accountOne] = accounts;
+		const acc1 = await createTempAccount();
+		defaultAccount = acc1.address;
+		const acc2 = await createTempAccount();
+		accountOne = acc2.address;
 
 		sendOptions = { from: defaultAccount, gas: '10000000' };
 
@@ -223,10 +223,10 @@ describe('ens', () => {
 			.setResolver(domainNode, resolver.options.address as string)
 			.send(sendOptions);
 
-		await resolver.methods.setAddr(domainNode, accounts[1]).send(sendOptions);
+		await resolver.methods.setAddr(domainNode, accountOne).send(sendOptions);
 
 		const res = await resolver.methods.addr(domainNode, DEFAULT_COIN_TYPE).call(sendOptions);
-		expect(res).toBe(accounts[1]);
+		expect(res).toBe(accountOne);
 	});
 
 	it('fetches address', async () => {
