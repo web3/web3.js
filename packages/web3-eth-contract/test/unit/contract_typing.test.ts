@@ -25,6 +25,15 @@ import { erc721Abi, Erc721Interface } from '../fixtures/erc721';
 import { NonPayableMethodObject, PayableMethodObject } from '../../src';
 
 describe('contract typing', () => {
+
+	describe('no abi type', () => {
+		const contractInstance = new Contract([]);
+
+		typecheck('should allow any input params', () => [
+			expectTypeOf<Parameters<typeof contractInstance.methods.test>>().not.toBe<[]>(),
+		]);
+
+	})
 	describe('custom abi', () => {
 		const abi = [
 			{

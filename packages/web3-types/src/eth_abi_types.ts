@@ -316,7 +316,7 @@ export type ContractMethodInputParameters<Params extends ReadonlyArray<unknown> 
 			  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodInputParameters<R>]
 			: ContractMethodInputParameters<R>
 		: Params extends undefined | unknown
-		? any[]
+		? []
 		: Params;
 
 export type ContractConstructor<Abis extends ContractAbi> = {
