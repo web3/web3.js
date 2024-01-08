@@ -15,9 +15,9 @@ First, install web3.js version 4 in your project using npm:
 npm install web3
 ```
 
-## Setting Up web3 and ENS
+## Setting up web3 and ENS
 
-Now, let's set up web3 and ENS in TypeScript file:
+Now, let's set up web3 and ENS in a TypeScript file:
 
 ```typescript
 import Web3 from 'web3';
