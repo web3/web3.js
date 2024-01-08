@@ -42,6 +42,7 @@ import {
 	InvalidNumberError,
 	InvalidUnitError,
 } from 'web3-errors';
+import { isUint8Array } from './uint8array.js';
 
 // Ref: https://ethdocs.org/en/latest/ether.html
 // Note: this could be simplified using ** operator, but babel does not handle it well (https://github.com/babel/babel/issues/13109)
@@ -91,7 +92,7 @@ export type EtherUnits = keyof typeof ethUnitMap;
 export const bytesToUint8Array = (data: Bytes): Uint8Array | never => {
 	validator.validate(['bytes'], [data]);
 
-	if (data instanceof Uint8Array) {
+	if (isUint8Array(data)) {
 		return data;
 	}
 
@@ -592,7 +593,11 @@ export const toChecksumAddress = (address: Address): string => {
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
 
-	const hash = utils.uint8ArrayToHexString(keccak256(utf8ToBytes(lowerCaseAddress)));
+	// calling `Uint8Array.from` because `noble-hashes` checks with `instanceof Uint8Array` that fails in some edge cases:
+	// 	https://github.com/paulmillr/noble-hashes/issues/25#issuecomment-1750106284
+	const hash = utils.uint8ArrayToHexString(
+		keccak256(validatorUtils.ensureIfUint8Array(utf8ToBytes(lowerCaseAddress))),
+	);
 
 	if (
 		isNullish(hash) ||

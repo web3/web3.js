@@ -15,13 +15,13 @@
 		"typecheck": "tsc"
 	},
 	"dependencies": {
-		"@docusaurus/core": "^3.0.0",
-		"@docusaurus/preset-classic": "^3.0.0",
-		"@docusaurus/theme-live-codeblock": "^3.0.0",
+		"@docusaurus/core": "^3.0.1",
+		"@docusaurus/preset-classic": "^3.0.1",
+		"@docusaurus/theme-live-codeblock": "^3.0.1",
 		"@mdx-js/react": "^3.0.0",
 		"classnames": "^2.3.2",
 		"clsx": "^2.0.0",
-		"docusaurus-lunr-search": "^3.3.0",
+		"docusaurus-lunr-search": "^3.3.1",
 		"prism-react-renderer": "^2.3.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
