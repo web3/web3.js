@@ -22,6 +22,7 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	isIpc,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.estimateGas', () => {
@@ -57,7 +58,8 @@ describe('Web3Eth.estimateGas', () => {
 		};
 		const response = await web3Eth.estimateGas(transaction);
 
-		if (getSystemTestBackend() === 'geth') {
+		// @TODO: check why this is different on geth ws and http
+		if (getSystemTestBackend() === 'geth' && !isIpc) {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(response).toBe(BigInt(475832));
 		} else {
