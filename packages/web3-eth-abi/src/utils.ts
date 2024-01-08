@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiError } from 'web3-errors';
-import { isNullish, leftPad, rightPad, toHex } from 'web3-utils';
+import { isNullish, isUint8Array, leftPad, rightPad, toHex } from 'web3-utils';
 import {
 	AbiInput,
 	AbiCoderStruct,
@@ -189,7 +189,7 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 	// Format correct length for bytes[0-9]+
 	match = paramTypeBytes.exec(type);
 	if (match) {
-		const hexParam = param instanceof Uint8Array ? toHex(param) : param;
+		const hexParam = isUint8Array(param) ? toHex(param) : param;
 
 		// format to correct length
 		const size = parseInt(match[1], 10);

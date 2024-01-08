@@ -76,6 +76,7 @@ import {
 	bytesToHex,
 	fromUtf8,
 	hexToBytes,
+	isUint8Array,
 	numberToHex,
 	randomBytes,
 	sha3Raw,
@@ -126,7 +127,7 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 	}
 
 	try {
-		privateKeyUint8Array = data instanceof Uint8Array ? data : bytesToUint8Array(data);
+		privateKeyUint8Array = isUint8Array(data) ? (data ) : bytesToUint8Array(data);
 	} catch {
 		throw new InvalidPrivateKeyError();
 	}
@@ -406,7 +407,7 @@ export const recover = (
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = prefixedOrR ? data : hashMessage(data);
 
-	let v = parseInt(signatureOrV.substring(V_INDEX),16); // 0x + r + s + v
+	let v = parseInt(signatureOrV.substring(V_INDEX), 16); // 0x + r + s + v
 	if (v > 26) {
 		v -= 27;
 	}
@@ -421,7 +422,7 @@ export const recover = (
 	const address = toChecksumAddress(`0x${publicHash.slice(-40)}`);
 
 	return address;
-};
+};;
 
 /**
  * Get the ethereum Address from a private key
@@ -456,7 +457,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * Get the public key from a private key
  *
  * @param privateKey - String or Uint8Array of 32 bytes
- * @param isCompressed - if true, will generate a 33 byte compressed public key instead of a 65 byte public key 
+ * @param isCompressed - if true, will generate a 33 byte compressed public key instead of a 65 byte public key
  * @returns The public key
  * @example
  * ```ts
@@ -465,7 +466,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * > "0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537662dd17042e6449dc843c281067a4d6d8d1a1775a13c41901670d5de7ee6503a" // uncompressed public key
  * ```
  */
- export const privateKeyToPublicKey = (privateKey: Bytes, isCompressed: boolean): string => {
+export const privateKeyToPublicKey = (privateKey: Bytes, isCompressed: boolean): string => {
 	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	// Get public key from private key in compressed format
@@ -562,7 +563,7 @@ export const encrypt = async (
 		salt = randomBytes(32);
 	}
 
-	if (!(isString(password) || password instanceof Uint8Array)) {
+	if (!(isString(password) || isUint8Array(password))) {
 		throw new InvalidPasswordError();
 	}
 

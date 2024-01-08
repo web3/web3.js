@@ -20,7 +20,7 @@ import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'w
 import { bytesToUint8Array, bytesToHex, numberToHex, toBigInt } from './converters.js';
 import { mergeDeep } from './objects.js';
 import { padLeft } from './string_manipulation.js';
-import { uint8ArrayConcat } from './uint8array.js';
+import { isUint8Array, uint8ArrayConcat } from './uint8array.js';
 
 const { parseBaseType } = utils;
 
@@ -112,7 +112,7 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 			let paddedValue;
 			if (baseTypeSize) {
 				if (typeof value === 'string') paddedValue = padLeft(value, baseTypeSize * 2);
-				else if (value instanceof Uint8Array) {
+				else if (isUint8Array(value)) {
 					paddedValue = uint8ArrayConcat(
 						new Uint8Array(baseTypeSize - value.length),
 						value,

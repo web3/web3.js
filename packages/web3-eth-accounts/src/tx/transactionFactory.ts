@@ -14,7 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 import { Numbers } from 'web3-types';
+import { isUint8Array } from 'web3-utils';
 import { toUint8Array, uint8ArrayToBigInt } from '../common/utils.js';
 import { FeeMarketEIP1559Transaction } from './eip1559Transaction.js';
 import { AccessListEIP2930Transaction } from './eip2930Transaction.js';
@@ -134,8 +136,8 @@ export class TransactionFactory {
 	 * @param txOptions - The transaction options
 	 */
 	public static fromBlockBodyData(data: Uint8Array | Uint8Array[], txOptions: TxOptions = {}) {
-		if (data instanceof Uint8Array) {
-			return this.fromSerializedData(data, txOptions);
+		if (isUint8Array(data)) {
+			return this.fromSerializedData(data , txOptions);
 		}
 		if (Array.isArray(data)) {
 			// It is a legacy transaction
