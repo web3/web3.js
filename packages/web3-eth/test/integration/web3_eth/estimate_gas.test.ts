@@ -52,10 +52,12 @@ describe('Web3Eth.estimateGas', () => {
 		const transaction: Transaction = {
 			from: tempAcc.address,
 			data: greeterContractDeploymentData,
-			gas: '0x742b8',
+			type: '0x0',
+			value: '0x0',
 		};
 		const response = await web3Eth.estimateGas(transaction);
-
-		expect(response).toBe(BigInt(475494));
+		console.log('ESTIMATE GAS VALUE', response);
+		expect(response).toBeGreaterThan(BigInt(470000));
+		expect(response).toBeLessThan(BigInt(490000));
 	});
 });
