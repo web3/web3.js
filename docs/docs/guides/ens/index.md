@@ -1,6 +1,7 @@
 ---
 sidebar_position: 9
-sidebar_label: 'Web3 ENS'
+sidebar_label: '🏷 Web3 ENS'
+title: Web3 ENS
 ---
 
 # Using web3.js ENS Package
