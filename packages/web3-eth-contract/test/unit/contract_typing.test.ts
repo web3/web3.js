@@ -30,7 +30,7 @@ describe('contract typing', () => {
 		const contractInstance = new Contract([]);
 
 		typecheck('should allow any input params', () => [
-			expectTypeOf<Parameters<typeof contractInstance.methods.test>>().not.toBe<[]>(),
+			expectTypeOf<Parameters<typeof contractInstance.methods.test>>().toBe<any[]>(),
 		]);
 
 	})
