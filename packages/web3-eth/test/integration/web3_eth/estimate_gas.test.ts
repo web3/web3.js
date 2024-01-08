@@ -20,6 +20,7 @@ import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
 
@@ -56,6 +57,12 @@ describe('Web3Eth.estimateGas', () => {
 		};
 		const response = await web3Eth.estimateGas(transaction);
 
-		expect(response).toBe(BigInt(475494));
+		if (getSystemTestBackend() === 'geth') {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(response).toBe(BigInt(475832));
+		} else {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(response).toBe(BigInt(475494));
+		}
 	});
 });
