@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable jest/expect-expect */
 
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
-import { Numbers } from 'web3-types';
+import { ContractConstructorArgs, Numbers } from 'web3-types';
 import { Contract } from '../../src/contract';
 import { erc20Abi, Erc20Interface } from '../fixtures/erc20';
 import { erc721Abi, Erc721Interface } from '../fixtures/erc721';
@@ -27,10 +27,23 @@ import { NonPayableMethodObject, PayableMethodObject } from '../../src';
 describe('contract typing', () => {
 
 	describe('no abi type', () => {
-		const contractInstance = new Contract([]);
+		const defaultContractInstance = new Contract([]);
+		// when using new web3.eth.Contract generic is any[] instead of never
+		const web3ContractInstance = new Contract<any[]>([]);
+
+		web3ContractInstance.deploy({
+			arguments: ["0x"]
+		})
+
+		typecheck('should allow any contract init params', () => [
+			expectTypeOf<ContractConstructorArgs<any[]>>().not.toBe<[]>(),
+			expectTypeOf<ContractConstructorArgs<never>>().not.toBe<[]>(),
+			expectTypeOf<ContractConstructorArgs<[]>>().not.toBe<[]>(),
+		]);
 
 		typecheck('should allow any input params', () => [
-			expectTypeOf<Parameters<typeof contractInstance.methods.test>>().toBe<any[]>(),
+			expectTypeOf<Parameters<typeof defaultContractInstance.methods.test>>().toBe<any[]>(),
+			expectTypeOf<Parameters<typeof web3ContractInstance.methods.test>>().toBe<any[]>(),
 		]);
 
 	})
