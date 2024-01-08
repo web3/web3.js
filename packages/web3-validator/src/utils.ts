@@ -495,3 +495,14 @@ export function hexToUint8Array(hex: string): Uint8Array {
 	}
 	return bytes
 }
+
+// @TODO: Remove this function and its usages once all sub dependencies uses version 1.3.3 or above of @noble/hashes
+export function ensureIfUint8Array<T = any>(data: T) {
+	if (
+		!(data instanceof Uint8Array) &&
+		(data as { constructor: { name: string } })?.constructor?.name === 'Uint8Array'
+	) {
+		return Uint8Array.from(data as unknown as Uint8Array);
+	}
+	return data;
+}

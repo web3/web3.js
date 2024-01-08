@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexPrefixed, isHexString } from 'web3-validator';
-import { bytesToHex, hexToBytes, numberToHex } from 'web3-utils';
+import { bytesToHex, hexToBytes, isUint8Array, numberToHex } from 'web3-utils';
 import { secp256k1 } from '../tx/constants.js';
 import { Hardfork } from './enums.js';
 import { ToBytesInputTypes, TypeOutput, TypeOutputReturnType } from './types.js';
@@ -331,6 +331,10 @@ export const toUint8Array = function (v: ToBytesInputTypes): Uint8Array {
 		return v;
 	}
 
+	if (v?.constructor?.name === 'Uint8Array') {
+		return Uint8Array.from(v as unknown as Uint8Array);
+	}
+
 	if (Array.isArray(v)) {
 		return Uint8Array.from(v);
 	}
@@ -420,7 +424,7 @@ const setLength = function (msg: Uint8Array, length: number, right: boolean) {
  * @param {Uint8Array} input value to check
  */
 export function assertIsUint8Array(input: unknown): asserts input is Uint8Array {
-	if (!(input instanceof Uint8Array)) {
+	if (!isUint8Array(input)) {
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		const msg = `This method only supports Uint8Array but input was: ${input}`;
 		throw new Error(msg);

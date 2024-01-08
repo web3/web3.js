@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 sidebar_label: 'Custom Subscriptions'
 ---
 
@@ -30,16 +30,16 @@ For example:
 
 ```ts
 class MyCustomSubscription extends Web3Subscription<
-	{
-		// here provide the type of the `data` that will be emitted by the node
-		data: string;
-	},
-	// here specify the types of the arguments that will be passed to the node when subscribing
-	{
-		customArg: string;
-	}
+  {
+    // here provide the type of the `data` that will be emitted by the node
+    data: string;
+  },
+  // here specify the types of the arguments that will be passed to the node when subscribing
+  {
+    customArg: string;
+  }
 > {
-	// ...
+  // ...
 }
 ```
 
@@ -48,17 +48,17 @@ class MyCustomSubscription extends Web3Subscription<
 You need to specify the exact data that will be passed to the provider. You do this by overriding `_buildSubscriptionParams` in your class. It could be something as follow:
 
 ```ts
-    protected _buildSubscriptionParams() {
-    // the `someCustomSubscription` below is the name of the subscription provided by the node you are connected to.
-        return ['someCustomSubscription', this.args];
-    }
+protected _buildSubscriptionParams() {
+  // the `someCustomSubscription` below is the name of the subscription provided by the node you are connected to.
+  return ['someCustomSubscription', this.args];
+}
 ```
 
 With the implementation above, the call that will be made to the provider will be as follow:
 
 ```ts
 {
-  id: "[GUID-STRING]", // something like: '3f839900-afdd-4553-bca7-b4e2b835c687'
+  id: '[GUID-STRING]', // something like: '3f839900-afdd-4553-bca7-b4e2b835c687'
   jsonrpc: '2.0',
   method: 'eth_subscribe',
   // The `someCustomSubscription` below is the name of the subscription provided by the node you are connected to.
@@ -114,17 +114,17 @@ To subscribe, you need to pass the custom subscriptions to the `Web3`. And then 
 
 ```ts
 const CustomSubscriptions = {
-	// the key (`custom`) is what you chose to use when you call `web3.subscriptionManager.subscribe`.
-	// the value (`CustomSubscription`) is your class name.
-	custom: MyCustomSubscription,
-	// you can have as many custom subscriptions as you like...
-	// custom2: MyCustomSubscription2,
-	// custom3: MyCustomSubscription3,
+  // the key (`custom`) is what you chose to use when you call `web3.subscriptionManager.subscribe`.
+  // the value (`CustomSubscription`) is your class name.
+  custom: MyCustomSubscription,
+  // you can have as many custom subscriptions as you like...
+  // custom2: MyCustomSubscription2,
+  // custom3: MyCustomSubscription3,
 };
 
 const web3 = new Web3({
-	provider, // the provider that support the custom event that you like to subscribe to.
-	registeredSubscriptions: CustomSubscriptions,
+  provider, // the provider that support the custom event that you like to subscribe to.
+  registeredSubscriptions: CustomSubscriptions,
 });
 
 // subscribe at the provider:
@@ -134,8 +134,8 @@ const sub = web3.subscriptionManager.subscribe('custom', args);
 
 // listen to the emitted event:
 // Note: the data will be optionally formatted at `formatSubscriptionResult`, before it is emitted here.
-sub.on('data', result => {
-	// This will be called every time a new data arrived from the provider to this subscription
+sub.on('data', (result) => {
+  // This will be called every time a new data arrived from the provider to this subscription
 });
 ```
 
@@ -153,68 +153,68 @@ Here is the full example for a custom subscription implementation:
 ```ts
 // Subscription class
 class MyCustomSubscription extends Web3Subscription<
-	{
-		// here provide the type of the `data` that will be emitted by the node
-		data: string;
-	},
-	// here specify the types of the arguments that will be passed to the node when subscribing
-	{
-		customArg: string;
-	}
+  {
+    // here provide the type of the `data` that will be emitted by the node
+    data: string;
+  },
+  // here specify the types of the arguments that will be passed to the node when subscribing
+  {
+    customArg: string;
+  }
 > {
-	protected _buildSubscriptionParams() {
-		// the `someCustomSubscription` below is the name of the subscription provided by the node your are connected to.
-		return ['someCustomSubscription', this.args];
-	}
+  protected _buildSubscriptionParams() {
+    // the `someCustomSubscription` below is the name of the subscription provided by the node your are connected to.
+    return ['someCustomSubscription', this.args];
+  }
 
-	protected formatSubscriptionResult(data: string) {
-		return format(data);
-	}
+  protected formatSubscriptionResult(data: string) {
+    return format(data);
+  }
 
-	constructor(
-		args: { customArg: string },
-		options: {
-			subscriptionManager: Web3SubscriptionManager;
-			returnFormat?: DataFormat;
-		},
-	) {
-		super(args, options);
+  constructor(
+    args: { customArg: string },
+    options: {
+      subscriptionManager: Web3SubscriptionManager;
+      returnFormat?: DataFormat;
+    }
+  ) {
+    super(args, options);
 
-		// Additional initialization
-	}
+    // Additional initialization
+  }
 }
 
 // Usage
 
 const args = {
-	customArg: 'hello custom',
+  customArg: 'hello custom',
 };
 
 const CustomSubscriptions = {
-	// the key (`custom`) is what you chose to use when you call `web3.subscriptionManager.subscribe`.
-	// the value (`MyCustomSubscription`) is your class name.
-	custom: MyCustomSubscription,
-	// you can have as many custom subscriptions as you like...
-	// custom2: MyCustomSubscription2,
-	// custom3: MyCustomSubscription3,
+  // the key (`custom`) is what you chose to use when you call `web3.subscriptionManager.subscribe`.
+  // the value (`MyCustomSubscription`) is your class name.
+  custom: MyCustomSubscription,
+  // you can have as many custom subscriptions as you like...
+  // custom2: MyCustomSubscription2,
+  // custom3: MyCustomSubscription3,
 };
 
 const web3 = new Web3({
-	provider, // the provider that support the custom event that you like to subscribe to.
-	registeredSubscriptions: CustomSubscriptions,
+  provider, // the provider that support the custom event that you like to subscribe to.
+  registeredSubscriptions: CustomSubscriptions,
 });
 
 const sub = web3.subscriptionManager.subscribe('custom', args);
 
-sub.on('data', result => {
-	// New data
+sub.on('data', (result) => {
+  // New data
 });
 
-// Unsubscribe:
-// If you want to subscribe later based on some code logic:
-// if () {
-//  await sub.subscribe();
-// }
+/* Unsubscribe:
+If you want to subscribe later based on some code logic:
+
+if () { await sub.subscribe(); }
+*/
 ```
 
 ## Key points
