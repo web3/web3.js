@@ -56,6 +56,7 @@ describe('Web3Eth.estimateGas', () => {
 			value: '0x0',
 		};
 		const response = await web3Eth.estimateGas(transaction);
+		// eslint-disable-next-line
 		console.log('ESTIMATE GAS VALUE', response);
 		expect(response).toBeGreaterThan(BigInt(470000));
 		expect(response).toBeLessThan(BigInt(490000));
