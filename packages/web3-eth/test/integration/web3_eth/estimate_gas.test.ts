@@ -55,7 +55,7 @@ describe('Web3Eth.estimateGas', () => {
 		};
 		const response = await web3Eth.estimateGas(transaction);
 
-		expect(response).toBeGreaterThan(BigInt(470000));
-		expect(response).toBeLessThan(BigInt(490000));
+		expect(Number(response)).toBeGreaterThan(470000);
+		expect(Number(response)).toBeLessThan(490000);
 	});
 });
