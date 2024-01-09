@@ -15,12 +15,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { jsonInterfaceMethodToString, isAbiConstructorFragment } from '../../src/utils';
+import {
+	jsonInterfaceMethodToString,
+	isAbiConstructorFragment,
+	flattenTypes,
+	mapTypes,
+	formatParam,
+	isOddHexstring,
+	formatOddHexstrings,
+	isAbiFragment,
+} from '../../src/utils';
 import {
 	jsonInterfaceInvalidData,
 	jsonInterfaceValidData,
 	validIsAbiConstructorFragment,
 	invalidIsAbiConstructorFragment,
+	mapTypesValidData,
+	formatParamValidData,
 } from '../fixtures/data';
 
 describe('utils', () => {
@@ -30,9 +41,71 @@ describe('utils', () => {
 				expect(jsonInterfaceMethodToString(input)).toEqual(output);
 			});
 		});
+		describe('default cases', () => {
+			it('default json value', () => {
+				// @ts-expect-error invalid input
+				expect(jsonInterfaceMethodToString({})).toBe('()');
+			});
+			it('name value with brackets', () => {
+				expect(
+					jsonInterfaceMethodToString({
+						name: '(test)',
+						type: 'function',
+						inputs: [],
+					}),
+				).toBe('(test)');
+			});
+		});
 		describe('invalid cases', () => {
 			// TODO: To be done after `sha3` is implemented
 			it.todo('should throw error for invalid cases');
+		});
+	});
+	describe('mapTypes', () => {
+		describe('valid data', () => {
+			it.each(mapTypesValidData)('%s', (input, output) => {
+				expect(mapTypes(input)).toEqual(output);
+			});
+		});
+	});
+	describe('formatParam', () => {
+		describe('default types', () => {
+			it.each(formatParamValidData)('%s', (input, output) => {
+				expect(formatParam(input[0], input[1])).toEqual(output);
+			});
+		});
+	});
+	describe('isOddHexstring', () => {
+		it('not string param', () => {
+			expect(isOddHexstring('')).toBeFalsy();
+		});
+	});
+	describe('isAbiFragment', () => {
+		it('nullish', () => {
+			expect(isAbiFragment(undefined)).toBeFalsy();
+		});
+	});
+	describe('formatOddHexstrings', () => {
+		it('not string param', () => {
+			expect(formatOddHexstrings('')).toBeFalsy();
+		});
+	});
+	describe('flattenTypes', () => {
+		it('default types with include tuples', () => {
+			expect(
+				flattenTypes(true, [
+					{
+						type: 'tuple',
+						name: 'test',
+						components: [
+							{
+								name: 'test',
+								type: '[string,number]',
+							},
+						],
+					},
+				]),
+			).toEqual(['tuple([string,number])']);
 		});
 	});
 	describe('jsonInterface', () => {
