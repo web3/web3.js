@@ -1,6 +1,7 @@
 ---
-sidebar_position: 9
-sidebar_label: 'Web3 ENS'
+sidebar_position: 8
+sidebar_label: 'Mastering the Web3 ENS package'
+title: Mastering the Web3 ENS package
 ---
 
 # Using web3.js ENS Package
