@@ -57,6 +57,6 @@ describe('Web3Eth.estimateGas', () => {
 		};
 		const response = await web3Eth.estimateGas(transaction);
 		// eslint-disable-next-line jest/no-standalone-expect
-		expect(Number(response)).toBe(480435);
+		expect(response).toBe(BigInt(480435));
 	});
 });
