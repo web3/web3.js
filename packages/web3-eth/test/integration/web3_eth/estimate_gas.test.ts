@@ -58,13 +58,6 @@ describe('Web3Eth.estimateGas', () => {
 		};
 		const response = await web3Eth.estimateGas(transaction);
 
-		// @TODO: check why this is different on geth ws and http
-		if (getSystemTestBackend() === 'geth' && !isIpc) {
-			// eslint-disable-next-line jest/no-conditional-expect
-			expect(response).toBe(BigInt(475832));
-		} else {
-			// eslint-disable-next-line jest/no-conditional-expect
-			expect(response).toBe(BigInt(475494));
-		}
+		expect(response).toBe(BigInt(475494));
 	});
 });
