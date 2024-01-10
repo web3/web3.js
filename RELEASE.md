@@ -54,7 +54,7 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 
     - Select recently pushed tag in `choose a tag` drop down
 
-    - Check `Set as the latest release` if its latest release else select `This is a pre-release` if its not main release e.g. if its `RC` or `alpha`
+    - Check `Set as the latest release` if its latest release else select `This is a pre-release` if it's not main release e.g. if it's `RC` or `alpha`
 
     - Check `Create a discussion for this release`
 
