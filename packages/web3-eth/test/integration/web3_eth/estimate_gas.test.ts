@@ -20,9 +20,7 @@ import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
-	getSystemTestBackend,
 	getSystemTestProvider,
-	isIpc,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.estimateGas', () => {
