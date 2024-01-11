@@ -25,8 +25,7 @@ start() {
 }
 
 stop() {
-	echo "Stopping ganache ..."
-    docker ps -q --filter ancestor="trufflesuite/ganache" | xargs -r docker stop
+	echo "Stopping hardhat ..."
 }
 
 case $1 in

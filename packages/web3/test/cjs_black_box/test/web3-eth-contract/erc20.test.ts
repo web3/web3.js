@@ -56,10 +56,10 @@ describeIf(getSystemTestBackend() === 'infura')(
 	},
 );
 
-describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'ganache')(
+describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'hardhat')(
 	'Black Box Unit Tests - web3.eth.Contract',
 	() => {
-		describe('Geth || Ganache - ERC20', () => {
+		describe('Geth || Hardhat - ERC20', () => {
 			let account;
 			let web3: typeof Web3;
 			let deployedContract: Contract<typeof ERC20TokenAbi>;
