@@ -27,27 +27,28 @@ jobs:
       - run: yarn prebuild
       - run: yarn build:cjs
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-      - uses: actions/upload-artifact@v4
+      - uses: actions/cache/save@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          key: web3-${{ matrix.node }}.js.tar.gz
+
   build-esm:
       name: Build ESM
       needs: build
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              node: [ 18, 16 ]
+            node: [ 18, 16 ]
       steps:
-          -   uses: actions/setup-node@v3
-              with:
-                node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v4
-              with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-          -   run: yarn build:esm
+          - uses: actions/setup-node@v3
+            with:
+              node-version: ${{ matrix.node }}
+          - uses: actions/cache/restore@v3
+            with:
+              path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+              key: web3-${{ matrix.node }}.js.tar.gz
+          - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          - run: yarn build:esm
   build-types:
       name: Build Types
       needs: build
@@ -59,10 +60,10 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v4
+          -   uses: actions/cache/restore@v3
               with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
+                  path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                  key: web3-${{ matrix.node }}.js.tar.gz
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn build:types
   lint:
@@ -73,10 +74,10 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: 18
-          -   uses: actions/download-artifact@v4
+          -   uses: actions/cache/restore@v3
               with:
-                name: web3-18.js.tar.gz
-                path: /tmp
+                  path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                  key: web3-${{ matrix.node }}.js.tar.gz
           -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
           -   run: yarn lint
 
@@ -88,10 +89,10 @@ jobs:
         -   uses: actions/setup-node@v3
             with:
               node-version: 18
-        -   uses: actions/download-artifact@v4
+        -   uses: actions/cache/restore@v3
             with:
-              name: web3-18.js.tar.gz
-              path: /tmp
+                path: /tmp/web3-18.js.tar.gz
+                key: web3-18.js.tar.gz
         -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
         -   name: Restore default branch stats
             if: github.event_name != 'push'
@@ -128,10 +129,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache/restore@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
+          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          key: web3-${{ matrix.node }}.js.tar.gz
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:unit
       - name: Upload coverage to Codecov
@@ -158,10 +159,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache/restore@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
+          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          key: web3-${{ matrix.node }}.js.tar.gz
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
@@ -183,10 +184,10 @@ jobs:
       -   uses: actions/setup-node@v3
           with:
             node-version: ${{ matrix.node }}
-      -   uses: actions/download-artifact@v4
+      -   uses: actions/cache/restore@v3
           with:
-            name: web3-${{ matrix.node }}.js.tar.gz
-            path: /tmp
+              path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+              key: web3-${{ matrix.node }}.js.tar.gz
       -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
@@ -206,10 +207,10 @@ jobs:
             node-version: ${{ matrix.node }}
       - uses: browser-actions/setup-firefox@latest
         if: matrix.browser == 'firefox'
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache/restore@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
+          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          key: web3-${{ matrix.node }}.js.tar.gz
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: npm install --no-package-lock --no-save --force cypress
       - name: Cypress run
@@ -230,10 +231,10 @@ jobs:
         -   uses: actions/setup-node@v3
             with:
                 node-version: ${{ matrix.node }}
-        -   uses: actions/download-artifact@v4
+        -   uses: actions/cache/restore@v3
             with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
+                path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                key: web3-${{ matrix.node }}.js.tar.gz
         -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         -   run: yarn build:docs
 
@@ -248,10 +249,10 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v4
+          -   uses: actions/cache/restore@v3
               with:
-                  name: web3-${{ matrix.node }}.js.tar.gz
-                  path: /tmp
+                  path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                  key: web3-${{ matrix.node }}.js.tar.gz
           -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
               # @octokit/core not supported on node 16, so I can't add it to the package.json
           -   run: npm install --no-package-lock --no-save --force @octokit/core
