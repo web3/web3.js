@@ -26,6 +26,9 @@ import {
 } from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
+import HardhatPlugin  from 'hardhat-plugin';
+// import { impersonateAccount, setBalance } from '@nomicfoundation/hardhat-network-helpers';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Context } from 'web3-core';
@@ -245,8 +248,16 @@ export const createNewAccount = async (config?: {
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
 
 	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
-
 	if (config?.unlock) {
+		
+		if (getSystemTestBackend() === 'hardhat'){
+			const url = getSystemTestProviderUrl();
+			const web3 = new Web3(url);
+			web3.registerPlugin(new HardhatPlugin())
+			await web3.hardhat.impersonateAccount(acc.address);
+			// await impersonateAccount(acc.address);
+			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
+		} else {
 		const web3Personal = new Personal(clientUrl);
 		if (!config?.doNotImport) {
 			await web3Personal.importRawKey(
@@ -256,14 +267,22 @@ export const createNewAccount = async (config?: {
 		}
 
 		await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 100000000);
+		}
 	}
 
 	if (config?.refill) {
-		const web3Personal = new Personal(clientUrl);
-		if (!mainAcc) {
-			[mainAcc] = await web3Personal.getAccounts();
+		if (getSystemTestBackend() === 'hardhat'){
+			const url = getSystemTestProviderUrl();
+			const web3 = new Web3(url);
+			web3.registerPlugin(new HardhatPlugin())
+			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'))
+		} else {
+			const web3Personal = new Personal(clientUrl);
+			if (!mainAcc) {
+				[mainAcc] = await web3Personal.getAccounts();
+			}
+			await refillAccount(mainAcc, acc.address, '100000000000000000');
 		}
-		await refillAccount(mainAcc, acc.address, '100000000000000000');
 	}
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
@@ -296,7 +315,6 @@ export const createTempAccount = async (
 			password: config.password,
 		});
 	}
-
 	if (currentIndex >= walletsOnWorker || !tempAccountList[currentIndex]) {
 		currentIndex = 0;
 	}
@@ -311,7 +329,7 @@ export const createTempAccount = async (
 	currentIndex += 1;
 
 	return acc;
-};
+	}
 
 export const getSystemTestAccountsWithKeys = async (): Promise<
 	{
