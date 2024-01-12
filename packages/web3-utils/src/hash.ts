@@ -59,7 +59,7 @@ import {
 	TypedObject,
 	TypedObjectAbbreviated,
 } from 'web3-types';
-import { isAddress, isNullish, isHexStrict } from 'web3-validator';
+import { utils as validatorUtils, isAddress, isNullish, isHexStrict } from 'web3-validator';
 import {
 	bytesToUint8Array,
 	bytesToHex,
@@ -70,7 +70,6 @@ import {
 	utf8ToHex,
 } from './converters.js';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation.js';
-
 
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
@@ -100,7 +99,7 @@ export const sha3 = (data: Bytes): string | undefined => {
 	} else {
 		updatedData = data;
 	}
-	const hash = bytesToHex(keccak256(updatedData));
+	const hash = bytesToHex(keccak256(validatorUtils.ensureIfUint8Array(updatedData)));
 
 	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
 	return hash === SHA3_EMPTY_BYTES ? undefined : hash;
@@ -159,7 +158,7 @@ export const keccak256Wrapper = (
 	} else {
 		processedData = bytesToUint8Array(data as Bytes);
 	}
-	return bytesToHex(keccak256(processedData));
+	return bytesToHex(keccak256(validatorUtils.ensureIfUint8Array(processedData)));
 };
 
 export { keccak256Wrapper as keccak256 };

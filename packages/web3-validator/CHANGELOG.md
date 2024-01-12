@@ -157,3 +157,7 @@ Documentation:
 -   Will now throw SchemaFormatError when unsupported format is passed to `convertToZod` method (#6434)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed an issue with detecting Uint8Array (#6486)

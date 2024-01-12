@@ -1,6 +1,6 @@
 ---
-sidebar_position: 5
-sidebar_label: 'Events Subscription'
+sidebar_position: 1
+sidebar_label: 'Introduction'
 ---
 
 # Events Subscription

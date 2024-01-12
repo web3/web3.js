@@ -1,10 +1,7 @@
 ---
-sidebar_position: 1
-sidebar_label: 'Deploying and Interacting with Smart Contracts'
+sidebar_position: 2
+sidebar_label: 'Tutorial: Deploying and Interacting with Smart Contracts'
 ---
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 # Deploying and Interacting with Smart Contracts
 
@@ -24,6 +21,12 @@ Here is a high-level overview of the steps we will be taking in this tutorial:
 6. Deploy the smart contract to the Ganache network using web3.js.
 7. Interact with the smart contract using web3.js.
 
+:::tip
+📝 **Community support:**
+If you encounter any issues while following this guide or have questions, don't hesitate to seek assistance. Our friendly community is ready to help you out!
+Join our [Discord](https://discord.gg/F4NUfaCC) server and head to the **#web3js-general** channel to connect with other developers and get the support you need. 
+:::
+
 ## Step 1: Setting up the Environment
 
 Before we start writing and deploying our contract, we need to set up our environment. For that, we need to install the following:
@@ -36,14 +39,14 @@ Before we start writing and deploying our contract, we need to set up our enviro
 
 First, create a new project directory for your project and navigate into it:
 
-```
+```bash
 mkdir smart-contract-tutorial
 cd smart-contract-tutorial
 ```
 
 Next, initialize a new Node.js project using npm:
 
-```
+```bash
 npm init -y
 ```
 
@@ -55,7 +58,7 @@ In this step, we will write the Solidity code for the smart contract and save it
 
 Create a new file called `MyContract.sol` in your project directory and add the following Solidity code to it:
 
-```solidity
+```ts
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -70,7 +73,6 @@ contract MyContract {
 		myNumber = _myNumber;
 	}
 }
-
 ```
 
 This simple smart contract defines a `myNumber` variable that can be set by calling the `setMyNumber` function.
@@ -99,71 +101,6 @@ npm i solc@0.8.0
 ```
 
 Next, create a new file called `compile.js` in your project directory and add the following code to it:
-
-<Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript" default 
-  	attributes={{className: "javascript-tab"}}>
-
-```javascript
-// This code will compile smart contract and generate its ABI and bytecode
-// Alternatively, you can use something like `npm i solc && npx solcjs MyContract.sol --bin --abi`
-
-import solc from 'solc';
-import path from 'path';
-import fs from 'fs';
-
-const fileName = 'MyContract.sol';
-const contractName = 'MyContract';
-
-// Read the Solidity source code from the file system
-const contractPath = path.join(__dirname, fileName);
-const sourceCode = fs.readFileSync(contractPath, 'utf8');
-
-// solc compiler config
-const input = {
-	language: 'Solidity',
-	sources: {
-		[fileName]: {
-			content: sourceCode,
-		},
-	},
-	settings: {
-		outputSelection: {
-			'*': {
-				'*': ['*'],
-			},
-		},
-	},
-};
-
-// Compile the Solidity code using solc
-const compiledCode = JSON.parse(solc.compile(JSON.stringify(input)));
-
-// Get the bytecode from the compiled contract
-const bytecode = compiledCode.contracts[fileName][contractName].evm.bytecode.object;
-
-// Write the bytecode to a new file
-const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin');
-fs.writeFileSync(bytecodePath, bytecode);
-
-// Log the compiled contract code to the console
-console.log('Contract Bytecode:\n', bytecode);
-
-// Get the ABI from the compiled contract
-const abi = compiledCode.contracts[fileName][contractName].abi;
-
-// Write the Contract ABI to a new file
-const abiPath = path.join(__dirname, 'MyContractAbi.json');
-fs.writeFileSync(abiPath, JSON.stringify(abi, null, '\t'));
-
-// Log the Contract ABI to the console
-console.log('Contract ABI:\n', abi);
-```
-
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript"
-  	attributes={{className: "typescript-tab"}}>
-
 
 ```typescript
 // This code will compile smart contract and generate its ABI and bytecode
@@ -221,14 +158,11 @@ fs.writeFileSync(abiPath, JSON.stringify(abi, null, '\t'));
 console.log('Contract ABI:\n', abi);
 ```
 
-  </TabItem>
-</Tabs>
-
 This code reads the Solidity code from the `MyContract.sol` file, compiles it using `solc`, and generates the ABI and bytecode for the smart contract. It then writes the bytecode to a new file called `MyContractBytecode.bin` and the contract ABI to `MyContractAbi.json`. And it logs them to the console.
 
 Run the following command to compile the Solidity code:
 
-```
+```bash
 node compile.js
 ```
 
@@ -244,37 +178,11 @@ In this step, we will set up the web3.js library and connect to the Ganache netw
 
 First, install the `web3` package using npm:
 
-```
+```bash
 npm i web3
 ```
 
 Next, create a new file called `index.js` in your project directory and add the following code to it:
-
-<Tabs groupId="programming-language" queryString>
-  <TabItem value="javascript" label="JavaScript"
-  	default attributes={{className: "javascript-tab"}}>
-
-```javascript
-const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
-
-// Set up a connection to the Ganache network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-
-// Log the current block number to the console
-web3.eth
-	.getBlockNumber()
-	.then(result => {
-		console.log('Current block number: ' + result);
-	})
-	.catch(error => {
-		console.error(error);
-	});
-```
-
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript"
-  	attributes={{className: "typescript-tab"}}>
-
 
 ```typescript
 import { Web3 } from 'web3';
@@ -293,14 +201,11 @@ web3.eth
 	});
 ```
 
-  </TabItem>
-</Tabs>
-
 This code sets up a connection to the Ganache network and logs the current block number to the console.
 
 Run the following command to test the connection:
 
-```
+```bash
 node index.js
 ```
 
@@ -312,70 +217,7 @@ In this step, we will use web3.js to deploy the smart contract to the Ganache ne
 
 Create a file named `deploy.js` and fill it with the following code:
 
-<Tabs groupId="prog-lang" queryString>
-  <TabItem value="javascript" label="JavaScript" default
-  	attributes={{className: "javascript-tab"}}>
-
-```javascript
-// For simplicity we use `web3` package here. However, if you are concerned with the size,
-//	you may import individual packages like 'web3-eth', 'web3-eth-contract' and 'web3-providers-http'.
-const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
-const fs = require('fs');
-const path = require('path');
-
-// Set up a connection to the Ethereum network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-web3.eth.Contract.handleRevert = true;
-
-// Read the bytecode from the file system
-const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin');
-const bytecode = fs.readFileSync(bytecodePath, 'utf8');
-
-// Create a new contract object using the ABI and bytecode
-const abi = require('./MyContractAbi.json');
-const myContract = new web3.eth.Contract(abi);
-
-async function deploy() {
-	const providersAccounts = await web3.eth.getAccounts();
-	const defaultAccount = providersAccounts[0];
-	console.log('deployer account:', defaultAccount);
-
-	const deployedContract = myContract.deploy({
-		data: '0x' + bytecode,
-		arguments: [1],
-	});
-
-	// optionally, estimate the gas that will be used for development and log it
-	const gas = await deployedContract.estimateGas({
-		from: defaultAccount,
-	});
-	console.log('estimated gas:', gas);
-
-	try {
-		// Deploy the contract to the Ganache network
-		const tx = await deployedContract.send({
-			from: defaultAccount,
-			gas,
-			gasPrice: 10000000000,
-		});
-		console.log('Contract deployed at address: ' + tx.options.address);
-
-		// Write the Contract address to a new file
-		const deployedAddressPath = path.join(__dirname, 'MyContractAddress.bin');
-		fs.writeFileSync(deployedAddressPath, tx.options.address);
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-deploy();
-```
-
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript"
- 	attributes={{className: "typescript-tab"}}>
-
-```typescript
+```ts
 // For simplicity we use `web3` package here. However, if you are concerned with the size,
 //	you may import individual packages like 'web3-eth', 'web3-eth-contract' and 'web3-providers-http'.
 import { Web3 } from 'web3';
@@ -396,18 +238,18 @@ async function deploy(): Promise<void> {
 	const defaultAccount: string = providersAccounts[0];
 	console.log('deployer account:', defaultAccount);
 
-	const deployedContract: any = myContract.deploy({
+	const contractDeployer: any = myContract.deploy({
 		data: '0x' + bytecode,
 		arguments: [1],
 	});
 
-	const gas: number = await deployedContract.estimateGas({
+	const gas: number = await contractDeployer.estimateGas({
 		from: defaultAccount,
 	});
 	console.log('estimated gas:', gas);
 
 	try {
-		const tx: any = await deployedContract.send({
+		const tx: any = await contractDeployer.send({
 			from: defaultAccount,
 			gas,
 			gasPrice: 10000000000,
@@ -424,20 +266,17 @@ async function deploy(): Promise<void> {
 deploy();
 ```
 
-  </TabItem>
-</Tabs>
-
 This code reads the bytecode from the `MyContractBytecode.bin` file and creates a new contract object using the ABI and bytecode. And, as an optional step, it estimates the gas that will be used to deploy the smart contract. It then deploys the contract to the Ganache network. It also saves the address inside the file `MyContractAddress.bin` which we be used when interacting with the contract.
 
 Run the following command to deploy the smart contract:
 
-```sh
+```bash
 node deploy.js
 ```
 
 If everything is working correctly, you should see something like the following:
 
-```
+```bash
 Deployer account: 0xdd5F9948B88608a1458e3a6703b0B2055AC3fF1b
 Estimated gas: 142748n
 Contract deployed at address: 0x16447837D4A572d0a8b419201bdcD91E6e428Df1
@@ -449,65 +288,7 @@ In this step, we will use web3.js to interact with the smart contract on the Gan
 
 Create a file named `interact.js` and fill it with the following code:
 
-<Tabs groupId="programming-language" queryString>
-  <TabItem value="javascript" label="JavaScript"
-  	default attributes={{className: "javascript-tab"}}>
-
-```javascript
-const { Web3 } = require('web3'); //  web3.js has native ESM builds and (`import Web3 from 'web3'`)
-const fs = require('fs');
-const path = require('path');
-
-// Set up a connection to the Ethereum network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-
-// Read the contract address from the file system
-const deployedAddressPath = path.join(__dirname, 'MyContractAddress.bin');
-const deployedAddress = fs.readFileSync(deployedAddressPath, 'utf8');
-
-// Read the bytecode from the file system
-const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin');
-const bytecode = fs.readFileSync(bytecodePath, 'utf8');
-
-// Create a new contract object using the ABI and bytecode
-const abi = require('./MyContractAbi.json');
-const myContract = new web3.eth.Contract(abi, deployedAddress);
-myContract.handleRevert = true;
-
-async function interact() {
-	const providersAccounts = await web3.eth.getAccounts();
-	const defaultAccount = providersAccounts[0];
-
-	try {
-		// Get the current value of my number
-		const myNumber = await myContract.methods.myNumber().call();
-		console.log('my number value: ' + myNumber);
-
-		// Increment my number
-		const receipt = await myContract.methods.setMyNumber(myNumber + 1n).send({
-			from: defaultAccount,
-			gas: 1000000,
-			gasPrice: 10000000000,
-		});
-		console.log('Transaction Hash: ' + receipt.transactionHash);
-
-		// Get the updated value of my number
-		const myNumberUpdated = await myContract.methods.myNumber().call();
-		console.log('my number updated value: ' + myNumberUpdated);
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-interact();
-```
-
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript"
-  	attributes={{className: "typescript-tab"}}>
-
-
-```typescript
+```ts
 import { Web3 } from 'web3';
 import fs from 'fs';
 import path from 'path';
@@ -556,20 +337,17 @@ async function interact(): Promise<void> {
 interact();
 ```
 
-  </TabItem>
-</Tabs>
-
 This code uses the `MyContract` object to interact with the smart contract. It gets the current value of myNumber, increments it and update it, and gets its updated value. It logs myNumber values and transaction receipts to the console.
 
 Run the following command to interact with the smart contract:
 
-```
+```bash
 node interact.js
 ```
 
 If everything is working correctly, you should see the current counter value logged to the console, followed by the transaction receipt, and then the updated counter value. The output would like:
 
-```sh
+```bash
 my number value: 1
 Transaction Hash: 0x9825e2a2115896728d0c9c04c2deaf08dfe1f1ff634c4b0e6eeb2f504372f927
 my number updated value: 2
@@ -588,54 +366,7 @@ If you want both `data` and `input` filled, set the property to `both`.
 
 Here are examples:
 
-<Tabs groupId="programming-language" queryString>
-  <TabItem value="javascript" label="JavaScript"
-  	default attributes={{className: "javascript-tab"}}>
-
-```javascript
-// Configuring Web3Context with `contractDataInputFill`
-const { Web3Context } = require('web3-core');
-const { Contract } = require('web3-eth-contract');
-
-const expectedProvider = 'http://127.0.0.1:8545';
-const web3Context = new Web3Context({
-	provider: expectedProvider,
-	config: { contractDataInputFill: 'data' }, //  all new contracts created to populate `data` field
-});
-
-const contract = new Contract(GreeterAbi, web3Context);
-
-// data will now be populated when using the call method
-contract.methods.greet().call().then(console.log);
-
-// Another way to do this is to set it within the contract using `dataInputFill`
-
-const contract = new Contract(
-	erc721Abi,
-	'0x1230B93ffd14F2F022039675fA3fc3A46eE4C701',
-	{ gas: '123', dataInputFill: 'data' }, // methods will now be populating `data` field
-);
-
-// `data` will now be populated instead of `input`
-contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).call();
-
-// Another way to do this is to set `data` when calling methods
-
-const contract = new Contract(erc721Abi, '0x1230B93ffd14F2F022039675fA3fc3A46eE4C701');
-
-contract.methods
-	.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1)
-	.call({
-		data: contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).encodeABI(),
-	});
-```
-
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript"
-  	attributes={{className: "typescript-tab"}}>
-
-
-```typescript
+```ts
 // Configuring Web3Context with `contractDataInputFill`
 import { Web3Context } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
@@ -672,9 +403,6 @@ contract.methods
 		data: contract.methods.approve('0x00000000219ab540356cBB839Cbe05303d7705Fa', 1).encodeABI(),
 	});
 ```
-
-  </TabItem>
-</Tabs>
 
 ## Conclusion
 

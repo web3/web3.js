@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Numbers } from 'web3-types';
+import { Common as CommonType, Numbers } from 'web3-types';
 import { bytesToHex } from 'web3-utils';
 import { MAX_INTEGER, MAX_UINT64, SECP256K1_ORDER_DIV_2, secp256k1 } from './constants.js';
 import { toUint8Array, uint8ArrayToBigInt, unpadUint8Array } from '../common/utils.js';
@@ -389,6 +389,8 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * @param chainId - Chain ID from tx options (typed txs) or signature (legacy tx)
 	 */
 	protected _getCommon(common?: Common, chainId?: Numbers) {
+		// TODO: this function needs to be reviewed and the code to be more clean
+		// check issue https://github.com/web3/web3.js/issues/6666
 		// Chain ID provided
 		if (chainId !== undefined) {
 			const chainIdBigInt = uint8ArrayToBigInt(toUint8Array(chainId));
@@ -424,6 +426,34 @@ export abstract class BaseTransaction<TransactionObject> {
 
 		if (common?.copy && typeof common?.copy === 'function') {
 			return common.copy();
+		}
+		// TODO: Recheck this next block when working on https://github.com/web3/web3.js/issues/6666
+		// This block is to handle when `chainId` was not passed and the `common` object does not have `copy()`
+		// If it was meant to be unsupported to process `common` in this case, an exception should be thrown instead of the following block
+		if (common) {
+			const hardfork =
+				typeof common.hardfork === 'function'
+					? common.hardfork()
+					: // eslint-disable-next-line @typescript-eslint/unbound-method
+					  (common.hardfork as unknown as string);
+
+			return Common.custom(
+				{
+					name: 'custom-chain',
+					networkId: common.networkId
+						? common.networkId()
+						: BigInt((common as unknown as CommonType).customChain?.networkId) ??
+						  undefined,
+					chainId: common.chainId
+						? common.chainId()
+						: BigInt((common as unknown as CommonType).customChain?.chainId) ??
+						  undefined,
+				},
+				{
+					baseChain: this.DEFAULT_CHAIN,
+					hardfork: hardfork || this.DEFAULT_HARDFORK,
+				},
+			);
 		}
 
 		return new Common({ chain: this.DEFAULT_CHAIN, hardfork: this.DEFAULT_HARDFORK });

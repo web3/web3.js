@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiError } from 'web3-errors';
-import { isNullish, leftPad, rightPad, toHex } from 'web3-utils';
+import { isNullish, isUint8Array, leftPad, rightPad, toHex } from 'web3-utils';
 import {
 	AbiInput,
 	AbiCoderStruct,
@@ -152,6 +152,10 @@ export const isOddHexstring = (param: unknown): boolean =>
 export const formatOddHexstrings = (param: string): string =>
 	isOddHexstring(param) ? `0x0${param.substring(2)}` : param;
 
+const paramTypeBytes = /^bytes([0-9]*)$/;
+const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
+const paramTypeNumber = /^(u?int)([0-9]*)$/;
+const paramTypeNumberArray = /^(u?int)([0-9]*)\[\]$/;
 /**
  * Handle some formatting of params for backwards compatibility with Ethers V4
  */
@@ -160,13 +164,9 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 
 	// clone if _param is an object
 	const param = typeof _param === 'object' && !Array.isArray(_param) ? { ..._param } : _param;
-	const paramTypeBytes = /^bytes([0-9]*)$/;
-	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
-	const paramTypeNumber = /^(u?int)([0-9]*)$/;
-	const paramTypeNumberArray = /^(u?int)([0-9]*)\[\]$/;
 
 	// Format BN to string
-	if (param instanceof BigInt) {
+	if (param instanceof BigInt || typeof param === 'bigint') {
 		return param.toString(10);
 	}
 
@@ -179,7 +179,7 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 	// Format correct width for u?int[0-9]*
 	let match = paramTypeNumber.exec(type);
 	if (match) {
-		const size = parseInt(match[2] ?? '256', 10);
+		const size = parseInt(match[2] ? match[2] : '256', 10);
 		if (size / 8 < (param as { length: number }).length) {
 			// pad to correct bit width
 			return leftPad(param as string, size);
@@ -189,7 +189,7 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 	// Format correct length for bytes[0-9]+
 	match = paramTypeBytes.exec(type);
 	if (match) {
-		const hexParam = param instanceof Uint8Array ? toHex(param) : param;
+		const hexParam = isUint8Array(param) ? toHex(param) : param;
 
 		// format to correct length
 		const size = parseInt(match[1], 10);

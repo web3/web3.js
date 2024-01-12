@@ -83,7 +83,7 @@ import {
 	ContractAbiWithSignature,
 	ContractOptions,
 } from 'web3-types';
-import { format, isDataFormat, keccak256, toChecksumAddress } from 'web3-utils';
+import { format, isDataFormat, keccak256, toChecksumAddress , isContractInitOptions } from 'web3-utils';
 import {
 	isNullish,
 	validator,
@@ -106,7 +106,6 @@ import {
 	getEstimateGasParams,
 	getEthTxCallParams,
 	getSendTxParams,
-	isContractInitOptions,
 	isWeb3ContractContext,
 } from './utils.js';
 
@@ -114,7 +113,7 @@ type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
 	Method extends ContractMethod<Abi> = ContractMethod<Abi>,
 > = (
-	...args: Method['Inputs']
+	...args: Method['Inputs'] extends undefined|unknown ? any[] : Method['Inputs']
 ) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
 	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
 	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;
@@ -483,6 +482,15 @@ export class Contract<Abi extends ContractAbi>
 			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
+
+		// Init protected properties
+		if ((contractContext as Web3Context)?.wallet) {
+			this._wallet = (contractContext as Web3Context).wallet;
+		}
+		if ((contractContext as Web3Context)?.accountProvider) {
+			this._accountProvider = (contractContext as Web3Context).accountProvider;
+		}
+
 		if (
 			!isNullish(options) &&
 			!isNullish(options.data) &&
@@ -734,7 +742,6 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			abi = {
 				type: 'constructor',
-				inputs: [],
 				stateMutability: '',
 			} as AbiConstructorFragment;
 		}
