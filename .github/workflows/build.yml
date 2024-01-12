@@ -165,8 +165,8 @@ jobs:
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
-        
-  integration:
+
+  integration-hardhat:
     name: Integration hardhat
     needs: build
     runs-on: ubuntu-latest
