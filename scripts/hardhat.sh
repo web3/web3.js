@@ -26,6 +26,9 @@ start() {
 
 stop() {
 	echo "Stopping hardhat ..."
+	PID=$(lsof -t -i :8545)
+	KILL $PID
+
 }
 
 case $1 in
