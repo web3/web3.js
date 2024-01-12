@@ -42,6 +42,7 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node }}
+          -   run: tar -xf /tmp/web3-esm-${{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn build:esm
   build-types:
       name: Build Types
@@ -54,6 +55,7 @@ jobs:
           -   uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node }}
+          -   run: tar -xf /tmp/web3-types-${{ matrix.node }}.js.tar.gz -C ./
           -   run: yarn build:types
   lint:
       name: Lint
