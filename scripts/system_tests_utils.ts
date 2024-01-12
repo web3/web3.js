@@ -26,7 +26,7 @@ import {
 } from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import HardhatPlugin  from 'hardhat-plugin';
+import HardhatPlugin  from 'web3-hardhat-plugin';
 // import { impersonateAccount, setBalance } from '@nomicfoundation/hardhat-network-helpers';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';

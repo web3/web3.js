@@ -58,8 +58,7 @@
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^29.1.1",
-		"typescript": "^4.7.4",
-		"web3-hardhat-plugin": "^1.0.0"
+		"typescript": "^4.7.4"
 	},
 	"dependencies": {
 		"@types/ws": "8.5.3",
