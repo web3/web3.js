@@ -60,7 +60,7 @@ jobs:
                 node-version: ${{ matrix.node }}
           -   uses: actions/cache/restore@v3
               with:
-                  path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                  path: ./
                   key: web3-${{ matrix.node }}
           -   run: yarn build:types
   lint:
@@ -73,7 +73,7 @@ jobs:
                 node-version: 18
           -   uses: actions/cache/restore@v3
               with:
-                  path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                  path: ./
                   key: web3-${{ matrix.node }}
           -   run: yarn lint
 
@@ -87,7 +87,7 @@ jobs:
               node-version: 18
         -   uses: actions/cache/restore@v3
             with:
-                path: /tmp/web3-18.js.tar.gz
+                path: ./
                 key: web3-18
         -   name: Restore default branch stats
             if: github.event_name != 'push'
@@ -126,7 +126,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - uses: actions/cache/restore@v3
         with:
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          path: ./
           key: web3-${{ matrix.node }}
       - run: yarn test:unit
       - name: Upload coverage to Codecov
@@ -155,7 +155,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - uses: actions/cache/restore@v3
         with:
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          path: ./
           key: web3-${{ matrix.node }}
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
@@ -179,7 +179,7 @@ jobs:
             node-version: ${{ matrix.node }}
       -   uses: actions/cache/restore@v3
           with:
-              path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+              path: ./
               key: web3-${{ matrix.node }}
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
@@ -201,7 +201,7 @@ jobs:
         if: matrix.browser == 'firefox'
       - uses: actions/cache/restore@v3
         with:
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+          path: ./
           key: web3-${{ matrix.node }}
       - run: npm install --no-package-lock --no-save --force cypress
       - name: Cypress run
@@ -224,7 +224,7 @@ jobs:
                 node-version: ${{ matrix.node }}
         -   uses: actions/cache/restore@v3
             with:
-                path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                path: ./
                 key: web3-${{ matrix.node }}
         -   run: yarn build:docs
 
@@ -241,7 +241,7 @@ jobs:
                   node-version: ${{ matrix.node }}
           -   uses: actions/cache/restore@v3
               with:
-                  path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                  path: ./
                   key: web3-${{ matrix.node }}
               # @octokit/core not supported on node 16, so I can't add it to the package.json
           -   run: npm install --no-package-lock --no-save --force @octokit/core
