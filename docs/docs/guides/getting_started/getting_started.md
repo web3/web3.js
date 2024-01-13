@@ -4,6 +4,9 @@ sidebar_position: 2
 sidebar_label: Quickstart
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Quickstart
 
 ## Installation
@@ -247,3 +250,22 @@ const subscription = uniswapToken.events.Transfer();
 subscription.on('data',console.log);
 // ↳ [{...},{...}, ...] live events will be printed in the console
 ```
+
+
+## Live code editor
+
+Feel free to interact with other `Web3Eth` methods by typing `web3.eth.` + `Ctrl + space bar` and you will see all the available methods.
+
+Then run the following command in the console:
+
+- For **JavaScript** `node index.js` 
+- For **Typescript** `ts-node index.ts`
+
+And you'll see the result printed in the console.
+
+:::info
+You can click in the top-left menu to navigate between the different files of the live code project
+:::
+
+<iframe width="100%" height="600px" frameBorder="0" src="https://stackblitz.com/edit/stackblitz-starters-gfq5gy?embed=1&file=index.js&view=editor"></iframe>
+  
