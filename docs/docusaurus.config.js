@@ -179,6 +179,7 @@ const config = {
 				 */
 				playgroundPosition: 'bottom',
 			},
+			image:"https://pbs.twimg.com/profile_images/1746099108937363456/duG_Pqem_400x400.jpg",
 			metadata: [
 				{ name: 'keywords', content: 'web3.js, web3, web3js, ethereum, ethereum json rpc, blockchain development, smart contracts, dapps, dApp development' },
 				{ name: 'description', content: 'Collection of comprehensive TypeScript libraries for Interaction with the Ethereum JSON RPC API and utility functions.' },
