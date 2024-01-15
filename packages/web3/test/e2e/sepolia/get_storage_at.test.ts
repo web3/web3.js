@@ -78,6 +78,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 					result === '0x0000000000000000000000000000000000000000000000000000000000000000',
 			).toBeTruthy();
 		} else {
+			console.log(block);
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
 				`0x000000000000000000000000${getE2ETestAccountAddress()
