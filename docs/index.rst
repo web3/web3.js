@@ -8,11 +8,11 @@ Commencing from January 1, 2024, a 90-day countdown has been initiated, signalin
 Timeline of Changes:
 ---------------------
 
-- 90-Day Countdown (1/1/24 - 3/31/24): During this period, we strongly encourage users to plan accordingly and initiate the upgrade to Web3.js version 4.x
+- 90-Day Countdown (1/1/24 - 3/31/24): During this period, we strongly encourage users to plan accordingly and initiate the `upgrade to Web3.js version 4.x <https://docs.web3js.org/guides/web3_upgrade_guide/x/>`_
 
-- No New Bug Fixes (4/1/24 onwards): Starting April 1, 2024, new bug fixes for Web3.js version 1.x will no longer be provided. To benefit from continued support and access to new features, we recommend upgrading to Web3.js version 4.x.
+- No New Bug Fixes (4/1/24 onwards): Starting April 1, 2024, new bug fixes for Web3.js version 1.x will no longer be provided. To benefit from continued support and access to new features, we recommend `upgrading to Web3.js version 4.x <https://docs.web3js.org/guides/web3_upgrade_guide/x/>`_
 
-- End of Security Fixes (7/1/24): Security fixes for Web3.js version 1.x will be discontinued from July 1, 2024. Upgrading to Web3.js version 4.x is crucial to ensure the security of your applications.
+- End of Security Fixes (7/1/24): Security fixes for Web3.js version 1.x will be discontinued from July 1, 2024. `Upgrading to Web3.js version 4.x <https://docs.web3js.org/guides/web3_upgrade_guide/x/>`_ is crucial to ensure the security of your applications
 
 
 =================================
