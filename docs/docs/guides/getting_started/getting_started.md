@@ -247,3 +247,52 @@ const subscription = uniswapToken.events.Transfer();
 subscription.on('data',console.log);
 // ↳ [{...},{...}, ...] live events will be printed in the console
 ```
+
+
+
+
+## Live code editor (Docusaurus jsx live)
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+```jsx live
+function Live(props) {
+  const [result, setResult] = useState("")
+  let web3 = new Web3("https://eth.llamarpc.com");
+
+  //edit this function to interact with the web3 library
+  async function doSomething() {
+    const block = await web3.eth.getBlockNumber();
+    setResult(String(block))
+  }
+
+  return (
+    <div>
+      <button onClick={doSomething}>Click me to get the result</button>
+      <h2 >The current block number is: {result}</h2>
+    </div>
+  );
+}
+```
+
+
+
+  
+  
+
+## Live code editor (Stackblitz)
+
+Feel free to interact with other `Web3Eth` methods by typing `web3.eth.` + `Ctrl + space bar` and you will see all the available methods.
+
+Then run the following command in the console:
+
+- For **JavaScript** `node index.js` 
+- For **Typescript** `ts-node index.ts`
+
+And you'll see the result printed in the console.
+
+:::info
+You can click in the top-left menu to navigate between the different files of the live code project
+:::
+
+
+<iframe width="100%" height="600px" frameBorder="0" src="https://stackblitz.com/edit/stackblitz-starters-gfq5gy?embed=1&file=index.js&view=editor"></iframe>
