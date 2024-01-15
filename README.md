@@ -1,3 +1,18 @@
+## Maintenance Countdown:
+Commencing from January 1, 2024, a 90-day countdown has been initiated, signaling the transition of Web3.js version 1.x into an end-of-maintenance phase.
+
+### Timeline of Changes:
+
+- 90-Day Countdown (1/1/24 - 3/31/24):
+  During this period, we strongly encourage users to plan accordingly and initiate the [upgrade to Web3.js version 4.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
+
+- No New Bug Fixes (4/1/24 onwards):
+  Starting April 1, 2024, new bug fixes for Web3.js version 1.x will no longer be provided. To benefit from continued support and access to new features, we recommend [upgrading to Web3.js version 4.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
+
+- End of Security Fixes (7/1/24):
+  Security fixes for Web3.js version 1.x will be discontinued from July 1, 2024. [Upgrading to Web3.js version 4.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/) is crucial to ensure the security of your applications.
+
+
 <p style="text-align: center;">
   <img src="assets/logo/web3js.jpg" width="200" alt="web3.js">
 </p>
