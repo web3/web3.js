@@ -85,7 +85,7 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 					expect(result).toBe(expectedBalance);
 					break;
 				case 'NUMBER_BIGINT':
-					// eslint-dgit cisable-next-line jest/no-conditional-expect
+					// eslint-disable-next-line jest/no-conditional-expect
 					expect(result).toBe(BigInt(expectedBalance));
 					break;
 				default:
