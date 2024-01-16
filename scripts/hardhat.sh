@@ -33,6 +33,6 @@ stop() {
 
 case $1 in
 start) start ;;
-# stop) stop ;;
+stop) stop ;;
 *) helpFunction ;; # Print helpFunction in case parameter is non-existent
 esac
