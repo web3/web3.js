@@ -74,7 +74,7 @@
 		"eslint-plugin-import": "^2.26.0",
 		"ethereum-cryptography": "^2.1.2",
 		"ganache": "^7.5.0",
-		"hardhat": "^2.12.2",
+		"hardhat": "^2.19.4",
 		"in3": "^3.3.3",
 		"jest": "^29.7.0",
 		"jest-extended": "^3.0.1",
