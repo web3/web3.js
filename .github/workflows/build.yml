@@ -151,7 +151,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [18, 16]
+        node: [18]
         backend: ['geth']
         mode: ['http', 'ws']
     steps:
@@ -175,7 +175,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [16]
+        node: [18]
         backend: ['hardhat']
         mode: ['http']
     steps:
