@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { toHex } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, Transaction } from '../../src';
-import { getSystemE2ETestProvider, getE2ETestAccountAddress } from './e2e_utils';
+import { getSystemE2ETestProvider } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { mainnetBlockData } from './fixtures/mainnet';
