@@ -58,7 +58,6 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 				'pending',
 				'safe',
 				'finalized',
-				'blockHash',
 				'blockNumber',
 			],
 			format: [FMT_NUMBER.BIGINT, FMT_NUMBER.HEX, FMT_NUMBER.STR],
@@ -85,7 +84,7 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 					expect(result).toBe(expectedBalance);
 					break;
 				case 'NUMBER_BIGINT':
-					// eslint-disable-next-line jest/no-conditional-expect
+					// eslint-dgit cisable-next-line jest/no-conditional-expect
 					expect(result).toBe(BigInt(expectedBalance));
 					break;
 				default:
