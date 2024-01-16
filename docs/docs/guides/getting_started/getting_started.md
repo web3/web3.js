@@ -248,37 +248,6 @@ subscription.on('data',console.log);
 // ↳ [{...},{...}, ...] live events will be printed in the console
 ```
 
-
-
-
-## Live code editor (Docusaurus jsx live)
-<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-
-```jsx live
-function Live(props) {
-  const [result, setResult] = useState("")
-  let web3 = new Web3("https://eth.llamarpc.com");
-
-  //edit this function to interact with the web3 library
-  async function doSomething() {
-    const block = await web3.eth.getBlockNumber();
-    setResult(String(block))
-  }
-
-  return (
-    <div>
-      <button onClick={doSomething}>Click me to get the result</button>
-      <h2 >The current block number is: {result}</h2>
-    </div>
-  );
-}
-```
-
-
-
-  
-  
-
 ## Live code editor (Stackblitz)
 
 Feel free to interact with other `Web3Eth` methods by typing `web3.eth.` + `Ctrl + space bar` and you will see all the available methods.
@@ -296,3 +265,16 @@ You can click in the top-left menu to navigate between the different files of th
 
 
 <iframe width="100%" height="600px" frameBorder="0" src="https://stackblitz.com/edit/stackblitz-starters-gfq5gy?embed=1&file=index.js&view=editor"></iframe>
+
+
+## Live code editor (CodeSandBox)
+
+<iframe
+  src="https://codesandbox.io/p/devbox/devbox1-codesanbox-web-editor-qc3jfc?embed=1&file=%2Findex.js&showConsole=true"
+  style={{ width: '100%', height: '500px', border: '0', borderRadius: '4px', overflow: 'hidden' }}
+  title="devbox1-codesanbox web editor"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+
+<iframe width="100%" height="600px" frameBorder="0" src="https://codesandbox.io/p/devbox/devbox2-vscode-ext-zxtg8m?embed=1&file=%2Findex.js&showConsole=true"></iframe>
