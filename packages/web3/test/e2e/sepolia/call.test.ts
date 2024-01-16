@@ -24,6 +24,7 @@ import {
 import { toAllVariants } from '../../shared_fixtures/utils';
 import {
 	getSystemE2ETestProvider,
+	getE2ETestAccountAddress,
 	getE2ETestContractAddress,
 } from '../e2e_utils';
 
@@ -88,7 +89,9 @@ describe(`${getSystemTestBackend()} tests - call`, () => {
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should call getOwner method from deployed contract', async ({ format }) => {
-		const expectedResult = "0x000000000000000000000000a127c5e6a7e3600ac34a9a9928e52521677e7211"
+		const expectedResult = `0x000000000000000000000000${getE2ETestAccountAddress()
+			.substring(2)
+			.toLowerCase()}`;
 		const result = await web3.eth.call(
 			{
 				to: getE2ETestContractAddress(),
