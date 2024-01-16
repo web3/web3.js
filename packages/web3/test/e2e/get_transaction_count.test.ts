@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3 from '../../src';
-import { getSystemE2ETestProvider } from './e2e_utils';
+import { getSystemE2ETestProvider, getE2ETestAccountAddress } from './e2e_utils';
 import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlockData } from './fixtures/sepolia';
@@ -57,9 +57,8 @@ describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
 			],
 		}),
 	)('getTransactionCount', async ({ block }) => {
-		const address = getSystemTestBackend() === 'sepolia' ? '0xa127C5E6a7E3600Ac34A9a9928E52521677e7211' : '0x98AF911164f9d4E0f5983ed114949c3Bfe3ADc9d'
 		const result = await web3.eth.getTransactionCount(
-			address,
+			getE2ETestAccountAddress(),
 			blockData[block],
 		);
 

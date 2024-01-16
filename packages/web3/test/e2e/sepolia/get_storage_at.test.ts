@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import Web3, { Numbers } from '../../../src';
 import {
 	getSystemE2ETestProvider,
+	getE2ETestAccountAddress,
 	getE2ETestContractAddress,
 } from '../e2e_utils';
 import {
@@ -78,7 +79,10 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			).toBeTruthy();
 		} else {
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(result).toBe("0x000000000000000000000000a127c5e6a7e3600ac34a9a9928e52521677e7211"
+			expect(result).toBe(
+				`0x000000000000000000000000${getE2ETestAccountAddress()
+					.substring(2)
+					.toLowerCase()}`,
 			);
 		}
 	});

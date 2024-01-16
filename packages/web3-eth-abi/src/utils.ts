@@ -166,7 +166,7 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 	const param = typeof _param === 'object' && !Array.isArray(_param) ? { ..._param } : _param;
 
 	// Format BN to string
-	if (param instanceof BigInt) {
+	if (param instanceof BigInt || typeof param === 'bigint') {
 		return param.toString(10);
 	}
 
