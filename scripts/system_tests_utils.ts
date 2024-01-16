@@ -237,15 +237,16 @@ export const refillAccount = async (from: string, to: string, value: string | nu
 };
 
 let mainAcc: string;
+const unlockedMap: { [key: string]: boolean } = {};
 export const createNewAccount = async (config?: {
 	unlock?: boolean;
 	refill?: boolean;
+	refillFromAddress?: string;
 	privateKey?: string;
 	password?: string;
 	doNotImport?: boolean;
 }): Promise<{ address: string; privateKey: string }> => {
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
-
 	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
 
 	if (config?.unlock) {
@@ -262,10 +263,24 @@ export const createNewAccount = async (config?: {
 
 	if (config?.refill) {
 		const web3Personal = new Personal(clientUrl);
-		if (!mainAcc) {
+
+		if (currentIndex >= walletsOnWorker || !tempAccountList[currentIndex]) {
+			currentIndex = 0;
+		}
+
+		const refillFromAddress = tempAccountList[currentIndex];
+		const refillFromAcc = refillFromAddress?.address ?? mainAcc;
+		currentIndex += 1;
+
+		if (!refillFromAcc) {
 			[mainAcc] = await web3Personal.getAccounts();
 		}
-		await refillAccount(mainAcc, acc.address, '100000000000000000');
+		if (!unlockedMap[refillFromAcc] && refillFromAcc) {
+			unlockedMap[refillFromAcc] = true;
+			await web3Personal.unlockAccount(refillFromAcc, '123456', 100000000);
+		}
+
+		await refillAccount(refillFromAcc, acc.address, '10000000000000000000');
 	}
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
@@ -299,20 +314,10 @@ export const createTempAccount = async (
 		});
 	}
 
-	if (currentIndex >= walletsOnWorker || !tempAccountList[currentIndex]) {
-		currentIndex = 0;
-	}
-
-	const acc = tempAccountList[currentIndex];
-	await createNewAccount({
+	return createNewAccount({
 		unlock: true,
-		refill: false,
-		privateKey: acc.privateKey,
-		doNotImport: true,
+		refill: true,
 	});
-	currentIndex += 1;
-
-	return acc;
 };
 
 export const getSystemTestAccountsWithKeys = async (): Promise<

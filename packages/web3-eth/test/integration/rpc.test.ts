@@ -437,7 +437,7 @@ describe('rpc', () => {
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contractDeployed.options.address as string,
 				fromBlock: numberToHex(Math.min(...resTx.map(d => Number(d.blockNumber)))),
-				toBlock: numberToHex(1000),
+				toBlock: 'latest',
 			});
 			const results = res.map(
 				r =>
@@ -449,7 +449,7 @@ describe('rpc', () => {
 			const res2: Array<any> = await web3Eth.getPastLogs({
 				address: contractDeployed.options.address as string,
 				fromBlock: Math.min(...resTx.map(d => Number(d.blockNumber))),
-				toBlock: 1000,
+				toBlock: 'latest',
 			});
 			const results2 = res2.map(
 				r =>
@@ -460,7 +460,7 @@ describe('rpc', () => {
 			const res3: Array<any> = await web3Eth.getPastLogs({
 				address: contractDeployed.options.address as string,
 				fromBlock: BigInt(Math.min(...resTx.map(d => Number(d.blockNumber)))),
-				toBlock: BigInt(1000),
+				toBlock: 'latest',
 			});
 			const results3 = res3.map(
 				r =>
