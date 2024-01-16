@@ -57,8 +57,9 @@ describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
 			],
 		}),
 	)('getTransactionCount', async ({ block }) => {
+		const address = getSystemTestBackend() === 'sepolia' ? '0xa127C5E6a7E3600Ac34A9a9928E52521677e7211' : '0x98AF911164f9d4E0f5983ed114949c3Bfe3ADc9d'
 		const result = await web3.eth.getTransactionCount(
-			getE2ETestAccountAddress(),
+			address,
 			blockData[block],
 		);
 

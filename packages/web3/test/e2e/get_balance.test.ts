@@ -58,12 +58,14 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 				'pending',
 				'safe',
 				'finalized',
+				'blockHash',
 				'blockNumber',
 			],
 			format: [FMT_NUMBER.BIGINT, FMT_NUMBER.HEX, FMT_NUMBER.STR],
 		}),
 	)('getBalance', async ({ block, format }) => {
-		const result = await web3.eth.getBalance(getE2ETestAccountAddress(), blockData[block], {
+		const address = getSystemTestBackend() === 'sepolia' ? '0xa127C5E6a7E3600Ac34A9a9928E52521677e7211' : '0x98AF911164f9d4E0f5983ed114949c3Bfe3ADc9d'
+		const result = await web3.eth.getBalance(address, blockData[block], {
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});
@@ -84,7 +86,7 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 					expect(result).toBe(expectedBalance);
 					break;
 				case 'NUMBER_BIGINT':
-					// eslint-disable-next-line jest/no-conditional-expect
+					// eslint-dgit cisable-next-line jest/no-conditional-expect
 					expect(result).toBe(BigInt(expectedBalance));
 					break;
 				default:
