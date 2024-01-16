@@ -226,6 +226,14 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 	};
 };
 
+let tempAccountList: { address: string; privateKey: string }[] = [];
+const walletsOnWorker = 20;
+
+if (tempAccountList.length === 0) {
+	tempAccountList = accountsString;
+}
+let currentIndex = Math.floor(Math.random() * (tempAccountList ? tempAccountList.length : 0));
+
 export const refillAccount = async (from: string, to: string, value: string | number) => {
 	const web3Eth = new Web3Eth(DEFAULT_SYSTEM_PROVIDER);
 
@@ -285,13 +293,7 @@ export const createNewAccount = async (config?: {
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
 };
-let tempAccountList: { address: string; privateKey: string }[] = [];
-const walletsOnWorker = 20;
 
-if (tempAccountList.length === 0) {
-	tempAccountList = accountsString;
-}
-let currentIndex = Math.floor(Math.random() * (tempAccountList ? tempAccountList.length : 0));
 export const createTempAccount = async (
 	config: {
 		unlock?: boolean;
