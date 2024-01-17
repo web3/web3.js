@@ -187,8 +187,7 @@ jobs:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: npx hardhat node
-        background: true
+      - run: npx hardhat node &
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
