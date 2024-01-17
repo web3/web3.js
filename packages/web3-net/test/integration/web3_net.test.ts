@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { SupportedProviders, Web3NetAPI } from 'web3-types';
 import Net from '../../src';
 
-import { closeOpenConnection, getSystemTestProvider } from '../fixtures/system_tests_utils';
+import { closeOpenConnection, getSystemTestProvider, getSystemTestBackend } from '../fixtures/system_tests_utils';
 
 describe('Web3 net', () => {
 	let clientUrl: string | SupportedProviders<Web3NetAPI>;
@@ -40,7 +40,13 @@ describe('Web3 net', () => {
 
 	it('should be able to get id', async () => {
 		const networkId = await web3Net.getId();
-		expect(networkId).toBe(BigInt(1337));
+		if (getSystemTestBackend() === 'hardhat') {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(networkId).toBe(BigInt(31337));
+		} else {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(networkId).toBe(BigInt(1337));
+		}
 	});
 
 	it('should be able to listen', async () => {
