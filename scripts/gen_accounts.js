@@ -21,21 +21,15 @@ const addAccount = async (address, privateKey) => {
 		mainAcc = accountList[0];
 	}
 	const web3Eth = new Web3Eth(clientUrl);
-
+	const isGeth = ['geth', 'geth-manual'].includes(getSystemTestBackend());
 	if (!accountList.find(acc => acc.address === address)) {
-		await web3Personal.importRawKey(
-			['geth', 'geth-manual'].includes(getSystemTestBackend())
-				? privateKey.slice(2)
-				: privateKey,
-			'123456',
-		);
+		await web3Personal.importRawKey(isGeth ? privateKey.slice(2) : privateKey, '123456');
 	}
-
 	await web3Eth.sendTransaction({
 		from: mainAcc,
 		to: address,
 		gas: 1500000,
-		value: '10000000000000000000000',
+		value: isGeth ? '10000000000000000000000' : '10000000000000000000',
 	});
 };
 

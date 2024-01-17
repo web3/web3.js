@@ -246,6 +246,29 @@ export const refillAccount = async (from: string, to: string, value: string | nu
 
 let mainAcc: string;
 const unlockedMap: { [key: string]: boolean } = {};
+
+export const randomRefill = async (toAddress: string, amount?: number | string) => {
+	const defaultAmount = isGeth ? '100000000000000000000' : '100000000000000000';
+	const web3Personal = new Personal(DEFAULT_SYSTEM_PROVIDER);
+
+	if (currentIndex >= walletsOnWorker || !tempAccountList[currentIndex]) {
+		currentIndex = 0;
+	}
+
+	const refillFromAddress = tempAccountList[currentIndex];
+	const refillFromAcc = refillFromAddress?.address ?? mainAcc;
+	currentIndex += 1;
+
+	if (!refillFromAcc) {
+		[mainAcc] = await web3Personal.getAccounts();
+	}
+	if (!unlockedMap[refillFromAcc] && refillFromAcc) {
+		unlockedMap[refillFromAcc] = true;
+		await web3Personal.unlockAccount(refillFromAcc, '123456', 100000000);
+	}
+	await refillAccount(refillFromAcc, toAddress, amount ?? defaultAmount);
+};
+
 export const createNewAccount = async (config?: {
 	unlock?: boolean;
 	refill?: boolean;
@@ -255,10 +278,8 @@ export const createNewAccount = async (config?: {
 	doNotImport?: boolean;
 }): Promise<{ address: string; privateKey: string }> => {
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
-	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
-
 	if (config?.unlock) {
-		const web3Personal = new Personal(clientUrl);
+		const web3Personal = new Personal(DEFAULT_SYSTEM_PROVIDER);
 		if (!config?.doNotImport) {
 			await web3Personal.importRawKey(
 				getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
@@ -270,25 +291,7 @@ export const createNewAccount = async (config?: {
 	}
 
 	if (config?.refill) {
-		const web3Personal = new Personal(clientUrl);
-
-		if (currentIndex >= walletsOnWorker || !tempAccountList[currentIndex]) {
-			currentIndex = 0;
-		}
-
-		const refillFromAddress = tempAccountList[currentIndex];
-		const refillFromAcc = refillFromAddress?.address ?? mainAcc;
-		currentIndex += 1;
-
-		if (!refillFromAcc) {
-			[mainAcc] = await web3Personal.getAccounts();
-		}
-		if (!unlockedMap[refillFromAcc] && refillFromAcc) {
-			unlockedMap[refillFromAcc] = true;
-			await web3Personal.unlockAccount(refillFromAcc, '123456', 100000000);
-		}
-
-		await refillAccount(refillFromAcc, acc.address, '10000000000000000000');
+		await randomRefill(acc.address);
 	}
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
