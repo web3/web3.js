@@ -75,6 +75,7 @@ jobs:
                 with:
                     path: ./
                     key: web3-18-${{github.event.pull_request.base.sha}}
+            -   run: npx ts-node scripts/init.ts
             -   run: yarn lint
 
     build-web:
@@ -204,6 +205,7 @@ jobs:
                 path: ./
                 key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
             - run: npm install --no-package-lock --no-save --force cypress
+            - run: npx ts-node scripts/init.ts
             - name: Cypress run
               uses: cypress-io/github-action@v4
               with:
