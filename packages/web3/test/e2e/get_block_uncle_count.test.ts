@@ -34,7 +34,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')(`${getSystemTestBackend()} test
 	afterAll(async () => {
 		await closeOpenConnection(web3);
 	});
-
+	// eslint-disable-next-line jest/consistent-test-it
 	it.each(
 		toAllVariants<{
 			block:
