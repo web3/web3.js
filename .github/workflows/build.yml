@@ -18,8 +18,8 @@ jobs:
         name: Build CJS
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node }}
                   cache: yarn
@@ -39,7 +39,7 @@ jobs:
             matrix:
                 node: [ 18 ]
         steps:
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
@@ -56,7 +56,7 @@ jobs:
             matrix:
                 node: [ 18 ]
         steps:
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
@@ -70,7 +70,7 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
             -   uses: actions/download-artifact@v4
@@ -85,7 +85,7 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
             -   uses: actions/download-artifact@v4
@@ -125,7 +125,7 @@ jobs:
             matrix:
                 node: [18, 20]
         steps:
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node }}
             - uses: actions/download-artifact@v4
@@ -155,7 +155,7 @@ jobs:
                 backend: ['ganache']
                 mode: ['http']
         steps:
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node }}
             - uses: actions/download-artifact@v4
@@ -180,7 +180,7 @@ jobs:
                 backend: [ 'geth' ]
                 mode: [ 'ipc', 'ws', 'http' ]
         steps:
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
@@ -201,7 +201,7 @@ jobs:
                 node: [18]
                 browser: ['electron', 'chrome', 'firefox']
         steps:
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node }}
             - uses: browser-actions/setup-firefox@latest
@@ -227,7 +227,7 @@ jobs:
             matrix:
                 node: [ 18 ]
         steps:
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
@@ -245,7 +245,7 @@ jobs:
             matrix:
                 node: [ 18 ]
         steps:
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
