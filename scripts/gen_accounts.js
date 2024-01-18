@@ -29,7 +29,7 @@ const addAccount = async (address, privateKey) => {
 		from: mainAcc,
 		to: address,
 		gas: 1500000,
-		value: isGeth ? '10000000000000000000000' : '10000000000000000000',
+		value: isGeth ? '10000000000000000000000' : '5000000000000000000',
 	});
 };
 
