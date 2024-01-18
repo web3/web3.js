@@ -21,11 +21,11 @@ getOS(){
 getDownloadLink(){
     case "$OS" in
       SOLARIS*) LINK="-" ;;
-      OSX*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.12.2-bed84606.tar.gz" ;;
-      LINUX*)   LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.12.2-bed84606.tar.gz" ;;
-      BSD*)     LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.12.2-bed84606.tar.gz" ;;
-      WINDOWS*)    LINK="https://gethstore.blob.core.windows.net/builds/geth-windows-386-1.12.2-bed84606.exe" ;;
-      "ALSO WINDOWS"*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-windows-386-1.12.2-bed84606.exe" ;;
+      OSX*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.13.8-b20b4a71.tar.gz" ;;
+      LINUX*)   LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.13.8-b20b4a71.tar.gz" ;;
+      BSD*)     LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.13.8-b20b4a71.tar.gz" ;;
+      WINDOWS*)    LINK="https://gethstore.blob.core.windows.net/builds/geth-windows-amd64-1.13.8-b20b4a71.exe" ;;
+      "ALSO WINDOWS"*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-windows-amd64-1.13.8-b20b4a71.exe" ;;
       *)        LINK="-" ;;
     esac
 }
