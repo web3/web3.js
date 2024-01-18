@@ -24,7 +24,7 @@ jobs:
                   node-version: ${{ matrix.node }}
                   cache: yarn
             - run: yarn install --ignore-scripts
-#            - run: yarn prebuild
+            - run: ts-node scripts/init.ts
             - run: yarn build:cjs
             - uses: actions/cache/save@v3
               with:
