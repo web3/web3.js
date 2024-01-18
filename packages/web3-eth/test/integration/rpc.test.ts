@@ -107,7 +107,7 @@ describe('rpc', () => {
 			const isMining = await web3Eth.isMining();
 
 			if (getSystemTestBackend() !== 'geth')
-				// eslint-disable-next-line jest/no-conditional-expect
+				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
 				expect(isMining).toBe(true);
 		});
 
@@ -116,6 +116,7 @@ describe('rpc', () => {
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(typeof hashRate).toBe(mapFormatToType[format as string]);
 		});
 
