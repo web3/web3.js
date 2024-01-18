@@ -84,7 +84,7 @@ describe('rpc', () => {
 	});
 
 	describe('methods', () => {
-		itIf(!['geth'].includes(getSystemTestBackend()))('getProtocolVersion', async () => {
+		itIf(!['geth', 'hardhat'].includes(getSystemTestBackend()))('getProtocolVersion', async () => {
 			const version = await web3Eth.getProtocolVersion();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(parseInt(version, 16)).toBeGreaterThan(0);
@@ -103,7 +103,7 @@ describe('rpc', () => {
 			expect(coinbase).toHaveLength(42);
 		});
 
-		it('isMining', async () => {
+		itIf(getSystemTestBackend() !== 'hardhat')('isMining', async () => {
 			const isMining = await web3Eth.isMining();
 
 			if (getSystemTestBackend() !== 'geth')
@@ -111,7 +111,7 @@ describe('rpc', () => {
 				expect(isMining).toBe(true);
 		});
 
-		it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
+		itIf(getSystemTestBackend() !== 'hardhat').each(Object.values(FMT_NUMBER))('getHashRate', async format => {
 			const hashRate = await web3Eth.getHashRate({
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
@@ -393,7 +393,7 @@ describe('rpc', () => {
 			expect(res).toBeDefined();
 		});
 
-		itIf(!['ganache', 'geth'].includes(getSystemTestBackend()))('getWork', async () => {
+		itIf(!['hardhat', 'geth'].includes(getSystemTestBackend()))('getWork', async () => {
 			const res = await web3Eth.getWork();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res[0]).toBeDefined();
@@ -406,7 +406,7 @@ describe('rpc', () => {
 			// expect(res[0]).toEqual(tempAcc.address);
 		});
 
-		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {
+		itIf(getSystemTestBackend() !== 'hardhat')('getProof', async () => {
 			const numberData = BigInt(10);
 			const stringData = 'str';
 			const boolData = true;
