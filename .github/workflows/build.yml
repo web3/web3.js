@@ -26,11 +26,10 @@ jobs:
             - run: yarn install --ignore-scripts
             - run: yarn prebuild
             - run: yarn build:cjs
-            - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
             - uses: actions/upload-artifact@v4
               with:
-                  name: web3-${{ matrix.node }}.js.tar.gz
-                  path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+                  name: web3-${{ matrix.node }}
+                  path: ./
     build-esm:
         name: Build ESM
         needs: build
@@ -44,9 +43,8 @@ jobs:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
                 with:
-                    name: web3-${{ matrix.node }}.js.tar.gz
-                    path: /tmp
-            -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                    name: web3-${{ matrix.node }}
+                    path: ./
             -   run: yarn build:esm
     build-types:
         name: Build Types
@@ -61,9 +59,8 @@ jobs:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
                 with:
-                    name: web3-${{ matrix.node }}.js.tar.gz
-                    path: /tmp
-            -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                    name: web3-${{ matrix.node }}
+                    path: ./
             -   run: yarn build:types
     lint:
         name: Lint
@@ -75,9 +72,8 @@ jobs:
                     node-version: 18
             -   uses: actions/download-artifact@v4
                 with:
-                    name: web3-18.js.tar.gz
-                    path: /tmp
-            -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
+                    name: web3-18
+                    path: ./
             -   run: yarn lint
 
     build-web:
@@ -90,9 +86,8 @@ jobs:
                     node-version: 18
             -   uses: actions/download-artifact@v4
                 with:
-                    name: web3-18.js.tar.gz
-                    path: /tmp
-            -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
+                    name: web3-18
+                    path: ./
             -   name: Restore default branch stats
                 if: github.event_name != 'push'
                 uses: actions/cache/restore@v3
@@ -130,9 +125,8 @@ jobs:
                   node-version: ${{ matrix.node }}
             - uses: actions/download-artifact@v4
               with:
-                  name: web3-${{ matrix.node }}.js.tar.gz
-                  path: /tmp
-            - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                  name: web3-${{ matrix.node }}
+                  path: ./
             - run: yarn test:unit
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v3
@@ -160,9 +154,8 @@ jobs:
                   node-version: ${{ matrix.node }}
             - uses: actions/download-artifact@v4
               with:
-                  name: web3-${{ matrix.node }}.js.tar.gz
-                  path: /tmp
-            - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                  name: web3-${{ matrix.node }}
+                  path: ./
             - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
               shell: bash
 
@@ -185,9 +178,8 @@ jobs:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
                 with:
-                    name: web3-${{ matrix.node }}.js.tar.gz
-                    path: /tmp
-            -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                    name: web3-${{ matrix.node }}
+                    path: ./
             -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
                 shell: bash
 
@@ -208,9 +200,8 @@ jobs:
               if: matrix.browser == 'firefox'
             - uses: actions/download-artifact@v4
               with:
-                  name: web3-${{ matrix.node }}.js.tar.gz
-                  path: /tmp
-            - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                  name: web3-${{ matrix.node }}
+                  path: ./
             - run: npm install --no-package-lock --no-save --force cypress
             - name: Cypress run
               uses: cypress-io/github-action@v4
@@ -232,9 +223,8 @@ jobs:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
                 with:
-                    name: web3-${{ matrix.node }}.js.tar.gz
-                    path: /tmp
-            -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                    name: web3-${{ matrix.node }}
+                    path: ./
             -   run: yarn build:docs
 
     benchmark:
@@ -250,9 +240,8 @@ jobs:
                     node-version: ${{ matrix.node }}
             -   uses: actions/download-artifact@v4
                 with:
-                    name: web3-${{ matrix.node }}.js.tar.gz
-                    path: /tmp
-            -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+                    name: web3-${{ matrix.node }}
+                    path: ./
                 # @octokit/core not supported on node 16, so I can't add it to the package.json
             -   run: npm install --no-package-lock --no-save --force @octokit/core
             -   name: Restore main branch benchmark data
@@ -290,8 +279,8 @@ jobs:
                     external-data-json-path: web3-benchmark-main.json
                     # Workflow will fail when an alert happens
                     fail-on-alert: true
-                    # Enable alert commit comment
-                    alert-threshold: '100%'
+                    # Enable alert commit comment. 200% means difference in 2 times
+                    alert-threshold: '200%'
                     comment-always: false
             -   name: Save main branch benchmark data
                 uses: actions/cache/save@v3
