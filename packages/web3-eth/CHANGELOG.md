@@ -213,8 +213,10 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.4.0]
 
 ### Added
 
 -   Catch `TransactionPollingTimeoutError` was added to send transaction events (#6623)
+
+## [Unreleased]
