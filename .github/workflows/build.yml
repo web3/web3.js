@@ -24,7 +24,6 @@ jobs:
                   node-version: ${{ matrix.node }}
                   cache: yarn
             - run: yarn install --ignore-scripts
-            - run: cd packages/web3 && ls && ls dist && ls lib
 #            - run: yarn prebuild
             - run: yarn build:cjs
             - uses: actions/cache/save@v3
