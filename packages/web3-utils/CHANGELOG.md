@@ -181,8 +181,10 @@ Documentation:
 
 -   Fix unnecessary array copy when pack encoding (#6553)
 
-## [Unreleased]
+## [4.1.1]
 
 ### Fixed
 
 -   Fixed an issue with detecting Uint8Array (#6486)
+
+## [Unreleased]
