@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { SupportedProviders, Web3NetAPI } from 'web3-types';
 import Net from '../../src';
 
-import { closeOpenConnection, getSystemTestProvider, getSystemTestBackend } from '../fixtures/system_tests_utils';
+import { closeOpenConnection, getSystemTestProvider } from '../fixtures/system_tests_utils';
 
 describe('Web3 net', () => {
 	let clientUrl: string | SupportedProviders<Web3NetAPI>;
