@@ -31,12 +31,15 @@ import {
 	waitForOpenConnection,
 	createLocalAccount,
 	sendFewSampleTxs,
+	getSystemTestBackend,
+	describeIf
 } from '../fixtures/system_test_utils';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
 const gas = 21000;
+// skip if using hardhat, does not return a transaction not mined error but instead a nonce too high error
 /* eslint-disable jest/no-standalone-expect */
-describe('defaults', () => {
+describeIf(getSystemTestBackend() !=='hardhat')('defaults', () => {
 	let web3: Web3;
 	let clientUrl: string | SupportedProviders;
 	let account1: Web3Account;

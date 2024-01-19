@@ -34,8 +34,8 @@ describe('Web3Eth.submitWork', () => {
 		await closeOpenConnection(web3Eth);
 	});
 
-	// Geth doesn't support eth_submitWork
-	itIf(getSystemTestBackend() !== 'geth')('should submit work', async () => {
+	// Hardhat and Geth doesn't support eth_submitWork
+	itIf(getSystemTestBackend() !== 'geth' && getSystemTestBackend() !== 'hardhat')('should submit work', async () => {
 		const response = await web3Eth.submitWork(
 			'0x0000000000000001',
 			'0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',

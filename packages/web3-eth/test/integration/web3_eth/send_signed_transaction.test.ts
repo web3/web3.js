@@ -37,13 +37,15 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	describeIf
 } from '../../fixtures/system_test_utils';
 import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
 import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
 const HEX_NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.HEX } as const;
 
-describe('Web3Eth.sendSignedTransaction', () => {
+// hardhat does not support eth_signTransaction
+describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction', () => {
 	let web3Eth: Web3Eth;
 	let tempAcc: { address: string; privateKey: string };
 

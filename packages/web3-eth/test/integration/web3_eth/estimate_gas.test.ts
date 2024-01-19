@@ -23,6 +23,7 @@ import {
 	getSystemTestProvider,
 	itIf,
 	isGeth,
+	getSystemTestBackend,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.estimateGas', () => {
@@ -45,7 +46,13 @@ describe('Web3Eth.estimateGas', () => {
 			value: '0x1',
 		};
 		const response = await web3Eth.estimateGas(transaction);
-		expect(response).toBe(BigInt(21000));
+		if (getSystemTestBackend() === 'hardhat') {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(response).toBe(BigInt(21001));
+		} else {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(response).toBe(BigInt(21000));
+		}
 	});
 
 	itIf(isGeth)('should estimate a contract deployment', async () => {

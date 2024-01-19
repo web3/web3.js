@@ -121,10 +121,18 @@ describe('rpc', () => {
 		});
 
 		it('getAccounts', async () => {
-			const account = await createNewAccount({ unlock: true });
-			const accList = await web3Eth.getAccounts();
-			const accListLowerCase = accList.map((add: string) => add.toLowerCase());
-			expect(accListLowerCase).toContain(account.address.toLowerCase());
+			// hardhat does not have support importrawkey
+			if (getSystemTestBackend() !== 'hardhat')	{
+				const account = await createNewAccount({ unlock: true });
+				const accList = await web3Eth.getAccounts();
+				const accListLowerCase = accList.map((add: string) => add.toLowerCase());
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(accListLowerCase).toContain(account.address.toLowerCase());
+			} else {
+				const accList = await web3Eth.getAccounts();
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(accList).toHaveLength(20);
+			}
 		});
 
 		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {

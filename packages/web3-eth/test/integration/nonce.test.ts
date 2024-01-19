@@ -24,6 +24,7 @@ import {
 	closeOpenConnection,
 	createAccount,
 	createLocalAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../fixtures/system_test_utils';
 
@@ -84,10 +85,13 @@ describe('defaults', () => {
 							web3Eth.transactionPollingTimeout / 1000
 						} seconds`,
 					);
-				} else {
-					throw error;
-				}
+				} else if (getSystemTestBackend() === 'hardhat'){
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect((error as any).message).toContain("Nonce too high")
+			}	else  {
+				throw error;
 			}
-		});
+		}
+	});
 	});
 });

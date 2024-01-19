@@ -21,9 +21,12 @@ import {
 	closeOpenConnection,
 	createTempAccount,
 	getSystemTestProvider,
+	describeIf,
+	getSystemTestBackend
 } from '../../fixtures/system_test_utils';
 
-describe('Web3Eth.signTransaction', () => {
+// hardhat does not support eth_signtransaction
+describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.signTransaction', () => {
 	let web3Eth: Web3Eth;
 	let tempAcc: { address: string; privateKey: string };
 

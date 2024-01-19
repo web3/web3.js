@@ -21,6 +21,7 @@ import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
 
@@ -38,8 +39,17 @@ describe('Web3Eth.sign', () => {
 	});
 
 	it('should sign message', async () => {
-		const message = '0x736f796c656e7420677265656e2069732070656f706c65';
-		const response = await web3Eth.sign(message, tempAcc.address);
-		expect(isHexStrict(response as string)).toBe(true);
+		if (getSystemTestBackend() === 'hardhat') {
+			const message = '0x736f796c656e7420677265656e2069732070656f706c65';
+			const accounts = await web3Eth.getAccounts();
+			const response = await web3Eth.sign(message, accounts[0]);
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(isHexStrict(response as string)).toBe(true);
+		} else {
+			const message = '0x736f796c656e7420677265656e2069732070656f706c65';
+			const response = await web3Eth.sign(message, tempAcc.address);
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(isHexStrict(response as string)).toBe(true);
+		}
 	});
 });
