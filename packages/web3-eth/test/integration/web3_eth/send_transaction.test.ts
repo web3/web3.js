@@ -540,6 +540,7 @@ describe('Web3Eth.sendTransaction', () => {
 			await expect(
 				web3Eth
 					.sendTransaction(transaction)
+					// eslint-disable-next-line jest/no-standalone-expect
 					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
 			).rejects.toMatchObject(expectedThrownError);
 		});
