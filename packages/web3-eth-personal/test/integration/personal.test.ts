@@ -43,7 +43,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 		await closeOpenConnection(ethPersonal);
 	});
 
-	it('new account', async () => {
+	test('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
 		expect(isHexStrict(newAccount)).toBe(true);
 	});
@@ -58,7 +58,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 		expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(acc));
 	});
 
-	it('lock account', async () => {
+	test('lock account', async () => {
 		const { address } = await createTempAccount();
 		const lockAccount = await ethPersonal.lockAccount(address);
 		expect(lockAccount).toBe(true);
@@ -76,7 +76,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 		await expect(ethPersonal.sendTransaction(tx, '')).rejects.toThrow();
 	});
 
-	it('unlock account', async () => {
+	test('unlock account', async () => {
 		const { address } = await createTempAccount();
 		const unlockedAccount = await ethPersonal.unlockAccount(address, '123456', 1000);
 		expect(unlockedAccount).toBe(true);
@@ -105,7 +105,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 		expect(key).toBe(address);
 	});
 
-	it('getAccounts', async () => {
+	test('getAccounts', async () => {
 		const accountList = await ethPersonal.getAccounts();
 		// create a new account
 		await ethPersonal.newAccount('cde');
@@ -113,7 +113,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 		expect(updatedAccountList.length).toBeGreaterThan(accountList.length);
 	});
 
-	it('importRawKey', async () => {
+	test('importRawKey', async () => {
 		const { address, privateKey } = createAccount();
 		const rawKey = getSystemTestBackend() === 'geth' ? privateKey.slice(2) : privateKey;
 		const key = await ethPersonal.importRawKey(rawKey, '123456');
@@ -143,7 +143,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 		expect(signedTx).toEqual(expectedResult);
 	});
 
-	it('sendTransaction', async () => {
+	test('sendTransaction', async () => {
 		const from = (await createNewAccount({ unlock: true, refill: true })).address;
 
 		const unlockedAccount = await ethPersonal.unlockAccount(from, '123456', 1000);
