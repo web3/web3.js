@@ -26,9 +26,11 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	itIf,
+	describeIf
 } from '../fixtures/system_test_utils';
 
-describe('personal integration tests', () => {
+// hardhat does not support personal
+describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', () => {
 	let ethPersonal: Personal;
 	let clientUrl: string | SupportedProviders<EthPersonalAPI>;
 

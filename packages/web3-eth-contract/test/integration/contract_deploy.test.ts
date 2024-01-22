@@ -29,6 +29,7 @@ import {
 	signTxAndSendEIP1559,
 	sendFewSampleTxs,
 	closeOpenConnection,
+	getSystemTestBackend,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -254,9 +255,17 @@ describe('contract', () => {
 		});
 
 		it('should fail with errors on "intrinsic gas too low" OOG', async () => {
-			await expect(
-				contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
-			).rejects.toThrow('Returned error: intrinsic gas too low');
+			if (getSystemTestBackend() !== 'hardhat'){
+				// eslint-disable-next-line jest/no-conditional-expect
+				await expect(
+					contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
+				).rejects.toThrow('Returned error: intrinsic gas too low');
+			} else {
+				// eslint-disable-next-line jest/no-conditional-expect
+				await expect(
+					contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
+				).rejects.toThrow('Returned error: Transaction requires at least 109656 gas but got 100');
+			}
 		});
 
 		it('should fail with errors deploying a zero length bytecode', () => {
@@ -273,14 +282,25 @@ describe('contract', () => {
 		it('should fail with errors on revert', async () => {
 			const revert = new Contract(DeployRevertAbi);
 			revert.provider = getSystemTestProvider();
-			// eslint-disable-next-line jest/no-standalone-expect
+			if (getSystemTestBackend() !== 'hardhat'){
+				// eslint-disable-next-line jest/no-conditional-expect
+				await expect(
+					revert
+						.deploy({
+							data: DeployRevertBytecode,
+						})
+						.send(sendOptions),
+				).rejects.toThrow("code couldn't be stored");
+			} else {
+			// eslint-disable-next-line jest/no-conditional-expect
 			await expect(
 				revert
 					.deploy({
 						data: DeployRevertBytecode,
 					})
 					.send(sendOptions),
-			).rejects.toThrow("code couldn't be stored");
+			).rejects.toThrow("Error happened while trying to execute a function inside a smart contract");
+				}	
 		});
 	});
 });
