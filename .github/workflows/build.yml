@@ -216,34 +216,6 @@ jobs:
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
 
-  e2e:
-    name: End-to-End ganache:ws
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [18]
-        browser: ['electron', 'chrome', 'firefox']
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-            node-version: ${{ matrix.node }}
-      - uses: browser-actions/setup-firefox@latest
-        if: matrix.browser == 'firefox'
-      - uses: actions/download-artifact@v4
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: npm install --no-package-lock --no-save --force cypress
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-            install: false
-            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
-
   build-docs:
     name: Build Docs
     needs: build
