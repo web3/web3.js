@@ -191,7 +191,7 @@ const config = {
 				{ name: 'twitter:card', content: 'summary_large_image' },
 				{ name: 'twitter:title', content: 'Web3.js Documentation' },
 				{ name: 'twitter:description', content: 'Official documentation for web3.js, the Type/JavaScript library for interacting with the Ethereum blockchain.' },
-				{ name: 'twitter:image', content: 'https://pbs.twimg.com/profile_images/1746099108937363456/duG_Pqem_400x400.jpg' },
+				{ name: 'twitter:image', content: 'https://raw.githubusercontent.com/web3/web3.js/4.x/assets/logo/web3js.jpg' },
 			],
 		}),
 };
