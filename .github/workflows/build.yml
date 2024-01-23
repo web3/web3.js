@@ -221,13 +221,12 @@ jobs:
         steps:
             -   uses: actions/setup-node@v4
                 with:
-                    cache: yarn
                     node-version: 18
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
                     key: web3-18-${{github.event.pull_request.base.sha}}
-            -   run: yarn run build:docs
+            -   run: npm run build:docs
             -   name: Publish to Cloudflare Pages
                 uses: cloudflare/pages-action@v1
                 with:
