@@ -142,7 +142,7 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 /**
  *
  * Hashes the given message. The data will be `UTF-8 HEX` decoded and enveloped as follows:
- * `"\\x19Ethereum Signed Message:\\n" + message.length + message` and hashed using keccak256.
+ * `"\x19Ethereum Signed Message:\n" + message.length + message` and hashed using keccak256.
  *
  * @param message - A message to hash, if its HEX it will be UTF8 decoded.
  * @returns The hashed message
