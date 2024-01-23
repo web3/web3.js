@@ -32,7 +32,7 @@ WebSocket Provider allows us to communicate with the Ethereum node via WebSocket
 Follow these steps to connect to the Ethereum network using WebSocket provider:
 
 :::tip
-The first 3 steps are the same as in the pervious section. So, you may skip them if you already executed the previous section.
+The first 3 steps are the same as in the previous section. So, you may skip them if you already executed the previous section.
 :::
 
 1.  Open a command prompt or terminal window and navigate to where you would like to create the folder for this example.
