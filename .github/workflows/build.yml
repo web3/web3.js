@@ -132,7 +132,7 @@ jobs:
               if: ${{ matrix.node == 18 }}
 
     integration:
-        name: Integration # (ganache with HTTP)
+        name: Integration (ganache) # (ganache with HTTP)
         needs: build
         runs-on: ubuntu-latest
         env:
@@ -198,19 +198,6 @@ jobs:
                   command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
                   cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
-#    build-docs:
-#        name: Build Docs
-#        needs: build
-#        runs-on: ubuntu-latest
-#        steps:
-#            -   uses: actions/setup-node@v4
-#                with:
-#                    node-version: 18
-#            -   uses: actions/cache/restore@v3
-#                with:
-#                    path: ./
-#                    key: web3-18-${{github.event.pull_request.base.sha}}
-#            -   run: yarn build:docs
     deploy-docs:
         name: Docs CloudFlare Deploy
         needs: build
