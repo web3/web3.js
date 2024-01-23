@@ -35,33 +35,27 @@ jobs:
         name: Build ESM
         needs: build
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [ 18 ]
         steps:
             -   uses: actions/setup-node@v4
                 with:
-                    node-version: ${{ matrix.node }}
+                    node-version: 18
             -   uses: actions/cache/restore@v3
                 with:
                    path: ./
-                   key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+                   key: web3-18-${{github.event.pull_request.base.sha}}
             -   run: yarn build:esm
     build-types:
         name: Build Types
         needs: build
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [ 18 ]
         steps:
             -   uses: actions/setup-node@v4
                 with:
-                    node-version: ${{ matrix.node }}
+                    node-version: 18
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.event.pull_request.base.sha}}
             -   run: yarn build:types
     lint:
         name: Lint
@@ -144,21 +138,15 @@ jobs:
         env:
             INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
             INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-        strategy:
-            fail-fast: false
-            matrix:
-                node: [18]
-                backend: ['ganache']
-                mode: ['http']
         steps:
             - uses: actions/setup-node@v4
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 18
             - uses: actions/cache/restore@v3
               with:
                 path: ./
-                key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
-            - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+                key: web3-18-${{github.event.pull_request.base.sha}}
+            - run: yarn test:e2e:ganache:http
               shell: bash
 
     e2e-ipc:
@@ -171,18 +159,16 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                node: [ 18 ]
-                backend: [ 'geth' ]
                 mode: [ 'ipc', 'ws', 'http' ]
         steps:
             -   uses: actions/setup-node@v4
                 with:
-                    node-version: ${{ matrix.node }}
+                    node-version: 18
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
-            -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+                    key: web3-18-${{github.event.pull_request.base.sha}}
+            -   run: yarn test:e2e:geth:${{ matrix.mode }}
                 shell: bash
 
     e2e:
@@ -192,18 +178,17 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                node: [18]
                 browser: ['electron', 'chrome', 'firefox']
         steps:
             - uses: actions/setup-node@v4
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 18
             - uses: browser-actions/setup-firefox@latest
               if: matrix.browser == 'firefox'
             - uses: actions/cache/restore@v3
               with:
                 path: ./
-                key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+                key: web3-18-${{github.event.pull_request.base.sha}}
             - run: npm install --no-package-lock --no-save --force cypress
             - run: npx ts-node scripts/init.ts
             - name: Cypress run
@@ -217,34 +202,28 @@ jobs:
         name: Build Docs
         needs: build
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [ 18 ]
         steps:
             -   uses: actions/setup-node@v4
                 with:
-                    node-version: ${{ matrix.node }}
+                    node-version: 18
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.event.pull_request.base.sha}}
             -   run: yarn build:docs
 
     benchmark:
         name: Benchmark Tests
         needs: build
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [ 18 ]
         steps:
             -   uses: actions/setup-node@v4
                 with:
-                    node-version: ${{ matrix.node }}
+                    node-version: 18
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.event.pull_request.base.sha}}
                 # @octokit/core not supported on node 16, so I can't add it to the package.json
             -   run: npm install --no-package-lock --no-save --force @octokit/core
             -   name: Restore main branch benchmark data
