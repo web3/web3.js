@@ -220,3 +220,7 @@ Documentation:
 -   Catch `TransactionPollingTimeoutError` was added to send transaction events (#6623)
 
 ## [Unreleased]
+
+### Added
+
+-   Added `eth.getMaxPriorityFeePerGas` method (#6748)
