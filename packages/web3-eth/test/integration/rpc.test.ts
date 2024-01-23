@@ -36,6 +36,7 @@ import {
 	createNewAccount,
 	itIf,
 	createTempAccount,
+	describeIf,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import {
@@ -111,14 +112,16 @@ describe('rpc', () => {
 				expect(isMining).toBe(true);
 		});
 
-		itIf(getSystemTestBackend() !== 'hardhat').each(Object.values(FMT_NUMBER))('getHashRate', async format => {
-			const hashRate = await web3Eth.getHashRate({
-				number: format as FMT_NUMBER,
-				bytes: FMT_BYTES.HEX,
+		describeIf(getSystemTestBackend() !== 'hardhat')('getHashRate', () => { 
+			it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
+				const hashRate = await web3Eth.getHashRate({
+					number: format as FMT_NUMBER,
+					bytes: FMT_BYTES.HEX,
+				});
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect(typeof hashRate).toBe(mapFormatToType[format as string]);		
 			});
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(typeof hashRate).toBe(mapFormatToType[format as string]);
-		});
+		})
 
 		it('getAccounts', async () => {
 			// hardhat does not have support importrawkey
