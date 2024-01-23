@@ -198,20 +198,44 @@ jobs:
                   command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
                   cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
-    build-docs:
-        name: Build Docs
+#    build-docs:
+#        name: Build Docs
+#        needs: build
+#        runs-on: ubuntu-latest
+#        steps:
+#            -   uses: actions/setup-node@v4
+#                with:
+#                    node-version: 18
+#            -   uses: actions/cache/restore@v3
+#                with:
+#                    path: ./
+#                    key: web3-18-${{github.event.pull_request.base.sha}}
+#            -   run: yarn build:docs
+    deploy-docs:
+        name: Docs CloudFlare Deploy
         needs: build
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            deployments: write
         steps:
             -   uses: actions/setup-node@v4
                 with:
+                    cache: yarn
                     node-version: 18
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
                     key: web3-18-${{github.event.pull_request.base.sha}}
-            -   run: yarn build:docs
-
+            -   run: yarn run build:docs
+            -   name: Publish to Cloudflare Pages
+                uses: cloudflare/pages-action@v1
+                with:
+                    apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                    accountId: 2238a825c5aca59233eab1f221f7aefb
+                    projectName: web3-js-docs
+                    directory: ./docs/build
+                    gitHubToken: ${{ secrets.GITHUB_TOKEN }}
     benchmark:
         name: Benchmark Tests
         needs: build
