@@ -154,7 +154,7 @@ jobs:
       - run: yarn test:e2e:hardhat:http
         shell: bash
 
-    e2e:
+    e2e-geth:
         name: Integration # (geth with HTTP, IPC & WS)
         needs: build
         runs-on: ubuntu-latest
@@ -176,32 +176,32 @@ jobs:
             -   run: yarn test:e2e:geth:${{ matrix.mode }}
                 shell: bash
 
-  e2e:
-    name: End-to-End hardhat:ws
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: ['electron', 'chrome', 'firefox']
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-            node-version: 18
-      - uses: browser-actions/setup-firefox@latest
-        if: matrix.browser == 'firefox'
-      - uses: actions/cache/restore@v3
-        with:
-          path: ./
-          key: web3-18-${{github.event.pull_request.base.sha}}
-      - run: npx hardhat node &
-      - run: npm install --no-package-lock --no-save --force cypress
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-            install: false
-            command: yarn test:e2e:hardhat:ws:${{ matrix.browser }}
-            cache-key: node-v18-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+    e2e-browsers:
+        name: End-to-End hardhat:ws
+        needs: build
+        runs-on: ubuntu-latest
+        strategy:
+          fail-fast: false
+          matrix:
+            browser: ['electron', 'chrome', 'firefox']
+        steps:
+          - uses: actions/setup-node@v3
+            with:
+                node-version: 18
+          - uses: browser-actions/setup-firefox@latest
+            if: matrix.browser == 'firefox'
+          - uses: actions/cache/restore@v3
+            with:
+              path: ./
+              key: web3-18-${{github.event.pull_request.base.sha}}
+          - run: npx hardhat node &
+          - run: npm install --no-package-lock --no-save --force cypress
+          - name: Cypress run
+            uses: cypress-io/github-action@v4
+            with:
+                install: false
+                command: yarn test:e2e:hardhat:ws:${{ matrix.browser }}
+                cache-key: node-v18-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
     deploy-docs:
         name: Docs CloudFlare Deploy
