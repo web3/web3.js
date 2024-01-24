@@ -200,6 +200,7 @@ jobs:
       matrix:
         node: [18]
         browser: ['electron', 'chrome', 'firefox']
+        backend: ['hardhat']
     steps:
       - uses: actions/setup-node@v3
         with:
