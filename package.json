@@ -33,7 +33,8 @@
 	"scripts": {
 		"version": "yarn run bootstrap && yarn build",
 		"bootstrap": "lerna bootstrap",
-		"prebuild": "yarn clean && ts-node scripts/init.ts",
+		"init-scripts": "ts-node scripts/init.ts",
+		"prebuild": "yarn clean && yarn init-scripts",
 		"build": "lerna run build --stream",
 		"build:types": "lerna run build:types --stream",
 		"build:cjs": "lerna run build:cjs --stream",
