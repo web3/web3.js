@@ -54,6 +54,8 @@
 		"test:unit": "jest --config=./test/unit/jest.config.js",
 		"test:integration": "jest --config=./test/integration/jest.config.js --forceExit",
 		"test:integration:stress": "jest --config=./test/stress/jest.config.js --forceExit",
+		"test:blackbox:hardhat:http": "./scripts/black_box_test.sh hardhat http",
+		"test:blackbox:hardhat:ws": "./scripts/black_box_test.sh hardhat ws",
 		"test:blackbox:geth:http": "./scripts/black_box_test.sh geth http",
 		"test:blackbox:geth:ws": "./scripts/black_box_test.sh geth ws",
 		"test:blackbox:infura:http": "./scripts/black_box_test.sh infura http",
