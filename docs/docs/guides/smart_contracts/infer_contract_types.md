@@ -66,7 +66,7 @@ import path from 'path';
 //read destination directory submitted as first param
 var destination = process.argv.slice(2)[0];
 
-//read all contract artifacts from artifacts.json which should be in the directoy from where script should be executed
+//read all contract artifacts from artifacts.json which should be in the directory from where script should be executed
 const artifactContent = fs.readFileSync('./artifacts.json', 'utf-8');
 
 const artifacts: string[] = JSON.parse(artifactContent);
