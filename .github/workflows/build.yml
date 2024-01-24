@@ -132,27 +132,27 @@ jobs:
               if: ${{ matrix.node == 18 }}
 
     integration-hardhat:
-    name: Integration hardhat
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-    strategy:
-      fail-fast: false
-      matrix:
-        backend: ['hardhat']
-        mode: ['http']
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - uses: actions/cache/restore@v3
-        with:
-            path: ./
-            key: web3-18-${{github.event.pull_request.base.sha}}
-      - run: npx hardhat node &
-      - run: yarn test:e2e:hardhat:http
-        shell: bash
+        name: Integration hardhat
+        needs: build
+        runs-on: ubuntu-latest
+        env:
+          INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+        strategy:
+          fail-fast: false
+          matrix:
+            backend: ['hardhat']
+            mode: ['http']
+        steps:
+          - uses: actions/setup-node@v3
+            with:
+              node-version: 18
+          - uses: actions/cache/restore@v3
+            with:
+                path: ./
+                key: web3-18-${{github.event.pull_request.base.sha}}
+          - run: npx hardhat node &
+          - run: yarn test:e2e:hardhat:http
+            shell: bash
 
     e2e-geth:
         name: Integration # (geth with HTTP, IPC & WS)
