@@ -29,6 +29,7 @@ import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { sendFewTxes } from '../helper';
 
+// hardhat does not support eth_getBlockUncleCountByBlockHash
 describeIf(getSystemTestBackend() !== 'hardhat')('rpc with block', () => {
 	let web3Eth: Web3Eth;
 	let clientUrl: string | SupportedProviders;

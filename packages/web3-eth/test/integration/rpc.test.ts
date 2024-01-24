@@ -124,7 +124,7 @@ describe('rpc', () => {
 		})
 
 		it('getAccounts', async () => {
-			// hardhat does not have support importrawkey
+			// hardhat does not have support importrawkey, so we can't add new accounts rather just check the default 20 accounts
 			if (getSystemTestBackend() !== 'hardhat')	{
 				const account = await createNewAccount({ unlock: true });
 				const accList = await web3Eth.getAccounts();
@@ -405,6 +405,7 @@ describe('rpc', () => {
 			expect(res).toBeDefined();
 		});
 
+		// hardhat does not support getWork
 		itIf(!['hardhat', 'geth'].includes(getSystemTestBackend()))('getWork', async () => {
 			const res = await web3Eth.getWork();
 			// eslint-disable-next-line jest/no-standalone-expect
@@ -418,6 +419,7 @@ describe('rpc', () => {
 			// expect(res[0]).toEqual(tempAcc.address);
 		});
 
+		// hardhat does not support getProof
 		itIf(getSystemTestBackend() !== 'hardhat')('getProof', async () => {
 			const numberData = BigInt(10);
 			const stringData = 'str';
