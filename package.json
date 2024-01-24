@@ -51,7 +51,6 @@
 		"geth-binary:start:background": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth_binary.sh start 1",
 		"geth-binary:stop": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth_binary.sh stop",
 		"hardhat:start": "WEB3_SYSTEM_TEST_BACKEND=hardhat && ./scripts/hardhat.sh start",
-		"hardhat:start:background": "WEB3_SYSTEM_TEST_BACKEND=hardhat && ./scripts/hardhat.sh start 1",
 		"hardhat:stop": "./scripts/hardhat.sh stop",
 		"geth-manual:start:background": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth_binary.sh manualStart 1",
 		"geth-manual:stop": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth_binary.sh stop",

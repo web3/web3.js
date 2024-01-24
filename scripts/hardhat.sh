@@ -12,9 +12,8 @@ start() {
 
 	if [ -z "${ORIGARGS[1]}" ]
 	then
-		echo "sup hardhat ..."
-	else
 		echo "Starting hardhat ..."
+		npx hardhat node
 	fi
 }
 
