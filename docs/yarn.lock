@@ -3724,10 +3724,10 @@ dns-packet@^5.2.2:
   dependencies:
     "@leichtgewicht/ip-codec" "^2.0.1"
 
-docusaurus-lunr-search@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/docusaurus-lunr-search/-/docusaurus-lunr-search-3.3.1.tgz#4ee77853b21c1f6a652c9545d8ba8dc3bd8b3ab9"
-  integrity sha512-EWUeHlTf+wVDLYLvgxeqavhww59elc9XfvlC9ZEHdeBT+kEbDdCdcC0CnHHeHVqePbMoHYfA8RhsXKYcLp6qgw==
+docusaurus-lunr-search@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/docusaurus-lunr-search/-/docusaurus-lunr-search-3.3.2.tgz#23699b899d9275402e3004e1fe6085e1bae4f007"
+  integrity sha512-+TXfiRAwIAaNwME8bBZvC+osfoXjJSNs5BcZu92lIHoWc3Myct4Nw3jU0FMXQCQGQcQ0FgFqMDoh56LPCLVaxQ==
   dependencies:
     autocomplete.js "^0.37.0"
     clsx "^1.2.1"
