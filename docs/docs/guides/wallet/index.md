@@ -239,7 +239,7 @@ ts-node index.ts`
 And you'll see the result in the console.
 
 :::info
-You can click in the top-left menu of the code editor `☰` to navigate between the different files of the live code project
+To navigate between the different files of the live code project, click on the menu icon "`☰`" located in the top-left corner of the code editor 
 :::
 
 <iframe width="100%" height="600px" frameBorder="0" src="https://stackblitz.com/edit/stackblitz-starters-b5suyj?embed=1&file=index.js&view=editor"></iframe>  
