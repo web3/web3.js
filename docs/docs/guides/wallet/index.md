@@ -219,3 +219,27 @@ The following is a list of `Accounts` [methods](/libdocs/Wallet) in the `web3.et
 - [recoverTransaction](/libdocs/Accounts#recovertransaction)
 - [sign](/libdocs/Accounts#sign)
 - [signTransaction](/libdocs/Accounts#signtransaction)
+
+
+## Live code editor
+
+You can interact with other `Web3Eth` methods by typing `web3.eth.` + `Ctrl + space bar` and you will see all the available methods.
+
+Run the following command in the console:
+
+- For **JavaScript** (.js)
+```bash
+node index.js
+```
+- For **Typescript** (.ts)
+```bash
+ts-node index.ts` 
+```
+
+And you'll see the result in the console.
+
+:::info
+You can click in the top-left menu of the code editor `☰` to navigate between the different files of the live code project
+:::
+
+<iframe width="100%" height="600px" frameBorder="0" src="https://stackblitz.com/edit/stackblitz-starters-b5suyj?embed=1&file=index.js&view=editor"></iframe>  
