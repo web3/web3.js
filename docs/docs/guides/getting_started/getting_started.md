@@ -247,3 +247,26 @@ const subscription = uniswapToken.events.Transfer();
 subscription.on('data',console.log);
 // ↳ [{...},{...}, ...] live events will be printed in the console
 ```
+
+## Live code editor
+
+You can interact with other `Web3Eth` methods by typing `web3.eth.` + `Ctrl + space bar` and you will see all the available methods.
+
+Run the following command in the console:
+
+- For **JavaScript** (.js)
+```bash
+node index.js
+```
+- For **Typescript** (.ts)
+```bash
+ts-node index.ts` 
+```
+
+And you'll see the result in the console.
+
+:::info
+To navigate between the different files of the live code project, click on the menu icon "`☰`" located in the top-left corner of the code editor 
+:::
+
+<iframe width="100%" height="600px" frameBorder="0" src="https://stackblitz.com/edit/stackblitz-starters-gfq5gy?embed=1&file=index.js&view=editor"></iframe>  
