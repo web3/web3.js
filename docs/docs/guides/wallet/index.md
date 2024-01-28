@@ -223,7 +223,7 @@ The following is a list of `Accounts` [methods](/libdocs/Wallet) in the `web3.et
 
 ## Live code editor
 
-You can interact with other `Web3Eth` methods by typing `web3.eth.` + `Ctrl + space bar` and you will see all the available methods.
+You can interact with other Wallet and Accounts methods by typing `web3.eth.accounts` and `web3.eth.accounts.wallet`.
 
 Run the following command in the console:
 
