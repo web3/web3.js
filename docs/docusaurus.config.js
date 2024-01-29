@@ -42,7 +42,7 @@ const packages = [
 /** @type {import('@docusaurus/types').Config} */
 const config = {
 	title: 'web3.js',
-	tagline: 'The ultimate JavaScript library for Ethereum',
+	tagline: 'Powerful TypeScript libraries for Ethereum interaction and utility functions',
 	url: 'https://docs.web3js.org',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
@@ -179,6 +179,20 @@ const config = {
 				 */
 				playgroundPosition: 'bottom',
 			},
+			image:"https://pbs.twimg.com/profile_images/1746099108937363456/duG_Pqem_400x400.jpg",
+			metadata: [
+				{ name: 'keywords', content: 'web3.js, web3, web3js, ethereum, ethereum json rpc, blockchain development, smart contracts, dapps, dApp development' },
+				{ name: 'description', content: 'Collection of comprehensive TypeScript libraries for Interaction with the Ethereum JSON RPC API and utility functions.' },
+				{ name: 'og:title', content: 'Web3.js Documentation' },
+				{ name: 'og:description', content: 'Collection of comprehensive TypeScript libraries for Interaction with the Ethereum JSON RPC API and utility functions.' },
+				{ name: 'og:type', content: 'website' },
+				{ name: 'og:url', content: 'https://docs.web3js.org' },
+				{ name: 'og:image', content: 'https://pbs.twimg.com/profile_images/1746099108937363456/duG_Pqem_400x400.jpg' },
+				{ name: 'twitter:card', content: 'summary_large_image' },
+				{ name: 'twitter:title', content: 'Web3.js Documentation' },
+				{ name: 'twitter:description', content: 'Official documentation for web3.js, the Type/JavaScript library for interacting with the Ethereum blockchain.' },
+				{ name: 'twitter:image', content: 'https://raw.githubusercontent.com/web3/web3.js/4.x/assets/logo/web3js.jpg' },
+			],
 		}),
 };
 

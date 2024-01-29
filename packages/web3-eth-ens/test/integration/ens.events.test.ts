@@ -27,7 +27,6 @@ import { ENS } from '../../src';
 import { namehash } from '../../src/utils';
 
 import {
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	isWs,
 	isIpc,
@@ -35,6 +34,7 @@ import {
 	isSocket,
 	describeIf,
 	getSystemTestProviderUrl,
+	createTempAccount,
 } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi } from '../fixtures/ens/abi/ENSRegistry';
@@ -62,7 +62,6 @@ describeIf(isSocket)('ens events', () => {
 	const node = namehash('resolver');
 	const label = sha3('resolver') as string;
 
-	let accounts: string[];
 	let ens: ENS;
 	let defaultAccount: string;
 	let accountOne: string;
@@ -71,9 +70,10 @@ describeIf(isSocket)('ens events', () => {
 	const addressOne: Address = '0x0000000000000000000000000000000000000001';
 
 	beforeAll(async () => {
-		accounts = await getSystemTestAccounts();
-
-		[defaultAccount, accountOne] = accounts;
+		const acc1 = await createTempAccount();
+		defaultAccount = acc1.address;
+		const acc2 = await createTempAccount();
+		accountOne = acc2.address;
 
 		sendOptions = { from: defaultAccount, gas: '10000000' };
 

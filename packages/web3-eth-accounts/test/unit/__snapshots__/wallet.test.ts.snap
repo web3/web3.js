@@ -1,35 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Wallet create should create given # of accounts using the account provider 1`] = `
-Array [
-  Object {
+[
+  {
     "address": "account_create_1",
   },
-  Object {
+  {
     "address": "account_create_2",
   },
-  Object {
+  {
     "address": "account_create_3",
   },
-  Object {
+  {
     "address": "account_create_4",
   },
-  Object {
+  {
     "address": "account_create_5",
   },
-  Object {
+  {
     "address": "account_create_6",
   },
-  Object {
+  {
     "address": "account_create_7",
   },
-  Object {
+  {
     "address": "account_create_8",
   },
-  Object {
+  {
     "address": "account_create_9",
   },
-  Object {
+  {
     "address": "account_create_10",
   },
 ]

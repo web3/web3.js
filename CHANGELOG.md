@@ -2287,39 +2287,52 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
--   Fix unecessary array copy when pack encoding (#6553)
+-   Fix unnecessary array copy when pack encoding (#6553)
 
-## [Unreleased]
+## [4.4.0]
 
 ### Added
-
-#### web3
-
 
 #### web3-eth
 
 -   Catch `TransactionPollingTimeoutError` was added to send transaction events (#6623)
 
-#### web3-utils
-
--   `SocketProvider` now contains public function `getPendingRequestQueueSize`, `getSentRequestsQueueSize` and `clearQueues` (#6479)
--   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6479) 
--   Add `isContractInitOptions` method (#6555)
-
 ### Changed
 
-#### web3-core
+#### web3-eth-abi
 
+-   Use `AbiError` instead of `Error` for errors at web3-eth-abi (#6641).
 
 #### web3-eth-contract
 
+-	Allow the `deploy` function to accept parameters, even when no ABI was provided to the `Contract`(#6635)
+
+#### web3
+
+-   Dependencies updated
 
 ### Fixed
 
-#### web3-rpc-methods
+#### web3-eth-abi
 
--   Fix web3-types import #6590 (#6589)
+-   Fixed an issue with detecting Uint8Array (#6486)
+
+#### web3-eth-accounts
+
+-   Send Transaction config used to be ignored if the passed `common` did not have a `copy()` and the `chainId` was not provided (#6663)
+-   Fixed an issue with detecting Uint8Array (#6486)
+
+#### web3-eth-contract
+
+-	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
+-	Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
 
 #### web3-utils
 
--   Fix unecessary array copy when pack encoding (#6553)
+-   Fixed an issue with detecting Uint8Array (#6486)
+
+#### web3-validator
+
+-   Fixed an issue with detecting Uint8Array (#6486)
+
+## [Unreleased]

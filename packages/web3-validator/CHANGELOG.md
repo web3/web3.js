@@ -156,4 +156,10 @@ Documentation:
 -   Validator will now properly handle all valid numeric type sizes: intN / uintN where 8 < = N < = 256 and N % 8 == 0 (#6434)
 -   Will now throw SchemaFormatError when unsupported format is passed to `convertToZod` method (#6434)
 
+## [2.0.4]
+
+### Fixed
+
+-   Fixed an issue with detecting Uint8Array (#6486)
+
 ## [Unreleased]

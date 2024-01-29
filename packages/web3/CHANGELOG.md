@@ -183,5 +183,8 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.4.0]
 
+-   Dependencies updated ( details are in root changelog )
+
+## [Unreleased]

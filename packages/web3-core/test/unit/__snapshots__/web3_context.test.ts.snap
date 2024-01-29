@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Web3Context getContextObject should return correct context object 1`] = `
-Object {
+{
   "accountProvider": undefined,
-  "config": Object {
+  "config": {
     "blockHeaderTimeout": 10,
     "contractDataInputFill": "data",
     "defaultAccount": undefined,
@@ -14,7 +14,7 @@ Object {
     "defaultMaxPriorityFeePerGas": "0x9502f900",
     "defaultNetworkId": undefined,
     "defaultTransactionType": "0x2",
-    "enableExperimentalFeatures": Object {
+    "enableExperimentalFeatures": {
       "useRpcCallSpecification": false,
       "useSubscriptionWhenCheckingBlockTimeout": false,
     },
@@ -34,14 +34,14 @@ Object {
     "clientUrl": "http://test/abc",
     "httpProviderOptions": undefined,
   },
-  "providers": Object {
+  "providers": {
     "HttpProvider": [Function],
     "WebsocketProvider": [Function],
   },
-  "registeredSubscriptions": Object {},
+  "registeredSubscriptions": {},
   "requestManager": Web3RequestManager {
     "_emitter": EventEmitter {
-      "_events": Object {
+      "_events": {
         "BEFORE_PROVIDER_CHANGE": [Function],
         "PROVIDER_CHANGED": [Function],
       },
@@ -57,10 +57,10 @@ Object {
   },
   "subscriptionManager": Web3SubscriptionManager {
     "_subscriptions": Map {},
-    "registeredSubscriptions": Object {},
+    "registeredSubscriptions": {},
     "requestManager": Web3RequestManager {
       "_emitter": EventEmitter {
-        "_events": Object {
+        "_events": {
           "BEFORE_PROVIDER_CHANGE": [Function],
           "PROVIDER_CHANGED": [Function],
         },

@@ -154,8 +154,14 @@ Documentation:
 
 -   Bug fix of `ERR_UNSUPPORTED_DIR_IMPORT` in ABI (#6535)
 
-## [Unreleased]
+## [4.2.0]
 
 ### Changed
 
 -   Use `AbiError` instead of `Error` for errors at web3-eth-abi (#6641).
+
+### Fixed
+
+-   Fixed an issue with detecting Uint8Array (#6486)
+
+## [Unreleased]
