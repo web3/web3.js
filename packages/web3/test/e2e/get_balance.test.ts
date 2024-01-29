@@ -73,7 +73,7 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 			switch (format) {
 				case 'NUMBER_HEX':
 					/**
-					 * @NOTE toHex assumes if a string is passed it's a hexidecimal
+					 * @NOTE toHex assumes if a string is passed it's a hexadecimal
 					 * which is why the number string, expectedBalance, is being
 					 * converted to a BigInt
 					 */
