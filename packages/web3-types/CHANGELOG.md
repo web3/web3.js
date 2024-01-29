@@ -177,4 +177,8 @@ Documentation:
 -   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
 -   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
 
+### Fixed
+
+-   type `accounts` includes `privateKeyToAccount`,`privateKeyToAddress`,and `privateKeyToPublicKey` (#6762)
+
 ## [Unreleased]
