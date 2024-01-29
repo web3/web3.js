@@ -32,7 +32,7 @@ It is important to note that the plugin name should be structured as `@<organiza
 }
 ```
 
-When your users install your plugin, this will allow the package manager to make use of the user installed `web3` if available and if the version satisfies the version constraints instead of installing it's own version of `web3`.
+When your users install your plugin, this will allow the package manager to make use of the user installed `web3` if available and if the version satisfies the version constraints instead of installing its own version of `web3`.
 
 ## Add New Transaction Type
 

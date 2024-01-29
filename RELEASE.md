@@ -24,7 +24,7 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 
 `E2E Network Tests` will be triggered to run via a Github workflow when a PR is open for a branch prefixed with `release/` and is being merged into `4.x` branch. These tests depend on a couple of ENVs to be set that are configurable in Github's Action Secrets when running these tests in CI. The following required secrets are:
 
--   `E2E_TESTS_ALLOWED_SEND_TRANSACTION`: If set to `false` this will keep the Sepolia tests that spend ETH from runnning, setting to anything else will cause them to run
+-   `E2E_TESTS_ALLOWED_SEND_TRANSACTION`: If set to `false` this will keep the Sepolia tests that spend ETH from running, setting to anything else will cause them to run
 -   `TEST_ACCOUNT_PRIVATE_KEY`: The private key of the Sepolia account to use when submitting transactions
 -   `INFURA_SEPOLIA_HTTP`: The provider to be used to access the Sepolia network
 -   `INFURA_MAINNET_HTTP`: The provider to be used to access Mainnet
@@ -54,7 +54,7 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 
     - Select recently pushed tag in `choose a tag` drop down
 
-    - Check `Set as the latest release` if its latest release else select `This is a pre-release` if its not main release e.g. if its `RC` or `alpha`
+    - Check `Set as the latest release` if its latest release else select `This is a pre-release` if it's not main release e.g. if it's `RC` or `alpha`
 
     - Check `Create a discussion for this release`
 
