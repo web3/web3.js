@@ -25,7 +25,7 @@ import {
 jest.mock('web3-eth');
 
 describe('Contract', () => {
-	describe('Contract use the the context wallet', () => {
+	describe('Contract use the context wallet', () => {
 		it('should work when created as web.eth.Contract', async () => {
 			const web3 = new Web3('https://rpc2.sepolia.org');
 			const contract = new web3.eth.Contract(

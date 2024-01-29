@@ -209,7 +209,7 @@ transactionHash {
 98999580000000000000 + 1000000000000000000 + (20000000000\*21000) = 100 Ether
 :::
 
-In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding tutotial). Create a file named `estimate.ts` and fill it with the following code:
+In the next example, we are going to use `estimateGas` function to see the expected gas for contract deployment. (For more on contracts, please see the corresponding tutorial). Create a file named `estimate.ts` and fill it with the following code:
 
 ```typescript
 import { Web3, ETH_DATA_FORMAT, DEFAULT_RETURN_FORMAT } from 'web3';
