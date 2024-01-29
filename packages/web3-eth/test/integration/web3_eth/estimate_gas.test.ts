@@ -24,6 +24,7 @@ import {
 	itIf,
 	isGeth,
 	getSystemTestBackend,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.estimateGas', () => {
@@ -46,7 +47,7 @@ describe('Web3Eth.estimateGas', () => {
 			value: '0x1',
 		};
 		const response = await web3Eth.estimateGas(transaction);
-		if (getSystemTestBackend() === 'hardhat') {
+		if (getSystemTestBackend() === BACKEND.HARDHAT) {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(response).toBe(BigInt(21001));
 		} else {

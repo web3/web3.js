@@ -23,6 +23,7 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sign', () => {
@@ -39,7 +40,7 @@ describe('Web3Eth.sign', () => {
 	});
 
 	it('should sign message', async () => {
-		if (getSystemTestBackend() === 'hardhat') {
+		if (getSystemTestBackend() === BACKEND.HARDHAT) {
 			const message = '0x736f796c656e7420677265656e2069732070656f706c65';
 			const accounts = await web3Eth.getAccounts();
 			const response = await web3Eth.sign(message, accounts[0]);

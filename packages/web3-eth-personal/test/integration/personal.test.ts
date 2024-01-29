@@ -26,11 +26,12 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	itIf,
-	describeIf
+	describeIf,
+	BACKEND
 } from '../fixtures/system_test_utils';
 
 // hardhat does not support personal
-describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', () => {
+describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('personal integration tests', () => {
 	let ethPersonal: Personal;
 	let clientUrl: string | SupportedProviders<EthPersonalAPI>;
 
@@ -48,7 +49,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 		expect(isHexStrict(newAccount)).toBe(true);
 	});
 
-	itIf(getSystemTestBackend() === 'geth')('ecRecover', async () => {
+	itIf(getSystemTestBackend() === BACKEND.GETH)('ecRecover', async () => {
 		const password = '123456';
 		const acc = (await createTempAccount({ password })).address;
 		// ganache does not support ecRecover
@@ -95,7 +96,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 	});
 
 	// ganache does not support sign
-	itIf(getSystemTestBackend() === 'geth')('sign', async () => {
+	itIf(getSystemTestBackend() === BACKEND.GETH)('sign', async () => {
 		const password = '123456';
 		const key = (await createTempAccount({ password })).address;
 		await ethPersonal.unlockAccount(key, password, 100000);
@@ -115,7 +116,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('personal integration tests', (
 
 	test('importRawKey', async () => {
 		const { address, privateKey } = createAccount();
-		const rawKey = getSystemTestBackend() === 'geth' ? privateKey.slice(2) : privateKey;
+		const rawKey = getSystemTestBackend() === BACKEND.GETH ? privateKey.slice(2) : privateKey;
 		const key = await ethPersonal.importRawKey(rawKey, '123456');
 		expect(toChecksumAddress(key).toLowerCase()).toBe(address.toLowerCase());
 	});

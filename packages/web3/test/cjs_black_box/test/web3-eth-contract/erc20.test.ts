@@ -22,6 +22,7 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
+	BACKEND
 	// eslint-disable-next-line import/no-relative-packages
 } from '../../../shared_fixtures/system_tests_utils';
 import {
@@ -33,7 +34,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const Web3 = require('web3').default;
 
-describeIf(getSystemTestBackend() === 'infura')(
+describeIf(getSystemTestBackend() === BACKEND.INFURA)(
 	'CJS - Black Box Unit Tests - web3.eth.Contract',
 	() => {
 		describe('Infura - ERC20', () => {
@@ -56,7 +57,7 @@ describeIf(getSystemTestBackend() === 'infura')(
 	},
 );
 
-describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'hardhat')(
+describeIf(getSystemTestBackend() === BACKEND.GETH || getSystemTestBackend() === BACKEND.GETH)(
 	'Black Box Unit Tests - web3.eth.Contract',
 	() => {
 		describe('Geth || Hardhat - ERC20', () => {

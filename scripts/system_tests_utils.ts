@@ -74,6 +74,13 @@ export const getEnvVar = (name: string): string | undefined =>
 
 export const DEFAULT_SYSTEM_PROVIDER = 'http://127.0.0.1:8545';
 export const DEFAULT_SYSTEM_ENGINE = 'node';
+export const BACKEND = {
+	GETH: 'geth',
+	HARDHAT: 'hardhat',
+	INFURA: 'infura',
+	SEPOLIA: 'sepolia',
+	MAINNET: 'mainnet',
+};
 
 export const getSystemTestProviderUrl = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
@@ -106,7 +113,7 @@ export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_M
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
 
-export const isGeth: boolean = getSystemTestBackend() === 'geth';
+export const isGeth: boolean = getSystemTestBackend() === BACKEND.GETH;
 
 export const createAccount = _createAccount;
 
@@ -252,7 +259,7 @@ export const createNewAccount = async (config?: {
 	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
 	if (config?.unlock) {
 		
-		if (getSystemTestBackend() === 'hardhat'){
+		if (getSystemTestBackend() === BACKEND.HARDHAT){
 			const url = getSystemTestProviderUrl();
 			const web3 = new Web3(url);
 			web3.registerPlugin(new HardhatPlugin())
@@ -263,7 +270,7 @@ export const createNewAccount = async (config?: {
 		const web3Personal = new Personal(clientUrl);
 		if (!config?.doNotImport) {
 			await web3Personal.importRawKey(
-				getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
+				getSystemTestBackend() === BACKEND.GETH ? acc.privateKey.slice(2) : acc.privateKey,
 				config.password ?? '123456',
 			);
 		}
@@ -273,7 +280,7 @@ export const createNewAccount = async (config?: {
 	}
 
 	if (config?.refill) {
-		if (getSystemTestBackend() === 'hardhat'){
+		if (getSystemTestBackend() === BACKEND.HARDHAT){
 			const url = getSystemTestProviderUrl();
 			const web3 = new Web3(url);
 			web3.registerPlugin(new HardhatPlugin())

@@ -25,10 +25,11 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
+	BACKEND
 } from '../../../shared_fixtures/system_tests_utils';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../../../shared_fixtures/contracts/ERC20Token';
 
-describeIf(getSystemTestBackend() === 'infura')(
+describeIf(getSystemTestBackend() === BACKEND.INFURA)(
 	'ESM - Black Box Unit Tests - web3.eth.Contract',
 	() => {
 		describe('Infura - ERC20', () => {
@@ -51,7 +52,7 @@ describeIf(getSystemTestBackend() === 'infura')(
 	},
 );
 
-describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'hardhat')(
+describeIf(getSystemTestBackend() === BACKEND.GETH || getSystemTestBackend() === BACKEND.HARDHAT)(
 	'Black Box Unit Tests - web3.eth.Contract',
 	() => {
 		describe('Geth || Hardhat - ERC20', () => {

@@ -37,7 +37,8 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
-	itIf
+	itIf,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
@@ -495,12 +496,12 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertInstructionError',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'err: intrinsic gas too low: have 1, want 21000 (supplied gas 1)'
 						: 'base fee exceeds gas limit',
 			};
 			
-			if(getSystemTestBackend() !== 'hardhat'){
+			if(getSystemTestBackend() !== BACKEND.HARDHAT){
 				await expect(
 					web3Eth
 						.sendTransaction(transaction)
@@ -517,7 +518,7 @@ describe('Web3Eth.sendTransaction', () => {
 				  }
 			}
 		});
-		itIf(getSystemTestBackend() !== 'hardhat')('Should throw TransactionRevertInstructionError because insufficient funds', async () => {
+		itIf(getSystemTestBackend() !== BACKEND.HARDHAT)('Should throw TransactionRevertInstructionError because insufficient funds', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
@@ -529,7 +530,7 @@ describe('Web3Eth.sendTransaction', () => {
 				message: 'Transaction has been reverted by the EVM',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? expect.stringContaining(
 								'err: insufficient funds for gas * price + value: address',
 						  )
@@ -558,7 +559,7 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertInstructionError',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted: This is a send revert'
 						: "Error: VM Exception while processing transaction: reverted with reason string 'This is a send revert'",
 				signature: '0x08c379a0',
@@ -586,7 +587,7 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertWithCustomError',
 				code: 438,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted'
 						: "Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0x72090e4d)",
 				signature: '0x72090e4d',
@@ -616,7 +617,7 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertWithCustomError',
 				code: 438,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted'
 						: "Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000)",
 				signature: '0xc85bda60',
@@ -650,7 +651,7 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertInstructionError',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted: This is a send revert'
 						: "Error: VM Exception while processing transaction: reverted with reason string 'This is a send revert'",
 				signature: '0x08c379a0',

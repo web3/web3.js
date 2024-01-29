@@ -37,7 +37,8 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
-	describeIf
+	describeIf,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
 import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
@@ -45,7 +46,7 @@ import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simp
 const HEX_NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.HEX } as const;
 
 // hardhat does not support eth_signTransaction
-describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction', () => {
+describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('Web3Eth.sendSignedTransaction', () => {
 	let web3Eth: Web3Eth;
 	let tempAcc: { address: string; privateKey: string };
 
@@ -413,7 +414,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction'
 				name: 'TransactionRevertInstructionError',
 				cause: undefined,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? expect.stringContaining(
 								'err: max fee per gas less than block base fee: address 0x',
 						  )
@@ -449,7 +450,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction'
 				message: 'Transaction has been reverted by the EVM',
 				cause: undefined,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? expect.stringContaining(
 								'err: insufficient funds for gas * price + value: address 0x',
 						  )
@@ -487,7 +488,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction'
 				name: 'TransactionRevertInstructionError',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted: This is a send revert'
 						: 'VM Exception while processing transaction: revert This is a send revert',
 				signature: '0x08c379a0',
@@ -522,7 +523,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction'
 				name: 'TransactionRevertWithCustomError',
 				code: 438,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted'
 						: 'VM Exception while processing transaction: revert',
 				signature: '0x72090e4d',
@@ -561,7 +562,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction'
 				name: 'TransactionRevertWithCustomError',
 				code: 438,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted'
 						: 'VM Exception while processing transaction: revert',
 				signature: '0xc85bda60',
@@ -604,7 +605,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')('Web3Eth.sendSignedTransaction'
 				name: 'TransactionRevertInstructionError',
 				cause: undefined,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted: This is a send revert'
 						: 'VM Exception while processing transaction: revert This is a send revert',
 				signature: '0x08c379a0',

@@ -22,9 +22,10 @@ import {
 	describeIf,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 
-describeIf(getSystemTestBackend() === 'geth')('Web3Eth.createAccessList', () => {
+describeIf(getSystemTestBackend() === BACKEND.GETH)('Web3Eth.createAccessList', () => {
 	let web3Eth: Web3Eth;
 	let greeterContractAddress: string;
 	let tempAcc: { address: string; privateKey: string };

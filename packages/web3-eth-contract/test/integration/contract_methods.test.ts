@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ContractExecutionError } from 'web3-errors';
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { getSystemTestProvider, createTempAccount, getSystemTestBackend } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount, getSystemTestBackend, BACKEND} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
@@ -148,8 +148,8 @@ describe('contract', () => {
 			});
 
 			it('should returns errors on reverts', async () => {
-				// hardhat does not support eip-838
-				if (getSystemTestBackend() === 'hardhat') {
+				// TODO hardhat reverts but sends an undefined receipt, needs investigation
+				if (getSystemTestBackend() === BACKEND.HARDHAT) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					await expect(
 						contractDeployed.methods.reverts().send(sendOptions),

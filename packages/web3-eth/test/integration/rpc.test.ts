@@ -37,6 +37,7 @@ import {
 	itIf,
 	createTempAccount,
 	describeIf,
+	BACKEND
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import {
@@ -104,15 +105,15 @@ describe('rpc', () => {
 			expect(coinbase).toHaveLength(42);
 		});
 
-		itIf(getSystemTestBackend() !== 'hardhat')('isMining', async () => {
+		itIf(getSystemTestBackend() !== BACKEND.HARDHAT)('isMining', async () => {
 			const isMining = await web3Eth.isMining();
 
-			if (getSystemTestBackend() !== 'geth')
+			if (getSystemTestBackend() !== BACKEND.GETH)
 				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
 				expect(isMining).toBe(true);
 		});
 
-		describeIf(getSystemTestBackend() !== 'hardhat')('getHashRate', () => { 
+		describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('getHashRate', () => { 
 			it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
 				const hashRate = await web3Eth.getHashRate({
 					number: format as FMT_NUMBER,
@@ -125,7 +126,7 @@ describe('rpc', () => {
 
 		it('getAccounts', async () => {
 			// hardhat does not have support importrawkey, so we can't add new accounts rather just check the default 20 accounts
-			if (getSystemTestBackend() !== 'hardhat')	{
+			if (getSystemTestBackend() !== BACKEND.HARDHAT)	{
 				const account = await createNewAccount({ unlock: true });
 				const accList = await web3Eth.getAccounts();
 				const accListLowerCase = accList.map((add: string) => add.toLowerCase());
@@ -420,7 +421,7 @@ describe('rpc', () => {
 		});
 
 		// hardhat does not support getProof
-		itIf(getSystemTestBackend() !== 'hardhat')('getProof', async () => {
+		itIf(getSystemTestBackend() !== BACKEND.HARDHAT)('getProof', async () => {
 			const numberData = BigInt(10);
 			const stringData = 'str';
 			const boolData = true;

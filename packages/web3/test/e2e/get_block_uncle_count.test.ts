@@ -16,14 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend, describeIf} from '../shared_fixtures/system_tests_utils';
+import { closeOpenConnection, getSystemTestBackend, describeIf, BACKEND} from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlockData } from './fixtures/sepolia';
 import { mainnetBlockData } from './fixtures/mainnet';
 
 describeIf(getSystemTestBackend() !== 'hardhat')(`${getSystemTestBackend()} tests - getBlockUncleCount`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
+	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
 

@@ -23,14 +23,15 @@ import {
 	createTempAccount,
 	closeOpenConnection,
 	describeIf,
-	getSystemTestBackend
+	getSystemTestBackend,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';
 import { sendFewTxes } from '../helper';
 
 // hardhat does not support eth_getBlockUncleCountByBlockHash
-describeIf(getSystemTestBackend() !== 'hardhat')('rpc with block', () => {
+describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('rpc with block', () => {
 	let web3Eth: Web3Eth;
 	let clientUrl: string | SupportedProviders;
 

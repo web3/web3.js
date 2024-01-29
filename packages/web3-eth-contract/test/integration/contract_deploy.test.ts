@@ -30,6 +30,7 @@ import {
 	sendFewSampleTxs,
 	closeOpenConnection,
 	getSystemTestBackend,
+	BACKEND
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -255,7 +256,7 @@ describe('contract', () => {
 		});
 
 		it('should fail with errors on "intrinsic gas too low" OOG', async () => {
-			if (getSystemTestBackend() !== 'hardhat'){
+			if (getSystemTestBackend() !== BACKEND.HARDHAT){
 				// eslint-disable-next-line jest/no-conditional-expect
 				await expect(
 					contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
@@ -282,7 +283,7 @@ describe('contract', () => {
 		it('should fail with errors on revert', async () => {
 			const revert = new Contract(DeployRevertAbi);
 			revert.provider = getSystemTestProvider();
-			if (getSystemTestBackend() !== 'hardhat'){
+			if (getSystemTestBackend() !== BACKEND.HARDHAT){
 				// eslint-disable-next-line jest/no-conditional-expect
 				await expect(
 					revert

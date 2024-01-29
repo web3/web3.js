@@ -135,13 +135,8 @@ jobs:
         name: Integration hardhat
         needs: build
         runs-on: ubuntu-latest
-        env:
-          INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
         strategy:
           fail-fast: false
-          matrix:
-            backend: ['hardhat']
-            mode: ['http']
         steps:
           - uses: actions/setup-node@v3
             with:
