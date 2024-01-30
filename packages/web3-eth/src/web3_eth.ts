@@ -300,7 +300,9 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		let gasPrice: bigint | undefined;
 		try {
 			gasPrice = await this.getGasPrice<{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>();
-		} catch (error) {}
+		} catch (error) {
+			// do nothing
+		}
 
 		let maxPriorityFeePerGas: bigint | undefined;
 		try {
@@ -308,7 +310,9 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				number: FMT_NUMBER.BIGINT;
 				bytes: FMT_BYTES.HEX;
 			}>();
-		} catch (error) {}
+		} catch (error) {
+			// do nothing
+		}
 
 		let maxFeePerGas: bigint | undefined;
 		// if the `block.baseFeePerGas` is available, then EIP-1559 is supported
@@ -327,7 +331,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	// an alias for calculateFeeData
-	getFeeData = this.calculateFeeData;
+	// eslint-disable-next-line
+	public getFeeData = this.calculateFeeData;
 
 	/**
 	 * @returns A list of accounts the node controls (addresses are checksummed).

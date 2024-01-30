@@ -56,7 +56,7 @@ describe('Web3Eth.calculateFeeData', () => {
 		expect(feeData).toMatchObject({
 			gasPrice,
 			maxFeePerGas: baseFeePerGas * baseFeePerGasFactor + maxPriorityFeePerGas,
-			maxPriorityFeePerGas: maxPriorityFeePerGas,
+			maxPriorityFeePerGas,
 			baseFeePerGas,
 		});
 	});
