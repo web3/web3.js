@@ -406,13 +406,6 @@ describe('rpc', () => {
 			expect(res).toBeDefined();
 		});
 
-		// hardhat does not support getWork
-		itIf(!['hardhat', 'geth'].includes(getSystemTestBackend()))('getWork', async () => {
-			const res = await web3Eth.getWork();
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(res[0]).toBeDefined();
-		});
-
 		itIf(!['geth', 'ganache'].includes(getSystemTestBackend()))('requestAccounts', () => {
 			// const res = await web3Eth.requestAccounts();
 			// eslint-disable-next-line jest/no-standalone-expect

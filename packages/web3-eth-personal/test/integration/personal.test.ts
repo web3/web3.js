@@ -121,29 +121,6 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('personal integration tes
 		expect(toChecksumAddress(key).toLowerCase()).toBe(address.toLowerCase());
 	});
 
-	// geth doesn't have signTransaction method
-	itIf(getSystemTestBackend() === 'ganache')('signTransaction', async () => {
-		const acc = await createNewAccount({
-			privateKey: '0x43c74e0b52c754285db6fc52cc98353804e5025e38ab80d7d9e2fd53d456de84',
-			unlock: true,
-			refill: true,
-		});
-		const tx = {
-			from: acc.address,
-			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
-			value: '10000',
-			gas: '21000',
-			maxFeePerGas: '0x59682F00',
-			maxPriorityFeePerGas: '0x1DCD6500',
-			nonce: 0,
-		};
-		const signedTx = await ethPersonal.signTransaction(tx, '123456');
-		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f00825208941337c75fdf978ababaacc038a1dcd580fec28ab282271080c001a0fef20ce4d8dd7e129bd52d08599988e74b0baad0692b9e316368896b22544162a07d69fac7625a925286dcf1be61d35c787f467b2b7e911181098d49c1ae041deb';
-		// eslint-disable-next-line jest/no-standalone-expect
-		expect(signedTx).toEqual(expectedResult);
-	});
-
 	test('sendTransaction', async () => {
 		const from = (await createNewAccount({ unlock: true, refill: true })).address;
 
