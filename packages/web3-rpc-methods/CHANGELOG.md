@@ -134,3 +134,6 @@ Documentation:
 
 ## [Unreleased]
 
+### Added
+
+-   Added `getMaxPriorityFeePerGas` method (#6748)

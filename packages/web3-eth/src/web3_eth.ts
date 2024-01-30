@@ -242,6 +242,24 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	/**
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @returns the current maxPriorityFeePerGas per gas in wei.
+	 *
+	 * ```ts
+	 * web3.eth.getMaxPriorityFeePerGas().then(console.log);
+	 * > 20000000000n
+	 *
+	 * web3.eth.getMaxPriorityFeePerGas({ number: FMT_NUMBER.HEX , bytes: FMT_BYTES.HEX }).then(console.log);
+	 * > "0x4a817c800"
+	 * ```
+	 */
+	public async getMaxPriorityFeePerGas<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+		return rpcMethodsWrappers.getMaxPriorityFeePerGas(this, returnFormat);
+	}
+
+	/**
 	 * Calculates the current Fee Data.
 	 * If the node supports EIP-1559, then the `maxFeePerGas` and `maxPriorityFeePerGas` will be calculated.
 	 * If the node does not support EIP-1559, then the `gasPrice` will be returned and the rest are `null`s.
@@ -399,13 +417,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getStorageAt(
-			this,
-			address,
-			storageSlot,
-			blockNumber,
-			returnFormat,
-		);
+		return rpcMethodsWrappers.getStorageAt(this, address, storageSlot, blockNumber, returnFormat);
 	}
 
 	/**
@@ -685,11 +697,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		transactionHash: Bytes,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		const response = await rpcMethodsWrappers.getTransaction(
-			this,
-			transactionHash,
-			returnFormat,
-		);
+		const response = await rpcMethodsWrappers.getTransaction(this, transactionHash, returnFormat);
 
 		if (!response) throw new TransactionNotFound();
 
@@ -841,12 +849,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		transactionIndex: Numbers,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getTransactionFromBlock(
-			this,
-			block,
-			transactionIndex,
-			returnFormat,
-		);
+		return rpcMethodsWrappers.getTransactionFromBlock(this, block, transactionIndex, returnFormat);
 	}
 
 	/**
@@ -925,9 +928,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * > 1
 	 * ```
 	 */
-	public async getTransactionCount<
-		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-	>(
+	public async getTransactionCount<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -1652,137 +1653,137 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	/**
-	* Lets you subscribe to specific events in the blockchain.
-	*
-	* @param name - The subscription you want to subscribe to.
-	* @param args - Optional additional parameters, depending on the subscription type.
-	* @returns A subscription object of type {@link RegisteredSubscription}. The object contains:
-	*  - subscription.id: The subscription id, used to identify and unsubscribing the subscription.
-	*  - subscription.subscribe(): Can be used to re-subscribe with the same parameters.
-	*  - subscription.unsubscribe(): Unsubscribes the subscription and returns TRUE in the callback if successful.
-	*  - subscription.args: The subscription arguments, used when re-subscribing.
-	*
-	*
-	* You can use the subscription object to listen on:
-	*
-	* - on("data") - Fires on each incoming log with the log object as argument.
-	* - on("changed") - Fires on each log which was removed from the blockchain. The log will have the additional property "removed: true".
-	* - on("error") - Fires when an error in the subscription occurs.
-	* - on("connected") - Fires once after the subscription successfully connected. Returns the subscription id.
-	*
-	* @example **Subscribe to Smart Contract events**
-	* ```ts
-	* // Subscribe to `logs`
-	* const logSubscription = web3.eth.subscribe('logs', {
-	*     address: '0x1234567890123456789012345678901234567890',
-	*     topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
-	* });
-	* logSubscription.on('data', (data: any) => console.log(data));
-	* logSubscription.on('error', (error: any) => console.log(error));
-	*
-	* ```
-	*
-	* @example **Subscribe to new block headers**
-	* ```ts
-	* // Subscribe to `newBlockHeaders`
-	* const newBlocksSubscription = await web3.eth.subscribe('newBlockHeaders');
-	*
-	* newBlocksSubscription.on('data', async blockhead => {
-	* 	console.log('New block header: ', blockhead);
-	*
-	* 	// You do not need the next line, if you like to keep notified for every new block
-	* 	await newBlocksSubscription.unsubscribe();
-	* 	console.log('Unsubscribed from new block headers.');
-	* });
-	* newBlocksSubscription.on('error', error =>
-	* 	console.log('Error when subscribing to New block header: ', error),
-	* );
-	* ```
-	* 
-	* 	### subscribe('pendingTransactions')
-	* 
-	* Subscribes to incoming pending transactions.
-	* You can subscribe to pending transactions by calling web3.eth.subscribe('pendingTransactions').
-	* 
-	* ```ts
-	* (await web3.eth.subscribe('pendingTransactions')).on('data', console.log);
-	* ```
-	*
-	* ### subscribe('newHeads') 
-	* ( same as subscribe('newBlockHeaders'))
-	* Subscribes to incoming block headers. This can be used as timer to check for changes on the blockchain.
-	*
-	* The structure of a returned block header is {@link BlockHeaderOutput}:
-	* 
-	* ```ts
-	* (await web3.eth.subscribe('newHeads')).on( // 'newBlockHeaders' would work as well
-	*  'data',
-	* console.log
-	* );
-	* >{
-	* parentHash: '0x9e746a1d906b299def98c75b06f714d62dacadd567c7515d76eeaa8c8074c738',
-	* sha3Uncles: '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
-	* miner: '0x0000000000000000000000000000000000000000',
-	* stateRoot: '0xe0f04b04861ecfa95e82a9310d6a7ef7aef8d7417f5209c182582bfb98a8e307',
-	* transactionsRoot: '0x31ab4ea571a9e10d3a19aaed07d190595b1dfa34e03960c04293fec565dea536',
-	* logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-	* difficulty: 2n,
-	* number: 21n,
-	* gasLimit: 11738125n,
-	* gasUsed: 830006n,
-	* timestamp: 1678797237n,
-	* extraData: '0xd883010b02846765746888676f312e32302e31856c696e757800000000000000e0a6e93cf40e2e71a72e493272210c3f43738ccc7e7d7b14ffd51833797d896c09117e8dc4fbcbc969bd21b42e5af3e276a911524038c001b2109b63b8e0352601',
-	* nonce: 0n
-	* }
-	* ```
-	* 
-	* ### subscribe('syncing')
-	* Subscribe to syncing events. This will return `true` when the node is syncing and when it’s finished syncing will return `false`, for the `changed` event.
-	* 
-	* ```ts
-	* (await web3.eth.subscribe('syncing')).on('changed', console.log);
-	* > `true` // when syncing
-	*
-	* (await web3.eth.subscribe('syncing')).on('data', console.log);
-	* > {
-	*      startingBlock: 0,
-	*      currentBlock: 0,
-	*      highestBlock: 0,
-	*      pulledStates: 0,
-	*      knownStates: 0
-	*   }
-	* ```
-	*
-	* ### subscribe('logs', options)
-	* Subscribes to incoming logs, filtered by the given options. If a valid numerical fromBlock options property is set, web3.js will retrieve logs beginning from this point, backfilling the response as necessary.
-	*
-	* options: You can subscribe to logs matching a given filter object, which can take the following parameters:
-	* - `fromBlock`: (optional, default: 'latest') Integer block number, or `'latest'` for the last mined block or `'pending'`, `'earliest'` for not yet mined transactions.
-	* - `address`: (optional) Contract address or a list of addresses from which logs should originate.
-	* - `topics`: (optional) Array of 32 Bytes DATA topics. Topics are order-dependent. Each topic can also be an array of DATA with `or` options.
-	*
-	* ```ts
-	*  (await web3.eth.subscribe('logs', {
-    *    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    *   })).on('data', console.log);
-	* 
-	* > {
-	* removed: false,
-	* logIndex: 119n,
-	* transactionIndex: 58n,
-	* transactionHash: '0x61533efa77937360215069d5d6cb0be09a22af9721e6dc3df59d957833ed8870',
-	* blockHash: '0xe32bb97084479d32247f66f8b46d00af2fbc3c2db2bc6e5843fe2e4d1ca9b099',
-	* blockNumber: 18771966n,
-	* address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-	* data: '0x00000000000000000000000000000000000000000000000000000000d88b2e40',
-	* topics: [
-	* '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
-	* '0x0000000000000000000000002fb2457f6ec1865dc0d4e7300c696b69c2a1b989',
-	* '0x00000000000000000000000027fd43babfbe83a81d14665b1a6fb8030a60c9b4'
-	* ]
-	* }
-	*``` 
-	*/
+	 * Lets you subscribe to specific events in the blockchain.
+	 *
+	 * @param name - The subscription you want to subscribe to.
+	 * @param args - Optional additional parameters, depending on the subscription type.
+	 * @returns A subscription object of type {@link RegisteredSubscription}. The object contains:
+	 *  - subscription.id: The subscription id, used to identify and unsubscribing the subscription.
+	 *  - subscription.subscribe(): Can be used to re-subscribe with the same parameters.
+	 *  - subscription.unsubscribe(): Unsubscribes the subscription and returns TRUE in the callback if successful.
+	 *  - subscription.args: The subscription arguments, used when re-subscribing.
+	 *
+	 *
+	 * You can use the subscription object to listen on:
+	 *
+	 * - on("data") - Fires on each incoming log with the log object as argument.
+	 * - on("changed") - Fires on each log which was removed from the blockchain. The log will have the additional property "removed: true".
+	 * - on("error") - Fires when an error in the subscription occurs.
+	 * - on("connected") - Fires once after the subscription successfully connected. Returns the subscription id.
+	 *
+	 * @example **Subscribe to Smart Contract events**
+	 * ```ts
+	 * // Subscribe to `logs`
+	 * const logSubscription = web3.eth.subscribe('logs', {
+	 *     address: '0x1234567890123456789012345678901234567890',
+	 *     topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
+	 * });
+	 * logSubscription.on('data', (data: any) => console.log(data));
+	 * logSubscription.on('error', (error: any) => console.log(error));
+	 *
+	 * ```
+	 *
+	 * @example **Subscribe to new block headers**
+	 * ```ts
+	 * // Subscribe to `newBlockHeaders`
+	 * const newBlocksSubscription = await web3.eth.subscribe('newBlockHeaders');
+	 *
+	 * newBlocksSubscription.on('data', async blockhead => {
+	 * 	console.log('New block header: ', blockhead);
+	 *
+	 * 	// You do not need the next line, if you like to keep notified for every new block
+	 * 	await newBlocksSubscription.unsubscribe();
+	 * 	console.log('Unsubscribed from new block headers.');
+	 * });
+	 * newBlocksSubscription.on('error', error =>
+	 * 	console.log('Error when subscribing to New block header: ', error),
+	 * );
+	 * ```
+	 *
+	 * 	### subscribe('pendingTransactions')
+	 *
+	 * Subscribes to incoming pending transactions.
+	 * You can subscribe to pending transactions by calling web3.eth.subscribe('pendingTransactions').
+	 *
+	 * ```ts
+	 * (await web3.eth.subscribe('pendingTransactions')).on('data', console.log);
+	 * ```
+	 *
+	 * ### subscribe('newHeads')
+	 * ( same as subscribe('newBlockHeaders'))
+	 * Subscribes to incoming block headers. This can be used as timer to check for changes on the blockchain.
+	 *
+	 * The structure of a returned block header is {@link BlockHeaderOutput}:
+	 *
+	 * ```ts
+	 * (await web3.eth.subscribe('newHeads')).on( // 'newBlockHeaders' would work as well
+	 *  'data',
+	 * console.log
+	 * );
+	 * >{
+	 * parentHash: '0x9e746a1d906b299def98c75b06f714d62dacadd567c7515d76eeaa8c8074c738',
+	 * sha3Uncles: '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
+	 * miner: '0x0000000000000000000000000000000000000000',
+	 * stateRoot: '0xe0f04b04861ecfa95e82a9310d6a7ef7aef8d7417f5209c182582bfb98a8e307',
+	 * transactionsRoot: '0x31ab4ea571a9e10d3a19aaed07d190595b1dfa34e03960c04293fec565dea536',
+	 * logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+	 * difficulty: 2n,
+	 * number: 21n,
+	 * gasLimit: 11738125n,
+	 * gasUsed: 830006n,
+	 * timestamp: 1678797237n,
+	 * extraData: '0xd883010b02846765746888676f312e32302e31856c696e757800000000000000e0a6e93cf40e2e71a72e493272210c3f43738ccc7e7d7b14ffd51833797d896c09117e8dc4fbcbc969bd21b42e5af3e276a911524038c001b2109b63b8e0352601',
+	 * nonce: 0n
+	 * }
+	 * ```
+	 *
+	 * ### subscribe('syncing')
+	 * Subscribe to syncing events. This will return `true` when the node is syncing and when it’s finished syncing will return `false`, for the `changed` event.
+	 *
+	 * ```ts
+	 * (await web3.eth.subscribe('syncing')).on('changed', console.log);
+	 * > `true` // when syncing
+	 *
+	 * (await web3.eth.subscribe('syncing')).on('data', console.log);
+	 * > {
+	 *      startingBlock: 0,
+	 *      currentBlock: 0,
+	 *      highestBlock: 0,
+	 *      pulledStates: 0,
+	 *      knownStates: 0
+	 *   }
+	 * ```
+	 *
+	 * ### subscribe('logs', options)
+	 * Subscribes to incoming logs, filtered by the given options. If a valid numerical fromBlock options property is set, web3.js will retrieve logs beginning from this point, backfilling the response as necessary.
+	 *
+	 * options: You can subscribe to logs matching a given filter object, which can take the following parameters:
+	 * - `fromBlock`: (optional, default: 'latest') Integer block number, or `'latest'` for the last mined block or `'pending'`, `'earliest'` for not yet mined transactions.
+	 * - `address`: (optional) Contract address or a list of addresses from which logs should originate.
+	 * - `topics`: (optional) Array of 32 Bytes DATA topics. Topics are order-dependent. Each topic can also be an array of DATA with `or` options.
+	 *
+	 * ```ts
+	 *  (await web3.eth.subscribe('logs', {
+	 *    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+	 *   })).on('data', console.log);
+	 *
+	 * > {
+	 * removed: false,
+	 * logIndex: 119n,
+	 * transactionIndex: 58n,
+	 * transactionHash: '0x61533efa77937360215069d5d6cb0be09a22af9721e6dc3df59d957833ed8870',
+	 * blockHash: '0xe32bb97084479d32247f66f8b46d00af2fbc3c2db2bc6e5843fe2e4d1ca9b099',
+	 * blockNumber: 18771966n,
+	 * address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+	 * data: '0x00000000000000000000000000000000000000000000000000000000d88b2e40',
+	 * topics: [
+	 * '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+	 * '0x0000000000000000000000002fb2457f6ec1865dc0d4e7300c696b69c2a1b989',
+	 * '0x00000000000000000000000027fd43babfbe83a81d14665b1a6fb8030a60c9b4'
+	 * ]
+	 * }
+	 *```
+	 */
 
 	public async subscribe<
 		T extends keyof RegisteredSubscription,
