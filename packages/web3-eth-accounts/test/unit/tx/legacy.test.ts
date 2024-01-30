@@ -113,7 +113,7 @@ describe('[Transaction]', () => {
 		expect(tx.r!.toString(16)).toBe('5');
 	});
 
-	it('Initialization -> throws when creating a a transaction with incompatible chainid and v value', () => {
+	it('Initialization -> throws when creating a transaction with incompatible chainid and v value', () => {
 		let common = new Common({ chain: Chain.Goerli, hardfork: Hardfork.Petersburg });
 		let tx = Transaction.fromTxData({}, { common });
 		expect(tx.common.chainId()).toEqual(BigInt(5));

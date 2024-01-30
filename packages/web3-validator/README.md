@@ -36,7 +36,7 @@ yarn add web3-validator
 
 ### Usage
 
-You can use the the validator by importing as and using to validate;
+You can use the validator by importing as and using to validate;
 
 ```ts
 import { validator } from 'web3-validator';
