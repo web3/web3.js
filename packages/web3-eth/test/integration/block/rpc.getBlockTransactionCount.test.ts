@@ -19,11 +19,9 @@ import { SupportedProviders, TransactionReceipt } from 'web3-types';
 import { Contract } from 'web3-eth-contract';
 import { Web3Eth } from '../../../src';
 import {
-	getSystemTestBackend,
 	getSystemTestProvider,
 	createTempAccount,
 	closeOpenConnection,
-	BACKEND
 } from '../../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';
