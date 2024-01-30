@@ -76,7 +76,7 @@ fi
 if [[ $BACKEND == "geth" || $BACKEND == "geth-binary" || $BACKEND == "geth-manual" ]]; then
     yarn "$BACKEND:start:background" && yarn generate:accounts && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
 elif [[ $BACKEND == "hardhat" ]]; then
-    yarn "$BACKEND:start:background" && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
+    yarn $TEST_COMMAND && yarn "$BACKEND:stop"
 else
     yarn $TEST_COMMAND
 fi
