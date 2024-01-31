@@ -222,6 +222,7 @@ jobs:
                     projectName: web3-js-docs
                     directory: ./docs/build
                     gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+            -   run: ls -la ./docs/build
     benchmark:
         name: Benchmark Tests
         needs: build
