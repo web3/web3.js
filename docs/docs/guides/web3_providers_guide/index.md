@@ -378,21 +378,4 @@ provider.on('error', (error) => {
 
 ## Live code editor
 
-Run the following command in the console:
-
-- For **JavaScript** (.js)
-```bash
-node index.js
-```
-- For **Typescript** (.ts)
-```bash
-ts-node index.ts` 
-```
-
-And you'll see the result in the console.
-
-:::info
-To navigate between the different files of the live code project, click on the menu icon "`☰`" located in the top-left corner of the code editor 
-:::
-
-<iframe width="100%" height="600px" frameBorder="0" src="https://stackblitz.com/edit/stackblitz-starters-bq5v9y?embed=1&file=index.js&view=editor"></iframe>  
+<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-zfusfd?embed=1&file=main.js&showSidebar=1"></iframe>   
