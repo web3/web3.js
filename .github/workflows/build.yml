@@ -1,301 +1,282 @@
 name: 'Build'
 on:
-  push:
-    branches:
-      - '4.x'
-    tags:
-      - v4*
-  pull_request:
-    branches:
-      - '4.x'
-    types: [opened, reopened, synchronize]
+    push:
+        branches:
+            - '4.x'
+        tags:
+            - v4*
+    pull_request:
+        branches:
+            - '4.x'
+        types: [opened, reopened, synchronize]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        node: [18, 20]
-    name: Build CJS
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-      - run: yarn install --ignore-scripts
-      - run: yarn prebuild
-      - run: yarn build:cjs
-      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-      - uses: actions/upload-artifact@v4
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
-  build-esm:
-      name: Build ESM
-      needs: build
-      runs-on: ubuntu-latest
-      strategy:
-          matrix:
-              node: [ 18 ]
-      steps:
-          -   uses: actions/setup-node@v3
-              with:
-                node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v4
-              with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-          -   run: yarn build:esm
-  build-types:
-      name: Build Types
-      needs: build
-      runs-on: ubuntu-latest
-      strategy:
-          matrix:
-              node: [ 18 ]
-      steps:
-          -   uses: actions/setup-node@v3
-              with:
-                node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v4
-              with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-          -   run: yarn build:types
-  lint:
-      name: Lint
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-          -   uses: actions/setup-node@v3
-              with:
-                node-version: 18
-          -   uses: actions/download-artifact@v4
-              with:
-                name: web3-18.js.tar.gz
-                path: /tmp
-          -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
-          -   run: yarn lint
-
-  build-web:
-    name: Build Web
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-        -   uses: actions/setup-node@v3
-            with:
-              node-version: 18
-        -   uses: actions/download-artifact@v4
-            with:
-              name: web3-18.js.tar.gz
-              path: /tmp
-        -   run: tar -xf /tmp/web3-18.js.tar.gz -C ./
-        -   name: Restore default branch stats
-            if: github.event_name != 'push'
-            uses: actions/cache/restore@v3
-            with:
-              path: packages/web3/dist/4.x.json
-              key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
-        -   run: yarn build:web:analyze
-            env:
-              STATS_FILE: ${{ github.ref_name }}.json
-        -   name: Compare bundle stats
-            uses: github/webpack-bundlesize-compare-action@v1
-            if: github.event_name != 'push'
-            continue-on-error: true
-            with:
-              github-token: ${{ secrets.GITHUB_TOKEN }}
-              current-stats-json-path: "packages/web3/dist/${{ github.ref_name }}.json"
-              base-stats-json-path: "packages/web3/dist/4.x.json"
-        -   name: Cache default branch stats
-            uses: actions/cache/save@v3
-            if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
-            with:
-              path: packages/web3/dist/4.x.json
-              key: web3-bundle-stats-4x-${{github.sha}}
-
-  unit:
-    name: Unit Tests
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [18, 20]
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-      - uses: actions/download-artifact@v4
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:unit
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          flags: UnitTests
-          token: ${{ secrets.CODECOV_TOKEN }}
-        if: ${{ matrix.node == 18 }}
-
-  integration:
-    name: Integration # (ganache with HTTP)
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [18]
-        backend: ['ganache']
-        mode: ['http']
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-      - uses: actions/download-artifact@v4
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-        shell: bash
-
-  e2e-ipc:
-    name: Integration # (geth with HTTP, IPC & WS)
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [ 18 ]
-        backend: [ 'geth' ]
-        mode: [ 'ipc', 'ws', 'http' ]
-    steps:
-      -   uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node }}
-      -   uses: actions/download-artifact@v4
-          with:
-            name: web3-${{ matrix.node }}.js.tar.gz
-            path: /tmp
-      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-          shell: bash
-
-  e2e:
-    name: End-to-End ganache:ws
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [18]
-        browser: ['electron', 'chrome', 'firefox']
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-            node-version: ${{ matrix.node }}
-      - uses: browser-actions/setup-firefox@latest
-        if: matrix.browser == 'firefox'
-      - uses: actions/download-artifact@v4
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: npm install --no-package-lock --no-save --force cypress
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-            install: false
-            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
-
-  build-docs:
-    name: Build Docs
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-        matrix:
-            node: [ 18 ]
-    steps:
-        -   uses: actions/setup-node@v3
-            with:
-                node-version: ${{ matrix.node }}
-        -   uses: actions/download-artifact@v4
-            with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-        -   run: yarn build:docs
-
-  benchmark:
-      name: Benchmark Tests
-      needs: build
-      runs-on: ubuntu-latest
-      strategy:
-          matrix:
-              node: [ 18 ]
-      steps:
-          -   uses: actions/setup-node@v3
+    build:
+        strategy:
+            matrix:
+                node: [18, 20]
+        name: Build CJS
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node }}
-          -   uses: actions/download-artifact@v4
+                  cache: yarn
+            - run: yarn install --ignore-scripts
+            - run: npx ts-node scripts/init.ts
+            - run: yarn build:cjs
+            - uses: actions/cache/save@v3
               with:
-                  name: web3-${{ matrix.node }}.js.tar.gz
-                  path: /tmp
-          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-              # @octokit/core not supported on node 16, so I can't add it to the package.json
-          -   run: npm install --no-package-lock --no-save --force @octokit/core
-          -   name: Restore main branch benchmark data
-              uses: actions/cache/restore@v3
+                path: ./
+                key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+
+    build-esm:
+        name: Build ESM
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   uses: actions/cache/restore@v3
+                with:
+                   path: ./
+                   key: web3-18-${{github.event.pull_request.base.sha}}
+            -   run: yarn build:esm
+    build-types:
+        name: Build Types
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   uses: actions/cache/restore@v3
+                with:
+                    path: ./
+                    key: web3-18-${{github.event.pull_request.base.sha}}
+            -   run: yarn build:types
+    lint:
+        name: Lint
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   uses: actions/cache/restore@v3
+                with:
+                    path: ./
+                    key: web3-18-${{github.event.pull_request.base.sha}}
+            -   run: npx ts-node scripts/init.ts
+            -   run: yarn lint
+
+    build-web:
+        name: Build Web
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   uses: actions/cache/restore@v3
+                with:
+                    path: ./
+                    key: web3-18-${{github.event.pull_request.base.sha}}
+            -   name: Restore default branch stats
+                if: github.event_name != 'push'
+                uses: actions/cache/restore@v3
+                with:
+                    path: packages/web3/dist/4.x.json
+                    key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
+            -   run: yarn build:web:analyze
+                env:
+                    STATS_FILE: ${{ github.ref_name }}.json
+            -   name: Compare bundle stats
+                uses: github/webpack-bundlesize-compare-action@v1
+                if: github.event_name != 'push'
+                continue-on-error: true
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    current-stats-json-path: "packages/web3/dist/${{ github.ref_name }}.json"
+                    base-stats-json-path: "packages/web3/dist/4.x.json"
+            -   name: Cache default branch stats
+                uses: actions/cache/save@v3
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                with:
+                    path: packages/web3/dist/4.x.json
+                    key: web3-bundle-stats-4x-${{github.sha}}
+
+    unit:
+        name: Unit Tests
+        needs: build
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [18, 20]
+        steps:
+            - uses: actions/setup-node@v4
               with:
-                  path: web3-benchmark-main.json
-                  key: ${{ runner.os }}-web3-benchmark-main.json
-          -   run: yarn test:benchmark
-          -   name: Compare benchmark result and make comment
-              uses: benchmark-action/github-action-benchmark@v1
+                  node-version: ${{ matrix.node }}
+            - uses: actions/cache/restore@v3
               with:
-                  # What benchmark tool the output.txt came from
-                  tool: 'benchmarkjs'
-                  # Where the output from the benchmark tool is stored
-                  output-file-path: benchmark-data.txt
-                  # Where the previous data file is stored
-                  external-data-json-path: web3-benchmark-main.json
-                  # Workflow will fail when an alert happens
-                  fail-on-alert: false
-                  # GitHub API token to make a commit comment
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  # Enable alert commit comment
-                  comment-always: true
-                  save-data-file: false
-              # copy comment from commit to Pull Request
-          -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.event.pull_request.head.sha}} ${{github.event.number}}
-          -   name: Compare benchmark result and fail if threshold is reached
-              uses: benchmark-action/github-action-benchmark@v1
+                    path: ./
+                    key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+            - run: yarn test:unit
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v3
               with:
-                  # What benchmark tool the output.txt came from
-                  tool: 'benchmarkjs'
-                  # Where the output from the benchmark tool is stored
-                  output-file-path: benchmark-data.txt
-                  # Where the previous data file is stored
-                  external-data-json-path: web3-benchmark-main.json
-                  # Workflow will fail when an alert happens
-                  fail-on-alert: true
-                  # Enable alert commit comment
-                  alert-threshold: '100%'
-                  comment-always: false
-          -   name: Save main branch benchmark data
-              uses: actions/cache/save@v3
-              if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                  flags: UnitTests
+                  token: ${{ secrets.CODECOV_TOKEN }}
+              if: ${{ matrix.node == 18 }}
+
+    integration:
+        name: Integration (ganache) # (ganache with HTTP)
+        needs: build
+        runs-on: ubuntu-latest
+        env:
+            INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+            INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        steps:
+            - uses: actions/setup-node@v4
               with:
-                path: web3-benchmark-main.json
-                key: ${{ runner.os }}-web3-benchmark-main.json
+                  node-version: 18
+            - uses: actions/cache/restore@v3
+              with:
+                path: ./
+                key: web3-18-${{github.event.pull_request.base.sha}}
+            - run: yarn test:e2e:ganache:http
+              shell: bash
+
+    e2e:
+        name: Integration # (geth with HTTP, IPC & WS)
+        needs: build
+        runs-on: ubuntu-latest
+        env:
+            INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+            INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        strategy:
+            fail-fast: false
+            matrix:
+                mode: [ 'ipc', 'ws', 'http' ]
+        steps:
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   uses: actions/cache/restore@v3
+                with:
+                    path: ./
+                    key: web3-18-${{github.event.pull_request.base.sha}}
+            -   run: yarn test:e2e:geth:${{ matrix.mode }}
+                shell: bash
+
+    e2e-browsers:
+        name: End-to-End ganache:ws
+        needs: build
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                browser: ['electron', 'chrome', 'firefox']
+        steps:
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+            - uses: browser-actions/setup-firefox@latest
+              if: matrix.browser == 'firefox'
+            - uses: actions/cache/restore@v3
+              with:
+                path: ./
+                key: web3-18-${{github.event.pull_request.base.sha}}
+            - run: npm install --no-package-lock --no-save --force cypress
+            - run: npx ts-node scripts/init.ts
+            - name: Cypress run
+              uses: cypress-io/github-action@v4
+              with:
+                  install: false
+                  command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+                  cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+
+    deploy-docs:
+        name: Docs CloudFlare Deploy
+        needs: build
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            deployments: write
+        steps:
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   uses: actions/cache/restore@v3
+                with:
+                    path: ./
+                    key: web3-18-${{github.event.pull_request.base.sha}}
+            -   run: npm run build:docs
+            -   name: Publish to Cloudflare Pages
+                uses: cloudflare/pages-action@v1
+                with:
+                    apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                    accountId: 2238a825c5aca59233eab1f221f7aefb
+                    projectName: web3-js-docs
+                    directory: ./docs/build
+                    gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+    benchmark:
+        name: Benchmark Tests
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   uses: actions/cache/restore@v3
+                with:
+                    path: ./
+                    key: web3-18-${{github.event.pull_request.base.sha}}
+                # @octokit/core not supported on node 16, so I can't add it to the package.json
+            -   run: npm install --no-package-lock --no-save --force @octokit/core
+            -   name: Restore main branch benchmark data
+                uses: actions/cache/restore@v3
+                with:
+                    path: web3-benchmark-main.json
+                    key: ${{ runner.os }}-web3-benchmark-main.json
+            -   run: yarn test:benchmark
+            -   name: Compare benchmark result and make comment
+                uses: benchmark-action/github-action-benchmark@v1
+                with:
+                    # What benchmark tool the output.txt came from
+                    tool: 'benchmarkjs'
+                    # Where the output from the benchmark tool is stored
+                    output-file-path: benchmark-data.txt
+                    # Where the previous data file is stored
+                    external-data-json-path: web3-benchmark-main.json
+                    # Workflow will fail when an alert happens
+                    fail-on-alert: false
+                    # GitHub API token to make a commit comment
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    # Enable alert commit comment
+                    comment-always: true
+                    save-data-file: false
+                # copy comment from commit to Pull Request
+            -   run: node scripts/copyCommitCommentToPrComment.js ${{ secrets.GITHUB_TOKEN }} ${{github.event.pull_request.head.sha}} ${{github.event.number}}
+            -   name: Compare benchmark result and fail if threshold is reached
+                uses: benchmark-action/github-action-benchmark@v1
+                with:
+                    # What benchmark tool the output.txt came from
+                    tool: 'benchmarkjs'
+                    # Where the output from the benchmark tool is stored
+                    output-file-path: benchmark-data.txt
+                    # Where the previous data file is stored
+                    external-data-json-path: web3-benchmark-main.json
+                    # Workflow will fail when an alert happens
+                    fail-on-alert: true
+                    # Enable alert commit comment
+                    alert-threshold: '200%'
+                    comment-always: false
+            -   name: Save main branch benchmark data
+                uses: actions/cache/save@v3
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                with:
+                    path: web3-benchmark-main.json
+                    key: ${{ runner.os }}-web3-benchmark-main.json

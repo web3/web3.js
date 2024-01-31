@@ -13,33 +13,47 @@ If used within the browser, wallets are not saved anywhere and disappear when th
 If used within your application, wallets will disappear after the program is completed.
 :::
 
-## Create an account and add it to an empty `Wallet`
+## Create a `Wallet` with a random account
 
-```ts title='Creating an Account and Adding it to an Empty Wallet'
-import { Web3 } from 'web3';
+```ts title= Create Wallet with random account
+import { Web3 } from "web3";
 
 const web3 = new Web3(/* PROVIDER */);
 
-// 1st - creating a new empty wallet (0 accounts inside)
-const wallet = web3.eth.accounts.wallet.create();
-
-console.log(wallet);
+/*
+ * creates wallet with 1 account
+ * @param: number of accounts you want to create within the wallet
+*/
+const wallet = web3.eth.accounts.wallet.create(1); 
 /* ↳
-Wallet(0) [
+Wallet(1) [
+  {
+    address: '0xE0A7859c5454B369Ab8089890A11efcB458eA13c',
+    privateKey: '0x0199829f0c95213670d48aa48abdb36c16c2ec3d11fe20e1fa8c0270ffb64110',
+    signTransaction: [Function: signTransaction],
+    sign: [Function: sign],
+    encrypt: [Function: encrypt]
+  },
   _accountProvider: {
     create: [Function: createWithContext],
     privateKeyToAccount: [Function: privateKeyToAccountWithContext],
     decrypt: [Function: decryptWithContext]
   },
-  _addressMap: Map(0) {},
+  _addressMap: Map(1) { '0xe0a7859c5454b369ab8089890a11efcb458ea13c' => 0 },
   _defaultKeyName: 'web3js_wallet'
 ]
 */
+```
 
-// 2nd - create an account
+## Create an account and add it to an empty `Wallet`
+
+```ts title='Creating an Account and add it to a Wallet'
+import { Web3 } from "web3";
+
+const web3 = new Web3(/* PROVIDER */);
+
+// 1st - creating a new account
 const account = web3.eth.accounts.create();
-
-console.log(account)
 /* ↳
 {
   address: '0x0770B4713B62E0c08C43743bCFcfBAA39Fa703EF',
@@ -50,10 +64,8 @@ console.log(account)
 }
 */
 
-// 3rd - add the account to the wallet
-web3.eth.accounts.wallet.add(account);
-
-console.log(wallet);
+// 2nd - add the account to the wallet
+const wallet = web3.eth.accounts.wallet.add(account);
 /* ↳
 Wallet(1) [
   {
@@ -81,27 +93,9 @@ import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER */);
 
-// 1st - creating a new empty wallet
-const wallet = web3.eth.accounts.wallet.create() 
-
-console.log(wallet);
-/* ↳
-> Wallet(0) [
-  _accountProvider: {
-    create: [Function: createWithContext],
-    privateKeyToAccount: [Function: privateKeyToAccountWithContext],
-    decrypt: [Function: decryptWithContext]
-  },
-  _addressMap: Map(0) {},
-  _defaultKeyName: 'web3js_wallet'
-]
-*/
-
-// 2nd - add an account to the wallet using a private key
+// add an account to the wallet using a private key
 const privateKey = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba'
-web3.eth.accounts.wallet.add(privateKey);
-
-console.log(wallet);
+const wallet = web3.eth.accounts.wallet.add(privateKey);
 /* ↳
 Wallet(1) [
   {
