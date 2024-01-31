@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 # Add custom RPC methods
 
-## Introduction
+## Introduction TEST TEST TEST
 
 Web3.js is a popular library for interacting with the Ethereum blockchain. It provides a set of APIs to interact with Ethereum nodes via JSON-RPC calls. For adding new JSON-RPC function calls to the library, you can do so using the plugin feature in web3.js 4.x. This allows you to extend the functionality of Web3.js and add support for new JSON-RPC methods.
 
