@@ -20,6 +20,7 @@ import { ValidChains, Hardfork, AccessListResult, Address, ETH_DATA_FORMAT , DEF
 import { Web3ContractError } from 'web3-errors';
 import { Web3Context , Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
+import { AbiItem } from 'web3-utils';
 
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
@@ -103,6 +104,97 @@ describe('Contract', () => {
 		it('should init with abi, options and context', () => {
 			const contract = new Contract(
 				[],
+				{ gas: '123' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
+			);
+
+			expect(contract).toBeInstanceOf(Contract);
+		});
+
+		it('should init with abiItem, options and context', () => {
+			const contract = new Contract(
+				[{
+					anonymous: false,
+					constant: true,
+					inputs: [
+						{
+							name: 'testMe',
+							type: 'uint256[3]'
+						},
+						{
+							name: 'inputA',
+							type: 'tuple',
+							components: [
+								{
+									name: 'a',
+									type: 'uint8'
+								},
+								{
+									name: 'b',
+									type: 'uint8'
+								}
+							]
+						},
+						{
+							name: 'inputB',
+							type: 'tuple[]',
+							components: [
+								{
+									name: 'a1',
+									type: 'uint256'
+								},
+								{
+									name: 'a2',
+									type: 'uint256'
+								}
+							]
+						},
+						{
+							name: 'inputC',
+							type: 'uint8',
+							indexed: false
+						}
+					],
+					name: "testName",
+					outputs: [
+						{
+							name: "test",
+							type: "uint256"
+						},
+						{
+							name: 'outputA',
+							type: 'tuple',
+							components: [
+								{
+									name: 'a',
+									type: 'uint8'
+								},
+								{
+									name: 'b',
+									type: 'uint8'
+								}
+							]
+						},
+						{
+							name: 'outputB',
+							type: 'tuple[]',
+							components: [
+								{
+									name: 'a1',
+									type: 'uint256'
+								},
+								{
+									name: 'a2',
+									type: 'uint256'
+								}
+							]
+						}
+					],
+					payable: false,
+					stateMutability: "pure",
+					type: "function",
+					gas: 175875
+				} as AbiItem],
 				{ gas: '123' },
 				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
 			);
