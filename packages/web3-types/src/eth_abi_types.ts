@@ -159,17 +159,6 @@ export type AbiInput =
 		internalType?: string;
 	}
 	
-// to be compatible with web3js v1
-export type AbiItem = AbiBaseFragment & {
-	anonymous?: boolean;
-	constant?: boolean;
-    inputs?: AbiInput[];
-    name?: string;
-    outputs?: AbiOutput[];
-    payable?: boolean;
-    stateMutability?: string | 'nonpayable' | 'payable' | 'pure' | 'view';
-    gas?: number;
-};
 
 
 // https://docs.soliditylang.org/en/latest/abi-spec.html#json
@@ -179,10 +168,10 @@ export type AbiFragment =
 	| AbiEventFragment
 	| AbiErrorFragment
 	| AbiFallbackFragment
-	| AbiItem
 
-	
-export type ContractAbi = ReadonlyArray<AbiFragment>;
+// to be compatible with web3js v1
+export type AbiItem = AbiFragment
+export type ContractAbi = ReadonlyArray<AbiFragment> | ReadonlyArray<AbiItem>
 
 
 // https://docs.soliditylang.org/en/develop/abi-spec.html#json
