@@ -206,11 +206,11 @@ jobs:
             contents: read
             deployments: write
         steps:
-            -   uses: actions/checkout@v4
-            -   uses: actions/setup-node@v4
+            -   uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
                 with:
                     cache: yarn
-                    node-version: 18
+                    node-version: '18'
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
