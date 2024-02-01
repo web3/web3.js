@@ -215,7 +215,7 @@ jobs:
                 with:
                     path: ./
                     key: web3-18-${{github.event.pull_request.base.sha}}
-            -   run: yarn install --ignore-scripts
+            -   run: yarn install
             -   run: yarn run build:docs
             -   name: Publish to Cloudflare Pages
                 uses: cloudflare/pages-action@v1
