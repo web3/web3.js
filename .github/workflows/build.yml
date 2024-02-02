@@ -206,14 +206,18 @@ jobs:
             contents: read
             deployments: write
         steps:
+            -   uses: actions/checkout@v4
             -   uses: actions/setup-node@v4
                 with:
-                    node-version: 18
+                    cache: yarn
+                    node-version: '18'
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
                     key: web3-18-${{github.event.pull_request.base.sha}}
-            -   run: npm run build:docs
+            -   run: yarn install  --ignore-scripts
+            -   run: yarn build:cjs
+            -   run: yarn run build:docs
             -   name: Publish to Cloudflare Pages
                 uses: cloudflare/pages-action@v1
                 with:
