@@ -50,12 +50,12 @@ const account = web3.eth.accounts.privateKeyToAccount('0x4651f9c219fc6401fe0b3f8
 const rawTransaction = {
   from: account.address,
   to: '0x5875da5854c2adadbc1a7a448b5b2a09b26baff8', //random wallet or contract address
-  value: 1, //1 wei *optional
+  value: 1, //optional - value in wei
   maxFeePerGas: (await web3.eth.getBlock()).baseFeePerGas * 2n, //updated depending on the network
   maxPriorityFeePerGas: 100_000, //high
   gasLimit: 2000000
-  nonce: await web3.eth.getTransactionCount(account.address), //get the current nonce of the account *optional
-  data: data //encoded method execution *optional 
+  nonce: await web3.eth.getTransactionCount(account.address), //optional - get the current nonce of the account 
+  data: "0x0" //optional - encoded function signature and arguments 
 };
 
 // 4th - sign the raw transaction with the private key
