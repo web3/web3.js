@@ -18,7 +18,6 @@ If you face any issues while contributing, or you want any type of support, we e
 2. **Clone the repo:** Clone the forked repository to your local machine using the following command
 ```bash
 git clone https://github.com/your-username/web3.js.git
-
 ```
 3. **Create a Branch:** Create a new branch for your changes with a descriptive name.
     **NOTE: The branch name must include the issue number (if there is no issue created for your contribution, please create one)**
