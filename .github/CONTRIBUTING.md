@@ -6,6 +6,11 @@ Thank you for contributing to web3.js! We appreciate your interest and welcome a
 
 If you face any issues while contributing, or you want any type of support, we encourage you to join our [Discord Community](https://discord.com/invite/3shNX8cqGR) and ask any question in the `#web3js-general` channel, and/or submit a [New Issue](https://github.com/web3/web3.js/issues/new).
 
+## Prerequisites
+
+- [NodeJS](https://nodejs.org/) (LTS)
+- [Yarn](https://yarnpkg.com/)
+
 ## Contributing to the docs
 
 1. **Fork the docs:** Start by forking our repository to your GitHub account.
