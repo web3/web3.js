@@ -1,3 +1,46 @@
+# Contributing
+
+Thank you for contributing to web3.js! We appreciate your interest and welcome any contributions that can help improve our documentation, functionality, addressing bugs, or any other aspects that can contribute to the overall improvement of our project. Before you start contributing, please take a moment to review the guidelines below.
+
+## Help and Support
+
+If you face any issues while contributing, or you want any type of support, we encourage you to join our [Discord Community](https://discord.com/invite/3shNX8cqGR) and ask any question in the `#web3js-general` channel, and/or submit a [New Issue](https://github.com/web3/web3.js/issues/new).
+
+## Contributing to the docs
+
+1. **Fork the docs:** Start by forking our repository to your GitHub account.
+
+2. **Clone the repo:** Clone the forked repository to your local machine using the following command
+```bash
+git clone https://github.com/your-username/web3.js.git
+
+```
+3. **Create a Branch:** Create a new branch for your changes with a descriptive name.
+    **NOTE: The branch name must include the issue number (if there is no issue created for your contribution, please create one)**
+```bash
+git checkout -b issue-name-1234
+```
+4. **Navigate to the docs folder:** `cd web3.js/docs/docs`
+
+5. **Install docusaurus:** 
+```bash
+yarn add docusaurus
+```
+6. **Make your changes:**...
+
+7. Check changes in local environment: Run the command `yarn start` and you'll see a local environment in `localhost:3000` with the docs
+
+8. **Commit your changes:** `git add .` and `git commit -m 'descriptive msg'` 
+
+9. **Push your changes:**
+```bash
+git push origin branch-name
+```
+
+10. **Open a Pull request(PR):** Provide a detailed description of your changes, the problem you are solving, and any additional context(you can use the PR template).
+
+11. **Wait for review**: Before merging any branch into the main branch, it must be approved by 2 devs, after succesfully approved, you can `Squash and merge` your branch, Please be responsive to any feedback on your pull request and make necessary changes based on the review.
+
 ## Guidelines for Pull Requests and Releases (Web3 4.x)
 
 This document provides some ground rules for contributors (including the maintainer(s) of
@@ -49,3 +92,4 @@ Emergency releases are allowed to shorten waiting periods depending on the sever
 There is precedent set for this in the 1.2.6 release (see [#3351](https://github.com/ethereum/web3.js/pull/3351)), where the consensus view was to make the smallest change necessary to address the emergency while waiving the `rc` process (meaning many existing additions to master were excluded).
 
 This topic is under further org-wide discussion at [ethereum/js-organization#6](https://github.com/ethereum/js-organization/issues/6).
+
