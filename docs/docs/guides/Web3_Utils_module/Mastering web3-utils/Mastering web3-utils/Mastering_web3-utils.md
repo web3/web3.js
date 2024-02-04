@@ -68,10 +68,10 @@ Strings are returned after being decoded in ASCI value, then it gets converted i
 `console.log(utils.toHex({ vehicle: "car" })); // objects`
 
 Other Alternatives
-`console.log(utils.numberToHex(10));` // number -> Hex
-`console.log(utils.numberToHex(10)); `// number -> Hex
-`console.log(utils.numberToHex("text"));` // number -> Hex
-`console.log(utils.numberToHex("text"));` // number -> Hex
+`console.log(utils.numberToHex(10));`  // number -> Hex
+`console.log(utils.numberToHex(10)); ` // number -> Hex
+`console.log(utils.numberToHex("text"));`  // number -> Hex
+`console.log(utils.numberToHex("text"));`  // number -> Hex
 
 bytes (array) -> Hex
 Another case is if you want to convert bytes in an arrayed format
@@ -99,4 +99,18 @@ There are three different ways to convert Hexadecimal values into numbers.
 
 ## Hashing Functions
 
+There are two main functions that we can use for Hashing.
+First function is `Sha3`  it will always receive a string as a parameter and it will return the Hash in a Hexadecimal value.
+`console.log(utils.sha3("web3"));`
+
+Second function is `SoliditySha3` can receive a string a uint address or bytes as a parameter and it will return the Hash in a Hexadecimal value.
+`console.log(utils.soliditySha3({ type: "string", value: "web3" }));`
+
+## Addresses
+
+If we want to see if an address is valid, before we were able to use `isAddress()` function we can do that by following the below function.
+`console.log(utils.toChecksumAddress("0xa3286..............."));`
+By running this function, we can check and see if the provided address in the function is valid, if we pass the address with wrong case characters, then this function will checksum perform and return with the correct address characters.
+
+## Packing and Padding
 
