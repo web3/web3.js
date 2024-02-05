@@ -26,6 +26,7 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	BACKEND
 } from '../fixtures/system_test_utils';
 
 describe('Web3Eth.getRevertReason', () => {
@@ -58,16 +59,16 @@ describe('Web3Eth.getRevertReason', () => {
 		const response = await getRevertReason(web3Eth, transaction);
 
 		switch (getSystemTestBackend()) {
-			case 'geth':
+			case BACKEND.GETH:
 				expect(response).toMatchObject({
 					reason: 'execution reverted: This is a call revert',
 					signature: '0x08c379a0',
 					data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612063616c6c207265766572740000000000000000000000',
 				});
 				break;
-			case 'ganache':
+			case BACKEND.HARDHAT:
 				expect(response).toMatchObject({
-					reason: 'VM Exception while processing transaction: revert This is a call revert',
+					reason: "Error: VM Exception while processing transaction: reverted with reason string 'This is a call revert'",
 					signature: '0x08c379a0',
 					data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612063616c6c207265766572740000000000000000000000',
 				});
@@ -89,16 +90,16 @@ describe('Web3Eth.getRevertReason', () => {
 		const response = await getRevertReason(web3Eth, transaction);
 
 		switch (getSystemTestBackend()) {
-			case 'geth':
+			case BACKEND.GETH:
 				expect(response).toMatchObject({
 					reason: 'execution reverted: This is a send revert',
 					signature: '0x08c379a0',
 					data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
 				});
 				break;
-			case 'ganache':
+			case BACKEND.HARDHAT:
 				expect(response).toMatchObject({
-					reason: 'VM Exception while processing transaction: revert This is a send revert',
+					reason: "Error: VM Exception while processing transaction: reverted with reason string 'This is a send revert'",
 					signature: '0x08c379a0',
 					data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
 				});
@@ -120,13 +121,13 @@ describe('Web3Eth.getRevertReason', () => {
 
 		const response = await getRevertReason(web3Eth, transaction);
 		switch (getSystemTestBackend()) {
-			case 'geth':
+			case BACKEND.GETH:
 				expect(response).toBe(
 					'err: intrinsic gas too low: have 0, want 21544 (supplied gas 0)',
 				);
 				break;
-			case 'ganache':
-				expect(response).toBe('VM Exception while processing transaction: out of gas');
+			case BACKEND.HARDHAT:
+				expect(response).toContain('Error: base fee exceeds gas limit');
 				break;
 			default:
 				throw new Error(
@@ -144,7 +145,7 @@ describe('Web3Eth.getRevertReason', () => {
 
 		const response = await getRevertReason(web3Eth, transaction, SimpleRevertAbi);
 		switch (getSystemTestBackend()) {
-			case 'geth':
+			case BACKEND.GETH:
 				expect(response).toMatchObject({
 					data: '',
 					reason: 'execution reverted',
@@ -154,10 +155,10 @@ describe('Web3Eth.getRevertReason', () => {
 					customErrorArguments: {},
 				});
 				break;
-			case 'ganache':
+			case BACKEND.HARDHAT:
 				expect(response).toMatchObject({
 					data: '',
-					reason: 'VM Exception while processing transaction: revert',
+					reason: "Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0x72090e4d)",
 					signature: '0x72090e4d',
 					customErrorName: 'ErrorWithNoParams',
 					customErrorDecodedSignature: 'ErrorWithNoParams()',
@@ -180,7 +181,7 @@ describe('Web3Eth.getRevertReason', () => {
 
 		const response = await getRevertReason(web3Eth, transaction, SimpleRevertAbi);
 		switch (getSystemTestBackend()) {
-			case 'geth':
+			case BACKEND.GETH:
 				expect(response).toMatchObject({
 					data: '000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
 					reason: 'execution reverted',
@@ -193,10 +194,10 @@ describe('Web3Eth.getRevertReason', () => {
 					},
 				});
 				break;
-			case 'ganache':
+			case BACKEND.HARDHAT:
 				expect(response).toMatchObject({
 					data: '000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
-					reason: 'VM Exception while processing transaction: revert',
+					reason: "Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000)",
 					signature: '0xc85bda60',
 					customErrorName: 'ErrorWithParams',
 					customErrorDecodedSignature: 'ErrorWithParams(uint256,string)',

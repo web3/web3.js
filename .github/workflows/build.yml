@@ -131,25 +131,25 @@ jobs:
                   token: ${{ secrets.CODECOV_TOKEN }}
               if: ${{ matrix.node == 18 }}
 
-    integration:
-        name: Integration (ganache) # (ganache with HTTP)
+    integration-hardhat:
+        name: Integration hardhat
         needs: build
         runs-on: ubuntu-latest
-        env:
-            INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-            INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        strategy:
+          fail-fast: false
         steps:
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-            - uses: actions/cache/restore@v3
-              with:
+          - uses: actions/setup-node@v3
+            with:
+              node-version: 18
+          - uses: actions/cache/restore@v3
+            with:
                 path: ./
                 key: web3-18-${{github.event.pull_request.base.sha}}
-            - run: yarn test:e2e:ganache:http
-              shell: bash
+          - run: npx hardhat node &
+          - run: yarn test:e2e:hardhat:http
+            shell: bash
 
-    e2e:
+    e2e-geth:
         name: Integration # (geth with HTTP, IPC & WS)
         needs: build
         runs-on: ubuntu-latest
@@ -172,31 +172,31 @@ jobs:
                 shell: bash
 
     e2e-browsers:
-        name: End-to-End ganache:ws
+        name: End-to-End hardhat:ws
         needs: build
         runs-on: ubuntu-latest
         strategy:
-            fail-fast: false
-            matrix:
-                browser: ['electron', 'chrome', 'firefox']
+          fail-fast: false
+          matrix:
+            browser: ['electron', 'chrome', 'firefox']
         steps:
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-            - uses: browser-actions/setup-firefox@latest
-              if: matrix.browser == 'firefox'
-            - uses: actions/cache/restore@v3
-              with:
-                path: ./
-                key: web3-18-${{github.event.pull_request.base.sha}}
-            - run: npm install --no-package-lock --no-save --force cypress
-            - run: npx ts-node scripts/init.ts
-            - name: Cypress run
-              uses: cypress-io/github-action@v4
-              with:
-                  install: false
-                  command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-                  cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+          - uses: actions/setup-node@v3
+            with:
+                node-version: 18
+          - uses: browser-actions/setup-firefox@latest
+            if: matrix.browser == 'firefox'
+          - uses: actions/cache/restore@v3
+            with:
+              path: ./
+              key: web3-18-${{github.event.pull_request.base.sha}}
+          - run: npx hardhat node &
+          - run: npm install --no-package-lock --no-save --force cypress
+          - name: Cypress run
+            uses: cypress-io/github-action@v4
+            with:
+                install: false
+                command: yarn test:e2e:hardhat:ws:${{ matrix.browser }}
+                cache-key: node-v18-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
     deploy-docs:
         name: Docs CloudFlare Deploy
