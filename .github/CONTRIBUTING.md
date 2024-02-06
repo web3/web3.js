@@ -26,9 +26,9 @@ git checkout -b issue-name-1234
 ```
 4. **Navigate to the docs folder:** `cd web3.js/docs/docs`
 
-5. **Install docusaurus:** 
+5. **Install dependencies:** 
 ```bash
-yarn add docusaurus
+yarn
 ```
 6. **Make your changes:**...
 
