@@ -144,7 +144,7 @@ jobs:
           - uses: actions/cache/restore@v3
             with:
                 path: ./
-                key: web3-18-${{github.event.pull_request.base.sha}}
+                key: web3-18-
           - run: npx hardhat node &
           - run: yarn test:e2e:hardhat:http
             shell: bash
