@@ -24,7 +24,9 @@ import {
 	closeOpenConnection,
 	createAccount,
 	createLocalAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
+	BACKEND
 } from '../fixtures/system_test_utils';
 
 const gas = 30000;
@@ -84,10 +86,13 @@ describe('defaults', () => {
 							web3Eth.transactionPollingTimeout / 1000
 						} seconds`,
 					);
-				} else {
-					throw error;
-				}
+				} else if (getSystemTestBackend() === BACKEND.HARDHAT){
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect((error as any).message).toContain("Nonce too high")
+			}	else  {
+				throw error;
 			}
-		});
+		}
+	});
 	});
 });

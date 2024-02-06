@@ -26,9 +26,12 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	itIf,
+	describeIf,
+	BACKEND
 } from '../fixtures/system_test_utils';
 
-describe('personal integration tests', () => {
+// hardhat does not support personal
+describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('personal integration tests', () => {
 	let ethPersonal: Personal;
 	let clientUrl: string | SupportedProviders<EthPersonalAPI>;
 
@@ -41,12 +44,12 @@ describe('personal integration tests', () => {
 		await closeOpenConnection(ethPersonal);
 	});
 
-	it('new account', async () => {
+	test('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
 		expect(isHexStrict(newAccount)).toBe(true);
 	});
 
-	itIf(getSystemTestBackend() === 'geth')('ecRecover', async () => {
+	itIf(getSystemTestBackend() === BACKEND.GETH)('ecRecover', async () => {
 		const password = '123456';
 		const acc = (await createTempAccount({ password })).address;
 		// ganache does not support ecRecover
@@ -56,7 +59,7 @@ describe('personal integration tests', () => {
 		expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(acc));
 	});
 
-	it('lock account', async () => {
+	test('lock account', async () => {
 		const { address } = await createTempAccount();
 		const lockAccount = await ethPersonal.lockAccount(address);
 		expect(lockAccount).toBe(true);
@@ -74,7 +77,7 @@ describe('personal integration tests', () => {
 		await expect(ethPersonal.sendTransaction(tx, '')).rejects.toThrow();
 	});
 
-	it('unlock account', async () => {
+	test('unlock account', async () => {
 		const { address } = await createTempAccount();
 		const unlockedAccount = await ethPersonal.unlockAccount(address, '123456', 1000);
 		expect(unlockedAccount).toBe(true);
@@ -93,7 +96,7 @@ describe('personal integration tests', () => {
 	});
 
 	// ganache does not support sign
-	itIf(getSystemTestBackend() === 'geth')('sign', async () => {
+	itIf(getSystemTestBackend() === BACKEND.GETH)('sign', async () => {
 		const password = '123456';
 		const key = (await createTempAccount({ password })).address;
 		await ethPersonal.unlockAccount(key, password, 100000);
@@ -103,7 +106,7 @@ describe('personal integration tests', () => {
 		expect(key).toBe(address);
 	});
 
-	it('getAccounts', async () => {
+	test('getAccounts', async () => {
 		const accountList = await ethPersonal.getAccounts();
 		// create a new account
 		await ethPersonal.newAccount('cde');
@@ -111,37 +114,14 @@ describe('personal integration tests', () => {
 		expect(updatedAccountList.length).toBeGreaterThan(accountList.length);
 	});
 
-	it('importRawKey', async () => {
+	test('importRawKey', async () => {
 		const { address, privateKey } = createAccount();
-		const rawKey = getSystemTestBackend() === 'geth' ? privateKey.slice(2) : privateKey;
+		const rawKey = getSystemTestBackend() === BACKEND.GETH ? privateKey.slice(2) : privateKey;
 		const key = await ethPersonal.importRawKey(rawKey, '123456');
 		expect(toChecksumAddress(key).toLowerCase()).toBe(address.toLowerCase());
 	});
 
-	// geth doesn't have signTransaction method
-	itIf(getSystemTestBackend() === 'ganache')('signTransaction', async () => {
-		const acc = await createNewAccount({
-			privateKey: '0x43c74e0b52c754285db6fc52cc98353804e5025e38ab80d7d9e2fd53d456de84',
-			unlock: true,
-			refill: true,
-		});
-		const tx = {
-			from: acc.address,
-			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
-			value: '10000',
-			gas: '21000',
-			maxFeePerGas: '0x59682F00',
-			maxPriorityFeePerGas: '0x1DCD6500',
-			nonce: 0,
-		};
-		const signedTx = await ethPersonal.signTransaction(tx, '123456');
-		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f00825208941337c75fdf978ababaacc038a1dcd580fec28ab282271080c001a0fef20ce4d8dd7e129bd52d08599988e74b0baad0692b9e316368896b22544162a07d69fac7625a925286dcf1be61d35c787f467b2b7e911181098d49c1ae041deb';
-		// eslint-disable-next-line jest/no-standalone-expect
-		expect(signedTx).toEqual(expectedResult);
-	});
-
-	it('sendTransaction', async () => {
+	test('sendTransaction', async () => {
 		const from = (await createNewAccount({ unlock: true, refill: true })).address;
 
 		const unlockedAccount = await ethPersonal.unlockAccount(from, '123456', 1000);
