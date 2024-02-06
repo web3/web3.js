@@ -186,9 +186,6 @@ jobs:
           - uses: browser-actions/setup-firefox@latest
             if: matrix.browser == 'firefox'
           - uses: actions/cache/restore@v3
-            with:
-              path: ./
-              key: web3-18-${{github.event.pull_request.base.sha}}
           - run: npx hardhat node &
           - run: npm install --no-package-lock --no-save --force cypress
           - name: Cypress run
