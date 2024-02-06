@@ -144,7 +144,7 @@ jobs:
           - uses: actions/cache/restore@v3
             with:
                 path: ./
-                key: web3-18-
+                key: web3-18-${{github.sha}}
           - run: npx hardhat node &
           - run: yarn test:e2e:hardhat:http
             shell: bash
@@ -167,7 +167,7 @@ jobs:
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-18-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.sha}}
             -   run: yarn test:e2e:geth:${{ matrix.mode }}
                 shell: bash
 
@@ -188,7 +188,7 @@ jobs:
           - uses: actions/cache/restore@v3
             with:
               path: ./
-              key: web3-18
+              key: web3-18-${{github.sha}}
           - run: npx hardhat node &
           - run: npm install --no-package-lock --no-save --force cypress
           - name: Cypress run
