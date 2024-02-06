@@ -188,3 +188,7 @@ Documentation:
 -   Fixed an issue with detecting Uint8Array (#6486)
 
 ## [Unreleased]
+
+### Added
+
+-   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)

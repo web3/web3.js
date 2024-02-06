@@ -178,3 +178,7 @@ Documentation:
 -   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
 
 ## [Unreleased]
+
+### Added
+
+-   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
