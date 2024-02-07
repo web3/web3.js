@@ -29,7 +29,7 @@ describe('Web3Eth.calculateFeeData', () => {
 	});
 
 	it('should return call getBlockByNumber, getGasPrice and getMaxPriorityFeePerGas', async () => {
-		await web3Eth.expectFeeData();
+		await web3Eth.calculateFeeData();
 		// web3Eth.getBlock = jest.fn();
 		expect(ethRpcMethods.getBlockByNumber).toHaveBeenCalledWith(
 			web3Eth.requestManager,
@@ -48,6 +48,7 @@ describe('Web3Eth.calculateFeeData', () => {
 
 		jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockReturnValueOnce({ baseFeePerGas } as any);
 		jest.spyOn(ethRpcMethods, 'getGasPrice').mockReturnValueOnce(gasPrice as any);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		jest
 			.spyOn(ethRpcMethods, 'getMaxPriorityFeePerGas')
 			.mockReturnValueOnce(maxPriorityFeePerGas as any);
