@@ -47,7 +47,6 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
       },
       "_eventsCount": 2,
       "_maxListeners": undefined,
-      Symbol(shapeMode): false,
       Symbol(kCapture): false,
     },
     "_provider": HttpProvider {
@@ -67,7 +66,6 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
         },
         "_eventsCount": 2,
         "_maxListeners": undefined,
-        Symbol(shapeMode): false,
         Symbol(kCapture): false,
       },
       "_provider": HttpProvider {
