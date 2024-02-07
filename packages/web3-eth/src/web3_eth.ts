@@ -106,6 +106,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			typeof providerOrContext === 'string' ||
 			isSupportedProvider(providerOrContext as SupportedProviders<any>)
 		) {
+			// @ts-ignore disable the error: "A 'super' call must be a root-level statement within a constructor of a derived class that contains initialized properties, parameter properties, or private identifiers."
 			super({
 				provider: providerOrContext as SupportedProviders<any>,
 				registeredSubscriptions,
