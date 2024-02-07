@@ -70,7 +70,7 @@ describe('Web3Context', () => {
 			const context = new Context1('http://test/abc');
 
 			// The following is because a specific property is different in node 18 than it is in node 20 and 21
-			// So the problematic property is removed from the object and the added to ensure its consistent location
+			// So the problematic property is removed from the object and then added to ensure its presence and its location
 			// And the snapshot is updated to reflect the change.
 			// Once node 18 is no longer supported, this can be removed. And the snapshot need to be updated then.
 
