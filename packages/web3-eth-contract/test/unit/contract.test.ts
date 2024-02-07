@@ -20,7 +20,8 @@ import { ValidChains, Hardfork, AccessListResult, Address, ETH_DATA_FORMAT , DEF
 import { Web3ContractError } from 'web3-errors';
 import { Web3Context , Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
-
+import { AbiItem } from 'web3-utils';
+import {Abi} from '../fixtures/Abi.json'
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -103,6 +104,16 @@ describe('Contract', () => {
 		it('should init with abi, options and context', () => {
 			const contract = new Contract(
 				[],
+				{ gas: '123' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
+			);
+
+			expect(contract).toBeInstanceOf(Contract);
+		});
+
+		it('should init with abiItem, options and context', () => {
+			const contract = new Contract(
+				[Abi as AbiItem],
 				{ gas: '123' },
 				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
 			);

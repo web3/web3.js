@@ -18,14 +18,14 @@ import { Numbers } from 'web3-types';
 
 import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
+import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { mainnetBlockData } from './fixtures/mainnet';
 import { sepoliaBlockData } from './fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getUncle`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
+	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
 

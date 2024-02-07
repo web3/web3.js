@@ -181,4 +181,5 @@ Documentation:
 
 ### Added
 
+-   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
 -   Updated type `Web3EthInterface.accounts` to includes `privateKeyToAccount`,`privateKeyToAddress`,and `privateKeyToPublicKey` (#6762)

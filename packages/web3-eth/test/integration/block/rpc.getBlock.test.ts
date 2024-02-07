@@ -33,6 +33,7 @@ import {
 	describeIf,
 	createNewAccount,
 	refillAccount,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';
@@ -139,7 +140,7 @@ describe('rpc with block', () => {
 		});
 	});
 
-	describeIf(getSystemTestBackend() === 'geth')(
+	describeIf(getSystemTestBackend() === BACKEND.GETH)(
 		'getBlock calls with POS tags in POA node',
 		() => {
 			it.each(['safe', 'finalized'])(

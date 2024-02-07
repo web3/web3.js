@@ -22,10 +22,11 @@ import {
 	describeIf,
 	getSystemTestBackend,
 	closeOpenConnection,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 import { feeHistorySchema } from '../../../src/schemas';
 
-describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () => {
+describeIf(getSystemTestBackend().includes(BACKEND.GETH))('Web3Eth.getFeeHistory', () => {
 	let web3Eth: Web3Eth;
 	let systemProvider: string | SupportedProviders;
 
