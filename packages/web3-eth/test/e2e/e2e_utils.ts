@@ -23,17 +23,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * running these E2E tests that use Sepolia and Mainnet, this util exists here for now.
  */
 
-import { getSystemTestBackend } from '../fixtures/system_test_utils';
+import { getSystemTestBackend, BACKEND } from '../fixtures/system_test_utils';
 // eslint-disable-next-line import/no-relative-packages
 import secrets from '../../../../.secrets.json';
 
 export const getSystemE2ETestProvider = (): string => {
 	if (process.env.WEB3_SYSTEM_TEST_MODE === 'http') {
-		return getSystemTestBackend() === 'sepolia'
+		return getSystemTestBackend() === BACKEND.SEPOLIA
 			? process.env.INFURA_SEPOLIA_HTTP ?? secrets.SEPOLIA.HTTP
 			: process.env.INFURA_MAINNET_HTTP ?? secrets.MAINNET.HTTP;
 	}
-	return getSystemTestBackend() === 'sepolia'
+	return getSystemTestBackend() === BACKEND.SEPOLIA
 		? process.env.INFURA_SEPOLIA_WS ?? secrets.SEPOLIA.WS
 		: process.env.INFURA_MAINNET_WS ?? secrets.MAINNET.WS;
 };
@@ -42,7 +42,7 @@ export const getE2ETestAccountAddress = (): string => {
 	if (process.env.TEST_ACCOUNT_ADDRESS !== undefined) {
 		return process.env.TEST_ACCOUNT_ADDRESS;
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === 'sepolia' || getSystemTestBackend() === 'mainnet') {
+	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET'].ACCOUNT
 			.address;
 	}
@@ -64,7 +64,7 @@ export const getAllowedSendTransaction = (): boolean => {
 
 		return Boolean(process.env.ALLOWED_SEND_TRANSACTION);
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === 'sepolia' || getSystemTestBackend() === 'mainnet') {
+	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET']
 			.ALLOWED_SEND_TRANSACTION;
 	}
@@ -76,7 +76,7 @@ export const getE2ETestAccountPrivateKey = (): string => {
 	if (process.env.TEST_ACCOUNT_PRIVATE_KEY !== undefined) {
 		return process.env.TEST_ACCOUNT_PRIVATE_KEY;
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === 'sepolia' || getSystemTestBackend() === 'mainnet') {
+	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET'].ACCOUNT
 			.privateKey;
 	}

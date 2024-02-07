@@ -36,6 +36,8 @@ import {
 	createNewAccount,
 	itIf,
 	createTempAccount,
+	describeIf,
+	BACKEND
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import {
@@ -84,7 +86,7 @@ describe('rpc', () => {
 	});
 
 	describe('methods', () => {
-		itIf(!['geth'].includes(getSystemTestBackend()))('getProtocolVersion', async () => {
+		itIf(!['geth', 'hardhat'].includes(getSystemTestBackend()))('getProtocolVersion', async () => {
 			const version = await web3Eth.getProtocolVersion();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(parseInt(version, 16)).toBeGreaterThan(0);
@@ -103,27 +105,38 @@ describe('rpc', () => {
 			expect(coinbase).toHaveLength(42);
 		});
 
-		it('isMining', async () => {
+		itIf(getSystemTestBackend() !== BACKEND.HARDHAT)('isMining', async () => {
 			const isMining = await web3Eth.isMining();
 
-			if (getSystemTestBackend() !== 'geth')
-				// eslint-disable-next-line jest/no-conditional-expect
+			if (getSystemTestBackend() !== BACKEND.GETH)
+				// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
 				expect(isMining).toBe(true);
 		});
 
-		it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
-			const hashRate = await web3Eth.getHashRate({
-				number: format as FMT_NUMBER,
-				bytes: FMT_BYTES.HEX,
+		describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('getHashRate', () => { 
+			it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
+				const hashRate = await web3Eth.getHashRate({
+					number: format as FMT_NUMBER,
+					bytes: FMT_BYTES.HEX,
+				});
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect(typeof hashRate).toBe(mapFormatToType[format as string]);		
 			});
-			expect(typeof hashRate).toBe(mapFormatToType[format as string]);
-		});
+		})
 
 		it('getAccounts', async () => {
-			const account = await createNewAccount({ unlock: true });
-			const accList = await web3Eth.getAccounts();
-			const accListLowerCase = accList.map((add: string) => add.toLowerCase());
-			expect(accListLowerCase).toContain(account.address.toLowerCase());
+			// hardhat does not have support importrawkey, so we can't add new accounts rather just check the default 20 accounts
+			if (getSystemTestBackend() !== BACKEND.HARDHAT)	{
+				const account = await createNewAccount({ unlock: true });
+				const accList = await web3Eth.getAccounts();
+				const accListLowerCase = accList.map((add: string) => add.toLowerCase());
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(accListLowerCase).toContain(account.address.toLowerCase());
+			} else {
+				const accList = await web3Eth.getAccounts();
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(accList).toHaveLength(20);
+			}
 		});
 
 		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
@@ -393,12 +406,6 @@ describe('rpc', () => {
 			expect(res).toBeDefined();
 		});
 
-		itIf(!['ganache', 'geth'].includes(getSystemTestBackend()))('getWork', async () => {
-			const res = await web3Eth.getWork();
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(res[0]).toBeDefined();
-		});
-
 		itIf(!['geth', 'ganache'].includes(getSystemTestBackend()))('requestAccounts', () => {
 			// const res = await web3Eth.requestAccounts();
 			// eslint-disable-next-line jest/no-standalone-expect
@@ -406,7 +413,8 @@ describe('rpc', () => {
 			// expect(res[0]).toEqual(tempAcc.address);
 		});
 
-		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {
+		// hardhat does not support getProof
+		itIf(getSystemTestBackend() !== BACKEND.HARDHAT)('getProof', async () => {
 			const numberData = BigInt(10);
 			const stringData = 'str';
 			const boolData = true;
