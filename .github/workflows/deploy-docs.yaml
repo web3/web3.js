@@ -1,8 +1,9 @@
 name: Docs CloudFlare Deploy
 on:
     push:
+      branches:
         - "4.x"
-    tags-ignore:
+      tags-ignore:
         - v4*
 jobs:
     deploy:
