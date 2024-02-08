@@ -2335,4 +2335,20 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Fixed an issue with detecting Uint8Array (#6486)
 
+## [4.5.0]
+
+### Added
+
+#### web3-utils
+
+-   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
+
+#### web3-types
+
+### Changed 
+
+#### web3
+
+-   Dependencies updated
+
 ## [Unreleased]
