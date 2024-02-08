@@ -21,7 +21,7 @@ import { Web3ContractError } from 'web3-errors';
 import { Web3Context , Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
 import { AbiItem } from 'web3-utils';
-import {Abi} from '../fixtures/Abi.json'
+import {Abi} from '../fixtures/AbiItem'
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
