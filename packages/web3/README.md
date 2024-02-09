@@ -9,7 +9,7 @@
 [![NPM Package][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 
-This is the main package of [web3.js](repo), it cointains a collection of comprehensive [TypeScript](https://www.typescriptlang.org/) libraries for Interaction with the [Ethereum JSON RPC API](https://ethereum.org/developers/docs/apis/json-rpc) and utility functions. 
+This is the main package of [web3.js](repo), it contains a collection of comprehensive [TypeScript](https://www.typescriptlang.org/) libraries for Interaction with the [Ethereum JSON RPC API](https://ethereum.org/developers/docs/apis/json-rpc) and utility functions. 
 
 ## Features
 
