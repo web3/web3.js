@@ -18,12 +18,12 @@ import { toHex } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
+import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 
 describe(`${getSystemTestBackend()} tests - getChainId`, () => {
 	const provider = getSystemE2ETestProvider();
-	const expectedChainId = getSystemTestBackend() === 'sepolia' ? 11155111 : 1;
+	const expectedChainId = getSystemTestBackend() === BACKEND.SEPOLIA ? 11155111 : 1;
 
 	let web3: Web3;
 

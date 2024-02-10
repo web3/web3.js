@@ -23,6 +23,7 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	describeIf,
+	BACKEND,
 } from '../fixtures/system_test_utils';
 
 describe('contract errors', () => {
@@ -50,7 +51,7 @@ describe('contract errors', () => {
 		contract.setProvider(getSystemTestProvider());
 	});
 
-	describeIf(getSystemTestBackend() === 'geth')('Test EIP-838 Error Codes', () => {
+	describeIf(getSystemTestBackend() === BACKEND.GETH)('Test EIP-838 Error Codes', () => {
 		it('Unauthorized', async () => {
 			let error: ContractExecutionError | undefined;
 			try {
