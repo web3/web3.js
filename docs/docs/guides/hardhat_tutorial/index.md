@@ -47,7 +47,7 @@ npx hardhat init
 
 ![images](./asset/image_3.png)
 
-### Install required dependencies (incuding `hardhat-web3-v4`)
+### Install required dependencies (including `hardhat-web3-v4`)
 
 Select `Typescript` and `Yes` for the rest of the options.
 You will be prompted to install the required dependencies. Reply `yes` to complete the installation.
