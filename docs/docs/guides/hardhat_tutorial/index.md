@@ -1,27 +1,28 @@
 ---
-slug: /
-sidebar_position: 2
-sidebar_label: Using Web3 With Hardhat 
+sidebar_position: 1
+sidebar_label: Web3.js v4 with Hardhat 
 ---
 
 # Using Web3 With Hardhat
 
 ## Introduction
-Following the recent compatibility update of Hardhat plugin [hardhat-web3-v4](https://github.com/NomicFoundation/hardhat/pull/4570), `Web3.Js` is now available to use as plugin in Hardhat.
+Following the recent compatibility update of Hardhat plugin [hardhat-web3-v4](https://hardhat.org/hardhat-runner/plugins/nomicfoundation-hardhat-web3-v4), `Web3.Js` is now available to use as plugin in Hardhat.
 
 This tutorial will guide you through using Web3js as a plugin to interact with the Blockchain.
 
 ## Pre-requisite
-This tutorial assumes you have previous knowledge of writing Smart contracts, and are convenient working with Javascript/Typescript. You should have NodeJs version greater than v16 installed.
+This tutorial assumes you have previous knowledge of writing Smart contracts, and are convenient working with Javascript/Typescript. You should have [NodeJS](https://nodejs.org/en) version greater than v16 installed.
 
-`Note`: To install dependencies, we will use `NPM`. 
+:::note
+To install dependencies, we will use `NPM`. 
+:::
 
 ## Steps
-- Initiate a Hardhat project
-- Install required dependencies (incuding `hardhat-web3-v4`)
-- Write the Smart Contract
-- Compile and deploying the contract
-- Testing and interacting with the contract
+- [Initiate a Hardhat project](#initiate-a-hardhat-project)
+- [Install required dependencies (including `hardhat-web3-v4`)](#install-required-dependencies-including-hardhat-web3-v4)
+- [Write the Smart Contract](#write-the-smart-contract)
+- [Compile and deploying the contract](#compile-test-and-deploy-the-contract)
+- [Testing and interacting with the contract](#testing-and-interacting-with-the-contract)
 
 ### Initiate a Hardhat project
 Create a new project folder and navigate into it.
@@ -41,7 +42,7 @@ npm install hardhat
 ```
 
 ```bash
-npx hardhat
+npx hardhat init
 ```
 
 ![images](./asset/image_3.png)
@@ -56,7 +57,7 @@ To include the `Hardhat-web3-v4` plugin, we will install it via `npm`.
 npm install --save-dev @nomicfoundation/hardhat-web3-v4 'web3@4'
 ```
 
-This will add Web3.Js to your project by including it in the 'node_modules' folder. To extend the Hardhat functionality with this plugin, we have to summmon it in the Hardhat configuration file `hardhat.config.ts`. Import this at the top of the config file.
+This will add Web3.Js to your project by including it in the 'node_modules' folder. To extend the Hardhat functionality with this plugin, we have to import the `web3-v4 plugin` in the Hardhat configuration file `hardhat.config.ts`. Import this at the top of the config file.
 
 ```ts
 import { HardhatUserConfig } from "hardhat/config";
@@ -278,4 +279,26 @@ in this file, we performed similar steps as in the deployment script to prepare 
 
 To change the status of the data we previously saved, we have to access the `method` container for the function (s) we desire and invoke the `.send` to broadcast our intention to the network `lock.methods.withdraw().send({from: deployer})`.
 
-`Note`: When using `.send()`, you must explicitly provide the sender of the transaction as the value to `from`.
+:::note
+When using `.send()`, you must explicitly provide the `sender` of the transaction in the `from` field (in the above example is the address of the `deployer` account).
+:::
+
+
+To run the test you can use the command
+```bash
+npx hardhat test test/Lock.ts
+```
+
+And you'll get a similar result to this:
+```js
+/*
+Lock
+    Deployment
+Lock contract deployed to:  0x5FbDB2315678afecb367f032d93F642f64180aa3
+SetTime 1739193193n
+      ✔ Should set the right unlockTime (884ms)
+      ✔ Should set the right deployer (54ms)
+      ✔ Should receive and store the funds to lock
+      ✔ Shouldn't fail if the unlockTime has arrived and the deployer calls it
+*/
+```
