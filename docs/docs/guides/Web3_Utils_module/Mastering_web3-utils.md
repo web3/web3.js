@@ -4,13 +4,13 @@
 
 ## Imports
 
-There are three different way to import utils package.
+There are three different ways to import utils package.
 
 1. Import the entire web3 module and initialize a provider:
 
     `const [ Web3 ] = require("web3"); ` 
 
-    then inialiazing a provider with 
+    then initializing  a provider with 
     `const web3 = new Web3("");`
 
     To be able to access the package you need to type
@@ -20,6 +20,10 @@ There are three different way to import utils package.
 2. Import only the utils package from web3:
 
     `const { utils } = require("web3");` 
+
+    `import { Web3 } from 'web3';`
+
+    `import * as utils from 'web3-utils';`
 
     Then you are also able to use any function like
     `utils.toWei()`
@@ -33,13 +37,13 @@ There are three different way to import utils package.
 
 ## Random Bytes
 
-There are two way to generate Random Bytes.
+There are two ways to generate Random Bytes.
 
-1. The first function that is knownn as Random Bytes, it receives a parameter of the size of bytes you want to generate and it will return the bytes in an array format.
+1. The first function that is known as Random Bytes, it receives a parameter of the size of bytes you want to generate and it will return the bytes in an array format.
 
     array format `console.log(utils.randomBytes());`
 
-2. The second function is known as Randon Hex also requires a parameter of the size of bytes and it will return the btytes in Hexadecimal format
+2. The second function is known as Random Hex also requires a parameter of the size of bytes and it will return the bytes in Hexadecimal format
 
     Hex format `console.log(utils.randomHex());`
 
@@ -48,7 +52,7 @@ There are two way to generate Random Bytes.
 
 ## Conversions - Ethereum Denominations
 
-We've got two different functions to perform conversions between ethereum denominations.
+We've got two different functions to perform conversions between Ethereum denominations.
 
 1. `toWei(any) -> wei `
 
@@ -70,7 +74,7 @@ We've got two different functions to perform conversions between ethereum denomi
 
 ## Conversions to Hex Values
 
-There are many ways to convert any value into Hexadecimal but one of the most simplest and easiest is to use the function to Hex 
+There are many ways to convert any value into Hexadecimal but one of the simplest and easiest is to use the function to Hex 
 `toHex(any) > Hex` which will accept anry parameter and will always return a Hexadecimal value so this function can accept numbers "big Int", "strings", "booleans" and "objects". Below is how you can write them.
 
 For Numbers: 
@@ -82,7 +86,7 @@ For Big Numbers:
 For Strings: 
 `console.log(utils.toHex("10"));` 
 
-Strings are returned after being decoded in ASCI value, then it gets converted into a Hexadecimal.
+Strings are returned after being decoded in ASCII value, then it gets converted into a Hexadecimal.
 
 For Booleans: 
 `console.log(utils.toHex(false));`  
@@ -138,7 +142,7 @@ There are three different ways to convert Hexadecimal values into numbers.
 1. This function `toNumber` returns Hexadecimal value in number format
 Hex -> number: `console.log(utils.toNumber("0xa"));`
 
-2. This function `hexToNumberString` will convert Hexadecimal value into anumber and returns it in string format
+2. This function `hexToNumberString` will convert Hexadecimal value into a number and returns it in string format
 Hex -> string(number): `console.log(utils.hexToNumberString("0xa"));` 
 
 3. This function will `toBigInt` returns the number in a big integer format
