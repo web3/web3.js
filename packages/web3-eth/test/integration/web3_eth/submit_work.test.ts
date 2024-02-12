@@ -21,6 +21,7 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	itIf,
+	BACKEND
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.submitWork', () => {
@@ -34,8 +35,8 @@ describe('Web3Eth.submitWork', () => {
 		await closeOpenConnection(web3Eth);
 	});
 
-	// Geth doesn't support eth_submitWork
-	itIf(getSystemTestBackend() !== 'geth')('should submit work', async () => {
+	// Hardhat and Geth doesn't support eth_submitWork
+	itIf(getSystemTestBackend() !== BACKEND.GETH && getSystemTestBackend() !== BACKEND.HARDHAT)('should submit work', async () => {
 		const response = await web3Eth.submitWork(
 			'0x0000000000000001',
 			'0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
