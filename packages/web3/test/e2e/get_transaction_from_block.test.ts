@@ -20,14 +20,14 @@ import { Numbers, TransactionInfo } from 'web3-types';
 
 import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
+import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlockData, sepoliaTransactionFromBlock } from './fixtures/sepolia';
 import { mainnetBlockData, mainnetTransactionFromBlock } from './fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
+	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
 
@@ -71,7 +71,7 @@ describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 			expect(result).toBeNull();
 		} else if (block === 'blockHash' || block === 'blockNumber') {
 			const expectedTransaction =
-				getSystemTestBackend() === 'sepolia'
+				getSystemTestBackend() === BACKEND.SEPOLIA
 					? sepoliaTransactionFromBlock
 					: mainnetTransactionFromBlock;
 			expect(result).toStrictEqual(expectedTransaction);

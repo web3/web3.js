@@ -177,4 +177,10 @@ Documentation:
 -   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
 -   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
 
+## [1.4.0]
+
+### Added
+
+-   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
+
 ## [Unreleased]

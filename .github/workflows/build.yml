@@ -29,7 +29,7 @@ jobs:
             - uses: actions/cache/save@v3
               with:
                 path: ./
-                key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+                key: web3-${{ matrix.node }}-${{github.sha}}
 
     build-esm:
         name: Build ESM
@@ -42,7 +42,7 @@ jobs:
             -   uses: actions/cache/restore@v3
                 with:
                    path: ./
-                   key: web3-18-${{github.event.pull_request.base.sha}}
+                   key: web3-18-${{github.sha}}
             -   run: yarn build:esm
     build-types:
         name: Build Types
@@ -55,7 +55,7 @@ jobs:
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-18-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.sha}}
             -   run: yarn build:types
     lint:
         name: Lint
@@ -68,7 +68,7 @@ jobs:
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-18-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.sha}}
             -   run: npx ts-node scripts/init.ts
             -   run: yarn lint
 
@@ -83,13 +83,13 @@ jobs:
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-18-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.sha}}
             -   name: Restore default branch stats
                 if: github.event_name != 'push'
                 uses: actions/cache/restore@v3
                 with:
                     path: packages/web3/dist/4.x.json
-                    key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
+                    key: web3-bundle-stats-4x-${{github.sha}}
             -   run: yarn build:web:analyze
                 env:
                     STATS_FILE: ${{ github.ref_name }}.json
@@ -122,7 +122,7 @@ jobs:
             - uses: actions/cache/restore@v3
               with:
                     path: ./
-                    key: web3-${{ matrix.node }}-${{github.event.pull_request.base.sha}}
+                    key: web3-${{ matrix.node }}-${{github.sha}}
             - run: yarn test:unit
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v3
@@ -131,25 +131,25 @@ jobs:
                   token: ${{ secrets.CODECOV_TOKEN }}
               if: ${{ matrix.node == 18 }}
 
-    integration:
-        name: Integration (ganache) # (ganache with HTTP)
+    integration-hardhat:
+        name: Integration hardhat
         needs: build
         runs-on: ubuntu-latest
-        env:
-            INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-            INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        strategy:
+          fail-fast: false
         steps:
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-            - uses: actions/cache/restore@v3
-              with:
+          - uses: actions/setup-node@v3
+            with:
+              node-version: 18
+          - uses: actions/cache/restore@v3
+            with:
                 path: ./
-                key: web3-18-${{github.event.pull_request.base.sha}}
-            - run: yarn test:e2e:ganache:http
-              shell: bash
+                key: web3-18-${{github.sha}}
+          - run: npx hardhat node &
+          - run: yarn test:e2e:hardhat:http
+            shell: bash
 
-    e2e:
+    e2e-geth:
         name: Integration # (geth with HTTP, IPC & WS)
         needs: build
         runs-on: ubuntu-latest
@@ -167,36 +167,36 @@ jobs:
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-18-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.sha}}
             -   run: yarn test:e2e:geth:${{ matrix.mode }}
                 shell: bash
 
     e2e-browsers:
-        name: End-to-End ganache:ws
+        name: End-to-End hardhat:ws
         needs: build
         runs-on: ubuntu-latest
         strategy:
-            fail-fast: false
-            matrix:
-                browser: ['electron', 'chrome', 'firefox']
+          fail-fast: false
+          matrix:
+            browser: ['electron', 'chrome', 'firefox']
         steps:
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-            - uses: browser-actions/setup-firefox@latest
-              if: matrix.browser == 'firefox'
-            - uses: actions/cache/restore@v3
-              with:
-                path: ./
-                key: web3-18-${{github.event.pull_request.base.sha}}
-            - run: npm install --no-package-lock --no-save --force cypress
-            - run: npx ts-node scripts/init.ts
-            - name: Cypress run
-              uses: cypress-io/github-action@v4
-              with:
-                  install: false
-                  command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-                  cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+          - uses: actions/setup-node@v3
+            with:
+                node-version: 18
+          - uses: browser-actions/setup-firefox@latest
+            if: matrix.browser == 'firefox'
+          - uses: actions/cache/restore@v3
+            with:
+              path: ./
+              key: web3-18-${{github.sha}}
+          - run: npx hardhat node &
+          - run: npm install --no-package-lock --no-save --force cypress
+          - name: Cypress run
+            uses: cypress-io/github-action@v4
+            with:
+                install: false
+                command: yarn test:e2e:hardhat:ws:${{ matrix.browser }}
+                cache-key: node-v18-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
     deploy-docs:
         name: Docs CloudFlare Deploy
@@ -206,14 +206,18 @@ jobs:
             contents: read
             deployments: write
         steps:
+            -   uses: actions/checkout@v4
             -   uses: actions/setup-node@v4
                 with:
-                    node-version: 18
+                    cache: yarn
+                    node-version: '18'
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-18-${{github.event.pull_request.base.sha}}
-            -   run: npm run build:docs
+                    key: web3-18-${{github.sha}}
+            -   run: yarn install  --ignore-scripts
+            -   run: yarn build:cjs
+            -   run: yarn run build:docs
             -   name: Publish to Cloudflare Pages
                 uses: cloudflare/pages-action@v1
                 with:
@@ -233,7 +237,7 @@ jobs:
             -   uses: actions/cache/restore@v3
                 with:
                     path: ./
-                    key: web3-18-${{github.event.pull_request.base.sha}}
+                    key: web3-18-${{github.sha}}
                 # @octokit/core not supported on node 16, so I can't add it to the package.json
             -   run: npm install --no-package-lock --no-save --force @octokit/core
             -   name: Restore main branch benchmark data

@@ -26,6 +26,8 @@ import {
 } from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
+import HardhatPlugin  from 'web3-hardhat-plugin';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Context } from 'web3-core';
@@ -71,6 +73,13 @@ export const getEnvVar = (name: string): string | undefined =>
 
 export const DEFAULT_SYSTEM_PROVIDER = 'http://127.0.0.1:8545';
 export const DEFAULT_SYSTEM_ENGINE = 'node';
+export const BACKEND = {
+	GETH: 'geth',
+	HARDHAT: 'hardhat',
+	INFURA: 'infura',
+	SEPOLIA: 'sepolia',
+	MAINNET: 'mainnet',
+};
 
 export const getSystemTestProviderUrl = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
@@ -103,7 +112,7 @@ export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_M
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
 
-export const isGeth: boolean = getSystemTestBackend() === 'geth';
+export const isGeth: boolean = getSystemTestBackend() === BACKEND.GETH;
 
 export const createAccount = _createAccount;
 
@@ -247,25 +256,41 @@ export const createNewAccount = async (config?: {
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
 
 	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
-
 	if (config?.unlock) {
+		
+		if (getSystemTestBackend() === BACKEND.HARDHAT){
+			const url = getSystemTestProviderUrl();
+			const web3 = new Web3(url);
+			web3.registerPlugin(new HardhatPlugin())
+			await web3.hardhat.impersonateAccount(acc.address);
+			// await impersonateAccount(acc.address);
+			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
+		} else {
 		const web3Personal = new Personal(clientUrl);
 		if (!config?.doNotImport) {
 			await web3Personal.importRawKey(
-				getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
+				getSystemTestBackend() === BACKEND.GETH ? acc.privateKey.slice(2) : acc.privateKey,
 				config.password ?? '123456',
 			);
 		}
 
 		await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 100000000);
+		}
 	}
 
 	if (config?.refill) {
-		const web3Personal = new Personal(clientUrl);
-		if (!mainAcc) {
-			[mainAcc] = await web3Personal.getAccounts();
+		if (getSystemTestBackend() === BACKEND.HARDHAT){
+			const url = getSystemTestProviderUrl();
+			const web3 = new Web3(url);
+			web3.registerPlugin(new HardhatPlugin())
+			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'))
+		} else {
+			const web3Personal = new Personal(clientUrl);
+			if (!mainAcc) {
+				[mainAcc] = await web3Personal.getAccounts();
+			}
+			await refillAccount(mainAcc, acc.address, '100000000000000000');
 		}
-		await refillAccount(mainAcc, acc.address, '100000000000000000');
 	}
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
@@ -298,7 +323,6 @@ export const createTempAccount = async (
 			password: config.password,
 		});
 	}
-
 	if (currentIndex >= walletsOnWorker || !tempAccountList[currentIndex]) {
 		currentIndex = 0;
 	}
@@ -313,7 +337,7 @@ export const createTempAccount = async (
 	currentIndex += 1;
 
 	return acc;
-};
+	}
 
 export const getSystemTestAccountsWithKeys = async (): Promise<
 	{

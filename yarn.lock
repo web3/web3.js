@@ -12077,6 +12077,11 @@ typescript@^4.7.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
   integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
 
+typescript@^5.3.3:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
+  integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
+
 uglify-js@^3.1.4:
   version "3.17.0"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.0.tgz#55bd6e9d19ce5eef0d5ad17cd1f587d85b180a85"
@@ -12387,6 +12392,14 @@ wcwidth@^1.0.0, wcwidth@^1.0.1:
   integrity sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==
   dependencies:
     defaults "^1.0.3"
+
+web3-hardhat-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/web3-hardhat-plugin/-/web3-hardhat-plugin-1.0.0.tgz#f12862e1666fce56d9714da184d0ccc208cac80d"
+  integrity sha512-XEiusGIXMAAPXgNYmNJ9VhXJiiDhIubjLEAoiOwwoEu+ifNIKu+ppLZJAVlHy/lbjYk5iF7mXrDajYcZ3bSbxQ==
+  dependencies:
+    typescript "^5.3.3"
+    web3 "^4.3.0"
 
 web3-provider-engine@16.0.3:
   version "16.0.3"

@@ -18,15 +18,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import Web3, { AccountObject } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
+import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { mainnetBlockData, mainnetProof } from './fixtures/mainnet';
 import { sepoliaBlockData, sepoliaProof } from './fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getProof`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === 'sepolia' ? sepoliaBlockData : mainnetBlockData;
-	const expectedProof = getSystemTestBackend() === 'sepolia' ? sepoliaProof : mainnetProof;
+	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
+	const expectedProof = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaProof : mainnetProof;
 
 	let web3: Web3;
 
