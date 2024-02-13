@@ -1,6 +1,6 @@
 ## Description
 
-Please include a summary of the changes and be sure to follow our [Contribution Guidelines](https://github.com/web3/web3.js/blob/4.x/CONTRIBUTIONS.md).
+Please include a summary of the changes and be sure to follow our [Contribution Guidelines](https://github.com/web3/web3.js/blob/4.x/.github/CONTRIBUTING.md).
 
 <!--
 Optional if an issue is fixed:
