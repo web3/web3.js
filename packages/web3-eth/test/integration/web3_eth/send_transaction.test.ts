@@ -371,6 +371,21 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(minedTransactionData).toMatchObject(transaction);
 	});
 
+	it('should send type 0x2 transaction with maxPriorityFeePerGas got from await web3Eth.getMaxPriorityFeePerGas()', async () => {
+		const transaction: Transaction = {
+			from: tempAcc.address,
+			to: '0x0000000000000000000000000000000000000000',
+			value: BigInt(1),
+			maxPriorityFeePerGas: await web3Eth.getMaxPriorityFeePerGas(),
+		};
+		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.events).toBeUndefined();
+		expect(response.type).toBe(BigInt(2));
+		expect(response.status).toBe(BigInt(1));
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject(transaction);
+	});
+
 	describe('Transaction PromiEvents', () => {
 		let transaction: Transaction;
 
