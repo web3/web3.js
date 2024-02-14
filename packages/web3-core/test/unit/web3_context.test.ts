@@ -69,6 +69,26 @@ describe('Web3Context', () => {
 		it('should return correct context object', () => {
 			const context = new Context1('http://test/abc');
 
+			// The following is because a specific property is different in node 18 than it is in node 20 and 21
+			// So the problematic property is removed from the object and then added to ensure its presence and its location
+			// And the snapshot is updated to reflect the change.
+			// Once node 18 is no longer supported, this can be removed. And the snapshot need to be updated then.
+
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const symbolForShapeMode = Object.getOwnPropertySymbols(
+				(context.getContextObject().requestManager as any)._emitter,
+			).find(s => s.description === 'shapeMode');
+			if (symbolForShapeMode) {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				delete (context.getContextObject().requestManager as any)._emitter[symbolForShapeMode];
+			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(context.getContextObject().requestManager as any)._emitter = {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				...(context.getContextObject().requestManager as any)._emitter,
+				[Symbol.for('shapeMode')]: false,
+			};
+
 			expect(context.getContextObject()).toMatchSnapshot();
 		});
 	});
