@@ -73,6 +73,13 @@ export async function getGasPrice(requestManager: Web3RequestManager) {
 	});
 }
 
+export async function getMaxPriorityFeePerGas(requestManager: Web3RequestManager) {
+	return requestManager.send({
+		method: 'eth_maxPriorityFeePerGas',
+		params: [],
+	});
+}
+
 export async function getAccounts(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_accounts',
