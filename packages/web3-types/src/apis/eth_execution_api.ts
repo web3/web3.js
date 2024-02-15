@@ -193,10 +193,7 @@ export type EthExecutionAPI = {
 	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint;
 	eth_getUncleCountByBlockNumber: (blockNumber: BlockNumberOrTag) => Uint;
 	eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => BlockAPI;
-	eth_getUncleByBlockNumberAndIndex: (
-		blockNumber: BlockNumberOrTag,
-		uncleIndex: Uint,
-	) => BlockAPI;
+	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => BlockAPI;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.yaml
 	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfoAPI | undefined;
@@ -233,6 +230,7 @@ export type EthExecutionAPI = {
 		newestBlock: BlockNumberOrTag,
 		rewardPercentiles: number[],
 	) => FeeHistoryResultAPI;
+	eth_maxPriorityFeePerGas: () => Uint;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/filter.yaml
 	eth_newFilter: (filter: Filter) => Uint;

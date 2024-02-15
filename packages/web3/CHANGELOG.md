@@ -187,4 +187,8 @@ Documentation:
 
 -   Dependencies updated ( details are in root changelog )
 
+## [4.5.0]
+
+-   Dependencies updated ( details are in root changelog )
+
 ## [Unreleased]

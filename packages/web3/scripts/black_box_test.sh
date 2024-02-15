@@ -13,7 +13,7 @@ BACKEND=${ORIGARGS[0]}
 MODE=${ORIGARGS[1]}
 PROVIDER_URL=${ORIGARGS[2]}
 
-SUPPORTED_BACKENDS=("geth" "infura", "hardhat")
+SUPPORTED_BACKENDS=("geth" "infura" "hardhat")
 SUPPORTED_MODE=("http" "ws")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then

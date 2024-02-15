@@ -139,6 +139,18 @@ export async function getGasPrice<ReturnFormat extends DataFormat>(
 }
 
 /**
+ * View additional documentations here: {@link Web3Eth.getMaxPriorityFeePerGas}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ */
+export async function getMaxPriorityFeePerGas<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	returnFormat: ReturnFormat,
+) {
+	const response = await ethRpcMethods.getMaxPriorityFeePerGas(web3Context.requestManager);
+
+	return format({ format: 'uint' }, response as Numbers, returnFormat);
+}
+/**
  * View additional documentations here: {@link Web3Eth.getBlockNumber}
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
  */
