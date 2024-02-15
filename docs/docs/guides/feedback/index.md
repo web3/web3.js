@@ -7,11 +7,11 @@ sidebar_label: '🗣️ Feedback'
 
 We highly value your feedback to continually improve our documentation and the web3.js library. Whether you have suggestions for improvement, requests for additional features, or simply want to let us know if the documentation has been helpful, please use the form linked below to provide your feedback.
 
-## How to Provide Feedback
+## How to provide feedback
 
 Please take a moment to fill out our [Web3.js User Feedback Form](https://forms.gle/7cWt1hPU43ayS53V9) to share your thoughts.
 
-## What We'll Do with Your Feedback
+## What we will do with your feedback
 
 We review all submissions regularly and use them to improve our documentation, address any gaps or issues, and ensure that our documentation and resources meets your needs effectively.
 
