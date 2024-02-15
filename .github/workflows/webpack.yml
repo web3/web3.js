@@ -1,0 +1,232 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ "4.x" ]
+  pull_request:
+    branches: [ "4.x" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build
+      run: |
+        npm install
+        npx webpack
+                    - name: Setup Java JDK
+  uses: actions/setup-java@v4.0.0
+  with:
+    # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+    java-version: # optional
+    # The path to the `.java-version` file. See examples of supported syntax in README file
+    java-version-file: # optional
+    # Java distribution. See the list of supported distributions in README file
+    distribution: 
+    # The package type (jdk, jre, jdk+fx, jre+fx)
+    java-package: # optional, default is jdk
+    # The architecture of the package (defaults to the action runner's architecture)
+    architecture: # optional
+    # Path to where the compressed JDK is located
+    jdkFile: # optional
+    # Set this option if you want the action to check for the latest available version that satisfies the version spec
+    check-latest: # optional
+    # ID of the distributionManagement repository in the pom.xml file. Default is `github`
+    server-id: # optional, default is github
+    # Environment variable name for the username for authentication to the Apache Maven repository. Default is $GITHUB_ACTOR
+    server-username: # optional, default is GITHUB_ACTOR
+    # Environment variable name for password or token for authentication to the Apache Maven repository. Default is $GITHUB_TOKEN
+    server-password: # optional, default is GITHUB_TOKEN
+    # Path to where the settings.xml file will be written. Default is ~/.m2.
+    settings-path: # optional
+    # Overwrite the settings.xml file if it exists. Default is "true".
+    overwrite-settings: # optional, default is true
+    # GPG private key to import. Default is empty string.
+    gpg-private-key: # optional
+    # Environment variable name for the GPG private key passphrase. Default is $GPG_PASSPHRASE.
+    gpg-passphrase: # optional
+    # Name of the build platform to cache dependencies. It can be "maven", "gradle" or "sbt".
+    cache: # optional
+    # The path to a dependency file: pom.xml, build.gradle, build.sbt, etc. This option can be used with the `cache` option. If this option is omitted, the action searches for the dependency file in the entire repository. This option supports wildcards and a list of file names for caching multiple dependencies.
+    cache-dependency-path: # optional
+    # Workaround to pass job status to post job step. This variable is not intended for manual setting
+    job-status: # optional, default is ${{ job.status }}
+    # The token used to authenticate when fetching version manifests hosted on github.com, such as for the Microsoft Build of OpenJDK. When running this action on github.com, the default value is sufficient. When running on GHES, you can pass a personal access token for github.com if you are experiencing rate limiting.
+    token: # optional, default is ${{ github.server_url == 'https://github.com' && github.token || '' }}
+    # Name of Maven Toolchain ID if the default name of "${distribution}_${java-version}" is not wanted. See examples of supported syntax in Advanced Usage file
+    mvn-toolchain-id: # optional
+    # Name of Maven Toolchain Vendor if the default name of "${distribution}" is not wanted. See examples of supported syntax in Advanced Usage file
+    mvn-toolchain-vendor: # optional
+                      - name: Download a Build Artifact
+  uses: actions/download-artifact@v4.1.2
+  with:
+    # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
+    name: # optional
+    # Destination path. Supports basic tilde expansion. Defaults to $GITHUB_WORKSPACE
+    path: # optional
+    # A glob pattern matching the artifacts that should be downloaded. Ignored if name is specified.
+    pattern: # optional
+    # When multiple artifacts are matched, this changes the behavior of the destination directories. If true, the downloaded artifacts will be in the same directory specified by path. If false, the downloaded artifacts will be extracted into individual named directories within the specified path.
+    merge-multiple: # optional, default is false
+    # The GitHub token used to authenticate with the GitHub API. This is required when downloading artifacts from a different repository or from a different workflow run. If this is not specified, the action will attempt to download artifacts from the current repository and the current workflow run.
+    github-token: # optional
+    # The repository owner and the repository name joined together by "/". If github-token is specified, this is the repository that artifacts will be downloaded from.
+    repository: # optional, default is ${{ github.repository }}
+    # The id of the workflow run where the desired download artifact was uploaded from. If github-token is specified, this is the run that artifacts will be downloaded from.
+    run-id: # optional, default is ${{ github.run_id }}
+                      - name: faros-cicd-github-action
+  # You may pin to the exact commit or the version.
+  # uses: faros-ai/faros-cicd-github-action@b9cbbed1ce7036e22deb348b320ba5c7247ba589
+  uses: faros-ai/faros-cicd-github-action@v3.0.6
+  with:
+    # Faros API Key
+    api-key: 
+    # Which CI/CD event the data is for. Can be either CI or CD
+    event: 
+    # Unique identifier of the job executing the CI or CD process. (Default: GITHUB_RUN_ID)
+    run-id: # optional
+    # CI or CD step's job run status. (Success, Failed, Canceled)
+    run-status: 
+    # Manually associate the commit to a specific pull request number
+    pull-request-number: # optional
+    # The URI of the deployment. Required for CD events. (source://app/env/deploy)
+    deploy: # optional
+    # The status of the deployment. Required for CD events. (Success, Failed, Canceled)
+    deploy-status: # optional
+    # The platform the application is being deployed on. (e.g. ECS, K8s)
+    deploy-app-platform: # optional
+    # Deployment process start time in millis. (e.g. 1626804346019)
+    deploy-started-at: # optional
+    # Deployment process end time in millis. (e.g. 1626804346019)
+    deploy-ended-at: # optional
+    # The URI of the artifact that was built or deployed. (source://org/repo/artifact)
+    artifact: # optional
+    # Job run start time in millis. (e.g. 1626804346019)
+    run-started-at: # optional
+    # Job run end time in millis. (e.g. 1626804346019)
+    run-ended-at: # optional
+    # Unique identifier of the pipeline.
+    pipeline-id: # optional
+    # Faros API URL.
+    api-url: # optional
+    # Graph name to use when invoking Faros API. (Default: 'default')
+    graph: # optional
+                - name: Await Taktile Deployment
+  # You may pin to the exact commit or the version.
+  # uses: taktile-org/await-taktile-deployment-action@3ebb7b87b16f94e8c87c7b546dc002006d57f708
+  uses: taktile-org/await-taktile-deployment-action@v0.3.0
+  with:
+    # Your Taktile API key
+    TKTL_API_KEY: 
+    # Long commit hash of the deployment. If not set GITHUB_SHA is used
+    DEPLOY_SHA: # optional
+                - name: ServiceNow CI/CD Batch Install
+  # You may pin to the exact commit or the version.
+  # uses: ServiceNow/sncicd-batch-install@cd0fe0c6cf7d8bf5baab47c8de34f98540b67a9d
+  uses: ServiceNow/sncicd-batch-install@2.0.1
+  with:
+    # Source of the payload(file/workflow)
+    source: 
+    # Filename(or a path without trailing slash) of the manifest JSON file is source equals to file(Default: now_batch_manifest.json)
+    filename: # optional
+    # JSON string with payload if source equals to workflow
+    manifest: # optional
+                - name: Generate SBOM YAML
+  # You may pin to the exact commit or the version.
+  # uses: opencontextinc/generate-sbom-yaml@48657649e89aa5d7b5e768c5b2a2644df273757d
+  uses: opencontextinc/generate-sbom-yaml@v1.0.1
+  with:
+    # Upload OpenContext SBOM artifact YAML to release?
+    upload_yaml: # default is true
+                - name: Pangea Vault Secrets Action
+  # You may pin to the exact commit or the version.
+  # uses: pangeacyber/pangea-github-action-vault@6bd58b585b52c76307edc6c895dbec719c3e6668
+  uses: pangeacyber/pangea-github-action-vault@1.0.2
+  with:
+    # Job command to run (ex - npm run dev)
+    pangea_token: # optional
+    # Pangea Domain
+    pangea_domain: # optional, default is aws.us.pangea.cloud
+    # Pangea folder to pull secrets from
+    pangea_default_folder: # optional
+    # Github personal access token
+    github_token: 
+                - name: Perforce Helix Core Actions
+  # You may pin to the exact commit or the version.
+  # uses: perforce/setup-p4@3c52f1cd06f054f8f292fc2e167a735a77c56e05
+  uses: perforce/setup-p4@1.0.3
+  with:
+    # p4 command to execute
+    command: 
+    # arguments for p4 cli that go before p4 command
+    global_options: # optional
+    # arguments for p4 cli that go after p4 command
+    arguments: # optional
+    # This is the P4 spec contents for the resource you are creating
+    spec: # optional
+    # Version of P4 binary to use.  When a step has this set it will download and install the P4 CLI.
+    p4_version: # optional, default is 21.2
+    # The working directory to use when running p4 commands.
+    working_directory: # optional, default is .
+                - name: Garden Action
+  # You may pin to the exact commit or the version.
+  # uses: garden-io/garden-action@c221d0ec3ba851097c8175778a1be911b02cf989
+  uses: garden-io/garden-action@v1.2
+  with:
+    # All command line options for the garden cli command.
+
+If not provided, the garden-action will only install garden and export the KUBECONFIG and GARDEN_AUTH_TOKEN
+environment variables for use in scripts in later steps.
+
+    command: # optional
+    # Garden logger type. Defaults to basic.
+    logger-type: # optional, default is basic
+    # Garden log level. Defaults to verbose.
+    log-level: # optional, default is verbose
+    # A base64 encoded string of the kubeconfig to use with Garden. Optional.
+    kubeconfig: # optional
+    # Path where Garden expects the kubeconfig. Defaults to $HOME/kube/config.
+    kubeconfig-location: # optional, default is ${{ runner.temp }}/garden/kubeconfig
+    # Garden version. Defaults to latest stable.
+    garden-version: # optional, default is latest
+    # An auth token to authenticate in case your project is connected to Garden Cloud. Optional.
+    garden-auth-token: # optional
+    # A path to a garden project in a repository.
+
+Only necessary if there are multiple garden projects in a repository, or when the project.garden.yml is in a subdirectory.
+
+    garden-workdir: # optional
+    # Github token for releases API. Required. Defaults to the `github.token` context variable.
+    github-token: # default is ${{ github.token }}
+                - name: Create Artifact YAML
+  # You may pin to the exact commit or the version.
+  # uses: opencontextinc/create-artifact-yaml@218aadb9180fd982c8f2aaa592573297bdb9550e
+  uses: opencontextinc/create-artifact-yaml@v1.0.1
+  with:
+    # Type of artifact. One of sbom, container, package, or image
+    type: 
+    # URL/URI of the artifact
+    url: 
+    # Directory to save YAML files to. If not specified then the directory oc-artifact-yaml will be used.
+    directory: # optional
+          
+          
+          
+          
+    
+          
+          
+          
+          
