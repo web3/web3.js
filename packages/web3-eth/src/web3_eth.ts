@@ -270,7 +270,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * @returns The current fee data.
 	 *
 	 * ```ts
-	 * web3.eth.getFeeData().then(console.log);
+	 * web3.eth.calculateFeeData().then(console.log);
 	 * > {
 	 *     gasPrice: 20000000000n,
 	 *     maxFeePerGas: 20000000000n,
@@ -278,7 +278,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * 	   baseFeePerGas: 20000000000n
 	 * }
 	 *
-	 * web3.eth.getFeeData(ethUnitMap.Gwei, 2n).then(console.log);
+	 * web3.eth.calculateFeeData(ethUnitMap.Gwei, 2n).then(console.log);
 	 * > {
 	 *     gasPrice: 20000000000n,
 	 *     maxFeePerGas: 40000000000n,
