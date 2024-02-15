@@ -3,7 +3,7 @@ sidebar_position: 15
 sidebar_label: '🗣️ Feedback'
 ---
 
-# Web3.js Feedback
+# Web3.js Developer Feedback
 
 We highly value your feedback to continually improve our documentation and the web3.js library. Whether you have suggestions for improvement, requests for additional features, or simply want to let us know if the documentation has been helpful, please use the form linked below to provide your feedback.
 
