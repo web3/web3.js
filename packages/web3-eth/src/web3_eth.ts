@@ -22,6 +22,7 @@ import {
 	SupportedProviders,
 	Address,
 	Bytes,
+	FeeData,
 	Filter,
 	HexString32Bytes,
 	HexString8Bytes,
@@ -38,10 +39,12 @@ import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	Eip712TypedData,
+	FMT_BYTES,
+	FMT_NUMBER,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
-import { toChecksumAddress, isNullish } from 'web3-utils';
+import { toChecksumAddress, isNullish, ethUnitMap } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
@@ -72,27 +75,27 @@ export const registeredSubscriptions = {
 };
 
 /**
- * 
+ *
  * The Web3Eth allows you to interact with an Ethereum blockchain.
- *  
+ *
  * For using Web3 Eth functions, first install Web3 package using `npm i web3` or `yarn add web3` based on your package manager usage.
- * After that, Web3 Eth functions will be available as mentioned in following snippet. 
+ * After that, Web3 Eth functions will be available as mentioned in following snippet.
  * ```ts
  * import { Web3 } from 'web3';
  * const web3 = new Web3('https://mainnet.infura.io/v3/<YOURPROJID>');
- * 
+ *
  * const block = await web3.eth.getBlock(0);
- * 
+ *
  * ```
- * 
+ *
  * For using individual package install `web3-eth` package using `npm i web3-eth` or `yarn add web3-eth` and only import required functions.
- * This is more efficient approach for building lightweight applications. 
+ * This is more efficient approach for building lightweight applications.
  * ```ts
  * import { Web3Eth } from 'web3-eth';
- * 
+ *
  * const eth = new Web3Eth('https://mainnet.infura.io/v3/<YOURPROJID>');
  * const block = await eth.getBlock(0);
- * 
+ *
  * ```
  */
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
@@ -103,6 +106,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			typeof providerOrContext === 'string' ||
 			isSupportedProvider(providerOrContext as SupportedProviders<any>)
 		) {
+			// @ts-expect-error disable the error: "A 'super' call must be a root-level statement within a constructor of a derived class that contains initialized properties, parameter properties, or private identifiers."
 			super({
 				provider: providerOrContext as SupportedProviders<any>,
 				registeredSubscriptions,
@@ -255,6 +259,81 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	>(returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
 		return rpcMethodsWrappers.getMaxPriorityFeePerGas(this, returnFormat);
 	}
+
+	/**
+	 * Calculates the current Fee Data.
+	 * If the node supports EIP-1559, then the `maxFeePerGas` and `maxPriorityFeePerGas` will be calculated.
+	 * If the node does not support EIP-1559, then the `gasPrice` will be returned and the rest are `null`s.
+	 *
+	 * @param baseFeePerGasFactor The factor to multiply the baseFeePerGas with, if the node supports EIP-1559.
+	 * @param alternativeMaxPriorityFeePerGas The alternative maxPriorityFeePerGas to use, if the node supports EIP-1559, but does not support the method `eth_maxPriorityFeePerGas`.
+	 * @returns The current fee data.
+	 *
+	 * ```ts
+	 * web3.eth.calculateFeeData().then(console.log);
+	 * > {
+	 *     gasPrice: 20000000000n,
+	 *     maxFeePerGas: 20000000000n,
+	 *     maxPriorityFeePerGas: 20000000000n,
+	 * 	   baseFeePerGas: 20000000000n
+	 * }
+	 *
+	 * web3.eth.calculateFeeData(ethUnitMap.Gwei, 2n).then(console.log);
+	 * > {
+	 *     gasPrice: 20000000000n,
+	 *     maxFeePerGas: 40000000000n,
+	 *     maxPriorityFeePerGas: 20000000000n,
+	 * 	   baseFeePerGas: 20000000000n
+	 * }
+	 * ```
+	 */
+	public async calculateFeeData(
+		baseFeePerGasFactor = BigInt(2),
+		alternativeMaxPriorityFeePerGas = ethUnitMap.Gwei,
+	): Promise<FeeData> {
+		const block = await this.getBlock<{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>(
+			undefined,
+			false,
+		);
+
+		const baseFeePerGas: bigint | undefined = block?.baseFeePerGas ?? undefined; // use undefined if it was null
+
+		let gasPrice: bigint | undefined;
+		try {
+			gasPrice = await this.getGasPrice<{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>();
+		} catch (error) {
+			// do nothing
+		}
+
+		let maxPriorityFeePerGas: bigint | undefined;
+		try {
+			maxPriorityFeePerGas = await this.getMaxPriorityFeePerGas<{
+				number: FMT_NUMBER.BIGINT;
+				bytes: FMT_BYTES.HEX;
+			}>();
+		} catch (error) {
+			// do nothing
+		}
+
+		let maxFeePerGas: bigint | undefined;
+		// if the `block.baseFeePerGas` is available, then EIP-1559 is supported
+		// and we can calculate the `maxFeePerGas` from the `block.baseFeePerGas`
+		if (baseFeePerGas) {
+			// tip the miner with alternativeMaxPriorityFeePerGas, if no value available from getMaxPriorityFeePerGas
+			maxPriorityFeePerGas = maxPriorityFeePerGas ?? alternativeMaxPriorityFeePerGas;
+			// basically maxFeePerGas = (baseFeePerGas +- 12.5%) + maxPriorityFeePerGas
+			// and we multiply the `baseFeePerGas` by `baseFeePerGasFactor`, to allow
+			// trying to include the transaction in the next few blocks even if the
+			// baseFeePerGas is increasing fast
+			maxFeePerGas = baseFeePerGas * baseFeePerGasFactor + maxPriorityFeePerGas;
+		}
+
+		return { gasPrice, maxFeePerGas, maxPriorityFeePerGas, baseFeePerGas };
+	}
+
+	// an alias for calculateFeeData
+	// eslint-disable-next-line
+	public getFeeData = this.calculateFeeData;
 
 	/**
 	 * @returns A list of accounts the node controls (addresses are checksummed).

@@ -290,6 +290,46 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(minedTransactionData).toMatchObject(transaction);
 		});
 
+		it('should send a successful type 0x2 transaction (gas = estimateGas)', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				type: BigInt(2),
+			};
+
+			transaction.gas = await web3Eth.estimateGas(transaction);
+
+			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
+			expect(response.type).toBe(BigInt(2));
+			expect(response.status).toBe(BigInt(1));
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
+		it('should send a successful type 0x2 transaction (fee per gas from: calculateFeeData)', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				type: BigInt(2),
+			};
+
+			const feeData = await web3Eth.calculateFeeData();
+			transaction.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+			transaction.maxFeePerGas = feeData.maxFeePerGas;
+
+			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
+			expect(response.type).toBe(BigInt(2));
+			expect(response.status).toBe(BigInt(1));
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
 		it('should send a successful type 0x0 transaction with data', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
