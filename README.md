@@ -48,7 +48,7 @@ yarn add web3
 
 ## Useful links
 
--   [Web3 tree shaking support guide](https://docs.web3js.org/guides/advanced/web3_tree_shaking_support_guide/)
+-   [Web3 tree shaking support guide](https://docs.web3js.org/guides/advanced/tree_shaking/)
 -   [React App Example](https://github.com/ChainSafe/web3js-example-react-app)
 
 ## Architecture Overview
