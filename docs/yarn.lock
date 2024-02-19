@@ -1545,7 +1545,7 @@
     tslib "^2.6.0"
     utility-types "^3.10.0"
 
-"@docusaurus/theme-live-codeblock@3.0.1":
+"@docusaurus/theme-live-codeblock@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/theme-live-codeblock/-/theme-live-codeblock-3.0.1.tgz#55624fba479da9816419f80b40d070b67cab364a"
   integrity sha512-1NfV6pi7uoFTq7Yj3Rc9NBWMVj3OZbwWxV5tcCY/TNvlJOWerSNZQIz0oF2cqU7QPfw/ZOCPz5imM1uQ4pKN2g==
@@ -7360,9 +7360,9 @@ react-json-view-lite@^1.2.0:
   integrity sha512-Itc0g86fytOmKZoIoJyGgvNqohWSbh3NXIKNgH6W6FT9PC1ck4xas1tT3Rr/b3UlFXyA9Jjaw9QSXdZy2JwGMQ==
 
 react-live@^4.1.5:
-  version "4.1.6"
-  resolved "https://registry.yarnpkg.com/react-live/-/react-live-4.1.6.tgz#6d9b7d381bd2b359ca859767501135112b6bab33"
-  integrity sha512-2oq3MADi3rupqZcdoHMrV9p+Eg/92BDds278ZuoOz8d68qw6ct0xZxX89MRxeChrnFHy1XPr8BVknDJNJNdvVw==
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/react-live/-/react-live-4.1.5.tgz#a4fa4cfdcad763503a209a29bace3339764fdfb1"
+  integrity sha512-ul3Zwvqvh6KTg8j7xGCT26+c8J9vQ+LFUrZCbrrrzEExuVB/39s1GKG3NsywnL+aGAjpfnUTaVCe7KlKIvVPiw==
   dependencies:
     prism-react-renderer "^2.0.6"
     sucrase "^3.31.0"
