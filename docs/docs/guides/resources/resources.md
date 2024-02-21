@@ -8,7 +8,6 @@ sidebar_label: '📚 Resources'
 
 This comprehensive 14-part video course from ChainSafe equips you with the skills to conquer the blockchain using web3.js v4. Unlock the potential of web3.js v4 and build cutting-edge dApps. This course caters to all skill levels.
 
-
 [![Web3.js v4 course](https://img.youtube.com/vi/3ZO_t-Kyr1g/0.jpg)](https://www.youtube.com/watch?v=3ZO_t-Kyr1g&list=PLPn3rQCo3XrP4LbQcOyyHQR8McV7w3HZT)
 
 
@@ -24,5 +23,18 @@ This series of 3 videos takes you on a journey through web3.js. Whether you're a
 
 [![Web3.js series](https://img.youtube.com/vi/BQ_bDH91S4k/0.jpg)](https://www.youtube.com/watch?v=BQ_bDH91S4k&list=PLPn3rQCo3XrNf__8irs4-MjMt4fJqW2I_)
 
-## Maybe more useful articles/tutorials/videos 
+## Other resources
+
+[Intro to Web3.js – Ethereum Blockchain Developer Crash Course (Dapp University)](https://www.dappuniversity.com/articles/web3-js-intro)
+
+[Web3 Tutorial Project | Build a web3js dApp for a smart contract](https://www.youtube.com/watch?v=Qu6GloG0dQk)
+
+[Web3 Tutorial Project | Build a web3js dApp with a Solidity lottery smart contract on Ethereum](https://www.youtube.com/watch?v=8ElPDw0laIo)
+
+[Learn Web3.js Basics – Ethereum Development for Beginners (FreeCodeCamp)](https://www.freecodecamp.org/news/learn-web3js-basics/)
+
+
+
+
+
 
