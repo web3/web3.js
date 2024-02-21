@@ -23,16 +23,6 @@ This series of 3 videos takes you on a journey through web3.js. Whether you're a
 
 [![Web3.js series](https://img.youtube.com/vi/BQ_bDH91S4k/0.jpg)](https://www.youtube.com/watch?v=BQ_bDH91S4k&list=PLPn3rQCo3XrNf__8irs4-MjMt4fJqW2I_)
 
-## Other resources
-
-[Intro to Web3.js – Ethereum Blockchain Developer Crash Course (Dapp University)](https://www.dappuniversity.com/articles/web3-js-intro)
-
-[Web3 Tutorial Project | Build a web3js dApp for a smart contract (Video)](https://www.youtube.com/watch?v=Qu6GloG0dQk)
-
-[Web3 Tutorial Project | Build a web3js dApp with a Solidity lottery smart contract on Ethereum (Video)](https://www.youtube.com/watch?v=8ElPDw0laIo)
-
-[Learn Web3.js Basics – Ethereum Development for Beginners (FreeCodeCamp)](https://www.freecodecamp.org/news/learn-web3js-basics/)
-
 
 
 
