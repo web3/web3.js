@@ -1,10 +1,12 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Wagmi Web3js Adaptor'
-title: 'Wagmi Web3js Adaptor'
+sidebar_label: 'Wagmi Web3js Adapter'
+title: 'Wagmi Web3js Adapter'
 ---
 
-If you're using [Wagmi](https://wagmi.sh/react/getting-started#use-wagmi) and want to add web3.js, use this provider in your project:
+
+### Reference Implementation
+If you're using [Wagmi](https://wagmi.sh/react/getting-started#use-wagmi) and want to add web3.js, use this code in your project. This snippet will help you to convert a `Viem` client to a `web3.js` instance for signing transactions and interacting with the blockchain:
 
 
 ```typescript
@@ -39,6 +41,7 @@ export function useWeb3jsSigner({chainId}: { chainId?: number } = {}) {
 }
 ```
 
+### Usage examples
 Get block data example:
 
 ```typescript
