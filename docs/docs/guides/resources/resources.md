@@ -22,9 +22,3 @@ This series of 3 videos takes you on a journey through web3.js. Whether you're a
 3. Sending Transactions: Dive deep into wallets and accounts. Learn how to sign and send transactions to the network, empowering you to interact with the blockchain directly.
 
 [![Web3.js series](https://img.youtube.com/vi/BQ_bDH91S4k/0.jpg)](https://www.youtube.com/watch?v=BQ_bDH91S4k&list=PLPn3rQCo3XrNf__8irs4-MjMt4fJqW2I_)
-
-
-
-
-
-
