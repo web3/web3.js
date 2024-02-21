@@ -24,6 +24,7 @@ import EventEmitter3  from 'eventemitter3';
  * It is used to provide the same interface for the browser environment.
  */
 export class EventEmitter extends EventEmitter3 {
+	// must be defined for backwards compatibility
 	private maxListeners = Number.MAX_SAFE_INTEGER;
 
 	public setMaxListeners(maxListeners: number) {
@@ -36,5 +37,3 @@ export class EventEmitter extends EventEmitter3 {
 	}
 
 }
-// eslint-disable-next-line import/no-mutable-exports
-// let EventEmitterType: typeof EventEmitter3;

@@ -23,7 +23,7 @@ import {
 	Web3APISpec,
 	Web3BaseProvider,
 } from 'web3-types';
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'eventemitter3';
 import { EIP1193ProviderRpcError } from 'web3-errors';
 import { toPayload } from './json_rpc.js';
 
