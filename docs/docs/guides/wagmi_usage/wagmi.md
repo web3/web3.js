@@ -47,5 +47,5 @@ const web3js = useWeb3js({chainId: mainnet.id})
 
 
 :::tip
-To learn about Wagmi and how to set up a Wagmi project, please follow this [link](https://wagmi.sh/react/getting-started#use-wagmi)
+[This repository](https://github.com/avkos/wagmi-web3js-example-app) contains an example Wagmi app that demonstrates how to interact with the Ethereum blockchain using the web3.js library
 ::: 
