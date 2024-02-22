@@ -67,6 +67,7 @@ describe('requestEIP6963Providers', () => {
 
 		// Now "eventListenerArg" represents the function to be called when the event occurs
 		const announceEventListener = eventListenerArg;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		announceEventListener(mockAnnounceEvent);
 
 		// Validate if the provider detail is stored in the eip6963Providers map
@@ -80,6 +81,6 @@ describe('requestEIP6963Providers', () => {
 		// Call the function and expect it to throw an error
 		expect(() => {
 			requestEIP6963Providers();
-		}).toThrowError("window object not available, EIP-6963 is intended to be used within a browser");
+		}).toThrow("window object not available, EIP-6963 is intended to be used within a browser");
 	});
 });
