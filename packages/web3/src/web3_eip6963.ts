@@ -48,7 +48,7 @@ export const eip6963Providers: Map<string, EIP6963ProviderDetail> = new Map();
 
 export const requestEIP6963Providers = () => {
 
-  if (window === undefined)
+  if (typeof window === 'undefined')
     throw new Error(
       "window object not available, EIP-6963 is intended to be used within a browser"
     );
