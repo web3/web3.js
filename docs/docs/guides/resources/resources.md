@@ -4,14 +4,14 @@ sidebar_label: '📚 Resources'
 ---
 # Resources
 
-## Web3.js v4 course
+## [Web3.js v4 course](https://www.youtube.com/watch?v=3ZO_t-Kyr1g&list=PLPn3rQCo3XrP4LbQcOyyHQR8McV7w3HZT)
 
 This comprehensive 14-part video course from ChainSafe equips you with the skills to conquer the blockchain using web3.js v4. Unlock the potential of web3.js v4 and build cutting-edge dApps. This course caters to all skill levels.
 
 [![Web3.js v4 course](https://img.youtube.com/vi/3ZO_t-Kyr1g/0.jpg)](https://www.youtube.com/watch?v=3ZO_t-Kyr1g&list=PLPn3rQCo3XrP4LbQcOyyHQR8McV7w3HZT)
 
 
-## Web3.js series
+## [Web3.js series](https://www.youtube.com/watch?v=BQ_bDH91S4k&list=PLPn3rQCo3XrNf__8irs4-MjMt4fJqW2I_)
 
 This series of 3 videos takes you on a journey through web3.js. Whether you're a complete beginner or want to refine your skills, these videos have something for you:
 
