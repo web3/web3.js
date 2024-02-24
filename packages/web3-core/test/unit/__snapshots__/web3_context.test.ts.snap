@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Web3Context getContextObject should return correct context object 1`] = `
+{
+  "accountProvider": undefined,
+  "config": {
+    "blockHeaderTimeout": 10,
+    "contractDataInputFill": "data",
+    "defaultAccount": undefined,
+    "defaultBlock": "latest",
+    "defaultChain": "mainnet",
+    "defaultCommon": undefined,
+    "defaultHardfork": "london",
+    "defaultMaxPriorityFeePerGas": "0x9502f900",
+    "defaultNetworkId": undefined,
+    "defaultTransactionType": "0x2",
+    "enableExperimentalFeatures": {
+      "useRpcCallSpecification": false,
+      "useSubscriptionWhenCheckingBlockTimeout": false,
+    },
+    "handleRevert": false,
+    "maxListenersWarningThreshold": 100,
+    "transactionBlockTimeout": 50,
+    "transactionBuilder": undefined,
+    "transactionConfirmationBlocks": 24,
+    "transactionConfirmationPollingInterval": undefined,
+    "transactionPollingInterval": 1000,
+    "transactionPollingTimeout": 750000,
+    "transactionReceiptPollingInterval": undefined,
+    "transactionSendTimeout": 750000,
+    "transactionTypeParser": undefined,
+  },
+  "provider": HttpProvider {
+    "clientUrl": "http://test/abc",
+    "httpProviderOptions": undefined,
+  },
+  "providers": {
+    "HttpProvider": [Function],
+    "WebsocketProvider": [Function],
+  },
+  "registeredSubscriptions": {},
+  "requestManager": Web3RequestManager {
+    "_emitter": {
+      "_events": {
+        "BEFORE_PROVIDER_CHANGE": EE {
+          "context": EventEmitter {
+            "_events": [Circular],
+            "_eventsCount": 2,
+            "maxListeners": 9007199254740991,
+          },
+          "fn": [Function],
+          "once": false,
+        },
+        "PROVIDER_CHANGED": EE {
+          "context": EventEmitter {
+            "_events": [Circular],
+            "_eventsCount": 2,
+            "maxListeners": 9007199254740991,
+          },
+          "fn": [Function],
+          "once": false,
+        },
+      },
+      "_eventsCount": 2,
+      "maxListeners": 9007199254740991,
+      Symbol(shapeMode): false,
+    },
+    "_provider": HttpProvider {
+      "clientUrl": "http://test/abc",
+      "httpProviderOptions": undefined,
+    },
+    "useRpcCallSpecification": undefined,
+  },
+  "subscriptionManager": Web3SubscriptionManager {
+    "_subscriptions": Map {},
+    "registeredSubscriptions": {},
+    "requestManager": Web3RequestManager {
+      "_emitter": {
+        "_events": {
+          "BEFORE_PROVIDER_CHANGE": EE {
+            "context": EventEmitter {
+              "_events": [Circular],
+              "_eventsCount": 2,
+              "maxListeners": 9007199254740991,
+            },
+            "fn": [Function],
+            "once": false,
+          },
+          "PROVIDER_CHANGED": EE {
+            "context": EventEmitter {
+              "_events": [Circular],
+              "_eventsCount": 2,
+              "maxListeners": 9007199254740991,
+            },
+            "fn": [Function],
+            "once": false,
+          },
+        },
+        "_eventsCount": 2,
+        "maxListeners": 9007199254740991,
+        Symbol(shapeMode): false,
+      },
+      "_provider": HttpProvider {
+        "clientUrl": "http://test/abc",
+        "httpProviderOptions": undefined,
+      },
+      "useRpcCallSpecification": undefined,
+    },
+    "tolerateUnlinkedSubscription": false,
+  },
+  "wallet": undefined,
+}
+`;
