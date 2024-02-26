@@ -267,7 +267,6 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param name - The ENS name
 	 * @param address - The address to set
 	 * @param txConfig - (Optional) The transaction config
-	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
 	 * @returns - The transaction receipt
 	 * ```ts
 	 * const receipt = await ens.setAddress('web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e');
