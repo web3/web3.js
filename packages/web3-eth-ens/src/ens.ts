@@ -16,15 +16,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError } from 'web3-errors';
+import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError, RevertInstructionError } from 'web3-errors';
 import { isSyncing } from 'web3-eth';
 import { Contract } from 'web3-eth-contract';
 import { getId } from 'web3-net';
 import {
+	Address,
 	DEFAULT_RETURN_FORMAT,
+	DataFormat,
 	EthExecutionAPI,
 	FMT_NUMBER,
+	PayableCallOptions,
 	SupportedProviders,
+	TransactionReceipt,
 	Web3NetAPI,
 } from 'web3-types';
 import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
@@ -257,5 +261,25 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 */
 	public get events() {
 		return this._registry.events;
+	}
+
+	/**
+	 * Sets the address of an ENS name in his resolver.
+	 * @param name - The ENS name
+	 * @param address - The address to set
+	 * @param txConfig - (Optional) The transaction config
+	 * @param returnFormat - (Optional) The return format, defaults to {@link DEFAULT_RETURN_FORMAT}
+	 * @returns - The transaction receipt
+	 * ```ts
+	 * const receipt = await ens.setAddress('web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e');
+	 *```
+	 */
+	 public async setAddress(
+		name: string,
+		address: Address,
+		txConfig: PayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+	): Promise<TransactionReceipt | RevertInstructionError> {
+		return this._resolver.setAddress(name, address, txConfig, returnFormat);
 	}
 }
