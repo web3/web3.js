@@ -22,6 +22,7 @@ import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 import { registryAddresses } from '../../src/config';
 
 import { ENS } from '../../src/ens';
+import { DEFAULT_RETURN_FORMAT } from 'web3-types';
 
 jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
 
@@ -110,6 +111,23 @@ describe('ens', () => {
 	});
 
 	describe('addr', () => {
+		it('setAddr valid', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setAddressMock = jest.spyOn(ens['_resolver'], 'setAddress').mockReturnValue({
+				send,
+			} as unknown as Web3PromiEvent<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await ens.setAddress(ENS_NAME, mockAddress, sendOptions);
+			expect(setAddressMock).toHaveBeenCalledWith(
+				ENS_NAME,
+				mockAddress,
+				sendOptions,
+				DEFAULT_RETURN_FORMAT,
+			);
+		});
 		it('getAddress', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const call = jest.spyOn({ call: () => {} }, 'call');
