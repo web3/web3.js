@@ -22,7 +22,6 @@ import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 import { registryAddresses } from '../../src/config';
 
 import { ENS } from '../../src/ens';
-import { DEFAULT_RETURN_FORMAT } from 'web3-types';
 
 jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
 
@@ -125,7 +124,6 @@ describe('ens', () => {
 				ENS_NAME,
 				mockAddress,
 				sendOptions,
-				DEFAULT_RETURN_FORMAT,
 			);
 		});
 		it('getAddress', async () => {
