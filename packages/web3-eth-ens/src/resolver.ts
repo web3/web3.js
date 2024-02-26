@@ -17,12 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ResolverMethodMissingError } from 'web3-errors';
 import { Contract } from 'web3-eth-contract';
-import { isNullish, sha3 } from 'web3-utils';
+import { format, isNullish, sha3 } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
 import { interfaceIds, methodsInInterface } from './config.js';
 import { Registry } from './registry.js';
 import { namehash } from './utils.js';
+import { Address, DEFAULT_RETURN_FORMAT, DataFormat, PayableCallOptions } from 'web3-types';
 
 //  Default public resolver
 //  https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol
@@ -101,5 +102,19 @@ export class Resolver {
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.contenthash);
 
 		return resolverContract.methods.contenthash(namehash(ENSName)).call();
+	}
+
+	public async setAddress(
+		ENSName: string,
+		address: Address,
+		txConfig: PayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+	) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setAddr);
+
+		return resolverContract.methods
+			.setAddr(namehash(ENSName), format({ format: 'address' }, address, returnFormat))
+			.send(txConfig);
 	}
 }
