@@ -23,7 +23,6 @@ import { getId } from 'web3-net';
 import {
 	Address,
 	DEFAULT_RETURN_FORMAT,
-	DataFormat,
 	EthExecutionAPI,
 	FMT_NUMBER,
 	PayableCallOptions,
@@ -277,9 +276,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 public async setAddress(
 		name: string,
 		address: Address,
-		txConfig: PayableCallOptions,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+		txConfig: PayableCallOptions
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._resolver.setAddress(name, address, txConfig, returnFormat);
+		return this._resolver.setAddress(name, address, txConfig);
 	}
 }

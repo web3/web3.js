@@ -598,14 +598,9 @@ export const PublicResolverAbi = [
 				type: 'bytes32',
 			},
 			{
-				internalType: 'uint256',
-				name: 'coinType',
-				type: 'uint256',
-			},
-			{
-				internalType: 'bytes',
+				internalType: 'address',
 				name: 'a',
-				type: 'bytes',
+				type: 'address',
 			},
 		],
 		name: 'setAddr',
