@@ -30,6 +30,55 @@ There is list of configuration params that can be set for modifying behavior of 
 
 ## Global level Config
 
+`handleRevert` is a configuration option that specifies whether the web3 provider should handle revert errors automatically. When set to true, the web3 provider will catch revert errors and return a more informative error message instead of throwing an exception.
+
+``` ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3({
+  provider: 'https://mainnet.infura.io/v3/YOURID',
+  config: {
+    handleRevert: true,
+  },
+});
+```
+
+## Package level config
+
+``` ts
+import { Web3, Web3Context } from 'web3';
+
+const context = new Web3Context('http://127.0.0.1:7545');
+context.setConfig({ handleRevert: true });
+```
+
+## Global level Config
+
+`defaultAccount` is a configuration option that specifies the default Ethereum account to use for transactions if no account is explicitly provided. This can be useful for simplifying transaction calls by automatically using a predefined account.
+
+``` ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3({
+  provider: 'https://mainnet.infura.io/v3/YOURID',
+  config: {
+    defaultAccount: '0xYourDefaultAccountAddress',
+  },
+});
+```
+
+## Package level config
+
+``` ts
+import { Web3, Web3Context } from 'web3';
+
+cconst context = new Web3Context('http://127.0.0.1:7545');
+context.setConfig({ defaultAccount: '0xYourDefaultAccountAddress' });
+
+```
+
+## Global level Config
+
 There is option of modifying any of above-mentioned configuration parameter at global level when instantiating Web3, and it will be available to all packages. 
 
 ``` ts
@@ -198,4 +247,6 @@ console.log(web3.getContextObject().config)
   transactionPollingTimeout: 750000,
   ...
 */
+
+
 ```
