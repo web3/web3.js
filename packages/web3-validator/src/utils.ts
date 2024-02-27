@@ -205,37 +205,41 @@ export const abiSchemaToJsonSchema = (
 			nestedTuple.$id = abiName;
 			(lastSchema.items as JsonSchema[]).push(nestedTuple);
 		} else if (baseType === 'tuple' && isArray) {
-			const arraySize = arraySizes[0];
-			const item: JsonSchema = {
-				$id: abiName,
-				type: 'array',
-				items: abiSchemaToJsonSchema(abiComponents, abiName),
-				maxItems: arraySize,
-				minItems: arraySize,
-			};
+		    for (let i = 0; i < arraySizes.length; i++) {
+		        const arraySize = arraySizes[i];
+                const item: JsonSchema = {
+                    $id: abiName,
+                    type: 'array',
+                    items: abiSchemaToJsonSchema(abiComponents, abiName),
+                    maxItems: arraySize,
+                    minItems: arraySize,
+                };
 
-			if (arraySize < 0) {
-				delete item.maxItems;
-				delete item.minItems;
-			}
+                if (arraySize < 0) {
+                    delete item.maxItems;
+                    delete item.minItems;
+                }
 
-			(lastSchema.items as JsonSchema[]).push(item);
+                (lastSchema.items as JsonSchema[]).push(item);
+		    }
 		} else if (isArray) {
-			const arraySize = arraySizes[0];
-			const item: JsonSchema = {
-				type: 'array',
-				$id: abiName,
-				items: convertEthType(String(baseType)),
-				minItems: arraySize,
-				maxItems: arraySize,
-			};
+		    for (let i = 0; i < arraySizes.length; i++) {
+                const arraySize = arraySizes[i];
+                const item: JsonSchema = {
+                    type: 'array',
+                    $id: abiName,
+                    items: convertEthType(String(baseType)),
+                    minItems: arraySize,
+                    maxItems: arraySize,
+                };
 
-			if (arraySize < 0) {
-				delete item.maxItems;
-				delete item.minItems;
-			}
+                if (arraySize < 0) {
+                    delete item.maxItems;
+                    delete item.minItems;
+                }
 
-			(lastSchema.items as JsonSchema[]).push(item);
+                (lastSchema.items as JsonSchema[]).push(item);
+		    }
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
 			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
