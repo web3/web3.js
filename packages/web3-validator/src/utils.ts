@@ -205,6 +205,7 @@ export const abiSchemaToJsonSchema = (
 			nestedTuple.$id = abiName;
 			(lastSchema.items as JsonSchema[]).push(nestedTuple);
 		} else if (baseType === 'tuple' && isArray) {
+		    // iterate over arraySizes array to each dimension
 		    for (let i = 0; i < arraySizes.length; i++) {
 		        const arraySize = arraySizes[i];
                 const item: JsonSchema = {
@@ -223,6 +224,7 @@ export const abiSchemaToJsonSchema = (
                 (lastSchema.items as JsonSchema[]).push(item);
 		    }
 		} else if (isArray) {
+		    // iterate over arraySizes array to each dimension
 		    for (let i = 0; i < arraySizes.length; i++) {
                 const arraySize = arraySizes[i];
                 const item: JsonSchema = {
