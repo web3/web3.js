@@ -239,7 +239,7 @@ jobs:
                     path: ./
                     key: web3-18-${{github.sha}}
                 # @octokit/core not supported on node 16, so I can't add it to the package.json
-            -   run: npm install --no-package-lock --no-save --force @octokit/core
+            -   run: npm install --no-package-lock --no-save --force @octokit/core@5.1.0
             -   name: Restore main branch benchmark data
                 uses: actions/cache/restore@v3
                 with:
