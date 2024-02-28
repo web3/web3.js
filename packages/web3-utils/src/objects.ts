@@ -60,5 +60,5 @@ export const mergeDeep = (
 			}
 		}
 	}
-	return result;
+	return result.freeze ? Object.freeze(result) : result;
 };

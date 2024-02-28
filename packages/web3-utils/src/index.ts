@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 export * from './converters.js';
 export * from './event_emitter.js';
 export * from './validation.js';
@@ -34,6 +33,3 @@ export * from './socket_provider.js';
 export * from './uint8array.js';
 // for backwards compatibility with v1
 export { AbiItem } from 'web3-types';
-
-// eslint-disable-next-line import/first
-import 'nopp';
