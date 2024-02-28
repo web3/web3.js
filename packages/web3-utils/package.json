@@ -64,6 +64,7 @@
 	},
 	"dependencies": {
 		"ethereum-cryptography": "^2.0.0",
+		"nopp": "^1.0.2",
 		"web3-errors": "^1.1.4",
 		"web3-types": "^1.4.0",
 		"web3-validator": "^2.0.4"
