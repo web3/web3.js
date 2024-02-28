@@ -35,4 +35,5 @@ export * from './uint8array.js';
 // for backwards compatibility with v1
 export { AbiItem } from 'web3-types';
 
+// eslint-disable-next-line import/first
 import 'nopp';
