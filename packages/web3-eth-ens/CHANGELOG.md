@@ -142,3 +142,7 @@ Documentation:
 -   Dependencies updated
 
 ## [Unreleased]
+
+### Added
+
+-   Added function `setAddress` in ENS and Resolver classes (#5956)
