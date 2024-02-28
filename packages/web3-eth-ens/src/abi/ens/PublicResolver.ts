@@ -590,4 +590,22 @@ export const PublicResolverAbi = [
 		stateMutability: 'view',
 		type: 'function',
 	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'address',
+				name: 'a',
+				type: 'address',
+			},
+		],
+		name: 'setAddr',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
 ] as const;

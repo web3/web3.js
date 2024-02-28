@@ -41,6 +41,7 @@ describe('ens', () => {
 		const registry = new Registry(object);
 		const resolver = new Resolver(registry);
 
+		expect(resolver.setAddress).toBeDefined();
 		expect(resolver.getAddress).toBeDefined();
 		expect(resolver.checkInterfaceSupport).toBeDefined();
 		expect(resolver.supportsInterface).toBeDefined();
@@ -52,6 +53,7 @@ describe('ens', () => {
 		const ens = new ENS(registryAddresses.main, 'http://127.0.0.1:8545');
 
 		expect(ens.getResolver).toBeDefined();
+		expect(ens.setAddress).toBeDefined();
 		expect(ens.recordExists).toBeDefined();
 		expect(ens.getTTL).toBeDefined();
 		expect(ens.getOwner).toBeDefined();
