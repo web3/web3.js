@@ -107,7 +107,8 @@ jobs:
                     path: packages/web3/dist/${{ github.ref_name }}.json
                     key: web3-bundle-stats-4x-${{github.sha}}
 
-            - run: cd packages/web3/dist && ls
+            - run: cd packages/web3/dist/6848 && ls && cat merge.json
+            - run: cd packages/web3/dist && cat 4.x.json
 
     unit:
         name: Unit Tests
