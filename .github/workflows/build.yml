@@ -103,10 +103,10 @@ jobs:
                     base-stats-json-path: "packages/web3/dist/4.x.json"
             -   name: Cache default branch stats
                 uses: actions/cache/save@v3
-#                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3/dist/4.x.json
-                    key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
+                    key: web3-bundle-stats-4x-${{github.sha}}
 
     unit:
         name: Unit Tests
