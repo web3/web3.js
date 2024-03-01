@@ -192,7 +192,7 @@ export const abiSchemaToJsonSchema = (
 				lastSchema.items = [lastSchema.items as JsonSchema, childSchema];
 			} // lastSchema.items is an empty Scheme array, set it to 'childSchema'
 			else if (lastSchema.items.length === 0) {
-				lastSchema.items = childSchema;
+				lastSchema.items = [childSchema];
 			} // lastSchema.items is a non-empty Scheme array, append 'childSchema'
 			else {
 				lastSchema.items.push(childSchema);
@@ -205,49 +205,63 @@ export const abiSchemaToJsonSchema = (
 			nestedTuple.$id = abiName;
 			(lastSchema.items as JsonSchema[]).push(nestedTuple);
 		} else if (baseType === 'tuple' && isArray) {
-		    // iterate over arraySizes array to each dimension
-		    for (let i = 0; i < arraySizes.length; i++) {
-		        const arraySize = arraySizes[i];
-                const item: JsonSchema = {
-                    $id: abiName,
+            let lastArraySchema = {}, currentArraySchema = {}, dimensions = [...arraySizes].reverse(), iterateCount = 1;
+            // iterate over arraySizes array to each dimension
+            for (let i = arraySizes.length - 1; i >= 0; i--) {
+                const arraySize = arraySizes[i], isCurrentArray = i !== arraySizes.length - 1, isSingle = arraySizes.length === 1;
+
+                currentArraySchema = isCurrentArray ? {
                     type: 'array',
+                    $id: abiName,
+                    items: iterateCount !== 1 ? Array.from({ length: iterateCount }, () => lastArraySchema) : lastArraySchema,
+                    ...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
+                } : isSingle ? {
+                    type: 'array',
+                    $id: abiName,
                     items: abiSchemaToJsonSchema(abiComponents, abiName),
-                    maxItems: arraySize,
                     minItems: arraySize,
-                };
+                    maxItems: arraySize,
+                } : abiSchemaToJsonSchema(abiComponents, abiName);
 
-                if (arraySize < 0) {
-                    delete item.maxItems;
-                    delete item.minItems;
-                }
+                iterateCount = i < arraySizes.length - 1 ? dimensions[i] : 1;
+                lastArraySchema = currentArraySchema;
+            }
 
-                (lastSchema.items as JsonSchema[]).push(item);
-		    }
+            while (iterateCount-- > 0) {
+                (lastSchema.items as JsonSchema[]).push(currentArraySchema);
+            }
 		} else if (isArray) {
-		    // iterate over arraySizes array to each dimension
-		    for (let i = 0; i < arraySizes.length; i++) {
-                const arraySize = arraySizes[i];
-                const item: JsonSchema = {
+		    let lastArraySchema = {}, currentArraySchema = {}, dimensions = [...arraySizes].reverse(), iterateCount = 1;
+            // iterate over arraySizes array to each dimension
+            for (let i = arraySizes.length - 1; i >= 0; i--) {
+                const arraySize = arraySizes[i], isCurrentArray = i !== arraySizes.length - 1, isSingle = arraySizes.length === 1;
+
+                currentArraySchema = isCurrentArray ? {
                     type: 'array',
-                    $id: abiName,
-                    items: convertEthType(String(baseType)),
+                    $id: `${abiName}_${i}`,
+                    items: iterateCount !== 1 ? Array.from({ length: iterateCount }, () => lastArraySchema) : lastArraySchema,
+                    ...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
+                } : isSingle ? {
+                    type: 'array',
+                    $id: `${abiName}`,
+                    items: convertEthType(abiType),
                     minItems: arraySize,
                     maxItems: arraySize,
-                };
+                } : convertEthType(abiType);
 
-                if (arraySize < 0) {
-                    delete item.maxItems;
-                    delete item.minItems;
-                }
+                iterateCount = i < arraySizes.length - 1 ? dimensions[i] : 1;
+                lastArraySchema = currentArraySchema;
+            }
 
-                (lastSchema.items as JsonSchema[]).push(item);
-		    }
+            while (iterateCount-- > 0) {
+                (lastSchema.items as JsonSchema[]).push(currentArraySchema);
+            }
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
 			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
 		} else {
 			// Nested object
-			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({
+			(lastSchema.items as JsonSchema[]).push({
 				$id: abiName,
 				...convertEthType(abiType),
 			});
