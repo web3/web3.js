@@ -89,13 +89,12 @@ jobs:
                 uses: actions/cache/restore@v3
                 with:
                     path: packages/web3/dist/4.x.json
-                    key: web3-bundle-stats-4x-${{github.sha}}
+                    key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
             -   run: yarn build:web:analyze
                 env:
                     STATS_FILE: ${{ github.ref_name }}.json
             -   name: Compare bundle stats
-                uses: github/webpack-bundlesize-compare-action@v1
-                if: github.event_name != 'push'
+                uses: github/webpack-bundlesize-compare-action@v1.8.2
                 continue-on-error: true
                 with:
                     github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -105,8 +104,9 @@ jobs:
                 uses: actions/cache/save@v3
                 if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
-                    path: packages/web3/dist/4.x.json
+                    path: packages/web3/dist/${{ github.ref_name }}.json
                     key: web3-bundle-stats-4x-${{github.sha}}
+
 
     unit:
         name: Unit Tests
