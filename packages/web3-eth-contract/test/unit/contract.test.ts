@@ -507,7 +507,7 @@ describe('Contract', () => {
 				expect(error).toBeInstanceOf(Web3ValidatorError);
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Web3ValidatorError).message).toBe(
-					'Web3 validator found 1 error[s]:\nmust NOT have more than 1 items',
+					'Web3 validator found 2 error[s]:\nmust NOT have more than 1 items\nvalue "true" at "/1" must pass "string" validation',
 				);
 			}
 
