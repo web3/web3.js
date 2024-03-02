@@ -105,6 +105,29 @@ describe('resolver', () => {
 		);
 	});
 	describe('addr', () => {
+		it('setAddr valid', async () => {
+			const checkInteraface = jest.spyOn(resolver, 'checkInterfaceSupport');
+
+			const setAddrMock = jest.spyOn(contract.methods, 'setAddr').mockReturnValue({
+				send: jest.fn(),
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			jest.spyOn(contract.methods, 'supportsInterface').mockReturnValue({
+				call: jest.fn().mockReturnValue(true),
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			// todo when moving this mock in beforeAll, jest calls the actual implementation, how to fix that
+			// I use this in many places
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			await resolver.setAddress(ENS_NAME, mockAddress, { from: mockAddress });
+			expect(checkInteraface).toHaveBeenCalled();
+			expect(setAddrMock).toHaveBeenCalledWith(namehash(ENS_NAME), mockAddress);
+		});
 		it('getAddress', async () => {
 			const supportsInterfaceMock = jest
 				.spyOn(contract.methods, 'supportsInterface')
