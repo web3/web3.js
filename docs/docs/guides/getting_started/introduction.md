@@ -21,6 +21,9 @@ The following documentation will guide you through different use cases of Web3.j
 -    More efficient ABI Encoder & Decoder
 -    Custom Output formatters
 -    In compliance with Eth EL API
+-    Reduced build size of packages
+
+![Package Size Chart](PackageSizeChart.png)
 
 ## Packages
 
