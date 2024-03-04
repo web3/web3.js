@@ -118,6 +118,7 @@ jobs:
         steps:
             - uses: actions/setup-node@v4
               with:
+                  architecture: x64
                   node-version: ${{ matrix.node }}
             - uses: actions/cache/restore@v3
               with:
