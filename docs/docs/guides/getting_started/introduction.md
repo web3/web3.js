@@ -21,9 +21,8 @@ The following documentation will guide you through different use cases of Web3.j
 -    More efficient ABI Encoder & Decoder
 -    Custom Output formatters
 -    In compliance with Eth EL API
--    Reduced build size of packages
 
-![Package Size Chart](PackageSizeChart.png)
+![Comparison of various package sizes](PackageSizeComparison.jpg)
 
 ## Packages
 
@@ -59,3 +58,11 @@ Web3.js is modular, consisting of several packages, each serving specific functi
 - **Web3 Errors:** Web3 Errors has error codes and common error classes that are used by other Web3 packages. 
 
 - **Web3 RPC Methods:** This is for advanced uses for building more lightweight applications. It has functions for making RPC requests to Ethereum using a given provider.
+
+## Advantages over other libraries
+
+- **Extensive Documentation and Community**: Being one of the earliest Ethereum libraries, Web3.js benefits from extensive documentation and a large, active community. Web3.js is widely adopted and has been thoroughly tested in various production environments and is compatible with a broad range of other tools and services in the Ethereum ecosystem.
+
+- **Modular Design**: Web3.js is designed to be modular, meaning it allows developers to use specific packages according to their needs. This may lead to smaller bundle sizes and faster load times for web applications.
+
+- **Active Development and Support**: Web3.js sees regular updates and active development. This support is crucial for developers needing assurance that the library they're using will keep pace with the evolving Ethereum landscape.
