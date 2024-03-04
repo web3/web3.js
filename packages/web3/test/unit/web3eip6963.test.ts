@@ -31,8 +31,8 @@ describe('requestEIP6963Providers', () => {
 
   it('should resolve with updated providers map when events are triggered', async () => {
     class CustomEventPolyfill extends Event {
-      detail: any;
-      constructor(eventType: string, eventInitDict: any) {
+      public detail: any;
+      public constructor(eventType: string, eventInitDict: any) {
         super(eventType, eventInitDict);
         this.detail = eventInitDict.detail;
       }
@@ -52,7 +52,9 @@ describe('requestEIP6963Providers', () => {
 
     // Mock window methods
     (global as any).window  = {
-      addEventListener: jest.fn().mockImplementation((_event, callback) => callback(mockEvent)),
+      addEventListener: jest.fn().mockImplementation(
+
+          (_event, callback) => callback(mockEvent)), // eslint-disable-line
       dispatchEvent: jest.fn()
     };
 
