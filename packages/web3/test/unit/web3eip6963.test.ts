@@ -16,71 +16,48 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	EIP6963AnnounceProviderEvent,
-	EIP6963ProviderDetail,
-	Eip6963EventName,
-	eip6963Providers,
 	requestEIP6963Providers
 } from "../../src/web3_eip6963";
 
+
+
 describe('requestEIP6963Providers', () => {
+  it('should reject with an error if window object is not available', async () => {
+    // Mocking window object absence
+    (global as any).window = undefined;
 
-	it('should request EIP6963 providers and store them in eip6963Providers', () => {
+    await expect(requestEIP6963Providers()).rejects.toThrow("window object not available, EIP-6963 is intended to be used within a browser");
+  });
 
-		const mockProviderDetail: EIP6963ProviderDetail = {
-			info: {
-				uuid: '1',
-				name: 'MockProvider',
-				icon: 'icon-path',
-				rdns: 'mock.rdns'
-			},
+  it('should resolve with updated providers map when events are triggered', async () => {
+    class CustomEventPolyfill extends Event {
+      detail: any;
+      constructor(eventType: string, eventInitDict: any) {
+        super(eventType, eventInitDict);
+        this.detail = eventInitDict.detail;
+      }
+    }
+    
+    (global as any).CustomEvent = CustomEventPolyfill;
+    
+    const mockProviderDetail = {
+      info: { uuid: 'test-uuid', name: 'Test Provider', icon: 'test-icon', rdns: 'test-rdns' },
+      provider: {} // Mock provider object
+    };
 
-			provider: {} as any
-		};
+    const mockEvent = {
+      type: 'eip6963:announceProvider',
+      detail: mockProviderDetail
+    };
 
-		const mockAnnounceEvent: EIP6963AnnounceProviderEvent = {
-			type: Eip6963EventName.eip6963announceProvider,
-			detail: mockProviderDetail
-		} as any;
+    // Mock window methods
+    (global as any).window  = {
+      addEventListener: jest.fn().mockImplementation((_event, callback) => callback(mockEvent)),
+      dispatchEvent: jest.fn()
+    };
 
-		// Mock the window object
-		(global as any).window = {
-			addEventListener: jest.fn(),
-			dispatchEvent: jest.fn()
-		};
+    const result = await requestEIP6963Providers();
 
-		// Call the function
-		requestEIP6963Providers();
-
-		// Validate event listener setup and event dispatch
-		expect((global as any).window.addEventListener)
-			.toHaveBeenCalledWith(Eip6963EventName.eip6963announceProvider, expect.any(Function));
-
-		expect((global as any).window.dispatchEvent).toHaveBeenCalled();
-
-		// Simulate the announce event
-		// Access the mock function calls for addEventListener
-		const addEventListenerMockCalls = (global as any).window.addEventListener.mock.calls;
-
-		// Retrieve the first call to addEventListener and access its second argument
-		const eventListenerArg = addEventListenerMockCalls[0][1];
-
-		// Now "eventListenerArg" represents the function to be called when the event occurs
-		const announceEventListener = eventListenerArg;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		announceEventListener(mockAnnounceEvent);
-
-		// Validate if the provider detail is stored in the eip6963Providers map
-		expect(eip6963Providers.get('1')).toEqual(mockProviderDetail);
-	});
-
-	it('should throw an error if window object is not available', () => {
-		// Remove the window object
-		delete (global as any).window;
-
-		// Call the function and expect it to throw an error
-		expect(() => {
-			requestEIP6963Providers();
-		}).toThrow("window object not available, EIP-6963 is intended to be used within a browser");
-	});
+    expect(result).toEqual(new Map([['test-uuid', mockProviderDetail]]));
+  });
 });
