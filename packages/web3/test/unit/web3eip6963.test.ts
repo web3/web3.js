@@ -16,16 +16,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+  onNewProviderDiscovered,
 	requestEIP6963Providers
 } from "../../src/web3_eip6963";
-
-
 
 describe('requestEIP6963Providers', () => {
   it('should reject with an error if window object is not available', async () => {
     // Mocking window object absence
     (global as any).window = undefined;
 
+     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     await expect(requestEIP6963Providers()).rejects.toThrow("window object not available, EIP-6963 is intended to be used within a browser");
   });
 
@@ -62,4 +62,30 @@ describe('requestEIP6963Providers', () => {
 
     expect(result).toEqual(new Map([['test-uuid', mockProviderDetail]]));
   });
+
+  it('onNewProviderDiscovered should throw an error if window object is not available', () => {
+    // Mock the window object not being available
+    (global as any).window = undefined;
+
+    // Expect an error to be thrown
+    expect(() => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      onNewProviderDiscovered((_providerEvent) => {});
+    }).toThrow("window object not available, EIP-6963 is intended to be used within a browser");
+
+
+  });
+
+  it('onNewProviderDiscovered should add an event listener when window object is available', () => {
+    (global as any).window = {
+      addEventListener: jest.fn(),
+    };
+
+    const callback = jest.fn();
+    onNewProviderDiscovered(callback);
+
+    // Expect the callback to have been called when the event listener is added
+    expect(global.window.addEventListener).toHaveBeenCalledWith('web3:providersMapUpdated', callback);
+  });
+
 });
