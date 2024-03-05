@@ -268,7 +268,7 @@ export const convert = (
 		dataPath.pop();
 	}
 
-	return object.freeze ? Object.freeze(object) : object;
+	return object;
 };
 
 export const format = <
