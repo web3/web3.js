@@ -52,8 +52,8 @@ export interface EIP6963ProvidersMapUpdateEvent extends CustomEvent {
   detail: Map<string, EIP6963ProviderDetail>;
 }
 
-export const requestEIP6963Providers = () => {
-  return new Promise((resolve, reject) => {
+export const requestEIP6963Providers = async () => 
+   new Promise((resolve, reject) => {
     if (typeof window === 'undefined') {
       reject(new Error("window object not available, EIP-6963 is intended to be used within a browser"));
     }
@@ -80,6 +80,12 @@ export const requestEIP6963Providers = () => {
   window.dispatchEvent(new Event(Eip6963EventName.eip6963requestProvider));
 
   });
-}
 
+
+export const onNewProviderDiscovered = (callback: (providerEvent: EIP6963AnnounceProviderEvent) => void) => {
+  if (typeof window === 'undefined') {
+    throw new Error("window object not available, EIP-6963 is intended to be used within a browser");
+  }
+  window.addEventListener(web3ProvidersMapUpdated as any, callback );
+}
 
