@@ -34,3 +34,14 @@ const wallet = web3.eth.accounts.wallet.create(1, 'optionalEntropy'); // entropy
 const account = web3.eth.accounts.wallet.create(1, 'optionalEntropy'); // will result in an error
 const account = web3.eth.accounts.wallet.create(); // correct way
 ```
+
+## stripHexPrefix method
+
+In 1.x `stripHexPrefix` method is located in the `web3-utils` package, in 4.x this has been moved to `web3-eth-accounts`
+
+```typescript
+import { stripHexPrefix } from 'web3-eth-accounts';
+
+console.log(stripHexPrefix('0x123')); // "123"
+
+```
