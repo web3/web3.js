@@ -36,7 +36,7 @@ export const mergeDeep = (
 	destination: Record<string, unknown>,
 	...sources: Record<string, unknown>[]
 ): Record<string, unknown> => {
-	const result = destination; // clone deep here
+	const result = { ...destination }; // clone deep here
 	if (!isIterable(result)) {
 		return result;
 	}
@@ -60,5 +60,5 @@ export const mergeDeep = (
 			}
 		}
 	}
-	return result.freeze ? Object.freeze(result) : result;
+	return result;
 };
