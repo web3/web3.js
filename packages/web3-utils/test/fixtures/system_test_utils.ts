@@ -1,1 +1,0 @@
-../../../../scripts/system_tests_utils.ts

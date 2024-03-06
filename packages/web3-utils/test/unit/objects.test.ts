@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { mergeDeep } from '../../src/objects';
 import { mergeDeepData } from '../fixtures/objects';
-import { objectBigintToString } from '../fixtures/system_test_utils';
 
 describe('objects', () => {
 	describe('mergeDeep', () => {
@@ -49,7 +48,7 @@ describe('objects', () => {
 			expect(result.b).toBe(true);
 			expect(result.c).toEqual(new Uint8Array([1, 2, 3]));
 			expect(result.d).toBe('string');
-			expect(objectBigintToString(result.e)).toEqual({ nested: BigInt(4).toString() });
+			expect(result.e).toEqual({ nested: BigInt(4) });
 			expect(result.f).toBe(99);
 		});
 
