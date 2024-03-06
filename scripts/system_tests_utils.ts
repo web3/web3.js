@@ -498,8 +498,9 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 	return res;
 };
 
-export const objectBigintToString = function (obj: object) {
-	return JSON.parse(
+export const objectBigintToString = (obj: object): object =>
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+	JSON.parse(
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		JSON.stringify(obj, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
 	);
-};

@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { mergeDeep } from '../../src/objects';
 import { mergeDeepData } from '../fixtures/objects';
 import { objectBigintToString } from '../fixtures/system_test_utils';
+
 describe('objects', () => {
 	describe('mergeDeep', () => {
 		it.each(mergeDeepData)('$message', ({ destination, sources, output }) => {
