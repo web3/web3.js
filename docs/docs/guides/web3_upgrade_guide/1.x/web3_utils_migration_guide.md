@@ -80,6 +80,16 @@ isHex('-0x'); // in 1.x used to return `true`. But changed in 4.x to return `fal
 isHexStrict('-0x'); // in 1.x used to return `true`. But changed in 4.x to return `false`
 // `false`
 ```
+## stripHexPrefix method
+
+In 1.x `stripHexPrefix` method is located in the `web3-utils` package, in 4.x this has been moved to `web3-eth-accounts`
+
+```typescript
+import { stripHexPrefix } from 'web3-eth-accounts';
+
+console.log(stripHexPrefix('0x123')); // "123"
+
+```
 
 ## Other functions
 
