@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-jest.setTimeout(25000);
 import { Address } from 'web3-types';
 import { Web3ValidatorError, isHexStrict } from 'web3-validator';
 import {
@@ -49,6 +48,8 @@ import {
 } from '../fixtures/account';
 import { TransactionFactory } from '../../src/tx/transactionFactory';
 import { TxData } from '../../src/tx/types';
+
+jest.setTimeout(25000);
 
 describe('accounts', () => {
 	describe('create', () => {
