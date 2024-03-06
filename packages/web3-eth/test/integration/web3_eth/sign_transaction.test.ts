@@ -66,7 +66,7 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('Web3Eth.signTransaction'
 
 		expect(response).toMatchObject(expectedResponse);
 
-		// Pulling out of toMatchObject to be compatiable with Cypress
+		// Pulling out of toMatchObject to be compatible with Cypress
 		expect(response.raw).toMatch(/0[xX][0-9a-fA-F]+/);
 		expect(typeof (response.tx as TransactionLegacySignedAPI).v).toBe('bigint');
 		expect(response.tx.r).toMatch(/0[xX][0-9a-fA-F]{64}/);
@@ -98,7 +98,7 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('Web3Eth.signTransaction'
 
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(response).toMatchObject(expectedResponse);
-		// Pulling out of toMatchObject to be compatiable with Cypress
+		// Pulling out of toMatchObject to be compatible with Cypress
 		expect(response.raw).toMatch(/0[xX][0-9a-fA-F]+/);
 		expect(typeof (response.tx as TransactionLegacySignedAPI).v).toBe('bigint');
 		expect(response.tx.r).toMatch(/0[xX][0-9a-fA-F]{64}/);
