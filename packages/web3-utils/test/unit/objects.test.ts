@@ -22,9 +22,7 @@ import { objectBigintToString } from '../fixtures/system_test_utils';
 describe('objects', () => {
 	describe('mergeDeep', () => {
 		it.each(mergeDeepData)('$message', ({ destination, sources, output }) => {
-			mergeDeep(destination, ...sources);
-
-			expect(objectBigintToString(destination)).toEqual(objectBigintToString(output));
+			expect(mergeDeep(destination, ...sources)).toEqual(output);
 		});
 
 		it('should not mutate the sources', () => {
