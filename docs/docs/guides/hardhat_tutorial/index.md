@@ -72,7 +72,7 @@ export default config;
 
 ```
 
-By default, `hardhat-toolbox` is added to the file. You will need to explicity invoke the plugin. This will modify the Hardhat Run-time Environment - HRE and to include both the Web3 class and an instantiated web3 object. With the latter, you get a modified ready-to-use web3 object can comes with an initialized local/Hardhat provider. The object will be available to use anywhere in the project such as testing and deployment files.
+By default, `hardhat-toolbox` is added to the file. You will need to explicitly invoke the plugin. This will modify the Hardhat Run-time Environment - HRE and to include both the Web3 class and an instantiated web3 object. With the latter, you get a modified ready-to-use web3 object can comes with an initialized local/Hardhat provider. The object will be available to use anywhere in the project such as testing and deployment files.
 
 ### Write the Smart Contract
 When you start a new project, Hardhat provides a sample `Lock` contracts. Please refer to the contract in `myproject/contracts/Lock.sol` file.
