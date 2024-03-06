@@ -17,13 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { mergeDeep } from '../../src/objects';
 import { mergeDeepData } from '../fixtures/objects';
-
+import { objectBigintToString } from '../fixtures/system_test_utils';
 describe('objects', () => {
 	describe('mergeDeep', () => {
 		it.each(mergeDeepData)('$message', ({ destination, sources, output }) => {
 			mergeDeep(destination, ...sources);
 
-			expect(destination).toEqual(output);
+			expect(objectBigintToString(destination)).toEqual(objectBigintToString(output));
 		});
 
 		it('should not mutate the sources', () => {
@@ -50,7 +50,7 @@ describe('objects', () => {
 			expect(result.b).toBe(true);
 			expect(result.c).toEqual(new Uint8Array([1, 2, 3]));
 			expect(result.d).toBe('string');
-			expect(result.e).toEqual({ nested: BigInt(4) });
+			expect(objectBigintToString(result.e)).toEqual({ nested: BigInt(4).toString() });
 			expect(result.f).toBe(99);
 		});
 

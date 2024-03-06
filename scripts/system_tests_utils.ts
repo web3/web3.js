@@ -26,7 +26,7 @@ import {
 } from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import HardhatPlugin  from 'web3-hardhat-plugin';
+import HardhatPlugin from 'web3-hardhat-plugin';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -257,33 +257,34 @@ export const createNewAccount = async (config?: {
 
 	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
 	if (config?.unlock) {
-		
-		if (getSystemTestBackend() === BACKEND.HARDHAT){
+		if (getSystemTestBackend() === BACKEND.HARDHAT) {
 			const url = getSystemTestProviderUrl();
 			const web3 = new Web3(url);
-			web3.registerPlugin(new HardhatPlugin())
+			web3.registerPlugin(new HardhatPlugin());
 			await web3.hardhat.impersonateAccount(acc.address);
 			// await impersonateAccount(acc.address);
 			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
 		} else {
-		const web3Personal = new Personal(clientUrl);
-		if (!config?.doNotImport) {
-			await web3Personal.importRawKey(
-				getSystemTestBackend() === BACKEND.GETH ? acc.privateKey.slice(2) : acc.privateKey,
-				config.password ?? '123456',
-			);
-		}
+			const web3Personal = new Personal(clientUrl);
+			if (!config?.doNotImport) {
+				await web3Personal.importRawKey(
+					getSystemTestBackend() === BACKEND.GETH
+						? acc.privateKey.slice(2)
+						: acc.privateKey,
+					config.password ?? '123456',
+				);
+			}
 
-		await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 100000000);
+			await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 100000000);
 		}
 	}
 
 	if (config?.refill) {
-		if (getSystemTestBackend() === BACKEND.HARDHAT){
+		if (getSystemTestBackend() === BACKEND.HARDHAT) {
 			const url = getSystemTestProviderUrl();
 			const web3 = new Web3(url);
-			web3.registerPlugin(new HardhatPlugin())
-			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'))
+			web3.registerPlugin(new HardhatPlugin());
+			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
 		} else {
 			const web3Personal = new Personal(clientUrl);
 			if (!mainAcc) {
@@ -337,7 +338,7 @@ export const createTempAccount = async (
 	currentIndex += 1;
 
 	return acc;
-	}
+};
 
 export const getSystemTestAccountsWithKeys = async (): Promise<
 	{
@@ -495,4 +496,10 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 	}
 	await closeOpenConnection(web3);
 	return res;
+};
+
+export const objectBigintToString = function (obj: object) {
+	return JSON.parse(
+		JSON.stringify(obj, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
+	);
 };
