@@ -6,6 +6,11 @@ module.exports = {
 		},
 	},
 	transform: {
-		'^.+\\.(ts|tsx)$': 'ts-jest',
+		'^.+\\.(ts|tsx)$': [
+			'ts-jest',
+			{
+				tsconfig: './test/tsconfig.json',
+			},
+		],
 	},
 };
