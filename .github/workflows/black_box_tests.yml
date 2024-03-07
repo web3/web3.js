@@ -3,6 +3,7 @@ on:
     push:
       branches:
         - release/**
+        - ok/6872**
       tags:
         - v4.*
 
