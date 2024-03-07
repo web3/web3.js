@@ -5,6 +5,10 @@ sidebar_label: 'Mastering Providers'
 
 # Web3js providers overview
 
+## Live code editor
+
+<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-zfusfd?embed=1&file=main.js&showSidebar=1"></iframe>
+
 ## Introduction
 
 web3.js providers are objects responsible for enabling connectivity with the Ethereum network in various ways. Connecting your web application to an Ethereum node is necessary for sending transactions, querying data, and interacting with smart contracts on the network. In this guide, we will explore the different types of providers available in web3.js, how to set them up, and how to use them in your code.
@@ -43,13 +47,13 @@ The passed provider can be either type `string` or one of the [`SupportedProvide
 
 ### HTTP Provider
 
-``` ts title='Initialize HTTP Provider'
+```ts title='Initialize HTTP Provider'
 import { Web3, HttpProvider } from 'web3';
 
 //highlight-next-line
 const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_ID');
 
-await web3.eth.getBlockNumber()
+await web3.eth.getBlockNumber();
 // ↳ 18849658n
 
 // or
@@ -57,19 +61,19 @@ await web3.eth.getBlockNumber()
 //highlight-next-line
 const web3_2 = new Web3(new HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_ID'));
 
-await web3.eth.getBlockNumber()
+await web3.eth.getBlockNumber();
 // ↳ 18849658n
 ```
 
 ### WebSocket provider
 
-``` ts title='Initialize WS Provider'
+```ts title='Initialize WS Provider'
 import { Web3, WebSocketProvider } from 'web3';
 
 //highlight-next-line
 const web3 = new Web3('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID');
 
-await web3.eth.getBlockNumber();	
+await web3.eth.getBlockNumber();
 // ↳ 18849658n
 
 // or
@@ -82,7 +86,7 @@ await web3.eth.getBlockNumber();
 
 ### IPC Provider
 
-``` ts title='Initialize IPC Provider'
+```ts title='Initialize IPC Provider'
 import { Web3 } from 'web3';
 //highlight-next-line
 import { IpcProvider } from 'web3-providers-ipc';
@@ -122,7 +126,7 @@ import { IpcProvider } from 'web3-providers-ipc';
 
 //highlight-next-line
 //IPC provider
-const web3 = new Web3(new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'));//mac os path
+const web3 = new Web3(new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc')); //mac os path
 // on windows the path is: '\\\\.\\pipe\\geth.ipc'
 // on linux the path is: '/users/myuser/.ethereum/geth.ipc'
 
@@ -155,30 +159,31 @@ As stated above, the injected provider should be in compliance with [EIP-1193](h
 The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
 
 ```html title='E.g, Metamask'
-<script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 <script>
- window.addEventListener('load', function () {
- // Check if web3 is available
-  if (typeof window.ethereum !== 'undefined') {
-	
-    //highlight-start
-    // Use the browser injected Ethereum provider
-    web3 = new Web3(window.ethereum);
-    //highlight-end
+	window.addEventListener('load', function () {
+		// Check if web3 is available
+		if (typeof window.ethereum !== 'undefined') {
+			//highlight-start
+			// Use the browser injected Ethereum provider
+			web3 = new Web3(window.ethereum);
+			//highlight-end
 
-    // Request access to the user's MetaMask account
-    window.ethereum.enable();
+			// Request access to the user's MetaMask account
+			window.ethereum.enable();
 
-    // Get the user's accounts
-    web3.eth.getAccounts().then(function (accounts) {
-     // Show the first account
-     document.getElementById('log').innerHTML = 'Connected with MetaMask account: ' + accounts[0];
-    });
-  } else {
-    // If web3 is not available, give instructions to install MetaMask
-    document.getElementById('log').innerHTML = 'Please install MetaMask to connect with the Ethereum network';
-  }
- });
+			// Get the user's accounts
+			web3.eth.getAccounts().then(function (accounts) {
+				// Show the first account
+				document.getElementById('log').innerHTML =
+					'Connected with MetaMask account: ' + accounts[0];
+			});
+		} else {
+			// If web3 is not available, give instructions to install MetaMask
+			document.getElementById('log').innerHTML =
+				'Please install MetaMask to connect with the Ethereum network';
+		}
+	});
 </script>
 ```
 
@@ -195,23 +200,23 @@ Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/Pow
 
 ```ts title='HTTP Provider example'
 const httpOptions = {
-    providerOptions: {
-        body: undefined,
-        cache: 'force-cache',
-        credentials: 'same-origin',
-        headers: {
-             'Content-Type': 'application/json',
-        },
-        integrity: 'foo',
-        keepalive: true,
-        method: 'GET',
-        mode: 'same-origin',
-        redirect: 'error',
-        referrer: 'foo',
-        referrerPolicy: 'same-origin',
-        signal: undefined,
-        window: undefined,
-    } as RequestInit,
+	providerOptions: {
+		body: undefined,
+		cache: 'force-cache',
+		credentials: 'same-origin',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		integrity: 'foo',
+		keepalive: true,
+		method: 'GET',
+		mode: 'same-origin',
+		redirect: 'error',
+		referrer: 'foo',
+		referrerPolicy: 'same-origin',
+		signal: undefined,
+		window: undefined,
+	} as RequestInit,
 };
 ```
 
@@ -226,27 +231,26 @@ The second option parameter can be given regarding reconnecting. And here is its
 ```ts title='WebSocket Provider example'
 // this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
-  autoReconnect: boolean, // default: `true`
-  delay: number, // default: `5000`
-  maxAttempts: number, // default: `5`
+	autoReconnect: boolean; // default: `true`
+	delay: number; // default: `5000`
+	maxAttempts: number; // default: `5`
 };
-
 ```
 
 ```ts title='Instantiation of WebSocket Provider'
 const provider = new WebSocketProvider(
-  `ws://localhost:8545`,
-  {
-    headers: {
-      // to provide the API key if the Node requires the key to be inside the `headers` for example:
-      'x-api-key': '<Api key>',
-    },
-  },
-  {
-    delay: 500,
-    autoReconnect: true,
-    maxAttempts: 10,
-  }
+	`ws://localhost:8545`,
+	{
+		headers: {
+			// to provide the API key if the Node requires the key to be inside the `headers` for example:
+			'x-api-key': '<Api key>',
+		},
+	},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
 );
 ```
 
@@ -254,13 +258,13 @@ The second and the third parameters are both optional. And, for example, the sec
 
 ```ts title='Instantiation of WebSocket Provider'
 const provider = new WebSocketProvider(
-  `ws://localhost:8545`,
-  {},
-  {
-    delay: 500,
-    autoReconnect: true,
-    maxAttempts: 10,
-  }
+	`ws://localhost:8545`,
+	{},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
 );
 ```
 
@@ -268,17 +272,17 @@ Below is an example for the passed options:
 
 ```ts title='WS Provider options example'
 let clientOptions: ClientOptions = {
-  // Useful for credentialed urls, e.g: ws://username:password@localhost:8546
-  headers: {
-    authorization: 'Basic username:password',
-  },
-  maxPayload: 100000000,
+	// Useful for credentialed urls, e.g: ws://username:password@localhost:8546
+	headers: {
+		authorization: 'Basic username:password',
+	},
+	maxPayload: 100000000,
 };
 
 const reconnectOptions: ReconnectOptions = {
-  autoReconnect: true,
-  delay: 5000,
-  maxAttempts: 5,
+	autoReconnect: true,
+	delay: 5000,
+	maxAttempts: 5,
 };
 ```
 
@@ -291,10 +295,10 @@ It accepts a second parameter called `socketOptions`. And, its type is `SocketCo
 ```ts title='IPC Provider options'
 // for more check https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_net_d_._net_.socketconstructoropts.html
 interface SocketConstructorOpts {
-  fd?: number | undefined;
-  allowHalfOpen?: boolean | undefined;
-  readable?: boolean | undefined;
-  writable?: boolean | undefined;
+	fd?: number | undefined;
+	allowHalfOpen?: boolean | undefined;
+	readable?: boolean | undefined;
+	writable?: boolean | undefined;
 }
 ```
 
@@ -303,9 +307,9 @@ And, the third parameter is called `reconnectOptions` that is of the type `Recon
 ```ts
 // this is the same options interface used for both WebSocketProvider and IpcProvider
 type ReconnectOptions = {
-  autoReconnect: boolean, // default: `true`
-  delay: number, // default: `5000`
-  maxAttempts: number, // default: `5`
+	autoReconnect: boolean; // default: `true`
+	delay: number; // default: `5000`
+	maxAttempts: number; // default: `5`
 };
 ```
 
@@ -329,15 +333,15 @@ And here is a sample instantiation for the `IpcProvider`:
 
 ```ts title='IPC Provider example'
 const provider = new IpcProvider(
-  `path.ipc`,
-  {
-    writable: false,
-  },
-  {
-    delay: 500,
-    autoReconnect: true,
-    maxAttempts: 10,
-  }
+	`path.ipc`,
+	{
+		writable: false,
+	},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
 );
 ```
 
@@ -345,13 +349,13 @@ The second and the third parameters are both optional. And, for example, the sec
 
 ```ts title='IPC Provider example'
 const provider = new IpcProvider(
-  `path.ipc`,
-  {},
-  {
-    delay: 500,
-    autoReconnect: true,
-    maxAttempts: 10,
-  }
+	`path.ipc`,
+	{},
+	{
+		delay: 500,
+		autoReconnect: true,
+		maxAttempts: 10,
+	},
 );
 ```
 
@@ -366,16 +370,10 @@ The error message, for the max reconnect attempts, will contain the value of the
 And here is how to catch the error, if max attempts reached when there is auto reconnecting:
 
 ```ts title='Error message for reconnect attempts'
-provider.on('error', (error) => {
-  if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
-    // the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
-    // the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
-  }
+provider.on('error', error => {
+	if (error.message.startsWith('Maximum number of reconnect attempts reached!')) {
+		// the `error.message` will be `Maximum number of reconnect attempts reached! (${maxAttempts})`
+		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
+	}
 });
 ```
-
-
-
-## Live code editor
-
-<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-zfusfd?embed=1&file=main.js&showSidebar=1"></iframe>   

@@ -5,6 +5,10 @@ sidebar_label: 'Mastering Wallets & Accounts'
 
 # Wallets and Accounts Overview
 
+## Live code editor
+
+<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-mhuwrk?embed=1&file=main.js&showSidebar=1"></iframe>
+
 ## Introduction
 
 A Web3.js `Wallet` is your main entry point if you want to use a private key directly to do any blockchain operations (transactions), also called `Signer` in other libraries.
@@ -31,7 +35,7 @@ An **account** in web3.js is an `object`, it refers to an individual Ethereum ad
 ```ts title='Create a new account'
 const account = web3.eth.accounts.create();
 
-console.log(account)
+console.log(account);
 /* ↳ 
 {
   address: '0x9E82491d1978217d631a3b467BF912933F54788f',
@@ -49,7 +53,7 @@ A **wallet** in web3.js is an `array` that holds multiple Ethereum accounts. It 
 //create a wallet with `1` random account
 const wallet = web3.eth.accounts.wallet.create(1);
 
-console.log(wallet)
+console.log(wallet);
 /* ↳ 
 Wallet(1) [
   {
@@ -91,7 +95,9 @@ const web3 = new Web3('https://ethereum-sepolia.publicnode.com');
 //it will generate automatically a public key for it
 //make sure you have funds in this accounts
 //highlight-next-line
-const wallet = web3.eth.accounts.wallet.add('0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5');
+const wallet = web3.eth.accounts.wallet.add(
+	'0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5',
+);
 
 const _to = '0xc7203efeb54846c149f2c79b715a8927f7334e74';
 const _value = '1'; //1 wei
@@ -99,9 +105,9 @@ const _value = '1'; //1 wei
 //the `from` address in the transaction must match the address stored in our `Wallet` array
 //that's why we explicitly access it using `wallet[0].address` to ensure accuracy
 const receipt = await web3.eth.sendTransaction({
-  from: wallet[0].address,
-  to: _to,
-  value: _value,
+	from: wallet[0].address,
+	to: _to,
+	value: _value,
 });
 //if you have more than 1 account, you can change the address by accessing to another account
 //e.g, `from: wallet[1].address`
@@ -139,7 +145,9 @@ const web3 = new Web3('https://ethereum-sepolia.publicnode.com');
 
 //create a wallet
 //highlight-next-line
-const wallet = web3.eth.accounts.wallet.add('0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5');
+const wallet = web3.eth.accounts.wallet.add(
+	'0x152c39c430806985e4dc16fa1d7d87f90a7a1d0a6b3f17efe5158086815652e5',
+);
 
 //this is how we can access to the first account of the wallet
 console.log('Account 1:', wallet[0]);
@@ -182,7 +190,7 @@ const myContract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 //highlight-next-line
 const result = await myContract.methods.doSomething().call();
 
-console.log('Result:', result)
+console.log('Result:', result);
 /* ↳
   Result: ...
 */
@@ -190,37 +198,32 @@ console.log('Result:', result)
 
 ## Wallet methods
 
-The following is a list of `Wallet` [methods](/libdocs/Wallet) in the `web3.eth.accounts.wallet` package with description and example usage: 
+The following is a list of `Wallet` [methods](/libdocs/Wallet) in the `web3.eth.accounts.wallet` package with description and example usage:
 
-- [add](/libdocs/Wallet#add)
-- [clear](/libdocs/Wallet#clear)
-- [create](/libdocs/Wallet#create)
-- [decrypt](/libdocs/Wallet#decrypt)
-- [encrypt](/libdocs/Wallet#encrypt)
-- [get](/libdocs/Wallet#get)
-- [load](/libdocs/Wallet#load)
-- [remove](/libdocs/Wallet#remove)
-- [save](/libdocs/Wallet#save)
-- [getStorage](/libdocs/Wallet#getStorage) 
+-   [add](/libdocs/Wallet#add)
+-   [clear](/libdocs/Wallet#clear)
+-   [create](/libdocs/Wallet#create)
+-   [decrypt](/libdocs/Wallet#decrypt)
+-   [encrypt](/libdocs/Wallet#encrypt)
+-   [get](/libdocs/Wallet#get)
+-   [load](/libdocs/Wallet#load)
+-   [remove](/libdocs/Wallet#remove)
+-   [save](/libdocs/Wallet#save)
+-   [getStorage](/libdocs/Wallet#getStorage)
 
 ## Account methods
 
-The following is a list of `Accounts` [methods](/libdocs/Wallet) in the `web3.eth.accounts` package with description and example usage: 
+The following is a list of `Accounts` [methods](/libdocs/Wallet) in the `web3.eth.accounts` package with description and example usage:
 
-- [create](/libdocs/Accounts#create)
-- [decrypt](/libdocs/Accounts#decrypt)
-- [encrypt](/libdocs/Accounts#encrypt)
-- [hashMessage](/libdocs/Accounts#hashMessage)
-- [parseAndValidatePrivateKey](/libdocs/Accounts#libdocs/Accounts#parseandvalidateprivatekey)
-- [privateKeyToAccount](/libdocs/Accounts#privatekeytoaccount)
-- [privateKeyToAddress](/libdocs/Accounts#privatekeytoaddress)
-- [privateKeyToPublicKey](/libdocs/Accounts#privatekeytopublickey)
-- [recover](/libdocs/Accounts#recover)
-- [recoverTransaction](/libdocs/Accounts#recovertransaction)
-- [sign](/libdocs/Accounts#sign)
-- [signTransaction](/libdocs/Accounts#signtransaction)
-
-
-## Live code editor 
-
-<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-mhuwrk?embed=1&file=main.js&showSidebar=1"></iframe>  
+-   [create](/libdocs/Accounts#create)
+-   [decrypt](/libdocs/Accounts#decrypt)
+-   [encrypt](/libdocs/Accounts#encrypt)
+-   [hashMessage](/libdocs/Accounts#hashMessage)
+-   [parseAndValidatePrivateKey](/libdocs/Accounts#libdocs/Accounts#parseandvalidateprivatekey)
+-   [privateKeyToAccount](/libdocs/Accounts#privatekeytoaccount)
+-   [privateKeyToAddress](/libdocs/Accounts#privatekeytoaddress)
+-   [privateKeyToPublicKey](/libdocs/Accounts#privatekeytopublickey)
+-   [recover](/libdocs/Accounts#recover)
+-   [recoverTransaction](/libdocs/Accounts#recovertransaction)
+-   [sign](/libdocs/Accounts#sign)
+-   [signTransaction](/libdocs/Accounts#signtransaction)
