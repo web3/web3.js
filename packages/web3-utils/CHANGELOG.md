@@ -194,3 +194,7 @@ Documentation:
 -   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
 
 ## [Unreleased]
+
+### Fixed
+
+-   replaced our eventEmitter to EventEmitter3 to support react native builds (#6253)
