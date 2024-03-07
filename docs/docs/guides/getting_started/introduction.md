@@ -22,7 +22,7 @@ The following documentation will guide you through different use cases of Web3.j
 -    Custom Output formatters
 -    In compliance with Eth EL API
 
-![Comparison of various package sizes](PackageSizeComparison.jpg)
+![Comparison of various package sizes](PackageSizeComparison.png)
 
 ## Packages
 
