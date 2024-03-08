@@ -12,6 +12,8 @@ This guide intends to provide the necessary context for registering plugins with
 
 To help you get started, take a look at a list of useful plugins at [https://web3js.org/plugins](https://web3js.org/plugins)
 
+This video explains in detail how to use web3.js to interract with chain link data feed efficiently :
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/iF_O7ggQaQw?si=U6pYKLJ89qtNXTvY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ## Installing the Plugin

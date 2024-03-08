@@ -10,6 +10,8 @@ This guide intends to provide the necessary context for developing plugins for w
 Feel free to explore some of [the already built plugins](https://web3js.org/plugins) and/or
 use this [template](https://github.com/ChainSafe/web3.js-plugin-template) to start with development of your Web3.js plugin.
 
+This video explains in detail how to use web3.js to create plugins for developers:
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/fW1PDApXCtM?si=92xAGyMM53xv_2Sz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 
