@@ -76,10 +76,8 @@ async function transferWithEIP1559() {
     // Construct the transaction object
     const tx = {
       from: account.address,
-      to: recipientAddress, // For ETH transfers
-      // or: to: tokenAddress, // For ERC-20 token transfers
-      value: amountToTransfer, // For ETH transfers, set to 0x0 for tokens
-      // ... (add contract data for ERC-20 transfers)
+      to: tokenAddress, // For ERC-20 token 
+      value: amountToTransfer, 
       gas: web3.utils.toHex(210000), // Gas limit, adjust as needed
       gasPrice,
       maxPriorityFeePerGas,
