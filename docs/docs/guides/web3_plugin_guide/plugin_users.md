@@ -12,6 +12,8 @@ This guide intends to provide the necessary context for registering plugins with
 
 To help you get started, take a look at a list of useful plugins at [https://web3js.org/plugins](https://web3js.org/plugins)
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/iF_O7ggQaQw?si=U6pYKLJ89qtNXTvY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ## Installing the Plugin
 
 Unless otherwise mentioned by the plugin author, installing a plugin should be as simple as `yarn add web3-plugin-example`. This should add the plugin as a dependency within your `package.json` and the plugin should be available to import within your code.
