@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'eventemitter3';
 import { InvalidResponseError } from 'web3-errors';
 import { ChunkResponseParser } from '../../src/chunk_response_parser';
 import { hugeData } from '../fixtures/hugeData';
