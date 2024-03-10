@@ -65,7 +65,7 @@ describe('Web3 instance', () => {
 		}
 	});
 
-    it('should be send transaction, change for defaultTransactionType and sucesfully send transaction with different type', async () => {
+    it('should be send transaction, change for defaultTransactionType and successfully send transaction with different type', async () => {
 		const transaction = {
             from: accounts[0],
             to: accounts[0],

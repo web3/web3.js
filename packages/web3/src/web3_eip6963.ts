@@ -44,28 +44,48 @@ export interface EIP6963RequestProviderEvent extends Event {
   type: Eip6963EventName.eip6963requestProvider;
 }
 
-export const eip6963Providers: Map<string, EIP6963ProviderDetail> = new Map();
+export const eip6963ProvidersMap: Map<string, EIP6963ProviderDetail> = new Map();
 
-export const requestEIP6963Providers = () => {
+export const web3ProvidersMapUpdated = "web3:providersMapUpdated";
+export interface EIP6963ProvidersMapUpdateEvent extends CustomEvent {
+  type: string;
+  detail: Map<string, EIP6963ProviderDetail>;
+}
 
-  if (typeof window === 'undefined')
-    throw new Error(
-      "window object not available, EIP-6963 is intended to be used within a browser"
-    );
+export const requestEIP6963Providers = async () => 
+   new Promise((resolve, reject) => {
+    if (typeof window === 'undefined') {
+      reject(new Error("window object not available, EIP-6963 is intended to be used within a browser"));
+    }
 
   window.addEventListener(
     Eip6963EventName.eip6963announceProvider as any,
     (event: EIP6963AnnounceProviderEvent) => {
 
-      eip6963Providers.set(
+      eip6963ProvidersMap.set(
         event.detail.info.uuid,
         event.detail);
+
+      const newEvent: EIP6963ProvidersMapUpdateEvent = new CustomEvent(
+        web3ProvidersMapUpdated,
+        { detail: eip6963ProvidersMap }
+        );
+
+      window.dispatchEvent(newEvent);
+      resolve(eip6963ProvidersMap);
+
     }
   );
 
   window.dispatchEvent(new Event(Eip6963EventName.eip6963requestProvider));
 
-  return eip6963Providers;
-}
+  });
 
+
+export const onNewProviderDiscovered = (callback: (providerEvent: EIP6963AnnounceProviderEvent) => void) => {
+  if (typeof window === 'undefined') {
+    throw new Error("window object not available, EIP-6963 is intended to be used within a browser");
+  }
+  window.addEventListener(web3ProvidersMapUpdated as any, callback );
+}
 

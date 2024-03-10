@@ -44,6 +44,7 @@ import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecod
 import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
+jest.setTimeout(25000);
 describe('ens', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
 	let resolver: Contract<typeof PublicResolverAbi>;

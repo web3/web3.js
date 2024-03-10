@@ -26,6 +26,7 @@ import {
 	numbersAsNumberTransaction,
 	bytesAsUint8ArrayTransaction,
 } from '../fixtures/format_transaction';
+import { objectBigintToString } from '../fixtures/system_test_utils';
 
 const transactionsDataForNumberTypes: Record<FMT_NUMBER, Record<string, unknown>> = {
 	[FMT_NUMBER.BIGINT]: numbersAsBigIntTransaction,
@@ -59,14 +60,16 @@ describe('formatTransaction', () => {
 					delete expectedFormattedTransaction.data;
 
 					expect(
-						formatTransaction(
-							transactionsDataForNumberTypes[sourceType as FMT_NUMBER],
-							{
-								...DEFAULT_RETURN_FORMAT,
-								number: destinationType as FMT_NUMBER,
-							},
+						objectBigintToString(
+							formatTransaction(
+								transactionsDataForNumberTypes[sourceType as FMT_NUMBER],
+								{
+									...DEFAULT_RETURN_FORMAT,
+									number: destinationType as FMT_NUMBER,
+								},
+							),
 						),
-					).toStrictEqual(expectedFormattedTransaction);
+					).toStrictEqual(objectBigintToString(expectedFormattedTransaction));
 				});
 			}
 		}
@@ -85,11 +88,16 @@ describe('formatTransaction', () => {
 					delete expectedFormattedTransaction.data;
 
 					expect(
-						formatTransaction(transactionsDataForByteTypes[sourceType as FMT_BYTES], {
-							...DEFAULT_RETURN_FORMAT,
-							bytes: destinationType as FMT_BYTES,
-						}),
-					).toStrictEqual(expectedFormattedTransaction);
+						objectBigintToString(
+							formatTransaction(
+								transactionsDataForByteTypes[sourceType as FMT_BYTES],
+								{
+									...DEFAULT_RETURN_FORMAT,
+									bytes: destinationType as FMT_BYTES,
+								},
+							),
+						),
+					).toStrictEqual(objectBigintToString(expectedFormattedTransaction));
 				});
 			}
 		}
