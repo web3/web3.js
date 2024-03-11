@@ -118,7 +118,6 @@ export abstract class SocketProvider<
 
 		this._socketPath = socketPath;
 		this._socketOptions = socketOptions;
-
 		this._reconnectOptions = {
 			...DEFAULT_RECONNECTION_OPTIONS,
 			...(reconnectOptions ?? {}),
@@ -465,7 +464,6 @@ export abstract class SocketProvider<
 		if (this._sentRequestsQueue.has(requestId)) {
 			throw new RequestAlreadySentError(requestId);
 		}
-
 		const deferredPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
 		deferredPromise.catch(error => {
 			this._eventEmitter.emit('error', error);

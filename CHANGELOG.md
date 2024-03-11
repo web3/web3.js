@@ -2353,4 +2353,34 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
+## [4.6.0]
+
+### Added
+
+#### web3
+
+-   Added EIP-6963 utility function `requestEIP6963Providers` for multi provider discovery 
+
+#### web3-eth
+
+-   Added `eth.getMaxPriorityFeePerGas` method (#6748)
+
+#### web3-eth-ens
+
+-   Added function `setAddress` in ENS and Resolver classes (#5956)
+
+#### web3-rpc-methods
+
+-   Added `getMaxPriorityFeePerGas` method (#6748)
+
+#### web3-types
+
+-   Type `FeeData` to be filled by `await web3.eth.calculateFeeData()` to be used with EIP-1559 transactions (#6795)
+
+### Fixed
+
+#### web3-utils
+
+-   replaced our eventEmitter to EventEmitter3 to support react native builds (#6253)
+
 ## [Unreleased]

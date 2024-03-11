@@ -191,8 +191,10 @@ Documentation:
 
 -   Dependencies updated ( details are in root changelog )
 
-## [Unreleased]
+## [4.6.0]
 
 ### Added
 
--   Added EIP-6963 utility function `requestEIP6963Providers` for multi provider discovery 
+-   Added EIP-6963 utility function `requestEIP6963Providers` for multi provider discovery ( other details are in root changelog )
+
+## [Unreleased]
