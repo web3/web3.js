@@ -279,7 +279,10 @@ const conversionBaseData: [[Numbers, EtherUnits], string][] = [
 
 export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
 	...conversionBaseData,
-	[['0xff', 'wei'], '255'],
+    [['0xff', 'wei'], '255'],
+    [[1e+22, 'ether'], '10000'],
+    [['19999999999999990000000', 'ether'], '19999.99999999999'],
+    [[1.9999999999999991611392e+22, 'ether'], '19999.999999999991611392'],
 ];
 
 export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
