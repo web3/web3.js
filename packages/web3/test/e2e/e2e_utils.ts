@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * @NOTE This Util method is kept seperate from shared system_test_utils.ts file because
+ * @NOTE This Util method is kept separate from shared system_test_utils.ts file because
  * of it's import of .secrets.json. For this method to exist in shared system_test_utils.ts
  * file, the import path would be ../.secrets.json which doesn't resolve when the file is
  * copied over to each package's test directory. Because web3 package is the only package

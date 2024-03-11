@@ -548,7 +548,7 @@ export interface FeeData {
 	readonly gasPrice?: Numbers;
 
 	/**
-	 * The baseFeePerGas returned from the the last available block.
+	 * The baseFeePerGas returned from the last available block.
 	 * 
 	 * If EIP-1559 is not supported, this will be `undefined`
 	 * 
