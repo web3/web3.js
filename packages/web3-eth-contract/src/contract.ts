@@ -160,8 +160,8 @@ export type ContractMethodSend = Web3PromiEvent<
 	FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
 	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 >;
-
 export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
+	// eslint-disable-next-line no-use-before-define
 	Contract<Abi>,
 	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 >;
