@@ -2260,7 +2260,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-core
 
--	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+-	Web3config `contractDataInputFill` has been defaulted to `data`, instead of `input`. (#6622)
 
 #### web3-eth-contracts
 
