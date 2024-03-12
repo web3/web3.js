@@ -11,7 +11,7 @@ Following the recent compatibility update of Hardhat plugin [hardhat-web3-v4](ht
 This tutorial will guide you through using Web3js as a plugin to interact with the Blockchain.
 
 ## Pre-requisite
-This tutorial assumes you have previous knowledge of writing Smart contracts, and are convenient working with Javascript/Typescript. You should have [NodeJS](https://nodejs.org/en) version greater than v16 installed.
+This tutorial assumes you have previous knowledge of writing Smart contracts, and are convenient working with JavaScript/TypeScript. You should have [NodeJS](https://nodejs.org/en) version greater than v16 installed.
 
 :::note
 To install dependencies, we will use `NPM`. 
@@ -49,7 +49,7 @@ npx hardhat init
 
 ### Install required dependencies (including `hardhat-web3-v4`)
 
-Select `Typescript` and `Yes` for the rest of the options.
+Select `TypeScript` and `Yes` for the rest of the options.
 You will be prompted to install the required dependencies. Reply `yes` to complete the installation.
 To include the `Hardhat-web3-v4` plugin, we will install it via `npm`. 
 

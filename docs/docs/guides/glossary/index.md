@@ -83,24 +83,24 @@ contract Test {
 ```json title='Resulting JSON ABI'
 [
     {
-        "type": "constructor"
+        "type": "constructor",
         "stateMutability": "nonpayable",
         "inputs": [{"internalType":"uint256","name":"testInt","type":"uint256"}],
     },
     {
-        "type": "event"
+        "type": "event",
         "name": "Event",
         "inputs": [{"indexed":true,"internalType":"uint256","name":"b","type":"uint256"},{"indexed":false,"internalType":"bytes32","name":"c","type":"bytes32"}],
         "anonymous": false,
     },
     {
-        "type": "event"
+        "type": "event",
         "name": "Event2",
         "inputs": [{"indexed":true,"internalType":"uint256","name":"b","type":"uint256"},{"indexed":false,"internalType":"bytes32","name":"c","type":"bytes32"}],
         "anonymous": false,
     },
     {
-        "type": "function"
+        "type": "function",
         "name": "foo",
         "stateMutability": "nonpayable",
         "inputs": [{"internalType":"uint256","name":"b","type":"uint256"},{"internalType":"bytes32","name":"c","type":"bytes32"}],

@@ -413,7 +413,7 @@ export class Contract<Abi extends ContractAbi>
 	 * });
 	 * ```
 	 *
-	 * To use the type safe interface for these contracts you have to include the ABI definitions in your Typescript project and then declare these as `const`.
+	 * To use the type safe interface for these contracts you have to include the ABI definitions in your TypeScript project and then declare these as `const`.
 	 *
 	 * ```ts title="Example"
 	 * const myContractAbi = [....] as const; // ABI definitions
