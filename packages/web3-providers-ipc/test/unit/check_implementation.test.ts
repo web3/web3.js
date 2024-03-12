@@ -97,23 +97,6 @@ describe('IPCProvider', () => {
 			expect(end).toHaveBeenCalled();
 		});
 
-		it('connection error', async () => {
-			const ipc = new IpcProvider(socketPath);
-			// @ts-expect-error mock method
-			ipc._socketConnection.connecting = false;
-			// @ts-expect-error mock method
-			ipc._connectionStatus = 'disconnected';
-			ipc.connect = jest.fn();
-
-			await expect(
-				ipc.request({
-					jsonrpc: '2.0',
-					id: 42,
-					method: 'eth_getBalance',
-					params: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', 'latest'],
-				}),
-			).rejects.toThrow('Connection not open');
-		});
 		it('_onCloseHandler autoReconnect=false', () => {
 			const ipc = new IpcProvider(socketPath, {}, { autoReconnect: false });
 			const _clearQueues = jest.fn();

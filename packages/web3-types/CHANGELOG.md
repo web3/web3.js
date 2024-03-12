@@ -183,8 +183,10 @@ Documentation:
 
 -   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
 
-## [Unreleased]
+## [1.5.0]
 
 ### Added
 
 -   Type `FeeData` to be filled by `await web3.eth.calculateFeeData()` to be used with EIP-1559 transactions (#6795)
+
+## [Unreleased]
