@@ -82,6 +82,7 @@ async function transferWithEIP1559() {
   } 
   catch (error) {
     console.error('Error:', error);
+  }
 ```
 ## Conclusion
 In this tutorial, we learned how to sign a set up RPC urls and transfer erc-20 tokens with the help of Web3.js library.
