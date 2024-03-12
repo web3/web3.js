@@ -903,7 +903,7 @@ export class Common extends EventEmitter {
 				// eslint-disable-next-line no-null/no-null
 				hf.block === null || (hf.ttd !== undefined && hf.ttd !== null) ? 0 : hf.block,
 			);
-			// Typescript can't seem to follow that the hfBlock is not null at this point
+			// TypeScript can't seem to follow that the hfBlock is not null at this point
 			// eslint-disable-next-line no-null/no-null
 			return block > hfBlock! && acc === null ? block : acc;
 			// eslint-disable-next-line no-null/no-null

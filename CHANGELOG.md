@@ -179,13 +179,13 @@ Released with 1.0.0-beta.37 code base.
 
 -   Introduce review and release guidelines. (#3460)
 -   Add EIP-1193 compatible provider to `AbstractProvider` interface. (#3499)
--   Add Typescript definitions for contract `methods` and `call`. (#3454)
+-   Add TypeScript definitions for contract `methods` and `call`. (#3454)
 -   Update AbstractProvider and contract.methods TS definitions (#3521)
 -   Add support for ENS contenthash methods. (#3392, #2782)
 
 ### Changed
 
--   Change CI provider from Travis to Github Actions. (#3468)
+-   Change CI provider from Travis to GitHub Actions. (#3468)
 -   Update `web3-eth-abi` ABICoder dependency. (#3490)
 -   Update AbiCoder param formatting (#3522)
 -   Improve code clarity of HttpProvider keepAlive option setting. (#3463)
@@ -354,7 +354,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 
--   Github action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
+-   GitHub action for running tests for `web3-eth2-core` and `web3-eth2-beaconchain` packages (#3892)
 -   Added description to documentation on how to connect using a remote node provider (#3884)
 -   Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
 -   `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
@@ -366,7 +366,7 @@ Released with 1.0.0-beta.37 code base.
 -   Renamed the `tsc` script in all packages to `compile`; updates the corresponding `lerna run` usage in the main `package.json` (#3894)
 -   moved deprecation warnings to postinstall scripts (#3917)
 -   Upgrade `@chainsafe/geth-dev-assistant` from `0.1.5` to `0.1.9` (#3950)
--   Replaced hardcoded infura link with Github Secret for some tests (#3943)
+-   Replaced hardcoded infura link with GitHub Secret for some tests (#3943)
 -   Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-eth-accounts` (#3941)
 -   Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-bzz` (#3940)
 -   Bump `elliptic` from `6.5.3` to `6.5.4` for `web3-core-requestmanager` (#3945)
@@ -466,13 +466,13 @@ Released with 1.0.0-beta.37 code base.
 
 -   Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
 -   Added missing PromiEvent handler types (#4194)
--   Updated README to include Webpack 5 angular support instructions (#4174)
+-   Updated README to include webpack 5 angular support instructions (#4174)
 -   Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
 -   Emit subscription id with connect event when creating a subscription (#4300)
 -   Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt (#3891)
 -   Format `block.baseFeePerGas` to number (#4330)
 -   Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
--   Updated README to include Webpack 5 angular support instructions (#4174)
+-   Updated README to include webpack 5 angular support instructions (#4174)
 
 ### Fixed
 
@@ -509,7 +509,7 @@ Released with 1.0.0-beta.37 code base.
 -   Fix typos in web3-utils.rst (#4662)
 -   Added effectiveGasPrice to TransactionReceipt (#4692)
 -   Correction in documentation for `web3.eth.accounts.signTransaction` (#4576)
--   Updated README to include Webpack 5 create-react-app support instructions (#4173)
+-   Updated README to include webpack 5 create-react-app support instructions (#4173)
 -   Update the documentation for `methods.myMethod.estimateGas` (#4702)
 -   Fix typos in REVIEW.md and TESTING.md (#4691)
 -   Fix encoding for "0x" string values (#4512)
@@ -562,7 +562,7 @@ Released with 1.0.0-beta.37 code base.
 
 -   Replace deprecated String.prototype.substr() (#4855)
 -   Exporting AbiCoder as coder (#4937)
--   Github build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
+-   GitHub build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
 -   Updated libraries using BN and the BN library (#5072)
 
 ### Added
@@ -950,7 +950,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-validator
 
--   Fix issue when importing `web3-validator` package within browser environments (Webpack minified filename changed from `index.min.js` to `web3-validator.min.js`) (#5710)
+-   Fix issue when importing `web3-validator` package within browser environments (webpack minified filename changed from `index.min.js` to `web3-validator.min.js`) (#5710)
 -   Fix build error '"type"' does not satisfy the constraint (#5712)
 
 #### web3-eth-abi
