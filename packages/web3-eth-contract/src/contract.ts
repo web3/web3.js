@@ -82,6 +82,8 @@ import {
 	EventLog,
 	ContractAbiWithSignature,
 	ContractOptions,
+	TransactionReceipt,
+	FormatType,
 } from 'web3-types';
 import {
 	format,
@@ -154,7 +156,12 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } & { [key: string]: ContractBoundMethod<any> };
 
-export type ContractMethodSend<Abi extends ContractAbi> = Web3PromiEvent<
+export type ContractMethodSend = Web3PromiEvent<
+	FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
+	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+>;
+
+export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
 	Contract<Abi>,
 	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 >;
@@ -779,7 +786,7 @@ export class Contract<Abi extends ContractAbi>
 		const deployData = _input ?? _data;
 		return {
 			arguments: args,
-			send: (options?: PayableTxOptions): ContractMethodSend<Abi> => {
+			send: (options?: PayableTxOptions): ContractDeploySend<Abi> => {
 				const modifiedOptions = { ...options };
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -1107,7 +1114,7 @@ export class Contract<Abi extends ContractAbi>
 						block,
 					),
 
-				send: (options?: PayableTxOptions | NonPayableTxOptions) =>
+				send: (options?: PayableTxOptions | NonPayableTxOptions): ContractMethodSend =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
 
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
