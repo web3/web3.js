@@ -25,12 +25,12 @@ export class ChunkResponseParser {
 	private _clearQueues: (() => void) | undefined;
 	private readonly eventEmitter: EventEmitter;
 	private readonly autoReconnect: boolean;
-	private readonly chunkTimout: number;
+	private readonly chunkTimeout: number;
 
 	public constructor(eventEmitter: EventEmitter, autoReconnect: boolean) {
 		this.eventEmitter = eventEmitter;
 		this.autoReconnect = autoReconnect;
-		this.chunkTimout = 1000 * 15;
+		this.chunkTimeout = 1000 * 15;
 	}
 	private clearQueues(): void {
 		if (typeof this._clearQueues === 'function') {
@@ -83,7 +83,7 @@ export class ChunkResponseParser {
 							error: { code: 2, message: 'Chunk timeout' },
 						}),
 					);
-				}, this.chunkTimout);
+				}, this.chunkTimeout);
 				return;
 			}
 
