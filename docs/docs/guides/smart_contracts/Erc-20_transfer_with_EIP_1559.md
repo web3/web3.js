@@ -31,25 +31,6 @@ Before we start writing and deploying our contract, we need to set up our enviro
 
 Here we initialize Web3 and set an RPC url inside `const Url;` , add our private key in the `const privateKey;` , then we specify the erc20 token inside the  
  `const tokenAdress;`
-``` 
-Javascript
-
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract myContract{
-
-const Web3 = require('web3');
-
-
-const Url = 'wss://mainnet.infura.io/v3/******';
-
-const privateKey = 'YOUR_PRIVATE_KEY';
-
-const tokenAddress = '0x...'; 
-}
-
-```
 
 Inside the `async function transferWithEIP1559()`, we initialize a provider, then add account and get the current base fee from the network to store it inside of  
 `const gasPrice;` , next we set the maximum priority fee we are willing to allocate inside  `const maxPriorityFeePerGas;`, to do this we make use of utils package of web3.js, which is imported at the top.
@@ -57,12 +38,22 @@ Inside the `async function transferWithEIP1559()`, we initialize a provider, the
 Construct the Transaction object:  
 To send the transaction details to the RPC provider for the transfer, we need to format the details in the tx object(transaction object). The tx object must contain the following:  
 from, to, value, gas, maxPriorityFeePerGas.
+Sign and send the transaction:  
 
+To sign a transaction we perform the `signTransaction` method on the account with the help of the web3.js lib.
+Next we use the `sendSignedTransaction` method with the `signedTx` parameters.
+``` 
+Javascript:
 
-```
+const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
+const Web3 = require('web3');
+
+const Url = 'wss://mainnet.infura.io/v3/******';
+const privateKey = 'YOUR_PRIVATE_KEY';
+const tokenAddress = '0x...'; 
+
 async function transferWithEIP1559() {
   try {
-    const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
 
     const account = web3.eth.accounts.privateKeyToAccount(privateKey);
     web3.eth.accounts.wallet.add(account);
@@ -83,21 +74,14 @@ async function transferWithEIP1559() {
       maxPriorityFeePerGas,
       type: 2, // EIP-1559 transaction type
     };
-    ```
-
-Sign and send the transaction:  
-To sign a transaction we perform the `signTransaction` method on the account with the help of the web3.js lib.
-Next we use the `sendSignedTransaction` method with the `signedTx` parameters.
-
-```
- // Sign and send the transaction
+    // Sign and send the transaction
     const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
     const txHash = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 
     console.log(`Transaction hash: ${txHash}`);
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Error:', error);
-  }
 ```
 ## Conclusion
 In this tutorial, we learned how to sign a set up RPC urls and transfer erc-20 tokens with the help of Web3.js library.
