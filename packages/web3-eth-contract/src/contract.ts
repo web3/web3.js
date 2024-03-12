@@ -83,7 +83,13 @@ import {
 	ContractAbiWithSignature,
 	ContractOptions,
 } from 'web3-types';
-import { format, isDataFormat, keccak256, toChecksumAddress , isContractInitOptions } from 'web3-utils';
+import {
+	format,
+	isDataFormat,
+	keccak256,
+	toChecksumAddress,
+	isContractInitOptions,
+} from 'web3-utils';
 import {
 	isNullish,
 	validator,
@@ -113,7 +119,7 @@ type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
 	Method extends ContractMethod<Abi> = ContractMethod<Abi>,
 > = (
-	...args: Method['Inputs'] extends undefined|unknown ? any[] : Method['Inputs']
+	...args: Method['Inputs'] extends undefined | unknown ? any[] : Method['Inputs']
 ) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
 	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
 	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;
@@ -147,6 +153,11 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 	// To allow users to use method signatures
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } & { [key: string]: ContractBoundMethod<any> };
+
+export type ContractMethodSend<Abi extends ContractAbi> = Web3PromiEvent<
+	Contract<Abi>,
+	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+>;
 
 /**
  * @hidden
@@ -768,12 +779,7 @@ export class Contract<Abi extends ContractAbi>
 		const deployData = _input ?? _data;
 		return {
 			arguments: args,
-			send: (
-				options?: PayableTxOptions,
-			): Web3PromiEvent<
-				Contract<Abi>,
-				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> => {
+			send: (options?: PayableTxOptions): ContractMethodSend<Abi> => {
 				const modifiedOptions = { ...options };
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
