@@ -236,7 +236,7 @@ describe('contract defaults (extra)', () => {
 	});
 
 	describeIf(isWs)('blockHeaderTimeout', () => {
-		it('should use "blockHeaderTimout" on "instance" level', async () => {
+		it('should use "blockHeaderTimeout" on "instance" level', async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});

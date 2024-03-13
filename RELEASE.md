@@ -22,7 +22,7 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 
 ### Running E2E Tests
 
-`E2E Network Tests` will be triggered to run via a Github workflow when a PR is open for a branch prefixed with `release/` and is being merged into `4.x` branch. These tests depend on a couple of ENVs to be set that are configurable in Github's Action Secrets when running these tests in CI. The following required secrets are:
+`E2E Network Tests` will be triggered to run via a GitHub workflow when a PR is open for a branch prefixed with `release/` and is being merged into `4.x` branch. These tests depend on a couple of ENVs to be set that are configurable in GitHub's Action Secrets when running these tests in CI. The following required secrets are:
 
 -   `E2E_TESTS_ALLOWED_SEND_TRANSACTION`: If set to `false` this will keep the Sepolia tests that spend ETH from running, setting to anything else will cause them to run
 -   `TEST_ACCOUNT_PRIVATE_KEY`: The private key of the Sepolia account to use when submitting transactions
@@ -50,7 +50,7 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 8. `git tag bumped-version`: Tag the commit with bumped version having prefix `v` , e.g. `git tag v4.0.1-alpha.0`
 9. `git push origin release/bumped-version`: Push release branch to `origin`
 10. `git push origin --tags`: Push release tag created in `Step 8` to `origin`
-11. Create a draft release on Github similar to [this](https://github.com/web3/web3.js/releases/tag/v4.2.0)
+11. Create a draft release on GitHub similar to [this](https://github.com/web3/web3.js/releases/tag/v4.2.0)
 
     - Select recently pushed tag in `choose a tag` drop down
 
