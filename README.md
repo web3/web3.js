@@ -15,7 +15,8 @@ Web3.js is a TypeScript implementation of the [Ethereum JSON RPC API](https://et
 
 ## Installation
 
-You can install the package either using [NPM](https://www.npmjs.com/package/web3) or using [Yarn](https://yarnpkg.com/package/web3)
+You can install the package either using [NPM](https://www.npmjs.com/package/web3) or using [Yarn](https://yarnpkg.com/package/web3) or using [Pnpm](https://pnpm.io/)
+
 
 > If you wanna checkout latest bugfix or feature, use `npm install web3@dev`
 
@@ -29,6 +30,12 @@ npm install web3
 
 ```bash
 yarn add web3
+```
+
+### Using Pnpm
+
+```bash
+pnpm add web3
 ```
 
 ## Getting Started
