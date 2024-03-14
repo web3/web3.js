@@ -55,7 +55,7 @@ describe('chunk_response_parser', () => {
 
 	it('lastChunkTimeout error', async () => {
 		// @ts-expect-error set private property
-		parser.chunkTimout = 10;
+		parser.chunkTimeout = 10;
 		parser.parseResponse(
 			'{"jsonrpc":"2.0","id":"96aa3f13-077c-4c82-a64a-64b8626f8192","result":"0x141414141',
 		);
