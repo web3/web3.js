@@ -124,7 +124,7 @@ jobs:
               with:
                     path: ./
                     key: web3-${{ matrix.node }}-${{github.sha}}
-            - run: yarn build
+            - run: yarn
             - run: yarn test:unit
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v3
