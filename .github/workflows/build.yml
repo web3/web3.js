@@ -120,10 +120,6 @@ jobs:
               with:
                   architecture: x64
                   node-version: ${{ matrix.node }}
-            - uses: actions/cache/restore@v3
-              with:
-                    path: ./
-                    key: web3-${{ matrix.node }}-${{github.sha}}
             - run: yarn
             - run: yarn test:unit
             - name: Upload coverage to Codecov
