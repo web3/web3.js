@@ -14,7 +14,7 @@ To help you get started, take a look at a list of useful plugins at [https://web
 
 Here is a video reference:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/iF_O7ggQaQw?si=1HyFI-8ijVXdqChv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/iF_O7ggQaQw?si=1HyFI-8ijVXdqChv" title ="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ## Installing the Plugin
 

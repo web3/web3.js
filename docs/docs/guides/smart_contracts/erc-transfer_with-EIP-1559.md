@@ -1,6 +1,9 @@
 
 # ERC-20 Transfers and EIP-1559
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## Introduction
 In this tutorial we will walk through sending transactions with the tx object and understand how the transaction gets executed, using web3.js version 4x.
 
@@ -15,22 +18,27 @@ also a tip for miners was introduced to incentivize them, which will prioritize 
 
 Here is a high-level overview of the steps we will be taking in this tutorial:
 
-1. Setting up  
-2. Get current base fee from the network  
+1. Setting up.
+2. Get current base fee from the network.  
 3. Set max priority fee.  
-4. Construct the transaction object
-5. Sign and send the transaction to the RPC provider
-
+4. Construct the transaction object.
+5. Sign and send the transaction to the RPC provider.
+6. Catch errors if any.
 Before we start writing and deploying our contract, we need to set up our environment. For that, we need to install the following:
 
 1. Node.js - Node.js is a JavaScript runtime environment that allows you to run JavaScript on the server-side. You can download it from https://nodejs.org/en/download/  
 
 2. npm - Node Package Manager is used to publish and install packages to and from the public npm registry or a private npm registry. Here is how to install it https://docs.npmjs.com/downloading-and-installing-node-js-and-npm. (Alternatively, you can use yarn instead of npm https://classic.yarnpkg.com/lang/en/docs/getting-started/)
 
-# Getting started
+## Getting started
 
-Here we initialize Web3 and set an RPC url inside `const Url;` , add our private key in the `const privateKey;` , then we specify the erc20 token inside the  
- `const tokenAdress;`
+Here we initialize Web3 and set an RPC url inside `const url;` , add our private key in the `const privateKey;` , then we specify the erc20 token inside the  
+ `const tokenAdress;`  
+   
+   
+There are two languages the demo is written in, typescript and javascript,
+typescript has `transferWithEIP1559(amountToTransfer: string): Promise<void> ` function and javascript has`async function transferWithEIP1559()` function.
+in typescript we have explicitly defined the type for the transaction object. Refer the tabs below.with specific type of parameters `amountToTransfer: string` and a defined return type `Promise<void>`.
 
 Inside the `async function transferWithEIP1559()`, we initialize a provider, then add account and get the current base fee from the network to store it inside of  
 `const gasPrice;` , next we set the maximum priority fee we are willing to allocate inside  `const maxPriorityFeePerGas;`, to do this we make use of utils package of web3.js, which is imported at the top.
@@ -42,13 +50,24 @@ Sign and send the transaction:
 
 To sign a transaction we perform the `signTransaction` method on the account with the help of the web3.js lib.
 Next we use the `sendSignedTransaction` method with the `signedTx` parameters.
+
+Error handling:
+The catch block is activated if any exceptions or errors are thrown within the try block.
+this logs the error message to the console using `console.error('Error:', error).`
+
+
+<Tabs groupId='prog-lang' queryString>
+
+  <TabItem value='javascript' label='JavaScript'
+  	attributes={{className: 'javascript-tab'}}>
+
 ``` 
 Javascript:
 
 const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
 const Web3 = require('web3');
 
-const Url = 'wss://mainnet.infura.io/v3/******';
+const url = 'wss://mainnet.infura.io/v3/******';
 const privateKey = 'YOUR_PRIVATE_KEY';
 const tokenAddress = '0x...'; 
 
@@ -83,7 +102,58 @@ async function transferWithEIP1559() {
   catch (error) {
     console.error('Error:', error);
   }
+}
 ```
+
+  </TabItem>
+  
+  <TabItem value='typescript' label='TypeScript' default
+  	attributes={{className: 'typescript-tab'}}>
+
+```
+Typescript:
+
+const providerUrl = 'wss://mainnet.infura.io/v3/******'; 
+const privateKey = 'YOUR_PRIVATE_KEY'; // Replace with your actual private key (never share this!)
+const tokenAddress = '0x...'; 
+const web3 = new Web3(new WebsocketProvider(providerUrl));
+
+async function transferWithEIP1559(amountToTransfer: string): Promise<void> { // Explicitly define return type
+  try {
+
+    const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+    web3.eth.accounts.wallet.add(account);
+
+    // Get current base fee from the network
+    const gasPrice = await web3.eth.gasPrice();
+
+    // Set max priority fee 
+    const maxPriorityFeePerGas = web3.utils.toWei('2', 'gwei');
+
+    // Construct the transaction object
+    const tx: Web3.Types.Transaction = {
+      from: account.address,
+      to: tokenAddress,
+      value: web3.utils.toWei(amountToTransfer, 'ether'), // Ensure correct unit for ERC-20 tokens
+      gas: web3.utils.toHex(210000),
+      gasPrice,
+      maxPriorityFeePerGas,
+      type: 2, // EIP-1559 transaction type
+    };
+
+    // Sign and send the transaction
+    const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+    const txHash = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+    console.log(`Transaction hash: ${txHash}`);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
 ## Conclusion
 In this tutorial, we learned how to set up RPC urls, create a transaction object, sign it and  and transfer erc-20 tokens with the help of Web3.js library.
 
