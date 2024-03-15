@@ -2384,3 +2384,13 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   replaced our eventEmitter to EventEmitter3 to support react native builds (#6253)
 
 ## [Unreleased]
+### Changed
+
+#### web3
+
+-   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+
+### Added
+
+#### web3-eth-contract
+
