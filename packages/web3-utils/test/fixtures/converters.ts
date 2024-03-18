@@ -282,9 +282,11 @@ export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
 	[['0xff', 'wei'], '255'],
 ];
 
-export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
+export const toWeiValidData: [[Numbers, EtherUnits], Numbers][] = [
 	...conversionBaseData,
 	[['255', 'wei'], '0xFF'],
+	[['255', 'wei'], '0xFF'],
+	[['100000000000', 'ether'], 0.0000001],
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [

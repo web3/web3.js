@@ -544,17 +544,21 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	if (!denomination) {
 		throw new InvalidUnitError(unit);
 	}
-
+	
+	// create error if decimal place is over 20 digits
+	const parsedNumber = typeof number === 'number' ? number.toLocaleString('fullwide', {useGrouping: false, maximumFractionDigits: 20}) : number;
+	// console.log(parsedNumber)
 	// if value is decimal e.g. 24.56 extract `integer` and `fraction` part
 	// to avoid `fraction` to be null use `concat` with empty string
 	const [integer, fraction] = String(
-		typeof number === 'string' && !isHexStrict(number) ? number : toNumber(number),
+		typeof parsedNumber === 'string' && !isHexStrict(parsedNumber) ? parsedNumber : toNumber(parsedNumber),
 	)
 		.split('.')
 		.concat('');
 
 	// join the value removing `.` from
 	// 24.56 -> 2456
+	
 	const value = BigInt(`${integer}${fraction}`);
 
 	// multiply value with denomination
