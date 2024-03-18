@@ -21,9 +21,7 @@ import { mergeDeepData } from '../fixtures/objects';
 describe('objects', () => {
 	describe('mergeDeep', () => {
 		it.each(mergeDeepData)('$message', ({ destination, sources, output }) => {
-			mergeDeep(destination, ...sources);
-
-			expect(destination).toEqual(output);
+			expect(mergeDeep(destination, ...sources)).toEqual(output);
 		});
 
 		it('should not mutate the sources', () => {

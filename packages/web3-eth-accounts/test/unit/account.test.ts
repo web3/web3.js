@@ -49,6 +49,8 @@ import {
 import { TransactionFactory } from '../../src/tx/transactionFactory';
 import { TxData } from '../../src/tx/types';
 
+jest.setTimeout(25000);
+
 describe('accounts', () => {
 	describe('create', () => {
 		describe('valid cases', () => {

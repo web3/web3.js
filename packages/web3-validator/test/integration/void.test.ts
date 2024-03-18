@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { Eip1193Provider, SocketProvider } from 'web3-utils';
-
-export * as http from 'web3-providers-http';
-export * as ws from 'web3-providers-ws';
-export * from './web3_eip6963.js';
+describe('Web3 validator test', () => {
+	it('void', () => {
+		expect(1).toBe(1);
+	});
+});
