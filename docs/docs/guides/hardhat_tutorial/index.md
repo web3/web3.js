@@ -11,7 +11,7 @@ Following the recent compatibility update of Hardhat plugin [hardhat-web3-v4](ht
 This tutorial will guide you through using Web3js as a plugin to interact with the Blockchain.
 
 ## Pre-requisite
-This tutorial assumes you have previous knowledge of writing Smart contracts, and are convenient working with Javascript/Typescript. You should have [NodeJS](https://nodejs.org/en) version greater than v16 installed.
+This tutorial assumes you have previous knowledge of writing Smart contracts, and are convenient working with JavaScript/TypeScript. You should have [NodeJS](https://nodejs.org/en) version greater than v16 installed.
 
 :::note
 To install dependencies, we will use `NPM`. 
@@ -49,7 +49,7 @@ npx hardhat init
 
 ### Install required dependencies (including `hardhat-web3-v4`)
 
-Select `Typescript` and `Yes` for the rest of the options.
+Select `TypeScript` and `Yes` for the rest of the options.
 You will be prompted to install the required dependencies. Reply `yes` to complete the installation.
 To include the `Hardhat-web3-v4` plugin, we will install it via `npm`. 
 
@@ -72,7 +72,7 @@ export default config;
 
 ```
 
-By default, `hardhat-toolbox` is added to the file. You will need to explicity invoke the plugin. This will modify the Hardhat Run-time Environment - HRE and to include both the Web3 class and an instantiated web3 object. With the latter, you get a modified ready-to-use web3 object can comes with an initialized local/Hardhat provider. The object will be available to use anywhere in the project such as testing and deployment files.
+By default, `hardhat-toolbox` is added to the file. You will need to explicitly invoke the plugin. This will modify the Hardhat Run-time Environment - HRE and to include both the Web3 class and an instantiated web3 object. With the latter, you get a modified ready-to-use web3 object can comes with an initialized local/Hardhat provider. The object will be available to use anywhere in the project such as testing and deployment files.
 
 ### Write the Smart Contract
 When you start a new project, Hardhat provides a sample `Lock` contracts. Please refer to the contract in `myproject/contracts/Lock.sol` file.

@@ -6,6 +6,11 @@ sidebar_label: Quickstart
 
 # Quickstart
 
+
+## Live code editor
+
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-aksddx?embed=1&file=main.js&showSidebar=1"></iframe> 
+
 ## Installation
 
 If NPM is being used as package manager, use the following for installing the web3.js library. 
@@ -247,7 +252,3 @@ const subscription = uniswapToken.events.Transfer();
 subscription.on('data',console.log);
 // ↳ [{...},{...}, ...] live events will be printed in the console
 ```
-
-## Live code editor
-
-<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-aksddx?embed=1&file=main.js&showSidebar=1"></iframe> 

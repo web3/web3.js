@@ -25,7 +25,7 @@ contract GreeterWithOverloading {
 		return (true, greeting);
 	}
 
-    // function overlading with addtional parameter
+    // function overlading with additional parameter
 	function setGreeting(string memory _greeting, bool _raiseEvents) public returns (bool, string memory) {
 		if(_raiseEvents) {
 			emit GREETING_CHANGING(greeting, _greeting);
