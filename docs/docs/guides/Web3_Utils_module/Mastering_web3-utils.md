@@ -1,37 +1,45 @@
 # Mastering web3.js Utils
 
 ## Introduction
+In this tutorial, we'll learn about the different functionalities of the web3 utils package, it contains the methods to know how to generate random bytes in different formats, how to perform conversion between Hex values in strings and numbers, hashing functions, addresses, packing padding and in the last part we'll look at how to compare block numbers.
 
 ## Imports
 
 There are three different ways to import utils package.
 
-1. Import the entire web3 module and initialize a provider:
+1.Import the entire web3 module and initialize a provider:
 
-    `const [ Web3 ] = require("web3"); ` 
+```bash
+const [ Web3 ] = require("web3"); 
+```
+then initializing  a provider with 
+```bash
+const web3 = new Web3("");
+```
+To be able to access the package you need to type
 
-    then initializing  a provider with 
-    `const web3 = new Web3("");`
-
-    To be able to access the package you need to type
-    `web3.utils.toWei()`
+```bash 
+web3.utils.toWei()
+```
 
 
-2. Import only the utils package from web3:
-
-    `const { utils } = require("web3");` 
-
-    `import { Web3 } from 'web3';`
-
-    `import * as utils from 'web3-utils';`
-
+2.Import only the utils package from web3:
+```bash 
+const { utils } = require("web3"); 
+```
+```bash
+import { Web3 } from 'web3';
+```
+```bash
+import * as utils from 'web3-utils';
+```
     Then you are also able to use any function like
     `utils.toWei()`
 
-3. Import a specific function from the utils package: 
-
-    `const { toWei } = require("web3-utils");`
-    
+3.Import a specific function from the utils package: 
+```bash
+const { toWei } = require("web3-utils");
+```    
     then you'll be able to use it here `toWei();`
 
 
@@ -39,14 +47,16 @@ There are three different ways to import utils package.
 
 There are two ways to generate Random Bytes.
 
-1. The first function that is known as Random Bytes, it receives a parameter of the size of bytes you want to generate and it will return the bytes in an array format.
-
-    array format `console.log(utils.randomBytes());`
-
-2. The second function is known as Random Hex also requires a parameter of the size of bytes and it will return the bytes in Hexadecimal format
-
-    Hex format `console.log(utils.randomHex());`
-
+1.The first function that is known as Random Bytes, it receives a parameter of the size of bytes you want to generate and it will return the bytes in an array format.
+    array format 
+```bash
+console.log(utils.randomBytes());
+```
+2.The second function is known as Random Hex also requires a parameter of the size of bytes and it will return the bytes in Hexadecimal format
+    Hex format 
+```bash    
+console.log(utils.randomHex());
+```
     If you don't give any arguments then both of these functions will have a default value as 32.
 
 
@@ -54,22 +64,24 @@ There are two ways to generate Random Bytes.
 
 We've got two different functions to perform conversions between Ethereum denominations.
 
-1. `toWei(any) -> wei `
+a.`toWei(any) -> wei `  
+For example, if we want to convert 1 ether to wei we can use the function below
+```bash
+console.log(utils.toWei("1", "ether"));
+```
+And to convert gwei to wei, we can do the following.  
+```bash
+console.log(utils.toWei("1", "gwei"));
+```
 
-    For example, if we want to convert 1 ether to wei we can use the function below
-    `console.log(utils.toWei("1", "ether"));`
-
-    And to convert gwei to wei, we can do the following.  
-    `console.log(utils.toWei("1", "gwei"));`
-
-2. `fromWei(wei) -> any`
-    To use the second function, you can convert 10^18(1000000000000000000) wei to ether, to get its output you can follow the below given methid.
-    `console.log(utils.FromWei("1000000000000000000", "ether"));`
-
-    You can follow the same method to convert 1000000000000000000 to gwei, which is given below.
-    `console.log("utils.fromWei("1000000000000000000", "gwei"));`
-
-    When you run the console, it will show us the results.
+b.`fromWei(wei) -> any`  
+To use the second function, you can convert 10^18(1000000000000000000) wei to ether, to get its output you can follow the below given methid.
+```bash
+console.log(utils.FromWei("1000000000000000000", "ether"));
+```
+You can follow the same method to convert 1000000000000000000 to gwei, which is given below.
+`console.log("utils.fromWei("1000000000000000000", "gwei"));`  
+When you run the console, it will show us the results.
 
 
 ## Conversions to Hex Values
@@ -129,11 +141,14 @@ You can convert Hexadecimal values to UTF and ASCII values. UTF has a broader ra
 Example function:
 
 For Emoji to UTF:
- `console.log("utf:", utils.toUtf8("0xf09f988a"));`
+```bash
+console.log("utf:", utils.toUtf8("0xf09f988a"));`
+```
 
 For emoji to Ascii:
- `console.log("ascii:", utils.toAscii("0xf09f988a"));`
-
+```bash
+console.log("ascii:", utils.toAscii("0xf09f988a"));
+```
 
 ## Conversions - Numbers and Bigint
 
@@ -225,6 +240,7 @@ In the above example, 'latest' represents the latest block number, while '0x1b4'
 
 Keep in mind that you need to have the web3.js Utils module installed in your project to use this function. You can install it using npm:
 
-`npm install web3-utils`
-
+```bash
+npm install web3-utils
+```
 
