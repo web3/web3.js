@@ -91,3 +91,13 @@ yarn add web3
 
 [npm-url]: https://npmjs.org/package/web3
 [downloads-image]: https://img.shields.io/npm/dm/web3?label=npm%20downloads
+
+## Contributors
+
+<a href="https://github.com/web3/web3.js/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=web3/web3.js&max=400&columns=20" width="100%"/>
+</a>
+
+## Star History Chart
+
+[![Star History Chart](https://api.star-history.com/svg?repos=web3/web3.js&type=Date)](https://star-history.com/#web3/web3.js&Date)
