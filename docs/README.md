@@ -1,7 +1,11 @@
 # Website
 
 This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+### Requirement
 
+Before getting started, ensure that you have ``Yarn`` installed on your machine.
+
+[How to install Yarn](https://www.hostinger.com/tutorials/how-to-install-yarn)
 ### Installation
 
 ```
