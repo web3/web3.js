@@ -21,6 +21,7 @@ import { Web3ContractError } from 'web3-errors';
 import { Web3Context , Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
 import { AbiItem } from 'web3-utils';
+import { stringify } from 'flatted';
 import {Abi} from '../fixtures/AbiItem'
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
@@ -507,7 +508,7 @@ describe('Contract', () => {
 				expect(error).toBeInstanceOf(Web3ValidatorError);
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Web3ValidatorError).message).toBe(
-					'Web3 validator found 1 error[s]:\nmust NOT have more than 1 items',
+					'Web3 validator found 2 error[s]:\nmust NOT have more than 1 items\nvalue "true" at "/1" must pass "string" validation',
 				);
 			}
 
@@ -755,7 +756,7 @@ describe('Contract', () => {
 
 			const clonnedContract = contract.clone();
 
-			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+			expect(stringify(contract)).toStrictEqual(stringify(clonnedContract));
 
 			contract.options.jsonInterface = GreeterAbi;
 		});
@@ -764,7 +765,7 @@ describe('Contract', () => {
 			const contract = new Contract(sampleStorageContractABI);
 
 			const clonnedContract = contract.clone();
-			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+			expect(stringify(contract)).toStrictEqual(stringify(clonnedContract));
 		});
 
 		it('should be able to update the jsonInterface', () => {

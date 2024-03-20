@@ -187,7 +187,7 @@ export const numberToHex = (value: Numbers, hexstrict?: boolean): HexString => {
 	let updatedValue = validatorUtils.numberToHex(value);
 	if (hexstrict) {
 		if (!updatedValue.startsWith('-') && updatedValue.length % 2 === 1) {
-			// To avoid duplicate a circular dependancy we will not be using the padLeft method
+			// To avoid duplicate a circular dependency we will not be using the padLeft method
 			updatedValue = '0x0'.concat(updatedValue.slice(2));
 		} else if (updatedValue.length % 2 === 0 && updatedValue.startsWith('-'))
 			updatedValue = '-0x0'.concat(updatedValue.slice(3));

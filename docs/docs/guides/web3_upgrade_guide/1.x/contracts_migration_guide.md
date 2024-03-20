@@ -9,7 +9,7 @@ sidebar_label: web3.eth.Contract
 
 ### Receipt Status
 
-The `receipt.status` will now be be an `unsigned integer` instead of `boolean` value to comply with the specification.
+The `receipt.status` will now be an `unsigned integer` instead of `boolean` value to comply with the specification.
 
 ```ts
 // in 1.x
