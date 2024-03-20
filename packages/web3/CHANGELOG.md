@@ -191,4 +191,14 @@ Documentation:
 
 -   Dependencies updated ( details are in root changelog )
 
+## [4.6.0]
+
+### Added
+
+-   Added EIP-6963 utility function `requestEIP6963Providers` for multi provider discovery ( other details are in root changelog )
+
 ## [Unreleased]
+
+### Changed
+
+-   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)

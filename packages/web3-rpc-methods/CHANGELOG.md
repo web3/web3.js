@@ -132,8 +132,10 @@ Documentation:
 
 -   Fix web3-types import #6590 (#6589)
 
-## [Unreleased]
+## [1.2.0]
 
 ### Added
 
 -   Added `getMaxPriorityFeePerGas` method (#6748)
+
+## [Unreleased]

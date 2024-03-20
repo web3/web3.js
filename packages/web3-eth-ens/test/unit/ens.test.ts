@@ -110,6 +110,22 @@ describe('ens', () => {
 	});
 
 	describe('addr', () => {
+		it('setAddr valid', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setAddressMock = jest.spyOn(ens['_resolver'], 'setAddress').mockReturnValue({
+				send,
+			} as unknown as Web3PromiEvent<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await ens.setAddress(ENS_NAME, mockAddress, sendOptions);
+			expect(setAddressMock).toHaveBeenCalledWith(
+				ENS_NAME,
+				mockAddress,
+				sendOptions,
+			);
+		});
 		it('getAddress', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const call = jest.spyOn({ call: () => {} }, 'call');

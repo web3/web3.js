@@ -58,9 +58,9 @@ const contract = new Contract(abi);
 
 ## Compatibility
 
-We have tested the Typescript interface support for the ABIs compiled with solidity version `v0.4.x` and above. If you face any issue regarding the contract typing, please create an issue to report to us.
+We have tested the TypeScript interface support for the ABIs compiled with solidity version `v0.4.x` and above. If you face any issue regarding the contract typing, please create an issue to report to us.
 
-The Typescript support for fixed length array types are supported up 30 elements. See more details [here](https://github.com/ChainSafe/web3.js/blob/nh%2F4562-contract-typing/packages/web3-eth-abi/src/number_map_type.ts#L1). This limitation is only to provide more performant developer experience in IDEs. In future we may come up with a workaround to avoid this limitation. If you have any idea feel free to share.
+The TypeScript support for fixed length array types are supported up 30 elements. See more details [here](https://github.com/ChainSafe/web3.js/blob/nh%2F4562-contract-typing/packages/web3-eth-abi/src/number_map_type.ts#L1). This limitation is only to provide more performant developer experience in IDEs. In future we may come up with a workaround to avoid this limitation. If you have any idea feel free to share.
 
 ## Package.json Scripts
 
