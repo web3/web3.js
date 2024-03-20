@@ -365,3 +365,7 @@ Documentation:
 -	Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
 
 ## [Unreleased]
+
+### Added
+
+-	Types `ContractDeploySend`, `ContractMethodSend` was added (#6883)
