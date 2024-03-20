@@ -33,9 +33,12 @@ describe('web3-validator', () => {
 		});
 
 		describe('validate', () => {
-			it('should pass for valid data', () => {
-				expect(validator.validate(['uint'], [1])).toBeUndefined();
-			});
+            describe('should pass for valid data', () => {
+                it.each(abiToJsonSchemaCases)('$title', ({ abi }) => {
+                    const arrayData: ReadonlyArray<unknown> = abi.data as Array<any>;
+                    expect(validator.validate(abi.fullSchema, arrayData)).toBeUndefined();
+                });
+            })
 
 			it('should raise error with empty value', () => {
 				expect(() => validator.validate(['string'], [])).toThrow(

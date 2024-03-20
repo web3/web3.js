@@ -163,3 +163,7 @@ Documentation:
 -   Fixed an issue with detecting Uint8Array (#6486)
 
 ## [Unreleased]
+
+### Fixed
+
+- Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
