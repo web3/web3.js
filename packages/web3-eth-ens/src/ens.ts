@@ -166,6 +166,13 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	}
 
 	/**
+	 * ERC-634 - Returns the text content stored in the resolver for the specified key.
+	 */
+	public async getText(ENSName: string, key: string): Promise<string> {
+		return this._resolver.text(ENSName, key);
+	}
+
+	/**
 	 * Returns the X and Y coordinates of the curve point for the public key.
 	 * @param ENSName - The ENS name
 	 * @returns - The X and Y coordinates of the curve point for the public key
