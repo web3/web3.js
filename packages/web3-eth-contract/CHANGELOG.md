@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Receipt Status
 
-The receiptInfo Status will now be be an unsigned integer instead of boolean value to comply with the specification.
+The receiptInfo Status will now be an unsigned integer instead of boolean value to comply with the specification.
 
 [https://github.com/ethereum/execution-apis/blob/773ffd230ae5cd037e32415855cf8d4f1e729b2d/src/schemas/receipt.yaml#L94-L97](https://github.com/ethereum/execution-apis/blob/773ffd230ae5cd037e32415855cf8d4f1e729b2d/src/schemas/receipt.yaml#L94-L97)
 

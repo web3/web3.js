@@ -55,7 +55,7 @@ lernaBuildAndCommit() {
     yarn build
 
     git add .
-    git commit -m "Comitting for black box publish"
+    git commit -m "Committing for black box publish"
 }
 
 lernaPublish() {
