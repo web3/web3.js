@@ -130,12 +130,12 @@ export class Resolver {
 	}
 
 	public async getName(
-		ENSName: string
+		address: string
 	) {
-		const resolverContract = await this.getResolverContractAdapter(ENSName);
+		const resolverContract = await this.getResolverContractAdapter(address);
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
 
 		return resolverContract.methods
-			.name(namehash(ENSName)).call()
+			.name(namehash(address)).call()
 	}
 }

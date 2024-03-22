@@ -167,9 +167,22 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * ERC-634 - Returns the text content stored in the resolver for the specified key.
+	 * @param ENSName - The ENS name to resolve
+	 * @param key - The key to resolve https://github.com/ethereum/ercs/blob/master/ERCS/erc-634.md#global-keys
+	 * @returns - The value content stored in the resolver for the specified key
 	 */
 	public async getText(ENSName: string, key: string): Promise<string> {
-		return this._resolver.text(ENSName, key);
+		return this._resolver.getText(ENSName, key);
+	}
+
+
+	/**
+	 * Resolves an ENS name to an Ethereum address.
+	 * @param address - The address to resolve
+	 * @returns - The ENS name of the given address
+	 */
+	public async getName(address: string): Promise<string> {
+		return this._resolver.getName(address);
 	}
 
 	/**
