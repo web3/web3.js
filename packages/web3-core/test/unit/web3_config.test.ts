@@ -117,7 +117,7 @@ describe('Web3Config', () => {
 		expect(() => {
 			obj.defaultChain = 'test';
 		}).toThrow(
-			'Web3Config chain doesnt match in defaultHardfork mainnet and common.hardfork test',
+			`Web3Config chain doesn't match in defaultHardfork mainnet and common.hardfork test`,
 		);
 	});
 

@@ -151,7 +151,7 @@ describe('prepareTransactionForSigning', () => {
 
 		// if the value here is different from the one in context.defaultCommon.hardfork
 		// Then an error will be thrown:
-		// "ConfigHardforkMismatchError: Web3Config hardfork doesnt match in defaultHardfork london and common.hardfork istanbul"
+		// "ConfigHardforkMismatchError: Web3Config hardfork doesn't match in defaultHardfork london and common.hardfork istanbul"
 		context.config.defaultHardfork = Hardfork.Istanbul;
 		context.defaultCommon = {
 			customChain: {
@@ -202,7 +202,7 @@ describe('prepareTransactionForSigning', () => {
 
 		// if the value here is different from the one in context.defaultCommon.hardfork
 		// Then an error will be thrown:
-		// "ConfigHardforkMismatchError: Web3Config hardfork doesnt match in defaultHardfork london and common.hardfork istanbul"
+		// "ConfigHardforkMismatchError: Web3Config hardfork doesn't match in defaultHardfork london and common.hardfork istanbul"
 		context.config.defaultHardfork = Hardfork.Istanbul;
 		context.defaultCommon = {
 			customChain: {
