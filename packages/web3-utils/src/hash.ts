@@ -233,8 +233,8 @@ const elementaryName = (name: string): string => {
  * returns the size of the value of type 'byte'
  */
 const parseTypeN = (value: string, typeLength: number): number => {
-	const typesize = /^(\d+).*$/.exec(value.slice(typeLength));
-	return typesize ? parseInt(typesize[1], 10) : 0;
+	const typeSize = /^(\d+).*$/.exec(value.slice(typeLength));
+	return typeSize ? parseInt(typeSize[1], 10) : 0;
 };
 
 /**
