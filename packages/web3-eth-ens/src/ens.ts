@@ -177,12 +177,12 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 
 	/**
-	 * Resolves an ENS name to an Ethereum address.
-	 * @param address - The address to resolve
-	 * @returns - The ENS name of the given address
+	 * Resolves the name of an ENS node.
+	 * @param ENSName - The node to resolve
+	 * @returns - The name
 	 */
-	public async getName(address: string): Promise<string> {
-		return this._resolver.getName(address);
+	public async getName(ENSName: string): Promise<string> {
+		return this._resolver.getName(ENSName);
 	}
 
 	/**
