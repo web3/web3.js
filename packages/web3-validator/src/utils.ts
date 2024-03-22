@@ -177,6 +177,7 @@ export const abiSchemaToJsonSchema = (
 		for (let i = arraySizes.length - 1; i > 0; i -= 1) {
 			childSchema = {
 				type: 'array',
+				$id: abiName,
 				items: [],
 				maxItems: arraySizes[i],
 				minItems: arraySizes[i],
@@ -192,7 +193,7 @@ export const abiSchemaToJsonSchema = (
 				lastSchema.items = [lastSchema.items as JsonSchema, childSchema];
 			} // lastSchema.items is an empty Scheme array, set it to 'childSchema'
 			else if (lastSchema.items.length === 0) {
-				lastSchema.items = childSchema;
+				lastSchema.items = [childSchema];
 			} // lastSchema.items is a non-empty Scheme array, append 'childSchema'
 			else {
 				lastSchema.items.push(childSchema);
@@ -205,43 +206,31 @@ export const abiSchemaToJsonSchema = (
 			nestedTuple.$id = abiName;
 			(lastSchema.items as JsonSchema[]).push(nestedTuple);
 		} else if (baseType === 'tuple' && isArray) {
-			const arraySize = arraySizes[0];
-			const item: JsonSchema = {
-				$id: abiName,
-				type: 'array',
-				items: abiSchemaToJsonSchema(abiComponents, abiName),
-				maxItems: arraySize,
-				minItems: arraySize,
-			};
+            const arraySize = arraySizes[0];
+            const item: JsonSchema = {
+                type: 'array',
+                $id: abiName,
+                items: abiSchemaToJsonSchema(abiComponents, abiName),
+                ...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
+            };
 
-			if (arraySize < 0) {
-				delete item.maxItems;
-				delete item.minItems;
-			}
-
-			(lastSchema.items as JsonSchema[]).push(item);
+            (lastSchema.items as JsonSchema[]).push(item);
 		} else if (isArray) {
-			const arraySize = arraySizes[0];
-			const item: JsonSchema = {
-				type: 'array',
-				$id: abiName,
-				items: convertEthType(String(baseType)),
-				minItems: arraySize,
-				maxItems: arraySize,
-			};
+		    const arraySize = arraySizes[0];
+            const item: JsonSchema = {
+                type: 'array',
+                $id: abiName,
+                items: convertEthType(abiType),
+                ...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
+            };
 
-			if (arraySize < 0) {
-				delete item.maxItems;
-				delete item.minItems;
-			}
-
-			(lastSchema.items as JsonSchema[]).push(item);
+            (lastSchema.items as JsonSchema[]).push(item);
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
 			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
 		} else {
 			// Nested object
-			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({
+			(lastSchema.items as JsonSchema[]).push({
 				$id: abiName,
 				...convertEthType(abiType),
 			});
