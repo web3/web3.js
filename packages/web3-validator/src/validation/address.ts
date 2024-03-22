@@ -66,7 +66,7 @@ export const isAddress = (value: ValidInputTypes, checkChecksum = true) => {
 	if (!/^(0x)?[0-9a-f]{40}$/i.test(valueToCheck)) {
 		return false;
 	}
-	// If it's ALL lowercase or ALL upppercase
+	// If it's ALL lowercase or ALL uppercase
 	if (
 		/^(0x|0X)?[0-9a-f]{40}$/.test(valueToCheck) ||
 		/^(0x|0X)?[0-9A-F]{40}$/.test(valueToCheck)
