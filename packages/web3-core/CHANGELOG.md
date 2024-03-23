@@ -123,7 +123,7 @@ Documentation:
 
 ### Added
 
--   Web3Subscription constructor accept a Subscription Manager (as an alternative to accepting Request Manager that is now marked marked as deprecated) (#6210)
+-   Web3Subscription constructor accept a Subscription Manager (as an alternative to accepting Request Manager that is now marked as deprecated) (#6210)
 
 ### Changed
 

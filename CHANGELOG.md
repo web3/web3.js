@@ -1640,7 +1640,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-core
 
--   Web3Subscription constructor accept a Subscription Manager (as an alternative to accepting Request Manager that is now marked marked as deprecated) (#6210)
+-   Web3Subscription constructor accept a Subscription Manager (as an alternative to accepting Request Manager that is now marked as deprecated) (#6210)
 
 #### web3-types
 
