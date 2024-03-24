@@ -369,3 +369,7 @@ Documentation:
 ### Added
 
 -	Types `ContractDeploySend`, `ContractMethodSend` was added (#6883)
+
+### Fixed
+
+-	Fix an issue with smart contract function overloading (#6922)
