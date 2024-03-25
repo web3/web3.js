@@ -199,9 +199,10 @@ Documentation:
 
 -   replaced our eventEmitter to EventEmitter3 to support react native builds (#6253)
 
-## [Unreleased]
+## [4.2.2]
 
 ### Fixed
 
-- fixed erroneous parsing of big numbers in the `fromWei(...)` function (#6880)
+- fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
+## [Unreleased]
