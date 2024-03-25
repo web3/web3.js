@@ -411,6 +411,13 @@ export const toHex = (
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
+            if (value > 1e+20) {
+                // JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
+                // leading to potential parsing errors and incorrect representations.
+                // For instance, String(10000000000000000000000) yields '1e+22'.
+                // Using BigInt prevents this
+                return BigInt(value);
+            }
 		return value;
 	}
 
