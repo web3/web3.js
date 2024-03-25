@@ -19,7 +19,7 @@ import { Web3PluginBase } from 'web3-core';
 import { Web3Context } from './reexported_web3_context';
 
 type CustomRpcApi = {
-	custom_rpc_method: () => string;
+	custom_rpc_method_without_parameters: () => string;
 	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
 };
 
@@ -28,7 +28,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 
 	public async customRpcMethod() {
 		return this.requestManager.send({
-			method: 'custom_rpc_method',
+			method: 'custom_rpc_method_without_parameters',
 			params: [],
 		});
 	}
