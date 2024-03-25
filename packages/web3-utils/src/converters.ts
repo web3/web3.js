@@ -41,6 +41,7 @@ import {
 	InvalidBytesError,
 	InvalidNumberError,
 	InvalidUnitError,
+	InvalidNumberDecimalPrecisionLossError
 } from 'web3-errors';
 import { isUint8Array } from './uint8array.js';
 
@@ -411,6 +412,7 @@ export const toHex = (
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
+			console.warn('Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
             if (value > 1e+20) {
                 // JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
                 // leading to potential parsing errors and incorrect representations.
@@ -551,10 +553,15 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	if (!denomination) {
 		throw new InvalidUnitError(unit);
 	}
+	if (typeof number === 'number'){
+		console.warn('Warning: The type `numbers` that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
+		if (number  < 1e-15){
+			throw new InvalidNumberDecimalPrecisionLossError(number);
+		}
+	}
 	
 	// create error if decimal place is over 20 digits
 	const parsedNumber = typeof number === 'number' ? number.toLocaleString('fullwide', {useGrouping: false, maximumFractionDigits: 20}) : number;
-	// console.log(parsedNumber)
 	// if value is decimal e.g. 24.56 extract `integer` and `fraction` part
 	// to avoid `fraction` to be null use `concat` with empty string
 	const [integer, fraction] = String(
