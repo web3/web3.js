@@ -243,8 +243,12 @@ const parseTypeN = (value: string, typeLength: number): number => {
  * @returns - the bit length of the input
  */
 const bitLength = (value: bigint | number): number => {
-	const updatedVal = value.toString(2);
-	return updatedVal.length;
+    let len = 0;
+    while (n !== 0){
+        len++;
+        n>>=1;
+    }
+	return len;
 };
 
 /**
