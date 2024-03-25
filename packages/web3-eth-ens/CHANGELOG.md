@@ -148,3 +148,7 @@ Documentation:
 -   Added function `setAddress` in ENS and Resolver classes (#5956)
 
 ## [Unreleased]
+
+### Add
+
+- Added function getText and getName in ENS and resolver classes
