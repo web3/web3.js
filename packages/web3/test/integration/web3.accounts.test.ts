@@ -25,7 +25,7 @@ import {
 } from '../shared_fixtures/system_tests_utils';
 import Web3, { SupportedProviders } from '../../src/index';
 
-const hexRegx = /0[xX][0-9a-fA-F]+/;
+const hexRegex = /0[xX][0-9a-fA-F]+/;
 
 describe('web3.accounts', () => {
 	let clientUrl: string | SupportedProviders;
@@ -51,8 +51,8 @@ describe('web3.accounts', () => {
 
 			expect(account).toEqual(
 				expect.objectContaining({
-					address: expect.stringMatching(hexRegx),
-					privateKey: expect.stringMatching(hexRegx),
+					address: expect.stringMatching(hexRegex),
+					privateKey: expect.stringMatching(hexRegex),
 				}),
 			);
 		});
@@ -86,12 +86,12 @@ describe('web3.accounts', () => {
 
 				expect(signedTx).toEqual(
 					expect.objectContaining({
-						messageHash: expect.stringMatching(hexRegx),
-						rawTransaction: expect.stringMatching(hexRegx),
-						transactionHash: expect.stringMatching(hexRegx),
-						v: expect.stringMatching(hexRegx),
-						r: expect.stringMatching(hexRegx),
-						s: expect.stringMatching(hexRegx),
+						messageHash: expect.stringMatching(hexRegex),
+						rawTransaction: expect.stringMatching(hexRegex),
+						transactionHash: expect.stringMatching(hexRegex),
+						v: expect.stringMatching(hexRegex),
+						r: expect.stringMatching(hexRegex),
+						s: expect.stringMatching(hexRegex),
 					}),
 				);
 
@@ -163,12 +163,12 @@ describe('web3.accounts', () => {
 
 			expect(signedTx).toEqual(
 				expect.objectContaining({
-					messageHash: expect.stringMatching(hexRegx),
-					rawTransaction: expect.stringMatching(hexRegx),
-					transactionHash: expect.stringMatching(hexRegx),
-					v: expect.stringMatching(hexRegx),
-					r: expect.stringMatching(hexRegx),
-					s: expect.stringMatching(hexRegx),
+					messageHash: expect.stringMatching(hexRegex),
+					rawTransaction: expect.stringMatching(hexRegex),
+					transactionHash: expect.stringMatching(hexRegex),
+					v: expect.stringMatching(hexRegex),
+					r: expect.stringMatching(hexRegex),
+					s: expect.stringMatching(hexRegex),
 				}),
 			);
 
