@@ -152,6 +152,9 @@ export interface Withdrawals {
 }
 
 export interface BlockHeaderOutput {
+	readonly blobGasUsed?: Numbers;
+	readonly excessBlobGas?: Numbers;
+	readonly parentBeaconBlockRoot?: HexString32Bytes;
 	readonly hash?: HexString32Bytes;
 	readonly parentHash?: HexString32Bytes;
 	readonly receiptsRoot?: HexString32Bytes;

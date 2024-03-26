@@ -342,6 +342,15 @@ export const withdrawalsSchema = {
 export const blockHeaderSchema = {
 	type: 'object',
 	properties: {
+		blobGasUsed: {
+			format: 'uint',
+		},
+		excessBlobGas: {
+			format: 'uint',
+		},
+		parentBeaconBlockRoot: {
+			format: 'bytes32',
+		},
 		author: {
 			format: 'bytes32',
 		},

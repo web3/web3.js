@@ -59,6 +59,7 @@ import { decodeSignedTransaction } from './utils/decode_signed_transaction.js';
 import {
 	accountSchema,
 	blockSchema,
+	blockHeaderSchema,
 	feeHistorySchema,
 	logSchema,
 	transactionReceiptSchema,
@@ -257,7 +258,7 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 			hydrated,
 		);
 	}
-	return format(blockSchema, response as unknown as Block, returnFormat);
+	return format(blockHeaderSchema, response as unknown as Block, returnFormat);
 }
 
 /**
