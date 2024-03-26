@@ -117,4 +117,25 @@ export class Resolver {
 			.setAddr(namehash(ENSName), address)
 			.send(txConfig);
 	}
+
+	public async getText(
+		ENSName: string,
+		key: string,
+	) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.text);
+
+		return resolverContract.methods
+			.text(namehash(ENSName), key).call()
+	}
+
+	public async getName(
+		address: string
+	) {
+		const resolverContract = await this.getResolverContractAdapter(address);
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
+
+		return resolverContract.methods
+			.name(namehash(address)).call()
+	}
 }
