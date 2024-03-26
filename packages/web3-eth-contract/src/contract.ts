@@ -446,7 +446,11 @@ export class Contract<Abi extends ContractAbi>
 	);
 	public constructor(
 		jsonInterface: Abi,
-		addressOrOptionsOrContext?: Address | ContractInitOptions | Web3ContractContext | Web3Context,
+		addressOrOptionsOrContext?:
+			| Address
+			| ContractInitOptions
+			| Web3ContractContext
+			| Web3Context,
 		optionsOrContextOrReturnFormat?:
 			| ContractInitOptions
 			| Web3ContractContext
@@ -472,14 +476,20 @@ export class Contract<Abi extends ContractAbi>
 		}
 
 		let provider;
-		if (typeof addressOrOptionsOrContext === 'object' && 'provider' in addressOrOptionsOrContext) {
+		if (
+			typeof addressOrOptionsOrContext === 'object' &&
+			'provider' in addressOrOptionsOrContext
+		) {
 			provider = addressOrOptionsOrContext.provider;
 		} else if (
 			typeof optionsOrContextOrReturnFormat === 'object' &&
 			'provider' in optionsOrContextOrReturnFormat
 		) {
 			provider = optionsOrContextOrReturnFormat.provider;
-		} else if (typeof contextOrReturnFormat === 'object' && 'provider' in contextOrReturnFormat) {
+		} else if (
+			typeof contextOrReturnFormat === 'object' &&
+			'provider' in contextOrReturnFormat
+		) {
 			provider = contextOrReturnFormat.provider;
 		} else {
 			provider = Contract.givenProvider;
@@ -937,7 +947,10 @@ export class Contract<Abi extends ContractAbi>
 						if (hashedIndexedString === String(log.returnValues[key])) return true;
 					}
 
-					return String(log.returnValues[key]).toUpperCase() === String(filter[key]).toUpperCase();
+					return (
+						String(log.returnValues[key]).toUpperCase() ===
+						String(filter[key]).toUpperCase()
+					);
 				});
 			});
 		}
@@ -962,7 +975,9 @@ export class Contract<Abi extends ContractAbi>
 		let result: ContractAbi = [];
 
 		const functionsAbi = abis.filter(abi => abi.type !== 'error');
-		const errorsAbi = abis.filter(abi => isAbiErrorFragment(abi)) as unknown as AbiErrorFragment[];
+		const errorsAbi = abis.filter(abi =>
+			isAbiErrorFragment(abi),
+		) as unknown as AbiErrorFragment[];
 
 		for (const a of functionsAbi) {
 			const abi: Mutable<AbiFragment & { signature: HexString }> = {
@@ -977,7 +992,9 @@ export class Contract<Abi extends ContractAbi>
 
 				// make constant and payable backwards compatible
 				abi.constant =
-					abi.stateMutability === 'view' ?? abi.stateMutability === 'pure' ?? abi.constant;
+					abi.stateMutability === 'view' ??
+					abi.stateMutability === 'pure' ??
+					abi.constant;
 
 				abi.payable = abi.stateMutability === 'payable' ?? abi.payable;
 				this._overloadedMethodAbis.set(abi.name, [
@@ -1001,8 +1018,9 @@ export class Contract<Abi extends ContractAbi>
 				};
 
 				// We don't know a particular type of the Abi method so can't type check
-				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] = this._functions[methodName]
-					.method as never;
+				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] = this._functions[
+					methodName
+				].method as never;
 
 				// We don't know a particular type of the Abi method so can't type check
 				this._methods[methodName as keyof ContractMethodsInterface<Abi>] =
@@ -1103,7 +1121,14 @@ export class Contract<Abi extends ContractAbi>
 				call: async (
 					options?: PayableCallOptions | NonPayableCallOptions,
 					block?: BlockNumberOrTag,
-				) => this._contractMethodCall(methodAbi, abiParams, internalErrorsAbis, options, block),
+				) =>
+					this._contractMethodCall(
+						methodAbi,
+						abiParams,
+						internalErrorsAbis,
+						options,
+						block,
+					),
 
 				send: (options?: PayableTxOptions | NonPayableTxOptions): ContractMethodSend =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
@@ -1310,7 +1335,11 @@ export class Contract<Abi extends ContractAbi>
 		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): ContractBoundEvent {
 		return (...params: unknown[]) => {
-			const { topics, fromBlock } = encodeEventABI(this.options, abi, params[0] as EventParameters);
+			const { topics, fromBlock } = encodeEventABI(
+				this.options,
+				abi,
+				params[0] as EventParameters,
+			);
 			const sub = new LogsSubscription(
 				{
 					address: this.options.address,
@@ -1320,7 +1349,10 @@ export class Contract<Abi extends ContractAbi>
 				},
 				{
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					subscriptionManager: this.subscriptionManager as Web3SubscriptionManager<unknown, any>,
+					subscriptionManager: this.subscriptionManager as Web3SubscriptionManager<
+						unknown,
+						any
+					>,
 					returnFormat,
 				},
 			);
@@ -1333,7 +1365,10 @@ export class Contract<Abi extends ContractAbi>
 						}
 					})
 					.catch((error: Error) => {
-						sub.emit('error', new SubscriptionError('Failed to get past events.', error));
+						sub.emit(
+							'error',
+							new SubscriptionError('Failed to get past events.', error),
+						);
 					});
 			}
 			this.subscriptionManager?.addSubscription(sub).catch((error: Error) => {
