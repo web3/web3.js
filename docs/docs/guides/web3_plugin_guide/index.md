@@ -1,50 +1,73 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Introduction'
+sidebar_label: 'Getting started'
 ---
 
-# Introduction
+# Getting Started
 
 Welcome to the web3.js Plugins Guide, an exciting new feature introduced in web3.js v4! In addition to the core web3.js libraries, plugins bring specialized functionalities tailored for end-users (functionalities that you, as a developer, can create). These enhancements may involve creating wrappers for specific contracts, adding extra features to RPC methods, or extending the capabilities of web3.js methods. Dive in and explore this innovative addition to web3.js v4!
 
 - [Plugin Developer Guide (For Creators)](/guides/web3_plugin_guide/plugin_authors)
 - [Plugin User Guide (Usage)](/guides/web3_plugin_guide/plugin_users)
-- [Plugin List](https://web3js.org/plugins)
+
+- You can find all the web3 plugins🧩 [here](https://web3js.org/plugins) 
+
+- To list your web3 plugin🧩 into the web3js.org/plugins page, you can submit a PR [here](https://github.com/web3/web3js-landing/blob/main/src/pluginList.ts)
+
+## Create a plugin
+
+```javascript
+//1. import the `Web3PluginBase` module
+const { Web3PluginBase } = require("web3");
+
+//2. Create a Class extending the `Web3Pluginbase`
+class MyPlugin extends Web3PluginBase {
+    
+    //3. Add a name to the plugin
+    pluginNamespace = "pluginExample"; 
+
+    //4. Createa any methods with your desired functionality
+    async doSomething(){
+        console.log("Hello web3!");
+        //send transactions
+        //initialize contracts
+        //deploy or interact with contracts
+        //add your own library, logic or functionality
+        //much more...
+    }
+}
+
+module.exports = MyPlugin;
+```
+
+## Use a plugin
+
+```javascript
+//1. import the plugin and web3 module
+const { Web3 } = require("web3");
+const MyPlugin = require("./plugin");
+
+//2. Initialize the web3 instance
+const web3 = new Web3("https://eth.llamarpc.com");
+
+//3. Register plugin to add the current Web3Context
+web3.registerPlugin(new MyPlugin());
+
+//4. Use the plugin methods
+web3.pluginExample.doSomething();
+//--> Hello web3!
+```
+
+## Using web3 packages on the plugin
+
+### Import eth module
+Here you will find a file `plugin.js` with the plugin code and a `usage.js` file with the example usage, feel free to navigate between both files.
+
+<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-ujbf9d?embed=1&file=plugin.js&showSidebar=1"></iframe>   
+
+### Import utils module
+Here you will find a file `plugin.js` with the plugin code and a `usage.js` file with the example usage, feel free to navigate between both files.
+
+<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-snkfuk?embed=1&file=plugin.js&showSidebar=1"></iframe>   
 
 
-## Plugin Showcase
-
-### Chainlink Plugin
-- [`npm i @chainsafe/web3-plugin-chainlink`](https://www.npmjs.com/package/@chainsafe/web3-plugin-chainlink)
-- **Description**: A Web3.js 4.x Plugin for Interacting With Chainlink Smart Contracts
-- **Author**: ChainSafe Systems
-
-### Tokens Plugin
-- [`npm i @chainsafe/web3-plugin-tokens`](https://www.npmjs.com/package/@chainsafe/web3-plugin-tokens)
-- **Description**: Plugin to extend web3.js with additional methods to interact with common token interfaces (ERC20, ERC721, ERC1155...)
-- **Author**: Peter Grassberger & ChainSafe
-
-### Craftsman Plugin
-- [`npm i web3-plugin-craftsman`](https://www.npmjs.com/package/web3-plugin-craftsman)
-- **Description**: web3.js plugin allowing instantiation of contract objects directly from Solidity source code
-- **Author**: Muhammad-Altabba
-
-### Optimism Plugin
-- [`npm i @eth-optimism/web3.js-plugin`](https://www.npmjs.com/package/@eth-optimism/web3.js-plugin)
-- **Description**: Web3.js plugin for OP-Chain gas estimation
-- **Author**: Unknown
-
-### Near Protocol Plugin
-- [`npm i @conx3/web3-plugin-near`](https://npmjs.com/package/@conx3/web3-plugin-near)
-- **Description**: web3.js plugin for Near Protocol
-- **Author**: Muhammad Altabba
-
-### Aurora Engine Plugin
-- [`npm i @conx3/web3-plugin-aurora`](https://www.npmjs.com/package/@conx3/web3-plugin-aurora)
-- **Description**: web3.js plugin for Aurora Engine, an EVM running atop NEAR protocol
-- **Author**: Muhammad Altabba
-
-### Superfluid Plugin
-- [`npm i web3-plugin-superfluid`](https://www.npmjs.com/package/web3-plugin-superfluid)
-- **Description**: Superfluid Web3.js Plugin
-- **Author**: Salman Dabbakuti
