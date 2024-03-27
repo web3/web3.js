@@ -2383,14 +2383,26 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   replaced our eventEmitter to EventEmitter3 to support react native builds (#6253)
 
-## [Unreleased]
-### Changed
+## [4.7.0]
 
-#### web3
-
--   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
-
-### Added
+### added
 
 #### web3-eth-contract
 
+-   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+
+#### web3-eth-ens
+
+- Added function getText and getName in ENS and resolver classes (#6914)
+
+### fixed
+
+#### web3-validator
+
+- Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
+
+#### web3-utils
+
+- fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
+
+## [Unreleased]
