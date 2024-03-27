@@ -159,14 +159,12 @@ export abstract class SocketProvider<
 							(e as Error).message
 						}`,
 					);
-				} else {
-					throw new InvalidClientError(this._socketPath);
 				}
-			} else {
-				setImmediate(() => {
-					this._reconnect();
-				});
+				throw new InvalidClientError(this._socketPath);
 			}
+			setImmediate(() => {
+				this._reconnect();
+			});
 		}
 	}
 
@@ -187,7 +185,7 @@ export abstract class SocketProvider<
 	protected _validateProviderPath(path: string): boolean {
 		return !!path;
 	}
-	
+
 	/**
 	 *
 	 * @returns the pendingRequestQueue size
@@ -350,14 +348,14 @@ export abstract class SocketProvider<
 
 	/**
 	 * Safely disconnects the socket, async and waits for request size to be 0 before disconnecting
-	 * @param forceDisconnect - If true, will clear queue after 5 attempts of waiting for both pending and sent queue to be 0  
+	 * @param forceDisconnect - If true, will clear queue after 5 attempts of waiting for both pending and sent queue to be 0
 	 * @param ms - Determines the ms of setInterval
 	 * @param code - The code to be sent to the server
 	 * @param data - The data to be sent to the server
 	 */
 	public async safeDisconnect(code?: number, data?: string, forceDisconnect = false,ms = 1000) {
 		let retryAttempt = 0;
-		const checkQueue = async () => 
+		const checkQueue = async () =>
 			new Promise(resolve => {
 				const interval = setInterval(() => {
 					if (forceDisconnect && retryAttempt === 5) {
@@ -370,7 +368,7 @@ export abstract class SocketProvider<
 					retryAttempt+=1;
 				}, ms)
 			})
-		
+
 		await checkQueue();
 		this.disconnect(code, data);
 	}
@@ -388,9 +386,9 @@ export abstract class SocketProvider<
 		// do not emit error while trying to reconnect
 		if (this.isReconnecting) {
 			this._reconnect();
-		} else {
-			this._eventEmitter.emit('error', event);
+            return;
 		}
+		this._eventEmitter.emit('error', event);
 	}
 
 	/**
@@ -427,15 +425,15 @@ export abstract class SocketProvider<
 				this.connect();
 				this.isReconnecting = false;
 			}, this._reconnectOptions.delay);
-		} else {
-			this.isReconnecting = false;
-			this._clearQueues();
-			this._removeSocketListeners();
-			this._eventEmitter.emit(
-				'error',
-				new MaxAttemptsReachedOnReconnectingError(this._reconnectOptions.maxAttempts),
-			);
+            return;
 		}
+		this.isReconnecting = false;
+		this._clearQueues();
+		this._removeSocketListeners();
+		this._eventEmitter.emit(
+			'error',
+			new MaxAttemptsReachedOnReconnectingError(this._reconnectOptions.maxAttempts),
+		);
 	}
 
 	/**
@@ -512,7 +510,7 @@ export abstract class SocketProvider<
 		if (isNullish(responses) || responses.length === 0) {
 			return;
 		}
-		
+
 		for (const response of responses) {
 			if (
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
@@ -544,7 +542,7 @@ export abstract class SocketProvider<
 			this._sentRequestsQueue.delete(requestId);
 		}
 	}
-	
+
 	public clearQueues(event?: ConnectionEvent) {
 		this._clearQueues(event);
 	}
