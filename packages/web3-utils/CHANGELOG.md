@@ -206,3 +206,11 @@ Documentation:
 - fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
 ## [Unreleased]
+
+### Fixed
+
+- `toWei` support numbers in scientific notation #6908
+
+### Added
+
+- `toWei` add warning when using large decimals that may cause precision loss #6908
