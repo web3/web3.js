@@ -329,6 +329,13 @@ describe('errors', () => {
 				} as JsonRpcError<contractErrors.ProviderErrorData>).toJSON(),
 			).toMatchSnapshot();
 		});
+        it('should return correctly when data is undefined', () => {
+			expect(
+				new contractErrors.Eip838ExecutionError({
+					data: undefined,
+				} as JsonRpcError<contractErrors.ProviderErrorData>).toJSON(),
+			).toMatchSnapshot();
+		});
 	});
 
 	describe('ResponseError', () => {
