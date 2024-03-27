@@ -371,3 +371,7 @@ Documentation:
 -   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
 
 ## [Unreleased]
+
+### Fixed
+
+-	Fix an issue with smart contract function overloading (#6922)
