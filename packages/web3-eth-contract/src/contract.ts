@@ -1111,8 +1111,15 @@ export class Contract<Abi extends ContractAbi>
 						`Multiple methods found that is compatible with the given inputs.\n\tFound ${
 							applicableMethodAbi.length
 						} compatible methods: ${JSON.stringify(
-							applicableMethodAbi.map(m => m.methodNameWithInputs + ' -> ' + methodAbi.signature),
-						)} \n\tThe first one will be used: ${methodAbi.methodNameWithInputs}`,
+							applicableMethodAbi.map(
+								m =>
+									`${(m as { methodNameWithInputs: string }).methodNameWithInputs} (${
+										(m as { signature: string }).signature
+									})`,
+							),
+						)} \n\tThe first one will be used: ${
+							(methodAbi as { methodNameWithInputs: string }).methodNameWithInputs
+						}`,
 					);
 					// TODO: 5.x Should throw a new error with the list of methods found.
 					// Related issue: https://github.com/web3/web3.js/issues/6923
