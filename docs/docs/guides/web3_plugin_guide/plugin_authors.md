@@ -14,6 +14,9 @@ use this [template](https://github.com/ChainSafe/web3.js-plugin-template) to sta
 To provide type safety and IntelliSense for your plugin users, please refer to the [Setting Up Module Augmentation](#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
 :::
 
+Here is a video for reference:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fW1PDApXCtM?si=pZtlZ0euNeysZf0L" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ## Plugin Dependencies
 
 At the minimum, your plugin should depend on `web3` package version `4.0.2`. This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/).
