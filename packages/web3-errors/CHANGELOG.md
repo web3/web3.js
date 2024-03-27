@@ -167,3 +167,7 @@ Documentation:
 -   Fixed grammar and spelling in `transactionTimeoutHint` (#6559)
 
 ## [Unreleased]
+
+### Added 
+
+- Add new `InvalidNumberDecimalPrecisionLossError` (#6908)
