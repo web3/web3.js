@@ -1113,7 +1113,7 @@ export class Contract<Abi extends ContractAbi>
 						} compatible methods: ${JSON.stringify(
 							applicableMethodAbi.map(
 								m =>
-									`${(m as { methodNameWithInputs: string }).methodNameWithInputs} (${
+									`${(m as { methodNameWithInputs: string }).methodNameWithInputs} (signature: ${
 										(m as { signature: string }).signature
 									})`,
 							),
