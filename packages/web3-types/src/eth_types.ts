@@ -131,33 +131,32 @@ export interface BlockInput {
 }
 
 export interface BlockOutput {
-    readonly baseFeePerGas?: Numbers;
-    readonly blobGasUsed?: Numbers;
-    readonly difficulty?: Numbers;
-    readonly excessBlobGas?: Numbers;
+    readonly gasLimit: bigint | number;
+    readonly gasUsed: bigint | number;
+	readonly size: bigint | number;
+	readonly timestamp: bigint | number;
+	readonly number?: bigint | number;
+	readonly difficulty?: bigint | number;
+	readonly totalDifficulty?: bigint | number;
+	readonly transactions?: TransactionOutput[];
+	readonly miner?: HexString;
+	readonly baseFeePerGas?: bigint | number;
+	readonly parentHash?: HexString32Bytes;
+
+	// Added properties
+	readonly blobGasUsed?: bigint | number;
+    readonly excessBlobGas?: bigint | number;
     readonly extraData?: Bytes;
-    readonly gasLimit: Numbers;
-    readonly gasUsed: Numbers;
     readonly hash?: HexString32Bytes;
     readonly logsBloom?: Bytes;
-    readonly miner?: HexString;
-    readonly nonce?: Numbers;
-    readonly number?: Numbers;
+    readonly nonce?: bigint | number;
     readonly parentBeaconBlockRoot?: HexString32Bytes;
-    readonly parentHash?: HexString32Bytes;
     readonly receiptsRoot?: HexString32Bytes;
     readonly sha3Uncles: HexString32Bytes[];
     readonly stateRoot?: HexString32Bytes;
-    readonly timestamp: Numbers;
     readonly transactionsRoot?: HexString32Bytes;
     readonly withdrawalsRoot?: HexString32Bytes;
-
-    // These fields are returned when the RPC client is Nethermind,
-    // but aren't available in other clients such as Geth
-    readonly totalDifficulty?: bigint | number;
-    readonly size?: Numbers;
     readonly mixHash?: HexString32Bytes;
-    readonly transactions?: TransactionOutput[];
     readonly uncles?: Uncles;
     readonly withdrawals?: Withdrawals[];
 }
