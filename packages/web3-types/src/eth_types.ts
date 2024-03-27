@@ -154,10 +154,8 @@ export interface BlockOutput {
 
     // These fields are returned when the RPC client is Nethermind,
     // but aren't available in other clients such as Geth
-    readonly author?: Address;
     readonly totalDifficulty?: bigint | number;
     readonly size?: Numbers;
-    readonly excessDataGas?: Numbers;
     readonly mixHash?: HexString32Bytes;
     readonly transactions?: TransactionOutput[];
     readonly uncles?: Uncles;
