@@ -412,8 +412,8 @@ export const toHex = (
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
-			console.warn('Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
-            if (value > 1e+20) {
+			if (value > 1e+20) {
+				console.warn('Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
                 // JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
                 // leading to potential parsing errors and incorrect representations.
                 // For instance, String(10000000000000000000000) yields '1e+22'.
@@ -554,8 +554,8 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 		throw new InvalidUnitError(unit);
 	}
 	if (typeof number === 'number'){
-		console.warn('Warning: The type `numbers` that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
 		if (number  < 1e-15){
+			console.warn('Warning: The type `numbers` that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
 			throw new InvalidNumberDecimalPrecisionLossError(number);
 		}
 	}
