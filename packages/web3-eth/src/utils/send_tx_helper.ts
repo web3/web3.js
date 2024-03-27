@@ -294,8 +294,7 @@ export class SendTxHelper<
 			}
 
 			throw error;
-		} else {
-			return receipt;
 		}
+		return receipt;
 	}
 }

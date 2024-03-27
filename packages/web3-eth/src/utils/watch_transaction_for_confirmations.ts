@@ -68,12 +68,12 @@ export function watchTransactionForConfirmations<
 			transactionPromiEvent,
 			returnFormat,
 		});
-	} else {
-		watchTransactionByPolling({
-			web3Context,
-			transactionReceipt,
-			transactionPromiEvent,
-			returnFormat,
-		});
+        return;
 	}
+	watchTransactionByPolling({
+		web3Context,
+		transactionReceipt,
+		transactionPromiEvent,
+		returnFormat,
+	});
 }

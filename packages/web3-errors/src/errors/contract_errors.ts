@@ -167,9 +167,9 @@ export class Eip838ExecutionError extends Web3ContractError {
 			}
 			this.data = originalError.data;
 			this.cause = new Eip838ExecutionError(originalError as JsonRpcError<ProviderErrorData>);
-		} else {
-			this.data = error.data;
-		}
+            return;
+        }
+		this.data = error.data;
 	}
 
 	public setDecodedProperties(

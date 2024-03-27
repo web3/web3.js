@@ -121,9 +121,8 @@ export class TransactionFactory {
 					throw new Error(`TypedTransaction with ID ${data[0]} unknown`);
 				}
 			}
-		} else {
-			return Transaction.fromSerializedTx(data, txOptions);
 		}
+		return Transaction.fromSerializedTx(data, txOptions);
 	}
 
 	/**

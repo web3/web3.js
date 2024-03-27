@@ -81,12 +81,11 @@ export const getTransactionFromOrToAttr = (
 				throw new LocalWalletNotAvailableError();
 			}
 			throw new LocalWalletNotAvailableError();
-		} else {
-			throw attr === 'from'
-				? new InvalidTransactionWithSender(transaction.from)
-				: // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				  new InvalidTransactionWithReceiver(transaction.to);
 		}
+		throw attr === 'from'
+			? new InvalidTransactionWithSender(transaction.from)
+			: // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			  new InvalidTransactionWithReceiver(transaction.to);
 	}
 	if (attr === 'from') {
 		if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);

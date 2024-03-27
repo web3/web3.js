@@ -47,9 +47,9 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 		if (Array.isArray(cause)) {
 			// eslint-disable-next-line no-use-before-define
 			this.cause = new MultipleErrors(cause);
-		} else {
-			this.cause = cause;
+            return;
 		}
+		this.cause = cause;
 	}
 
 	public constructor(msg?: string, cause?: Error | Error[]) {
