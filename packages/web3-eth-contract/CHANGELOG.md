@@ -364,8 +364,14 @@ Documentation:
 -	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
 -	Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
 
-## [Unreleased]
+## [4.3.0]
 
 ### Added
 
--	Types `ContractDeploySend`, `ContractMethodSend` was added (#6883)
+-   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+
+## [Unreleased]
+
+### Fixed
+
+-	Fix an issue with smart contract function overloading (#6922)
