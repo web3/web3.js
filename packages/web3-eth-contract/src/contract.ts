@@ -988,6 +988,7 @@ export class Contract<Abi extends ContractAbi>
 			if (isAbiFunctionFragment(abi)) {
 				const methodName = jsonInterfaceMethodToString(abi);
 				const methodSignature = encodeFunctionSignature(methodName);
+				abi.methodNameWithInputs = methodName;
 				abi.signature = methodSignature;
 
 				// make constant and payable backwards compatible
@@ -1104,9 +1105,24 @@ export class Contract<Abi extends ContractAbi>
 				}
 				if (applicableMethodAbi.length === 1) {
 					[methodAbi] = applicableMethodAbi; // take the first item that is the only item in the array
-				} else {
+				} else if (applicableMethodAbi.length > 1) {
 					[methodAbi] = applicableMethodAbi; // take the first item in the array
-					// TODO: Should throw a new error with the list of methods found.
+					console.warn(
+						`Multiple methods found that is compatible with the given inputs.\n\tFound ${
+							applicableMethodAbi.length
+						} compatible methods: ${JSON.stringify(
+							applicableMethodAbi.map(
+								m =>
+									`${(m as { methodNameWithInputs: string }).methodNameWithInputs} (signature: ${
+										(m as { signature: string }).signature
+									})`,
+							),
+						)} \n\tThe first one will be used: ${
+							(methodAbi as { methodNameWithInputs: string }).methodNameWithInputs
+						}`,
+					);
+					// TODO: 5.x Should throw a new error with the list of methods found.
+					// Related issue: https://github.com/web3/web3.js/issues/6923
 					// This is in order to provide an error message when there is more than one method found that fits the inputs.
 					// To do that, replace the pervious line of code with something like the following line:
 					// throw new Web3ValidatorError({ message: 'Multiple methods found',  ... list of applicable methods }));
