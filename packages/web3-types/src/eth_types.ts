@@ -131,17 +131,37 @@ export interface BlockInput {
 }
 
 export interface BlockOutput {
-	readonly gasLimit: bigint | number;
-	readonly gasUsed: bigint | number;
-	readonly size: bigint | number;
-	readonly timestamp: bigint | number;
-	readonly number?: bigint | number;
-	readonly difficulty?: bigint | number;
-	readonly totalDifficulty?: bigint | number;
-	readonly transactions?: TransactionOutput[];
-	readonly miner?: HexString;
-	readonly baseFeePerGas?: bigint | number;
-	readonly parentHash?: HexString32Bytes;
+    readonly baseFeePerGas?: Numbers;
+    readonly blobGasUsed?: Numbers;
+    readonly difficulty?: Numbers;
+    readonly excessBlobGas?: Numbers;
+    readonly extraData?: Bytes;
+    readonly gasLimit: Numbers;
+    readonly gasUsed: Numbers;
+    readonly hash?: HexString32Bytes;
+    readonly logsBloom?: Bytes;
+    readonly miner?: HexString;
+    readonly nonce?: Numbers;
+    readonly number?: Numbers;
+    readonly parentBeaconBlockRoot?: HexString32Bytes;
+    readonly parentHash?: HexString32Bytes;
+    readonly receiptsRoot?: HexString32Bytes;
+    readonly sha3Uncles: HexString32Bytes[];
+    readonly stateRoot?: HexString32Bytes;
+    readonly timestamp: Numbers;
+    readonly transactionsRoot?: HexString32Bytes;
+    readonly withdrawalsRoot?: HexString32Bytes;
+
+    // These fields are returned when the RPC client is Nethermind,
+    // but aren't available in other clients such as Geth
+    readonly author?: Address;
+    readonly totalDifficulty?: bigint | number;
+    readonly size?: Numbers;
+    readonly excessDataGas?: Numbers;
+    readonly mixHash?: HexString32Bytes;
+    readonly transactions?: TransactionOutput[];
+    readonly uncles?: Uncles;
+    readonly withdrawals?: Withdrawals[];
 }
 
 export interface Withdrawals {
@@ -152,37 +172,37 @@ export interface Withdrawals {
 }
 
 export interface BlockHeaderOutput {
-	readonly blobGasUsed?: Numbers;
-	readonly excessBlobGas?: Numbers;
-	readonly parentBeaconBlockRoot?: HexString32Bytes;
-	readonly hash?: HexString32Bytes;
-	readonly parentHash?: HexString32Bytes;
-	readonly receiptsRoot?: HexString32Bytes;
-	readonly miner?: HexString;
-	readonly stateRoot?: HexString32Bytes;
-	readonly transactionsRoot?: HexString32Bytes;
-	readonly withdrawalsRoot?: HexString32Bytes;
-	readonly logsBloom?: Bytes;
-	readonly difficulty?: Numbers;
-	readonly number?: Numbers;
-	readonly gasLimit: Numbers;
-	readonly gasUsed: Numbers;
-	readonly timestamp: Numbers;
-	readonly extraData?: Bytes;
-	readonly nonce?: Numbers;
-	readonly sha3Uncles: HexString32Bytes[];
-	readonly baseFeePerGas?: Numbers;
+    readonly baseFeePerGas?: Numbers;
+    readonly blobGasUsed?: Numbers;
+    readonly difficulty?: Numbers;
+    readonly excessBlobGas?: Numbers;
+    readonly extraData?: Bytes;
+    readonly gasLimit: Numbers;
+    readonly gasUsed: Numbers;
+    readonly hash?: HexString32Bytes;
+    readonly logsBloom?: Bytes;
+    readonly miner?: HexString;
+    readonly nonce?: Numbers;
+    readonly number?: Numbers;
+    readonly parentBeaconBlockRoot?: HexString32Bytes;
+    readonly parentHash?: HexString32Bytes;
+    readonly receiptsRoot?: HexString32Bytes;
+    readonly sha3Uncles: HexString32Bytes[];
+    readonly stateRoot?: HexString32Bytes;
+    readonly timestamp: Numbers;
+    readonly transactionsRoot?: HexString32Bytes;
+    readonly withdrawalsRoot?: HexString32Bytes;
 
-	// These fields are returned when the RPC client is Nethermind,
-	// but aren't available in other clients such as Geth
-	readonly author?: Address;
-	readonly totalDifficulty?: Numbers;
-	readonly size?: Numbers;
-	readonly excessDataGas?: Numbers;
-	readonly mixHash?: HexString32Bytes;
-	readonly transactions?: TransactionOutput[];
-	readonly uncles?: Uncles;
-	readonly withdrawals?: Withdrawals[];
+    // These fields are returned when the RPC client is Nethermind,
+    // but aren't available in other clients such as Geth
+    readonly author?: Address;
+    readonly totalDifficulty?: Numbers;
+    readonly size?: Numbers;
+    readonly excessDataGas?: Numbers;
+    readonly mixHash?: HexString32Bytes;
+    readonly transactions?: TransactionOutput[];
+    readonly uncles?: Uncles;
+    readonly withdrawals?: Withdrawals[];
 }
 
 export interface ReceiptInput {
