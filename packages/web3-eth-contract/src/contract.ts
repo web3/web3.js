@@ -1105,7 +1105,7 @@ export class Contract<Abi extends ContractAbi>
 				}
 				if (applicableMethodAbi.length === 1) {
 					[methodAbi] = applicableMethodAbi; // take the first item that is the only item in the array
-				} else {
+				} else if (applicableMethodAbi.length > 1) {
 					[methodAbi] = applicableMethodAbi; // take the first item in the array
 					console.warn(
 						`Multiple methods found that is compatible with the given inputs.\n\tFound ${
