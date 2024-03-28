@@ -201,7 +201,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getHashrate<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return this.getHashRate(returnFormat);
 	}
@@ -219,7 +220,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getHashRate<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getHashRate(this, returnFormat);
 	}
@@ -237,7 +239,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getGasPrice<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getGasPrice(this, returnFormat);
 	}
@@ -256,7 +259,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async getMaxPriorityFeePerGas<
 		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-	>(returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+	>(
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
+	) {
 		return rpcMethodsWrappers.getMaxPriorityFeePerGas(this, returnFormat);
 	}
 
@@ -300,7 +306,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 
 		let gasPrice: bigint | undefined;
 		try {
-			gasPrice = await this.getGasPrice<{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>();
+			gasPrice = await this.getGasPrice<{
+				number: FMT_NUMBER.BIGINT;
+				bytes: FMT_BYTES.HEX;
+			}>();
 		} catch (error) {
 			// do nothing
 		}
@@ -361,7 +370,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getBlockNumber<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getBlockNumber(this, returnFormat);
 	}
@@ -385,7 +395,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async getBalance<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getBalance(this, address, blockNumber, returnFormat);
 	}
@@ -421,9 +432,16 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		address: Address,
 		storageSlot: Numbers,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getStorageAt(this, address, storageSlot, blockNumber, returnFormat);
+		return rpcMethodsWrappers.getStorageAt(
+			this,
+			address,
+			storageSlot,
+			blockNumber,
+			returnFormat,
+		);
 	}
 
 	/**
@@ -455,7 +473,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async getCode<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getCode(this, address, blockNumber, returnFormat);
 	}
@@ -527,7 +546,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async getBlock<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		hydrated = false,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getBlock(this, block, hydrated, returnFormat);
 	}
@@ -552,7 +572,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 	>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getBlockTransactionCount(this, block, returnFormat);
 	}
@@ -575,7 +596,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async getBlockUncleCount<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getBlockUncleCount(this, block, returnFormat);
 	}
@@ -646,7 +668,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async getUncle<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		uncleIndex: Numbers,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getUncle(this, block, uncleIndex, returnFormat);
 	}
@@ -701,9 +724,14 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async getTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transactionHash: Bytes,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
-		const response = await rpcMethodsWrappers.getTransaction(this, transactionHash, returnFormat);
+		const response = await rpcMethodsWrappers.getTransaction(
+			this,
+			transactionHash,
+			returnFormat,
+		);
 
 		if (!response) throw new TransactionNotFound();
 
@@ -794,7 +822,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async getPendingTransactions<
 		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-	>(returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+	>(
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
+	) {
 		return rpcMethodsWrappers.getPendingTransactions(this, returnFormat);
 	}
 
@@ -853,9 +884,15 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		transactionIndex: Numbers,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getTransactionFromBlock(this, block, transactionIndex, returnFormat);
+		return rpcMethodsWrappers.getTransactionFromBlock(
+			this,
+			block,
+			transactionIndex,
+			returnFormat,
+		);
 	}
 
 	/**
@@ -904,7 +941,11 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async getTransactionReceipt<
 		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-	>(transactionHash: Bytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+	>(
+		transactionHash: Bytes,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
+	) {
 		const response = await rpcMethodsWrappers.getTransactionReceipt(
 			this,
 			transactionHash,
@@ -934,10 +975,13 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * > 1
 	 * ```
 	 */
-	public async getTransactionCount<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+	public async getTransactionCount<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnFormat);
 	}
