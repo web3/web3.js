@@ -942,8 +942,7 @@ export class Contract<Abi extends ContractAbi>
 					if (Array.isArray(filter[key])) {
 						return (filter[key] as Numbers[]).some(
 							(v: Numbers) =>
-								String(log.returnValues[key]).toUpperCase() ===
-								String(v).toUpperCase(),
+								String(log.returnValues[key]).toUpperCase() === String(v).toUpperCase(),
 						);
 					}
 
@@ -1011,10 +1010,15 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 				]);
 				const abiFragment = this._overloadedMethodAbis.get(abi.name) ?? [];
-				const contractMethod = this._createContractMethod<
+				const contractMethod = this._createContractMethod<typeof abiFragment, AbiErrorFragment>(
+					abiFragment,
+					errorsAbi,
+				);
+
+				const exactContractMethod = this._createContractMethod<
 					typeof abiFragment,
 					AbiErrorFragment
-				>(abiFragment, errorsAbi);
+				>(abiFragment, errorsAbi, true);
 
 				this._functions[methodName] = {
 					signature: methodSignature,
@@ -1027,13 +1031,12 @@ export class Contract<Abi extends ContractAbi>
 				].method as never;
 
 				// We don't know a particular type of the Abi method so can't type check
-				this._methods[methodName as keyof ContractMethodsInterface<Abi>] = this._functions[
-					methodName
-				].method as never;
+				this._methods[methodName as keyof ContractMethodsInterface<Abi>] =
+					exactContractMethod as never;
 
 				// We don't know a particular type of the Abi method so can't type check
-				this._methods[methodSignature as keyof ContractMethodsInterface<Abi>] = this
-					._functions[methodName].method as never;
+				this._methods[methodSignature as keyof ContractMethodsInterface<Abi>] =
+					exactContractMethod as never;
 			} else if (isAbiEventFragment(abi)) {
 				const eventName = jsonInterfaceMethodToString(abi);
 				const eventSignature = encodeEventSignature(eventName);
@@ -1072,11 +1075,17 @@ export class Contract<Abi extends ContractAbi>
 	private _createContractMethod<T extends AbiFunctionFragment[], E extends AbiErrorFragment>(
 		abiArr: T,
 		errorsAbis: E[],
+		exact = false, // when true, it will only match the exact method signature
 	): ContractBoundMethod<T[0]> {
 		const abi = abiArr[abiArr.length - 1];
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
-			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
+			const abis =
+				(exact
+					? this._overloadedMethodAbis
+							.get(abi.name)
+							?.filter(_abi => _abi.signature === abi.signature)
+					: this._overloadedMethodAbis.get(abi.name)) ?? [];
 			let methodAbi: AbiFunctionFragment = abis[0];
 			const internalErrorsAbis = errorsAbis;
 
@@ -1090,18 +1099,25 @@ export class Contract<Abi extends ContractAbi>
 			} else {
 				const errors: Web3ValidationErrorObject[] = [];
 
+				// all the methods that have is valid for the given inputs
+				const applicableMethodAbi: AbiFunctionFragment[] = [];
 				for (const _abi of arrayOfAbis) {
 					try {
 						abiParams = this._getAbiParams(_abi, params);
-						validator.validate(
-							_abi.inputs as unknown as ValidationSchemaInput,
-							abiParams,
-						);
-						methodAbi = _abi;
-						break;
+						validator.validate(_abi.inputs as unknown as ValidationSchemaInput, abiParams);
+						applicableMethodAbi.push(_abi);
 					} catch (e) {
 						errors.push(e as Web3ValidationErrorObject);
 					}
+				}
+				if (applicableMethodAbi.length === 1) {
+					[methodAbi] = applicableMethodAbi; // take the first item that is the only item in the array
+				} else {
+					[methodAbi] = applicableMethodAbi; // take the first item in the array
+					// TODO: Should throw a new error with the list of methods found.
+					// This is in order to provide an error message when there is more than one method found that fits the inputs.
+					// To do that, replace the pervious line of code with something like the following line:
+					// throw new Web3ValidatorError({ message: 'Multiple methods found',  ... list of applicable methods }));
 				}
 				if (errors.length === arrayOfAbis.length) {
 					throw new Web3ValidatorError(errors);

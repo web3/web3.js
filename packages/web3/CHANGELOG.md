@@ -197,8 +197,27 @@ Documentation:
 
 -   Added EIP-6963 utility function `requestEIP6963Providers` for multi provider discovery ( other details are in root changelog )
 
-## [Unreleased]
 
-### Changed
+## [4.7.0]
+
+### added
+
+#### web3-eth-contract
 
 -   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+
+#### web3-eth-ens
+
+- Added function getText and getName in ENS and resolver classes (#6914)
+
+### fixed
+
+#### web3-validator
+
+- Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
+
+#### web3-utils
+
+- fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
+
+## [Unreleased]
