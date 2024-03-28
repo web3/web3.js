@@ -130,6 +130,13 @@ export interface BlockInput {
 	readonly baseFeePerGas?: HexString;
 }
 
+export interface Withdrawals {
+	readonly index: Numbers;
+	readonly validatorIndex: Numbers;
+	readonly address: Address;
+	readonly amount: Numbers;
+}
+
 export interface BlockOutput {
     readonly gasLimit: bigint | number;
     readonly gasUsed: bigint | number;
@@ -159,13 +166,6 @@ export interface BlockOutput {
     readonly mixHash?: HexString32Bytes;
     readonly uncles?: Uncles;
     readonly withdrawals?: Withdrawals[];
-}
-
-export interface Withdrawals {
-	readonly index: Numbers;
-	readonly validatorIndex: Numbers;
-	readonly address: Address;
-	readonly amount: Numbers;
 }
 
 export interface BlockHeaderOutput {
