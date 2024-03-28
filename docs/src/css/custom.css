@@ -70,3 +70,12 @@ li[role="tab"] {
 .tabs-container .margin-top--md {
   margin-top: 0px !important;
 }
+
+
+
+#playground-iframe {
+  width: 92vw; /* 92% of viewport width */
+  height: 700px; /* Adjust height as needed */
+  margin: 0; /* Remove any default margins */
+  padding: 0; /* Remove any default padding */
+}
