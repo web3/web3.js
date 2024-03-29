@@ -17,8 +17,30 @@ Parameter overloading enables smart contracts to define multiple functions beari
 
 ### Example Code
 
-Below is a demonstration of invoking two versions of the `funcWithParamsOverloading` function in a smart contract, differentiated by their parameter types—`uint256` versus `address`.
+Below is a demonstration of invoking two versions of the `funcWithParamsOverloading` function in a smart contract, differentiated by their parameter types: `uint256` versus `address`.
 
+The Solidity code:
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.8.20 <0.9.0;
+
+
+contract TestOverlading {
+
+    function funcWithParamsOverloading(uint256 userId) public pure returns (string memory) {
+        return  "called for the parameter with the type 'uint256'";
+    }
+    
+    function funcWithParamsOverloading(address userAddress) public pure returns (string memory) {
+        return  "called for the parameter with the type 'address'";
+    }
+
+}
+```
+
+The TypeScript:
 ```typescript
 import { Web3 } from 'web3';
 
