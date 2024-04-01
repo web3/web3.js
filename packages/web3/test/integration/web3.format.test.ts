@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { SupportedProviders, FMT_BYTES, FMT_NUMBER, DEFAULT_RETURN_FORMAT } from 'web3-types';
 import { numberToHex } from 'web3-utils';
+import { describe } from 'node:test';
 import { Web3, Contract } from '../../src';
 
 import {
@@ -27,7 +28,6 @@ import {
 	mapFormatToType,
 } from '../shared_fixtures/system_tests_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { describe } from 'node:test';
 
 describe('format', () => {
 	let web3: Web3;
@@ -65,21 +65,21 @@ describe('format', () => {
 	});
 
 	describe('methods', () => {
-		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
+		test.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
 			web3.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const res = await web3.eth.getBlockNumber();
 			expect(typeof res).toBe(mapFormatToType[format as string]);
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
-		it.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
+		test.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
 			web3.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const res = await web3.eth.getGasPrice();
 			expect(typeof res).toBe(mapFormatToType[format as string]);
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
-		it.each(Object.values(FMT_NUMBER))('getBalance', async format => {
+		test.each(Object.values(FMT_NUMBER))('getBalance', async format => {
 			web3.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const value = '0xa';
 			const newAccount = await createNewAccount();
@@ -93,14 +93,14 @@ describe('format', () => {
 			expect(numberToHex(res)).toBe(value);
 		});
 
-		it.each(Object.values(FMT_BYTES))('getCode', async format => {
+		test.each(Object.values(FMT_BYTES))('getCode', async format => {
 			web3.defaultReturnFormat = { number: FMT_NUMBER.BIGINT, bytes: format };
 			const code = await web3.eth.getCode(contractDeployed?.options?.address as string);
 			expect(code).toBeDefined();
 			expect(typeof code).toBe(mapFormatToType[format as string]);
 		});
 
-		it.each(Object.values(FMT_NUMBER))('getChainId', async format => {
+		test.each(Object.values(FMT_NUMBER))('getChainId', async format => {
 			web3.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 
 			const res = await web3.eth.getChainId();
