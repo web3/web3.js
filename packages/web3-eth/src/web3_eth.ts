@@ -1098,7 +1098,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			| TransactionWithFromLocalWalletIndex
 			| TransactionWithToLocalWalletIndex
 			| TransactionWithFromAndToLocalWalletIndex,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {
 		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options);
@@ -1190,7 +1191,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public sendSignedTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Bytes,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {
 		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat, options);
@@ -1226,7 +1228,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async sign<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		message: Bytes,
 		addressOrIndex: Address | number,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.sign(this, message, addressOrIndex, returnFormat);
 	}
@@ -1284,7 +1287,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async signTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Transaction,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.signTransaction(this, transaction, returnFormat);
 	}
@@ -1303,7 +1307,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async call<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: TransactionCall,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.call(this, transaction, blockNumber, returnFormat);
 	}
@@ -1337,7 +1342,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Transaction,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.estimateGas(this, transaction, blockNumber, returnFormat);
 	}
@@ -1388,7 +1394,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 */
 	public async getPastLogs<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		filter: Filter,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getLogs(this, filter, returnFormat);
 	}
@@ -1471,7 +1478,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getChainId<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getChainId(this, returnFormat);
 	}
@@ -1564,7 +1572,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		address: Address,
 		storageKeys: Bytes[],
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getProof(this, address, storageKeys, blockNumber, returnFormat);
 	}
@@ -1634,7 +1643,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		blockCount: Numbers,
 		newestBlock: BlockNumberOrTag = this.defaultBlock,
 		rewardPercentiles: Numbers[],
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getFeeHistory(
 			this,
@@ -1679,7 +1689,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async createAccessList<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: TransactionForAccessList,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.createAccessList(this, transaction, blockNumber, returnFormat);
 	}
@@ -1697,7 +1708,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		address: Address,
 		typedData: Eip712TypedData,
 		useLegacy = false,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.signTypedData(this, address, typedData, useLegacy, returnFormat);
 	}
@@ -1841,7 +1853,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
-		returnFormat: ReturnType = DEFAULT_RETURN_FORMAT as ReturnType,
+		returnFormat: ReturnType = (this.defaultReturnFormat ??
+			DEFAULT_RETURN_FORMAT) as ReturnType,
 	): Promise<InstanceType<RegisteredSubscription[T]>> {
 		const subscription = await this.subscriptionManager?.subscribe(name, args, returnFormat);
 		if (

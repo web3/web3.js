@@ -37,16 +37,12 @@ import {
 	itIf,
 	createTempAccount,
 	describeIf,
-	BACKEND
+	mapFormatToType,
+	BACKEND,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import {
-	eventAbi,
-	mapFormatToType,
-	sendFewTxes,
-	validateReceipt,
-	validateTransaction,
-} from './helper';
+import { eventAbi, sendFewTxes, validateReceipt, validateTransaction } from './helper';
+import { describe } from 'node:test';
 
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
@@ -86,11 +82,14 @@ describe('rpc', () => {
 	});
 
 	describe('methods', () => {
-		itIf(!['geth', 'hardhat'].includes(getSystemTestBackend()))('getProtocolVersion', async () => {
-			const version = await web3Eth.getProtocolVersion();
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(parseInt(version, 16)).toBeGreaterThan(0);
-		});
+		itIf(!['geth', 'hardhat'].includes(getSystemTestBackend()))(
+			'getProtocolVersion',
+			async () => {
+				const version = await web3Eth.getProtocolVersion();
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect(parseInt(version, 16)).toBeGreaterThan(0);
+			},
+		);
 
 		// TODO:in beta,  test eth_syncing during sync mode with return obj having ( startingblock, currentBlock, heighestBlock )
 		it('isSyncing', async () => {
@@ -113,20 +112,20 @@ describe('rpc', () => {
 				expect(isMining).toBe(true);
 		});
 
-		describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('getHashRate', () => { 
+		describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('getHashRate', () => {
 			it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
 				const hashRate = await web3Eth.getHashRate({
 					number: format as FMT_NUMBER,
 					bytes: FMT_BYTES.HEX,
 				});
 				// eslint-disable-next-line jest/no-standalone-expect
-				expect(typeof hashRate).toBe(mapFormatToType[format as string]);		
+				expect(typeof hashRate).toBe(mapFormatToType[format as string]);
 			});
-		})
+		});
 
 		it('getAccounts', async () => {
 			// hardhat does not have support importrawkey, so we can't add new accounts rather just check the default 20 accounts
-			if (getSystemTestBackend() !== BACKEND.HARDHAT)	{
+			if (getSystemTestBackend() !== BACKEND.HARDHAT) {
 				const account = await createNewAccount({ unlock: true });
 				const accList = await web3Eth.getAccounts();
 				const accListLowerCase = accList.map((add: string) => add.toLowerCase());

@@ -942,7 +942,8 @@ export class Contract<Abi extends ContractAbi>
 					if (Array.isArray(filter[key])) {
 						return (filter[key] as Numbers[]).some(
 							(v: Numbers) =>
-								String(log.returnValues[key]).toUpperCase() === String(v).toUpperCase(),
+								String(log.returnValues[key]).toUpperCase() ===
+								String(v).toUpperCase(),
 						);
 					}
 
@@ -1010,10 +1011,10 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 				]);
 				const abiFragment = this._overloadedMethodAbis.get(abi.name) ?? [];
-				const contractMethod = this._createContractMethod<typeof abiFragment, AbiErrorFragment>(
-					abiFragment,
-					errorsAbi,
-				);
+				const contractMethod = this._createContractMethod<
+					typeof abiFragment,
+					AbiErrorFragment
+				>(abiFragment, errorsAbi);
 
 				const exactContractMethod = this._createContractMethod<
 					typeof abiFragment,
@@ -1104,7 +1105,10 @@ export class Contract<Abi extends ContractAbi>
 				for (const _abi of arrayOfAbis) {
 					try {
 						abiParams = this._getAbiParams(_abi, params);
-						validator.validate(_abi.inputs as unknown as ValidationSchemaInput, abiParams);
+						validator.validate(
+							_abi.inputs as unknown as ValidationSchemaInput,
+							abiParams,
+						);
 						applicableMethodAbi.push(_abi);
 					} catch (e) {
 						errors.push(e as Web3ValidationErrorObject);
