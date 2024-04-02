@@ -2407,6 +2407,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ## [Unreleased]
 ### Added
+### Added
 
 #### web3-core
 
@@ -2436,3 +2437,9 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-contract
 
+
+### Changed
+
+#### web3-utils
+
+-   Method `format` was changed. Now it has default value `DEFAULT_RETURN_FORMAT` for `returnFormat` parameter (#6947)

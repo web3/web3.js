@@ -206,3 +206,6 @@ Documentation:
 - fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
 ## [Unreleased]
+
+### Changed
+-   Method `format` was changed. Now it has default value `DEFAULT_RETURN_FORMAT` for `returnFormat` parameter (#6947)
