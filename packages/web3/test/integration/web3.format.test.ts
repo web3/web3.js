@@ -56,9 +56,6 @@ describe('format', () => {
 
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 	});
-	beforeEach(() => {
-		web3.defaultReturnFormat = DEFAULT_RETURN_FORMAT;
-	});
 
 	afterAll(async () => {
 		await closeOpenConnection(web3);
