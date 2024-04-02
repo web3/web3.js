@@ -82,8 +82,16 @@ import {
 	EventLog,
 	ContractAbiWithSignature,
 	ContractOptions,
+	TransactionReceipt,
+	FormatType,
 } from 'web3-types';
-import { format, isDataFormat, keccak256, toChecksumAddress , isContractInitOptions } from 'web3-utils';
+import {
+	format,
+	isDataFormat,
+	keccak256,
+	toChecksumAddress,
+	isContractInitOptions,
+} from 'web3-utils';
 import {
 	isNullish,
 	validator,
@@ -113,7 +121,7 @@ type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
 	Method extends ContractMethod<Abi> = ContractMethod<Abi>,
 > = (
-	...args: Method['Inputs'] extends undefined|unknown ? any[] : Method['Inputs']
+	...args: Method['Inputs'] extends undefined | unknown ? any[] : Method['Inputs']
 ) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
 	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
 	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;
@@ -147,6 +155,16 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 	// To allow users to use method signatures
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } & { [key: string]: ContractBoundMethod<any> };
+
+export type ContractMethodSend = Web3PromiEvent<
+	FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
+	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+>;
+export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
+	// eslint-disable-next-line no-use-before-define
+	Contract<Abi>,
+	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+>;
 
 /**
  * @hidden
@@ -395,7 +413,7 @@ export class Contract<Abi extends ContractAbi>
 	 * });
 	 * ```
 	 *
-	 * To use the type safe interface for these contracts you have to include the ABI definitions in your Typescript project and then declare these as `const`.
+	 * To use the type safe interface for these contracts you have to include the ABI definitions in your TypeScript project and then declare these as `const`.
 	 *
 	 * ```ts title="Example"
 	 * const myContractAbi = [....] as const; // ABI definitions
@@ -768,12 +786,7 @@ export class Contract<Abi extends ContractAbi>
 		const deployData = _input ?? _data;
 		return {
 			arguments: args,
-			send: (
-				options?: PayableTxOptions,
-			): Web3PromiEvent<
-				Contract<Abi>,
-				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> => {
+			send: (options?: PayableTxOptions): ContractDeploySend<Abi> => {
 				const modifiedOptions = { ...options };
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -924,8 +937,7 @@ export class Contract<Abi extends ContractAbi>
 					if (Array.isArray(filter[key])) {
 						return (filter[key] as Numbers[]).some(
 							(v: Numbers) =>
-								String(log.returnValues[key]).toUpperCase() ===
-								String(v).toUpperCase(),
+								String(log.returnValues[key]).toUpperCase() === String(v).toUpperCase(),
 						);
 					}
 
@@ -976,6 +988,7 @@ export class Contract<Abi extends ContractAbi>
 			if (isAbiFunctionFragment(abi)) {
 				const methodName = jsonInterfaceMethodToString(abi);
 				const methodSignature = encodeFunctionSignature(methodName);
+				abi.methodNameWithInputs = methodName;
 				abi.signature = methodSignature;
 
 				// make constant and payable backwards compatible
@@ -990,10 +1003,15 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 				]);
 				const abiFragment = this._overloadedMethodAbis.get(abi.name) ?? [];
-				const contractMethod = this._createContractMethod<
+				const contractMethod = this._createContractMethod<typeof abiFragment, AbiErrorFragment>(
+					abiFragment,
+					errorsAbi,
+				);
+
+				const exactContractMethod = this._createContractMethod<
 					typeof abiFragment,
 					AbiErrorFragment
-				>(abiFragment, errorsAbi);
+				>(abiFragment, errorsAbi, true);
 
 				this._functions[methodName] = {
 					signature: methodSignature,
@@ -1006,13 +1024,12 @@ export class Contract<Abi extends ContractAbi>
 				].method as never;
 
 				// We don't know a particular type of the Abi method so can't type check
-				this._methods[methodName as keyof ContractMethodsInterface<Abi>] = this._functions[
-					methodName
-				].method as never;
+				this._methods[methodName as keyof ContractMethodsInterface<Abi>] =
+					exactContractMethod as never;
 
 				// We don't know a particular type of the Abi method so can't type check
-				this._methods[methodSignature as keyof ContractMethodsInterface<Abi>] = this
-					._functions[methodName].method as never;
+				this._methods[methodSignature as keyof ContractMethodsInterface<Abi>] =
+					exactContractMethod as never;
 			} else if (isAbiEventFragment(abi)) {
 				const eventName = jsonInterfaceMethodToString(abi);
 				const eventSignature = encodeEventSignature(eventName);
@@ -1051,11 +1068,17 @@ export class Contract<Abi extends ContractAbi>
 	private _createContractMethod<T extends AbiFunctionFragment[], E extends AbiErrorFragment>(
 		abiArr: T,
 		errorsAbis: E[],
+		exact = false, // when true, it will only match the exact method signature
 	): ContractBoundMethod<T[0]> {
 		const abi = abiArr[abiArr.length - 1];
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
-			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
+			const abis =
+				(exact
+					? this._overloadedMethodAbis
+							.get(abi.name)
+							?.filter(_abi => _abi.signature === abi.signature)
+					: this._overloadedMethodAbis.get(abi.name)) ?? [];
 			let methodAbi: AbiFunctionFragment = abis[0];
 			const internalErrorsAbis = errorsAbis;
 
@@ -1069,18 +1092,40 @@ export class Contract<Abi extends ContractAbi>
 			} else {
 				const errors: Web3ValidationErrorObject[] = [];
 
+				// all the methods that have is valid for the given inputs
+				const applicableMethodAbi: AbiFunctionFragment[] = [];
 				for (const _abi of arrayOfAbis) {
 					try {
 						abiParams = this._getAbiParams(_abi, params);
-						validator.validate(
-							_abi.inputs as unknown as ValidationSchemaInput,
-							abiParams,
-						);
-						methodAbi = _abi;
-						break;
+						validator.validate(_abi.inputs as unknown as ValidationSchemaInput, abiParams);
+						applicableMethodAbi.push(_abi);
 					} catch (e) {
 						errors.push(e as Web3ValidationErrorObject);
 					}
+				}
+				if (applicableMethodAbi.length === 1) {
+					[methodAbi] = applicableMethodAbi; // take the first item that is the only item in the array
+				} else if (applicableMethodAbi.length > 1) {
+					[methodAbi] = applicableMethodAbi; // take the first item in the array
+					console.warn(
+						`Multiple methods found that is compatible with the given inputs.\n\tFound ${
+							applicableMethodAbi.length
+						} compatible methods: ${JSON.stringify(
+							applicableMethodAbi.map(
+								m =>
+									`${(m as { methodNameWithInputs: string }).methodNameWithInputs} (signature: ${
+										(m as { signature: string }).signature
+									})`,
+							),
+						)} \n\tThe first one will be used: ${
+							(methodAbi as { methodNameWithInputs: string }).methodNameWithInputs
+						}`,
+					);
+					// TODO: 5.x Should throw a new error with the list of methods found.
+					// Related issue: https://github.com/web3/web3.js/issues/6923
+					// This is in order to provide an error message when there is more than one method found that fits the inputs.
+					// To do that, replace the pervious line of code with something like the following line:
+					// throw new Web3ValidatorError({ message: 'Multiple methods found',  ... list of applicable methods }));
 				}
 				if (errors.length === arrayOfAbis.length) {
 					throw new Web3ValidatorError(errors);
@@ -1101,7 +1146,7 @@ export class Contract<Abi extends ContractAbi>
 						block,
 					),
 
-				send: (options?: PayableTxOptions | NonPayableTxOptions) =>
+				send: (options?: PayableTxOptions | NonPayableTxOptions): ContractMethodSend =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
 
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(

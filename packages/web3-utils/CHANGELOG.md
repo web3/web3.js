@@ -187,4 +187,22 @@ Documentation:
 
 -   Fixed an issue with detecting Uint8Array (#6486)
 
+## [4.2.0]
+
+### Added
+
+-   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
+
+## [4.2.1]
+
+### Fixed
+
+-   replaced our eventEmitter to EventEmitter3 to support react native builds (#6253)
+
+## [4.2.2]
+
+### Fixed
+
+- fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
+
 ## [Unreleased]

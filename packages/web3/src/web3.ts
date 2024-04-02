@@ -44,6 +44,7 @@ import abi from './abi.js';
 import { initAccountsForContext } from './accounts.js';
 import { Web3EthInterface } from './types.js';
 import { Web3PkgInfo } from './version.js';
+import { onNewProviderDiscovered, requestEIP6963Providers } from './web3_eip6963.js';
 
 export class Web3<
 	CustomRegisteredSubscription extends {
@@ -52,6 +53,8 @@ export class Web3<
 > extends Web3Context<EthExecutionAPI, CustomRegisteredSubscription & RegisteredSubscription> {
 	public static version = Web3PkgInfo.version;
 	public static utils = utils;
+	public static requestEIP6963Providers = requestEIP6963Providers;
+	public static onNewProviderDiscovered = onNewProviderDiscovered;
 	public static modules = {
 		Web3Eth,
 		Iban,

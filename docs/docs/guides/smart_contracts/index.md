@@ -2,14 +2,39 @@
 sidebar_position: 1
 sidebar_label: 'Mastering Smart Contracts'
 ---
-
 # Mastering Smart Contracts
+
+## Live code editor
+
+### Deploy and Interact with smart contracts:
+
+This contract is deployed on the [mumbai testnet](https://mumbai.polygonscan.com/address/0xB9433C87349134892f6C9a9E342Ed6adce39F8dF). In this live code editor, you will find the following:
+
+In the code editor you'll find:
+- `ContractCounter.sol`: the solidity code of the contract with:
+    - `uint256 number`: state variable of the contract.
+    - `increase()`: this function will increment by 1 the `number` variable.
+    - `getNumber()`: this function will return the current value of the `number` variable.
+- `counterABI.json`: the ABI of the ContractCounter.sol
+- `counterBytecode.json`: the compiled Bytecode of the ContractCounter.sol
+- `main.js`: here you will find 3 funtions:
+    - `deploy()`: sample script to deploy the smart contract using the ABI and Bytecode
+    - `getNumber()`: sample script to call the reading function getNumber() of the smart contract
+    - `increase()`: sample script to interact with the increase() function of the smart contract
+
+- Contract address:
+```bash
+0xB9433C87349134892f6C9a9E342Ed6adce39F8dF
+```
+
+<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-idcw5t?embed=1&file=main.js&showSidebar=1"></iframe>   
+
+
+## Contract class
 
 :::info
 This guide expects you to have some basic knowledge. If you are just starting, it is recommended to first check out this [Tutorial: Deploying and Interacting with Smart Contracts](./smart_contracts_guide.md).
 :::
-
-## Contract class
 
 The `Contract` class is the main object exported by the `web3-eth-contract` package. It is also available in the `web3` package.
 

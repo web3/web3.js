@@ -177,4 +177,20 @@ Documentation:
 -   Interface `MetaMaskProvider` added and is part of `SupportedProviders` (#6534)
 -   `gasPrice` was added to `Transaction1559UnsignedAPI` type. (#6539)
 
+## [1.4.0]
+
+### Added
+
+-   Adds missing exported type `AbiItem` from 1.x to v4 for compatabiltiy (#6678)
+
+## [1.5.0]
+
+### Added
+
+-   Type `FeeData` to be filled by `await web3.eth.calculateFeeData()` to be used with EIP-1559 transactions (#6795)
+
 ## [Unreleased]
+
+### Added
+
+-   Added `signature` to type `AbiFunctionFragment` (#6922)

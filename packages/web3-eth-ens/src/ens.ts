@@ -16,15 +16,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError } from 'web3-errors';
+import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError, RevertInstructionError } from 'web3-errors';
 import { isSyncing } from 'web3-eth';
 import { Contract } from 'web3-eth-contract';
 import { getId } from 'web3-net';
 import {
+	Address,
 	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
 	FMT_NUMBER,
+	PayableCallOptions,
 	SupportedProviders,
+	TransactionReceipt,
 	Web3NetAPI,
 } from 'web3-types';
 import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
@@ -163,6 +166,26 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	}
 
 	/**
+	 * ERC-634 - Returns the text content stored in the resolver for the specified key.
+	 * @param ENSName - The ENS name to resolve
+	 * @param key - The key to resolve https://github.com/ethereum/ercs/blob/master/ERCS/erc-634.md#global-keys
+	 * @returns - The value content stored in the resolver for the specified key
+	 */
+	public async getText(ENSName: string, key: string): Promise<string> {
+		return this._resolver.getText(ENSName, key);
+	}
+
+
+	/**
+	 * Resolves the name of an ENS node.
+	 * @param ENSName - The node to resolve
+	 * @returns - The name
+	 */
+	public async getName(ENSName: string): Promise<string> {
+		return this._resolver.getName(ENSName);
+	}
+
+	/**
 	 * Returns the X and Y coordinates of the curve point for the public key.
 	 * @param ENSName - The ENS name
 	 * @returns - The X and Y coordinates of the curve point for the public key
@@ -257,5 +280,23 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 */
 	public get events() {
 		return this._registry.events;
+	}
+
+	/**
+	 * Sets the address of an ENS name in his resolver.
+	 * @param name - The ENS name
+	 * @param address - The address to set
+	 * @param txConfig - (Optional) The transaction config
+	 * @returns - The transaction receipt
+	 * ```ts
+	 * const receipt = await ens.setAddress('web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e');
+	 *```
+	 */
+	 public async setAddress(
+		name: string,
+		address: Address,
+		txConfig: PayableCallOptions
+	): Promise<TransactionReceipt | RevertInstructionError> {
+		return this._resolver.setAddress(name, address, txConfig);
 	}
 }

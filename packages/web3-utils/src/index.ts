@@ -32,3 +32,5 @@ export * from './uuid.js';
 export * from './web3_eip1193_provider.js';
 export * from './socket_provider.js';
 export * from './uint8array.js';
+// for backwards compatibility with v1
+export { AbiItem } from 'web3-types';

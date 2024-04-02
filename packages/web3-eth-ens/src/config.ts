@@ -29,7 +29,7 @@ export const interfaceIds: { [T: string]: string } = {
 };
 
 /**
- * An object holding the functionsthat are supported by the ENS resolver contracts/interfaces.
+ * An object holding the functions that are supported by the ENS resolver contracts/interfaces.
  */
 export const methodsInInterface: { [T: string]: string } = {
 	setAddr: 'addr',
@@ -38,6 +38,8 @@ export const methodsInInterface: { [T: string]: string } = {
 	pubkey: 'pubkey',
 	setContenthash: 'contenthash',
 	contenthash: 'contenthash',
+	text: 'text',
+	name: 'name',
 };
 
 /**

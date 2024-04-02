@@ -141,4 +141,16 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.1.0]
+
+### Added
+
+-   Added function `setAddress` in ENS and Resolver classes (#5956)
+
+## [4.2.0]
+
+### Add
+
+- Added function getText and getName in ENS and resolver classes (#6914)
+
 ## [Unreleased]

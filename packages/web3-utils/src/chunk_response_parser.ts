@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { JsonRpcResponse } from 'web3-types';
 import { InvalidResponseError } from 'web3-errors';
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'eventemitter3';
 import { Timeout } from './promise_helpers.js';
 
 export class ChunkResponseParser {
@@ -25,12 +25,12 @@ export class ChunkResponseParser {
 	private _clearQueues: (() => void) | undefined;
 	private readonly eventEmitter: EventEmitter;
 	private readonly autoReconnect: boolean;
-	private readonly chunkTimout: number;
+	private readonly chunkTimeout: number;
 
 	public constructor(eventEmitter: EventEmitter, autoReconnect: boolean) {
 		this.eventEmitter = eventEmitter;
 		this.autoReconnect = autoReconnect;
-		this.chunkTimout = 1000 * 15;
+		this.chunkTimeout = 1000 * 15;
 	}
 	private clearQueues(): void {
 		if (typeof this._clearQueues === 'function') {
@@ -83,7 +83,7 @@ export class ChunkResponseParser {
 							error: { code: 2, message: 'Chunk timeout' },
 						}),
 					);
-				}, this.chunkTimout);
+				}, this.chunkTimeout);
 				return;
 			}
 

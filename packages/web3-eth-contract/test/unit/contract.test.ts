@@ -20,7 +20,9 @@ import { ValidChains, Hardfork, AccessListResult, Address, ETH_DATA_FORMAT , DEF
 import { Web3ContractError } from 'web3-errors';
 import { Web3Context , Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
-
+import { AbiItem } from 'web3-utils';
+import { stringify } from 'flatted';
+import {Abi} from '../fixtures/AbiItem'
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -103,6 +105,16 @@ describe('Contract', () => {
 		it('should init with abi, options and context', () => {
 			const contract = new Contract(
 				[],
+				{ gas: '123' },
+				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
+			);
+
+			expect(contract).toBeInstanceOf(Contract);
+		});
+
+		it('should init with abiItem, options and context', () => {
+			const contract = new Contract(
+				[Abi as AbiItem],
 				{ gas: '123' },
 				{ config: { defaultAccount: '0x00000000219ab540356cBB839Cbe05303d7705Fa' } },
 			);
@@ -496,7 +508,7 @@ describe('Contract', () => {
 				expect(error).toBeInstanceOf(Web3ValidatorError);
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Web3ValidatorError).message).toBe(
-					'Web3 validator found 1 error[s]:\nmust NOT have more than 1 items',
+					'Web3 validator found 2 error[s]:\nmust NOT have more than 1 items\nvalue "true" at "/1" must pass "string" validation',
 				);
 			}
 
@@ -744,7 +756,7 @@ describe('Contract', () => {
 
 			const clonnedContract = contract.clone();
 
-			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+			expect(stringify(contract)).toStrictEqual(stringify(clonnedContract));
 
 			contract.options.jsonInterface = GreeterAbi;
 		});
@@ -753,7 +765,7 @@ describe('Contract', () => {
 			const contract = new Contract(sampleStorageContractABI);
 
 			const clonnedContract = contract.clone();
-			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+			expect(stringify(contract)).toStrictEqual(stringify(clonnedContract));
 		});
 
 		it('should be able to update the jsonInterface', () => {

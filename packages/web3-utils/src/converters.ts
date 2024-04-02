@@ -187,7 +187,7 @@ export const numberToHex = (value: Numbers, hexstrict?: boolean): HexString => {
 	let updatedValue = validatorUtils.numberToHex(value);
 	if (hexstrict) {
 		if (!updatedValue.startsWith('-') && updatedValue.length % 2 === 1) {
-			// To avoid duplicate a circular dependancy we will not be using the padLeft method
+			// To avoid duplicate a circular dependency we will not be using the padLeft method
 			updatedValue = '0x0'.concat(updatedValue.slice(2));
 		} else if (updatedValue.length % 2 === 0 && updatedValue.startsWith('-'))
 			updatedValue = '-0x0'.concat(updatedValue.slice(3));
@@ -411,6 +411,13 @@ export const toHex = (
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
+            if (value > 1e+20) {
+                // JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
+                // leading to potential parsing errors and incorrect representations.
+                // For instance, String(10000000000000000000000) yields '1e+22'.
+                // Using BigInt prevents this
+                return BigInt(value);
+            }
 		return value;
 	}
 

@@ -40,14 +40,30 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
   },
   "registeredSubscriptions": {},
   "requestManager": Web3RequestManager {
-    "_emitter": EventEmitter {
+    "_emitter": {
       "_events": {
-        "BEFORE_PROVIDER_CHANGE": [Function],
-        "PROVIDER_CHANGED": [Function],
+        "BEFORE_PROVIDER_CHANGE": EE {
+          "context": EventEmitter {
+            "_events": [Circular],
+            "_eventsCount": 2,
+            "maxListeners": 9007199254740991,
+          },
+          "fn": [Function],
+          "once": false,
+        },
+        "PROVIDER_CHANGED": EE {
+          "context": EventEmitter {
+            "_events": [Circular],
+            "_eventsCount": 2,
+            "maxListeners": 9007199254740991,
+          },
+          "fn": [Function],
+          "once": false,
+        },
       },
       "_eventsCount": 2,
-      "_maxListeners": undefined,
-      Symbol(kCapture): false,
+      "maxListeners": 9007199254740991,
+      Symbol(shapeMode): false,
     },
     "_provider": HttpProvider {
       "clientUrl": "http://test/abc",
@@ -59,14 +75,30 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
     "_subscriptions": Map {},
     "registeredSubscriptions": {},
     "requestManager": Web3RequestManager {
-      "_emitter": EventEmitter {
+      "_emitter": {
         "_events": {
-          "BEFORE_PROVIDER_CHANGE": [Function],
-          "PROVIDER_CHANGED": [Function],
+          "BEFORE_PROVIDER_CHANGE": EE {
+            "context": EventEmitter {
+              "_events": [Circular],
+              "_eventsCount": 2,
+              "maxListeners": 9007199254740991,
+            },
+            "fn": [Function],
+            "once": false,
+          },
+          "PROVIDER_CHANGED": EE {
+            "context": EventEmitter {
+              "_events": [Circular],
+              "_eventsCount": 2,
+              "maxListeners": 9007199254740991,
+            },
+            "fn": [Function],
+            "once": false,
+          },
         },
         "_eventsCount": 2,
-        "_maxListeners": undefined,
-        Symbol(kCapture): false,
+        "maxListeners": 9007199254740991,
+        Symbol(shapeMode): false,
       },
       "_provider": HttpProvider {
         "clientUrl": "http://test/abc",

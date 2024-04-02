@@ -25,9 +25,9 @@ import { AbiFunctionFragment } from 'web3-types';
 import { isAbiFunctionFragment, jsonInterfaceMethodToString } from '../utils.js';
 import { encodeParameters } from './parameters_api.js';
 
-// todo Add link to JSON interface documentation
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
+ * The JSON interface spec documentation https://docs.soliditylang.org/en/latest/abi-spec.html#json
  * @param functionName - The function name to encode or the `JSON interface` object of the function.
  * If the passed parameter is a string, it has to be in the form of `functionName(param1Type,param2Type,...)`. eg: myFunction(uint256,uint32[],bytes10,bytes)
  * @returns - The ABI signature of the function.
@@ -75,9 +75,9 @@ export const encodeFunctionSignature = (functionName: string | AbiFunctionFragme
 	return sha3Raw(name).slice(0, 10);
 };
 
-// todo Add link to JSON interface documentation
 /**
  * Encodes a function call using its `JSON interface` object and given parameters.
+ * The JSON interface spec documentation https://docs.soliditylang.org/en/latest/abi-spec.html#json
  * @param jsonInterface - The `JSON interface` object of the function.
  * @param params - The parameters to encode
  * @returns - The ABI encoded function call, which, means the function signature and the parameters passed.

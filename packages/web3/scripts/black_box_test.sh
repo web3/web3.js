@@ -5,7 +5,7 @@ ORIGARGS=("$@")
 . scripts/env.sh
 
 helpFunction() {
-	echo "Usage: $0 <ganache | geth | infura> <http | ws>"
+	echo "Usage: $0 <hardhat | geth | infura> <http | ws>"
 	exit 1 # Exit script after printing help
 }
 
@@ -13,7 +13,7 @@ BACKEND=${ORIGARGS[0]}
 MODE=${ORIGARGS[1]}
 PROVIDER_URL=${ORIGARGS[2]}
 
-SUPPORTED_BACKENDS=("ganache" "geth" "infura")
+SUPPORTED_BACKENDS=("geth" "infura" "hardhat")
 SUPPORTED_MODE=("http" "ws")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then

@@ -19,10 +19,12 @@ import { ResolverMethodMissingError } from 'web3-errors';
 import { Contract } from 'web3-eth-contract';
 import { isNullish, sha3 } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
+import { Address, PayableCallOptions } from 'web3-types';
 import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
 import { interfaceIds, methodsInInterface } from './config.js';
 import { Registry } from './registry.js';
 import { namehash } from './utils.js';
+
 
 //  Default public resolver
 //  https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol
@@ -101,5 +103,39 @@ export class Resolver {
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.contenthash);
 
 		return resolverContract.methods.contenthash(namehash(ENSName)).call();
+	}
+
+	public async setAddress(
+		ENSName: string,
+		address: Address,
+		txConfig: PayableCallOptions,
+	) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setAddr);
+
+		return resolverContract.methods
+			.setAddr(namehash(ENSName), address)
+			.send(txConfig);
+	}
+
+	public async getText(
+		ENSName: string,
+		key: string,
+	) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.text);
+
+		return resolverContract.methods
+			.text(namehash(ENSName), key).call()
+	}
+
+	public async getName(
+		address: string
+	) {
+		const resolverContract = await this.getResolverContractAdapter(address);
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
+
+		return resolverContract.methods
+			.name(namehash(address)).call()
 	}
 }

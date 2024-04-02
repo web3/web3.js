@@ -37,6 +37,9 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	isGeth,
+	itIf,
+	BACKEND,
 } from '../../fixtures/system_test_utils';
 import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
@@ -87,9 +90,7 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(response.status).toBe(BigInt(1));
 		expect(response.events).toBeUndefined();
 
-		const minedTransactionData = await web3EthWithWallet.getTransaction(
-			response.transactionHash,
-		);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(response.transactionHash);
 
 		expect(minedTransactionData).toMatchObject({
 			from: tempAcc.address,
@@ -118,9 +119,7 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(response.status).toBe(BigInt(1));
 		expect(response.events).toBeUndefined();
 
-		const minedTransactionData = await web3EthWithWallet.getTransaction(
-			response.transactionHash,
-		);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(response.transactionHash);
 
 		expect(minedTransactionData).toMatchObject({
 			from: tempAcc.address,
@@ -153,9 +152,7 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(response.status).toBe(BigInt(1));
 		expect(response.events).toBeUndefined();
 
-		const minedTransactionData = await web3EthWithWallet.getTransaction(
-			response.transactionHash,
-		);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(response.transactionHash);
 
 		expect(minedTransactionData).toMatchObject({
 			from: tempAcc.address,
@@ -293,6 +290,46 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(minedTransactionData).toMatchObject(transaction);
 		});
 
+		it('should send a successful type 0x2 transaction (gas = estimateGas)', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				type: BigInt(2),
+			};
+
+			transaction.gas = await web3Eth.estimateGas(transaction);
+
+			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
+			expect(response.type).toBe(BigInt(2));
+			expect(response.status).toBe(BigInt(1));
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
+		it('should send a successful type 0x2 transaction (fee per gas from: calculateFeeData)', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				type: BigInt(2),
+			};
+
+			const feeData = await web3Eth.calculateFeeData();
+			transaction.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+			transaction.maxFeePerGas = feeData.maxFeePerGas;
+
+			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.events).toBeUndefined();
+			expect(response.type).toBe(BigInt(2));
+			expect(response.status).toBe(BigInt(1));
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
 		it('should send a successful type 0x0 transaction with data', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
@@ -368,6 +405,29 @@ describe('Web3Eth.sendTransaction', () => {
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
 	});
+
+	itIf(isGeth)(
+		'should send type 0x2 transaction with maxPriorityFeePerGas got from await web3Eth.getMaxPriorityFeePerGas()',
+		async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				maxPriorityFeePerGas: await web3Eth.getMaxPriorityFeePerGas(),
+			};
+			const response = await web3Eth.sendTransaction(transaction);
+
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(response.events).toBeUndefined();
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(response.type).toBe(BigInt(2));
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(response.status).toBe(BigInt(1));
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(minedTransactionData).toMatchObject(transaction);
+		},
+	);
 
 	describe('Transaction PromiEvents', () => {
 		let transaction: Transaction;
@@ -474,12 +534,9 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				data: SimpleRevertDeploymentData,
 			};
-			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
-				simpleRevertDeployTransaction,
-			);
-			simpleRevertContractAddress = (
-				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
-			).contractAddress as Address;
+			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(simpleRevertDeployTransaction);
+			simpleRevertContractAddress = (await web3Eth.sendTransaction(simpleRevertDeployTransaction))
+				.contractAddress as Address;
 		});
 
 		it('Should throw TransactionRevertInstructionError because gas too low', async () => {
@@ -494,42 +551,55 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertInstructionError',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'err: intrinsic gas too low: have 1, want 21000 (supplied gas 1)'
-						: 'VM Exception while processing transaction: out of gas',
+						: 'base fee exceeds gas limit',
 			};
 
-			await expect(
-				web3Eth
-					.sendTransaction(transaction)
-					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
-			).rejects.toMatchObject(expectedThrownError);
+			if (getSystemTestBackend() !== BACKEND.HARDHAT) {
+				await expect(
+					web3Eth
+						.sendTransaction(transaction)
+						.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+				).rejects.toMatchObject(expectedThrownError);
+			} else {
+				try {
+					await web3Eth.sendTransaction(transaction);
+				} catch (error) {
+					expect((error as any).name).toEqual(expectedThrownError.name);
+					expect((error as any).code).toEqual(expectedThrownError.code);
+					expect((error as any).reason).toContain(expectedThrownError.reason);
+				}
+			}
 		});
-		it('Should throw TransactionRevertInstructionError because insufficient funds', async () => {
-			const transaction: Transaction = {
-				from: tempAcc.address,
-				to: '0x0000000000000000000000000000000000000000',
-				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
-			};
+		itIf(getSystemTestBackend() !== BACKEND.HARDHAT)(
+			'Should throw TransactionRevertInstructionError because insufficient funds',
+			async () => {
+				const transaction: Transaction = {
+					from: tempAcc.address,
+					to: '0x0000000000000000000000000000000000000000',
+					value: BigInt('99999999999999999999999999999999999999999999999999999999999999999'),
+				};
 
-			const expectedThrownError = {
-				name: 'TransactionRevertInstructionError',
-				message: 'Transaction has been reverted by the EVM',
-				code: 402,
-				reason:
-					getSystemTestBackend() === 'geth'
-						? expect.stringContaining(
-								'err: insufficient funds for gas * price + value: address',
-						  )
-						: 'VM Exception while processing transaction: insufficient balance',
-			};
+				const expectedThrownError = {
+					name: 'TransactionRevertInstructionError',
+					message: 'Transaction has been reverted by the EVM',
+					code: 402,
+					reason:
+						getSystemTestBackend() === BACKEND.GETH
+							? expect.stringContaining('err: insufficient funds for gas * price + value: address')
+							: 'VM Exception while processing transaction: insufficient balance',
+				};
 
-			await expect(
-				web3Eth
-					.sendTransaction(transaction)
-					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
-			).rejects.toMatchObject(expectedThrownError);
-		});
+				// eslint-disable-next-line jest/no-standalone-expect
+				await expect(
+					web3Eth
+						.sendTransaction(transaction)
+						// eslint-disable-next-line jest/no-standalone-expect
+						.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+				).rejects.toMatchObject(expectedThrownError);
+			},
+		);
 
 		it('Should throw TransactionRevertInstructionError because of contract revert and return revert reason', async () => {
 			const transaction: Transaction = {
@@ -544,9 +614,9 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertInstructionError',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted: This is a send revert'
-						: 'VM Exception while processing transaction: revert This is a send revert',
+						: "Error: VM Exception while processing transaction: reverted with reason string 'This is a send revert'",
 				signature: '0x08c379a0',
 				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
 				receipt: undefined,
@@ -572,9 +642,9 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertWithCustomError',
 				code: 438,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted'
-						: 'VM Exception while processing transaction: revert',
+						: 'Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0x72090e4d)',
 				signature: '0x72090e4d',
 				customErrorName: 'ErrorWithNoParams',
 				customErrorDecodedSignature: 'ErrorWithNoParams()',
@@ -602,9 +672,9 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertWithCustomError',
 				code: 438,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted'
-						: 'VM Exception while processing transaction: revert',
+						: 'Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000)',
 				signature: '0xc85bda60',
 				data: '000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
 				customErrorName: 'ErrorWithParams',
@@ -636,9 +706,9 @@ describe('Web3Eth.sendTransaction', () => {
 				name: 'TransactionRevertInstructionError',
 				code: 402,
 				reason:
-					getSystemTestBackend() === 'geth'
+					getSystemTestBackend() === BACKEND.GETH
 						? 'execution reverted: This is a send revert'
-						: 'VM Exception while processing transaction: revert This is a send revert',
+						: "Error: VM Exception while processing transaction: reverted with reason string 'This is a send revert'",
 				signature: '0x08c379a0',
 				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
 			};

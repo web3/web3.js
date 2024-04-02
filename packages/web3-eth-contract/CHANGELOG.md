@@ -364,4 +364,18 @@ Documentation:
 -	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
 -	Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
 
+## [4.3.0]
+
+### Added
+
+-   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+
 ## [Unreleased]
+
+### Fixed
+
+-	Fix an issue with smart contract function overloading (#6922)
+
+### Added
+
+-	Add a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)

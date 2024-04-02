@@ -105,6 +105,29 @@ describe('resolver', () => {
 		);
 	});
 	describe('addr', () => {
+		it('setAddr valid', async () => {
+			const checkInteraface = jest.spyOn(resolver, 'checkInterfaceSupport');
+
+			const setAddrMock = jest.spyOn(contract.methods, 'setAddr').mockReturnValue({
+				send: jest.fn(),
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			jest.spyOn(contract.methods, 'supportsInterface').mockReturnValue({
+				call: jest.fn().mockReturnValue(true),
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			// todo when moving this mock in beforeAll, jest calls the actual implementation, how to fix that
+			// I use this in many places
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			await resolver.setAddress(ENS_NAME, mockAddress, { from: mockAddress });
+			expect(checkInteraface).toHaveBeenCalled();
+			expect(setAddrMock).toHaveBeenCalledWith(namehash(ENS_NAME), mockAddress);
+		});
 		it('getAddress', async () => {
 			const supportsInterfaceMock = jest
 				.spyOn(contract.methods, 'supportsInterface')
@@ -187,6 +210,60 @@ describe('resolver', () => {
 			expect(contenthashMock).toHaveBeenCalledWith(namehash(ENS_NAME));
 		});
 	});
+
+	describe('text', () => {
+		it('getText', async () => {
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: async () => Promise.resolve(true),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+				const textMock = jest.spyOn(contract.methods, 'text').mockReturnValue({
+					call: jest.fn(),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+				jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+					return new Promise(resolve => {
+						resolve(contract);
+					});
+				});
+	
+				await resolver.getText(ENS_NAME, "key");
+				expect(supportsInterfaceMock).toHaveBeenCalledWith(
+					interfaceIds[methodsInInterface.text],
+				);
+				expect(textMock).toHaveBeenCalledWith(namehash(ENS_NAME), "key");
+	})
+})
+
+	describe('name', () => {
+		it('getName', async () => {
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: async () => Promise.resolve(true),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+				const nameMock = jest.spyOn(contract.methods, 'name').mockReturnValue({
+					call: jest.fn(),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+				jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+					return new Promise(resolve => {
+						resolve(contract);
+					});
+				});
+	
+				await resolver.getName(ENS_NAME);
+				expect(supportsInterfaceMock).toHaveBeenCalledWith(
+					interfaceIds[methodsInInterface.name],
+				);
+		
+				expect(nameMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+		})
+	})
+	
 
 	describe('supportsInterface', () => {
 		it('check supportsInterface for non strict hex id', async () => {

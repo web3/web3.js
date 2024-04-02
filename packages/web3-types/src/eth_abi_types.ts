@@ -110,6 +110,9 @@ export type AbiFunctionFragment = AbiBaseFragment & {
 
 	readonly constant?: boolean; // stateMutability == 'pure' or stateMutability == 'view'
 	readonly payable?: boolean; // stateMutability == 'payable'
+
+	readonly signature?: string;
+	readonly methodNameWithInputs?: string; // like: funcWithParamsOverloading(uint8)
 };
 
 export type AbiFallbackFragment = AbiBaseFragment & {
@@ -139,15 +142,6 @@ export type AbiErrorFragment = AbiBaseFragment & {
 	readonly inputs?: ReadonlyArray<AbiParameter>;
 };
 
-// https://docs.soliditylang.org/en/latest/abi-spec.html#json
-export type AbiFragment =
-	| AbiConstructorFragment
-	| AbiFunctionFragment
-	| AbiEventFragment
-	| AbiErrorFragment
-	| AbiFallbackFragment;
-
-export type ContractAbi = ReadonlyArray<AbiFragment>;
 
 export type AbiInput =
 	| string
@@ -160,6 +154,28 @@ export type AbiInput =
 			internalType?: string;
 	  }
 	| { readonly [key: string]: unknown };
+
+	export interface AbiOutput {
+		name: string;
+		type: string;
+		components?: AbiOutput[];
+		internalType?: string;
+	}
+	
+
+
+// https://docs.soliditylang.org/en/latest/abi-spec.html#json
+export type AbiFragment =
+	| AbiConstructorFragment
+	| AbiFunctionFragment
+	| AbiEventFragment
+	| AbiErrorFragment
+	| AbiFallbackFragment
+
+// to be compatible with web3js v1
+export type AbiItem = AbiFragment
+export type ContractAbi = ReadonlyArray<AbiFragment> | ReadonlyArray<AbiItem>
+
 
 // https://docs.soliditylang.org/en/develop/abi-spec.html#json
 export type JsonFunctionInterface = {
