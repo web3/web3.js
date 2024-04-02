@@ -20,7 +20,6 @@ import { SupportedProviders, FMT_BYTES, FMT_NUMBER } from 'web3-types';
 import { Contract } from 'web3-eth-contract';
 import { numberToHex } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { describe } from 'node:test';
 import { Web3Eth } from '../../src';
 
 import {
