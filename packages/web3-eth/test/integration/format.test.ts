@@ -67,21 +67,21 @@ describe('format', () => {
 	});
 
 	describe('methods', () => {
-		test.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
+		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
 			web3Eth.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const res = await web3Eth.getBlockNumber();
 			expect(typeof res).toBe(mapFormatToType[format as string]);
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
-		test.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
+		it.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
 			web3Eth.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const res = await web3Eth.getGasPrice();
 			expect(typeof res).toBe(mapFormatToType[format as string]);
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
-		test.each(Object.values(FMT_NUMBER))('getBalance', async format => {
+		it.each(Object.values(FMT_NUMBER))('getBalance', async format => {
 			web3Eth.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const value = '0xa';
 			const newAccount = await createNewAccount();
@@ -95,14 +95,14 @@ describe('format', () => {
 			expect(numberToHex(res)).toBe(value);
 		});
 
-		test.each(Object.values(FMT_BYTES))('getCode', async format => {
+		it.each(Object.values(FMT_BYTES))('getCode', async format => {
 			web3Eth.defaultReturnFormat = { number: FMT_NUMBER.BIGINT, bytes: format };
 			const code = await web3Eth.getCode(contractDeployed?.options?.address as string);
 			expect(code).toBeDefined();
 			expect(typeof code).toBe(mapFormatToType[format as string]);
 		});
 
-		test.each(Object.values(FMT_NUMBER))('getChainId', async format => {
+		it.each(Object.values(FMT_NUMBER))('getChainId', async format => {
 			web3Eth.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const res = await web3Eth.getChainId();
 			expect(typeof res).toBe(mapFormatToType[format as string]);
