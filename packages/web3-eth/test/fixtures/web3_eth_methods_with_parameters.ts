@@ -30,7 +30,6 @@ import {
 	Uint256,
 	TransactionWithSenderAPI,
 	TransactionReceipt,
-	FMT_BYTES,
 } from 'web3-types';
 import { transactionWithSender } from './rpc_methods_wrappers';
 
