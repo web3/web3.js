@@ -41,7 +41,7 @@ import { ENS } from 'web3-eth-ens';
 import { Net } from 'web3-net';
 import { Iban } from 'web3-eth-iban';
 import { Personal } from 'web3-eth-personal';
-
+export { FMT_BYTES, FMT_NUMBER } from 'web3-types';
 /**
  * The Ethereum interface for main web3 object. It provides extra methods in addition to `web3-eth` interface.
  *

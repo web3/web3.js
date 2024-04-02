@@ -27,6 +27,7 @@ There is list of configuration params that can be set for modifying behavior of 
 - [defaultHardfork](/api/web3-core/class/Web3Config#defaultHardfork)  
 - [defaultCommon](/api/web3-core/class/Web3Config#defaultCommon)  
 - [defaultTransactionType](/api/web3-core/class/Web3Config#defaultTransactionType)  
+- [defaultReturnFormat](/api/web3-core/class/Web3Config#defaultReturnFormat)  
 
 ## Global level Config
 
@@ -198,4 +199,46 @@ console.log(web3.getContextObject().config)
   transactionPollingTimeout: 750000,
   ...
 */
+```
+
+
+### defaultReturnFormat
+The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
+```ts
+import { Web3, FMT_NUMBER, FMT_BYTES } from 'web3';
+
+web3.defaultReturnFormat = {
+    number: FMT_NUMBER.BIGINT,
+    bytes: FMT_BYTES.HEX,
+};
+
+```
+:::info
+The `defaultReturnFormat` can be configured both globally and at the package level:
+```ts
+import { Web3Eth, FMT_NUMBER, FMT_BYTES } from 'web3-eth';
+
+const eth = new Web3Eth()
+eth.defaultReturnFormat = {
+    number: FMT_NUMBER.BIGINT,
+    bytes: FMT_BYTES.HEX,
+};
+
+```
+:::
+#### All available choices for numeric data:
+```ts 
+export enum FMT_NUMBER {
+	NUMBER = 'NUMBER_NUMBER',
+	HEX = 'NUMBER_HEX',
+	STR = 'NUMBER_STR',
+	BIGINT = 'NUMBER_BIGINT',
+}
+```
+#### All available choices for bytes data:     
+```ts
+export enum FMT_BYTES {
+    HEX = 'BYTES_HEX',
+    UINT8ARRAY = 'BYTES_UINT8ARRAY',
+}
 ```
