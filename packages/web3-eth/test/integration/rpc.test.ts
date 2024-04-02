@@ -26,8 +26,6 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { hexToNumber, hexToString, numberToHex, getStorageSlotNumForLongString } from 'web3-utils';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { describe } from 'node:test';
 import { Web3Eth } from '../../src';
 
 import {
@@ -92,13 +90,13 @@ describe('rpc', () => {
 		);
 
 		// TODO:in beta,  test eth_syncing during sync mode with return obj having ( startingblock, currentBlock, heighestBlock )
-		test('isSyncing', async () => {
+		it('isSyncing', async () => {
 			const isSyncing = await web3Eth.isSyncing();
 			expect(isSyncing).toBe(false);
 		});
 
 		// TODO: in future release, set coinbase account in node and match actual address here
-		test('getCoinbase', async () => {
+		it('getCoinbase', async () => {
 			const coinbase = await web3Eth.getCoinbase();
 			expect(coinbase.startsWith('0x')).toBe(true);
 			expect(coinbase).toHaveLength(42);
@@ -113,7 +111,7 @@ describe('rpc', () => {
 		});
 
 		describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('getHashRate', () => {
-			test.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
+			it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
 				const hashRate = await web3Eth.getHashRate({
 					number: format as FMT_NUMBER,
 					bytes: FMT_BYTES.HEX,
@@ -123,7 +121,7 @@ describe('rpc', () => {
 			});
 		});
 
-		test('getAccounts', async () => {
+		it('getAccounts', async () => {
 			// hardhat does not have support importrawkey, so we can't add new accounts rather just check the default 20 accounts
 			if (getSystemTestBackend() !== BACKEND.HARDHAT) {
 				const account = await createNewAccount({ unlock: true });
@@ -138,7 +136,7 @@ describe('rpc', () => {
 			}
 		});
 
-		test.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
+		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
 			const res = await web3Eth.getBlockNumber({
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
@@ -147,7 +145,7 @@ describe('rpc', () => {
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
-		test.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
+		it.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
 			const res = await web3Eth.getGasPrice({
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
@@ -156,7 +154,7 @@ describe('rpc', () => {
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
-		test.each(Object.values(FMT_NUMBER))('getBalance', async format => {
+		it.each(Object.values(FMT_NUMBER))('getBalance', async format => {
 			const value = '0xa';
 			const newAccount = await createNewAccount();
 			await web3Eth.sendTransaction({
@@ -173,7 +171,7 @@ describe('rpc', () => {
 			expect(numberToHex(res)).toBe(value);
 		});
 
-		test('getStorageAt', async () => {
+		it('getStorageAt', async () => {
 			const numberData = 10;
 			const stringData = 'str';
 			const boolData = true;
@@ -247,7 +245,7 @@ describe('rpc', () => {
 			expect(stringDataLong).toBe(str);
 		});
 
-		test.each(Object.values(FMT_NUMBER))('getCode', async format => {
+		it.each(Object.values(FMT_NUMBER))('getCode', async format => {
 			const code = await web3Eth.getCode(
 				contractDeployed?.options?.address as string,
 				undefined,
@@ -260,7 +258,7 @@ describe('rpc', () => {
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
 
-		test('getTransaction', async () => {
+		it('getTransaction', async () => {
 			const [receipt] = await sendFewTxes({
 				from: tempAcc.address,
 				value: '0x1',
@@ -276,7 +274,7 @@ describe('rpc', () => {
 			validateTransaction(res as TransactionInfo);
 			expect(res?.hash).toBe(receipt.transactionHash);
 		});
-		test('check get transaction fields', async () => {
+		it('check get transaction fields', async () => {
 			const receipt0 = await web3Eth.sendTransaction({
 				from: tempAcc.address,
 				value: '0x1',
@@ -375,7 +373,7 @@ describe('rpc', () => {
 			expect(res).toBeDefined();
 		});
 
-		test('getTransactionReceipt', async () => {
+		it('getTransactionReceipt', async () => {
 			const [receipt] = await sendFewTxes({
 				from: tempAcc.address,
 				value: '0x1',
@@ -390,7 +388,7 @@ describe('rpc', () => {
 			expect(res?.transactionHash).toBe(receipt.transactionHash);
 		});
 
-		test('getChainId', async () => {
+		it('getChainId', async () => {
 			const res = await web3Eth.getChainId({
 				number: FMT_NUMBER.NUMBER,
 				bytes: FMT_BYTES.HEX,
@@ -399,7 +397,7 @@ describe('rpc', () => {
 			expect(Number(res)).toBeGreaterThan(0);
 		});
 
-		test('getNodeInfo', async () => {
+		it('getNodeInfo', async () => {
 			const res = await web3Eth.getNodeInfo();
 			// TODO: in next release, it should also be validated
 			expect(res).toBeDefined();
@@ -432,7 +430,7 @@ describe('rpc', () => {
 			expect(res.storageProof[0].value).toBe(numberData);
 		});
 
-		test('getPastLogs', async () => {
+		it('getPastLogs', async () => {
 			const listOfStrings = ['t1', 't2', 't3'];
 			const resTx = [];
 			for (const l of listOfStrings) {
