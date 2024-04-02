@@ -2406,3 +2406,33 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 - fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
 ## [Unreleased]
+### Added
+
+#### web3-core
+
+-   `defaultReturnFormat` was added to the configuration options. (#6947)
+
+#### web3-eth
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-eth-contract
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-eth-ens
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-net
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-types
+
+-   Added `signature` to type `AbiFunctionFragment` (#6922)
+
+### Fixed
+
+#### web3-eth-contract
+

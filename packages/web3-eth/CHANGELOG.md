@@ -226,3 +226,6 @@ Documentation:
 -   Added `eth.getMaxPriorityFeePerGas` method (#6748)
 
 ## [Unreleased]
+
+### Added
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)

@@ -375,3 +375,6 @@ Documentation:
 ### Fixed
 
 -	Fix an issue with smart contract function overloading (#6922)
+
+### Added
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
