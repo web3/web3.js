@@ -2406,8 +2406,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 - fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
 ## [Unreleased]
-### Added
-### Added
 
 #### web3-core
 
