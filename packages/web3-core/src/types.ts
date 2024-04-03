@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString, Transaction } from 'web3-types';
+import { HexString, JsonRpcResponse, Transaction, Web3APIMethod, Web3APIRequest, Web3APIReturnType } from 'web3-types';
 
 export type TransactionTypeParser = (
 	transaction: Transaction,
@@ -30,3 +30,14 @@ export interface ExtensionObject {
 	property?: string;
 	methods: Method[];
 }
+
+export interface RequestManagerMiddleware<API> {
+	processRequest<
+	  Method extends Web3APIMethod<API>
+	>(request: Web3APIRequest<API, Method>): Promise<Web3APIRequest<API, Method>>;
+
+	processResponse<
+	Method extends Web3APIMethod<API>,
+	ResponseType = Web3APIReturnType<API, Method>>
+	(response: JsonRpcResponse<ResponseType>): Promise<JsonRpcResponse<ResponseType>>;
+  }
