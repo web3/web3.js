@@ -26,7 +26,7 @@ class MyPlugin extends Web3PluginBase {
     //3. Add a name to the plugin
     pluginNamespace = "pluginExample"; 
 
-    //4. Createa any methods with your desired functionality
+    //4. Create any methods with your desired functionality
     async doSomething(){
         console.log("Hello web3!");
         //send transactions
@@ -58,16 +58,212 @@ web3.pluginExample.doSomething();
 //--> Hello web3!
 ```
 
+## Initialize a provider for the plugin
+
+There are 2 ways to initialize a provider when you are using a plugin, the [first one](#set-a-provider-within-the-plugin) is within the plugin (internally using the `this` object and `setProvider()` method). And the [second one](#register-plugin), is done by the final user by using the `registerPlugin()` method.
+
+### Register plugin (External - Final user)
+
+When the final user (developer) is using the plugin, they must write the following:
+
+```js
+//Step #1: Import the plugin and web3 module
+const { Web3 } = require("web3");
+const MyPlugin = require("./plugin");
+
+//Step #2: Initialize the web3 instance
+const web3 = new Web3("https://eth.llamarpc.com");
+
+//Step #3: Register plugin to add the current Web3Context
+web3.registerPlugin(new MyPlugin());
+```
+
+And once the plugin is registered in step #3 by using `registerPlugin(new Plugin)`, the provider in the plugin is automatically set to the provider initialized in `Step #2` (in this case: `https://eth.llamarpc.com`).
+
+### Set a provider within the plugin (web3Context)
+
+If you want to initialize the provider inside the plugin you can use the `this` object, but anyway the user must initialize a provider when [registering the plugin](#register-plugin-external---final-user):
+
+```js
+//Step #1: Import modules
+const { Web3PluginBase, eth } = require("web3");
+
+//Step #2: Create class
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = "myPlugin";
+
+//Step #3: Set providers
+  async getChainIdMainnet() {
+    this.setProvider("https://eth.llamarpc.com") //or any other RPC
+    return await eth.getChainId(this)
+  }
+
+  async getChainIdPolygon() {
+    this.setProvider("https://polygon.llamarpc.com") //or any other RPC
+    return await eth.getChainId(this)
+  }
+
+  async getChainIdArbitrum() {
+    this.setProvider("https://arbitrum.llamarpc.com") //or any other RPC
+    return await eth.getChainId(this)
+  }
+}
+
+```
+
+
+
 ## Using web3 packages on the plugin
 
-### Import eth module
-Here you will find a file `plugin.js` with the plugin code and a `usage.js` file with the example usage, feel free to navigate between both files.
+### Use Eth module
 
-<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-ujbf9d?embed=1&file=plugin.js&showSidebar=1"></iframe>   
+```js
+import { FMT_NUMBER, Web3PluginBase, eth } from 'web3';
 
-### Import utils module
-Here you will find a file `plugin.js` with the plugin code and a `usage.js` file with the example usage, feel free to navigate between both files.
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
 
-<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-snkfuk?embed=1&file=plugin.js&showSidebar=1"></iframe>   
+  async getChainId() {
+    //`this` is the web3context used when you register the plugin in the usage
+    return await eth.getChainId(this, { number: FMT_NUMBER.NUMBER });
+  }
+
+  async getBlockNumber() {
+    return await eth.getBlockNumber(this, { number: FMT_NUMBER.NUMBER });
+  }
+
+  //more web3.eth. methods...
+}
+
+export default MyPlugin;
+```
+
+### Use Utils
+
+```js
+import { Web3PluginBase, utils } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  weiToEth(value) {
+    //`this` is the web3context used when you register the plugin in the usage
+    return utils.fromWei(value, 'ether');
+  }
+
+  //more web3.eth. methods...
+}
+
+export default MyPlugin;
+
+```
 
 
+### Use Accounts
+
+
+```js
+import { Web3PluginBase, eth } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async createAccount() {
+    const account = eth.accounts.create();
+    console.log("account:", account);
+    /* 
+    account: {
+        address: '0x59E797F2F66AffA9A419a6BC2ED4742b7cBc2570',
+        privateKey: '0x52a81fc3a7fd6ce9644147c9fb5bfbe1f708f37b4611b3c3310eb9a6dc85ccf4',
+        signTransaction: [Function: signTransaction],
+        sign: [Function: sign],
+        encrypt: [Function: encrypt]
+    }
+    */
+  }
+}
+
+export default MyPlugin;
+```
+
+### Use Wallet
+
+
+```js
+import { Web3PluginBase, eth } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async createWallet() {
+    //1. Create a random account
+    const accounts = eth.accounts.create();
+    //2. Add the account to the wallet
+    const wallet = this.wallet.add(accounts);
+    //by creating the wallet, web3.js will use this account to sign TXs under the hood
+    console.log(wallet);
+    /* 
+    Wallet(1) [
+    {
+      address: '0x233725561B1430bE2C24Ce9EEabe63E4B46EC9E3',
+      privateKey: '0x6856adf06dd803e0354450ccf251f829a2c9ef1177ce371f8835bbfb56cd0898',
+      signTransaction: [Function: signTransaction],
+      sign: [Function: sign],
+      encrypt: [Function: encrypt]
+    },
+    _accountProvider: {
+      create: [Function: createWithContext],
+      privateKeyToAccount: [Function: privateKeyToAccountWithContext],
+      decrypt: [Function: decryptWithContext]
+    },
+    _addressMap: Map(1) { '0x233725561b1430be2c24ce9eeabe63e4b46ec9e3' => 0 },
+    _defaultKeyName: 'web3js_wallet'
+  ]
+    */
+  }
+}
+
+export default MyPlugin;
+```
+
+
+### Use Contract
+
+
+```js
+import { Web3PluginBase, Contract } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async interactWithContract() {
+    //1. Initialize contract
+    const myContract = new Contract(ABI, ADDRESS);
+    
+    //2. Interact with reading functions
+    const response = myContract.methods.doSomething().call();
+    
+    //3. Interact with writing functions
+    //You must initialize a wallet to be able to send the TX from wallet[0].address
+    const txReceipt = myContract.methods.doSomething().send({from: wallet[0].address})
+  }
+}
+
+export default MyPlugin;
+```
+
+### Use ENS
+
+TO DO 
+
+## Use web3Context
+
+TO DO
+
+## Use requestManager
+
+TO DO 
+
+## Config Params
+
+TO DO 
