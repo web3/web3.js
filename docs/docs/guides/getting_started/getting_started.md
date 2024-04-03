@@ -245,7 +245,7 @@ const web3 = new Web3('wss://ethereum.publicnode.com');
 //instantiate contract
 const uniswapToken = new web3.eth.Contract(abi, address)
 
-//create the subcription to all the 'Transfer' events
+//create the subscription to all the 'Transfer' events
 const subscription = uniswapToken.events.Transfer();
 
 //listen to the events
