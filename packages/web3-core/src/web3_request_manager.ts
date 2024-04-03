@@ -52,6 +52,7 @@ import {
 	isWeb3Provider,
 } from './utils.js';
 import { Web3EventEmitter } from './web3_event_emitter.js';
+import { RequestManagerMiddleware } from './types.js';
 
 export enum Web3RequestManagerEvent {
 	PROVIDER_CHANGED = 'PROVIDER_CHANGED',
@@ -73,9 +74,12 @@ export class Web3RequestManager<
 }> {
 	private _provider?: SupportedProviders<API>;
 	private readonly useRpcCallSpecification?: boolean;
+	public middleware?: RequestManagerMiddleware<API>;
+
 	public constructor(
 		provider?: SupportedProviders<API> | string,
 		useRpcCallSpecification?: boolean,
+		requestManagerMiddleware?: RequestManagerMiddleware<API>
 	) {
 		super();
 
@@ -83,8 +87,12 @@ export class Web3RequestManager<
 			this.setProvider(provider);
 		}
 		this.useRpcCallSpecification = useRpcCallSpecification;
-	}
 
+		if (!isNullish(requestManagerMiddleware))
+			this.middleware = requestManagerMiddleware;
+
+	}
+	
 	/**
 	 * Will return all available providers
 	 */
@@ -142,6 +150,10 @@ export class Web3RequestManager<
 		return true;
 	}
 
+	public setMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>){
+		this.middleware = requestManagerMiddleware;
+	}
+
 	/**
 	 *
 	 * Will execute a request
@@ -155,7 +167,15 @@ export class Web3RequestManager<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIRequest<API, Method>): Promise<ResponseType> {
-		const response = await this._sendRequest<Method, ResponseType>(request);
+
+		if (!isNullish(this.middleware))
+			request = await this.middleware.processRequest(request);
+
+		let response = await this._sendRequest<Method, ResponseType>(request);
+
+		if (!isNullish(this.middleware))
+			response = await this.middleware.processResponse(response);
+
 		if (jsonRpc.isResponseWithResult(response)) {
 			return response.result;
 		}
