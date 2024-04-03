@@ -168,10 +168,12 @@ export class Web3RequestManager<
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIRequest<API, Method>): Promise<ResponseType> {
 
-		if (!isNullish(this.middleware))
-			request = await this.middleware.processRequest(request);
+		let requestObj = {...request};
 
-		let response = await this._sendRequest<Method, ResponseType>(request);
+		if (!isNullish(this.middleware))
+		requestObj = await this.middleware.processRequest(requestObj);
+
+		let response = await this._sendRequest<Method, ResponseType>(requestObj);
 
 		if (!isNullish(this.middleware))
 			response = await this.middleware.processResponse(response);
