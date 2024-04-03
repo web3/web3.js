@@ -375,3 +375,7 @@ Documentation:
 ### Fixed
 
 -	Fix an issue with smart contract function overloading (#6922)
+
+### Added
+
+-	Add a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)
