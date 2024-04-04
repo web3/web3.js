@@ -19,8 +19,8 @@ import Web3, { JsonRpcResponse, TransactionCall } from 'web3';
 import { CustomRpcMethodsPlugin } from '../../src/custom_rpc_methods';
 
 
-describe('CustomRpcMethodsPlugin', () => {
-	it('should register the plugin', async () => {
+describe('CustomRpcMethodsPlugin Middleware', () => {
+	it('should modify request and response using middleware plugin', async () => {
 
 		const web3 = new Web3('http://127.0.0.1:8545');
 		const plugin = new CustomRpcMethodsPlugin(true);
@@ -49,7 +49,7 @@ describe('CustomRpcMethodsPlugin', () => {
 			chainId: '0x1',
 		};
 		const result = await web3.eth.call(transaction);
-		expect(result).toBe('0x6a756e616964'); // result modified by response processor , so its 0x6a756e616964 insated of 0x0
+		expect(result).toBe('0x6a756e616964'); // result modified by response processor , so its 0x6a756e616964 instead of 0x0
 
 		const expectedCall = {
 		   method: "eth_call",
