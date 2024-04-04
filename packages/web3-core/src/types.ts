@@ -33,11 +33,11 @@ export interface ExtensionObject {
 
 export interface RequestManagerMiddleware<API> {
 	processRequest<
-	  Method extends Web3APIMethod<API>
-	>(request: Web3APIRequest<API, Method>): Promise<Web3APIRequest<API, Method>>;
+	  AnotherMethod extends Web3APIMethod<API>
+	>(request: Web3APIRequest<API, AnotherMethod>): Promise<Web3APIRequest<API, AnotherMethod>>;
 
 	processResponse<
-	Method extends Web3APIMethod<API>,
-	ResponseType = Web3APIReturnType<API, Method>>
+	AnotherMethod extends Web3APIMethod<API>,
+	ResponseType = Web3APIReturnType<API, AnotherMethod>>
 	(response: JsonRpcResponse<ResponseType>): Promise<JsonRpcResponse<ResponseType>>;
   }

@@ -21,6 +21,8 @@ import { RequestManagerMiddleware } from '../../src/types';
 import { Web3RequestManager } from '../../src/web3_request_manager';
 
 class Web3Middleware<API> implements RequestManagerMiddleware<API> {
+
+  // eslint-disable-next-line class-methods-use-this
   public async processRequest<Method extends Web3APIMethod<API>>(
     request: Web3APIRequest<API, Method>
   ): Promise<Web3APIRequest<API, Method>> {
@@ -37,6 +39,7 @@ class Web3Middleware<API> implements RequestManagerMiddleware<API> {
     return Promise.resolve(requestObj);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public async processResponse<
     Method extends Web3APIMethod<API>,
     ResponseType = Web3APIReturnType<API, Method>
