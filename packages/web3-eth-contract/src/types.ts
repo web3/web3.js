@@ -217,7 +217,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @param data - The data to decode.
 	 * @returns - The decoded data.
 	 */
-	decodeABI<SpecialOutput = Outputs>(data?: string): SpecialOutput;
+	decodeData<SpecialInputs = Inputs>(data: HexString): SpecialInputs;
 
 	/**
 	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
@@ -414,7 +414,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @param data - The data to decode.
 	 * @returns - The decoded data.
 	 */
-	decodeABI<SpecialOutput = Outputs>(data?: HexString): SpecialOutput;
+	decodeData<SpecialInputs = Inputs>(data: HexString): SpecialInputs;
 
 	/**
 	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
