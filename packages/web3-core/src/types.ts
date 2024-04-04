@@ -33,11 +33,17 @@ export interface ExtensionObject {
 
 export interface RequestManagerMiddleware<API> {
 	processRequest<
-	  AnotherMethod extends Web3APIMethod<API>
-	>(request: Web3APIRequest<API, AnotherMethod>): Promise<Web3APIRequest<API, AnotherMethod>>;
+		AnotherMethod extends Web3APIMethod<API>
+	>(
+		request: Web3APIRequest<API, AnotherMethod>, 
+		options?: { [key: string]: unknown }) // options for future Extensible Middleware
+	: Promise<Web3APIRequest<API, AnotherMethod>>;
 
 	processResponse<
-	AnotherMethod extends Web3APIMethod<API>,
-	ResponseType = Web3APIReturnType<API, AnotherMethod>>
-	(response: JsonRpcResponse<ResponseType>): Promise<JsonRpcResponse<ResponseType>>;
+		AnotherMethod extends Web3APIMethod<API>,
+		ResponseType = Web3APIReturnType<API, AnotherMethod>>
+	(
+		response: JsonRpcResponse<ResponseType>, 
+		options?: { [key: string]: unknown }) // options for future Extensible Middleware
+	: Promise<JsonRpcResponse<ResponseType>>;
   }
