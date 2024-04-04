@@ -49,7 +49,7 @@ describe('CustomRpcMethodsPlugin', () => {
 			chainId: '0x1',
 		};
 		const result = await web3.eth.call(transaction);
-		expect(result).toEqual('0x6a756e616964'); // result modified by response processor , so its 0x6a756e616964 insated of 0x0
+		expect(result).toBe('0x6a756e616964'); // result modified by response processor , so its 0x6a756e616964 insated of 0x0
 
 		const expectedCall = {
 		   method: "eth_call",
