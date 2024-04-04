@@ -21,37 +21,41 @@ import { jsonRpc } from "web3-utils";
 export class Web3Middleware<API> implements RequestManagerMiddleware<API> {
 
   // eslint-disable-next-line class-methods-use-this
-  async processRequest<Method extends Web3APIMethod<API>>(
+  public async processRequest<Method extends Web3APIMethod<API>>(
     request: Web3APIRequest<API, Method>
   ): Promise<Web3APIRequest<API, Method>> {
     
     // add your custom logic here for processing requests
-    if (request.method === 'eth_call' && Array.isArray(request.params)) {
-      request = {
-        ...request,
-        params: [...request.params, '0x0', '0x1'],
+    let reqObj = {...request};
+    if (reqObj.method === 'eth_call' && Array.isArray(reqObj.params)) {
+      reqObj = {
+        ...reqObj,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        params: [...reqObj.params, '0x0', '0x1'],
       };
     }
 
-    return Promise.resolve(request);
+    return Promise.resolve(reqObj);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async processResponse<
+  public async processResponse<
     Method extends Web3APIMethod<API>,
     ResponseType = Web3APIReturnType<API, Method>
   >(
     response: JsonRpcResponse<ResponseType>
   ): Promise<JsonRpcResponse<ResponseType>> {
 
-    // add your custom logic here for processing responses
-    if (!jsonRpc.isBatchResponse(response) && response.id === 1) {
-      response = {
-        ...response,
+    // add your custom logic here for processing responses, following is just a demo 
+    let resObj = {...response};
+    if (!jsonRpc.isBatchResponse(resObj) && resObj.id === 1) {
+      resObj = {
+        ...resObj,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         result: '0x6a756e616964' as any,
       };
     }
 
-    return Promise.resolve(response);
+    return Promise.resolve(resObj);
   }
 }
