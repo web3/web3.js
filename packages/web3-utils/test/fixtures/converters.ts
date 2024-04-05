@@ -235,6 +235,22 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 	],
 	['-0x01', ['-0x1', 'int256']],
 	['123c', ['0x123c', 'bytes']],
+	[new Uint8Array([
+		221, 128, 128, 128, 148, 186, 248,
+		242, 159, 130, 231, 84, 254, 199,
+		252, 69, 21, 58, 104, 102, 201,
+		137, 255, 3, 196, 10, 128, 128,
+		128, 128
+		]), ['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes']],
+	// this works but jest has bug since forever where they modify global Buffer object: https://github.com/jestjs/jest/issues/2549
+	// [Buffer.from([
+	// 	221, 128, 128, 128, 148, 186, 248,
+	// 	242, 159, 130, 231, 84, 254, 199,
+	// 	252, 69, 21, 58, 104, 102, 201,
+	// 	137, 255, 3, 196, 10, 128, 128,
+	// 	128, 128
+	// 	]), ['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes']]
+
 ];
 
 export const toHexInvalidData: [any, string][] = [
