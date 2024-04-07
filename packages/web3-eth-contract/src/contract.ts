@@ -793,7 +793,7 @@ export class Contract<Abi extends ContractAbi>
 	 * // decoding
 	 * myContract.deploy({
 	 *   input: '0x12345...',
-	 *   arguments: [123, 'My Greeting']
+	 *   // arguments: [123, 'My Greeting'] if you just need to decode the data, you can skip the arguments
 	 * })
 	 * .decodeData('0x12345...0000012345678765432');
 	 * > {
