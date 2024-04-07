@@ -212,6 +212,21 @@ const ABI = [
 
 describe('test Params Overloading', () => {
 	const contract: Contract<typeof ABI> = new Contract(ABI);
+	describe('calling a function with multiple compatible inputs without specifying', () => {
+		// TODO: 5.x Should throw a new error with the list of methods found.
+		// Related issue: https://github.com/web3/web3.js/issues/6923
+		it('should call the first one when the signature is not passed but also show a warning', async () => {
+			const originalWarn = console.warn;
+			console.warn = function (message: string) {
+				expect(message).toMatch('Multiple methods found that is compatible with the given inputs.');
+			};
+			const abi = contract.methods['funcWithParamsOverloading_pure'](
+				'0x12eca7a3959a42973ef4452e44948650be8b8610',
+			).encodeABI();
+			console.warn = originalWarn;
+			expect(abi.substring(0, 10)).toBe('0x125f6ec5');
+		});
+	});
 
 	describe('funcWithParamsOverloading_pure', () => {
 		it('uint256', async () => {

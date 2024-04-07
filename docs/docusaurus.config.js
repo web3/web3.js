@@ -138,6 +138,12 @@ const config = {
 						position: 'left',
 					},
 					{
+						to: '/web3_playground',
+						activeBasePath: '/',
+						label: 'Playground',
+						position: 'right',
+					},
+					{
 						href: 'https://github.com/ChainSafe/web3.js/tree/4.x/',
 						label: 'GitHub',
 						position: 'right',
