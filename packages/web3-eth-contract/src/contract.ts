@@ -329,6 +329,67 @@ const contractSubscriptions = {
  *
  * ```
  *
+
+ * ### decodeMethodData
+ * Decodes the given ABI-encoded data, revealing both the method name and the parameters used in the smart contract call.
+ * This function reverses the encoding process happens at the method `encodeABI`.
+ * It's particularly useful for debugging and understanding the interactions with and between smart contracts.
+ * 
+ * #### Parameters
+ * 
+ * - `data` **HexString**: The string of ABI-encoded data that needs to be decoded. This should include the method signature and the encoded parameters.
+ * 
+ * #### Returns
+ * 
+ * - **Object**: This object combines both the decoded parameters and the method name in a readable format. Specifically, the returned object contains:
+ *   - `__method__` **String**: The name of the contract method, reconstructed from the ABI.
+ *   - `__length__` **Number**: The number of parameters decoded.
+ *   - Additional properties representing each parameter by name, as well as their position and values.
+ * 
+ * #### Example
+ * 
+ * Given an ABI-encoded string from a transaction, you can decode this data to identify the method called and the parameters passed.
+ * Here's a simplified example:
+ * 
+ * 
+ * ```typescript
+ * const GreeterAbi = [
+ * 	{
+ * 		inputs: [
+ * 			{
+ * 				internalType: 'string',
+ * 				name: '_greeting',
+ * 				type: 'string',
+ * 			},
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [],
+ * 		type: 'function',
+ * 	},
+ * ];
+ * const contract = new Contract(GreeterAbi); // Initialize with your contract's ABI
+ * 
+ * // The ABI-encoded data string for "setGreeting('Hello World')"
+ * const encodedData =
+ * 	'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b48656c6c6f20576f726c64000000000000000000000000000000000000000000';
+ * 
+ * try {
+ * 	const decoded = contract.decodeMethodData(encodedData);
+ * 	console.log(decoded.__method__); // Outputs: "setGreeting(string)"
+ * 	console.log(decoded); // Outputs the detailed parameter data
+ * 	// This tells that the method called was `setGreeting` with a single string parameter "Hello World":
+ * 	// {
+ * 	//   __method__: 'setGreeting(string)',
+ * 	//   __length__: 1,
+ * 	//   '0': 'Hello World',
+ * 	//   _greeting: 'Hello World'
+ * 	// }
+ * } catch (error) {
+ * 	console.error(error);
+ * }
+ * ```
+ * 
+
  * ### createAccessList
  * This will create an access list a method execution will access when executed in the EVM.
  * Note: You must specify a from address and gas if it’s not specified in options when instantiating parent contract object.
@@ -727,6 +788,22 @@ export class Contract<Abi extends ContractAbi>
 	 * })
 	 * .encodeABI();
 	 * > '0x12345...0000012345678765432'
+	 *
+	 *
+	 * // decoding
+	 * myContract.deploy({
+	 *   input: '0x12345...',
+	 *   arguments: [123, 'My Greeting']
+	 * })
+	 * .decodeData('0x12345...0000012345678765432');
+	 * > {
+	 *      __method__: 'constructor',
+	 *      __length__: 2,
+	 *      '0': '123',
+	 *      _id: '123',
+	 *      '1': 'My Greeting',
+	 *      _greeting: 'My Greeting',
+	 *   }
 	 *
 	 *
 	 * // Gas estimation

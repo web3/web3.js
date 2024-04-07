@@ -1401,7 +1401,7 @@ describe('Contract', () => {
 			spyTx.mockClear();
 		});
 
-		it('decodeData should decode data for methods', async () => {
+		it('decodeMethodData should decode data for methods', async () => {
 			const arg = 'Hello';
 
 			const contract = new Contract(GreeterAbi, { data: GreeterBytecode });
