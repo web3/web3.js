@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3PluginBase } from 'web3-core';
 // eslint-disable-next-line require-extensions/require-extensions
 import { Web3Context } from './reexported_web3_context';
+// eslint-disable-next-line require-extensions/require-extensions
 import { Web3Middleware } from './middleware';
 
 type CustomRpcApi = {
