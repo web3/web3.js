@@ -362,7 +362,7 @@ export const toHex = (
 		return returnType ? 'bigint' : numberToHex(value);
 	}
 
-	if(value instanceof Uint8Array) {
+	if(isUint8Array(value)) {
 		return returnType ? 'bytes' : bytesToHex(value);
 	}
 

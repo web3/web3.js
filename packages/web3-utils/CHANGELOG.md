@@ -206,3 +206,8 @@ Documentation:
 - fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
 ## [Unreleased]
+
+### Fixed
+
+- fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
+- fixed isUint8Array not returning true for Buffer
