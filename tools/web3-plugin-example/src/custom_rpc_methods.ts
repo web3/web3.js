@@ -28,22 +28,23 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 	public pluginNamespace = 'customRpcMethods';
 	public web3Middleware: Web3Middleware<CustomRpcApi> | undefined;
 
-	public constructor(testMiddleware = false){
+	public constructor(testMiddleware = false) {
 		super();
 
-		if(testMiddleware)
+		if (testMiddleware) {
 			this.web3Middleware = new Web3Middleware<CustomRpcApi>();
+		}
 	}
 
-public link(parentContext: Web3Context): void {
+	public link(parentContext: Web3Context): void {
 
-	if(this.web3Middleware)
-		parentContext.requestManager.setMiddleware(this.web3Middleware);
+		if (this.web3Middleware)
+			parentContext.requestManager.setMiddleware(this.web3Middleware);
 
-    super.link(parentContext);
-  }
+		super.link(parentContext);
+	}
 
-	
+
 	public async customRpcMethod() {
 		return this.requestManager.send({
 			method: 'custom_rpc_method',
