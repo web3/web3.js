@@ -59,7 +59,7 @@ export interface Web3ConfigOptions {
 	};
 	transactionBuilder?: TransactionBuilder;
 	transactionTypeParser?: TransactionTypeParser;
-	defaultReturnFormat?: DataFormat;
+	defaultReturnFormat: DataFormat;
 }
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown

@@ -31,7 +31,6 @@ import {
 	DataFormat,
 	FormatType,
 	ETH_DATA_FORMAT,
-	DEFAULT_RETURN_FORMAT,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
@@ -99,8 +98,7 @@ export const getTransactionFromOrToAttr = (
 export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	address?: Address,
-	returnFormat: ReturnFormat = (web3Context.defaultReturnFormat ??
-		DEFAULT_RETURN_FORMAT) as ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) => {
 	if (isNullish(address)) {
 		// TODO if (web3.eth.accounts.wallet) use address from local wallet

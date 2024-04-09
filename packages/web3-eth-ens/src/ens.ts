@@ -26,7 +26,6 @@ import { Contract } from 'web3-eth-contract';
 import { getId } from 'web3-net';
 import {
 	Address,
-	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
 	FMT_NUMBER,
 	PayableCallOptions,
@@ -249,7 +248,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 			return this._detectedAddress;
 		}
 		const networkType = await getId(this, {
-			...(this.defaultReturnFormat ?? DEFAULT_RETURN_FORMAT),
+			...this.defaultReturnFormat,
 			number: FMT_NUMBER.HEX,
 		}); // get the network from provider
 		const addr = registryAddresses[networkIds[networkType]];

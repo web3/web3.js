@@ -403,7 +403,7 @@ export async function getUncle<ReturnFormat extends DataFormat>(
 export async function getTransaction<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: Bytes,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const transactionHashFormatted = format(
 		{ format: 'bytes32' },
@@ -417,7 +417,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: formatTransaction(response, returnFormat ?? web3Context.defaultReturnFormat, {
+		: formatTransaction(response, returnFormat, {
 				fillInputAndData: true,
 		  });
 }
@@ -779,17 +779,13 @@ export async function sign<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	message: Bytes,
 	addressOrIndex: Address | number,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const messageFormatted = format({ format: 'bytes' }, message, DEFAULT_RETURN_FORMAT);
 	if (web3Context.wallet?.get(addressOrIndex)) {
 		const wallet = web3Context.wallet.get(addressOrIndex) as Web3BaseWalletAccount;
 		const signed = wallet.sign(messageFormatted);
-		return format(
-			SignatureObjectSchema,
-			signed,
-			returnFormat ?? web3Context.defaultReturnFormat,
-		);
+		return format(SignatureObjectSchema, signed, returnFormat);
 	}
 
 	if (typeof addressOrIndex === 'number') {
@@ -805,11 +801,7 @@ export async function sign<ReturnFormat extends DataFormat>(
 		messageFormatted,
 	);
 
-	return format(
-		{ format: 'bytes' },
-		response as Bytes,
-		returnFormat ?? web3Context.defaultReturnFormat,
-	);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 /**
@@ -819,7 +811,7 @@ export async function sign<ReturnFormat extends DataFormat>(
 export async function signTransaction<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const response = await ethRpcMethods.signTransaction(
 		web3Context.requestManager,
@@ -828,26 +820,18 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 	// Some clients only return the encoded signed transaction (e.g. Ganache)
 	// while clients such as Geth return the desired SignedTransactionInfoAPI object
 	return isString(response as HexStringBytes)
-		? decodeSignedTransaction(
-				response as HexStringBytes,
-				returnFormat ?? web3Context.defaultReturnFormat ?? DEFAULT_RETURN_FORMAT,
-				{
-					fillInputAndData: true,
-				},
-		  )
+		? decodeSignedTransaction(response as HexStringBytes, returnFormat, {
+				fillInputAndData: true,
+		  })
 		: {
 				raw: format(
 					{ format: 'bytes' },
 					(response as SignedTransactionInfoAPI).raw,
-					returnFormat ?? web3Context.defaultReturnFormat,
+					returnFormat,
 				),
-				tx: formatTransaction(
-					(response as SignedTransactionInfoAPI).tx,
-					returnFormat ?? web3Context.defaultReturnFormat,
-					{
-						fillInputAndData: true,
-					},
-				),
+				tx: formatTransaction((response as SignedTransactionInfoAPI).tx, returnFormat, {
+					fillInputAndData: true,
+				}),
 		  };
 }
 
@@ -861,7 +845,7 @@ export async function call<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
@@ -873,11 +857,7 @@ export async function call<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	);
 
-	return format(
-		{ format: 'bytes' },
-		response as Bytes,
-		returnFormat ?? web3Context.defaultReturnFormat,
-	);
+	return format({ format: 'bytes' }, response as Bytes, returnFormat);
 }
 
 // TODO - Investigate whether response is padded as 1.x docs suggest
