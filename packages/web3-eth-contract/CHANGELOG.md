@@ -378,5 +378,6 @@ Documentation:
 ### Added
 
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
-
 -   Add a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)
+-   Added a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)
+-   Added contract.deploy(...).decodeData(...) and contract.decodeMethodData(...) that decode data based on the ABI (#6950)
