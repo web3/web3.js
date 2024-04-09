@@ -600,6 +600,10 @@ export class Contract<Abi extends ContractAbi>
 			(options as ContractInitOptions)?.dataInputFill ?? this.config.contractDataInputFill;
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
+		if (this.defaultReturnFormat !== returnDataFormat) {
+			this.defaultReturnFormat = returnDataFormat;
+		}
+
 		if (!isNullish(address)) {
 			this._parseAndSetAddress(address, returnDataFormat);
 		}
@@ -993,7 +997,7 @@ export class Contract<Abi extends ContractAbi>
 			? param1
 			: isDataFormat(param2)
 			? param2
-			: param3 ?? (this.defaultReturnFormat );
+			: param3 ?? this.defaultReturnFormat;
 
 		const abi =
 			eventName === 'allEvents' || eventName === ALL_EVENTS
