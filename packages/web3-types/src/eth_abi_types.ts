@@ -110,6 +110,9 @@ export type AbiFunctionFragment = AbiBaseFragment & {
 
 	readonly constant?: boolean; // stateMutability == 'pure' or stateMutability == 'view'
 	readonly payable?: boolean; // stateMutability == 'payable'
+
+	readonly signature?: string;
+	readonly methodNameWithInputs?: string; // like: funcWithParamsOverloading(uint8)
 };
 
 export type AbiFallbackFragment = AbiBaseFragment & {

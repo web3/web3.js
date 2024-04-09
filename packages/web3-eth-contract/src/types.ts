@@ -212,6 +212,14 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	encodeABI(): string;
 
 	/**
+	 * Decode raw result of method call into readable value(s).
+	 *
+	 * @param data - The data to decode.
+	 * @returns - The decoded data.
+	 */
+	decodeData<SpecialInputs = Inputs>(data: HexString): SpecialInputs;
+
+	/**
 	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
 	 *
 	 * @param options - The options used for createAccessList.
@@ -399,6 +407,14 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The encoded ABI byte code to send via a transaction or call.
 	 */
 	encodeABI(): HexString;
+
+	/**
+	 * Decode raw result of method call into readable value(s).
+	 *
+	 * @param data - The data to decode.
+	 * @returns - The decoded data.
+	 */
+	decodeData<SpecialInputs = Inputs>(data: HexString): SpecialInputs;
 
 	/**
 	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
