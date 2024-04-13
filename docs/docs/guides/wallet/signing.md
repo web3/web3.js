@@ -21,11 +21,11 @@ const account = create(); //this is the same as web3.eth.accounts.create();
 
 /* ↳
 {
-address: '0xbD504f977021b5E5DdccD8741A368b147B3B38bB',
-privateKey: 'privateKey',
-signTransaction: [Function: signTransaction],
-sign: [Function: sign],
-encrypt: [AsyncFunction: encrypt]
+  address: '0xbD504f977021b5E5DdccD8741A368b147B3B38bB',
+  privateKey: 'privateKey',
+  signTransaction: [Function: signTransaction],
+  sign: [Function: sign],
+  encrypt: [AsyncFunction: encrypt]
 }
 */
 
@@ -66,13 +66,13 @@ signedTransaction = await account.signTransaction({
 console.log(signedTransaction);
 /* ↳
 {
-messageHash: '0xfad22c3ab5ecbb6eec934a21243ee1866fbbd3786f4e8e8ec631b917ef65174d',
-v: '0xf4f6',
-r: '0xc0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11',
-s: '0x4944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
-rawTransaction:
-    '0xf866808477359400830493e094e4beef667408b99053dc147ed19592ada0d77f59018082f4f6a0c0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11a04944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
-transactionHash: '0xa3fed275c97abc4a160cd9bef3ec90206686f32821a8fd4e01a04130bff35c1a',
+  messageHash: '0xfad22c3ab5ecbb6eec934a21243ee1866fbbd3786f4e8e8ec631b917ef65174d',
+  v: '0xf4f6',
+  r: '0xc0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11',
+  s: '0x4944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
+  rawTransaction:
+      '0xf866808477359400830493e094e4beef667408b99053dc147ed19592ada0d77f59018082f4f6a0c0035636d9417f63fdd418bc545190e59b58a4ff921bbf4efebf352dac211f11a04944d746ff12c7bca41f77c8f7d75301cea8b205e021dfde34d09d5bdccc713d',
+  transactionHash: '0xa3fed275c97abc4a160cd9bef3ec90206686f32821a8fd4e01a04130bff35c1a',
 };
 */
 ```
