@@ -362,6 +362,10 @@ export const toHex = (
 		return returnType ? 'bigint' : numberToHex(value);
 	}
 
+	if(isUint8Array(value)) {
+		return returnType ? 'bytes' : bytesToHex(value);
+	}
+
 	if (typeof value === 'object' && !!value) {
 		return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
 	}
