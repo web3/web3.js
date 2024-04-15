@@ -310,6 +310,11 @@ export const toWeiValidData: [[Numbers, EtherUnits], Numbers][] = [
 
 ];
 
+export const toWeiValidDataWarnings: [[Numbers, EtherUnits], string][] = [
+	[[0.0000000000000000000001, 'ether'], 'Warning: The type `numbers` that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
+
+];
+
 export const fromWeiInvalidData: [[any, any], string][] = [
 	// eslint-disable-next-line no-useless-escape
 	[['123.34', 'kwei'], 'Invalid value given "123.34". Error: can not parse as number data.'],
@@ -330,7 +335,6 @@ export const toWeiInvalidData: [[any, any], string][] = [
 	[[{}, 'kwei'], 'value "{}" at "/0" must pass "number" validation'],
 	[['data', 'kwei'], 'value "data" at "/0" must pass "number" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
-	[[0.0000000000000000000001, 'ether'], 'value is too small to be represented accurately, use bigInt or string instead.'],
 ];
 export const toCheckSumValidData: [string, string][] = [
 	['0x0089d53f703f7e0843953d48133f74ce247184c2', '0x0089d53F703f7E0843953D48133f74cE247184c2'],
