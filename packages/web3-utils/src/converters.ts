@@ -77,6 +77,8 @@ export const ethUnitMap = {
 	tether: BigInt('1000000000000000000000000000000'),
 };
 
+const PrecisionLossWarning = 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods';
+
 export type EtherUnits = keyof typeof ethUnitMap;
 /**
  * Convert a value from bytes to Uint8Array
@@ -416,7 +418,7 @@ export const toHex = (
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
 			if (value > 1e+20) {
-				console.warn('Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
+				console.warn(PrecisionLossWarning)
                 // JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
                 // leading to potential parsing errors and incorrect representations.
                 // For instance, String(10000000000000000000000) yields '1e+22'.
@@ -559,10 +561,10 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	let parsedNumber = number;
 	if (typeof parsedNumber === 'number'){
 		if (parsedNumber  < 1e-15){
-			console.warn('Warning: The type `numbers` that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
+			console.warn(PrecisionLossWarning)
 		}
 		if (parsedNumber > 1e+20) {
-			console.warn('Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
+			console.warn(PrecisionLossWarning)
 
 			parsedNumber =  BigInt(parsedNumber);
 		}

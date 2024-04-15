@@ -311,7 +311,9 @@ export const toWeiValidData: [[Numbers, EtherUnits], Numbers][] = [
 ];
 
 export const toWeiValidDataWarnings: [[Numbers, EtherUnits], string][] = [
-	[[0.0000000000000000000001, 'ether'], 'Warning: The type `numbers` that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
+	[[0.0000000000000000000001, 'ether'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
+	[[0.0000000000000000000001, 'ether'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
+	[[1999999000000009900000, 'kwei'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
 
 ];
 
