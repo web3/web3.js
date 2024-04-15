@@ -209,8 +209,11 @@ Documentation:
 
 ### Fixed
 
-- `toWei` support numbers in scientific notation #6908
+- `toWei` support numbers in scientific notation (#6908)
+- fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
+- fixed isUint8Array not returning true for Buffer (#6957)
 
 ### Added
 
-- `toWei` add warning when using large decimals that may cause precision loss #6908
+- `toWei` add warning when using large decimals that may cause precision loss (#6908)
+- `toWei` add warning when using small decimals that may cause precision loss (#6908)

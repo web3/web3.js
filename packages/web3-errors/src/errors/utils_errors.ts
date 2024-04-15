@@ -32,7 +32,6 @@ import {
 	ERR_INVALID_TYPE_ABI,
 	ERR_INVALID_UNIT,
 	ERR_INVALID_UNSIGNED_INTEGER,
-	ERR_INVALID_NUMBER_DECIMAL_PRECISION_LOSS
 } from '../error_codes.js';
 import { InvalidValueError } from '../web3_error_base.js';
 
@@ -145,13 +144,5 @@ export class InvalidTypeAbiInputError extends InvalidValueError {
 
 	public constructor(value: string) {
 		super(value, 'components found but type is not tuple');
-	}
-}
-
-export class InvalidNumberDecimalPrecisionLossError extends InvalidValueError {
-	public code = ERR_INVALID_NUMBER_DECIMAL_PRECISION_LOSS;
-
-	public constructor(value: number) {
-		super(value, 'value is too small to be represented accurately, use bigInt or string instead.');
 	}
 }

@@ -363,6 +363,10 @@ export const toHex = (
 		return returnType ? 'bigint' : numberToHex(value);
 	}
 
+	if(isUint8Array(value)) {
+		return returnType ? 'bytes' : bytesToHex(value);
+	}
+
 	if (typeof value === 'object' && !!value) {
 		return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
 	}
@@ -557,7 +561,6 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	if (typeof parsedNumber === 'number'){
 		if (parsedNumber  < 1e-15){
 			console.warn('Warning: The type `numbers` that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
-			throw new InvalidNumberDecimalPrecisionLossError(number as number);
 		}
 		if (parsedNumber > 1e+20) {
 			console.warn('Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods')
