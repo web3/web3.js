@@ -41,7 +41,6 @@ import {
 	InvalidBytesError,
 	InvalidNumberError,
 	InvalidUnitError,
-	InvalidNumberDecimalPrecisionLossError
 } from 'web3-errors';
 import { isUint8Array } from './uint8array.js';
 

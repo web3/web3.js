@@ -215,5 +215,4 @@ Documentation:
 
 ### Added
 
-- `toWei` add warning when using large decimals that may cause precision loss (#6908)
-- `toWei` add warning when using small decimals that may cause precision loss (#6908)
+- `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
