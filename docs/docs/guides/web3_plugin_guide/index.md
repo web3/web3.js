@@ -5,7 +5,9 @@ sidebar_label: 'Getting started'
 
 # Getting Started
 
-Welcome to the web3.js Plugins Guide, an exciting new feature introduced in web3.js v4! In addition to the core web3.js libraries, plugins bring specialized functionalities tailored for end-users (functionalities that you, as a developer, can create). These enhancements may involve creating wrappers for specific contracts, adding extra features to RPC methods, or extending the capabilities of web3.js methods. Dive in and explore this innovative addition to web3.js v4!
+Welcome to the Web3 Plugins🧩 Guide, a new feature introduced in web3.js v4. In addition to the core web3.js libraries, plugins bring specialized functionalities tailored for end-users (functionalities, that you, as a developer, can create). These enhancements may involve creating wrappers for specific contracts, adding extra features to RPC methods, adding any external libraries, logic, extending the capabilities of web3.js methods, etc... 
+
+In this guide, you will learn the basics to get started building web3 plugins, setting up providers, importing, and using different web3.js packages. 
 
 - [Plugin Developer Guide (For Creators)](/guides/web3_plugin_guide/plugin_authors)
 - [Plugin User Guide (Usage)](/guides/web3_plugin_guide/plugin_users)
@@ -254,16 +256,79 @@ export default MyPlugin;
 
 ### Use ENS
 
-TO DO 
+```js
+const { Web3PluginBase } = require("web3");
+const { ENS } = require("web3-eth-ens");
 
-## Use web3Context
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = "pluginExample";
 
-TO DO
+  async getAddressENS() {
+    const ens = new ENS(undefined, this); //link to current web3Context
+    return ens.getAddress("ethereum.eth");
+  }
 
-## Use requestManager
+}
 
-TO DO 
+```
+:::info
+More ENS methods [here](https://docs.web3js.org/libdocs/ENS#methods)
+:::
 
-## Config Params
 
-TO DO 
+## Web3 requestManager (custom RPC)
+
+```js
+import { Web3PluginBase } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async customRPC() {
+    return await this.requestManager.send({
+      method: "custom_RPC_call",
+      params: [],
+    });
+  }
+
+  async getNonce() {
+    return await this.requestManager.send({
+      jsonrpc: "2.0",
+      method: "eth_getTransactionCount",
+      params: ["0xEA9eEca67682Cd9c6Ce3DdD1681049D7A897289F", "latest"],
+    });
+  }
+
+  async getBlockNumber() {
+    return await this.requestManager.send({
+      jsonrpc: "2.0",
+      method: "eth_blockNumber",
+      params: [],
+    });
+  }
+
+}
+```
+
+:::info
+All the Ethereum JSON-RPC API [here](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_gettransactioncount)
+:::
+
+## Web3 Config Params
+
+```js
+import { Web3PluginBase } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async configParams() {
+    this.config.handleRevert = true;
+    this.config.defaultTransactionType = 0x1;
+    //more params...
+  }
+}
+```
+:::info
+All web3 config params [here](https://docs.web3js.org/guides/web3_config/)
+:::
