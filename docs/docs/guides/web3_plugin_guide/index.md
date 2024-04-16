@@ -20,7 +20,7 @@ In this guide, you will learn the basics to get started building web3 plugins, s
 
 ```javascript
 //1. import the `Web3PluginBase` module
-const { Web3PluginBase } = require("web3");
+import { Web3PluginBase } from "web3";
 
 //2. Create a Class extending the `Web3Pluginbase`
 class MyPlugin extends Web3PluginBase {
@@ -46,8 +46,8 @@ module.exports = MyPlugin;
 
 ```javascript
 //1. import the plugin and web3 module
-const { Web3 } = require("web3");
-const MyPlugin = require("./plugin");
+import { Web3 } from "web3";
+import MyPlugin from "./plugin";
 
 //2. Initialize the web3 instance
 const web3 = new Web3("https://eth.llamarpc.com");
@@ -70,8 +70,8 @@ When the final user (developer) is using the plugin, they must write the followi
 
 ```js
 //Step #1: Import the plugin and web3 module
-const { Web3 } = require("web3");
-const MyPlugin = require("./plugin");
+import { Web3 } from "web3";
+import  MyPlugin from "./plugin";
 
 //Step #2: Initialize the web3 instance
 const web3 = new Web3("https://eth.llamarpc.com");
@@ -88,7 +88,7 @@ If you want to initialize the provider inside the plugin you can use the `this` 
 
 ```js
 //Step #1: Import modules
-const { Web3PluginBase, eth } = require("web3");
+import { Web3PluginBase, eth } from "web3";
 
 //Step #2: Create class
 class MyPlugin extends Web3PluginBase {
@@ -257,8 +257,8 @@ export default MyPlugin;
 ### Use ENS
 
 ```js
-const { Web3PluginBase } = require("web3");
-const { ENS } = require("web3-eth-ens");
+import { Web3PluginBase } from "web3";
+import { ENS } from "web3-eth-ens";
 
 class MyPlugin extends Web3PluginBase {
   pluginNamespace = "pluginExample";
