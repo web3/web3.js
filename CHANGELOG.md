@@ -2406,3 +2406,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 - fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
 ## [Unreleased]
+
+### fixed
+
+#### web3-validator
+
+- Nodejs Buffer is not recognized as valid bytes value
+- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings.
