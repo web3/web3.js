@@ -229,10 +229,10 @@ eth.defaultReturnFormat = {
 #### All available choices for numeric data:
 ```ts 
 export enum FMT_NUMBER {
-	NUMBER = 'NUMBER_NUMBER',
-	HEX = 'NUMBER_HEX',
-	STR = 'NUMBER_STR',
-	BIGINT = 'NUMBER_BIGINT',
+    NUMBER = 'NUMBER_NUMBER',
+    HEX = 'NUMBER_HEX',
+    STR = 'NUMBER_STR',
+    BIGINT = 'NUMBER_BIGINT',
 }
 ```
 #### All available choices for bytes data:     
