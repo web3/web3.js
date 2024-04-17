@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Mastering events subcriptions'
+sidebar_label: 'Mastering Events Subcriptions'
 ---
 
 # Events Subscription
