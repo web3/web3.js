@@ -518,8 +518,11 @@ export function sendTransaction<
 							to: getTransactionFromOrToAttr('to', web3Context, transaction),
 						},
 						ETH_DATA_FORMAT,
+						{
+							transactionSchema: web3Context.transactionSchema,
+						},
 					);
-					
+
 					try {
 						transactionFormatted = await sendTxHelper.populateGasPrice({
 							transaction,

@@ -19,9 +19,7 @@ import { EventEmitter, bytesToHex, hexToBytes, uint8ArrayConcat } from 'web3-uti
 import type { Numbers } from 'web3-types';
 import { TypeOutput } from './types.js';
 import { intToUint8Array, toType, parseGethGenesis } from './utils.js';
-import goerli from './chains/goerli.js';
-import mainnet from './chains/mainnet.js';
-import sepolia from './chains/sepolia.js';
+import { CHAINS } from './chains';
 import { EIPs } from './eips/index.js';
 import type { ConsensusAlgorithm, ConsensusType } from './enums.js';
 import { Chain, CustomChain, Hardfork } from './enums.js';
@@ -57,6 +55,7 @@ type HardforkSpecValues = typeof HARDFORK_SPECS[HardforkSpecKeys];
 export class Common extends EventEmitter {
 	public readonly DEFAULT_HARDFORK: string | Hardfork;
 
+	private _customCrypto: unknown;
 	private _chainParams: ChainConfig;
 	private _hardfork: string | Hardfork;
 	private _eips: number[] = [];
@@ -254,9 +253,7 @@ export class Common extends EventEmitter {
 		if (opts.hardfork !== undefined) {
 			this.setHardfork(opts.hardfork);
 		}
-		if (opts.eips) {
-			this.setEIPs(opts.eips);
-		}
+		this.setEIPs(opts.eips ?? Object.keys(EIPs).map(Number));
 	}
 
 	/**
@@ -492,33 +489,37 @@ export class Common extends EventEmitter {
 	 * @param eips
 	 */
 	public setEIPs(eips: number[] = []) {
+		const compatibleEips = [];
 		for (const eip of eips) {
 			if (!(eip in EIPs)) {
 				throw new Error(`${eip} not supported`);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
 			const minHF = this.gteHardfork(EIPs[eip].minimumHardfork);
-			if (!minHF) {
-				throw new Error(
-					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-					`${eip} cannot be activated on hardfork ${this.hardfork()}, minimumHardfork: ${minHF}`,
-				);
-			}
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			if (EIPs[eip].requiredEIPs !== undefined) {
+
+			if (minHF) {
+				compatibleEips.push(eip);
+				// throw new Error(
+				// 	eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+				// `${eip} cannot be activated on hardfork ${this.hardfork()}, minimumHardfork: ${minHF}`,
+				// );
+
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-				for (const elem of EIPs[eip].requiredEIPs) {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-					if (!(eips.includes(elem) || this.isActivatedEIP(elem))) {
-						throw new Error(
-							// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-							`${eip} requires EIP ${elem}, but is not included in the EIP list`,
-						);
+				if (EIPs[eip].requiredEIPs !== undefined) {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+					for (const elem of EIPs[eip].requiredEIPs) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+						if (!(eips.includes(elem) || this.isActivatedEIP(elem))) {
+							throw new Error(
+								// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+								`${eip} requires EIP ${elem}, but is not included in the EIP list`,
+							);
+						}
 					}
 				}
 			}
 		}
-		this._eips = eips;
+		this._eips = compatibleEips;
 	}
 
 	/**
@@ -537,7 +538,11 @@ export class Common extends EventEmitter {
 		// can change the same parameter
 		let value;
 		for (const eip of this._eips) {
-			value = this.paramByEIP(topic, name, eip);
+			try {
+				value = this.paramByEIP(topic, name, eip);
+			} catch (e) {
+				continue;
+			}
 			if (value !== undefined) return value;
 		}
 		return this.paramByHardfork(topic, name, this._hardfork);
@@ -645,8 +650,11 @@ export class Common extends EventEmitter {
 		for (const hfChanges of this.HARDFORK_CHANGES) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const hf = hfChanges[1];
+			if (!hf) {
+				continue;
+			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-			if (this.gteHardfork(hf.name) && 'eips' in hf) {
+			if (this.gteHardfork(hf?.name ?? hf) && 'eips' in hf) {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 				if ((hf.eips as number[]).includes(eip)) {
 					return true;
@@ -1193,7 +1201,7 @@ export class Common extends EventEmitter {
 		for (const [name, id] of Object.entries(Chain)) {
 			names[id] = name.toLowerCase();
 		}
-		const chains = { mainnet, goerli, sepolia } as ChainsConfig;
+		const chains = { ...CHAINS } as ChainsConfig;
 		if (customChains) {
 			for (const chain of customChains) {
 				const { name } = chain;
@@ -1203,5 +1211,12 @@ export class Common extends EventEmitter {
 		}
 		chains.names = names;
 		return chains;
+	}
+
+	public get customCrypto() {
+		return this._customCrypto;
+	}
+	public set customCrypto(customCrypto: unknown) {
+		this._customCrypto = customCrypto;
 	}
 }

@@ -22,6 +22,7 @@ import { TransactionTypeParser } from './types.js';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context.js';
 import { Web3EventEmitter } from './web3_event_emitter.js';
+import { ValidationSchemaInput } from 'web3-validator';
 
 // To avoid cycle dependency declare this
 export interface Web3ConfigOptions {
@@ -52,6 +53,8 @@ export interface Web3ConfigOptions {
 	};
 	transactionBuilder?: TransactionBuilder;
 	transactionTypeParser?: TransactionTypeParser;
+	customCrypto?: unknown;
+	transactionSchema?: ValidationSchemaInput;
 }
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
@@ -93,6 +96,8 @@ export abstract class Web3Config
 		},
 		transactionBuilder: undefined,
 		transactionTypeParser: undefined,
+		customCrypto: undefined,
+		transactionSchema: undefined,
 	};
 
 	public constructor(options?: Partial<Web3ConfigOptions>) {
@@ -147,6 +152,36 @@ export abstract class Web3Config
 	public set contractDataInputFill(val) {
 		this._triggerConfigChange('contractDataInputFill', val);
 		this.config.contractDataInputFill = val;
+	}
+
+	/**
+	 * The customCrypto can be used by some EIP like EIP4844
+	 */
+	public get customCrypto() {
+		return this.config.customCrypto;
+	}
+
+	/**
+	 * Will set the customCrypto
+	 */
+	public set customCrypto(val) {
+		this._triggerConfigChange('customCrypto', val);
+		this.config.customCrypto = val;
+	}
+
+	/**
+	 * The transactionSchema can be used by some EIP like EIP4844
+	 */
+	public get transactionSchema() {
+		return this.config.transactionSchema;
+	}
+
+	/**
+	 * Will set the transactionSchema
+	 */
+	public set transactionSchema(val: ValidationSchemaInput | undefined) {
+		this._triggerConfigChange('transactionSchema', val);
+		this.config.transactionSchema = val;
 	}
 
 	/**

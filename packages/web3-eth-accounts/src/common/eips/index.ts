@@ -37,7 +37,7 @@ import e4345 from './4345.js';
 import e4399 from './4399.js';
 import e5133 from './5133.js';
 
-export const EIPs: { [key: number]: any } = {
+export let EIPs: { [key: number]: any } = {
 	1153: e1153,
 	1559: e1559,
 	2315: e2315,
@@ -60,4 +60,16 @@ export const EIPs: { [key: number]: any } = {
 	4345: e4345,
 	4399: e4399,
 	5133: e5133,
+};
+
+interface EIP {
+	url: string;
+	status: string;
+	requiredEIPs?: number[];
+	minimumHardfork: string;
+	[key: string]: unknown;
+}
+
+export const addEIP = (number: number, eip: EIP): void => {
+	EIPs[number] = eip;
 };

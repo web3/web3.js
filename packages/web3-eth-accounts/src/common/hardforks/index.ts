@@ -32,7 +32,7 @@ import grayGlacier from './grayGlacier.js';
 import mergeForkIdTransition from './mergeForkIdTransition.js';
 import merge from './merge.js';
 
-export const hardforks: { [key: string]: any } = {
+export let hardforks: { [key: string]: any } = {
 	chainstart,
 	homestead,
 	dao,
@@ -50,4 +50,8 @@ export const hardforks: { [key: string]: any } = {
 	grayGlacier,
 	mergeForkIdTransition,
 	merge,
+};
+
+export const addHardfork = (name: string, hardfork: { [key: string]: any }): void => {
+	hardforks[name] = hardfork;
 };

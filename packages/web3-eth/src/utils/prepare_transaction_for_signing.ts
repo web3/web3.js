@@ -37,14 +37,9 @@ import { transactionBuilder } from './transaction_builder.js';
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
 ) => ({
-	nonce: transaction.nonce,
-	gasPrice: transaction.gasPrice,
+	...transaction,
 	gasLimit: transaction.gasLimit ?? transaction.gas,
-	to: transaction.to,
-	value: transaction.value,
 	data: transaction.data ?? transaction.input,
-	type: transaction.type,
-	chainId: transaction.chainId,
 	accessList: (
 		transaction as FormatType<PopulatedUnsignedEip2930Transaction, typeof ETH_DATA_FORMAT>
 	).accessList,
@@ -117,6 +112,9 @@ const getEthereumjsTransactionOptions = (
 			);
 		}
 	}
+	if (common && web3Context.customCrypto) {
+		(common as Common).customCrypto = web3Context.customCrypto;
+	}
 	return { common } as TxOptions;
 };
 
@@ -134,14 +132,13 @@ export const prepareTransactionForSigning = async (
 		fillGasPrice,
 		fillGasLimit,
 	})) as unknown as PopulatedUnsignedTransaction;
-	const formattedTransaction = formatTransaction(
-		populatedTransaction,
-		ETH_DATA_FORMAT,
-	) as unknown as FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>;
+	const formattedTransaction = formatTransaction(populatedTransaction, ETH_DATA_FORMAT, {
+		transactionSchema: web3Context.transactionSchema,
+	}) as unknown as FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>;
 	validateTransactionForSigning(
 		formattedTransaction as unknown as FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	);
-	
+
 	return TransactionFactory.fromTxData(
 		getEthereumjsTxDataFromTransaction(formattedTransaction),
 		getEthereumjsTransactionOptions(formattedTransaction, web3Context),

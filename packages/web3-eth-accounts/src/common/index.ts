@@ -19,3 +19,6 @@ export * from './common.js';
 export * from './enums.js';
 export * from './types.js';
 export * from './utils.js';
+export { addEIP } from './eips/index.js';
+export { addHardfork } from './hardforks/index.js';
+export { addChain } from './chains/index.js';

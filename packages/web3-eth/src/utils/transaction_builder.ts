@@ -131,7 +131,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	fillGasLimit?: boolean;
 }): Promise<ReturnType> {
 	let populatedTransaction = format(
-		transactionSchema,
+		options.web3Context.transactionSchema ?? transactionSchema,
 		options.transaction,
 		DEFAULT_RETURN_FORMAT,
 	) as InternalTransaction;

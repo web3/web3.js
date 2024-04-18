@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import type { Chain, ConsensusAlgorithm, ConsensusType, Hardfork } from './enums.js';
+import { Numbers } from 'web3-types';
 
 export interface ChainName {
 	[chainId: string]: string;
@@ -31,11 +32,11 @@ export type CasperConfig = Record<string, unknown>;
 
 export interface GenesisBlockConfig {
 	timestamp?: string;
-	gasLimit: number;
-	difficulty: number;
-	nonce: string;
+	gasLimit: Numbers;
+	difficulty: Numbers;
+	nonce: Numbers;
 	extraData: string;
-	baseFeePerGas?: string;
+	baseFeePerGas?: Numbers;
 }
 
 export interface HardforkConfig {
@@ -60,8 +61,8 @@ export interface BootstrapNodeConfig {
 
 export interface ChainConfig {
 	name: string;
-	chainId: number | bigint;
-	networkId: number | bigint;
+	chainId: Numbers;
+	networkId: Numbers;
 	defaultHardfork?: string;
 	comment?: string;
 	url?: string;

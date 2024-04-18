@@ -18,8 +18,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ExistingPluginNamespaceError } from 'web3-errors';
 import {
 	EthExecutionAPI,
-	HexString, Numbers, SupportedProviders, Transaction, Web3AccountProvider, Web3APISpec, Web3BaseProvider, Web3BaseWallet,
-	Web3BaseWalletAccount
+	HexString,
+	Numbers,
+	SupportedProviders,
+	Transaction,
+	Web3AccountProvider,
+	Web3APISpec,
+	Web3BaseProvider,
+	Web3BaseWallet,
+	Web3BaseWalletAccount,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
 import { BaseTransaction, TransactionFactory } from 'web3-eth-accounts';
