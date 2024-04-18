@@ -225,4 +225,11 @@ Documentation:
 
 -   Added `eth.getMaxPriorityFeePerGas` method (#6748)
 
+## [4.6.0]
+
+### Added 
+
+-   method `getBlock` now includes properties of eip 4844, 4895, 4788 when returning block (#6933) 
+-   update type `withdrawalsSchema`, `blockSchema` and `blockHeaderSchema` schemas to include properties of eip 4844, 4895, 4788 (#6933)
+
 ## [Unreleased]
