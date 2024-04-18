@@ -2470,6 +2470,8 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-types
 
+-   Added `signature` to type `AbiFunctionFragment` (#6922)
+-   update type `Withdrawals`, `block` and `BlockHeaderOutput` to include properties of eip 4844, 4895, 4788 (#6933)
 
 ### Fixed
 
