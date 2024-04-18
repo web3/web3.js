@@ -14,13 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import {
-	AbiEventFragment,
-	Block,
-	TransactionInfo,
-	TransactionReceipt,
-	FMT_NUMBER,
-} from 'web3-types';
+import { AbiEventFragment, Block, TransactionInfo, TransactionReceipt } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Web3 from 'web3';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
@@ -130,12 +124,6 @@ export const validateReceipt = (r: TransactionReceipt) => {
 	expect(Number(r.gasUsed)).toBeGreaterThan(0);
 };
 
-export const mapFormatToType: { [key: string]: string } = {
-	[FMT_NUMBER.NUMBER]: 'number',
-	[FMT_NUMBER.HEX]: 'string',
-	[FMT_NUMBER.STR]: 'string',
-	[FMT_NUMBER.BIGINT]: 'bigint',
-};
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';

@@ -21,24 +21,24 @@ import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
 
 /**
  * Net class allows you to interact with an Ethereum node’s network properties.
-* For using Net package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that Net features can be used.
-* ```ts
-* 
-* import { Web3 } from 'web3';
-* const web3 = new Web3('https://mainnet.infura.io/v3/<YOURPROJID>');
-* 
-* console.log(await web3.eth.net.getId());
-* 
-* ```
-* For using individual package install `web3-net` packages using: `npm i web3-net` or `yarn add web3-net`.
-*
-* ```ts
-* import {Net} from 'web3-net';
-* 
-*  const net = new Net('https://mainnet.infura.io/v3/<YOURPROJID>');
-*  console.log(await net.getId());
-* ```
-*/
+ * For using Net package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that Net features can be used.
+ * ```ts
+ *
+ * import { Web3 } from 'web3';
+ * const web3 = new Web3('https://mainnet.infura.io/v3/<YOURPROJID>');
+ *
+ * console.log(await web3.eth.net.getId());
+ *
+ * ```
+ * For using individual package install `web3-net` packages using: `npm i web3-net` or `yarn add web3-net`.
+ *
+ * ```ts
+ * import {Net} from 'web3-net';
+ *
+ *  const net = new Net('https://mainnet.infura.io/v3/<YOURPROJID>');
+ *  console.log(await net.getId());
+ * ```
+ */
 export class Net extends Web3Context<Web3NetAPI> {
 	/**
 	 * Gets the current network ID
@@ -53,7 +53,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 	 * ```
 	 */
 	public async getId<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = this.defaultReturnFormat as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getId(this, returnFormat);
 	}
@@ -71,7 +71,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 	 * ```
 	 */
 	public async getPeerCount<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		returnFormat: ReturnFormat = this.defaultReturnFormat as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getPeerCount(this, returnFormat);
 	}

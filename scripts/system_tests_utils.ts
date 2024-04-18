@@ -48,6 +48,8 @@ import {
 	SupportedProviders,
 	Web3APISpec,
 	Web3EthExecutionAPI,
+	FMT_NUMBER,
+	FMT_BYTES,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -504,3 +506,12 @@ export const objectBigintToString = (obj: object): object =>
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		JSON.stringify(obj, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
 	);
+
+export const mapFormatToType: { [key: string]: string } = {
+	[FMT_NUMBER.NUMBER]: 'number',
+	[FMT_NUMBER.HEX]: 'string',
+	[FMT_NUMBER.STR]: 'string',
+	[FMT_NUMBER.BIGINT]: 'bigint',
+	[FMT_BYTES.HEX]: 'string',
+	[FMT_BYTES.UINT8ARRAY]: 'object',
+};
