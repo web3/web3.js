@@ -169,7 +169,3 @@ Documentation:
 - Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
 
 ## [Unreleased]
-
-### Fixed
-
-- Nodejs Buffer is not recognized as valid bytes value
