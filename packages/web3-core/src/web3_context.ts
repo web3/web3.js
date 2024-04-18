@@ -25,7 +25,7 @@ import { isNullish } from 'web3-utils';
 import { BaseTransaction, TransactionFactory } from 'web3-eth-accounts';
 import { isSupportedProvider } from './utils.js';
 // eslint-disable-next-line import/no-cycle
-import { ExtensionObject } from './types.js';
+import { ExtensionObject, RequestManagerMiddleware } from './types.js';
 import { Web3BatchRequest } from './web3_batch_request.js';
 // eslint-disable-next-line import/no-cycle
 import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config.js';
@@ -65,6 +65,7 @@ export type Web3ContextInitOptions<
 	registeredSubscriptions?: RegisteredSubs;
 	accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
 	wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
+	requestManagerMiddleware?: RequestManagerMiddleware<API>;
 };
 
 // eslint-disable-next-line no-use-before-define
@@ -129,6 +130,7 @@ export class Web3Context<
 			registeredSubscriptions,
 			accountProvider,
 			wallet,
+			requestManagerMiddleware
 		} = providerOrContext as Web3ContextInitOptions<API, RegisteredSubs>;
 
 		this.setConfig(config ?? {});
@@ -138,6 +140,7 @@ export class Web3Context<
 			new Web3RequestManager<API>(
 				provider,
 				config?.enableExperimentalFeatures?.useSubscriptionWhenCheckingBlockTimeout,
+				requestManagerMiddleware
 			);
 
 		if (subscriptionManager) {
@@ -352,6 +355,11 @@ export class Web3Context<
 		this.provider = provider;
 		return true;
 	}
+
+	public setRequestManagerMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>){
+		this.requestManager.setMiddleware(requestManagerMiddleware);
+	}
+	
 	/**
 	 * Will return the {@link Web3BatchRequest} constructor.
 	 */
