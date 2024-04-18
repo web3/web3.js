@@ -18,11 +18,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Numbers, HexString, BlockNumberOrTag, Common } from 'web3-types';
 import { ConfigHardforkMismatchError, ConfigChainMismatchError } from 'web3-errors';
 import { isNullish, toHex } from 'web3-utils';
+import { ValidationSchemaInput } from 'web3-validator';
 import { TransactionTypeParser } from './types.js';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context.js';
 import { Web3EventEmitter } from './web3_event_emitter.js';
-import { ValidationSchemaInput } from 'web3-validator';
 
 // To avoid cycle dependency declare this
 export interface Web3ConfigOptions {
