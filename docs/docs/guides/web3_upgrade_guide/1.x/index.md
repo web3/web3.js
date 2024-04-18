@@ -79,6 +79,9 @@ It will not have:
 -   `givenProvider` default value is `undefined` instead of `null`
 -   `currentProvider` default value is `undefined` instead of `null` (if web3 is instantiated without a provider)
 
+:::warning
+In version 4.x, all numbers return as BigInt instead of string or number, which constitutes a breaking change for users accustomed to handling numbers as string or number in their code. For instance, web3.eth.getBalance will now return BigInt instead of string or number. If you wish to retain numbers as number or string, you can refer to [this guide](/guides/web3_config/#defaultreturnformat) on how to set returning types in web3js 4.x.
+:::
 ### Web3 BatchRequest
 
 ```ts
