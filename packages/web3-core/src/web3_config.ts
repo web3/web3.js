@@ -15,7 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Numbers, HexString, BlockNumberOrTag, Common } from 'web3-types';
+import {
+	Numbers,
+	HexString,
+	BlockNumberOrTag,
+	Common,
+	DEFAULT_RETURN_FORMAT,
+	DataFormat,
+} from 'web3-types';
 import { ConfigHardforkMismatchError, ConfigChainMismatchError } from 'web3-errors';
 import { isNullish, toHex } from 'web3-utils';
 import { ValidationSchemaInput } from 'web3-validator';
@@ -55,6 +62,7 @@ export interface Web3ConfigOptions {
 	transactionTypeParser?: TransactionTypeParser;
 	customCrypto?: unknown;
 	transactionSchema?: ValidationSchemaInput;
+	defaultReturnFormat: DataFormat;
 }
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
@@ -98,6 +106,7 @@ export abstract class Web3Config
 		transactionTypeParser: undefined,
 		customCrypto: undefined,
 		transactionSchema: undefined,
+		defaultReturnFormat: DEFAULT_RETURN_FORMAT,
 	};
 
 	public constructor(options?: Partial<Web3ConfigOptions>) {
@@ -381,6 +390,15 @@ export abstract class Web3Config
 		this._triggerConfigChange('maxListenersWarningThreshold', val);
 		this.setMaxListenerWarningThreshold(val);
 		this.config.maxListenersWarningThreshold = val;
+	}
+
+	public get defaultReturnFormat() {
+		return this.config.defaultReturnFormat;
+	}
+	public set defaultReturnFormat(val) {
+		this._triggerConfigChange('defaultReturnFormat', val);
+
+		this.config.defaultReturnFormat = val;
 	}
 
 	public get defaultNetworkId() {

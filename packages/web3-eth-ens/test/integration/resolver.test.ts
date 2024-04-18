@@ -15,12 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import Web3Eth from 'web3-eth';
 import { Contract, PayableTxOptions } from 'web3-eth-contract';
 import { sha3 } from 'web3-utils';
 
-import { Address, Bytes, DEFAULT_RETURN_FORMAT } from 'web3-types';
+import { Address, Bytes } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { IpcProvider } from 'web3-providers-ipc';
 import { ENS } from '../../src';
@@ -59,8 +57,6 @@ describe('ens', () => {
 	const node = namehash('resolver');
 	const label = sha3('resolver') as string;
 
-	let web3Eth: Web3Eth;
-
 	let ens: ENS;
 	let defaultAccount: string;
 	let accountOne: string;
@@ -78,7 +74,7 @@ describe('ens', () => {
 		const acc2 = await createTempAccount();
 		accountOne = acc2.address;
 
-		sendOptions = { from: defaultAccount, gas: '10000000' };
+		sendOptions = { from: defaultAccount, type: '0x1' };
 
 		const Registry = new Contract(ENSRegistryAbi, undefined, {
 			provider: getSystemTestProvider(),
@@ -123,16 +119,6 @@ describe('ens', () => {
 		else provider = new ENS.providers.HttpProvider(clientUrl);
 
 		ens = new ENS(registry.options.address, provider);
-
-		web3Eth = new Web3Eth(provider);
-		const block = await web3Eth.getBlock('latest', false, DEFAULT_RETURN_FORMAT);
-		const gas = block.gasLimit.toString();
-
-		// Increase gas for contract calls
-		sendOptions = {
-			...sendOptions,
-			gas,
-		};
 	});
 
 	afterAll(async () => {
