@@ -570,7 +570,7 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 		}
 	}
 	
-	parsedNumber = typeof number === 'number' ? number.toLocaleString('fullwide', {useGrouping: false, maximumFractionDigits: 20}) : number;
+	parsedNumber = typeof parsedNumber === 'number' ? parsedNumber.toLocaleString('fullwide', {useGrouping: false, maximumFractionDigits: 20}) : parsedNumber;
 	// if value is decimal e.g. 24.56 extract `integer` and `fraction` part
 	// to avoid `fraction` to be null use `concat` with empty string
 	const [integer, fraction] = String(
