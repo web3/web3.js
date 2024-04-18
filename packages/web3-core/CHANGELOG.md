@@ -208,3 +208,6 @@ Documentation:
 -	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
 
 ## [Unreleased]
+
+### Added
+-   `defaultReturnFormat` was added to the configuration options. (#6947)
