@@ -24,7 +24,13 @@ async function subscribe() {
   subscription.on("data", console.log);
 }
 
+// function to unsubscribe from a subscription
+async function unsubscribe(subscription) {
+    await subscription.unsubscribe();
+}
+
 subscribe();
+unsubscribe(subscription);
 ```
 
 
@@ -79,7 +85,7 @@ async function unsubscribe(subscription) {
 }
 
 subscribe();
-unsuscribe(subscription);
+unsubscribe(subscription);
 ```
 
 ### Pending Transactions 
@@ -106,7 +112,7 @@ async function unsubscribe(subscription) {
 }
 
 subscribe();
-unsuscribe(subscription);
+unsubscribe(subscription);
 ```
 
 ### Block headers
@@ -133,7 +139,7 @@ async function unsubscribe(subscription) {
 }
 
 subscribe();
-unsuscribe(subscription);
+unsubscribe(subscription);
 ```
 
 ### Syncing
@@ -160,7 +166,7 @@ async function unsubscribe(subscription) {
 }
 
 subscribe();
-unsuscribe(subscription);
+unsubscribe(subscription);
 ```
 
 
