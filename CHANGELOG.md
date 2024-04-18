@@ -2445,3 +2445,35 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   update type `Withdrawals`, `block` and `BlockHeaderOutput` to include properties of eip 4844, 4895, 4788 (#6933)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-core
+
+-   `defaultReturnFormat` was added to the configuration options. (#6947)
+
+#### web3-eth
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-eth-contract
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-eth-ens
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-net
+
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+#### web3-types
+
+-   Added `signature` to type `AbiFunctionFragment` (#6922)
+-   update type `Withdrawals`, `block` and `BlockHeaderOutput` to include properties of eip 4844, 4895, 4788 (#6933)
+
+### Fixed
+
+#### web3-validator
+
