@@ -213,10 +213,15 @@ Documentation:
 
 ### Fixed
 
-- `toWei` support numbers in scientific notation (#6908)
 - fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
 - fixed isUint8Array not returning true for Buffer (#6957)
+
+## [Unreleased]
 
 ### Added
 
 - `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
+
+### Fixed
+
+- `toWei` support numbers in scientific notation (#6908)
