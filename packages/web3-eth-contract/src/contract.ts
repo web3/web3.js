@@ -84,6 +84,7 @@ import {
 	ContractOptions,
 	TransactionReceipt,
 	FormatType,
+	DecodedParams,
 } from 'web3-types';
 import {
 	format,
@@ -99,7 +100,12 @@ import {
 	ValidationSchemaInput,
 	Web3ValidatorError,
 } from 'web3-validator';
-import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding.js';
+import {
+	decodeMethodReturn,
+	decodeMethodParams,
+	encodeEventABI,
+	encodeMethodABI,
+} from './encoding.js';
 import { LogsSubscription } from './log_subscription.js';
 import {
 	ContractEventOptions,
@@ -157,13 +163,13 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 } & { [key: string]: ContractBoundMethod<any> };
 
 export type ContractMethodSend = Web3PromiEvent<
-	FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
-	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	FormatType<TransactionReceipt, DataFormat>,
+	SendTransactionEvents<DataFormat>
 >;
 export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
 	// eslint-disable-next-line no-use-before-define
 	Contract<Abi>,
-	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	SendTransactionEvents<DataFormat>
 >;
 
 /**
@@ -323,6 +329,67 @@ const contractSubscriptions = {
  *
  * ```
  *
+
+ * ### decodeMethodData
+ * Decodes the given ABI-encoded data, revealing both the method name and the parameters used in the smart contract call.
+ * This function reverses the encoding process happens at the method `encodeABI`.
+ * It's particularly useful for debugging and understanding the interactions with and between smart contracts.
+ *
+ * #### Parameters
+ *
+ * - `data` **HexString**: The string of ABI-encoded data that needs to be decoded. This should include the method signature and the encoded parameters.
+ *
+ * #### Returns
+ *
+ * - **Object**: This object combines both the decoded parameters and the method name in a readable format. Specifically, the returned object contains:
+ *   - `__method__` **String**: The name of the contract method, reconstructed from the ABI.
+ *   - `__length__` **Number**: The number of parameters decoded.
+ *   - Additional properties representing each parameter by name, as well as their position and values.
+ *
+ * #### Example
+ *
+ * Given an ABI-encoded string from a transaction, you can decode this data to identify the method called and the parameters passed.
+ * Here's a simplified example:
+ *
+ *
+ * ```typescript
+ * const GreeterAbi = [
+ * 	{
+ * 		inputs: [
+ * 			{
+ * 				internalType: 'string',
+ * 				name: '_greeting',
+ * 				type: 'string',
+ * 			},
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [],
+ * 		type: 'function',
+ * 	},
+ * ];
+ * const contract = new Contract(GreeterAbi); // Initialize with your contract's ABI
+ *
+ * // The ABI-encoded data string for "setGreeting('Hello World')"
+ * const encodedData =
+ * 	'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b48656c6c6f20576f726c64000000000000000000000000000000000000000000';
+ *
+ * try {
+ * 	const decoded = contract.decodeMethodData(encodedData);
+ * 	console.log(decoded.__method__); // Outputs: "setGreeting(string)"
+ * 	console.log(decoded); // Outputs the detailed parameter data
+ * 	// This tells that the method called was `setGreeting` with a single string parameter "Hello World":
+ * 	// {
+ * 	//   __method__: 'setGreeting(string)',
+ * 	//   __length__: 1,
+ * 	//   '0': 'Hello World',
+ * 	//   _greeting: 'Hello World'
+ * 	// }
+ * } catch (error) {
+ * 	console.error(error);
+ * }
+ * ```
+ *
+
  * ### createAccessList
  * This will create an access list a method execution will access when executed in the EVM.
  * Note: You must specify a from address and gas if it’s not specified in options when instantiating parent contract object.
@@ -526,12 +593,16 @@ export class Contract<Abi extends ContractAbi>
 			? contextOrReturnFormat
 			: isDataFormat(optionsOrContextOrReturnFormat)
 			? optionsOrContextOrReturnFormat
-			: returnFormat ?? DEFAULT_RETURN_FORMAT;
+			: returnFormat ?? this.defaultReturnFormat;
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
 		this.config.contractDataInputFill =
 			(options as ContractInitOptions)?.dataInputFill ?? this.config.contractDataInputFill;
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
+
+		if (this.defaultReturnFormat !== returnDataFormat) {
+			this.defaultReturnFormat = returnDataFormat;
+		}
 
 		if (!isNullish(address)) {
 			this._parseAndSetAddress(address, returnDataFormat);
@@ -733,6 +804,22 @@ export class Contract<Abi extends ContractAbi>
 	 * > '0x12345...0000012345678765432'
 	 *
 	 *
+	 * // decoding
+	 * myContract.deploy({
+	 *   input: '0x12345...',
+	 *   // arguments: [123, 'My Greeting'] if you just need to decode the data, you can skip the arguments
+	 * })
+	 * .decodeData('0x12345...0000012345678765432');
+	 * > {
+	 *      __method__: 'constructor',
+	 *      __length__: 2,
+	 *      '0': '123',
+	 *      _id: '123',
+	 *      '1': 'My Greeting',
+	 *      _greeting: 'My Greeting',
+	 *   }
+	 *
+	 *
 	 * // Gas estimation
 	 * myContract.deploy({
 	 *   input: '0x12345...',
@@ -799,7 +886,7 @@ export class Contract<Abi extends ContractAbi>
 			},
 			estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 				options?: PayableCallOptions,
-				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+				returnFormat: ReturnFormat = this.defaultReturnFormat as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
 				return this._contractMethodEstimateGas({
@@ -814,8 +901,20 @@ export class Contract<Abi extends ContractAbi>
 				encodeMethodABI(
 					abi as AbiFunctionFragment,
 					args as unknown[],
-					format({ format: 'bytes' }, deployData as Bytes, DEFAULT_RETURN_FORMAT),
+					format(
+						{ format: 'bytes' },
+						deployData as Bytes,
+						this.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
+					),
 				),
+			decodeData: (data: HexString) => ({
+				...decodeMethodParams(
+					abi as AbiFunctionFragment,
+					data.replace(deployData as string, ''),
+					false,
+				),
+				__method__: abi.type, // abi.type is constructor
+			}),
 		};
 	}
 
@@ -898,7 +997,7 @@ export class Contract<Abi extends ContractAbi>
 			? param1
 			: isDataFormat(param2)
 			? param2
-			: param3 ?? DEFAULT_RETURN_FORMAT;
+			: param3 ?? this.defaultReturnFormat;
 
 		const abi =
 			eventName === 'allEvents' || eventName === ALL_EVENTS
@@ -937,7 +1036,8 @@ export class Contract<Abi extends ContractAbi>
 					if (Array.isArray(filter[key])) {
 						return (filter[key] as Numbers[]).some(
 							(v: Numbers) =>
-								String(log.returnValues[key]).toUpperCase() === String(v).toUpperCase(),
+								String(log.returnValues[key]).toUpperCase() ===
+								String(v).toUpperCase(),
 						);
 					}
 
@@ -958,15 +1058,33 @@ export class Contract<Abi extends ContractAbi>
 		return decodedLogs;
 	}
 
-	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
+	private _parseAndSetAddress(
+		value?: Address,
+		returnFormat: DataFormat = this.defaultReturnFormat,
+	) {
 		this._address = value
 			? toChecksumAddress(format({ format: 'address' }, value, returnFormat))
 			: value;
 	}
 
+	public decodeMethodData(data: HexString): DecodedParams & { __method__: string } {
+		const methodSignature = data.slice(0, 10);
+		const functionsAbis = this._jsonInterface.filter(j => j.type !== 'error');
+
+		const abi = functionsAbis.find(
+			a => methodSignature === encodeFunctionSignature(jsonInterfaceMethodToString(a)),
+		);
+		if (!abi) {
+			throw new Web3ContractError(
+				`The ABI for the provided method signature ${methodSignature} was not found.`,
+			);
+		}
+		return { ...decodeMethodParams(abi, data), __method__: jsonInterfaceMethodToString(abi) };
+	}
+
 	private _parseAndSetJsonInterface(
 		abis: ContractAbi,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+		returnFormat: DataFormat = this.defaultReturnFormat,
 	) {
 		this._functions = {};
 		this._methods = {} as ContractMethodsInterface<Abi>;
@@ -988,6 +1106,7 @@ export class Contract<Abi extends ContractAbi>
 			if (isAbiFunctionFragment(abi)) {
 				const methodName = jsonInterfaceMethodToString(abi);
 				const methodSignature = encodeFunctionSignature(methodName);
+				abi.methodNameWithInputs = methodName;
 				abi.signature = methodSignature;
 
 				// make constant and payable backwards compatible
@@ -1002,10 +1121,10 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 				]);
 				const abiFragment = this._overloadedMethodAbis.get(abi.name) ?? [];
-				const contractMethod = this._createContractMethod<typeof abiFragment, AbiErrorFragment>(
-					abiFragment,
-					errorsAbi,
-				);
+				const contractMethod = this._createContractMethod<
+					typeof abiFragment,
+					AbiErrorFragment
+				>(abiFragment, errorsAbi);
 
 				const exactContractMethod = this._createContractMethod<
 					typeof abiFragment,
@@ -1014,13 +1133,12 @@ export class Contract<Abi extends ContractAbi>
 
 				this._functions[methodName] = {
 					signature: methodSignature,
-					method: contractMethod,
+					method: exactContractMethod,
 				};
 
 				// We don't know a particular type of the Abi method so can't type check
-				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] = this._functions[
-					methodName
-				].method as never;
+				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] =
+					contractMethod as never;
 
 				// We don't know a particular type of the Abi method so can't type check
 				this._methods[methodName as keyof ContractMethodsInterface<Abi>] =
@@ -1096,7 +1214,10 @@ export class Contract<Abi extends ContractAbi>
 				for (const _abi of arrayOfAbis) {
 					try {
 						abiParams = this._getAbiParams(_abi, params);
-						validator.validate(_abi.inputs as unknown as ValidationSchemaInput, abiParams);
+						validator.validate(
+							_abi.inputs as unknown as ValidationSchemaInput,
+							abiParams,
+						);
 						applicableMethodAbi.push(_abi);
 					} catch (e) {
 						errors.push(e as Web3ValidationErrorObject);
@@ -1104,9 +1225,24 @@ export class Contract<Abi extends ContractAbi>
 				}
 				if (applicableMethodAbi.length === 1) {
 					[methodAbi] = applicableMethodAbi; // take the first item that is the only item in the array
-				} else {
+				} else if (applicableMethodAbi.length > 1) {
 					[methodAbi] = applicableMethodAbi; // take the first item in the array
-					// TODO: Should throw a new error with the list of methods found.
+					console.warn(
+						`Multiple methods found that is compatible with the given inputs.\n\tFound ${
+							applicableMethodAbi.length
+						} compatible methods: ${JSON.stringify(
+							applicableMethodAbi.map(
+								m =>
+									`${
+										(m as { methodNameWithInputs: string }).methodNameWithInputs
+									} (signature: ${(m as { signature: string }).signature})`,
+							),
+						)} \n\tThe first one will be used: ${
+							(methodAbi as { methodNameWithInputs: string }).methodNameWithInputs
+						}`,
+					);
+					// TODO: 5.x Should throw a new error with the list of methods found.
+					// Related issue: https://github.com/web3/web3.js/issues/6923
 					// This is in order to provide an error message when there is more than one method found that fits the inputs.
 					// To do that, replace the pervious line of code with something like the following line:
 					// throw new Web3ValidatorError({ message: 'Multiple methods found',  ... list of applicable methods }));
@@ -1135,7 +1271,8 @@ export class Contract<Abi extends ContractAbi>
 
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: PayableCallOptions | NonPayableCallOptions,
-					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+					returnFormat: ReturnFormat = this
+						.defaultReturnFormat as unknown as ReturnFormat,
 				) =>
 					this._contractMethodEstimateGas({
 						abi: methodAbi,
@@ -1145,6 +1282,7 @@ export class Contract<Abi extends ContractAbi>
 					}),
 
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
+				decodeData: (data: HexString) => decodeMethodParams(methodAbi, data),
 
 				createAccessList: async (
 					options?: PayableCallOptions | NonPayableCallOptions,
@@ -1192,7 +1330,12 @@ export class Contract<Abi extends ContractAbi>
 			},
 		});
 		try {
-			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);
+			const result = await call(
+				this,
+				tx,
+				block,
+				this.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
+			);
 			return decodeMethodReturn(abi, result);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
@@ -1223,7 +1366,7 @@ export class Contract<Abi extends ContractAbi>
 		});
 
 		try {
-			return createAccessList(this, tx, block, DEFAULT_RETURN_FORMAT);
+			return createAccessList(this, tx, block, this.defaultReturnFormat);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
@@ -1253,7 +1396,7 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+		const transactionToSend = sendTransaction(this, tx, this.defaultReturnFormat, {
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
 			contractAbi: this._jsonInterface,
@@ -1283,10 +1426,10 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getSendTxParams({
 			abi,
 			params,
-			options: { ...options, dataInputFill: this.config.contractDataInputFill },
+			options: { ...options, dataInputFill: this.contractDataInputFill },
 			contractOptions: modifiedContractOptions,
 		});
-		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+		return sendTransaction(this, tx, this.defaultReturnFormat, {
 			transactionResolver: receipt => {
 				if (receipt.status === BigInt(0)) {
 					throw new Web3ContractError("code couldn't be stored", receipt);
@@ -1326,13 +1469,13 @@ export class Contract<Abi extends ContractAbi>
 			options: { ...options, dataInputFill: this.config.contractDataInputFill },
 			contractOptions: contractOptions ?? this.options,
 		});
-		return estimateGas(this, tx, BlockTags.LATEST, returnFormat);
+		return estimateGas(this, tx, BlockTags.LATEST, returnFormat ?? this.defaultReturnFormat);
 	}
 
 	// eslint-disable-next-line class-methods-use-this
 	private _createContractEvent(
 		abi: AbiEventFragment & { signature: HexString },
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+		returnFormat: DataFormat = this.defaultReturnFormat,
 	): ContractBoundEvent {
 		return (...params: unknown[]) => {
 			const { topics, fromBlock } = encodeEventABI(

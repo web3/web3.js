@@ -235,6 +235,21 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 	],
 	['-0x01', ['-0x1', 'int256']],
 	['123c', ['0x123c', 'bytes']],
+	[new Uint8Array([
+		221, 128, 128, 128, 148, 186, 248,
+		242, 159, 130, 231, 84, 254, 199,
+		252, 69, 21, 58, 104, 102, 201,
+		137, 255, 3, 196, 10, 128, 128,
+		128, 128
+		]), ['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes']],
+	[Buffer.from([
+		221, 128, 128, 128, 148, 186, 248,
+		242, 159, 130, 231, 84, 254, 199,
+		252, 69, 21, 58, 104, 102, 201,
+		137, 255, 3, 196, 10, 128, 128,
+		128, 128
+		]), ['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes']]
+
 ];
 
 export const toHexInvalidData: [any, string][] = [
@@ -285,9 +300,20 @@ export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
     [[1.9999999999999991611392e+22, 'ether'], '19999.999999999991611392'],
 ];
 
-export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
+export const toWeiValidData: [[Numbers, EtherUnits], Numbers][] = [
 	...conversionBaseData,
 	[['255', 'wei'], '0xFF'],
+	[['100000000000', 'ether'], 0.0000001],
+	[['1000000000', 'ether'], 0.000000001],
+	[['1000000', 'ether'], 0.000000000001]
+
+];
+
+export const toWeiValidDataWarnings: [[Numbers, EtherUnits], string][] = [
+	[[0.0000000000000000000001, 'ether'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
+	[[0.0000000000000000000001, 'ether'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
+	[[1999999000000009900000, 'kwei'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
+
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [

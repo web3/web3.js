@@ -92,9 +92,9 @@ To use this script, just create an `artifacts.json` file at the root of your pro
 
 ```json title='artifacts.json'
 [
-	'@openzeppelin/contracts/build/contracts/ERC20.json',
-	'@openzeppelin/contracts/build/contracts/ERC1155.json',
-	'./build/contracts/MyContract.json'
+	"@openzeppelin/contracts/build/contracts/ERC20.json",
+	"@openzeppelin/contracts/build/contracts/ERC1155.json",
+	"./build/contracts/MyContract.json"
 ]
 ```
 
