@@ -60,61 +60,6 @@ web3.pluginExample.doSomething();
 //--> Hello web3!
 ```
 
-## Initialize a provider for the plugin
-
-There are 2 ways to initialize a provider when you are using a plugin, the [first one](#set-a-provider-within-the-plugin) is within the plugin (internally using the `this` object and `setProvider()` method). And the [second one](#register-plugin), is done by the final user by using the `registerPlugin()` method.
-
-### Register plugin (External - Final user)
-
-When the final user (developer) is using the plugin, they must write the following:
-
-```js
-//Step #1: Import the plugin and web3 module
-import { Web3 } from "web3";
-import  MyPlugin from "./plugin";
-
-//Step #2: Initialize the web3 instance
-const web3 = new Web3("https://eth.llamarpc.com");
-
-//Step #3: Register plugin to add the current Web3Context
-web3.registerPlugin(new MyPlugin());
-```
-
-And once the plugin is registered in step #3 by using `registerPlugin(new Plugin)`, the provider in the plugin is automatically set to the provider initialized in `Step #2` (in this case: `https://eth.llamarpc.com`).
-
-### Set a provider within the plugin (web3Context)
-
-If you want to initialize the provider inside the plugin you can use the `this` object, but anyway the user must initialize a provider when [registering the plugin](#register-plugin-external---final-user):
-
-```js
-//Step #1: Import modules
-import { Web3PluginBase, eth } from "web3";
-
-//Step #2: Create class
-class MyPlugin extends Web3PluginBase {
-  pluginNamespace = "myPlugin";
-
-//Step #3: Set providers
-  async getChainIdMainnet() {
-    this.setProvider("https://eth.llamarpc.com") //or any other RPC
-    return await eth.getChainId(this)
-  }
-
-  async getChainIdPolygon() {
-    this.setProvider("https://polygon.llamarpc.com") //or any other RPC
-    return await eth.getChainId(this)
-  }
-
-  async getChainIdArbitrum() {
-    this.setProvider("https://arbitrum.llamarpc.com") //or any other RPC
-    return await eth.getChainId(this)
-  }
-}
-
-```
-
-
-
 ## Using web3 packages on the plugin
 
 ### Use Eth module
