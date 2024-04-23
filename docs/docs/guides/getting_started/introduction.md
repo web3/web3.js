@@ -22,8 +22,6 @@ The following documentation will guide you through different use cases of Web3.j
 -    Custom Output formatters
 -    In compliance with Eth EL API
 
-![Comparison of various package sizes](PackageSizeComparison.png)
-
 ## Packages
 
 Web3.js is modular, consisting of several packages, each serving specific functionalities. If you have specific tasks in mind, you don't need to install the entire Web3 library. Instead, selectively install the package that suits your requirements for a more efficient development experience. Here is an overview of the available packages:
