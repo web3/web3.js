@@ -25,7 +25,7 @@ export class ConfigHardforkMismatchError extends BaseWeb3Error {
 
 	public constructor(defaultHardfork: string, commonHardFork: string) {
 		super(
-			`Web3Config hardfork doesnt match in defaultHardfork ${defaultHardfork} and common.hardfork ${commonHardFork}`,
+			`Web3Config hardfork doesn't match in defaultHardfork ${defaultHardfork} and common.hardfork ${commonHardFork}`,
 		);
 	}
 }
@@ -35,7 +35,7 @@ export class ConfigChainMismatchError extends BaseWeb3Error {
 
 	public constructor(defaultHardfork: string, commonHardFork: string) {
 		super(
-			`Web3Config chain doesnt match in defaultHardfork ${defaultHardfork} and common.hardfork ${commonHardFork}`,
+			`Web3Config chain doesn't match in defaultHardfork ${defaultHardfork} and common.hardfork ${commonHardFork}`,
 		);
 	}
 }

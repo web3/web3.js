@@ -823,7 +823,7 @@ describe('Contract', () => {
 				contract.defaultCommon = defaultCommonDifferentHardfork;
 			}).toThrow(
 				new Error(
-					'Web3Config hardfork doesnt match in defaultHardfork constantinople and common.hardfork petersburg',
+					'Web3Config hardfork doesn't match in defaultHardfork constantinople and common.hardfork petersburg',
 				),
 			);
 
@@ -839,7 +839,7 @@ describe('Contract', () => {
 				contract.defaultCommon = defaultCommonDifferentChain;
 			}).toThrow(
 				new Error(
-					'Web3Config chain doesnt match in defaultHardfork mainnet and common.hardfork sepolia',
+					'Web3Config chain doesn't match in defaultHardfork mainnet and common.hardfork sepolia',
 				),
 			);
 
