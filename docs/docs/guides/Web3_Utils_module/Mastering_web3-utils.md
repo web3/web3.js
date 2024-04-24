@@ -1,246 +1,237 @@
-# Mastering web3.js Utils
+# Mastering Utility Functions
 
 ## Introduction
-In this tutorial, we'll learn about the different functionalities of the web3 utils package, it contains the methods to know how to generate random bytes in different formats, how to perform conversion between Hex values in strings and numbers, hashing functions, addresses, packing padding and in the last part we'll look at how to compare block numbers.
+In this guide, you'll learn about the different functions of the web3 utils package, it contains the methods to know how to generate random bytes in different formats, how to perform conversion between Hex values and numbers, hashing functions, addresses, packing padding and in the last part you will see how to compare block numbers.
+
+## Installation
+
+Install only the web3 package
+```bash
+npm i web3-utils
+```
+
+Or you can install the web3 library as well and then access web3.utils
+
+```bash
+npm i web3
+```
 
 ## Imports
 
 There are three different ways to import utils package.
 
-1.Import the entire web3 module and initialize a provider:
+### Import the entire web3 library
 
-```bash
-const [ Web3 ] = require("web3"); 
+```js
+//import web3 module
+const { Web3 } = require("web3"); 
+
+//initialize  a provider
+const web3 = new Web3("https://eth.llamarpc.com");
+
+//access the utils package
+web3.utils.toWei("")
+web3.utils.toHex("")
 ```
-then initializing  a provider with 
-```bash
-const web3 = new Web3("");
-```
-To be able to access the package you need to type
-
-```bash 
-web3.utils.toWei()
-```
 
 
-2.Import only the utils package from web3:
-```bash 
+### Import utils module
+
+```js 
+//import utils module
 const { utils } = require("web3"); 
-```
-```bash
-import { Web3 } from 'web3';
-```
-```bash
-import * as utils from 'web3-utils';
-```
-    Then you are also able to use any function like
-    `utils.toWei()`
 
-3.Import a specific function from the utils package: 
-```bash
-const { toWei } = require("web3-utils");
+//access the utils package
+utils.toWei()
+```
+
+### Import specific methods
+
+```js
+//import toWei and toHex functions
+const { toWei, toHex } = require("web3-utils");
+
+//usage
+toWei("")
+toHex("")
 ```    
-    then you'll be able to use it here `toWei();`
 
+## Methods example
 
-## Random Bytes
+### Random Hex and Bytes
 
-There are two ways to generate Random Bytes.
+```js
+//Random bytes in hex format and array format
 
-1.The first function that is known as Random Bytes, it receives a parameter of the size of bytes you want to generate and it will return the bytes in an array format.
-    array format 
-```bash
-console.log(utils.randomBytes());
+console.log(web3.utils.randomBytes(32));
+/* => array format
+Uint8Array(32) [
+  251,  70, 124,  65, 203, 180,  92, 234,
+  210, 236,  72, 154,  83, 219, 171, 223,
+  212, 136, 117, 140,  67, 117,  86,  81,
+  234, 245, 148, 186, 175,  83,  98,  78
+]
+*/
+
+console.log(web3.utils.randomHex(32));
+/* => hex string format
+0x594386dc9b2e150979416f9b2a093e01f84a37c4f8db5fc1b0d9b1dc83a12c1f
+*/
+
 ```
-2.The second function is known as Random Hex also requires a parameter of the size of bytes and it will return the bytes in Hexadecimal format
-    Hex format 
-```bash    
-console.log(utils.randomHex());
-```
-    If you don't give any arguments then both of these functions will have a default value as 32.
+:::info
+If you don't give any arguments then both of these functions will have a default value as 32.
+:::
 
-
-## Conversions - Ethereum Denominations
+### Conversions - Ethereum Denominations
 
 We've got two different functions to perform conversions between Ethereum denominations.
 
-a.`toWei(any) -> wei `  
-For example, if we want to convert 1 ether to wei we can use the function below
-```bash
-console.log(utils.toWei("1", "ether"));
-```
-And to convert gwei to wei, we can do the following.  
-```bash
-console.log(utils.toWei("1", "gwei"));
+```js
+console.log(web3.utils.fromWei("1", "ether")); 
+//0.000000000000000001
+
+console.log(web3.utils.toWei("1", "ether")); 
+//1_000_000_000_000_000_000
 ```
 
-b.`fromWei(wei) -> any`  
-To use the second function, you can convert 10^18(1000000000000000000) wei to ether, to get its output you can follow the below given methid.
-```bash
-console.log(utils.FromWei("1000000000000000000", "ether"));
-```
-You can follow the same method to convert 1000000000000000000 to gwei, which is given below.
-`console.log("utils.fromWei("1000000000000000000", "gwei"));`  
-When you run the console, it will show us the results.
+### Conversions to Hex Values
 
+```js
+//most versatile one
+console.log(web3.utils.toHex(10));
+//0xa
 
-## Conversions to Hex Values
+console.log(web3.utils.toHex(true));
+//0x01
 
-There are many ways to convert any value into Hexadecimal but one of the simplest and easiest is to use the function to Hex 
-`toHex(any) > Hex` which will accept anry parameter and will always return a Hexadecimal value so this function can accept numbers "big Int", "strings", "booleans" and "objects". Below is how you can write them.
+console.log(web3.utils.numberToHex(10));
+//0xa
 
-For Numbers: 
-`console.log(utils.toHex(10));`
+console.log(web3.utils.fromDecimal(10));
+//0xa
 
-For Big Numbers:
-`console.log(utils.toHex(10n));` 
+const arr = new Uint8Array([1, 2, 3, 4]);
 
-For Strings: 
-`console.log(utils.toHex("10"));` 
+console.log(web3.utils.toHex(arr));
+//0x7b2230223a312c2231223a322c2232223a332c2233223a347d
 
-Strings are returned after being decoded in ASCII value, then it gets converted into a Hexadecimal.
-
-For Booleans: 
-`console.log(utils.toHex(false));`  
-
-For Objects:
-`console.log(utils.toHex({ vehicle: "car" }));`
-
-Other Alternatives:
-
-Number -> Hex: 
-`console.log(utils.numberToHex(10));`
-
-Decimal-> Hex: 
-`console.log(utils.fromDecimal(10)); ` 
-
-String -> Hex: 
-`console.log(utils.utf8ToHex("text"));` 
-
-String -> Hex: 
-`console.log(utils.asciiToHex("text"));`
-
-bytes (array) -> Hex
-Another case is if you want to convert bytes in an arrayed format
-Here is how you can do it.
-
-Array: 
-`const arr = [72,12]`
-
-Uint8Arry: 
-`console.log(utils.toHex(arr));` 
-
-Bytes: 
-`console.log(utils.bytesToHex(arr));` 
-
-
-## Conversions UTF and ASCII
-
-You can convert Hexadecimal values to UTF and ASCII values. UTF has a broader range of characters and can support emojis as well, hence it is recommended to use. If you use UTF and send Emoji as a Hexadecimal value, it will return the emoji but the same case cannot be applied when it comes ASCII values.
-
-Example function:
-
-For Emoji to UTF:
-```bash
-console.log("utf:", utils.toUtf8("0xf09f988a"));`
+console.log(web3.utils.bytesToHex(arr));
+//0x01020304
 ```
 
-For emoji to Ascii:
-```bash
-console.log("ascii:", utils.toAscii("0xf09f988a"));
+### Conversions UTF and ASCII
+
+```js
+console.log(web3.utils.utf8ToHex("😊"));
+//0xf09f988a
+
+console.log(web3.utils.fromUtf8("😊"));
+//0xf09f988a
+
+console.log(web3.utils.asciiToHex("😊"));
+//0xd83dde0a
+
+console.log(web3.utils.toUtf8("0xf09f988a"));
+//😊
+
+console.log(web3.utils.hexToUtf8("0xf09f988a"));
+//😊
+
+console.log(web3.utils.hexToString("0xf09f988a"));
+//😊
+
+//emojis are not ASCII character, that's why it won't work
+console.log(web3.utils.toAscii("0x4869"));
+//Hi
+
+console.log(web3.utils.hexToAscii("0x4869"));
+//Hi
 ```
 
-## Conversions - Numbers and Bigint
+### Conversions - Numbers and Bigint
 
-There are three different ways to convert Hexadecimal values into numbers.
+```js
+console.log(web3.utils.toNumber("0xa"));
+//10 (number)
 
-1. This function `toNumber` returns Hexadecimal value in number format
-Hex -> number: `console.log(utils.toNumber("0xa"));`
+console.log(web3.utils.hexToNumber("0xa"));
+//10 (number)
 
-2. This function `hexToNumberString` will convert Hexadecimal value into a number and returns it in string format
-Hex -> string(number): `console.log(utils.hexToNumberString("0xa"));` 
+console.log(web3.utils.toDecimal("0xa"));
+//10 (number)
 
-3. This function will `toBigInt` returns the number in a big integer format
-Hex -> bigInt: `console.log(utils.toBigInt("0xa"));` 
+console.log(web3.utils.hexToNumberString("0xa"));
+//10 (string)
 
+console.log(web3.utils.toBigInt("0xa")); 
+//10n (bigint)
+```
 
-## Hashing Functions
+### Hashing Functions
 
-There are two main functions that you can use for Hashing.
-1. This function is `Sha3`  it will always receive a string as a parameter and it will return the Hash in a Hexadecimal value.
-`console.log(utils.sha3("web3"));`
+```js
+//both will return undefined if an empty string is passed as an argument
+console.log(web3.utils.sha3("hello web3"));
+//0x6c171485a0138b7b0a49d72b570e1d9c589d42a79ae57329d90671d1ac702d74
 
-2. The other function is `SoliditySha3` can receive a string a uint address or bytes as a parameter and it will return the Hash in a Hexadecimal value. It is often used in Solidity smart contracts to generate a hash of various data types.
+console.log(web3.utils.soliditySha3({ type: "string", value: "hello web3" }));
+//0x6c171485a0138b7b0a49d72b570e1d9c589d42a79ae57329d90671d1ac702d74
+```
 
-Example:
+### Addresses
 
-`console.log(utils.soliditySha3({ type: "string", value: "web3" }));`
+```js
+//isAddress() is deprecated so we can use toCheckSumAddress()
+//to see if the hex string we are passing is a correct ethereum address
 
-`console.log(utils.soliditySha3("web3", 42, true));`
- 
+//passing an address with all characters lowercase
+console.log(web3.utils.toChecksumAddress("0xa3286628134bad128faeef82f44e99aa64085c94"));
+//0xA3286628134baD128faeef82F44e99AA64085C94
 
-## Addresses
+//passing an wrong address
+console.log(web3.utils.toChecksumAddress("0xa3286628134bad128faeef82f44e99aa64085c9"));
+//InvalidAddressError: Invalid value given "0xa286628134bad128faeef82f44e99aa64085c94". Error: invalid ethereum address.
+```
 
-If you want to see if an address is valid, before you were able to use `isAddress()` function you can do that by following this function. `console.log(utils.toChecksumAddress("0xa3286..............."));` 
-With the help of this function, you can check and see if the provided address in the function is valid, if you pass the address with wrong case characters, then this function will checksum perform and return with the correct address characters.
+### Packing and Padding
 
-`isAddress` Function:
-If you want to validate whether an Ethereum address is correctly formatted, you should use the isAddress function.
-`const isValid = utils.isAddress("0xa3286...............");`
-`console.log(isValid);` // true or false
-The isAddress function returns true if the provided string is a valid Ethereum address and false otherwise.
-
-
-## Packing and Padding
-
-Packing: Encode packing function has the same behavious as the solidity ABI: `console.log(abi.encodePacked("Hello", "World"));`
-
-if you packed the strings it will return a Hex value, below is the function to perform this method
-`console.log(utils.encodepacked("10", "10", "10"));`
-
-if you packed the numbers it will treat them as a `uint 256`, and it will pack them with zeros to convert them into a `byte32` number, then that will pack the different values. Below is the function to perform this method
-`console.log(utils.encodepacked(10, 10, 10));`
-
-
-Padding: There are two main functions that you can use for padding, `padRight()` and `padLeft()`. The first parameter the function will receive is the number that you want to pad.
-
-Function for padRight:
-`console.log(utils.padRight());`
-
-function for padLeft:
-`console.log(utils.padLeft());`
+```js
+//same as abi.encodePacked() in solidity (must be strings)
+//converts everything to hex and packs everything without padding
+console.log(web3.utils.encodePacked("1", "1", "1"));
+//0x313131
 
 
-## Compare Block Numbers
+//it will convert the number `10` to hex('a') and add 0s until it's 32 characters long
+//the third argument will be the one that will fill/pad the whole hex string, in this case is '0'
+console.log(web3.utils.padRight(10, 32, 0));
+//0xa0000000000000000000000000000000
 
-To compare block numbers you can use a function that allows us to compare block numbers. If the first argument is higher than the second one then it will return `1` and if its lower then it will return `-1` and if they are equal then it returns a `0`. 
+console.log(web3.utils.rightPad(10, 32, 0));
+//0xa0000000000000000000000000000000
 
-You can send strings "pending" and "latest" or block numbers as well.
+console.log(web3.utils.padLeft(10, 32, 0));
+//0x0000000000000000000000000000000a
 
-Example usage:
+console.log(web3.utils.leftPad(10, 32, 0));
+//0x0000000000000000000000000000000a
+```
 
-`const Web3Utils = require('web3-utils');`
+### Compare Block Numbers
 
-Define two block numbers or strings representing block numbers
+```js
+//accepts numbers and formats as well
+console.log(web3.utils.compareBlockNumbers("pending", "latest"));
+//1
 
-`const blockNumber1 = 'latest';`
+console.log(web3.utils.compareBlockNumbers("latest", "pending"));
+//-1
 
-Equivalent to 440 in decimal: 
+console.log(web3.utils.compareBlockNumbers("latest", "latest"));
+//0
 
-`const blockNumber2 = '0x1b4'; `
-
-Compare the block numbers
-
-`const comparisonResult = Web3Utils.compareBlockNumbers(blockNumber1, blockNumber2);`
-
-Log the result
-console.log(`Comparison result: ${comparisonResult}`);
-
-In the above example, 'latest' represents the latest block number, while '0x1b4' represents the block number 440 in hexadecimal form. The compareBlockNumbers function will compare these two block numbers and log the result to the console.
-
-Keep in mind that you need to have the web3.js Utils module installed in your project to use this function. You can install it using npm:
-
-```bash
-npm install web3-utils
+const equal2 = console.log(web3.utils.compareBlockNumbers(2, 2));
+//0
 ```
 
