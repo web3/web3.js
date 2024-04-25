@@ -23,13 +23,13 @@ There are three different ways to import utils package.
 ### Import the entire web3 library
 
 ```js
-//import web3 module
-const { Web3 } = require("web3"); 
+// import web3 module
+import { Web3 } from "web3"; 
 
-//initialize  a provider
-const web3 = new Web3("https://eth.llamarpc.com");
+// initialize  a provider
+const web3 = new Web3("https:// eth.llamarpc.com");
 
-//access the utils package
+// access the utils package
 web3.utils.toWei("")
 web3.utils.toHex("")
 ```
@@ -38,20 +38,20 @@ web3.utils.toHex("")
 ### Import utils module
 
 ```js 
-//import utils module
-const { utils } = require("web3"); 
+// import utils module
+import { utils } from "web3"; 
 
-//access the utils package
+// access the utils package
 utils.toWei()
 ```
 
 ### Import specific methods
 
 ```js
-//import toWei and toHex functions
-const { toWei, toHex } = require("web3-utils");
+// import toWei and toHex functions
+import { toWei, toHex } from"web3-utils";
 
-//usage
+// usage
 toWei("")
 toHex("")
 ```    
@@ -61,7 +61,7 @@ toHex("")
 ### Random Hex and Bytes
 
 ```js
-//Random bytes in hex format and array format
+// Random bytes in hex format and array format
 
 console.log(web3.utils.randomBytes(32));
 /* => array format
@@ -89,149 +89,149 @@ We've got two different functions to perform conversions between Ethereum denomi
 
 ```js
 console.log(web3.utils.fromWei("1", "ether")); 
-//0.000000000000000001
+// 0.000000000000000001
 
 console.log(web3.utils.toWei("1", "ether")); 
-//1_000_000_000_000_000_000
+// 1_000_000_000_000_000_000
 ```
 
 ### Conversions to Hex Values
 
 ```js
-//most versatile one
+// most versatile one
 console.log(web3.utils.toHex(10));
-//0xa
+// 0xa
 
 console.log(web3.utils.toHex(true));
-//0x01
+// 0x01
 
 console.log(web3.utils.numberToHex(10));
-//0xa
+// 0xa
 
 console.log(web3.utils.fromDecimal(10));
-//0xa
+// 0xa
 
 const arr = new Uint8Array([1, 2, 3, 4]);
 
 console.log(web3.utils.toHex(arr));
-//0x7b2230223a312c2231223a322c2232223a332c2233223a347d
+// 0x7b2230223a312c2231223a322c2232223a332c2233223a347d
 
 console.log(web3.utils.bytesToHex(arr));
-//0x01020304
+// 0x01020304
 ```
 
 ### Conversions UTF and ASCII
 
 ```js
 console.log(web3.utils.utf8ToHex("😊"));
-//0xf09f988a
+// 0xf09f988a
 
 console.log(web3.utils.fromUtf8("😊"));
-//0xf09f988a
+// 0xf09f988a
 
 console.log(web3.utils.asciiToHex("😊"));
-//0xd83dde0a
+// 0xd83dde0a
 
 console.log(web3.utils.toUtf8("0xf09f988a"));
-//😊
+// 😊
 
 console.log(web3.utils.hexToUtf8("0xf09f988a"));
-//😊
+// 😊
 
 console.log(web3.utils.hexToString("0xf09f988a"));
-//😊
+// 😊
 
-//emojis are not ASCII character, that's why it won't work
+// emojis are not ASCII character, that's why it won't work
 console.log(web3.utils.toAscii("0x4869"));
-//Hi
+// Hi
 
 console.log(web3.utils.hexToAscii("0x4869"));
-//Hi
+// Hi
 ```
 
 ### Conversions - Numbers and Bigint
 
 ```js
 console.log(web3.utils.toNumber("0xa"));
-//10 (number)
+// 10 (number)
 
 console.log(web3.utils.hexToNumber("0xa"));
-//10 (number)
+// 10 (number)
 
 console.log(web3.utils.toDecimal("0xa"));
-//10 (number)
+// 10 (number)
 
 console.log(web3.utils.hexToNumberString("0xa"));
-//10 (string)
+// 10 (string)
 
 console.log(web3.utils.toBigInt("0xa")); 
-//10n (bigint)
+// 10n (bigint)
 ```
 
 ### Hashing Functions
 
 ```js
-//both will return undefined if an empty string is passed as an argument
+// both will return undefined if an empty string is passed as an argument
 console.log(web3.utils.sha3("hello web3"));
-//0x6c171485a0138b7b0a49d72b570e1d9c589d42a79ae57329d90671d1ac702d74
+// 0x6c171485a0138b7b0a49d72b570e1d9c589d42a79ae57329d90671d1ac702d74
 
 console.log(web3.utils.soliditySha3({ type: "string", value: "hello web3" }));
-//0x6c171485a0138b7b0a49d72b570e1d9c589d42a79ae57329d90671d1ac702d74
+// 0x6c171485a0138b7b0a49d72b570e1d9c589d42a79ae57329d90671d1ac702d74
 ```
 
 ### Addresses
 
 ```js
-//isAddress() is deprecated so we can use toCheckSumAddress()
-//to see if the hex string we are passing is a correct ethereum address
+// isAddress() is deprecated so we can use toCheckSumAddress()
+// to see if the hex string we are passing is a correct ethereum address
 
-//passing an address with all characters lowercase
+// passing an address with all characters lowercase
 console.log(web3.utils.toChecksumAddress("0xa3286628134bad128faeef82f44e99aa64085c94"));
-//0xA3286628134baD128faeef82F44e99AA64085C94
+// 0xA3286628134baD128faeef82F44e99AA64085C94
 
-//passing an wrong address
+// passing an wrong address
 console.log(web3.utils.toChecksumAddress("0xa3286628134bad128faeef82f44e99aa64085c9"));
-//InvalidAddressError: Invalid value given "0xa286628134bad128faeef82f44e99aa64085c94". Error: invalid ethereum address.
+// InvalidAddressError: Invalid value given "0xa286628134bad128faeef82f44e99aa64085c94". Error: invalid ethereum address.
 ```
 
 ### Packing and Padding
 
 ```js
-//same as abi.encodePacked() in solidity (must be strings)
-//converts everything to hex and packs everything without padding
+// same as abi.encodePacked() in solidity (must be strings)
+// converts everything to hex and packs everything without padding
 console.log(web3.utils.encodePacked("1", "1", "1"));
-//0x313131
+// 0x313131
 
 
-//it will convert the number `10` to hex('a') and add 0s until it's 32 characters long
-//the third argument will be the one that will fill/pad the whole hex string, in this case is '0'
+// it will convert the number `10` to hex('a') and add 0s until it's 32 characters long
+// the third argument will be the one that will fill/pad the whole hex string, in this case is '0'
 console.log(web3.utils.padRight(10, 32, 0));
-//0xa0000000000000000000000000000000
+// 0xa0000000000000000000000000000000
 
 console.log(web3.utils.rightPad(10, 32, 0));
-//0xa0000000000000000000000000000000
+// 0xa0000000000000000000000000000000
 
 console.log(web3.utils.padLeft(10, 32, 0));
-//0x0000000000000000000000000000000a
+// 0x0000000000000000000000000000000a
 
 console.log(web3.utils.leftPad(10, 32, 0));
-//0x0000000000000000000000000000000a
+// 0x0000000000000000000000000000000a
 ```
 
 ### Compare Block Numbers
 
 ```js
-//accepts numbers and formats as well
+// accepts numbers and formats as well
 console.log(web3.utils.compareBlockNumbers("pending", "latest"));
-//1
+// 1
 
 console.log(web3.utils.compareBlockNumbers("latest", "pending"));
-//-1
+// -1
 
 console.log(web3.utils.compareBlockNumbers("latest", "latest"));
-//0
+// 0
 
 const equal2 = console.log(web3.utils.compareBlockNumbers(2, 2));
-//0
+// 0
 ```
 
