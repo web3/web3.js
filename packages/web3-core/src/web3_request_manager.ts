@@ -43,7 +43,7 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderConstructor,
 } from 'web3-types';
-import { isNullish, isPromise, jsonRpc, isResponseRpcError } from 'web3-utils';
+import { isNullish, jsonRpc, isResponseRpcError } from 'web3-utils';
 import {
 	isEIP1193Provider,
 	isLegacyRequestProvider,
@@ -181,7 +181,7 @@ export class Web3RequestManager<
 		if (jsonRpc.isResponseWithResult(response)) {
 			return response.result;
 		}
-
+		console.log("reacahes here")
 		throw new ResponseError(response);
 	}
 
@@ -249,88 +249,47 @@ export class Web3RequestManager<
 
 		// TODO: This could be deprecated and removed.
 		if (isLegacyRequestProvider(provider)) {
-			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject) => {
-				const rejectWithError = (err: unknown) =>
-					reject(
-						this._processJsonRpcResponse(
-							payload,
-							err as JsonRpcResponse<ResponseType>,
-							{
-								legacy: true,
-								error: true,
-							},
-						),
-					);
-				const resolveWithResponse = (response: JsonRpcResponse<ResponseType>) =>
-					resolve(
-						this._processJsonRpcResponse(payload, response, {
+			return (provider as Web3BaseProvider<API>)
+				.request<Method, ResponseType>(payload as Web3APIPayload<API, Method>)
+				.then(
+					res =>
+						this._processJsonRpcResponse(payload, res, {
 							legacy: true,
 							error: false,
-						}),
-					);
-				const result = provider.request<ResponseType>(
-					payload,
-					// a callback that is expected to be called after getting the response:
-					(err, response) => {
-						if (err) {
-							return rejectWithError(err);
-						}
-
-						return resolveWithResponse(response);
-					},
+						}) as JsonRpcResponseWithResult<ResponseType>,
+				)
+				.catch(error =>
+					this._processJsonRpcResponse(
+						payload,
+						error as JsonRpcResponse<ResponseType, unknown>,
+						{ legacy: true, error: true },
+					),
 				);
-				// Some providers, that follow a previous drafted version of EIP1193, has a `request` function
-				//	that is not defined as `async`, but it returns a promise.
-				// Such providers would not be picked with if(isEIP1193Provider(provider)) above
-				//	because the `request` function was not defined with `async` and so the function definition is not `AsyncFunction`.
-				// Like this provider: https://github.dev/NomicFoundation/hardhat/blob/62bea2600785595ba36f2105564076cf5cdf0fd8/packages/hardhat-core/src/internal/core/providers/backwards-compatibility.ts#L19
-				// So check if the returned result is a Promise, and resolve with it accordingly.
-				// Note: in this case we expect the callback provided above to never be called.
-				if (isPromise(result)) {
-					const responsePromise = result as unknown as Promise<
-						JsonRpcResponse<ResponseType>
-					>;
-					responsePromise.then(resolveWithResponse).catch(rejectWithError);
-				}
-			});
 		}
 
 		// TODO: This could be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
-			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject): void => {
-				provider.send<ResponseType>(payload, (err, response) => {
-					if (err) {
-						return reject(
-							this._processJsonRpcResponse(
-								payload,
-								err as unknown as JsonRpcResponse<ResponseType>,
-								{
-									legacy: true,
-									error: true,
-								},
-							),
-						);
-					}
-
-					if (isNullish(response)) {
-						throw new ResponseError(
-							{} as never,
-							'Got a "nullish" response from provider.',
-						);
-					}
-
-					return resolve(
-						this._processJsonRpcResponse(payload, response, {
+			return (provider as Web3BaseProvider<API>)
+				.request<Method, ResponseType>(payload as Web3APIPayload<API, Method>)
+				.then(
+					res =>
+						this._processJsonRpcResponse(payload, res, {
 							legacy: true,
 							error: false,
-						}),
-					);
-				});
-			});
+						}) as JsonRpcResponseWithResult<ResponseType>,
+				)
+				.catch(error =>
+					this._processJsonRpcResponse(
+						payload,
+						error as JsonRpcResponse<ResponseType, unknown>,
+						{ legacy: true, error: true },
+					),
+				);
 		}
 
 		// TODO: This could be deprecated and removed.
 		if (isLegacySendAsyncProvider(provider)) {
+			console.log("legacy async")
 			return provider
 				.sendAsync<ResponseType>(payload)
 				.then(response =>
