@@ -233,7 +233,7 @@ console.log(web3.utils.compareBlockNumbers("latest", "pending"));
 console.log(web3.utils.compareBlockNumbers("latest", "latest"));
 // 0
 
-const equal2 = console.log(web3.utils.compareBlockNumbers(2, 2));
+console.log(web3.utils.compareBlockNumbers(2, 2));
 // 0
 ```
 
