@@ -181,7 +181,6 @@ export class Web3RequestManager<
 		if (jsonRpc.isResponseWithResult(response)) {
 			return response.result;
 		}
-		console.log("reacahes here")
 		throw new ResponseError(response);
 	}
 
@@ -289,7 +288,6 @@ export class Web3RequestManager<
 
 		// TODO: This could be deprecated and removed.
 		if (isLegacySendAsyncProvider(provider)) {
-			console.log("legacy async")
 			return provider
 				.sendAsync<ResponseType>(payload)
 				.then(response =>
