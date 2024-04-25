@@ -27,7 +27,7 @@ There are three different ways to import utils package.
 import { Web3 } from "web3";
 
 // no need to initialize a provider
-console.log(Web3.utils.toHex(""));
+Web3.utils.toHex("");
 
 // initializing  a provider
 const web3 = new Web3("https:// eth.llamarpc.com");
