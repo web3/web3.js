@@ -35,8 +35,8 @@ async function txLegacy() {
     gasPrice,
   };
 
-  const result = await web3.eth.sendTransaction(tx);
-  console.log("Tx hash", result.transactionHash);
+  const txReceipt = await web3.eth.sendTransaction(tx);
+  console.log("Tx hash", txReceipt.transactionHash);
 }
 
 txLegacy();
@@ -80,8 +80,8 @@ async function txEIP2930() {
   };
 
 
-  const result = await web3.eth.sendTransaction(tx);
-  console.log("Tx hash", result.transactionHash);
+  const txReceipt = await web3.eth.sendTransaction(tx);
+  console.log("Tx hash", txReceipt.transactionHash);
 }
 
 txEIP2930()
@@ -117,13 +117,11 @@ async function txEIP1559() {
     maxPriorityFeePerGas,
   };
 
-  const result = await web3.eth.sendTransaction(tx);
-  console.log("Tx hash", result.transactionHash);
+  const txReceipt = await web3.eth.sendTransaction(tx);
+  console.log("Tx hash", txReceipt.transactionHash);
 }
 
 txEIP1559();
-
-//=> Tx hash 0xa00eb8b1a3f881a416d5d49cb472860f77863d4f4d17998e8d5d7545f51656ec
 ```
 
 
