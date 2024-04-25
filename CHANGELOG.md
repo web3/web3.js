@@ -2477,3 +2477,4 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-validator
 
+- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
