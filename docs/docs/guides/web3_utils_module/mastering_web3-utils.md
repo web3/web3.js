@@ -24,14 +24,16 @@ There are three different ways to import utils package.
 
 ```js
 // import web3 module
-import { Web3 } from "web3"; 
+import { Web3 } from "web3";
 
-// initialize  a provider
+// no need to initialize a provider
+console.log(Web3.utils.toHex(""));
+
+// initializing  a provider
 const web3 = new Web3("https:// eth.llamarpc.com");
 
 // access the utils package
-web3.utils.toWei("")
-web3.utils.toHex("")
+web3.utils.toHex("");
 ```
 
 
