@@ -9,6 +9,8 @@ This guide provides insights into sending transactions using web3.js, covering v
 
 ## Transaction Type 0 (Legacy)
 
+### Raw Transaction 
+
 A Legacy Transaction refers to a transaction that was created using an older version of Ethereum's transaction format, also known as "transaction type 0". This transaction format was used before the EIP-1559 upgrade, which was implemented in August 2021.
 
 ```ts
@@ -33,6 +35,8 @@ async function txLegacy() {
     nonce,
     gas,
     gasPrice,
+    // highlight-next-line
+    type: 0,
   };
 
   const txReceipt = await web3.eth.sendTransaction(tx);
@@ -42,9 +46,38 @@ async function txLegacy() {
 txLegacy();
 ```
 
+### ERC20 Interaction
+
+```ts
+import { Web3 } from "web3";
+
+const web3 = new Web3("https://rpc2.sepolia.org");
+
+async function transfer() {
+  //initialize wallet
+  const wallet = web3.eth.wallet.add("PRIVATE_KEY");
+
+  //initialize contract
+  const myERC20 = new web3.eth.Contract(ABI, ADDRESS);
+
+  //send transfer and specify the type
+  const txReceipt = await myERC20.methods.transfer(TO, VALUE).send({
+    from: wallet[0].address,
+    // highlight-next-line
+    type: 0,
+  });
+
+  console.log(txReceipt.transactionHash);
+}
+
+transfer();
+```
+
 ## Transaction Type 1 (EIP-2930)
 
 This EIP was introduced in April 2021, it introduces a feature called 'Transaction Type and Access List.' This improvement allows saving gas on cross-contract calls by declaring in advance which contract and storage slots will be accessed.
+
+### Raw Transaction
 
 ```ts
 import { Web3 } from"web3";
@@ -67,6 +100,7 @@ async function txEIP2930() {
     data: "0x...",
     gas,
     gasPrice,
+    // highlight-next-line
     type: 1,
     accessList: [
       {
@@ -90,6 +124,8 @@ txEIP2930()
 ## Transaction Type 2 (EIP-1559)
 
 When a user creates an EIP-1559 transaction, they specify the maximum fee they are willing to pay `maxFeePerGas` as well as a tip `maxPriorityFeePerGas` to incentivize the miner. The actual fee paid by the user is then determined by the network based on the current demand for block space and the priority of the transaction.
+
+### Raw Transaction
 
 ```ts
 import { Web3 } from"web3";
@@ -115,6 +151,8 @@ async function txEIP1559() {
     gasLimit,
     maxFeePerGas,
     maxPriorityFeePerGas,
+    // highlight-next-line
+    type: 2,
   };
 
   const txReceipt = await web3.eth.sendTransaction(tx);
@@ -122,6 +160,33 @@ async function txEIP1559() {
 }
 
 txEIP1559();
+```
+
+### ERC20 Interaction
+
+```ts
+import { Web3 } from "web3";
+
+const web3 = new Web3("https://rpc2.sepolia.org");
+
+async function transfer() {
+  //initialize wallet
+  const wallet = web3.eth.wallet.add("PRIVATE_KEY");
+
+  //initialize contract
+  const myERC20 = new web3.eth.Contract(ABI, ADDRESS);
+
+  //send transfer and specify the type
+  const txReceipt = await myERC20.methods.transfer(TO, VALUE).send({
+    from: wallet[0].address,
+    // highlight-next-line
+    type: 2,
+  });
+
+  console.log(txReceipt.transactionHash);
+}
+
+transfer();
 ```
 
 
