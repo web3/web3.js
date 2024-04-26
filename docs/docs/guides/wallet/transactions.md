@@ -7,6 +7,10 @@ sidebar_label: 'Tutorial: Sending Transactions'
 
 This guide provides insights into sending transactions using web3.js, covering various scenarios from utilizing a local wallet to sending raw transactions.
 
+:::note
+Web3.js uses transactions type 2 by default
+:::
+
 ## Transaction Type 0 (Legacy)
 
 ### Raw Transaction 
