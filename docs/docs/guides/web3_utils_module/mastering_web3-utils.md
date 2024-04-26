@@ -27,13 +27,15 @@ There are three different ways to import utils package.
 import { Web3 } from "web3";
 
 // no need to initialize a provider
-Web3.utils.toHex("");
+Web3.utils.toHex("web3");
+//=> 0x77656233
 
 // initializing  a provider
 const web3 = new Web3("https:// eth.llamarpc.com");
 
 // access the utils package
-web3.utils.toHex("");
+web3.utils.toHex("web3");
+//=> 0x77656233
 ```
 
 
@@ -44,7 +46,7 @@ web3.utils.toHex("");
 import { utils } from "web3"; 
 
 // access the utils package
-utils.toWei()
+utils.toWei("1", "ether")
 ```
 
 ### Import specific methods
@@ -54,7 +56,7 @@ utils.toWei()
 import { toWei, toHex } from"web3-utils";
 
 // usage
-toWei("")
+toWei("1", "ether")
 toHex("")
 ```    
 
