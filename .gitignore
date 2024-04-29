@@ -45,3 +45,5 @@ packages/web3/.in3/
 
 # benchmark results
 benchmark-data.txt
+
+.eslintcache
