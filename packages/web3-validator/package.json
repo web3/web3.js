@@ -36,12 +36,12 @@
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
-		"test": "jest --config=./test/unit/jest.config.js --ci",
-		"test:coverage:unit": "jest --config=./test/unit/jest.config.js --ci --coverage=true --coverage-reporters=text",
+		"test": "jest --config=./test/unit/jest.config.js",
+		"test:coverage:unit": "jest --config=./test/unit/jest.config.js  --coverage=true --coverage-reporters=text",
 		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests --coverage=true --coverage-reporters=text",
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
-		"test:unit": "jest --config=./test/unit/jest.config.js --ci",
+		"test:unit": "jest --config=./test/unit/jest.config.js",
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
