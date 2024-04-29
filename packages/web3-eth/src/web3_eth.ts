@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -279,7 +279,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * 	   baseFeePerGas: 20000000000n
 	 * }
 	 *
-	 * web3.eth.calculateFeeData(ethUnitMap.Gwei, 2n).then(console.log);
+	 * web3.eth.calculateFeeData(2n, ethUnitMap.Gwei).then(console.log);
 	 * > {
 	 *     gasPrice: 20000000000n,
 	 *     maxFeePerGas: 40000000000n,
