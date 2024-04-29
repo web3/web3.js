@@ -164,156 +164,173 @@ jobs:
             -   run: yarn lint
             # save cache for each package if it is push to main branch
             -   run: gh cache delete "${{ runner.os }}-web3.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-core.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-eth.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-eth-abi.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-eth-accounts.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-eth-contract.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-eth-ens.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-eth-iban.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-eth-personal.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-net.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-providers-http.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-providers-ws.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-rpc-methods.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-types.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-utils.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-validator.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   run: gh cache delete "${{ runner.os }}-web3-plugin-example.eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Save lint cache for web3
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3/.eslintcache
                     key: ${{ runner.os }}-web3.eslintcache
             -   name: Save lint cache for web3-core
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-core/.eslintcache
                     key: ${{ runner.os }}-web3-core.eslintcache
             -   name: Save lint cache for web3-eth
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-eth/.eslintcache
                     key: ${{ runner.os }}-web3-eth.eslintcache
             -   name: Save lint cache for web3-eth-abi
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-eth-abi/.eslintcache
                     key: ${{ runner.os }}-web3-eth-abi.eslintcache
             -   name: Save lint cache for web3-eth-accounts
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-eth-accounts/.eslintcache
                     key: ${{ runner.os }}-web3-eth-accounts.eslintcache
             -   name: Save lint cache for web3-eth-contract
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-eth-contract/.eslintcache
                     key: ${{ runner.os }}-web3-eth-contract.eslintcache
             -   name: Save lint cache for web3-eth-ens
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-eth-ens/.eslintcache
                     key: ${{ runner.os }}-web3-eth-ens.eslintcache
             -   name: Save lint cache for web3-eth-iban
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-eth-iban/.eslintcache
                     key: ${{ runner.os }}-web3-eth-iban.eslintcache
             -   name: Save lint cache for web3-eth-personal
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-eth-personal/.eslintcache
                     key: ${{ runner.os }}-web3-eth-personal.eslintcache
             -   name: Save lint cache for web3-net
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-net/.eslintcache
                     key: ${{ runner.os }}-web3-net.eslintcache
             -   name: Save lint cache for web3-providers-http
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-providers-http/.eslintcache
                     key: ${{ runner.os }}-web3-providers-http.eslintcache
             -   name: Save lint cache for web3-providers-ws
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-providers-ws/.eslintcache
                     key: ${{ runner.os }}-web3-providers-ws.eslintcache
             -   name: Save lint cache for web3-rpc-methods
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-rpc-methods/.eslintcache
                     key: ${{ runner.os }}-web3-rpc-methods.eslintcache
             -   name: Save lint cache for web3-types
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-types/.eslintcache
                     key: ${{ runner.os }}-web3-types.eslintcache
             -   name: Save lint cache for web3-utils
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-utils/.eslintcache
                     key: ${{ runner.os }}-web3-utils.eslintcache
             -   name: Save lint cache for web3-validator
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3-validator/.eslintcache
                     key: ${{ runner.os }}-web3-validator.eslintcache
             -   name: Save lint cache for web3-plugin-example
                 uses: actions/cache/save@v4
-                # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: tools/web3-plugin-example/.eslintcache
                     key: ${{ runner.os }}-web3-plugin-example.eslintcache
