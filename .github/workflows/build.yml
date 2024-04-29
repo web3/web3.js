@@ -96,10 +96,10 @@ jobs:
                     key: ${{ runner.os }}-eslintcache
 
             -   run: yarn lint
-#            -   run: gh cache delete "${{ runner.os }}-eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-eslintcache"
                 # if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
-#                env:
-#                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                env:
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Save eslint caches
               #  if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
