@@ -163,55 +163,7 @@ jobs:
 
             -   run: yarn lint
             # save cache for each package if it is push to main branch
-            -   run: gh cache delete "${{ runner.os }}-web3.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-core.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-eth.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-abi.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-accounts.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-contract.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-ens.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-iban.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-personal.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-net.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-providers-http.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-providers-ws.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-rpc-methods.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-types.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-utils.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-validator.eslintcache"
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   run: gh cache delete "${{ runner.os }}-web3-plugin-example.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-plugin-example.eslintcache" "${{ runner.os }}-web3-validator.eslintcache" "${{ runner.os }}-web3-utils.eslintcache" "${{ runner.os }}-web3-types.eslintcache" "${{ runner.os }}-web3-rpc-methods.eslintcache" "${{ runner.os }}-web3-providers-ws.eslintcache" "${{ runner.os }}-web3-providers-http.eslintcache" "${{ runner.os }}-web3-net.eslintcache" "${{ runner.os }}-web3-eth-personal.eslintcache" "${{ runner.os }}-web3-eth-iban.eslintcache" "${{ runner.os }}-web3-eth-ens.eslintcache" "${{ runner.os }}-web3-eth-contract.eslintcache" "${{ runner.os }}-web3-eth-accounts.eslintcache" "${{ runner.os }}-web3-eth-abi.eslintcache" "${{ runner.os }}-web3.eslintcache" "${{ runner.os }}-web3-core.eslintcache" "${{ runner.os }}-web3-eth.eslintcache"
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
