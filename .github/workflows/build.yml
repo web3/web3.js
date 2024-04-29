@@ -163,23 +163,23 @@ jobs:
 
             -   run: yarn lint
             # save cache for each package if it is push to main branch
-            -   run: gh cache delete "${{ runner.os }}-web3.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-core.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-eth.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-abi.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-accounts.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-contract.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-ens.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-iban.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-eth-personal.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-net.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-providers-http.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-providers-ws.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-rpc-methods.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-types.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-utils.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-validator.eslintcache" --confirm
-            -   run: gh cache delete "${{ runner.os }}-web3-plugin-example.eslintcache" --confirm
+            -   run: gh cache delete "${{ runner.os }}-web3.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-core.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-eth.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-eth-abi.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-eth-accounts.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-eth-contract.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-eth-ens.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-eth-iban.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-eth-personal.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-net.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-providers-http.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-providers-ws.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-rpc-methods.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-types.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-utils.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-validator.eslintcache"
+            -   run: gh cache delete "${{ runner.os }}-web3-plugin-example.eslintcache"
 
             -   name: Save lint cache for web3
                 uses: actions/cache/save@v4
