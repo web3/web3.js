@@ -40,7 +40,7 @@
 		"build:web": "npx webpack",
 		"build:web:analyze": "npx webpack --config ./webpack.analyze.js",
 		"build:check": "node -e \"require('./lib')\"",
-		"lint": "eslint --ext .js,.ts .",
+		"lint": "eslint --cache --ext .ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
