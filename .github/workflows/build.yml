@@ -70,7 +70,6 @@ jobs:
                     path: ./
                     key: web3-18-${{github.sha}}
             -   run: npx ts-node scripts/init.ts
-            # restore cache for each package from main branch
             -   name: Restore eslint caches
                 uses: actions/cache/restore@v4
                 with:
