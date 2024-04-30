@@ -95,13 +95,15 @@ async function txEIP2930() {
   const contractAddress1 = "0x...";
   const gas = 500000; //could be higher
   const gasPrice = await web3.eth.getGasPrice();
+  const data = "0x9a67c8b100000000000000000000000000000000000000000000000000000000000004d0"
+
 
   // highlight-start
   //create access list using web3.eth
   const accessListData = await web3.eth.createAccessList({
     from: sender,
     to: contractAddress1,
-    data: "0x9a67c8b100000000000000000000000000000000000000000000000000000000000004d0",
+    data,
   });
   // highlight-end
 
@@ -126,7 +128,7 @@ async function txEIP2930() {
   const tx = {
     from: sender,
     to: contractAddress1, //the contract we are calling
-    data: "0x...",
+    data,
     gas,
     gasPrice,
     // highlight-next-line
