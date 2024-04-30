@@ -79,7 +79,7 @@ transfer();
 
 ## Transaction Type 1 (EIP-2930)
 
-This EIP was introduced in April 2021, it introduces a feature called 'Transaction Type and Access List.' This improvement allows saving gas on cross-contract calls by declaring in advance which contract and storage slots will be accessed.
+This EIP was introduced in April 2021, it introduces a feature called 'Access List.' This improvement allows saving gas on cross-contract calls by declaring in advance which contract and storage slots will be accessed.
 
 ### Raw Transaction
 
