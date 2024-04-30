@@ -72,7 +72,6 @@ jobs:
             -   run: npx ts-node scripts/init.ts
             # restore cache for each package from main branch
             -   name: Restore eslint caches
-                #  if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 uses: actions/cache/restore@v4
                 with:
                     path: |
