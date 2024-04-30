@@ -1,8 +1,16 @@
 {
-	"name": "web3-packagetemplate",
-	"version": "1.1.1",
-	"description": "Package template for Web3 4.x.x",
-	"main": "lib/index.js",
+	"name": "web3-providers",
+	"version": "0.1.0",
+	"description": "Web3 Providers package",
+	"main": "./lib/commonjs/index.js",
+	"module": "./lib/esm/index.js",
+	"exports": {
+		".": {
+			"types": "./lib/types/index.d.ts",
+			"import": "./lib/esm/index.js",
+			"require": "./lib/commonjs/index.js"
+		}
+	},
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
@@ -12,7 +20,8 @@
 	},
 	"files": [
 		"lib/**/*",
-		"src/**/*"
+		"src/**/*",
+		"dist/**/*"
 	],
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
@@ -46,5 +55,12 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^29.1.1",
 		"typescript": "^4.7.4"
+	},
+	"dependencies": {
+		"web3": "^4.8.0",
+		"web3-providers-http": "^4.1.0",
+		"web3-providers-ws": "^4.0.7",
+		"web3-types": "^1.6.0",
+		"web3-utils": "^4.2.3"
 	}
 }
