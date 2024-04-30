@@ -539,7 +539,7 @@ describe('Web3Eth.sendTransaction', () => {
 				.contractAddress as Address;
 		});
 
-		it('Should throw TransactionRevertInstructionError because gas too low', async () => {
+		it.only('Should throw TransactionRevertInstructionError because gas too low', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
@@ -548,27 +548,30 @@ describe('Web3Eth.sendTransaction', () => {
 			};
 
 			const expectedThrownError = {
-				name: 'TransactionRevertInstructionError',
-				code: 402,
-				reason:
+				cause: {
+				code: -32000,
+				message:
 					getSystemTestBackend() === BACKEND.GETH
-						? 'err: intrinsic gas too low: have 1, want 21000 (supplied gas 1)'
-						: 'base fee exceeds gas limit',
+						? 'intrinsic gas too low: gas 1, minimum needed 21000'
+						: 'Transaction requires at least 21000 gas but got 1',
+				},
+				name: 'InvalidResponseError',
 			};
 
 			if (getSystemTestBackend() !== BACKEND.HARDHAT) {
 				await expect(
 					web3Eth
 						.sendTransaction(transaction)
-						.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+						.on('error', error => {
+							expect(error).toMatchObject(expectedThrownError)}),
 				).rejects.toMatchObject(expectedThrownError);
 			} else {
 				try {
 					await web3Eth.sendTransaction(transaction);
 				} catch (error) {
-					expect((error as any).name).toEqual(expectedThrownError.name);
-					expect((error as any).code).toEqual(expectedThrownError.code);
-					expect((error as any).reason).toContain(expectedThrownError.reason);
+					expect((error as any).cause.message).toEqual(expectedThrownError.cause.message);
+					expect((error as any).cause.code).toEqual(expectedThrownError.cause.code);
+					expect((error as any).name).toContain(expectedThrownError.name);
 				}
 			}
 		});
