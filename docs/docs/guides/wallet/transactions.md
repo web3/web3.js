@@ -93,10 +93,35 @@ async function txEIP2930() {
 
   const sender = wallet[0].address;
   const contractAddress1 = "0x...";
-  const contractAddress2 = "0x..."
-  const nonce = await web3.eth.getTransactionCount(sender);
   const gas = 500000; //could be higher
   const gasPrice = await web3.eth.getGasPrice();
+
+  // highlight-start
+  //create access list using web3.eth
+  const accessListData = await web3.eth.createAccessList({
+    from: sender,
+    to: contractAddress1,
+    data: "0x9a67c8b100000000000000000000000000000000000000000000000000000000000004d0",
+  });
+  // highlight-end
+
+  console.log(accessListData)
+  /* 
+  => 
+  {
+    // highlight-start
+  "accessList": [
+      {
+        "address": "0x15859bdf5aff2080a9968f6a410361e9598df62f",
+        "storageKeys": [
+          "0x0000000000000000000000000000000000000000000000000000000000000000"
+        ]
+      }
+    ],
+    // highlight-end
+    "gasUsed": "0x7671"
+  }
+  */
 
   const tx = {
     from: sender,
@@ -106,19 +131,12 @@ async function txEIP2930() {
     gasPrice,
     // highlight-next-line
     type: 1,
-    accessList: [
-      {
-        address: contractAddress2, //contract1 is calling contract2
-        storageKeys: [
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-          "0x0000000000000000000000000000000000000000000000000000000000000001",
-        ],
-      },
-    ],
+    // highlight-next-line
+    accessList: accessListData.accessList //access the object `accessList`
   };
 
-
   const txReceipt = await web3.eth.sendTransaction(tx);
+  
   console.log("Tx hash", txReceipt.transactionHash);
 }
 
