@@ -90,6 +90,9 @@ export interface Web3EthInterface extends Eth {
 			options?: Record<string, unknown>,
 		) => Promise<Web3Account>;
 		wallet: Wallet;
+		privateKeyToAddress: (privateKey: Bytes) => string;
+		privateKeyToPublicKey: (privateKey: Bytes, isCompressed: boolean) => string;
+		parseAndValidatePrivateKey: (data: Bytes, ignoreLength?: boolean) => Uint8Array;
 	};
 	personal: Personal;
 }
