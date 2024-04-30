@@ -539,7 +539,7 @@ describe('Web3Eth.sendTransaction', () => {
 				.contractAddress as Address;
 		});
 
-		it.only('Should throw TransactionRevertInstructionError because gas too low', async () => {
+		it('Should throw TransactionRevertInstructionError because gas too low', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
