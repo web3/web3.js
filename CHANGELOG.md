@@ -2455,6 +2455,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth
 
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+-   `getTransactionFromOrToAttr`, `waitForTransactionReceipt`, `trySendTransaction`, `SendTxHelper` was exported (#7000)
 
 #### web3-eth-contract
 
@@ -2473,8 +2474,23 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Added `signature` to type `AbiFunctionFragment` (#6922)
 -   update type `Withdrawals`, `block` and `BlockHeaderOutput` to include properties of eip 4844, 4895, 4788 (#6933)
 
+#### web3-utils
+
+
 ### Fixed
+
+#### web3-utils
+
 
 #### web3-validator
 
-- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
+
+### Changed
+
+#### web3-eth
+
+-   Added parameter `customTransactionReceiptSchema` into methods `emitConfirmation`, `waitForTransactionReceipt`, `watchTransactionByPolling`, `watchTransactionBySubscription`, `watchTransactionForConfirmations` (#7000)
+
+#### web3-rpc-methods
+
+-   Change `estimateGas` method to add possibility pass Transaction type (#7000)
