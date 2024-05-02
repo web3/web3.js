@@ -22,7 +22,7 @@
 		"build:esm": "tsc --build tsconfig.esm.json",
 		"build:types": "tsc --build tsconfig.types.json",
 		"build:check": "node -e \"require('./lib')\"",
-		"lint": "eslint --ext .js,.ts .",
+		"lint": "eslint --cache --cache-strategy content --ext .ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
