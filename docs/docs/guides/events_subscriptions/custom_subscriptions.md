@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 sidebar_label: 'Custom Subscriptions'
 ---
 
@@ -8,7 +8,7 @@ sidebar_label: 'Custom Subscriptions'
 You can extend the `Web3Subscription` class to create custom subscriptions. This way you can subscribe to custom events emitted by the provider.
 
 :::note
-This guide is most likely for advanced users who are connecting to a node that provides additional custom subscriptions. For normal users, the standard subscriptions are supported out of the box as you can find in [Supported Subscriptions](/guides/events_subscriptions/supported_subscriptions).
+This guide is most likely for advanced users who are connecting to a node that provides additional custom subscriptions. For normal users, the standard subscriptions are supported out of the box as you can find in [Supported Subscriptions](/guides/events_subscriptions/index.md).
 :::
 
 :::important

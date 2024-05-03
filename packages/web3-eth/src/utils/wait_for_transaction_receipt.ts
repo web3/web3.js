@@ -30,19 +30,30 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
+	customGetTransactionReceipt?: (
+		web3Context: Web3Context<EthExecutionAPI>,
+		transactionHash: Bytes,
+		returnFormat: ReturnFormat,
+	) => Promise<TransactionReceipt>,
 ): Promise<TransactionReceipt> {
-
 	const pollingInterval =
 		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
 
-	const [awaitableTransactionReceipt, IntervalId] = pollTillDefinedAndReturnIntervalId(async () => {
-		try {
-			return getTransactionReceipt(web3Context, transactionHash, returnFormat);
-		} catch (error) {
-			console.warn('An error happen while trying to get the transaction receipt', error);
-			return undefined;
-		}
-	}, pollingInterval);
+	const [awaitableTransactionReceipt, IntervalId] = pollTillDefinedAndReturnIntervalId(
+		async () => {
+			try {
+				return (customGetTransactionReceipt ?? getTransactionReceipt)(
+					web3Context,
+					transactionHash,
+					returnFormat,
+				);
+			} catch (error) {
+				console.warn('An error happen while trying to get the transaction receipt', error);
+				return undefined;
+			}
+		},
+		pollingInterval,
+	);
 
 	const [timeoutId, rejectOnTimeout] = rejectIfTimeout(
 		web3Context.transactionPollingTimeout,
@@ -65,10 +76,8 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
 	} finally {
-		if(timeoutId)
-			clearTimeout(timeoutId);
-		if(IntervalId)
-			clearInterval(IntervalId);
+		if (timeoutId) clearTimeout(timeoutId);
+		if (IntervalId) clearInterval(IntervalId);
 		blockTimeoutResourceCleaner.clean();
 	}
 }

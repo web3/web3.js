@@ -20,7 +20,7 @@ import {
 	Web3ContextInitOptions,
 	Web3ContextObject,
 	Web3SubscriptionConstructor,
-	isSupportedProvider
+	isSupportedProvider,
 } from 'web3-core';
 import { Web3Eth, RegisteredSubscription, registeredSubscriptions } from 'web3-eth';
 import Contract from 'web3-eth-contract';
@@ -37,7 +37,6 @@ import {
 	EthExecutionAPI,
 	SupportedProviders,
 	DataFormat,
-	DEFAULT_RETURN_FORMAT
 } from 'web3-types';
 import { InvalidMethodParamsError } from 'web3-errors';
 import abi from './abi.js';
@@ -122,32 +121,38 @@ export class Web3<
 
 		class ContractBuilder<Abi extends ContractAbi> extends Contract<Abi> {
 			public constructor(jsonInterface: Abi);
-			public constructor(jsonInterface: Abi,
+			public constructor(
+				jsonInterface: Abi,
 				addressOrOptionsOrContext?: Address | ContractInitOptions | Web3Context,
-				);
+			);
 			public constructor(
 				jsonInterface: Abi,
 				addressOrOptionsOrContext?: Address | ContractInitOptions | Web3Context,
 				optionsOrContextOrReturnFormat?: ContractInitOptions | Web3Context | DataFormat,
 			);
-			public constructor(jsonInterface: Abi,
+			public constructor(
+				jsonInterface: Abi,
 				addressOrOptionsOrContext?: Address | ContractInitOptions,
 				optionsOrContextOrReturnFormat?: ContractInitOptions,
 				contextOrReturnFormat?: Web3Context | DataFormat,
-				);
-			public constructor(jsonInterface: Abi,
+			);
+			public constructor(
+				jsonInterface: Abi,
 				addressOrOptionsOrContext?: Address | ContractInitOptions,
 				optionsOrContextOrReturnFormat?: ContractInitOptions,
 				contextOrReturnFormat?: Web3Context | DataFormat,
-				);
-			public constructor(jsonInterface: Abi,
+			);
+			public constructor(
+				jsonInterface: Abi,
 				addressOrOptionsOrContext?: Address | ContractInitOptions,
 				optionsOrContextOrReturnFormat?: ContractInitOptions,
 				contextOrReturnFormat?: Web3Context | DataFormat,
-				returnFormat?: DataFormat
-				)
-				  {
-				if (isContractInitOptions(addressOrOptionsOrContext) && isContractInitOptions(optionsOrContextOrReturnFormat)) {
+				returnFormat?: DataFormat,
+			) {
+				if (
+					isContractInitOptions(addressOrOptionsOrContext) &&
+					isContractInitOptions(optionsOrContextOrReturnFormat)
+				) {
 					throw new InvalidMethodParamsError(
 						'Should not provide options at both 2nd and 3rd parameters',
 					);
@@ -155,22 +160,26 @@ export class Web3<
 				let address: string | undefined;
 				let options: object = {};
 				let context: Web3ContextObject;
-				let dataFormat: DataFormat = DEFAULT_RETURN_FORMAT;
+				let dataFormat: DataFormat | undefined;
 
 				// add validation so its not a breaking change
-				if (!isNullish(addressOrOptionsOrContext) && typeof addressOrOptionsOrContext !== 'object' && typeof addressOrOptionsOrContext !== 'string') {
+				if (
+					!isNullish(addressOrOptionsOrContext) &&
+					typeof addressOrOptionsOrContext !== 'object' &&
+					typeof addressOrOptionsOrContext !== 'string'
+				) {
 					throw new InvalidMethodParamsError();
 				}
 
 				if (typeof addressOrOptionsOrContext === 'string') {
 					address = addressOrOptionsOrContext;
 				}
-				if (isContractInitOptions(addressOrOptionsOrContext)){
+				if (isContractInitOptions(addressOrOptionsOrContext)) {
 					options = addressOrOptionsOrContext as object;
 				} else if (isContractInitOptions(optionsOrContextOrReturnFormat)) {
 					options = optionsOrContextOrReturnFormat as object;
 				} else {
-					options = {}
+					options = {};
 				}
 
 				if (addressOrOptionsOrContext instanceof Web3Context) {
@@ -183,7 +192,7 @@ export class Web3<
 					context = self.getContextObject() as Web3ContextObject;
 				}
 
-				if (returnFormat){
+				if (returnFormat) {
 					dataFormat = returnFormat;
 				} else if (isDataFormat(optionsOrContextOrReturnFormat)) {
 					dataFormat = optionsOrContextOrReturnFormat as DataFormat;
@@ -191,7 +200,7 @@ export class Web3<
 					dataFormat = contextOrReturnFormat;
 				}
 
-				super(jsonInterface,address, options, context, dataFormat)
+				super(jsonInterface, address, options, context, dataFormat);
 				super.subscribeToContextEvents(self);
 			}
 		}

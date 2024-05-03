@@ -157,6 +157,40 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		},
 	},
 
+	// this is for public mappings case where the abi has no name
+	{
+		title: 'multiple params of different types without name',
+		abi: {
+			fullSchema: [
+				{ name: '', type: 'uint' },
+				{ name: '', type: 'int' },
+			],
+			shortSchema: ['uint', 'int'],
+			data: [12, -1],
+		},
+		json: {
+			fullSchema: {
+				type: 'array',
+				items: [
+					{ $id: '/0/0', format: 'uint', required: true },
+					{ $id: '/0/1', format: 'int', required: true },
+				],
+				minItems: 2,
+				maxItems: 2,
+			},
+			shortSchema: {
+				type: 'array',
+				items: [
+					{ $id: '/0/0', format: 'uint', required: true },
+					{ $id: '/0/1', format: 'int', required: true },
+				],
+				minItems: 2,
+				maxItems: 2,
+			},
+			data: [12, -1],
+		},
+	},
+
 	{
 		title: 'single param array',
 		abi: {

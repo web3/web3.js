@@ -63,6 +63,7 @@ import {
 	toHexInvalidData,
 	toWeiInvalidData,
 	toWeiValidData,
+	toWeiValidDataWarnings,
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
 	toCheckSumValidData,
@@ -365,6 +366,19 @@ describe('converters', () => {
 				expect(() => toWei(input[0], input[1])).toThrow(output);
 			});
 		});
+		describe('test console warnings', () => {
+			beforeEach(() => {
+				jest.spyOn(console, 'warn').mockImplementation(() => {
+					// do nothing
+				});
+			});
+			it.each(toWeiValidDataWarnings)('%s', (input, output) => {
+				toWei(input[0], input[1]);
+				// expect(() => toWei(input[0], input[1])).toThrow(output);
+				expect(console.warn).toHaveBeenCalledWith(output)
+			});
+
+		})
 	});
 	describe('toChecksumAddress', () => {
 		describe('valid cases', () => {

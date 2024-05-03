@@ -20,6 +20,7 @@ import { format, numberToHex } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { DataFormat } from 'web3-types';
+import { JsonSchema } from 'web3-validator';
 import { SendSignedTransactionEvents, SendTransactionEvents } from '../types.js';
 import { transactionReceiptSchema } from '../schemas.js';
 
@@ -30,6 +31,7 @@ export type Web3PromiEventEventTypeBase<ReturnFormat extends DataFormat> =
 export type WaitProps<ReturnFormat extends DataFormat, ResolveType = TransactionReceipt> = {
 	web3Context: Web3Context<EthExecutionAPI>;
 	transactionReceipt: TransactionReceipt;
+	customTransactionReceiptSchema?: JsonSchema;
 	transactionPromiEvent: Web3PromiEvent<ResolveType, Web3PromiEventEventTypeBase<ReturnFormat>>;
 	returnFormat: ReturnFormat;
 };
@@ -46,6 +48,7 @@ export const watchTransactionByPolling = <
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
+	customTransactionReceiptSchema,
 	returnFormat,
 }: WaitProps<ReturnFormat, ResolveType>) => {
 	// Having a transactionReceipt means that the transaction has already been included
@@ -67,7 +70,11 @@ export const watchTransactionByPolling = <
 
 				transactionPromiEvent.emit('confirmation', {
 					confirmations: format({ format: 'uint' }, confirmations, returnFormat),
-					receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
+					receipt: format(
+						customTransactionReceiptSchema ?? transactionReceiptSchema,
+						transactionReceipt,
+						returnFormat,
+					),
 					latestBlockHash: format(
 						{ format: 'bytes32' },
 						nextBlock.hash as Bytes,

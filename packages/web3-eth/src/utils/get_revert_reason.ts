@@ -16,7 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context } from 'web3-core';
-import { ContractExecutionError, Eip838ExecutionError, InvalidResponseError , MultipleErrors } from 'web3-errors';
+import {
+	ContractExecutionError,
+	Eip838ExecutionError,
+	InvalidResponseError,
+	MultipleErrors,
+} from 'web3-errors';
 import { decodeContractErrorData, isAbiErrorFragment } from 'web3-eth-abi';
 import {
 	AbiErrorFragment,
@@ -80,7 +85,7 @@ export async function getRevertReason<
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
 	contractAbi?: ContractAbi,
-	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ): Promise<undefined | RevertReason | RevertReasonWithCustomError | string> {
 	try {
 		await call(web3Context, transaction, web3Context.defaultBlock, returnFormat);
