@@ -1,6 +1,6 @@
 {
 	"name": "web3",
-	"version": "4.7.0",
+	"version": "4.8.0",
 	"description": "Ethereum JavaScript API",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -40,7 +40,7 @@
 		"build:web": "npx webpack",
 		"build:web:analyze": "npx webpack --config ./webpack.analyze.js",
 		"build:check": "node -e \"require('./lib')\"",
-		"lint": "eslint --ext .js,.ts .",
+		"lint": "eslint --cache --cache-strategy content --ext .ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
@@ -88,10 +88,10 @@
 	"dependencies": {
 		"web3-core": "^4.3.2",
 		"web3-errors": "^1.1.4",
-		"web3-eth": "^4.5.0",
-		"web3-eth-abi": "^4.2.0",
-		"web3-eth-accounts": "^4.1.1",
-		"web3-eth-contract": "^4.3.0",
+		"web3-eth": "^4.6.0",
+		"web3-eth-abi": "^4.2.1",
+		"web3-eth-accounts": "^4.1.2",
+		"web3-eth-contract": "^4.4.0",
 		"web3-eth-ens": "^4.2.0",
 		"web3-eth-iban": "^4.0.7",
 		"web3-eth-personal": "^4.0.8",
@@ -99,8 +99,8 @@
 		"web3-providers-http": "^4.1.0",
 		"web3-providers-ws": "^4.0.7",
 		"web3-rpc-methods": "^1.2.0",
-		"web3-types": "^1.5.0",
-		"web3-utils": "^4.2.2",
+		"web3-types": "^1.6.0",
+		"web3-utils": "^4.2.3",
 		"web3-validator": "^2.0.5"
 	}
 }

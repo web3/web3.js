@@ -28,7 +28,7 @@
 	},
 	"main": "ts.js",
 	"scripts": {
-		"lint": "eslint --ext .js,.ts .",
+		"lint": "eslint --cache --cache-strategy content --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'"
 	},

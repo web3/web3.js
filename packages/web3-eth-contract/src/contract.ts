@@ -163,13 +163,13 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 } & { [key: string]: ContractBoundMethod<any> };
 
 export type ContractMethodSend = Web3PromiEvent<
-	FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
-	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	FormatType<TransactionReceipt, DataFormat>,
+	SendTransactionEvents<DataFormat>
 >;
 export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
 	// eslint-disable-next-line no-use-before-define
 	Contract<Abi>,
-	SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	SendTransactionEvents<DataFormat>
 >;
 
 /**
@@ -334,24 +334,24 @@ const contractSubscriptions = {
  * Decodes the given ABI-encoded data, revealing both the method name and the parameters used in the smart contract call.
  * This function reverses the encoding process happens at the method `encodeABI`.
  * It's particularly useful for debugging and understanding the interactions with and between smart contracts.
- * 
+ *
  * #### Parameters
- * 
+ *
  * - `data` **HexString**: The string of ABI-encoded data that needs to be decoded. This should include the method signature and the encoded parameters.
- * 
+ *
  * #### Returns
- * 
+ *
  * - **Object**: This object combines both the decoded parameters and the method name in a readable format. Specifically, the returned object contains:
  *   - `__method__` **String**: The name of the contract method, reconstructed from the ABI.
  *   - `__length__` **Number**: The number of parameters decoded.
  *   - Additional properties representing each parameter by name, as well as their position and values.
- * 
+ *
  * #### Example
- * 
+ *
  * Given an ABI-encoded string from a transaction, you can decode this data to identify the method called and the parameters passed.
  * Here's a simplified example:
- * 
- * 
+ *
+ *
  * ```typescript
  * const GreeterAbi = [
  * 	{
@@ -368,11 +368,11 @@ const contractSubscriptions = {
  * 	},
  * ];
  * const contract = new Contract(GreeterAbi); // Initialize with your contract's ABI
- * 
+ *
  * // The ABI-encoded data string for "setGreeting('Hello World')"
  * const encodedData =
  * 	'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b48656c6c6f20576f726c64000000000000000000000000000000000000000000';
- * 
+ *
  * try {
  * 	const decoded = contract.decodeMethodData(encodedData);
  * 	console.log(decoded.__method__); // Outputs: "setGreeting(string)"
@@ -388,7 +388,7 @@ const contractSubscriptions = {
  * 	console.error(error);
  * }
  * ```
- * 
+ *
 
  * ### createAccessList
  * This will create an access list a method execution will access when executed in the EVM.
@@ -513,7 +513,11 @@ export class Contract<Abi extends ContractAbi>
 	);
 	public constructor(
 		jsonInterface: Abi,
-		addressOrOptionsOrContext?: Address | ContractInitOptions | Web3ContractContext | Web3Context,
+		addressOrOptionsOrContext?:
+			| Address
+			| ContractInitOptions
+			| Web3ContractContext
+			| Web3Context,
 		optionsOrContextOrReturnFormat?:
 			| ContractInitOptions
 			| Web3ContractContext
@@ -539,14 +543,20 @@ export class Contract<Abi extends ContractAbi>
 		}
 
 		let provider;
-		if (typeof addressOrOptionsOrContext === 'object' && 'provider' in addressOrOptionsOrContext) {
+		if (
+			typeof addressOrOptionsOrContext === 'object' &&
+			'provider' in addressOrOptionsOrContext
+		) {
 			provider = addressOrOptionsOrContext.provider;
 		} else if (
 			typeof optionsOrContextOrReturnFormat === 'object' &&
 			'provider' in optionsOrContextOrReturnFormat
 		) {
 			provider = optionsOrContextOrReturnFormat.provider;
-		} else if (typeof contextOrReturnFormat === 'object' && 'provider' in contextOrReturnFormat) {
+		} else if (
+			typeof contextOrReturnFormat === 'object' &&
+			'provider' in contextOrReturnFormat
+		) {
 			provider = contextOrReturnFormat.provider;
 		} else {
 			provider = Contract.givenProvider;
@@ -583,12 +593,16 @@ export class Contract<Abi extends ContractAbi>
 			? contextOrReturnFormat
 			: isDataFormat(optionsOrContextOrReturnFormat)
 			? optionsOrContextOrReturnFormat
-			: returnFormat ?? DEFAULT_RETURN_FORMAT;
+			: returnFormat ?? this.defaultReturnFormat;
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
 		this.config.contractDataInputFill =
 			(options as ContractInitOptions)?.dataInputFill ?? this.config.contractDataInputFill;
 		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
+
+		if (this.defaultReturnFormat !== returnDataFormat) {
+			this.defaultReturnFormat = returnDataFormat;
+		}
 
 		if (!isNullish(address)) {
 			this._parseAndSetAddress(address, returnDataFormat);
@@ -872,7 +886,7 @@ export class Contract<Abi extends ContractAbi>
 			},
 			estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 				options?: PayableCallOptions,
-				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+				returnFormat: ReturnFormat = this.defaultReturnFormat as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
 				return this._contractMethodEstimateGas({
@@ -887,7 +901,11 @@ export class Contract<Abi extends ContractAbi>
 				encodeMethodABI(
 					abi as AbiFunctionFragment,
 					args as unknown[],
-					format({ format: 'bytes' }, deployData as Bytes, DEFAULT_RETURN_FORMAT),
+					format(
+						{ format: 'bytes' },
+						deployData as Bytes,
+						this.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
+					),
 				),
 			decodeData: (data: HexString) => ({
 				...decodeMethodParams(
@@ -979,7 +997,7 @@ export class Contract<Abi extends ContractAbi>
 			? param1
 			: isDataFormat(param2)
 			? param2
-			: param3 ?? DEFAULT_RETURN_FORMAT;
+			: param3 ?? this.defaultReturnFormat;
 
 		const abi =
 			eventName === 'allEvents' || eventName === ALL_EVENTS
@@ -1018,7 +1036,8 @@ export class Contract<Abi extends ContractAbi>
 					if (Array.isArray(filter[key])) {
 						return (filter[key] as Numbers[]).some(
 							(v: Numbers) =>
-								String(log.returnValues[key]).toUpperCase() === String(v).toUpperCase(),
+								String(log.returnValues[key]).toUpperCase() ===
+								String(v).toUpperCase(),
 						);
 					}
 
@@ -1028,7 +1047,10 @@ export class Contract<Abi extends ContractAbi>
 						if (hashedIndexedString === String(log.returnValues[key])) return true;
 					}
 
-					return String(log.returnValues[key]).toUpperCase() === String(filter[key]).toUpperCase();
+					return (
+						String(log.returnValues[key]).toUpperCase() ===
+						String(filter[key]).toUpperCase()
+					);
 				});
 			});
 		}
@@ -1036,7 +1058,10 @@ export class Contract<Abi extends ContractAbi>
 		return decodedLogs;
 	}
 
-	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
+	private _parseAndSetAddress(
+		value?: Address,
+		returnFormat: DataFormat = this.defaultReturnFormat,
+	) {
 		this._address = value
 			? toChecksumAddress(format({ format: 'address' }, value, returnFormat))
 			: value;
@@ -1059,7 +1084,7 @@ export class Contract<Abi extends ContractAbi>
 
 	private _parseAndSetJsonInterface(
 		abis: ContractAbi,
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+		returnFormat: DataFormat = this.defaultReturnFormat,
 	) {
 		this._functions = {};
 		this._methods = {} as ContractMethodsInterface<Abi>;
@@ -1068,7 +1093,9 @@ export class Contract<Abi extends ContractAbi>
 		let result: ContractAbi = [];
 
 		const functionsAbi = abis.filter(abi => abi.type !== 'error');
-		const errorsAbi = abis.filter(abi => isAbiErrorFragment(abi)) as unknown as AbiErrorFragment[];
+		const errorsAbi = abis.filter(abi =>
+			isAbiErrorFragment(abi),
+		) as unknown as AbiErrorFragment[];
 
 		for (const a of functionsAbi) {
 			const abi: Mutable<AbiFragment & { signature: HexString }> = {
@@ -1084,7 +1111,9 @@ export class Contract<Abi extends ContractAbi>
 
 				// make constant and payable backwards compatible
 				abi.constant =
-					abi.stateMutability === 'view' ?? abi.stateMutability === 'pure' ?? abi.constant;
+					abi.stateMutability === 'view' ??
+					abi.stateMutability === 'pure' ??
+					abi.constant;
 
 				abi.payable = abi.stateMutability === 'payable' ?? abi.payable;
 				this._overloadedMethodAbis.set(abi.name, [
@@ -1092,10 +1121,10 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 				]);
 				const abiFragment = this._overloadedMethodAbis.get(abi.name) ?? [];
-				const contractMethod = this._createContractMethod<typeof abiFragment, AbiErrorFragment>(
-					abiFragment,
-					errorsAbi,
-				);
+				const contractMethod = this._createContractMethod<
+					typeof abiFragment,
+					AbiErrorFragment
+				>(abiFragment, errorsAbi);
 
 				const exactContractMethod = this._createContractMethod<
 					typeof abiFragment,
@@ -1108,7 +1137,8 @@ export class Contract<Abi extends ContractAbi>
 				};
 
 				// We don't know a particular type of the Abi method so can't type check
-				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] = contractMethod as never;
+				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] =
+					contractMethod as never;
 
 				// We don't know a particular type of the Abi method so can't type check
 				this._methods[methodName as keyof ContractMethodsInterface<Abi>] =
@@ -1184,7 +1214,10 @@ export class Contract<Abi extends ContractAbi>
 				for (const _abi of arrayOfAbis) {
 					try {
 						abiParams = this._getAbiParams(_abi, params);
-						validator.validate(_abi.inputs as unknown as ValidationSchemaInput, abiParams);
+						validator.validate(
+							_abi.inputs as unknown as ValidationSchemaInput,
+							abiParams,
+						);
 						applicableMethodAbi.push(_abi);
 					} catch (e) {
 						errors.push(e as Web3ValidationErrorObject);
@@ -1200,9 +1233,9 @@ export class Contract<Abi extends ContractAbi>
 						} compatible methods: ${JSON.stringify(
 							applicableMethodAbi.map(
 								m =>
-									`${(m as { methodNameWithInputs: string }).methodNameWithInputs} (signature: ${
-										(m as { signature: string }).signature
-									})`,
+									`${
+										(m as { methodNameWithInputs: string }).methodNameWithInputs
+									} (signature: ${(m as { signature: string }).signature})`,
 							),
 						)} \n\tThe first one will be used: ${
 							(methodAbi as { methodNameWithInputs: string }).methodNameWithInputs
@@ -1224,14 +1257,22 @@ export class Contract<Abi extends ContractAbi>
 				call: async (
 					options?: PayableCallOptions | NonPayableCallOptions,
 					block?: BlockNumberOrTag,
-				) => this._contractMethodCall(methodAbi, abiParams, internalErrorsAbis, options, block),
+				) =>
+					this._contractMethodCall(
+						methodAbi,
+						abiParams,
+						internalErrorsAbis,
+						options,
+						block,
+					),
 
 				send: (options?: PayableTxOptions | NonPayableTxOptions): ContractMethodSend =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
 
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: PayableCallOptions | NonPayableCallOptions,
-					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+					returnFormat: ReturnFormat = this
+						.defaultReturnFormat as unknown as ReturnFormat,
 				) =>
 					this._contractMethodEstimateGas({
 						abi: methodAbi,
@@ -1289,7 +1330,12 @@ export class Contract<Abi extends ContractAbi>
 			},
 		});
 		try {
-			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);
+			const result = await call(
+				this,
+				tx,
+				block,
+				this.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
+			);
 			return decodeMethodReturn(abi, result);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
@@ -1320,7 +1366,7 @@ export class Contract<Abi extends ContractAbi>
 		});
 
 		try {
-			return createAccessList(this, tx, block, DEFAULT_RETURN_FORMAT);
+			return createAccessList(this, tx, block, this.defaultReturnFormat);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
@@ -1350,7 +1396,7 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+		const transactionToSend = sendTransaction(this, tx, this.defaultReturnFormat, {
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
 			contractAbi: this._jsonInterface,
@@ -1380,10 +1426,10 @@ export class Contract<Abi extends ContractAbi>
 		const tx = getSendTxParams({
 			abi,
 			params,
-			options: { ...options, dataInputFill: this.config.contractDataInputFill },
+			options: { ...options, dataInputFill: this.contractDataInputFill },
 			contractOptions: modifiedContractOptions,
 		});
-		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+		return sendTransaction(this, tx, this.defaultReturnFormat, {
 			transactionResolver: receipt => {
 				if (receipt.status === BigInt(0)) {
 					throw new Web3ContractError("code couldn't be stored", receipt);
@@ -1423,16 +1469,20 @@ export class Contract<Abi extends ContractAbi>
 			options: { ...options, dataInputFill: this.config.contractDataInputFill },
 			contractOptions: contractOptions ?? this.options,
 		});
-		return estimateGas(this, tx, BlockTags.LATEST, returnFormat);
+		return estimateGas(this, tx, BlockTags.LATEST, returnFormat ?? this.defaultReturnFormat);
 	}
 
 	// eslint-disable-next-line class-methods-use-this
 	private _createContractEvent(
 		abi: AbiEventFragment & { signature: HexString },
-		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+		returnFormat: DataFormat = this.defaultReturnFormat,
 	): ContractBoundEvent {
 		return (...params: unknown[]) => {
-			const { topics, fromBlock } = encodeEventABI(this.options, abi, params[0] as EventParameters);
+			const { topics, fromBlock } = encodeEventABI(
+				this.options,
+				abi,
+				params[0] as EventParameters,
+			);
 			const sub = new LogsSubscription(
 				{
 					address: this.options.address,
@@ -1442,7 +1492,10 @@ export class Contract<Abi extends ContractAbi>
 				},
 				{
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					subscriptionManager: this.subscriptionManager as Web3SubscriptionManager<unknown, any>,
+					subscriptionManager: this.subscriptionManager as Web3SubscriptionManager<
+						unknown,
+						any
+					>,
 					returnFormat,
 				},
 			);
@@ -1455,7 +1508,10 @@ export class Contract<Abi extends ContractAbi>
 						}
 					})
 					.catch((error: Error) => {
-						sub.emit('error', new SubscriptionError('Failed to get past events.', error));
+						sub.emit(
+							'error',
+							new SubscriptionError('Failed to get past events.', error),
+						);
 					});
 			}
 			this.subscriptionManager?.addSubscription(sub).catch((error: Error) => {
