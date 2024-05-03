@@ -165,7 +165,7 @@ export class Web3RequestManager<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIRequest<API, Method>): Promise<ResponseType> {
-		let requestObj = { ...request };
+		const requestObj = { ...request };
 
 		let response = await this._sendRequest<Method, ResponseType>(requestObj);
 
@@ -210,7 +210,7 @@ export class Web3RequestManager<
 		) as JsonRpcPayload;
 
 		if (!isNullish(this.middleware)) {
-			payload = (await this.middleware.processRequest(payload)) as JsonRpcPayload;
+			payload = (await this.middleware.processRequest(payload));
 		}
 		if (isWeb3Provider(provider)) {
 			let response;
