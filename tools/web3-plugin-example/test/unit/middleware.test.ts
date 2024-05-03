@@ -15,25 +15,26 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Web3, { JsonRpcResponse, TransactionCall } from 'web3';
+import Web3, { TransactionCall } from 'web3';
+import { jsonRpc } from 'web3-utils';
 import { CustomRpcMethodsPlugin } from '../../src/custom_rpc_methods';
-
 
 describe('CustomRpcMethodsPlugin Middleware', () => {
 	it('should modify request and response using middleware plugin', async () => {
-
 		const web3 = new Web3('http://127.0.0.1:8545');
 		const plugin = new CustomRpcMethodsPlugin(true);
 
 		// Test mocks and spy - code block start
-		const expectedResponse: JsonRpcResponse<string> = {
+		const expectedResponse = {
 			jsonrpc: '2.0',
 			id: 1,
-			result: '0x0',
-		  };
-	
-		const mockSendRequest = jest.spyOn(web3.requestManager as any, '_sendRequest');
-		mockSendRequest.mockResolvedValue(expectedResponse);
+			result: '0x6a756e616964',
+		};
+
+		jsonRpc.setRequestIdStart(0);
+
+		const mockRequest = jest.spyOn(web3.provider as any, 'request');
+		mockRequest.mockResolvedValue(expectedResponse);
 		// Test mocks and spy - code block end
 
 		web3.registerPlugin(plugin);
@@ -52,15 +53,16 @@ describe('CustomRpcMethodsPlugin Middleware', () => {
 		expect(result).toBe('0x6a756e616964'); // result modified by response processor , so its 0x6a756e616964 instead of 0x0
 
 		const expectedCall = {
-		   method: "eth_call",
-		   params:  [
-		      {...transaction},
-		     "latest",
-		     "0x0", // added by middleware by request processor
-		     "0x1", // added by middleware by request processor
-		   ],
-		 };
-		expect(mockSendRequest).toHaveBeenCalledWith(expectedCall);
-
+			jsonrpc: '2.0',
+			id: 1,
+			method: 'eth_call',
+			params: [
+				{ ...transaction },
+				'latest',
+				'0x0', // added by middleware by request processor
+				'0x1', // added by middleware by request processor
+			],
+		};
+		expect(mockRequest).toHaveBeenCalledWith(expectedCall);
 	});
 });
