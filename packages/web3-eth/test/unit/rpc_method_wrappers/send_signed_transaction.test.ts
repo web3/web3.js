@@ -53,7 +53,7 @@ describe('sendTransaction', () => {
 				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
 			).mockResolvedValueOnce(expectedTransactionReceipt);
 
-			const checkRevertBeforeSendingSpy = jest.fn().mockImplementation((transaction) => {
+			const checkRevertBeforeSendingSpy = jest.fn().mockImplementation(transaction => {
 				expect(transaction).toBeDefined();
 
 				// verify signature part is removed before sending to revert check function
@@ -78,7 +78,6 @@ describe('sendTransaction', () => {
 			);
 
 			expect(checkRevertBeforeSendingSpy).toHaveBeenCalledTimes(1);
-			
 		},
 	);
 
@@ -300,6 +299,7 @@ describe('sendTransaction', () => {
 				formattedTransactionReceipt,
 				expectedTransactionHash,
 				DEFAULT_RETURN_FORMAT,
+				undefined,
 			);
 		},
 	);

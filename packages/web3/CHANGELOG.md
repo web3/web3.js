@@ -197,8 +197,73 @@ Documentation:
 
 -   Added EIP-6963 utility function `requestEIP6963Providers` for multi provider discovery ( other details are in root changelog )
 
-## [Unreleased]
+
+## [4.7.0]
+
+### added
+
+#### web3-eth-contract
+
+-   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+
+#### web3-eth-ens
+
+- Added function getText and getName in ENS and resolver classes (#6914)
+
+### fixed
+
+#### web3-validator
+
+- Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
+
+#### web3-utils
+
+- fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
+
+## [4.8.0]
 
 ### Changed
 
--   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+#### web3-eth-abi
+
+-   Dependencies updated
+
+#### web3-eth-accounts
+
+-   Dependencies updated
+
+### Fixed
+
+#### web3-eth-contract
+
+-	Fix an issue with smart contract function overloading (#6922)
+
+#### web3-utils
+
+- fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
+- fixed isUint8Array not returning true for Buffer (#6957)
+
+
+### Added
+
+#### web3-eth-contract
+
+-	Added a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)
+-	Added contract.deploy(...).decodeData(...) and contract.decodeMethodData(...) that decode data based on the ABI (#6950)
+
+#### web3-eth
+
+-   method `getBlock` now includes properties of eip 4844, 4895, 4788 when returning block (#6933) 
+-   update type `withdrawalsSchema`, `blockSchema` and `blockHeaderSchema` schemas to include properties of eip 4844, 4895, 4788 (#6933)
+
+
+#### web3-types
+
+-   Added `signature` to type `AbiFunctionFragment` (#6922)
+-   update type `Withdrawals`, `block` and `BlockHeaderOutput` to include properties of eip 4844, 4895, 4788 (#6933)
+
+## [Unreleased]
+
+### added
+
+-   Updated type `Web3EthInterface.accounts` to includes `privateKeyToAccount`,`privateKeyToAddress`,and `privateKeyToPublicKey` (#6762)

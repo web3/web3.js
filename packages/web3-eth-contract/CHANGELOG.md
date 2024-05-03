@@ -328,7 +328,6 @@ Documentation:
 -   Added `dataInputFill` as a ContractInitOption, allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider. (#6355)
 -   Added to `Web3Config` property `contractDataInputFill` allowing users to have the choice using property `data`, `input` or `both` for contract methods to be sent to the RPC provider when creating contracts. (#6377)
 
-
 ## [4.1.1]
 
 ### Changed
@@ -345,27 +344,44 @@ Documentation:
 
 ### Fixed
 
--	Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
+-   Will populate `data` for transactions in contract for metamask provider instead of `input` (#6534)
 
 ## [4.1.4]
 
 ### Changed
 
--	By default, contracts will fill `data` instead of `input` within method calls (#6622)
+-   By default, contracts will fill `data` instead of `input` within method calls (#6622)
 
 ## [4.2.0]
 
 ### Changed
 
--	Allow the `deploy` function to accept parameters, even when no ABI was provided to the `Contract`(#6635)
+-   Allow the `deploy` function to accept parameters, even when no ABI was provided to the `Contract`(#6635)
 
 ### Fixed
 
--	Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
--	Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
+-   Fix and error that happen when trying to get past events by calling `contract.getPastEvents` or `contract.events.allEvents()`, if there is no matching events. (#6647)
+-   Fixed: The Contract is not using the context wallet passed if context was passed at constructor. (#6661)
+
+## [4.3.0]
+
+### Added
+
+-   Types `ContractDeploySend`, `ContractMethodSend`, `Web3PromiEvent` was exported (#6883)
+
+## [4.4.0]
+
+### Fixed
+
+-   Fix an issue with smart contract function overloading (#6922)
+
+### Added
+
+-   Added a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)
+-   Added contract.deploy(...).decodeData(...) and contract.decodeMethodData(...) that decode data based on the ABI (#6950)
 
 ## [Unreleased]
 
 ### Added
 
--	Types `ContractDeploySend`, `ContractMethodSend` was added (#6883)
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)

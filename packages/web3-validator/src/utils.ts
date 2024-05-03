@@ -141,7 +141,7 @@ export const abiSchemaToJsonSchema = (
 		// e.g. {name: 'a', type: 'uint'}
 		if (isAbiParameterSchema(abi)) {
 			abiType = abi.type;
-			abiName = abi.name;
+			abiName = abi.name || `${level}/${index}`;
 			abiComponents = abi.components as FullValidationSchema;
 			// If its short form string value e.g. ['uint']
 		} else if (typeof abi === 'string') {

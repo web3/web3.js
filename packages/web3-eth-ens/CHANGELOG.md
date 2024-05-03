@@ -147,8 +147,13 @@ Documentation:
 
 -   Added function `setAddress` in ENS and Resolver classes (#5956)
 
-## [Unreleased]
+## [4.2.0]
 
 ### Add
 
-- Added function getText and getName in ENS and resolver classes
+- Added function getText and getName in ENS and resolver classes (#6914)
+
+## [Unreleased]
+
+### Added
+-   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)

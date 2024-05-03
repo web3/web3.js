@@ -162,8 +162,14 @@ Documentation:
 
 -   Fixed an issue with detecting Uint8Array (#6486)
 
-## [Unreleased]
+## [2.0.5]
 
 ### Fixed
 
 - Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
+
+## [Unreleased]
+
+### Fixed
+
+- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings.

@@ -154,6 +154,22 @@ export const encodeMethodABI = (
 	return `${encodeFunctionSignature(abi)}${params}`;
 };
 
+export const decodeMethodParams = (
+	abi: AbiFunctionFragment | AbiConstructorFragment,
+	data: HexString,
+	methodSignatureProvided = true,
+) => {
+	const value =
+		methodSignatureProvided && data && data.length >= 10 && data.startsWith('0x')
+			? data.slice(10)
+			: data;
+	if (!abi.inputs) {
+		throw new Web3ContractError('No inputs found in the ABI');
+	}
+	const result = decodeParameters([...abi.inputs], value);
+	return result;
+};
+
 export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {
 	// If it was constructor then we need to return contract address
 	if (abi.type === 'constructor') {
