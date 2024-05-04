@@ -57,12 +57,44 @@ import { Web3 } from "web3";
 
 const web3 = new Web3("https://rpc2.sepolia.org");
 
+//WETH token in Sepolia https://sepolia.etherscan.io/address/0xfff9976782d46cc05630d1f6ebab18b2324d6b14#code
+const ADDRESS_WETH_SEPOLIA = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14";
+const ABI = [
+  {
+    constant: false,
+    inputs: [
+      {
+        name: "dst",
+        type: "address",
+      },
+      {
+        name: "wad",
+        type: "uint256",
+      },
+    ],
+    name: "transfer",
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
 async function transfer() {
   //initialize wallet
-  const wallet = web3.eth.wallet.add("PRIVATE_KEY");
+  const wallet = web3.eth.accounts.wallet.add("YOUR_PRIVATE_KEY"); //make sure you have WETH tokens in the Sepolia network
+  //you can swap Sepolia tokens for WETH here https://app.uniswap.org/swap?chain=sepolia
 
-  //initialize contract
-  const myERC20 = new web3.eth.Contract(ABI, ADDRESS);
+  //initialize WETH contract in sepolia
+  const myERC20 = new web3.eth.Contract(ABI, ADDRESS_WETH_SEPOLIA);
+
+  const TO = "0xEA9eEca67682Cd9c6Ce3DdD1681049D7A897289F"; //address to send the tokens to
+  const VALUE = 1; //wei value, dont forget to multiply by decimals
 
   //send transfer and specify the type
   const txReceipt = await myERC20.methods.transfer(TO, VALUE).send({
@@ -72,6 +104,7 @@ async function transfer() {
   });
 
   console.log(txReceipt.transactionHash);
+  //=> 0x5f2087c22166f3a1909c40ce537dd564dc3d4c70c5be02f35c6406a628123b16
 }
 
 transfer();
@@ -193,12 +226,44 @@ import { Web3 } from "web3";
 
 const web3 = new Web3("https://rpc2.sepolia.org");
 
+//WETH token in Sepolia https://sepolia.etherscan.io/address/0xfff9976782d46cc05630d1f6ebab18b2324d6b14#code
+const ADDRESS_WETH_SEPOLIA = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14";
+const ABI = [
+  {
+    constant: false,
+    inputs: [
+      {
+        name: "dst",
+        type: "address",
+      },
+      {
+        name: "wad",
+        type: "uint256",
+      },
+    ],
+    name: "transfer",
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
 async function transfer() {
   //initialize wallet
-  const wallet = web3.eth.wallet.add("PRIVATE_KEY");
+  const wallet = web3.eth.accounts.wallet.add("YOUR_PRIVATE_KEY"); //make sure you have WETH tokens in the Sepolia network
+  //you can swap Sepolia tokens for WETH here https://app.uniswap.org/swap?chain=sepolia
 
-  //initialize contract
-  const myERC20 = new web3.eth.Contract(ABI, ADDRESS);
+  //initialize WETH contract in sepolia
+  const myERC20 = new web3.eth.Contract(ABI, ADDRESS_WETH_SEPOLIA);
+
+  const TO = "0xEA9eEca67682Cd9c6Ce3DdD1681049D7A897289F"; //address to send the tokens to
+  const VALUE = 1; //wei value, dont forget to multiply by decimals
 
   //send transfer and specify the type
   const txReceipt = await myERC20.methods.transfer(TO, VALUE).send({
@@ -208,6 +273,7 @@ async function transfer() {
   });
 
   console.log(txReceipt.transactionHash);
+  //=> 0x174bc88023be4af431fad1693a59f7a41135238510cdcd00f15f6409b5471d77
 }
 
 transfer();
