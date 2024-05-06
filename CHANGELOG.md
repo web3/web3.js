@@ -2448,6 +2448,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ### Added
 
+#### web3
+
+-   Updated type `Web3EthInterface.accounts` to includes `privateKeyToAccount`,`privateKeyToAddress`,and `privateKeyToPublicKey` (#6762)
+
 #### web3-core
 
 -   `defaultReturnFormat` was added to the configuration options. (#6947)
@@ -2486,6 +2490,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 
 ### Changed
+
+#### web3-core
+
+-   Interface `RequestManagerMiddleware` was changed (#7003)
 
 #### web3-eth
 
