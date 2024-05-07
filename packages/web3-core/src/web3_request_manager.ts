@@ -267,18 +267,18 @@ export class Web3RequestManager<
 							legacy: true,
 							error: false,
 						}),
-					);
+					);		
 				const result = provider.request<ResponseType>(
-					payload,
-					// a callback that is expected to be called after getting the response:
-					(err, response) => {
-						if (err) {
-							return rejectWithError(err);
-						}
-
-						return resolveWithResponse(response);
-					},
-				);
+							payload,
+							// a callback that is expected to be called after getting the response:
+							(err, response) => {
+								if (err) {
+									return rejectWithError(err);
+								}
+		
+								return resolveWithResponse(response);
+							},
+						);
 				// Some providers, that follow a previous drafted version of EIP1193, has a `request` function
 				//	that is not defined as `async`, but it returns a promise.
 				// Such providers would not be picked with if(isEIP1193Provider(provider)) above
@@ -287,10 +287,24 @@ export class Web3RequestManager<
 				// So check if the returned result is a Promise, and resolve with it accordingly.
 				// Note: in this case we expect the callback provided above to never be called.
 				if (isPromise(result)) {
+					// turn this into an async/await, promise doesnt work
 					const responsePromise = result as unknown as Promise<
 						JsonRpcResponse<ResponseType>
 					>;
-					responsePromise.then(resolveWithResponse).catch(rejectWithError);
+					responsePromise.then(
+						res =>
+							this._processJsonRpcResponse(payload, res, {
+								legacy: true,
+								error: false,
+							}) as JsonRpcResponseWithResult<ResponseType>,
+					)
+					.catch(error =>
+						this._processJsonRpcResponse(
+							payload,
+							error as JsonRpcResponse<ResponseType, unknown>,
+							{ legacy: true, error: true },
+						),
+					);;
 				}
 			});
 		}
@@ -298,7 +312,7 @@ export class Web3RequestManager<
 		// TODO: This could be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
 			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject): void => {
-				provider.send<ResponseType>(payload, (err, response) => {
+				const res = provider.send<ResponseType>(payload, (err, response) => {
 					if (err) {
 						return reject(
 							this._processJsonRpcResponse(
@@ -326,6 +340,7 @@ export class Web3RequestManager<
 						}),
 					);
 				});
+				return res;
 			});
 		}
 
