@@ -15,130 +15,163 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, JsonRpcResponse, Web3APIMethod, Web3APIRequest, Web3APIReturnType } from 'web3-types';
+import {
+	EthExecutionAPI,
+	JsonRpcPayload,
+	JsonRpcRequest,
+	JsonRpcResponse,
+	Web3APIMethod,
+	Web3APIReturnType,
+} from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { RequestManagerMiddleware } from '../../src/types';
 import { Web3RequestManager } from '../../src/web3_request_manager';
 
 class Web3Middleware<API> implements RequestManagerMiddleware<API> {
+	// eslint-disable-next-line class-methods-use-this
+	public async processRequest<ParamType = unknown[]>(
+		request: JsonRpcPayload<ParamType>,
+	): Promise<JsonRpcPayload<ParamType>> {
+		// Implement the processRequest logic here
 
-  // eslint-disable-next-line class-methods-use-this
-  public async processRequest<Method extends Web3APIMethod<API>>(
-    request: Web3APIRequest<API, Method>
-  ): Promise<Web3APIRequest<API, Method>> {
-    // Implement the processRequest logic here
+		let requestObj = { ...request };
+		if (
+			(requestObj as JsonRpcRequest<ParamType>).method === 'eth_call' &&
+			Array.isArray((requestObj as JsonRpcRequest<ParamType>).params)
+		) {
+			(requestObj as JsonRpcRequest) = {
+				...(requestObj as JsonRpcRequest),
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				params: [...((requestObj as JsonRpcRequest).params ?? []), '0x0', '0x1'],
+			};
+		}
 
-    let requestObj = {...request};
-    if (request.method === 'eth_call' && Array.isArray(request.params)) {
-      requestObj = {
-        ...requestObj,
-        params: [...request.params, '0x0', '0x1'],
-      };
-    }
+		return Promise.resolve(requestObj as JsonRpcPayload<ParamType>);
+	}
 
-    return Promise.resolve(requestObj);
-  }
+	// eslint-disable-next-line class-methods-use-this
+	public async processResponse<
+		Method extends Web3APIMethod<API>,
+		ResponseType = Web3APIReturnType<API, Method>,
+	>(response: JsonRpcResponse<ResponseType>): Promise<JsonRpcResponse<ResponseType>> {
+		let responseObj = { ...response };
+		if (!jsonRpc.isBatchResponse(responseObj) && responseObj.id === 1) {
+			responseObj = {
+				...responseObj,
+				result: '0x6a756e616964' as any,
+			};
+		}
 
-  // eslint-disable-next-line class-methods-use-this
-  public async processResponse<
-    Method extends Web3APIMethod<API>,
-    ResponseType = Web3APIReturnType<API, Method>
-  >(
-    response: JsonRpcResponse<ResponseType>
-  ): Promise<JsonRpcResponse<ResponseType>> {
-   
-    let responseObj = {...response};
-    if (!jsonRpc.isBatchResponse(responseObj) && responseObj.id === 1) {
-      responseObj = {
-        ...responseObj,
-        result: '0x6a756e616964' as any,
-      };
-    }
-
-    return Promise.resolve(responseObj);
-  }
+		return Promise.resolve(responseObj);
+	}
 }
 
 describe('Request Manager Middleware', () => {
-  let requestManagerMiddleware: RequestManagerMiddleware<EthExecutionAPI>;
+	let requestManagerMiddleware: RequestManagerMiddleware<EthExecutionAPI>;
 
-  beforeAll(() => { 
-    requestManagerMiddleware = {
-      processRequest: jest.fn(async <Method extends Web3APIMethod<EthExecutionAPI>>(request: Web3APIRequest<EthExecutionAPI, Method>) => request),
-      processResponse: jest.fn(async <Method extends Web3APIMethod<EthExecutionAPI>, ResponseType = Web3APIReturnType<EthExecutionAPI, Method>>(response: JsonRpcResponse<ResponseType>) => response),
-    };
+	beforeAll(() => {
+		requestManagerMiddleware = {
+			processRequest: jest.fn(
+				async <ParamType = unknown[]>(request: JsonRpcPayload<ParamType>) => request,
+			),
+			processResponse: jest.fn(
+				async <
+					Method extends Web3APIMethod<EthExecutionAPI>,
+					ResponseType = Web3APIReturnType<EthExecutionAPI, Method>,
+				>(
+					response: JsonRpcResponse<ResponseType>,
+				) => response,
+			),
+		};
+	});
 
-  });
+	it('should set requestManagerMiddleware via constructor', () => {
+		const web3RequestManager1: Web3RequestManager = new Web3RequestManager<EthExecutionAPI>(
+			undefined,
+			true,
+			requestManagerMiddleware,
+		);
 
-  it('should set requestManagerMiddleware via constructor', () => {
-    const web3RequestManager1: Web3RequestManager = new Web3RequestManager<EthExecutionAPI>(undefined, true, requestManagerMiddleware);
+		expect(web3RequestManager1.middleware).toBeDefined();
+		expect(web3RequestManager1.middleware).toEqual(requestManagerMiddleware);
+	});
 
-    expect(web3RequestManager1.middleware).toBeDefined();
-    expect(web3RequestManager1.middleware).toEqual(requestManagerMiddleware);
-  });
+	it('should set requestManagerMiddleware via set method', () => {
+		const middleware2: RequestManagerMiddleware<EthExecutionAPI> =
+			new Web3Middleware<EthExecutionAPI>();
+		const web3RequestManager2: Web3RequestManager = new Web3RequestManager<EthExecutionAPI>(
+			'http://localhost:8181',
+		);
+		web3RequestManager2.setMiddleware(middleware2);
 
-  it('should set requestManagerMiddleware via set method', () => {
+		expect(web3RequestManager2.middleware).toBeDefined();
+		expect(web3RequestManager2.middleware).toEqual(middleware2);
+	});
 
-    const middleware2: RequestManagerMiddleware<EthExecutionAPI> = new Web3Middleware<EthExecutionAPI>();
-    const web3RequestManager2: Web3RequestManager = new Web3RequestManager<EthExecutionAPI>('http://localhost:8181');
-    web3RequestManager2.setMiddleware(middleware2);
+	it('should call processRequest and processResponse functions of requestManagerMiddleware', async () => {
+		const web3RequestManager3 = new Web3RequestManager<EthExecutionAPI>(
+			'http://localhost:8080',
+			true,
+			requestManagerMiddleware,
+		);
 
-    expect(web3RequestManager2.middleware).toBeDefined();
-    expect(web3RequestManager2.middleware).toEqual(middleware2);
-  });
+		const expectedResponse: JsonRpcResponse<string> = {
+			jsonrpc: '2.0',
+			id: 1,
+			result: '0x0',
+		};
 
-  it('should call processRequest and processResponse functions of requestManagerMiddleware', async () => {
+		jest.spyOn(web3RequestManager3.provider as any, 'request').mockResolvedValue(
+			expectedResponse,
+		);
 
-    const web3RequestManager3 = new Web3RequestManager<EthExecutionAPI>('http://localhost:8080', true, requestManagerMiddleware );
-    
-    const expectedResponse: JsonRpcResponse<string> = {
-        jsonrpc: '2.0',
-        id: 1,
-        result: '0x0',
-      };
+		const request = {
+			id: 1,
+			method: 'eth_call',
+			params: [],
+		};
 
-    jest.spyOn(web3RequestManager3 as any, '_sendRequest').mockResolvedValue(expectedResponse);
+		await web3RequestManager3.send(request);
 
-    const request = {
-      id: 1,
-      method: 'eth_call',
-      params: [],
-    };
+		expect(requestManagerMiddleware.processRequest).toHaveBeenCalledWith({
+			jsonrpc: '2.0',
+			...request,
+		});
+		expect(requestManagerMiddleware.processResponse).toHaveBeenCalled();
+	});
 
-    await web3RequestManager3.send(request);
+	it('should allow modification of request and response', async () => {
+		const middleware3: RequestManagerMiddleware<EthExecutionAPI> =
+			new Web3Middleware<EthExecutionAPI>();
 
-    expect(requestManagerMiddleware.processRequest).toHaveBeenCalledWith(request);
-    expect(requestManagerMiddleware.processResponse).toHaveBeenCalled();
-  });
+		const web3RequestManager3 = new Web3RequestManager<EthExecutionAPI>(
+			'http://localhost:8080',
+			true,
+			middleware3,
+		);
 
-  it('should allow modification of request and response', async () => {
+		const expectedResponse: JsonRpcResponse<string> = {
+			jsonrpc: '2.0',
+			id: 1,
+			result: '0x0',
+		};
 
-    const middleware3: RequestManagerMiddleware<EthExecutionAPI> = new Web3Middleware<EthExecutionAPI>();
-  
-    const web3RequestManager3 = new Web3RequestManager<EthExecutionAPI>('http://localhost:8080', true, middleware3);
+		const mockSendRequest = jest.spyOn(web3RequestManager3.provider as any, 'request');
+		mockSendRequest.mockResolvedValue(expectedResponse);
 
-    const expectedResponse: JsonRpcResponse<string> = {
-        jsonrpc: '2.0',
-        id: 1,
-        result: '0x0',
-      };
+		const request = {
+			id: 1,
+			method: 'eth_call',
+			params: ['0x3'],
+		};
 
-    const mockSendRequest = jest.spyOn(web3RequestManager3 as any, '_sendRequest');
-    mockSendRequest.mockResolvedValue(expectedResponse);
+		const response = await web3RequestManager3.send(request);
+		expect(response).toBe('0x6a756e616964');
 
-    const request = {
-      id: 1,
-      method: 'eth_call',
-      params: ['0x3'],
-    };
-
-    const response = await web3RequestManager3.send(request);
-    expect(response).toBe('0x6a756e616964');
-
-    expect(mockSendRequest).toHaveBeenCalledWith({
-      ...request,
-      params: [...request.params, '0x0', '0x1'],
-    });
-
-  });
+		expect(mockSendRequest).toHaveBeenCalledWith({
+			...request,
+			jsonrpc: '2.0',
+			params: [...request.params, '0x0', '0x1'],
+		});
+	});
 });

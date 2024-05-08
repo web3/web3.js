@@ -264,6 +264,6 @@ Documentation:
 
 ## [Unreleased]
 
-### added
+### Added
 
 -   Updated type `Web3EthInterface.accounts` to includes `privateKeyToAccount`,`privateKeyToAddress`,and `privateKeyToPublicKey` (#6762)

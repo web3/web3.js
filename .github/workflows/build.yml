@@ -26,7 +26,7 @@ jobs:
             - run: yarn install --ignore-scripts
             - run: npx ts-node scripts/init.ts
             - run: yarn build:cjs
-            - uses: actions/cache/save@v3
+            - uses: actions/cache/save@v4
               with:
                 path: ./
                 key: web3-${{ matrix.node }}-${{github.sha}}
@@ -39,7 +39,7 @@ jobs:
             -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
-            -   uses: actions/cache/restore@v3
+            -   uses: actions/cache/restore@v4
                 with:
                    path: ./
                    key: web3-18-${{github.sha}}
@@ -52,7 +52,7 @@ jobs:
             -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
-            -   uses: actions/cache/restore@v3
+            -   uses: actions/cache/restore@v4
                 with:
                     path: ./
                     key: web3-18-${{github.sha}}
@@ -65,12 +65,63 @@ jobs:
             -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
-            -   uses: actions/cache/restore@v3
+            -   uses: actions/cache/restore@v4
                 with:
                     path: ./
                     key: web3-18-${{github.sha}}
             -   run: npx ts-node scripts/init.ts
+            -   name: Restore eslint caches
+                uses: actions/cache/restore@v4
+                with:
+                    path: |
+                        packages/web3/.eslintcache
+                        packages/web3-core/.eslintcache
+                        packages/web3-eth/.eslintcache
+                        packages/web3-eth-abi/.eslintcache
+                        packages/web3-eth-accounts/.eslintcache
+                        packages/web3-eth-contract/.eslintcache
+                        packages/web3-eth-ens/.eslintcache
+                        packages/web3-eth-iban/.eslintcache
+                        packages/web3-eth-personal/.eslintcache
+                        packages/web3-net/.eslintcache
+                        packages/web3-providers-http/.eslintcache
+                        packages/web3-providers-ws/.eslintcache
+                        packages/web3-rpc-methods/.eslintcache
+                        packages/web3-types/.eslintcache
+                        packages/web3-utils/.eslintcache
+                        packages/web3-validator/.eslintcache
+                        tools/web3-plugin-example/.eslintcache
+                    key: ${{ runner.os }}-eslintcache
+
             -   run: yarn lint
+            -   run: gh cache delete "${{ runner.os }}-eslintcache"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                env:
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            -   name: Save eslint caches
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                uses: actions/cache/save@v4
+                with:
+                     path: |
+                        packages/web3/.eslintcache
+                        packages/web3-core/.eslintcache
+                        packages/web3-eth/.eslintcache
+                        packages/web3-eth-abi/.eslintcache
+                        packages/web3-eth-accounts/.eslintcache
+                        packages/web3-eth-contract/.eslintcache
+                        packages/web3-eth-ens/.eslintcache
+                        packages/web3-eth-iban/.eslintcache
+                        packages/web3-eth-personal/.eslintcache
+                        packages/web3-net/.eslintcache
+                        packages/web3-providers-http/.eslintcache
+                        packages/web3-providers-ws/.eslintcache
+                        packages/web3-rpc-methods/.eslintcache
+                        packages/web3-types/.eslintcache
+                        packages/web3-utils/.eslintcache
+                        packages/web3-validator/.eslintcache
+                        tools/web3-plugin-example/.eslintcache
+                     key: ${{ runner.os }}-eslintcache
 
     build-web:
         name: Build Web
@@ -80,13 +131,13 @@ jobs:
             -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
-            -   uses: actions/cache/restore@v3
+            -   uses: actions/cache/restore@v4
                 with:
                     path: ./
                     key: web3-18-${{github.sha}}
             -   name: Restore default branch stats
                 if: github.event_name != 'push'
-                uses: actions/cache/restore@v3
+                uses: actions/cache/restore@v4
                 with:
                     path: packages/web3/dist/4.x.json
                     key: web3-bundle-stats-4x-${{github.event.pull_request.base.sha}}
@@ -101,7 +152,7 @@ jobs:
                     current-stats-json-path: "packages/web3/dist/${{ github.ref_name }}.json"
                     base-stats-json-path: "packages/web3/dist/4.x.json"
             -   name: Cache default branch stats
-                uses: actions/cache/save@v3
+                uses: actions/cache/save@v4
                 if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: packages/web3/dist/${{ github.ref_name }}.json
@@ -120,7 +171,7 @@ jobs:
               with:
                   architecture: x64
                   node-version: ${{ matrix.node }}
-            - uses: actions/cache/restore@v3
+            - uses: actions/cache/restore@v4
               with:
                     path: ./
                     key: web3-${{ matrix.node }}-${{github.sha}}
@@ -142,7 +193,7 @@ jobs:
           - uses: actions/setup-node@v3
             with:
               node-version: 18
-          - uses: actions/cache/restore@v3
+          - uses: actions/cache/restore@v4
             with:
                 path: ./
                 key: web3-18-${{github.sha}}
@@ -165,7 +216,7 @@ jobs:
             -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
-            -   uses: actions/cache/restore@v3
+            -   uses: actions/cache/restore@v4
                 with:
                     path: ./
                     key: web3-18-${{github.sha}}
@@ -186,7 +237,7 @@ jobs:
                 node-version: 18
           - uses: browser-actions/setup-firefox@latest
             if: matrix.browser == 'firefox'
-          - uses: actions/cache/restore@v3
+          - uses: actions/cache/restore@v4
             with:
               path: ./
               key: web3-18-${{github.sha}}
@@ -212,7 +263,7 @@ jobs:
                 with:
                     cache: yarn
                     node-version: '18'
-            -   uses: actions/cache/restore@v3
+            -   uses: actions/cache/restore@v4
                 with:
                     path: ./
                     key: web3-18-${{github.sha}}
@@ -235,14 +286,14 @@ jobs:
             -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
-            -   uses: actions/cache/restore@v3
+            -   uses: actions/cache/restore@v4
                 with:
                     path: ./
                     key: web3-18-${{github.sha}}
                 # @octokit/core not supported on node 16, so I can't add it to the package.json
             -   run: npm install --no-package-lock --no-save --force @octokit/core@5.1.0
             -   name: Restore main branch benchmark data
-                uses: actions/cache/restore@v3
+                uses: actions/cache/restore@v4
                 with:
                     path: web3-benchmark-main.json
                     key: ${{ runner.os }}-web3-benchmark-main.json
@@ -279,8 +330,12 @@ jobs:
                     # Enable alert commit comment
                     alert-threshold: '200%'
                     comment-always: false
+            -   run: gh cache delete "${{ runner.os }}-web3-benchmark-main.json"
+                if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+                env:
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Save main branch benchmark data
-                uses: actions/cache/save@v3
+                uses: actions/cache/save@v4
                 if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
                 with:
                     path: web3-benchmark-main.json

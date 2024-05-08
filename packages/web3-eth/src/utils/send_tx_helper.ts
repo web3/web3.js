@@ -33,7 +33,7 @@ import {
 	ContractAbiWithSignature,
 } from 'web3-types';
 import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
-import { isNullish } from 'web3-validator';
+import { isNullish, JsonSchema } from 'web3-validator';
 import {
 	ContractExecutionError,
 	InvalidResponseError,
@@ -258,9 +258,11 @@ export class SendTxHelper<
 	public emitConfirmation({
 		receipt,
 		transactionHash,
+		customTransactionReceiptSchema,
 	}: {
 		receipt: ResolveType;
 		transactionHash: TransactionHash;
+		customTransactionReceiptSchema?: JsonSchema;
 	}) {
 		if (this.promiEvent.listenerCount('confirmation') > 0) {
 			watchTransactionForConfirmations<
@@ -273,6 +275,7 @@ export class SendTxHelper<
 				receipt as unknown as TransactionReceipt,
 				transactionHash,
 				this.returnFormat,
+				customTransactionReceiptSchema,
 			);
 		}
 	}

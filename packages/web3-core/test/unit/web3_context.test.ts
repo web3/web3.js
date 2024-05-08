@@ -18,7 +18,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line max-classes-per-file
 import { ExistingPluginNamespaceError } from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
-import { EthExecutionAPI, JsonRpcResponse, Web3APIMethod, Web3APIRequest, Web3APIReturnType } from 'web3-types';
+import {
+	EthExecutionAPI,
+	JsonRpcPayload,
+	JsonRpcResponse,
+	Web3APIMethod,
+	Web3APIReturnType,
+} from 'web3-types';
 import { Web3Context, Web3PluginBase } from '../../src/web3_context';
 import { Web3RequestManager } from '../../src/web3_request_manager';
 import { RequestManagerMiddleware } from '../../src/types';
@@ -69,11 +75,19 @@ describe('Web3Context', () => {
 		it('should set middleware for the request manager', () => {
 			const context = new Web3Context('http://test.com');
 
-			const middleware: RequestManagerMiddleware<EthExecutionAPI>
-			  = {
-				processRequest: jest.fn(async <Method extends Web3APIMethod<EthExecutionAPI>>(request: Web3APIRequest<EthExecutionAPI, Method>) => request),
-				processResponse: jest.fn(async <Method extends Web3APIMethod<EthExecutionAPI>, ResponseType = Web3APIReturnType<EthExecutionAPI, Method>>(response: JsonRpcResponse<ResponseType>) => response),
-			  };
+			const middleware: RequestManagerMiddleware<EthExecutionAPI> = {
+				processRequest: jest.fn(
+					async <Param = unknown[]>(request: JsonRpcPayload<Param>) => request,
+				),
+				processResponse: jest.fn(
+					async <
+						Method extends Web3APIMethod<EthExecutionAPI>,
+						ResponseType = Web3APIReturnType<EthExecutionAPI, Method>,
+					>(
+						response: JsonRpcResponse<ResponseType>,
+					) => response,
+				),
+			};
 
 			context.setRequestManagerMiddleware(middleware);
 			expect(context.requestManager.middleware).toEqual(middleware);
@@ -95,7 +109,9 @@ describe('Web3Context', () => {
 			).find(s => s.description === 'shapeMode');
 			if (symbolForShapeMode) {
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				delete (context.getContextObject().requestManager as any)._emitter[symbolForShapeMode];
+				delete (context.getContextObject().requestManager as any)._emitter[
+					symbolForShapeMode
+				];
 			}
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			(context.getContextObject().requestManager as any)._emitter = {

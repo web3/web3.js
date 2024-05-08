@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Bytes, EthExecutionAPI, Web3BaseProvider, TransactionReceipt } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { format } from 'web3-utils';
-import { isNullish } from 'web3-validator';
+import { isNullish, JsonSchema } from 'web3-validator';
 
 import {
 	TransactionMissingReceiptOrBlockHashError,
@@ -41,6 +41,7 @@ export function watchTransactionForConfirmations<
 	transactionReceipt: TransactionReceipt,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
+	customTransactionReceiptSchema?: JsonSchema,
 ) {
 	if (isNullish(transactionReceipt) || isNullish(transactionReceipt.blockHash))
 		throw new TransactionMissingReceiptOrBlockHashError({
@@ -55,7 +56,11 @@ export function watchTransactionForConfirmations<
 	// As we have the receipt, it's the first confirmation that tx is accepted.
 	transactionPromiEvent.emit('confirmation', {
 		confirmations: format({ format: 'uint' }, 1, returnFormat),
-		receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
+		receipt: format(
+			customTransactionReceiptSchema ?? transactionReceiptSchema,
+			transactionReceipt,
+			returnFormat,
+		),
 		latestBlockHash: format({ format: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
 	});
 
@@ -66,6 +71,7 @@ export function watchTransactionForConfirmations<
 			web3Context,
 			transactionReceipt,
 			transactionPromiEvent,
+			customTransactionReceiptSchema,
 			returnFormat,
 		});
 	} else {
@@ -73,6 +79,7 @@ export function watchTransactionForConfirmations<
 			web3Context,
 			transactionReceipt,
 			transactionPromiEvent,
+			customTransactionReceiptSchema,
 			returnFormat,
 		});
 	}

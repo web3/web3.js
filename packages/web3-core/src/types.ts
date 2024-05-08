@@ -15,11 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString, JsonRpcResponse, Transaction, Web3APIMethod, Web3APIRequest, Web3APIReturnType } from 'web3-types';
+import {
+	HexString,
+	JsonRpcPayload,
+	JsonRpcResponse,
+	Transaction,
+	Web3APIMethod,
+	Web3APIReturnType,
+} from 'web3-types';
 
-export type TransactionTypeParser = (
-	transaction: Transaction,
-) => HexString | undefined;
+export type TransactionTypeParser = (transaction: Transaction) => HexString | undefined;
 
 export interface Method {
 	name: string;
@@ -32,16 +37,16 @@ export interface ExtensionObject {
 }
 
 export interface RequestManagerMiddleware<API> {
-	processRequest<
-		AnotherMethod extends Web3APIMethod<API>
-	>(
-		request: Web3APIRequest<API, AnotherMethod>, 
-		options?: { [key: string]: unknown }): Promise<Web3APIRequest<API, AnotherMethod>>;
+	processRequest<ParamType = unknown[]>(
+		request: JsonRpcPayload<ParamType>,
+		options?: { [key: string]: unknown },
+	): Promise<JsonRpcPayload<ParamType>>;
 
 	processResponse<
 		AnotherMethod extends Web3APIMethod<API>,
-		ResponseType = Web3APIReturnType<API, AnotherMethod>>
-	(
-		response: JsonRpcResponse<ResponseType>, 
-		options?: { [key: string]: unknown }): Promise<JsonRpcResponse<ResponseType>>;
-  }
+		ResponseType = Web3APIReturnType<API, AnotherMethod>,
+	>(
+		response: JsonRpcResponse<ResponseType>,
+		options?: { [key: string]: unknown },
+	): Promise<JsonRpcResponse<ResponseType>>;
+}
