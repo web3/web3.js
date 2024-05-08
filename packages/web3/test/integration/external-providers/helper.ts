@@ -16,7 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { SupportedProviders } from 'web3-types';
+import { Contract } from 'web3-eth-contract';
 import Web3 from '../../../src/index';
+import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 
 /**
  * Performs basic RPC calls (like `eth_accounts`, `eth_blockNumber` and `eth_sendTransaction`)
@@ -44,5 +46,31 @@ export async function performBasicRpcCalls(provider: SupportedProviders) {
 	expect(typeof blockNumber1).toBe('bigint');
 
 	// After sending a transaction, the blocknumber is supposed to be greater than or equal the block number before sending the transaction
-	expect(blockNumber1).toBeGreaterThanOrEqual(blockNumber0);
+	expect(blockNumber1).toBeGreaterThanOrEqual(blockNumber0);	
+}
+
+export async function failErrorCalls(provider: SupportedProviders) {
+	let contract: Contract<typeof BasicAbi>;
+	const web3 = new Web3(provider);
+
+	contract = new web3.eth.Contract(BasicAbi, undefined, {
+		provider,
+	});
+
+	let deployOptions: Record<string, unknown>;;
+
+	// eslint-disable-next-line prefer-const
+	deployOptions = {
+		data: BasicBytecode,
+		arguments: [10, 'string init value'],
+	};
+	const accounts = await web3.eth.getAccounts();
+
+	const sendOptions = { from: accounts[0], gas: '1000000' };
+
+
+	contract = await contract.deploy(deployOptions).send(sendOptions);
+
+	await contract.methods.reverts().send({ from: accounts[0] })
+	
 }
