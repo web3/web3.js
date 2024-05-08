@@ -313,7 +313,7 @@ export class Web3RequestManager<
 		// TODO: This could be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
 			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject): void => {
-				const res = provider.send<ResponseType>(payload, (err, response) => {
+				provider.send<ResponseType>(payload, (err, response) => {
 					if (err) {
 						return reject(
 							this._processJsonRpcResponse(
@@ -341,7 +341,6 @@ export class Web3RequestManager<
 						}),
 					);
 				});
-				return res;
 			});
 		}
 
