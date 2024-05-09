@@ -38,7 +38,7 @@ export async function performBasicRpcCalls(provider: SupportedProviders) {
 		to: accounts[1],
 		from: accounts[0],
 		value: '1',
-		gas: 21000
+		gas: 21000,
 	});
 	expect(tx.status).toBe(BigInt(1));
 
@@ -46,7 +46,7 @@ export async function performBasicRpcCalls(provider: SupportedProviders) {
 	expect(typeof blockNumber1).toBe('bigint');
 
 	// After sending a transaction, the blocknumber is supposed to be greater than or equal the block number before sending the transaction
-	expect(blockNumber1).toBeGreaterThanOrEqual(blockNumber0);	
+	expect(blockNumber1).toBeGreaterThanOrEqual(blockNumber0);
 }
 
 export async function failErrorCalls(provider: SupportedProviders) {
@@ -57,7 +57,7 @@ export async function failErrorCalls(provider: SupportedProviders) {
 		provider,
 	});
 
-	let deployOptions: Record<string, unknown>;;
+	let deployOptions: Record<string, unknown>;
 
 	// eslint-disable-next-line prefer-const
 	deployOptions = {
@@ -68,9 +68,7 @@ export async function failErrorCalls(provider: SupportedProviders) {
 
 	const sendOptions = { from: accounts[0], gas: '1000000' };
 
-
 	contract = await contract.deploy(deployOptions).send(sendOptions);
 
-	await contract.methods.reverts().send({ from: accounts[0] })
-	
+	await contract.methods.reverts().send({ from: accounts[0] });
 }
