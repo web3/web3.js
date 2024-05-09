@@ -5,6 +5,9 @@ sidebar_label: Connecting to Metamask
 
 # Connecting to Metamask
 
+
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-wkhaza?embed=1&file=main.js&showSidebar=1"></iframe>
+
 ## React app
 
 After creating your react app `npx create-react-app app-name`, and installing web3 `npm i web3` you can go to `src/app.js`, you can clean up the code and import `{Web3}`. It should look like this:
