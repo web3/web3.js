@@ -280,6 +280,21 @@ describe('Web3RequestManager', () => {
 			expect(myProvider.request).toHaveBeenCalledTimes(1);
 			expect(await pr).toBe('test');
 		});
+
+		it('promise of legacy provider should be error', async () => {
+			const manager = new Web3RequestManager(undefined, undefined);
+			const pr = new Promise(resolve => {
+				resolve('test');
+			});
+			const myProvider = {
+				request: jest.fn().mockImplementation(async () => pr),
+			} as any;
+			manager.setProvider(myProvider);
+			await manager.send(request);
+			expect(myProvider.request).toHaveBeenCalledTimes(1);
+			expect(await pr).toBe('test');
+		});
+
 		it('Got a "nullish" response from provider', async () => {
 			const manager = new Web3RequestManager(undefined, undefined);
 			const myProvider = {
@@ -1125,6 +1140,22 @@ describe('Web3RequestManager', () => {
 						.mockImplementation((_, cb: (error?: any, data?: any) => void) => {
 							cb(errorResponse);
 						}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.sendBatch(request)).rejects.toEqual(errorResponse);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+			});
+
+			it('should error in isPromise', async () => {
+
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest
+						.fn()
+						.mockImplementation((async () => Promise.reject(errorResponse))),
 				} as any;
 
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
