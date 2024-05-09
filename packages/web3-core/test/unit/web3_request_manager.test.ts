@@ -1150,6 +1150,23 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
 
+			it('should error in isPromise and error in _processJsonRpcResponse', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest
+						.fn()
+						.mockImplementation(async () => Promise.reject(errorResponse)),
+				} as any;
+				jest.spyOn(manager as any, '_processJsonRpcResponse').mockImplementation(() => {
+					throw new Error('Error in promise');
+				});
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.sendBatch(request)).rejects.toEqual(new Error('Error in promise'));
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+			});
+
 			it('should pass request to provider and reject if provider returns error', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
