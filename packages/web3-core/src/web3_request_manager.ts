@@ -307,7 +307,6 @@ export class Web3RequestManager<
 			});
 		}
 
-
 		// TODO: This could be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
 			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject): void => {

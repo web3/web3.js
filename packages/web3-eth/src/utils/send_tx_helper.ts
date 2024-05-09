@@ -121,7 +121,6 @@ export class SendTxHelper<
 	}
 
 	public async checkRevertBeforeSending(tx: TransactionCall) {
-		// should not check revert reason if data is not provided
 		if (this.options.checkRevertBeforeSending !== false) {
 			const reason = await getRevertReason(this.web3Context, tx, this.options.contractAbi);
 			if (reason !== undefined) {

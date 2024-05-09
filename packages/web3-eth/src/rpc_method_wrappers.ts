@@ -581,6 +581,7 @@ export function sendTransaction<
 							transaction,
 							transactionFormatted,
 						});
+						
 						await sendTxHelper.checkRevertBeforeSending(
 							transactionFormatted as TransactionCall,
 						);
