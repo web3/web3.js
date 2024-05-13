@@ -4,6 +4,7 @@ sidebar_label: 'Mastering Events Subcriptions'
 ---
 
 # Events Subscription
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-5cbd4m?embed=1&file=main.ts&showSidebar=1"></iframe>
 
 ## Subscribing to smart contracts events
 
