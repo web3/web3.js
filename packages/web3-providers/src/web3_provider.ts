@@ -32,12 +32,12 @@ export abstract class Web3ExternalProvider <
 API extends Web3APISpec = EthExecutionAPI,
 > extends Eip1193Provider {
 
-    provider!: Web3BaseProvider;
-    private readonly transport: Transport;
+    public provider!: Web3BaseProvider;
+    public readonly transport: Transport;
 
     public abstract getRPCURL(network: Network,transport: Transport,token: string): string;
 
-    constructor(
+    public constructor(
         network: Network,
         transport: Transport,
         token: string) {
@@ -62,62 +62,65 @@ API extends Web3APISpec = EthExecutionAPI,
     ): Promise<ResultType> {
 
         if (this.transport === Transport.HTTPS) {
-            return ( (this.provider as HttpProvider).request(payload, requestOptions)) as any;// .result as Promise<ResultType>;
+            return ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as Promise<ResultType>;
         }
         
-            return ( (this.provider as WebSocketProvider).request(payload)) as any;// .result as Promise<ResultType>;
+        return ( (this.provider as WebSocketProvider).request(payload)) as unknown as Promise<ResultType>;
         
     }
 
-    getStatus(): Web3ProviderStatus {
+    public getStatus(): Web3ProviderStatus {
         return this.provider.getStatus();
     }
-    supportsSubscriptions(): boolean {
+    public supportsSubscriptions(): boolean {
         return this.provider.supportsSubscriptions();
     }
-    once(type: "disconnect", listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>): void;
-    once<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>): void;
-    once(type: "connect", listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>): void;
-    once(type: "chainChanged", listener: Web3Eip1193ProviderEventCallback<string>): void;
-    once(type: "accountsChanged", listener: Web3Eip1193ProviderEventCallback<string[]>): void;
-    once(_type: string, _listener: unknown): void {
-        if (this.provider && this.provider.once)
+    public once(type: "disconnect", listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>): void;
+    public once<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>): void;
+    public once(type: "connect", listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>): void;
+    public once(type: "chainChanged", listener: Web3Eip1193ProviderEventCallback<string>): void;
+    public once(type: "accountsChanged", listener: Web3Eip1193ProviderEventCallback<string[]>): void;
+    public once(_type: string, _listener: unknown): void {
+        if (this.provider?.once)
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.provider.once(_type, _listener as any);
     }
-    removeAllListeners?(_type: string): void {
-        if (this.provider && this.provider.removeAllListeners)
+    public removeAllListeners?(_type: string): void {
+        if (this.provider?.removeAllListeners)
             this.provider.removeAllListeners(_type);
     }
-    connect(): void {
-        if (this.provider && this.provider.connect)
+    public connect(): void {
+        if (this.provider?.connect)
             this.provider.connect();
     }
-    disconnect(_code?: number | undefined, _data?: string | undefined): void {
-        if (this.provider && this.provider.disconnect)
+    public disconnect(_code?: number | undefined, _data?: string | undefined): void {
+        if (this.provider?.disconnect)
             this.provider.disconnect(_code, _data);
     }
-    reset(): void {
-        if (this.provider && this.provider.reset)
+    public reset(): void {
+        if (this.provider?.reset)
             this.provider.reset();
     }
 
-    on(type: "disconnect", listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>): void;
-    on<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderMessageEventCallback<T>): void;
-    on<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderMessageEventCallback<T>): void;
-    on(type: "connect", listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>): void;
-    on(type: "chainChanged", listener: Web3Eip1193ProviderEventCallback<string>): void;
-    on(type: "accountsChanged", listener: Web3Eip1193ProviderEventCallback<string[]>): void;
-    on(_type: unknown, _listener: unknown): void {
+    public on(type: "disconnect", listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>): void;
+    public on<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderMessageEventCallback<T>): void;
+    public on<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderMessageEventCallback<T>): void;
+    public on(type: "connect", listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>): void;
+    public on(type: "chainChanged", listener: Web3Eip1193ProviderEventCallback<string>): void;
+    public on(type: "accountsChanged", listener: Web3Eip1193ProviderEventCallback<string[]>): void;
+    public on(_type: unknown, _listener: unknown): void {
         if (this.provider)
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.provider.on(_type as any, _listener as any);
     }
-    removeListener(type: "disconnect", listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>): void;
-    removeListener<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>): void;
-    removeListener(type: "connect", listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>): void;
-    removeListener(type: "chainChanged", listener: Web3Eip1193ProviderEventCallback<string>): void;
-    removeListener(type: "accountsChanged", listener: Web3Eip1193ProviderEventCallback<string[]>): void;
-    removeListener(_type: unknown, _listener: unknown): void {
+    public removeListener(type: "disconnect", listener: Web3Eip1193ProviderEventCallback<ProviderRpcError>): void;
+    public removeListener<T = JsonRpcResult>(type: string, listener: Web3Eip1193ProviderEventCallback<ProviderMessage> | Web3ProviderEventCallback<T>): void;
+    public removeListener(type: "connect", listener: Web3Eip1193ProviderEventCallback<ProviderConnectInfo>): void;
+    public removeListener(type: "chainChanged", listener: Web3Eip1193ProviderEventCallback<string>): void;
+    public removeListener(type: "accountsChanged", listener: Web3Eip1193ProviderEventCallback<string[]>): void;
+    public removeListener(_type: unknown, _listener: unknown): void {
         if (this.provider)
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.provider.removeListener(_type as any, _listener as any);
     }
 }

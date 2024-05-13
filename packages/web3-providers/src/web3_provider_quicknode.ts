@@ -20,7 +20,7 @@ import { Web3ExternalProvider } from "./web3_provider.js";
 
 export class QuickNodeProvider extends Web3ExternalProvider {
 
-    constructor(
+    public constructor(
         network: Network = Network.ETH_MAINNET,
         transport: Transport = Transport.HTTPS,
         token = "") {
@@ -29,7 +29,8 @@ export class QuickNodeProvider extends Web3ExternalProvider {
 
     }
 
-    getRPCURL(network: Network,
+    // eslint-disable-next-line class-methods-use-this
+    public getRPCURL(network: Network,
         transport: Transport,
         token: string) {
 
