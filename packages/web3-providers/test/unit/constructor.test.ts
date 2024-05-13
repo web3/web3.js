@@ -15,23 +15,41 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// import Web3ProviderBase from '../../src/index'
-// import {ProviderOptions} from '../../types'
+import { Web3ExternalProvider } from '../../src/web3_provider';
+import { Network, Transport } from '../../src/types';
+import HttpProvider from 'web3-providers-http';
+import WebSocketProvider from 'web3-providers-ws';
 
-describe('constructs a PLACEHOLDER instance with expected properties', () => {
-	// let providerOptions: ProviderOptions
+class MockWeb3ExternalHTTPProvider extends Web3ExternalProvider {
+  getRPCURL(_network: Network, _transport: Transport, _token: string): string {
+    return 'https://example.com/rpc';
+  }
+}
 
-	beforeEach(() => {
-		// providerOptions = {
-		//     providerUrl: 'http://127.0.0.1:8545'
-		// }
-	});
+class MockWeb3ExternalWSProvider extends Web3ExternalProvider {
+  getRPCURL(_network: Network, _transport: Transport, _token: string): string {
+    return 'wss://example.com/';
+  }
+}
 
-	it('should construct with expected properties', () => {
-		// const web3ProviderBase = new Web3ProviderBase(providerOptions)
-		// expect(web3ProviderBase).toMatchObject({
-		//     _providerUrl: providerOptions.providerUrl
-		// })
-		expect(true).toBeTruthy();
-	});
+describe('Web3ExternalProvider', () => {
+  it('should initialize the provider correctly', () => {
+    const network: Network = Network.ETH_MAINNET;
+    const transport: Transport = Transport.HTTPS;
+    const token = 'your-token';
+
+    const provider = new MockWeb3ExternalHTTPProvider(network, transport, token);
+
+    expect(provider.provider).toBeInstanceOf(HttpProvider);
+  });
+
+  it('should initialize the provider with WebSocketProvider for WebSocket transport', () => {
+    const network: Network = Network.ETH_MAINNET;
+    const transport: Transport = Transport.WebSocket;
+    const token = 'your-token';
+
+    const provider = new MockWeb3ExternalWSProvider(network, transport, token);
+
+    expect(provider.provider).toBeInstanceOf(WebSocketProvider);
+  });
 });

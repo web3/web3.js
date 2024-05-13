@@ -17,9 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EthExecutionAPI } from "web3-types";
 import { Transport, Network } from "./types.js";
-import Web3ExternalProvider from "./web3_provider.js";
+import { Web3ExternalProvider } from "./web3_provider.js";
 
-export default class QuickNodeProvider extends Web3ExternalProvider<EthExecutionAPI> {
+export class QuickNodeProvider extends Web3ExternalProvider<EthExecutionAPI> {
 
     constructor(
         network: Network = Network.ETH_MAINNET,
