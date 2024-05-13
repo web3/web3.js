@@ -28,19 +28,19 @@ import {
 import { Eip1193Provider } from "web3-utils";
 import { Transport, Network } from "./types.js";
 
-export default abstract class Web3ExternalProvider <
+export abstract class Web3ExternalProvider <
 API extends Web3APISpec = EthExecutionAPI,
-> extends Eip1193Provider<EthExecutionAPI> {
+> extends Eip1193Provider {
 
     provider!: Web3BaseProvider;
-    private transport: Transport;
+    private readonly transport: Transport;
 
-    public abstract getRPCURL(network: Network,transport: Transport,token: String): string;
+    public abstract getRPCURL(network: Network,transport: Transport,token: string): string;
 
     constructor(
         network: Network,
         transport: Transport,
-        token: String) {
+        token: string) {
             
         super();
 
@@ -62,11 +62,11 @@ API extends Web3APISpec = EthExecutionAPI,
     ): Promise<ResultType> {
 
         if (this.transport === Transport.HTTPS) {
-            return ( (this.provider as HttpProvider).request(payload, requestOptions)) as any;//.result as Promise<ResultType>;
+            return ( (this.provider as HttpProvider).request(payload, requestOptions)) as any;// .result as Promise<ResultType>;
         }
-        else {
-            return ( (this.provider as WebSocketProvider).request(payload)) as any;//.result as Promise<ResultType>;
-        }
+        
+            return ( (this.provider as WebSocketProvider).request(payload)) as any;// .result as Promise<ResultType>;
+        
     }
 
     getStatus(): Web3ProviderStatus {

@@ -15,16 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI } from "web3-types";
 import { Transport, Network } from "./types.js";
 import { Web3ExternalProvider } from "./web3_provider.js";
 
-export class QuickNodeProvider extends Web3ExternalProvider<EthExecutionAPI> {
+export class QuickNodeProvider extends Web3ExternalProvider {
 
     constructor(
         network: Network = Network.ETH_MAINNET,
         transport: Transport = Transport.HTTPS,
-        token: String = "") {
+        token = "") {
 
         super(network, transport, token);
 
@@ -32,7 +31,7 @@ export class QuickNodeProvider extends Web3ExternalProvider<EthExecutionAPI> {
 
     getRPCURL(network: Network,
         transport: Transport,
-        token: String) {
+        token: string) {
 
         let host: string;
 

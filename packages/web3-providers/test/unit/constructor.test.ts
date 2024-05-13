@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3ExternalProvider } from '../../src/web3_provider';
-import { Network, Transport } from '../../src/types';
 import HttpProvider from 'web3-providers-http';
 import WebSocketProvider from 'web3-providers-ws';
+import { Web3ExternalProvider } from '../../src/web3_provider';
+import { Network, Transport } from '../../src/types';
 
 class MockWeb3ExternalHTTPProvider extends Web3ExternalProvider {
   getRPCURL(_network: Network, _transport: Transport, _token: string): string {
