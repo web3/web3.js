@@ -90,7 +90,9 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(response.status).toBe(BigInt(1));
 		expect(response.events).toBeUndefined();
 
-		const minedTransactionData = await web3EthWithWallet.getTransaction(response.transactionHash);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(
+			response.transactionHash,
+		);
 
 		expect(minedTransactionData).toMatchObject({
 			from: tempAcc.address,
@@ -119,7 +121,9 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(response.status).toBe(BigInt(1));
 		expect(response.events).toBeUndefined();
 
-		const minedTransactionData = await web3EthWithWallet.getTransaction(response.transactionHash);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(
+			response.transactionHash,
+		);
 
 		expect(minedTransactionData).toMatchObject({
 			from: tempAcc.address,
@@ -152,7 +156,9 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(response.status).toBe(BigInt(1));
 		expect(response.events).toBeUndefined();
 
-		const minedTransactionData = await web3EthWithWallet.getTransaction(response.transactionHash);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(
+			response.transactionHash,
+		);
 
 		expect(minedTransactionData).toMatchObject({
 			from: tempAcc.address,
@@ -534,9 +540,12 @@ describe('Web3Eth.sendTransaction', () => {
 				from: tempAcc.address,
 				data: SimpleRevertDeploymentData,
 			};
-			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(simpleRevertDeployTransaction);
-			simpleRevertContractAddress = (await web3Eth.sendTransaction(simpleRevertDeployTransaction))
-				.contractAddress as Address;
+			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
+				simpleRevertDeployTransaction,
+			);
+			simpleRevertContractAddress = (
+				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
+			).contractAddress as Address;
 		});
 
 		it('Should throw TransactionRevertInstructionError because gas too low', async () => {
@@ -578,7 +587,9 @@ describe('Web3Eth.sendTransaction', () => {
 				const transaction: Transaction = {
 					from: tempAcc.address,
 					to: '0x0000000000000000000000000000000000000000',
-					value: BigInt('99999999999999999999999999999999999999999999999999999999999999999'),
+					value: BigInt(
+						'99999999999999999999999999999999999999999999999999999999999999999',
+					),
 				};
 
 				const expectedThrownError = {
@@ -587,7 +598,9 @@ describe('Web3Eth.sendTransaction', () => {
 					code: 402,
 					reason:
 						getSystemTestBackend() === BACKEND.GETH
-							? expect.stringContaining('err: insufficient funds for gas * price + value: address')
+							? expect.stringContaining(
+									'err: insufficient funds for gas * price + value: address',
+							  )
 							: 'VM Exception while processing transaction: insufficient balance',
 				};
 
