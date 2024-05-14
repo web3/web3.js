@@ -21,18 +21,19 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Web3ExternalProvider } from '../../src/web3_provider';
 import { Network, Transport } from '../../src/types';
 
-class MockWeb3ExternalHTTPProvider extends Web3ExternalProvider {
-  // eslint-disable-next-line class-methods-use-this
-  public getRPCURL(_network: Network, _transport: Transport, _token: string): string {
-    return 'https://example.com/rpc';
+class MockWeb3ExternalProviderA extends Web3ExternalProvider {
+  public constructor(network: Network, transport: Transport, token: string){
+    super(network, transport, token, "");
   }
-}
-
-
-class MockWeb3ExternalWSProvider extends Web3ExternalProvider {
   // eslint-disable-next-line class-methods-use-this
-  public getRPCURL(_network: Network, _transport: Transport, _token: string): string {
-    return 'wss://example.com/';
+  public getRPCURL(_network: Network, _transport: Transport, _token: string, _host=""): string {
+    let transport = "";
+    if (_transport === Transport.HTTPS)
+      transport = "http://";
+    else if (_transport === Transport.WebSocket)
+      transport = "wss://";
+
+    return `${transport}example.com/`;
   }
 }
 
@@ -42,7 +43,7 @@ describe('Web3ExternalProvider', () => {
     const transport: Transport = Transport.HTTPS;
     const token = 'your-token';
 
-    const provider = new MockWeb3ExternalHTTPProvider(network, transport, token);
+    const provider = new MockWeb3ExternalProviderA(network, transport, token);
 
     expect(provider.provider).toBeInstanceOf(HttpProvider);
   });
@@ -52,9 +53,10 @@ describe('Web3ExternalProvider', () => {
     const transport: Transport = Transport.WebSocket;
     const token = 'your-token';
 
-    const provider = new MockWeb3ExternalWSProvider(network, transport, token);
+    const provider = new MockWeb3ExternalProviderA(network, transport, token);
 
     expect(provider.provider).toBeInstanceOf(WebSocketProvider);
   });
+
 });
 /* eslint-enable max-classes-per-file */

@@ -28,6 +28,9 @@ jest.mock('web3-providers-ws', () => {
 });
 
 class MockWeb3ExternalProvider extends Web3ExternalProvider {
+  public constructor(network: Network, transport: Transport, token: string){
+    super(network, transport, token, "");
+  }
     // eslint-disable-next-line class-methods-use-this
     public getRPCURL(_network: Network, _transport: Transport, _token: string): string {
       return 'https://example.com/';
