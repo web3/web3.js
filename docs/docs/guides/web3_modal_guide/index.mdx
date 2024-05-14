@@ -1,45 +1,35 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Web3Modal with Vue'
+sidebar_label: 'Getting started'
 ---
 
-# Setting up Web3Modal with Vue
+# Getting Started
 
-This guide go through an example and will teach you how to use Web3modal with Vue
+Welcome to the Web3modal📱 Guide.
+
+The Web3Modal SDK allows you to easily connect your Web3 app with wallets. It provides a simple and intuitive interface for requesting actions such as signing transactions and interacting with smart contracts on the blockchain.
+
+In this guide, you will learn how to set up Walletconnect with web3js.
 
 
+
+## Preview
+:::info
+Switch your browsers if preview doesn't load
+:::
 <iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-cg7ctd?file=src%2FApp.tsx,package.json,.env,src%2Fvite-env.d.ts&terminal=dev"></iframe>
 
 
 
 ## Installation
 
-For this guide we will be creating a new project will need to install dependancies. We will be using vite to locally host the app, React and web3modal-web3js
-
 ```bash
-npm install web3modal-web3js react react-dom
-npm install --save-dev vite @vitejs/plugin-react
+npm install web3modal-web3js web3js
 ```
 
 ## Implementation
 
-Within the root of the project create `index.html`
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React Web3 example</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-```
-
-Now we will add the Web3modal code within `src/Web3modal.tsx`
+Now we will add the Web3modal code within our App
 ```typescript
 
 import { createWeb3Modal, defaultConfig } from 'web3modal-web3/react'
@@ -90,33 +80,50 @@ export default function App() {
 }
 ```
 
-Set up vite configs within root `vite.config.js`
-```javascript
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+## Triggering the modal
 
-export default defineConfig({
-  plugins: [react()]
-})
+```Typescript
+
+export default function ConnectButton() {
+  return <w3m-button/>
+}
+
 ```
 
-And finally add react to the app `src/main.tsx`
-```typescript
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.js'
+## Smart Contract Interaction
 
-ReactDOM.createRoot(document.getElementById('app')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-)
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-itfrzf?file=src%2FApp.tsx"></iframe>
+
+Web3js can help us interact with wallets and smart contracts:
+
+```Typescript
+import Web3 from 'web3';
+import { ERC20ABI } from './contracts/ERC20';
+
+const USDTAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7';
+
+function Components() {
+  const { isConnected } = useWeb3ModalAccount()
+  const { walletProvider } = useWeb3ModalProvider()
+  const [USDTBalance, setUSDTBalance] = useState(0); 
+  const [smartContractName, setSmartContractName] = useState(''); 
+
+  async function getContractInfo() {
+    if (!isConnected) throw Error('not connected');
+    const web3 = new Web3({
+      provider: walletProvider,
+      config: { defaultNetworkId: chainId },
+    });
+    const contract = new web3.eth.Contract(ERC20ABI, USDTAddress);
+    const balance = await contract.methods.balanceOf(address).call();
+    const name = (await contract.methods.name().call()) as string;
+    setUSDTBalance(Number(balance));
+    setSmartContractName(name);
+  }
+
+  return <> <button onClick={getContractInfo}>Get User Balance and Contract name</button> <p> Balance: {USDTBalance} smartContractName: {smartContractName}</p></>
+}
+
 ```
 
-You are finished and have sucesfully created Web3modal with Vue. For additional information take a look into the interactive code editor above and the files.
-
-:::info
-- You can view different examples of setting up walletconnect with web3.js [here](https://github.com/ChainSafe/web3modal/tree/add-examples/examples/vue-web3)
-- Learn more about Web3modal [here](https://docs.walletconnect.com/web3modal/about)
-:::
-
+To learn how to set up Web3modal with vue, click [here](/web3_modal_guide/vue).
