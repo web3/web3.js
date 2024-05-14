@@ -28,6 +28,14 @@ import {
 import { Eip1193Provider } from "web3-utils";
 import { Transport, Network } from "./types.js";
 
+/* 
+This class can be used to create new providers only when there is custom logic required in each Request method like
+checking specific HTTP status codes and performing any action, throwing new error types or setting additional HTTP headers in requests, or even modifying requests.
+
+Another simpler approach can be a function simply returning URL strings instead of using the following class in case if
+no additional logic implementation is required in the provider.
+*/
+
 export abstract class Web3ExternalProvider <
 API extends Web3APISpec = EthExecutionAPI,
 > extends Eip1193Provider {
@@ -35,21 +43,22 @@ API extends Web3APISpec = EthExecutionAPI,
     public provider!: Web3BaseProvider;
     public readonly transport: Transport;
 
-    public abstract getRPCURL(network: Network,transport: Transport,token: string): string;
+    public abstract getRPCURL(network: Network,transport: Transport,token: string, host: string): string;
 
     public constructor(
         network: Network,
         transport: Transport,
-        token: string) {
+        token: string,
+        host: string) {
             
         super();
 
         this.transport = transport;
         if (transport === Transport.HTTPS) {
-            this.provider = new HttpProvider(this.getRPCURL(network, transport, token));
+            this.provider = new HttpProvider(this.getRPCURL(network, transport, token, host));
         }
         else if (transport === Transport.WebSocket) {
-            this.provider = new WebSocketProvider(this.getRPCURL(network, transport, token));
+            this.provider = new WebSocketProvider(this.getRPCURL(network, transport, token, host));
         }
     }
 
