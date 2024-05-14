@@ -5,14 +5,16 @@ sidebar_label: 'Getting started'
 
 # Getting Started
 
-Welcome to the Web3 Plugins🧩 Guide, a new feature introduced in web3.js v4. In addition to the core web3.js libraries, plugins bring specialized functionalities tailored for end-users (functionalities, that you, as a developer, can create). These enhancements may involve creating wrappers for specific contracts, adding extra features to RPC methods, adding any external libraries, logic, extending the capabilities of web3.js methods, etc... 
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-uxkc1b?embed=1&file=main.ts&showSidebar=1"></iframe>
 
-In this guide, you will learn the basics to get started building web3 plugins, setting up providers, importing, and using different web3.js packages. 
+Welcome to the Web3 Plugins🧩 Guide, a new feature introduced in web3.js v4. In addition to the core web3.js libraries, plugins bring specialized functionalities tailored for end-users (functionalities, that you, as a developer, can create). These enhancements may involve creating wrappers for specific contracts, adding extra features to RPC methods, adding any external libraries, logic, extending the capabilities of web3.js methods, etc...
+
+In this guide, you will learn the basics to get started building web3 plugins, setting up providers, importing, and using different web3.js packages.
 
 - [Plugin Developer Guide (For Creators)](/guides/web3_plugin_guide/plugin_authors)
 - [Plugin User Guide (Usage)](/guides/web3_plugin_guide/plugin_users)
 
-- You can find all the web3 plugins🧩 [here](https://web3js.org/plugins) 
+- You can find all the web3 plugins🧩 [here](https://web3js.org/plugins)
 
 - To list your web3 plugin🧩 into the web3js.org/plugins page, you can submit a PR [here](https://github.com/web3/web3js-landing/blob/main/src/pluginList.ts)
 
@@ -24,9 +26,9 @@ import { Web3PluginBase } from "web3";
 
 //2. Create a Class extending the `Web3Pluginbase`
 class MyPlugin extends Web3PluginBase {
-    
+
     //3. Add a name to the plugin
-    pluginNamespace = "pluginExample"; 
+    pluginNamespace = "pluginExample";
 
     //4. Create any methods with your desired functionality
     async doSomething(){
@@ -118,7 +120,7 @@ class MyPlugin extends Web3PluginBase {
   async createAccount() {
     const account = eth.accounts.create();
     console.log("account:", account);
-    /* 
+    /*
     account: {
         address: '0x59E797F2F66AffA9A419a6BC2ED4742b7cBc2570',
         privateKey: '0x52a81fc3a7fd6ce9644147c9fb5bfbe1f708f37b4611b3c3310eb9a6dc85ccf4',
@@ -149,7 +151,7 @@ class MyPlugin extends Web3PluginBase {
     const wallet = this.wallet.add(accounts);
     //by creating the wallet, web3.js will use this account to sign TXs under the hood
     console.log(wallet);
-    /* 
+    /*
     Wallet(1) [
     {
       address: '0x233725561B1430bE2C24Ce9EEabe63E4B46EC9E3',
@@ -186,10 +188,10 @@ class MyPlugin extends Web3PluginBase {
   async interactWithContract() {
     //1. Initialize contract
     const myContract = new Contract(ABI, ADDRESS);
-    
+
     //2. Interact with reading functions
     const response = myContract.methods.doSomething().call();
-    
+
     //3. Interact with writing functions
     //You must initialize a wallet to be able to send the TX from wallet[0].address
     const txReceipt = myContract.methods.doSomething().send({from: wallet[0].address})
@@ -279,7 +281,7 @@ All web3 config params [here](https://docs.web3js.org/guides/web3_config/)
 :::
 
 
-## Videos 
+## Videos
 
 ### Create your first plugin in 20 minutes!
 
