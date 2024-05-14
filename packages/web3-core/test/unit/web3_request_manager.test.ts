@@ -280,6 +280,7 @@ describe('Web3RequestManager', () => {
 			expect(myProvider.request).toHaveBeenCalledTimes(1);
 			expect(await pr).toBe('test');
 		});
+
 		it('Got a "nullish" response from provider', async () => {
 			const manager = new Web3RequestManager(undefined, undefined);
 			const myProvider = {
@@ -1127,6 +1128,38 @@ describe('Web3RequestManager', () => {
 						}),
 				} as any;
 
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.sendBatch(request)).rejects.toEqual(errorResponse);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+			});
+
+			it('should error in isPromise', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest
+						.fn()
+						.mockImplementation(async () => Promise.reject(errorResponse)),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.sendBatch(request)).rejects.toEqual(errorResponse);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+			});
+
+			it('should catch error and process json response in isPromise', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest
+						.fn()
+						.mockImplementation(async () => Promise.reject(errorResponse)),
+				} as any;
+				jest.spyOn(manager as any, '_processJsonRpcResponse').mockImplementation(() => {
+					return errorResponse;
+				});
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
 				await expect(manager.sendBatch(request)).rejects.toEqual(errorResponse);

@@ -210,7 +210,7 @@ export class Web3RequestManager<
 		) as JsonRpcPayload;
 
 		if (!isNullish(this.middleware)) {
-			payload = (await this.middleware.processRequest(payload));
+			payload = await this.middleware.processRequest(payload);
 		}
 		if (isWeb3Provider(provider)) {
 			let response;
@@ -248,7 +248,7 @@ export class Web3RequestManager<
 		// TODO: This could be deprecated and removed.
 		if (isLegacyRequestProvider(provider)) {
 			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject) => {
-				const rejectWithError = (err: unknown) =>
+				const rejectWithError = (err: unknown) => {
 					reject(
 						this._processJsonRpcResponse(
 							payload,
@@ -259,6 +259,8 @@ export class Web3RequestManager<
 							},
 						),
 					);
+				};
+
 				const resolveWithResponse = (response: JsonRpcResponse<ResponseType>) =>
 					resolve(
 						this._processJsonRpcResponse(payload, response, {
@@ -288,7 +290,20 @@ export class Web3RequestManager<
 					const responsePromise = result as unknown as Promise<
 						JsonRpcResponse<ResponseType>
 					>;
-					responsePromise.then(resolveWithResponse).catch(rejectWithError);
+					responsePromise.then(resolveWithResponse).catch(error => {
+						try {
+							// Attempt to process the error response
+							const processedError = this._processJsonRpcResponse(
+								payload,
+								error as JsonRpcResponse<ResponseType, unknown>,
+								{ legacy: true, error: true },
+							);
+							reject(processedError);
+						} catch (processingError) {
+							// Catch any errors that occur during the error processing
+							reject(processingError);
+						}
+					});
 				}
 			});
 		}
