@@ -7,7 +7,7 @@ sidebar_label: 'Web3Modal with Vue'
 
 ## Live code editor
 
-<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-cg7ctd?file=src%2FApp.tsx,package.json,.env,src%2Fvite-env.d.ts&terminal=dev"></iframe>
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-cg7ctd?embed=1&file=src%2FApp.tsx"></iframe>
 
 
 
