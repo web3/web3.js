@@ -360,7 +360,7 @@ export abstract class SocketProvider<
 		const checkQueue = async () => 
 			new Promise(resolve => {
 				const interval = setInterval(() => {
-					if (forceDisconnect && retryAttempt === 5) {
+					if (forceDisconnect && retryAttempt >= 5) {
 						this.clearQueues();
 					}
 					if (this.getPendingRequestQueueSize() === 0 && this.getSentRequestsQueueSize() === 0) {
