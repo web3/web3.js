@@ -146,7 +146,7 @@ export function rejectIfTimeout(timeout: number, error: Error): [Timer, Promise<
 /**
  * Sets an interval that repeatedly executes the given cond function with the specified interval between each call.
  * If the condition is met, the interval is cleared and a Promise that rejects with the returned value is returned.
- * @param cond - The function/confition to call.
+ * @param cond - The function/condition to call.
  * @param interval - The interval in milliseconds.
  * @returns - an array with the interval ID and the Promise.
  */
