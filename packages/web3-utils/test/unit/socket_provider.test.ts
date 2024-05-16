@@ -447,6 +447,22 @@ describe('SocketProvider', () => {
 				// @ts-expect-error run protected method
 				expect(provider._sentRequestsQueue.get(payload.id).payload).toBe(payload);
 			});
+
+			it('should add request to the `_sentRequestsQueue` when the status is `connected` for batch requests', () => {
+				const provider = new TestProvider(socketPath, socketOption);
+				const payload = [
+					{ id: 1, method: 'some_rpc_method', jsonrpc: '2.0' as JsonRpcIdentifier },
+					{ id: 2, method: 'some_rpc_method', jsonrpc: '2.0' as JsonRpcIdentifier },
+				];
+				provider.setStatus('connected');
+				const reqPromise = provider.request(payload as any);
+				expect(reqPromise).toBeInstanceOf(Promise);
+
+				// the id of the first request in the batch is the one used to identify the batch request
+				// @ts-expect-error run protected method
+				expect(provider._sentRequestsQueue.get(payload[0].id).payload).toBe(payload);
+			});
+
 			it('should clear _sentRequestsQueue in case `_sendToSocket` had an error', async () => {
 				// Create a mock SocketProvider instance
 				const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
