@@ -575,13 +575,12 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 					);
-
+					
 					try {
 						transactionFormatted = await sendTxHelper.populateGasPrice({
 							transaction,
 							transactionFormatted,
 						});
-
 						await sendTxHelper.checkRevertBeforeSending(
 							transactionFormatted as TransactionCall,
 						);
