@@ -575,7 +575,7 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 					);
-					
+
 					try {
 						transactionFormatted = await sendTxHelper.populateGasPrice({
 							transaction,
