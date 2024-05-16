@@ -123,7 +123,7 @@ export class SendTxHelper<
 	public async checkRevertBeforeSending(tx: TransactionCall) {
 		if (this.options.checkRevertBeforeSending !== false) {
 			let formatTx = tx;
-			if (tx.data === undefined && tx.input && tx.gas === undefined) { // eth.call runs into error if data isnt filled and gas is not defined, its a simple transaction so we fill it with 21000
+			if (isNullish(tx.data) && isNullish(tx.input) && isNullish(tx.gas)) { // eth.call runs into error if data isnt filled and gas is not defined, its a simple transaction so we fill it with 21000
 				formatTx = {
 					...tx,
 					gas: 21000

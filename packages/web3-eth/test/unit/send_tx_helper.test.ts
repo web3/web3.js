@@ -162,7 +162,6 @@ describe('sendTxHelper class', () => {
 			},
 			returnFormat: DEFAULT_RETURN_FORMAT,
 		});
-		jest.spyOn(utils, 'getRevertReason').mockResolvedValue(undefined);
 
 		const tx = {from:"0x"} as TransactionCall
 
@@ -172,7 +171,7 @@ describe('sendTxHelper class', () => {
             ...tx,
             gas: 21000,
         };
-		expect(utils.getRevertReason).toHaveBeenCalledWith(web3Context, expectedTx);
+		expect(utils.getRevertReason).toHaveBeenCalledWith(web3Context, expectedTx, undefined);
 
 	});
 	it('emit handleError with handleRevert', async () => {
