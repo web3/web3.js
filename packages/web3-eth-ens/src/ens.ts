@@ -175,10 +175,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param key - The key to resolve https://github.com/ethereum/ercs/blob/master/ERCS/erc-634.md#global-keys
 	 * @returns - The value content stored in the resolver for the specified key
 	 */
-	public async getText(ENSName: string | Address, key: string): Promise<string> {
-		if(isAddress(ENSName))
-			return this._resolver.getText(await(this._resolver.getName(ENSName,false)), key);
-		return this._resolver.getText(ENSName, key);
+	public async getText(ENSNameOrAddr: string | Address, key: string): Promise<string> {
+		if(isAddress(ENSNameOrAddr))
+			return this._resolver.getText(await(this._resolver.getName(ENSNameOrAddr,false)), key);
+		return this._resolver.getText(ENSNameOrAddr, key);
 	}
 
 	/**
