@@ -138,7 +138,7 @@ export class Resolver {
 		const resolverContract = await this.getResolverContractAdapter(reverseName);
 		
 		if(checkInterfaceSupport)
-			this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
+			await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
 		
 		return resolverContract.methods
 			.name(namehash(reverseName)).call()
