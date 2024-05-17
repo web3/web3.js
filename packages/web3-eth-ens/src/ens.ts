@@ -37,6 +37,7 @@ import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
 import { networkIds, registryAddresses } from './config.js';
 import { Registry } from './registry.js';
 import { Resolver } from './resolver.js';
+import { isAddress } from 'web3-validator';
 
 /**
  * This class is designed to interact with the ENS system on the Ethereum blockchain.
@@ -174,7 +175,9 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param key - The key to resolve https://github.com/ethereum/ercs/blob/master/ERCS/erc-634.md#global-keys
 	 * @returns - The value content stored in the resolver for the specified key
 	 */
-	public async getText(ENSName: string, key: string): Promise<string> {
+	public async getText(ENSName: string | Address, key: string): Promise<string> {
+		if(isAddress(ENSName))
+			return this._resolver.getText(await(this._resolver.getName(ENSName,false)), key);
 		return this._resolver.getText(ENSName, key);
 	}
 
@@ -183,8 +186,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param ENSName - The node to resolve
 	 * @returns - The name
 	 */
-	public async getName(ENSName: string): Promise<string> {
-		return this._resolver.getName(ENSName);
+	public async getName(ENSName: string, checkInterfaceSupport = true): Promise<string> {
+		return this._resolver.getName(ENSName, checkInterfaceSupport);
 	}
 
 	/**
