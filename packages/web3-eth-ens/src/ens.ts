@@ -33,11 +33,11 @@ import {
 	TransactionReceipt,
 	Web3NetAPI,
 } from 'web3-types';
+import { isAddress } from 'web3-validator';
 import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
 import { networkIds, registryAddresses } from './config.js';
 import { Registry } from './registry.js';
 import { Resolver } from './resolver.js';
-import { isAddress } from 'web3-validator';
 
 /**
  * This class is designed to interact with the ENS system on the Ethereum blockchain.
