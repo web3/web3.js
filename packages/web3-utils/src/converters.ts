@@ -532,8 +532,9 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 	if (fraction === '') {
 		return integer;
 	}
+	const updatedValue = `${integer}.${fraction}`;
 
-	return `${integer}.${fraction}`;
+	return updatedValue.slice(0, integer.length + numberOfZerosInDenomination + 1);
 };
 
 /**
