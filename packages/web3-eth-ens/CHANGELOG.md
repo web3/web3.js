@@ -157,3 +157,9 @@ Documentation:
 
 ### Added
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+-   `getText` now supports first param Address
+-   `getName` has optional second param checkInterfaceSupport
+
+### Fixed
+
+-   `getName` reverse resolution
