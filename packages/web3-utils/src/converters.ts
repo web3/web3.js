@@ -383,6 +383,18 @@ export const toHex = (
 		if (isHex(value) && !isInt(value) && !isUInt(value)) {
 			return returnType ? 'bytes' : `0x${value}`;
 		}
+		if (isHex(value) && !isInt(value) && isUInt(value)) {
+			// This condition seems problematic because meeting
+			// both conditions `!isInt(value) && isUInt(value)` should be impossible.
+			// But a value pass for those conditions: "101611154195520776335741463917853444671577865378275924493376429267637792638729"
+			// Note that according to the docs: it is supposed to be treated as a string (https://docs.web3js.org/guides/web3_upgrade_guide/x/web3_utils_migration_guide#conversion-to-hex)
+			// In short, the strange is that isInt(value) is false but isUInt(value) is true for the value above.
+			// So, isUInt(value) should be investigated.
+
+			// However, if `toHex('101611154195520776335741463917853444671577865378275924493376429267637792638729', true)` is called, it will return `true`.
+			// But, if `toHex('101611154195520776335741463917853444671577865378275924493376429267637792638729')` is called, it will throw inside `numberToHex`.
+			return returnType ? 'uint' : numberToHex(value);
+		}
 
 		if (!Number.isFinite(value)) {
 			return returnType ? 'string' : utf8ToHex(value);

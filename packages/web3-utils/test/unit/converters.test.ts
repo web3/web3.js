@@ -328,6 +328,16 @@ describe('converters', () => {
 			it.each(toHexValidData)('%s', (input, output) => {
 				expect(toHex(input, true)).toEqual(output[1]);
 			});
+
+			it('an interesting case that needs investigation', () => {
+				// This case is to be investigated further
+				expect(
+					toHex(
+						'101611154195520776335741463917853444671577865378275924493376429267637792638729',
+						true,
+					),
+				).toEqual('uint');
+			});
 		});
 
 		describe('invalid cases', () => {
