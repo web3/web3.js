@@ -79,6 +79,7 @@ import {
 	toBoolValidData,
 	toBoolInvalidData,
 } from '../fixtures/converters';
+
 describe('converters', () => {
 	describe('bytesToHex', () => {
 		describe('valid cases', () => {
@@ -400,7 +401,7 @@ describe('converters', () => {
 			jest.spyOn(utils, 'uint8ArrayToHexString').mockReturnValue(undefined as unknown as string);
 
 			const result = toChecksumAddress(address);
-			expect(result).toEqual('');
+			expect(result).toBe('');
 
 			jest.mock('web3-validator').restoreAllMocks();
 		});
@@ -413,7 +414,7 @@ describe('converters', () => {
 			const hash = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 			jest.spyOn(utils, 'uint8ArrayToHexString').mockReturnValue(hash);
 			const result = toChecksumAddress(address);
-			expect(result).toEqual('');
+			expect(result).toBe('');
 
 			jest.mock('web3-validator').restoreAllMocks();
 		});
