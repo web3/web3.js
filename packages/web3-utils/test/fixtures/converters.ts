@@ -359,6 +359,7 @@ export const bytesToUint8ArrayValidData: [Bytes, Uint8Array][] = [
 	['0x1234', new Uint8Array([18, 52])],
 	['0x1234', new Uint8Array([18, 52])],
 	[new Uint8Array(hexToBytes('0c12')), new Uint8Array(hexToBytes('0c12'))],
+	[[72, 12] as any, new Uint8Array([72, 12])],
 ];
 
 export const toBigIntValidData: [any, bigint][] = [
