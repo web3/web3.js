@@ -383,9 +383,6 @@ export const toHex = (
 		if (isHex(value) && !isInt(value) && !isUInt(value)) {
 			return returnType ? 'bytes' : `0x${value}`;
 		}
-		if (isHex(value) && !isInt(value) && isUInt(value)) {
-			return returnType ? 'uint' : numberToHex(value);
-		}
 
 		if (!Number.isFinite(value)) {
 			return returnType ? 'string' : utf8ToHex(value);
