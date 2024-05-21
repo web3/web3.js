@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { mainnet} from "web3-providers";
+import { mainnet } from "web3-providers";
 import { Web3 } from '../../src/index';
 
 describe('Web3 Provider Integration tests', () => {
