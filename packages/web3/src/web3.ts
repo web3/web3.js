@@ -30,7 +30,7 @@ import { Personal } from 'web3-eth-personal';
 import { Net } from 'web3-net';
 import * as utils from 'web3-utils';
 import { isNullish, isDataFormat, isContractInitOptions } from 'web3-utils';
-import { mainnet } from 'web3-providers';
+import { mainnet } from 'web3-rpc-providers';
 import {
 	Address,
 	ContractAbi,
