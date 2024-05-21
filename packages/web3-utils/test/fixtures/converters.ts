@@ -256,7 +256,7 @@ export const toHexInvalidData: [any, string][] = [
 	[undefined, 'Invalid value given "undefined". Error: can not be converted to hex.'],
 ];
 
-const conversionBaseData: [[Numbers, EtherUnits], string][] = [
+const conversionBaseData: [[Numbers, EtherUnits | number], string][] = [
 	[[0, 'wei'], '0'],
 	[[123, 'wei'], '123'],
 	[['123', 'wei'], '123'],
@@ -290,9 +290,18 @@ const conversionBaseData: [[Numbers, EtherUnits], string][] = [
 	[['178373938391829348', 'ether'], '0.178373938391829348'],
 	[['879123456788877661', 'gwei'], '879123456.788877661'],
 	[['879123456788877661', 'tether'], '0.000000000000879123456788877661'],
+	[['1', 3], '0.001'],
+	[['1', 4], '0.0001'],
+	[['1', 5], '0.00001'],
+	[['1', 6], '0.000001'],
+	[['1', 7], '0.0000001'],
+	[['1', 8], '0.00000001'],
+	[['1', 9], '0.000000001'],
+	[['1', 10], '0.0000000001'],
+	[['1000000000000000000', 18], '1'],
 ];
 
-export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
+export const fromWeiValidData: [[Numbers, EtherUnits | number], string][] = [
 	...conversionBaseData,
     [['0xff', 'wei'], '255'],
     [[1e+22, 'ether'], '10000'],
@@ -300,7 +309,7 @@ export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
     [[1.9999999999999991611392e+22, 'ether'], '19999.999999999991611392'],
 ];
 
-export const toWeiValidData: [[Numbers, EtherUnits], Numbers][] = [
+export const toWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
 	...conversionBaseData,
 	[['255', 'wei'], '0xFF'],
 	[['100000000000', 'ether'], 0.0000001],

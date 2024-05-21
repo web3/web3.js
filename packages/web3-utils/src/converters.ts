@@ -492,8 +492,16 @@ export const toBigInt = (value: unknown): bigint => {
  * > 0.000000001
  * ```
  */
-export const fromWei = (number: Numbers, unit: EtherUnits): string => {
-	const denomination = ethUnitMap[unit];
+export const fromWei = (number: Numbers, unit: EtherUnits | number): string => {
+	let denomination;
+	if (typeof unit === 'string') {
+		denomination = ethUnitMap[unit];
+	} else {
+		if (unit <= 0 && !Number.isInteger(unit)) {
+			throw new InvalidUnitError(unit);
+		}
+		denomination = BigInt(10)**BigInt(unit);
+	}
 
 	if (!denomination) {
 		throw new InvalidUnitError(unit);
@@ -550,10 +558,18 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
  * ```
  */
 // todo in 1.x unit defaults to 'ether'
-export const toWei = (number: Numbers, unit: EtherUnits): string => {
+export const toWei = (number: Numbers, unit: EtherUnits | number): string => {
 	validator.validate(['number'], [number]);
 
-	const denomination = ethUnitMap[unit];
+	let denomination;
+	if (typeof unit === 'string') {
+		denomination = ethUnitMap[unit];
+	} else {
+		if (unit < 0 && !Number.isInteger(unit)) {
+			throw new InvalidUnitError(unit);
+		}
+		denomination = BigInt(10)**BigInt(unit);
+	}
 
 	if (!denomination) {
 		throw new InvalidUnitError(unit);
