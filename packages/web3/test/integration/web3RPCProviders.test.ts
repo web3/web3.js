@@ -15,11 +15,35 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { mainnet } from "web3-providers";
+import { mainnet } from "web3-rpc-providers";
 import { Web3 } from '../../src/index';
+import { Network, QuickNodeProvider, Transport } from "web3-rpc-providers";
 
-describe('Web3 Provider Integration tests', () => {
+describe('Web3 RPC Provider Integration tests', () => {
+    const transports = Object.values(Transport);
+    const networks = [Network.ETH_MAINNET, Network.ETH_HOLESKY, Network.ETH_SEPOLIA,
+        Network.ARBITRUM_MAINNET, Network.ARBITRUM_SEPOLIA,
+        Network.BNB_MAINNET, Network.BNB_TESTNET,
+        Network.POLYGON_MAINNET, Network.POLYGON_AMONY];
 
+    transports.forEach((transport) => {
+        networks.forEach((network) => {
+            it(`QuickNodeProvider should work with ${transport} transport and ${network} network`, async () => {
+
+                const provider = new QuickNodeProvider(network, transport);
+                const web3 = new Web3(provider);
+                const result = await web3.eth.getBlockNumber()
+
+                expect(typeof result).toBe('bigint');
+                expect(result > 0).toBe(true);
+
+                if (transport === Transport.WebSocket) {
+                    web3.provider?.disconnect();
+                }
+
+            });
+        });
+    });
     it(`should work with mainnet provider`, async () => {
         const web3 = new Web3(mainnet);
         const result = await web3.eth.getBlockNumber()
