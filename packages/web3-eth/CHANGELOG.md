@@ -237,3 +237,8 @@ Documentation:
 ### Added
 
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+-   `getTransactionFromOrToAttr`, `waitForTransactionReceipt`, `trySendTransaction`, `SendTxHelper` was exported (#7000)
+
+### Changed
+
+-   Added parameter `customTransactionReceiptSchema` into methods `emitConfirmation`, `waitForTransactionReceipt`, `watchTransactionByPolling`, `watchTransactionBySubscription`, `watchTransactionForConfirmations` (#7000)

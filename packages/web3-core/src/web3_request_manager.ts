@@ -79,7 +79,7 @@ export class Web3RequestManager<
 	public constructor(
 		provider?: SupportedProviders<API> | string,
 		useRpcCallSpecification?: boolean,
-		requestManagerMiddleware?: RequestManagerMiddleware<API>
+		requestManagerMiddleware?: RequestManagerMiddleware<API>,
 	) {
 		super();
 
@@ -88,11 +88,9 @@ export class Web3RequestManager<
 		}
 		this.useRpcCallSpecification = useRpcCallSpecification;
 
-		if (!isNullish(requestManagerMiddleware))
-			this.middleware = requestManagerMiddleware;
-
+		if (!isNullish(requestManagerMiddleware)) this.middleware = requestManagerMiddleware;
 	}
-	
+
 	/**
 	 * Will return all available providers
 	 */
@@ -150,7 +148,7 @@ export class Web3RequestManager<
 		return true;
 	}
 
-	public setMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>){
+	public setMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>) {
 		this.middleware = requestManagerMiddleware;
 	}
 
@@ -167,16 +165,11 @@ export class Web3RequestManager<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIRequest<API, Method>): Promise<ResponseType> {
-
-		let requestObj = {...request};
-
-		if (!isNullish(this.middleware))
-		requestObj = await this.middleware.processRequest(requestObj);
+		const requestObj = { ...request };
 
 		let response = await this._sendRequest<Method, ResponseType>(requestObj);
 
-		if (!isNullish(this.middleware))
-			response = await this.middleware.processResponse(response);
+		if (!isNullish(this.middleware)) response = await this.middleware.processResponse(response);
 
 		if (jsonRpc.isResponseWithResult(response)) {
 			return response.result;
@@ -210,10 +203,15 @@ export class Web3RequestManager<
 			);
 		}
 
-		const payload = jsonRpc.isBatchRequest(request)
-			? jsonRpc.toBatchPayload(request)
-			: jsonRpc.toPayload(request);
+		let payload = (
+			jsonRpc.isBatchRequest(request)
+				? jsonRpc.toBatchPayload(request)
+				: jsonRpc.toPayload(request)
+		) as JsonRpcPayload;
 
+		if (!isNullish(this.middleware)) {
+			payload = await this.middleware.processRequest(payload);
+		}
 		if (isWeb3Provider(provider)) {
 			let response;
 
@@ -250,7 +248,7 @@ export class Web3RequestManager<
 		// TODO: This could be deprecated and removed.
 		if (isLegacyRequestProvider(provider)) {
 			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject) => {
-				const rejectWithError = (err: unknown) =>
+				const rejectWithError = (err: unknown) => {
 					reject(
 						this._processJsonRpcResponse(
 							payload,
@@ -261,6 +259,8 @@ export class Web3RequestManager<
 							},
 						),
 					);
+				};
+
 				const resolveWithResponse = (response: JsonRpcResponse<ResponseType>) =>
 					resolve(
 						this._processJsonRpcResponse(payload, response, {
@@ -290,7 +290,20 @@ export class Web3RequestManager<
 					const responsePromise = result as unknown as Promise<
 						JsonRpcResponse<ResponseType>
 					>;
-					responsePromise.then(resolveWithResponse).catch(rejectWithError);
+					responsePromise.then(resolveWithResponse).catch(error => {
+						try {
+							// Attempt to process the error response
+							const processedError = this._processJsonRpcResponse(
+								payload,
+								error as JsonRpcResponse<ResponseType, unknown>,
+								{ legacy: true, error: true },
+							);
+							reject(processedError);
+						} catch (processingError) {
+							// Catch any errors that occur during the error processing
+							reject(processingError);
+						}
+					});
 				}
 			});
 		}
@@ -447,10 +460,10 @@ export class Web3RequestManager<
 		} else if ((response as unknown) instanceof Error) {
 			error = response as unknown as JsonRpcError;
 		}
-		
+
 		// This message means that there was an error while executing the code of the smart contract
 		// However, more processing will happen at a higher level to decode the error data,
-		//	according to the Error ABI, if it was available as of EIP-838. 
+		//	according to the Error ABI, if it was available as of EIP-838.
 		if (error?.message.includes('revert')) throw new ContractExecutionError(error);
 
 		return false;

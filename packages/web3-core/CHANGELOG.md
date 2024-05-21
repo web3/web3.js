@@ -210,4 +210,10 @@ Documentation:
 ## [Unreleased]
 
 ### Added
+
 -   `defaultReturnFormat` was added to the configuration options. (#6947)
+
+### Changed
+
+-   Interface `RequestManagerMiddleware` was changed (#7003)
+

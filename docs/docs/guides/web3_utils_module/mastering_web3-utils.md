@@ -1,6 +1,7 @@
 # Mastering Utility Functions
 
 ## Introduction
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-kbtbsv?embed=1&file=main.ts&showSidebar=1"></iframe>
 In this guide, you'll learn about the different functions of the web3 utils package, it contains the methods to know how to generate random bytes in different formats, how to perform conversion between Hex values and numbers, hashing functions, addresses, packing padding and in the last part you will see how to compare block numbers.
 
 ## Installation

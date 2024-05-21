@@ -6,6 +6,8 @@ title: Mastering the Web3 ENS package
 
 # Using web3.js ENS Package
 
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-qmk8vz?embed=1&file=main.ts&showSidebar=1"></iframe>
+
 In this tutorial, we'll explore how to use the web3.js ENS (Ethereum Name Service) package. The Ethereum Name Service (ENS) is a decentralized domain system built on the Ethereum blockchain. It serves as a distributed, secure, and human-readable naming system designed to map Ethereum addresses, smart contracts, and various other services to easily understandable names. 
 
 ## Installing web3.js

@@ -299,6 +299,7 @@ describe('sendTransaction', () => {
 				formattedTransactionReceipt,
 				expectedTransactionHash,
 				DEFAULT_RETURN_FORMAT,
+				undefined,
 			);
 		},
 	);

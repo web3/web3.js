@@ -132,7 +132,7 @@ const config = {
 						position: 'left',
 					},
 					{
-						to: '/glossary/json_interface',
+						to: 'glossary',
 						activeBasePath: '/glossary/',
 						label: 'Glossary',
 						position: 'left',
