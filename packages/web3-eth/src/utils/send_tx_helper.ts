@@ -122,7 +122,14 @@ export class SendTxHelper<
 
 	public async checkRevertBeforeSending(tx: TransactionCall) {
 		if (this.options.checkRevertBeforeSending !== false) {
-			const reason = await getRevertReason(this.web3Context, tx, this.options.contractAbi);
+			let formatTx = tx;
+			if (isNullish(tx.data) && isNullish(tx.input) && isNullish(tx.gas)) { // eth.call runs into error if data isnt filled and gas is not defined, its a simple transaction so we fill it with 21000
+				formatTx = {
+					...tx,
+					gas: 21000
+				}
+			}
+			const reason = await getRevertReason(this.web3Context, formatTx, this.options.contractAbi);
 			if (reason !== undefined) {
 				throw await getTransactionError<ReturnFormat>(
 					this.web3Context,

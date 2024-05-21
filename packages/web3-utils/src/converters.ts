@@ -532,8 +532,9 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 	if (fraction === '') {
 		return integer;
 	}
+	const updatedValue = `${integer}.${fraction}`;
 
-	return `${integer}.${fraction}`;
+	return updatedValue.slice(0, integer.length + numberOfZerosInDenomination + 1);
 };
 
 /**
@@ -559,50 +560,50 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 		throw new InvalidUnitError(unit);
 	}
 	let parsedNumber = number;
-	if (typeof parsedNumber === 'number'){
-		if (parsedNumber  < 1e-15){
-			console.warn(PrecisionLossWarning)
+	if (typeof parsedNumber === 'number') {
+		if (parsedNumber < 1e-15) {
+			console.warn(PrecisionLossWarning);
 		}
-		if (parsedNumber > 1e+20) {
-			console.warn(PrecisionLossWarning)
+		if (parsedNumber > 1e20) {
+			console.warn(PrecisionLossWarning);
 
-			parsedNumber =  BigInt(parsedNumber);
+			parsedNumber = BigInt(parsedNumber);
 		} else {
 			// in case there is a decimal point, we need to convert it to string
-			parsedNumber = parsedNumber.toLocaleString('fullwide', {useGrouping: false, maximumFractionDigits: 20})
+			parsedNumber = parsedNumber.toLocaleString('fullwide', {
+				useGrouping: false,
+				maximumFractionDigits: 20,
+			});
 		}
 	}
-	
+
 	// if value is decimal e.g. 24.56 extract `integer` and `fraction` part
 	// to avoid `fraction` to be null use `concat` with empty string
 	const [integer, fraction] = String(
-		typeof parsedNumber === 'string' && !isHexStrict(parsedNumber) ? parsedNumber : toNumber(parsedNumber),
+		typeof parsedNumber === 'string' && !isHexStrict(parsedNumber)
+			? parsedNumber
+			: toNumber(parsedNumber),
 	)
 		.split('.')
 		.concat('');
 
 	// join the value removing `.` from
 	// 24.56 -> 2456
-	
+
 	const value = BigInt(`${integer}${fraction}`);
 
 	// multiply value with denomination
 	// 2456 * 1000000 -> 2456000000
 	const updatedValue = value * denomination;
 
-	// count number of zeros in denomination
-	const numberOfZerosInDenomination = denomination.toString().length - 1;
-
-	// check which either `fraction` or `denomination` have lower number of zeros
-	const decimals = Math.min(fraction.length, numberOfZerosInDenomination);
-
+	// check if whole number was passed in
+	const decimals = fraction.length;
 	if (decimals === 0) {
 		return updatedValue.toString();
 	}
 
-	// Add zeros to make length equal to required decimal points
-	// If string is larger than decimal points required then remove last zeros
-	return updatedValue.toString().padStart(decimals, '0').slice(0, -decimals);
+	// trim the value to remove extra zeros
+	return updatedValue.toString().slice(0, -decimals);
 };
 
 /**
