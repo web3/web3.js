@@ -225,3 +225,4 @@ Documentation:
 ### Fixed
 
 - `toWei` support numbers in scientific notation (#6908)
+- `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
