@@ -1,5 +1,5 @@
 {
-	"name": "web3-providers",
+	"name": "web3-rpc-providers",
 	"version": "0.1.0",
 	"description": "Web3 Providers package",
 	"main": "./lib/commonjs/index.js",

@@ -14,18 +14,18 @@ This is a sub-package of [web3.js][repo].
 
 ## Installation
 
-You can install the package either using [NPM](https://www.npmjs.com/package/web3-providers) or using [Yarn](https://yarnpkg.com/package/web3-providers)
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-rpc-providers) or using [Yarn](https://yarnpkg.com/package/web3-rpc-providers)
 
 ### Using NPM
 
 ```bash
-npm install web3-providers
+npm install web3-rpc-providers
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add web3-providers
+yarn add web3-rpc-providers
 ```
 
 ## Getting Started
@@ -52,7 +52,7 @@ yarn add web3-providers
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: https://docs.web3js.org/
-[repo]: https://github.com/web3/web3.js/tree/4.x/tools/web3-providers
-[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=tools%2Fweb3-providers%2Fpackage.json
-[npm-url]: https://npmjs.org/package/web3-providers
-[downloads-image]: https://img.shields.io/npm/dm/web3-providers?label=npm%20downloads
+[repo]: https://github.com/web3/web3.js/tree/4.x/tools/web3-rpc-providers
+[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=tools%2Fweb3-rpc-providers%2Fpackage.json
+[npm-url]: https://npmjs.org/package/web3-rpc-providers
+[downloads-image]: https://img.shields.io/npm/dm/web3-rpc-providers?label=npm%20downloads
