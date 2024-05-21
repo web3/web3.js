@@ -41,14 +41,14 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, ETH_DATA_FORMAT);
 	if (isNullish(block.baseFeePerGas)) throw new Eip1559NotSupportedError();
 
-	let gasPrice: Numbers;
+	let gasPrice: Numbers | undefined = undefined;
 	if (isNullish(transaction.gasPrice) && BigInt(block.baseFeePerGas) === BigInt(0)) {
-		gasPrice = (await getGasPrice(web3Context, returnFormat)) as string;
+		gasPrice = await getGasPrice(web3Context, returnFormat);
 	}
 	if (!isNullish(transaction.gasPrice) || !isNullish(gasPrice)) {
 		const convertedTransactionGasPrice = format(
 			{ format: 'uint' },
-			(transaction.gasPrice ?? gasPrice),
+			transaction.gasPrice ?? gasPrice,
 			returnFormat,
 		);
 
