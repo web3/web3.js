@@ -41,7 +41,7 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, ETH_DATA_FORMAT);
 	if (isNullish(block.baseFeePerGas)) throw new Eip1559NotSupportedError();
 
-	let gasPrice: Numbers | undefined = undefined;
+	let gasPrice: Numbers | undefined;
 	if (isNullish(transaction.gasPrice) && BigInt(block.baseFeePerGas) === BigInt(0)) {
 		gasPrice = await getGasPrice(web3Context, returnFormat);
 	}
