@@ -6,7 +6,7 @@ sidebar_label: Introduction
 
 # Introduction
 
-Web3.js is a robust and flexible collection of **TypeScript and JavaScript** libraries that allows developers to interact with local or remote [Ethereum](https://ethereum.org/en/) nodes (or **any EVM-compatible blockchain**) using **HTTP, IPC or WebSocket.** It is a powerful and efficient toolkit for crafting applications within the Ethereum ecosystem and beyond.
+Web3.js is a robust and flexible collection of **TypeScript and JavaScript** libraries that allows developers to interact with local or remote [Ethereum](https://ethereum.org/en/) nodes (or **any EVM-compatible blockchain**) over **HTTP, IPC or WebSocket** connections. It is a powerful and efficient toolkit for crafting applications within the Ethereum ecosystem and beyond.
 
 This documentation is the entrypoint to Web3.js for developers. It covers [basic](/guides/getting_started/quickstart) and [advanced](/guides/smart_contracts/) usage with examples, and includes comprehensive [API documentation](/api) as well as guides for common tasks, like [upgrading](/guides/web3_upgrade_guide/x/) from older versions.
 
@@ -23,7 +23,7 @@ This documentation is the entrypoint to Web3.js for developers. It covers [basic
 - Developer-Friendly
   - [Dynamic contract types](/guides/smart_contracts/infer_contract_types/) & full API in TypeScript
   - Custom output [formatters](https://docs.web3js.org/api/web3-utils/function/format)
-  - In compliance with Eth EL API
+  - In compliance with the [Ethereum JSON-RPC Specification](https://ethereum.github.io/execution-apis/api-documentation/)
 
 ## Packages
 
