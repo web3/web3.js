@@ -318,12 +318,17 @@ const conversionBaseData: [[Numbers, EtherUnits | number], string][] = [
 	[['1000000000000000000', 18], '1'],
 ];
 
-export const fromWeiValidData: [[Numbers, EtherUnits | number], string][] = [
+export const fromWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
 	...conversionBaseData,
     [['0xff', 'wei'], '255'],
     [[1e+22, 'ether'], '10000'],
     [[19999999999999991611392, 'ether'], '19999.999999999991611392'],
     [[1.9999999999999991611392e+22, 'ether'], '19999.999999999991611392'],
+	[['1000000', 'ether'], '0.000000000001'],
+	[['1123456789123456789', 'ether'], '1.123456789123456789'],
+	[['1123', 'kwei'], '1.123'],
+	[['1234100' ,'kwei'], '1234.1'],
+	[['3308685546611893', 'ether'], '0.003308685546611893']
 ];
 
 export const toWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
@@ -331,7 +336,12 @@ export const toWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
 	[['255', 'wei'], '0xFF'],
 	[['100000000000', 'ether'], 0.0000001],
 	[['1000000000', 'ether'], 0.000000001],
-	[['1000000', 'ether'], 0.000000000001]
+	[['1000000', 'ether'], 0.000000000001],
+	[['1123456789123456789', 'ether'], '1.123456789123456789123'],
+	[['1123', 'kwei'], '1.12345'],
+	[['1234100' ,'kwei'], '1234.1'],
+	[['3308685546611893', 'ether'], '0.0033086855466118933'],
+	[['1123', 'kwei'], 1.12345],
 
 ];
 
