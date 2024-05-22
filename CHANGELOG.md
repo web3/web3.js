@@ -2456,6 +2456,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   `defaultReturnFormat` was added to the configuration options. (#6947)
 
+#### web3-errors
+
+- Added `InvalidIntegerError` error for fromWei and toWei (#7052)
+
 #### web3-eth
 
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
@@ -2480,6 +2484,8 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
+- `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
+- `toWei` and `fromWei` now supports integers as a unit. (#7053)  
 
 ### Fixed
 
@@ -2489,9 +2495,17 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
+- `toWei` support numbers in scientific notation (#6908)
+- `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
 
 #### web3-validator
 
+- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
+-  `browser` entry point that was pointing to an non-existing bundle file was removed from `package.json` (#7015)
+
+#### web3-core
+
+-   Set a try catch block if processesingError fails (#7022)
 
 ### Changed
 
@@ -2503,6 +2517,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Added parameter `customTransactionReceiptSchema` into methods `emitConfirmation`, `waitForTransactionReceipt`, `watchTransactionByPolling`, `watchTransactionBySubscription`, `watchTransactionForConfirmations` (#7000)
 -   Changed functionality: For networks that returns `baseFeePerGas===0x0` fill `maxPriorityFeePerGas` and `maxFeePerGas` by `getGasPrice` method (#7050)
+
+#### web3-eth-abi
+
+-   Dependencies updated
 
 #### web3-rpc-methods
 

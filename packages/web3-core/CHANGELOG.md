@@ -217,3 +217,6 @@ Documentation:
 
 -   Interface `RequestManagerMiddleware` was changed (#7003)
 
+### Fixed
+
+-   Set a try catch block if processesingError fails (#7022)
