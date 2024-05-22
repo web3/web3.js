@@ -41,6 +41,7 @@ import {
 	InvalidBytesError,
 	InvalidNumberError,
 	InvalidUnitError,
+	InvalidIntegerError,
 } from 'web3-errors';
 import { isUint8Array } from './uint8array.js';
 
@@ -496,16 +497,17 @@ export const fromWei = (number: Numbers, unit: EtherUnits | number): string => {
 	let denomination;
 	if (typeof unit === 'string') {
 		denomination = ethUnitMap[unit];
-	} else {
-		if (unit <= 0 && !Number.isInteger(unit)) {
+
+		if (!denomination) {
 			throw new InvalidUnitError(unit);
+		}
+	} else {
+		if (unit < 0 || !Number.isInteger(unit)) {
+			throw new InvalidIntegerError(unit);
 		}
 		denomination = BigInt(10)**BigInt(unit);
 	}
 
-	if (!denomination) {
-		throw new InvalidUnitError(unit);
-	}
 
 	// value in wei would always be integer
 	// 13456789, 1234
@@ -564,16 +566,17 @@ export const toWei = (number: Numbers, unit: EtherUnits | number): string => {
 	let denomination;
 	if (typeof unit === 'string') {
 		denomination = ethUnitMap[unit];
-	} else {
-		if (unit < 0 && !Number.isInteger(unit)) {
+		if (!denomination) {
 			throw new InvalidUnitError(unit);
 		}
+	} else {
+		if (unit < 0 || !Number.isInteger(unit)) {
+			throw new InvalidIntegerError(unit);
+		}
+		
 		denomination = BigInt(10)**BigInt(unit);
 	}
 
-	if (!denomination) {
-		throw new InvalidUnitError(unit);
-	}
 	let parsedNumber = number;
 	if (typeof parsedNumber === 'number'){
 		if (parsedNumber  < 1e-15){

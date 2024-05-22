@@ -290,6 +290,9 @@ const conversionBaseData: [[Numbers, EtherUnits | number], string][] = [
 	[['178373938391829348', 'ether'], '0.178373938391829348'],
 	[['879123456788877661', 'gwei'], '879123456.788877661'],
 	[['879123456788877661', 'tether'], '0.000000000000879123456788877661'],
+	[['1', 0], '1'],
+	[['1', 1], '0.1'],
+	[['1', 2], '0.01'],
 	[['1', 3], '0.001'],
 	[['1', 4], '0.0001'],
 	[['1', 5], '0.00001'],
@@ -298,6 +301,20 @@ const conversionBaseData: [[Numbers, EtherUnits | number], string][] = [
 	[['1', 8], '0.00000001'],
 	[['1', 9], '0.000000001'],
 	[['1', 10], '0.0000000001'],
+	[[1, 18], '0.000000000000000001'],
+	[[100, 2], '1'],
+	[['100', 2], '1'],
+	[['1000', 3], '1'],
+	[['10000', 4], '1'],
+	[['100000', 5], '1'],
+	[['1000000', 6], '1'],
+	[['10000000', 7], '1'],
+	[['100000000', 8], '1'],
+	[['1000000000', 9], '1'],
+	[['10000000000', 10], '1'],
+	[['100000000000', 11], '1'],
+	[['1000000000000', 12], '1'],
+	[['10000000000000', 13], '1'],
 	[['1000000000000000000', 18], '1'],
 ];
 
@@ -335,6 +352,8 @@ export const fromWeiInvalidData: [[any, any], string][] = [
 	[[{}, 'kwei'], 'Invalid value given "{}". Error: can not parse as number data'],
 	[['data', 'kwei'], 'Invalid value given "data". Error: can not parse as number data.'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
+	[['1234', -1], 'Invalid value given "-1". Error: not a valid unit. Must be a positive integer.'],
+	[['1234', 3.3], 'Invalid value given "3.3". Error: not a valid unit. Must be a positive integer.']
 ];
 
 export const toWeiInvalidData: [[any, any], string][] = [

@@ -167,3 +167,7 @@ Documentation:
 -   Fixed grammar and spelling in `transactionTimeoutHint` (#6559)
 
 ## [Unreleased]
+
+### Added
+
+- Added `InvalidIntegerError` error for fromWei and toWei (#7052)
