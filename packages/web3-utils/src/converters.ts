@@ -32,6 +32,7 @@ import {
 	utils,
 	utils as validatorUtils,
 	validator,
+	bigintPower,
 } from 'web3-validator';
 
 import {
@@ -505,7 +506,7 @@ export const fromWei = (number: Numbers, unit: EtherUnits | number): string => {
 		if (unit < 0 || !Number.isInteger(unit)) {
 			throw new InvalidIntegerError(unit);
 		}
-		denomination = BigInt(10)**BigInt(unit);
+		denomination = bigintPower(BigInt(10),BigInt(unit));
 	}
 
 
@@ -575,7 +576,7 @@ export const toWei = (number: Numbers, unit: EtherUnits | number): string => {
 			throw new InvalidIntegerError(unit);
 		}
 		
-		denomination = BigInt(10)**BigInt(unit);
+		denomination = bigintPower(BigInt(10),BigInt(unit));
 	}
 
 	let parsedNumber = number;
@@ -608,7 +609,6 @@ export const toWei = (number: Numbers, unit: EtherUnits | number): string => {
 
 	// join the value removing `.` from
 	// 24.56 -> 2456
-
 	const value = BigInt(`${integer}${fraction}`);
 
 	// multiply value with denomination
