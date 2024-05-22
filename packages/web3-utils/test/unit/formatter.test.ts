@@ -519,6 +519,115 @@ describe('formatter', () => {
 				).toEqual(result);
 			});
 
+			it('should format array of objects', () => {
+				const schema = {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							prop1: {
+								format: 'uint',
+							},
+							prop2: {
+								format: 'bytes',
+							},
+						},
+					},
+				};
+
+				const data = [
+					{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
+					{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
+				];
+
+				const result = [
+					{ prop1: '0xa', prop2: '0xff' },
+					{ prop1: '0xa', prop2: '0xff' },
+				];
+
+				expect(
+					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),
+				).toEqual(result);
+			});
+
+			it('should format array of objects with oneOf', () => {
+				const schema = {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							prop1: {
+								oneOf: [{ format: 'address' }, { type: 'string' }],
+							},
+							prop2: {
+								format: 'bytes',
+							},
+						},
+					},
+				};
+
+				const data = [
+					{
+						prop1: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401',
+						prop2: new Uint8Array(hexToBytes('FF')),
+					},
+					{ prop1: 'some string', prop2: new Uint8Array(hexToBytes('FF')) },
+				];
+
+				const result = [
+					{ prop1: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', prop2: '0xff' },
+					{ prop1: 'some string', prop2: '0xff' },
+				];
+
+				expect(
+					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),
+				).toEqual(result);
+			});
+
+			it('should format array of different objects', () => {
+				const schema = {
+					type: 'array',
+					items: [
+						{
+							type: 'object',
+							properties: {
+								prop1: {
+									format: 'uint',
+								},
+								prop2: {
+									format: 'bytes',
+								},
+							},
+						},
+						{
+							type: 'object',
+							properties: {
+								prop1: {
+									format: 'string',
+								},
+								prop2: {
+									format: 'uint',
+								},
+							},
+						},
+					],
+				};
+
+				const data = [
+					{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
+					{ prop1: 'test', prop2: 123 },
+				];
+
+				const result = [
+					{ prop1: 10, prop2: '0xff' },
+					{ prop1: 'test', prop2: 123 },
+				];
+
+				expect(
+					format(schema, data, { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX }),
+				).toEqual(result);
+			});
+
 			it('should format array values with object type', () => {
 				const schema = {
 					type: 'object',

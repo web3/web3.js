@@ -32,6 +32,7 @@ import {
 	utils,
 	utils as validatorUtils,
 	validator,
+	bigintPower,
 } from 'web3-validator';
 
 import {
@@ -41,6 +42,7 @@ import {
 	InvalidBytesError,
 	InvalidNumberError,
 	InvalidUnitError,
+	InvalidIntegerError,
 } from 'web3-errors';
 import { isUint8Array } from './uint8array.js';
 
@@ -492,12 +494,21 @@ export const toBigInt = (value: unknown): bigint => {
  * > 0.000000001
  * ```
  */
-export const fromWei = (number: Numbers, unit: EtherUnits): string => {
-	const denomination = ethUnitMap[unit];
+export const fromWei = (number: Numbers, unit: EtherUnits | number): string => {
+	let denomination;
+	if (typeof unit === 'string') {
+		denomination = ethUnitMap[unit];
 
-	if (!denomination) {
-		throw new InvalidUnitError(unit);
+		if (!denomination) {
+			throw new InvalidUnitError(unit);
+		}
+	} else {
+		if (unit < 0 || !Number.isInteger(unit)) {
+			throw new InvalidIntegerError(unit);
+		}
+		denomination = bigintPower(BigInt(10),BigInt(unit));
 	}
+
 
 	// value in wei would always be integer
 	// 13456789, 1234
@@ -551,14 +562,23 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
  * ```
  */
 // todo in 1.x unit defaults to 'ether'
-export const toWei = (number: Numbers, unit: EtherUnits): string => {
+export const toWei = (number: Numbers, unit: EtherUnits | number): string => {
 	validator.validate(['number'], [number]);
 
-	const denomination = ethUnitMap[unit];
-
-	if (!denomination) {
-		throw new InvalidUnitError(unit);
+	let denomination;
+	if (typeof unit === 'string') {
+		denomination = ethUnitMap[unit];
+		if (!denomination) {
+			throw new InvalidUnitError(unit);
+		}
+	} else {
+		if (unit < 0 || !Number.isInteger(unit)) {
+			throw new InvalidIntegerError(unit);
+		}
+		
+		denomination = bigintPower(BigInt(10),BigInt(unit));
 	}
+
 	let parsedNumber = number;
 	if (typeof parsedNumber === 'number') {
 		if (parsedNumber < 1e-15) {
@@ -589,7 +609,6 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 
 	// join the value removing `.` from
 	// 24.56 -> 2456
-
 	const value = BigInt(`${integer}${fraction}`);
 
 	// multiply value with denomination

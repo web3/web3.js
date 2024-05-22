@@ -221,6 +221,7 @@ Documentation:
 ### Added
 
 - `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
+- `toWei` and `fromWei` now supports integers as a unit. (#7053)  
 
 ### Fixed
 
