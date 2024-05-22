@@ -170,8 +170,10 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.3.0]
 
 ### Changed
 
 -   Dependencies updated
+
+## [Unreleased]

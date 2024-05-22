@@ -153,8 +153,10 @@ Documentation:
 
 - Added function getText and getName in ENS and resolver classes (#6914)
 
-## [Unreleased]
+## [4.3.0]
 
 ### Added
 
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+## [Unreleased]

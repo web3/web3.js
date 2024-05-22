@@ -262,8 +262,10 @@ Documentation:
 -   Added `signature` to type `AbiFunctionFragment` (#6922)
 -   update type `Withdrawals`, `block` and `BlockHeaderOutput` to include properties of eip 4844, 4895, 4788 (#6933)
 
-## [Unreleased]
+## [4.9.0]
 
 ### Added
 
 -   Updated type `Web3EthInterface.accounts` to includes `privateKeyToAccount`,`privateKeyToAddress`,and `privateKeyToPublicKey` (#6762)
+
+## [Unreleased]

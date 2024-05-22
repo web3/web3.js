@@ -47,7 +47,7 @@
 		"web3-eth-iban": "^4.0.7",
 		"web3-providers-http": "^4.1.0",
 		"web3-providers-ws": "^4.0.7",
-		"web3-types": "^1.7.0",
+		"web3-types": "^1.6.0",
 		"web3-utils": "^4.3.0",
 		"web3-validator": "^2.0.6"
 	},

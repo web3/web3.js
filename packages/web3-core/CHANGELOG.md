@@ -207,7 +207,7 @@ Documentation:
 
 -	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
 
-## [Unreleased]
+## [4.4.0]
 
 ### Added
 
@@ -220,3 +220,5 @@ Documentation:
 ### Fixed
 
 -   Set a try catch block if processesingError fails (#7022)
+
+## [Unreleased]

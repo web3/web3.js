@@ -232,7 +232,7 @@ Documentation:
 -   method `getBlock` now includes properties of eip 4844, 4895, 4788 when returning block (#6933)
 -   update type `withdrawalsSchema`, `blockSchema` and `blockHeaderSchema` schemas to include properties of eip 4844, 4895, 4788 (#6933)
 
-## [Unreleased]
+## [4.7.0]
 
 ### Added
 
@@ -247,3 +247,5 @@ Documentation:
 ### Fixed
 
 -   Fixed issue with simple transactions, Within `checkRevertBeforeSending` if there is no data set in transaction, set gas to be `21000` (#7043)
+
+## [Unreleased]

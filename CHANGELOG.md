@@ -2444,7 +2444,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Added `signature` to type `AbiFunctionFragment` (#6922)
 -   update type `Withdrawals`, `block` and `BlockHeaderOutput` to include properties of eip 4844, 4895, 4788 (#6933)
 
-## [Unreleased]
+## [4.9.0]
 
 ### Added
 
@@ -2525,3 +2525,5 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-rpc-methods
 
 -   Change `estimateGas` method to add possibility pass Transaction type (#7000)
+
+## [Unreleased]

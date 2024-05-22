@@ -216,7 +216,7 @@ Documentation:
 - fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
 - fixed isUint8Array not returning true for Buffer (#6957)
 
-## [Unreleased]
+## [4.3.0]
 
 ### Added
 
@@ -227,3 +227,5 @@ Documentation:
 
 - `toWei` support numbers in scientific notation (#6908)
 - `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
+
+## [Unreleased]

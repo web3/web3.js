@@ -57,7 +57,7 @@
 	},
 	"dependencies": {
 		"web3-core": "^4.4.0",
-		"web3-types": "^1.7.0",
+		"web3-types": "^1.6.0",
 		"web3-validator": "^2.0.6"
 	}
 }

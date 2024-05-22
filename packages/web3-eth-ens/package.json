@@ -64,7 +64,7 @@
 		"web3-eth": "^4.7.0",
 		"web3-eth-contract": "^4.5.0",
 		"web3-net": "^4.1.0",
-		"web3-types": "^1.7.0",
+		"web3-types": "^1.6.0",
 		"web3-utils": "^4.3.0",
 		"web3-validator": "^2.0.6"
 	}
