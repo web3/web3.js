@@ -1,26 +1,28 @@
 ---
+slug: /
 sidebar_position: 1
 sidebar_label: Introduction
 ---
 
 # Introduction
 
-Welcome to Web3.js Documentation!👋
+Web3.js is a robust and flexible collection of **TypeScript and JavaScript** libraries that allows developers to interact with local or remote [Ethereum](https://ethereum.org/en/) nodes (or **any EVM-compatible blockchain**) using **HTTP, IPC or WebSocket.** It is a powerful and efficient toolkit for crafting applications within the Ethereum ecosystem and beyond.
 
-Web3.js is a robust and flexible collection of libraries for **TypeScript and JavaScript** developers. It allows you to interact with a local or remote Ethereum node (or **any EVM-compatible blockchain**) using **HTTP, IPC or WebSocket.** It serves as an essential tool for connecting and crafting applications within the Ethereum ecosystem.
-
-The following documentation will guide you through different use cases of Web3.js, upgrading from older versions, as well as providing an API reference documentation with examples.
+This documentation is the entrypoint to Web3.js for developers. It covers [basic](/guides/getting_started/) and [advanced](/guides/smart_contracts/) usage with examples, and includes comprehensive [API documentation](/api) as well as guides for common tasks, like [upgrading](/guides/web3_upgrade_guide/x/) from older versions.
 
 ## Features of Web3.js v4
 
--    Web3.js [Plugins Feature](/guides/web3_plugin_guide/) for extending functionality ( [List of Existing Plugins](https://web3js.org/plugins) )
--    ECMAScript (ESM) and CommonJS (CJS) builds 
--    [Tree shakable with ESM](/guides/advanced/tree_shaking)
--    [Contracts dynamic types](/guides/smart_contracts/infer_contract_types/) & full API in TypeScript
--    Using native BigInt instead of large BigNumber libraries
--    More efficient ABI Encoder & Decoder
--    Custom Output formatters
--    In compliance with Eth EL API
+- Flexible
+  - ECMAScript (ESM) and CommonJS (CJS) builds
+  - [Plugins](/guides/web3_plugin_guide/) for extending functionality
+- Efficient
+  - [Tree shakable with ESM](/guides/advanced/tree_shaking)
+  - Use of native [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) instead of large [BigNumber](https://mikemcl.github.io/bignumber.js/) libraries
+  - Efficient ABI [encoding](/api/web3-eth-abi/function/encodeFunctionCall) & [decoding](/api/web3-eth-abi/function/decodeLog)
+- Developer-Friendly
+  - [Dynamic contract types](/guides/smart_contracts/infer_contract_types/) & full API in TypeScript
+  - Custom output [formatters](https://docs.web3js.org/api/web3-utils/function/format)
+  - In compliance with Eth EL API
 
 ## Packages
 
