@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3RequestManager } from 'web3-core';
-import { personalRpcMethods } from '../../../src/index';
 import { EthPersonalAPI } from 'web3-types';
+import { personalRpcMethods } from '../../../src/index';
 
 describe('Eth Personal', () => {
 	let requestManagerSendSpy: jest.Mock;
