@@ -138,8 +138,10 @@ Documentation:
 
 -   Added `getMaxPriorityFeePerGas` method (#6748)
 
-## [Unreleased]
+## [1.3.0]
 
 ### Changed
 
 -   Change `estimateGas` method to add possibility pass Transaction type (#7000)
+
+## [Unreleased]

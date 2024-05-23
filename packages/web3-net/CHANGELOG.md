@@ -141,7 +141,10 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.1.0]
 
 ### Added
+
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
+
+## [Unreleased]
