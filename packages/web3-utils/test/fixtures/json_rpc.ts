@@ -81,3 +81,18 @@ export const isResponseRpcErrorValidData: [any, boolean][] = [
 	[responseWithRpcError, true],
 	[responseWithError, false],
 ]
+
+export const isBatchRequestValidData: [any, boolean][] = [
+	[[{
+		method: 'add',
+		id: 1,
+		jsonrpc: '1.0',
+		params: undefined
+	}], true],
+	[{
+		method: 'add',
+		id: 1,
+		jsonrpc: '1.0',
+		params: undefined
+	}, false]
+]

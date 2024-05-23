@@ -25,6 +25,7 @@ import {
 	isBatchResponse,
 	setRequestIdStart,
 	toBatchPayload,
+	isBatchRequest,
 	toPayload,
 } from '../../src/json_rpc';
 import {
@@ -36,6 +37,7 @@ import {
 	toPayloadValidTest,
 	isValidResponseValidTest,
 	isBatchResponseValidTest,
+	isBatchRequestValidData,
 } from '../fixtures/json_rpc';
 
 describe('json rpc tests', () => {
@@ -89,12 +91,19 @@ describe('json rpc tests', () => {
 	});
 	describe('isBatchResponseValid', () => {
 		describe('valid cases', () => {
-			it.each(isBatchResponseValidTest)('isValidresponse valid test', (input, output) => {
+			it.each(isBatchResponseValidTest)('isBatchResponseValid valid test', (input, output) => {
 				const result = isBatchResponse(input);
 				expect(result).toBe(output);
 			});
 		});
 	});
+	describe('isBatchRequest', () => {
+		describe('valid cases', () => {
+			it.each(isBatchRequestValidData)('isBatchRqeuest valid data', (input, output) => {
+				expect(isBatchRequest(input)).toBe(output);
+			})
+		})
+	})
 	describe('toPayloadValid', () => {
 		describe('valid cases', () => {
 			beforeEach (() => {

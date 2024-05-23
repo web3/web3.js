@@ -22,7 +22,7 @@ import {
 	Web3ProviderStatus,
 	JsonRpcIdentifier,
 } from 'web3-types';
-import { MaxAttemptsReachedOnReconnectingError } from 'web3-errors';
+import { MaxAttemptsReachedOnReconnectingError, InvalidClientError } from 'web3-errors';
 import { EventEmitter } from '../../src/event_emitter';
 // eslint-disable-next-line import/no-relative-packages
 import { sleep } from '../../../../fixtures/utils';
@@ -120,6 +120,12 @@ describe('SocketProvider', () => {
 
 				expect(clearQueuesSpy).toHaveBeenCalled();
 			});
+			it('should error when failing to _validateProviderPath', () => {
+				expect(() => {
+					// eslint-disable-next-line no-new
+					new TestProvider("", socketOption, { delay: 0 });
+				}).toThrow(InvalidClientError)
+			})
 		});
 		describe('testing _reconnect() method', () => {
 			it('should not be called when { autoReconnect: false }', () => {
