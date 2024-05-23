@@ -53,7 +53,7 @@ Web3.js is a modular collection of packages, each of which serves a specific nee
 
 - [**Web3 Core:**](/api/web3-core) subscriptions, request management, and configuration used by other Web3 packages
 
-- [**Web3 Types:**](/api/web3-types) common TypeScript types
+- [**Web3 Types:**](/api/web3-types) data structures, objects, interfaces and types used by Web3
 
 - [**Web3 Validator:**](/api/web3-validator) runtime type validation against predefined types or custom schemas
 
