@@ -328,7 +328,7 @@ export const fromWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
 	[['1123456789123456789', 'ether'], '1.123456789123456789'],
 	[['1123', 'kwei'], '1.123'],
 	[['1234100' ,'kwei'], '1234.1'],
-	[['3308685546611893', 'ether'], '0.003308685546611893']
+	[['3308685546611893', 'ether'], '0.003308685546611893'],
 ];
 
 export const toWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
@@ -374,6 +374,7 @@ export const toWeiInvalidData: [[any, any], string][] = [
 	[[{}, 'kwei'], 'value "{}" at "/0" must pass "number" validation'],
 	[['data', 'kwei'], 'value "data" at "/0" must pass "number" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
+	[['123', -1], 'Invalid value given "-1". Error: not a valid unit. Must be a positive integer.'],
 ];
 export const toCheckSumValidData: [string, string][] = [
 	['0x0089d53f703f7e0843953d48133f74ce247184c2', '0x0089d53F703f7E0843953D48133f74cE247184c2'],

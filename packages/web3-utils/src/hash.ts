@@ -169,9 +169,6 @@ export { keccak256Wrapper as keccak256 };
  * @returns - the type and value of the input
  */
 const getType = (arg: Sha3Input): [string, EncodingTypes] => {
-	if (Array.isArray(arg)) {
-		throw new Error('Autodetection of array types is not supported.');
-	}
 
 	let type;
 	let value;

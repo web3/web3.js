@@ -256,6 +256,7 @@ export const encodePackData: [TypedObject[] | TypedObjectAbbreviated[], any][] =
 		'0x12480000000000000000000000000000000000000000000000000000000000003c69a194aaf415ba5d6afca734660d0a3d45acdc05d54cd1ca89a8988e7625b4',
 	],
 	[[{ type: 'bytes4[]', value: ['0x11223344', '0x22334455'] }], '0x1122334422334455'],
+	[[{ type: '', value: '31323334' }], '0x'],
 ];
 
 export const encodePackedInvalidData: [any, string][] = [
@@ -349,3 +350,8 @@ export const soliditySha3BigIntValidData: [Sha3Input[], string][] = [
         		return keccak256(abi.encodePacked(int(90071992547409))) ;}
 	 */
 ];
+
+export const getStorageSlotNumForLongStringValidData: [string|number, string | undefined][]
+	= [
+		[0, "0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563"]
+	];
