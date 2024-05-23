@@ -232,7 +232,7 @@ Documentation:
 -   method `getBlock` now includes properties of eip 4844, 4895, 4788 when returning block (#6933)
 -   update type `withdrawalsSchema`, `blockSchema` and `blockHeaderSchema` schemas to include properties of eip 4844, 4895, 4788 (#6933)
 
-## [Unreleased]
+## [4.7.0]
 
 ### Added
 
@@ -242,3 +242,10 @@ Documentation:
 ### Changed
 
 -   Added parameter `customTransactionReceiptSchema` into methods `emitConfirmation`, `waitForTransactionReceipt`, `watchTransactionByPolling`, `watchTransactionBySubscription`, `watchTransactionForConfirmations` (#7000)
+-   Changed functionality: For networks that returns `baseFeePerGas===0x0` fill `maxPriorityFeePerGas` and `maxFeePerGas` by `getGasPrice` method (#7050)
+
+### Fixed
+
+-   Fixed issue with simple transactions, Within `checkRevertBeforeSending` if there is no data set in transaction, set gas to be `21000` (#7043)
+
+## [Unreleased]
