@@ -19,7 +19,7 @@ This documentation is the entrypoint to Web3.js for developers. It covers [basic
   - Modular, [package](/#packages)-based design reduces unneeded dependencies
   - [Tree shakable with ESM](/guides/advanced/tree_shaking)
   - Use of native [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) (instead of large [BigNumber](https://mikemcl.github.io/bignumber.js/) libraries)
-  - Efficient ABI [encoding](/api/web3-eth-abi/function/encodeFunctionCall) & [decoding](/api/web3-eth-abi/function/decodeLog)
+  - Efficient ABI [encoding](/api/web3-eth-abi/function/encodeFunctionCall) & [decoding](/api/web3-eth-abi/function/decodeParameter)
 - Developer-Friendly
   - [Dynamic contract types](/guides/smart_contracts/infer_contract_types/) & full API in TypeScript
   - Custom output [formatters](https://docs.web3js.org/api/web3-utils/function/format)
