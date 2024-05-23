@@ -170,7 +170,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [4.3.0]
+## [4.2.2]
 
 ### Changed
 
