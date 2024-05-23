@@ -16,17 +16,21 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+	isResponseRpcError,
 	isResponseWithResult,
 	isResponseWithError,
 	isResponseWithNotification,
 	isSubscriptionResult,
 	isValidResponse,
 	isBatchResponse,
+	setRequestIdStart,
+	toBatchPayload,
 	toPayload,
 } from '../../src/json_rpc';
 import {
 	isResponseWithResultValidTest,
 	isResponseWithErrorValidTest,
+	isResponseRpcErrorValidData,
 	isResponseWithNotificationValidTest,
 	isSubscriptionResultValidTest,
 	toPayloadValidTest,
@@ -47,6 +51,14 @@ describe('json rpc tests', () => {
 		describe('valid cases', () => {
 			it.each(isResponseWithErrorValidTest)('should error', (input, output) => {
 				const result = isResponseWithError(input);
+				expect(result).toBe(output);
+			});
+		});
+	});
+	describe('isResponseRpcError', () => {
+		describe('valid cases', () => {
+			it.each(isResponseRpcErrorValidData)('%s', (input, output) => {
+				const result = isResponseRpcError(input);
 				expect(result).toBe(output);
 			});
 		});
@@ -85,10 +97,34 @@ describe('json rpc tests', () => {
 	});
 	describe('toPayloadValid', () => {
 		describe('valid cases', () => {
-			it.each(toPayloadValidTest)('isValidresponse valid test', (input, output) => {
-				const result = toPayload(input);
+			beforeEach (() => {
+				setRequestIdStart(undefined)
+			});
+			it.each(toPayloadValidTest)('toPayload valid test', async (input, output) => {
+				const result = await new Promise((resolve) => {
+					resolve(toPayload(input))
+				})
 				expect(result).toStrictEqual(output);
+			});
+			it('should give payload that has requestid set', async () => {
+				setRequestIdStart(1)
+				const result = await new Promise((resolve) => {
+					resolve(toPayload({ method: 'delete' }))
+				})
+				expect(result).toStrictEqual({method: 'delete', id:2, params: undefined, jsonrpc: '2.0'});
 			});
 		});
 	});
+	describe('toBatchPayload', () => {
+		it('should batch payload', async () => {
+			setRequestIdStart(0)
+			const result = await new Promise((resolve) => {
+				resolve(toBatchPayload([{ method: 'delete' }, {method: 'add'}]))
+			})
+			expect(result).toStrictEqual([
+				{method: 'delete', id:1, params: undefined, jsonrpc: '2.0'},
+				{method: 'add', id:2, params: undefined, jsonrpc: '2.0'}
+			]);
+		});
+	})
 });
