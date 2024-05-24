@@ -31,6 +31,7 @@ import {
 	ERR_INVALID_TYPE,
 	ERR_INVALID_TYPE_ABI,
 	ERR_INVALID_UNIT,
+	ERR_INVALID_INTEGER,
 	ERR_INVALID_UNSIGNED_INTEGER,
 } from '../error_codes.js';
 import { InvalidValueError } from '../web3_error_base.js';
@@ -72,6 +73,15 @@ export class InvalidUnitError extends InvalidValueError {
 
 	public constructor(value: unknown) {
 		super(value, 'invalid unit');
+	}
+}
+
+export class InvalidIntegerError extends InvalidValueError {
+	public code = ERR_INVALID_INTEGER;
+
+	public constructor(value: unknown) {
+		super(value, 'not a valid unit. Must be a positive integer');
+	
 	}
 }
 
