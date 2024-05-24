@@ -189,7 +189,7 @@ Documentation:
 
 -   Type `FeeData` to be filled by `await web3.eth.calculateFeeData()` to be used with EIP-1559 transactions (#6795)
 
-## [Unreleased]
+## [1.6.0]
 
 ### Added
 

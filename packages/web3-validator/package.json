@@ -1,6 +1,6 @@
 {
 	"name": "web3-validator",
-	"version": "2.0.5",
+	"version": "2.0.6",
 	"description": "JSON-Schema compatible validator for web3",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -46,8 +46,8 @@
 	"dependencies": {
 		"ethereum-cryptography": "^2.0.0",
 		"util": "^0.12.5",
-		"web3-errors": "^1.1.4",
-		"web3-types": "^1.5.0",
+		"web3-errors": "^1.2.0",
+		"web3-types": "^1.6.0",
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {
