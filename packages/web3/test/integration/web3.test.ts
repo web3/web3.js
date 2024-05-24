@@ -124,13 +124,13 @@ describe('Web3 instance', () => {
 		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
 	});
 
-	it('should be able use "utils" ', () => {
+	it('should be able use "utils"', () => {
 		web3 = new Web3();
 
 		expect(web3.utils.hexToNumber('0x5')).toBe(5);
 	});
 
-	it('should be able use "abi" ', () => {
+	it('should be able use "abi"', () => {
 		web3 = new Web3();
 		const validData = validEncodeParametersData[0];
 
