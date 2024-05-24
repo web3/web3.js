@@ -142,7 +142,7 @@ describe('Web3 instance', () => {
 	});
 
 	it('should throw error when we make a request when provider not available', async () => {
-		web3 = new Web3();
+		web3 = new Web3("");
 
 		await expect(web3.eth.getChainId()).rejects.toThrow('Provider not available');
 	});
