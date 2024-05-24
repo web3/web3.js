@@ -130,12 +130,17 @@ export class Resolver {
 	}
 
 	public async getName(
-		address: string
+		address: string,
+		checkInterfaceSupport = true
 	) {
-		const resolverContract = await this.getResolverContractAdapter(address);
-		await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
+		const reverseName = `${address.toLowerCase().substring(2)}.addr.reverse`;
 
+		const resolverContract = await this.getResolverContractAdapter(reverseName);
+		
+		if(checkInterfaceSupport)
+			await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
+		
 		return resolverContract.methods
-			.name(namehash(address)).call()
+			.name(namehash(reverseName)).call()
 	}
 }

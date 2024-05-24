@@ -239,6 +239,8 @@ describe('resolver', () => {
 
 	describe('name', () => {
 		it('getName', async () => {
+			const address = "0x314159265dd8dbb310642f98f50c066173c1259b";
+
 			const supportsInterfaceMock = jest
 				.spyOn(contract.methods, 'supportsInterface')
 				.mockReturnValue({
@@ -255,12 +257,13 @@ describe('resolver', () => {
 					});
 				});
 	
-				await resolver.getName(ENS_NAME);
+				await resolver.getName(address);
 				expect(supportsInterfaceMock).toHaveBeenCalledWith(
 					interfaceIds[methodsInInterface.name],
 				);
 		
-				expect(nameMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+				const reverseName = `${address.toLowerCase().substring(2)}.addr.reverse`;
+				expect(nameMock).toHaveBeenCalledWith(namehash(reverseName));
 		})
 	})
 	
