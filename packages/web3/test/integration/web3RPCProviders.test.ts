@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { mainnet } from "web3-rpc-providers";
+import { mainnet , Network, QuickNodeProvider, Transport } from "web3-rpc-providers";
 import { Web3 } from '../../src/index';
-import { Network, QuickNodeProvider, Transport } from "web3-rpc-providers";
 
 describe('Web3 RPC Provider Integration tests', () => {
     const transports = Object.values(Transport);
