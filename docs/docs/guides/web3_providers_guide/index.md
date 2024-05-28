@@ -5,20 +5,9 @@ sidebar_label: 'Mastering Providers'
 
 # Web3js providers overview
 
+Providers are services that are responsible for enabling Web3.js connectivity with the Ethereum network. Using a provider to connect your application to an Ethereum node is necessary for querying data, sending transactions, and interacting with smart contracts. This guide will explore the different types of Web3.js providers, how to set them up, and how to use them in an application.
 
-## Live code editor
-
-<iframe width="100%" height="700px" src="https://stackblitz.com/edit/vitejs-vite-zfusfd?embed=1&file=main.js&showSidebar=1"></iframe>   
-
-## Introduction
-
-web3.js providers are objects responsible for enabling connectivity with the Ethereum network in various ways. Connecting your web application to an Ethereum node is necessary for sending transactions, querying data, and interacting with smart contracts on the network. In this guide, we will explore the different types of providers available in web3.js, how to set them up, and how to use them in your code.
-
-Connecting to a chain happens through a provider. You can pass the provider to the constructor as in the following example:
-
-:::tip
-If you want to subscribe to live events in the blockchain, you should use [`WebSocket provider`](#websocket-provider) or [`IPC provider`](#ipc-provider)
-:::
+A provider is typically supplied when constructing a new `Web3` object:
 
 ```typescript title='Initialize a provider'
 import { Web3 } from 'web3';
@@ -29,36 +18,38 @@ const web3 = new Web3(/* PROVIDER*/);
 await web3.eth.getBlockNumber();
 ```
 
-The created `Web3` instance will use the passed provider to interact with the blockchain network. This interaction happens when sending a request and receiving the response, and possibly when listening to provider events (if the provider support this).
+The new `Web3` instance will use the supplied provider to interact with the blockchain network. This interaction happens when sending requests and receiving responses, and possibly when listening to provider events (if the provider supports this).
 
 ## Providers Types
 
-web3.js supports several types of providers, each with its own unique features or specific use cases. Here are the main types:
+Web3.js supports several types of providers for different use cases. Here are the available types:
 
-1. [HTTP Provider](/api/web3-providers-http/class/HttpProvider)
-2. [WebSocket Provider](/api/web3-providers-ws/class/WebSocketProvider)
-3. [IPC Provider (for Node.js)](/api/web3-providers-ipc/class/IpcProvider)
-4. [Third-party Providers (Compliant with EIP 1193)](https://eips.ethereum.org/EIPS/eip-1193)
+1. [HTTP Provider](#http-provider)
+2. [WebSocket Provider](#websocket-provider)
+3. [IPC Provider (for Node.js)](#ipc-provider)
+4. [Third-party Providers (Compliant with EIP 1193)](#injected-provider)
 
-A string containing string url for `http`/`https` or `ws`/`wss` protocol. And when a string is passed, an instance of the compatible class above will be created accordingly. ex. WebSocketProvider instance will be created for string containing `ws` or `wss`. And you access this instance by calling `web3.provider` to read the provider and possibly register an event listener.
+HTTP and WebSocket providers can be supplied as URL strings. All provider types can be supplied by constructing one of the [`SupportedProviders`](/api/web3/namespace/types#SupportedProviders) types.
 
-:::tip
-The passed provider can be either type `string` or one of the [`SupportedProviders`](/api/web3-core#SupportedProviders). And if it is passed as a string, then internally the compatible provider object will be created and used.
-:::
+Keep reading to learn more about the different types of providers and how to use them.
 
 ### HTTP Provider
 
-``` ts title='Initialize HTTP Provider'
+HTTP is a request-response protocol and does not support persistent connection, which means that HTTP providers are not suitable for use cases that require real-time [event subscriptions](/guides/events_subscriptions/).
+
+``` ts title='Initialize an HTTP Provider'
 import { Web3, HttpProvider } from 'web3';
 
+//supply an HTTP provider as a URL string
 //highlight-next-line
 const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_ID');
 
 await web3.eth.getBlockNumber()
 // ↳ 18849658n
 
-// or
+// OR
 
+//supply an HTTP provider by constructing a new HttpProvider
 //highlight-next-line
 const web3_2 = new Web3(new HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_ID'));
 
@@ -68,16 +59,21 @@ await web3.eth.getBlockNumber()
 
 ### WebSocket provider
 
+WebSockets support a persistent connection between a client and a server, which means they are suitable for use cases that require real-time [event subscriptions](/guides/events_subscriptions/).
+
 ``` ts title='Initialize WS Provider'
 import { Web3, WebSocketProvider } from 'web3';
 
+//supply a WebSocket provider as a URL string
 //highlight-next-line
 const web3 = new Web3('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID');
 
 await web3.eth.getBlockNumber();	
 // ↳ 18849658n
 
-// or
+// OR
+
+//supply a WebSocket provider by constructing a new WebSocketProvider
 //highlight-next-line
 const web3_2 = new Web3(new WebSocketProvider('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID'));
 
@@ -86,6 +82,8 @@ await web3.eth.getBlockNumber();
 ```
 
 ### IPC Provider
+
+IPC (inter-process communication) providers offer high-performance local communication and provide a faster alternative to HTTP providers. IPC providers are tailored for efficiency and excel in local environments, and also support real-time event subscriptions.
 
 ``` ts title='Initialize IPC Provider'
 import { Web3 } from 'web3';
@@ -99,27 +97,17 @@ await web3.eth.getBlockNumber();
 // ↳ 18849658n
 ```
 
-## Providers Priorities
+### Injected Provider
 
-There are multiple ways to set the provider.
-
-```ts title='Setting a provider'
-web3.setProvider(myProvider);
-web3.eth.setProvider(myProvider);
-web3.Contract.setProvider(myProvider);
-contractInstance.setProvider(myProvider);
-```
-
-The key rule for setting provider is as follows:
-
-1. Any provider set on the higher level will be applied to all lower levels. e.g. Any provider set using `web3.setProvider` will also be applied to `web3.eth` object.
-2. For contracts `web3.Contract.setProvider` can be used to set provider for **all instances** of contracts created by `web3.eth.Contract`.
-
----
+Injected providers are supplied by an external third-party, most often a wallet or a web browser that is designed to be used with the Ethereum network. In addition to providing network connectivity, injected providers often supply one or more [accounts](/guides/wallet/). Web3.js supports any injected provider that is compliant with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193). Injected providers support real-time event subscriptions. Continue reading for an [example](#injected-provider-1) of using an injected provider.
 
 ## Usage Scenarios
 
-### Local Geth Node
+A provider may be local to an application (i.e. running on the same machine) or remote (i.e. running on a third-party server). Injected providers are a third alternative that are supplied by an external third-party, most often a wallet or a web browser that is designed to be used with the Ethereum network. Keep reading for more examples that illustrate how to work with local, remote, and injected providers.
+
+### Local Provider
+
+Local providers can usually be accessed via IPC, HTTP, or WebSocket. The following examples demonstrates using a local Geth node to supply the Web3.js provider.
 
 ```typescript title='IPC, HTTP and WS provider'
 import { Web3 } from 'web3';
@@ -144,7 +132,9 @@ web3.setProvider('ws://localhost:8546');
 web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 ```
 
-### Remote Node Provider
+### Remote Provider
+
+Services like [Alchemy](https://www.alchemy.com/), [Infura](https://www.infura.io/), and [QuickNode](https://www.quicknode.com/) offer Ethereum node services that can be accessed via HTTP or Websocket.
 
 ```ts title='Alchemy, Infura, etc'
 // like Alchemy (https://www.alchemyapi.io/supernode)
@@ -155,9 +145,11 @@ const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 
 ### Injected Provider
 
-As stated above, the injected provider should be in compliance with [EIP-1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md). And it is tested with Ganache provider, Hardhat provider, and Incubed (IN3) as a provider.
+Injected providers are supplied by an external third-party, most often a wallet or a web browser that is designed to be used with the Ethereum network. In addition to providing network connectivity, injected providers often supply one or more [accounts](/guides/wallet/). Web3.js supports any injected provider that is compliant with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) and has been tested with multiple EIP-1193 providers, including [MetaMask](https://docs.metamask.io/wallet/reference/provider-api/), [Hardhat](https://hardhat.org/hardhat-runner/docs/advanced/hardhat-runtime-environment), and [Incubed (IN3)](https://in3.readthedocs.io/en/develop/index.html).
 
-The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
+:::note
+The following example should be run in a browser with the MetaMask extension installed.
+:::
 
 ```html title='E.g, Metamask'
 <script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
@@ -186,8 +178,6 @@ The web3.js 4.x Provider specifications are defined in [web3 base provider](http
  });
 </script>
 ```
-
-Note that the above code should be hosted in a web server (that could be a simple local web server), because many browser does not support this feature for static files located on your machine.
 
 ## Provider Options
 
