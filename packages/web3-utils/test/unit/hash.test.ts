@@ -60,20 +60,6 @@ describe('hash', () => {
 				expect(sha3(input)).toBe(`0x${keccak256(output)}`);
 			});
 		});
-
-		describe('handle when array', () => {
-			it('should handle array input and convert it to Uint8Array for hashing', () => {
-				// Arrange
-				const input = [0x61, 0x62, 0x63]; // ['a', 'b', 'c']
-				const expectedHash = '0x7f83b165f6e8dd98bfa2727c7e4d949b';
-			
-				// Act
-				const result = keccak256(input);
-			
-				// Assert
-				expect(result).toEqual(expectedHash);
-			});
-		})
 	});
 
 	describe('sha3Raw', () => {

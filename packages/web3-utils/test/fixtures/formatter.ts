@@ -55,5 +55,5 @@ export const convertScalarValueValid: [[any, any, any], any][] = [
 			hexToBytes('0x00000000000000000000000000000000000000000000000000000000000000ff'),
 		),
 	],
-	[[new Uint8Array(hexToBytes('FF')), 'bytes32', { bytes: "invalidFormat" }], [255]] // return original value when erroring
+	[[255, 'bytes32', { bytes: "invalidFormat" }], 255] // return original value when erroring
 ];

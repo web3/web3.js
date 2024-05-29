@@ -98,7 +98,6 @@ export abstract class Eip1193Provider<
 				} as ProviderConnectInfo),
 			)
 			.catch(err => {
-				console.log("enters")
 				// todo: add error handler
 				// eslint-disable-next-line no-console
 				console.error(err);
