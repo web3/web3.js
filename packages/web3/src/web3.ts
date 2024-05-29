@@ -30,6 +30,7 @@ import { Personal } from 'web3-eth-personal';
 import { Net } from 'web3-net';
 import * as utils from 'web3-utils';
 import { isNullish, isDataFormat, isContractInitOptions } from 'web3-utils';
+import { mainnet } from 'web3-rpc-providers';
 import {
 	Address,
 	ContractAbi,
@@ -67,10 +68,10 @@ export class Web3<
 	public eth: Web3EthInterface;
 
 	public constructor(
-		providerOrContext?:
+		providerOrContext:
 			| string
 			| SupportedProviders<EthExecutionAPI>
-			| Web3ContextInitOptions<EthExecutionAPI, CustomRegisteredSubscription>,
+			| Web3ContextInitOptions<EthExecutionAPI, CustomRegisteredSubscription> = mainnet,
 	) {
 		if (
 			isNullish(providerOrContext) ||

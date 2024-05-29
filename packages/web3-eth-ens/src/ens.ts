@@ -33,6 +33,7 @@ import {
 	TransactionReceipt,
 	Web3NetAPI,
 } from 'web3-types';
+import { isAddress } from 'web3-validator';
 import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
 import { networkIds, registryAddresses } from './config.js';
 import { Registry } from './registry.js';
@@ -174,8 +175,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param key - The key to resolve https://github.com/ethereum/ercs/blob/master/ERCS/erc-634.md#global-keys
 	 * @returns - The value content stored in the resolver for the specified key
 	 */
-	public async getText(ENSName: string, key: string): Promise<string> {
-		return this._resolver.getText(ENSName, key);
+	public async getText(ENSNameOrAddr: string | Address, key: string): Promise<string> {
+		if(isAddress(ENSNameOrAddr))
+			return this._resolver.getText(await(this._resolver.getName(ENSNameOrAddr,false)), key);
+		return this._resolver.getText(ENSNameOrAddr, key);
 	}
 
 	/**
@@ -183,8 +186,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param ENSName - The node to resolve
 	 * @returns - The name
 	 */
-	public async getName(ENSName: string): Promise<string> {
-		return this._resolver.getName(ENSName);
+	public async getName(ENSName: string, checkInterfaceSupport = true): Promise<string> {
+		return this._resolver.getName(ENSName, checkInterfaceSupport);
 	}
 
 	/**

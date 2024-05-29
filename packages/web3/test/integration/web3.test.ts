@@ -124,13 +124,13 @@ describe('Web3 instance', () => {
 		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
 	});
 
-	it('should be able use "utils" without provider', () => {
+	it('should be able use "utils"', () => {
 		web3 = new Web3();
 
 		expect(web3.utils.hexToNumber('0x5')).toBe(5);
 	});
 
-	it('should be able use "abi" without provider', () => {
+	it('should be able use "abi"', () => {
 		web3 = new Web3();
 		const validData = validEncodeParametersData[0];
 
@@ -139,12 +139,6 @@ describe('Web3 instance', () => {
 			validData.input[1],
 		);
 		expect(encodedParameters).toEqual(validData.output);
-	});
-
-	it('should throw error when we make a request when provider not available', async () => {
-		web3 = new Web3();
-
-		await expect(web3.eth.getChainId()).rejects.toThrow('Provider not available');
 	});
 
 	describeIf(isHttp)('Create Web3 class instance with http string providers', () => {
