@@ -387,7 +387,6 @@ describe('converters', () => {
 			});
 			it.each(toWeiValidDataWarnings)('%s', (input, output) => {
 				toWei(input[0], input[1]);
-				// expect(() => toWei(input[0], input[1])).toThrow(output);
 				expect(console.warn).toHaveBeenCalledWith(output);
 			});
 		});
