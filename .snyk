@@ -1,0 +1,51 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-WEB3-174533:
+    - '*':
+        reason: Ignore test issue
+        expires: 3024-06-26T17:16:53.075Z
+        created: 2024-05-27T17:16:53.080Z
+  SNYK-JS-BRACES-6838727:
+    - '*':
+        reason: Docusaurus issue
+        expires: 3024-06-26T17:29:07.153Z
+        created: 2024-05-27T17:29:07.159Z
+  SNYK-JS-EXPRESS-6474509:
+    - '*':
+        reason: Docusaurus issue
+        expires: 3024-06-26T17:29:31.142Z
+        created: 2024-05-27T17:29:31.149Z
+  SNYK-JS-INFLIGHT-6095116:
+    - '*':
+        reason: Docusaurus issue
+        expires: 3024-06-26T17:29:51.622Z
+        created: 2024-05-27T17:29:51.628Z
+  SNYK-JS-MICROMATCH-6838728:
+    - '*':
+        reason: Docusaurus issue
+        expires: 3024-06-26T17:30:47.237Z
+        created: 2024-05-27T17:30:47.240Z
+  SNYK-JS-SERIALIZEJAVASCRIPT-6147607:
+    - '*':
+        reason: Docusaurus issue
+        expires: 3024-06-26T17:31:06.652Z
+        created: 2024-05-27T17:31:06.656Z
+  SNYK-JS-WEBPACKDEVMIDDLEWARE-6476555:
+    - '*':
+        reason: Docusaurus issue
+        expires: 3024-06-26T20:52:00.793Z
+        created: 2024-05-27T20:52:00.797Z
+  SNYK-JS-JSON5-3182856:
+    - '*':
+        reason: Eslint problem
+        expires: 3024-06-26T20:53:53.640Z
+        created: 2024-05-27T20:53:53.644Z
+  SNYK-JS-SEMVER-3247795:
+    - '*':
+        reason: Eslint problem
+        expires: 3024-06-26T20:54:20.755Z
+        created: 2024-05-27T20:54:20.759Z
+
+patch: {}
