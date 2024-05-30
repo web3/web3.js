@@ -68,7 +68,7 @@ export abstract class Eip1193Provider<
 						this._chainId = chainId;
 						this._eventEmitter.emit('chainChanged', this._chainId);
 					}
-				})	
+				})
 				.catch(err => {
 					// todo: add error handler
 					console.error(err);

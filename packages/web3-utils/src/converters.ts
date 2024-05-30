@@ -79,7 +79,8 @@ export const ethUnitMap = {
 	tether: BigInt('1000000000000000000000000000000'),
 };
 
-const PrecisionLossWarning = 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods';
+const PrecisionLossWarning =
+	'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods';
 
 export type EtherUnits = keyof typeof ethUnitMap;
 /**
@@ -366,7 +367,7 @@ export const toHex = (
 		return returnType ? 'bigint' : numberToHex(value);
 	}
 
-	if(isUint8Array(value)) {
+	if (isUint8Array(value)) {
 		return returnType ? 'bytes' : bytesToHex(value);
 	}
 
@@ -391,7 +392,7 @@ export const toHex = (
 			// But a value pass for those conditions: "101611154195520776335741463917853444671577865378275924493376429267637792638729"
 			// Note that according to the docs: it is supposed to be treated as a string (https://docs.web3js.org/guides/web3_upgrade_guide/x/web3_utils_migration_guide#conversion-to-hex)
 			// In short, the strange is that isInt(value) is false but isUInt(value) is true for the value above.
-			// So, isUInt(value) should be investigated.
+			// TODO: isUInt(value) should be investigated.
 
 			// However, if `toHex('101611154195520776335741463917853444671577865378275924493376429267637792638729', true)` is called, it will return `true`.
 			// But, if `toHex('101611154195520776335741463917853444671577865378275924493376429267637792638729')` is called, it will throw inside `numberToHex`.
@@ -428,14 +429,14 @@ export const toHex = (
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
-			if (value > 1e+20) {
-				console.warn(PrecisionLossWarning)
-                // JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
-                // leading to potential parsing errors and incorrect representations.
-                // For instance, String(10000000000000000000000) yields '1e+22'.
-                // Using BigInt prevents this
-                return BigInt(value);
-            }
+		if (value > 1e20) {
+			console.warn(PrecisionLossWarning);
+			// JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
+			// leading to potential parsing errors and incorrect representations.
+			// For instance, String(10000000000000000000000) yields '1e+22'.
+			// Using BigInt prevents this
+			return BigInt(value);
+		}
 		return value;
 	}
 
@@ -515,9 +516,8 @@ export const fromWei = (number: Numbers, unit: EtherUnits | number): string => {
 		if (unit < 0 || !Number.isInteger(unit)) {
 			throw new InvalidIntegerError(unit);
 		}
-		denomination = bigintPower(BigInt(10),BigInt(unit));
+		denomination = bigintPower(BigInt(10), BigInt(unit));
 	}
-
 
 	// value in wei would always be integer
 	// 13456789, 1234
@@ -584,8 +584,8 @@ export const toWei = (number: Numbers, unit: EtherUnits | number): string => {
 		if (unit < 0 || !Number.isInteger(unit)) {
 			throw new InvalidIntegerError(unit);
 		}
-		
-		denomination = bigintPower(BigInt(10),BigInt(unit));
+
+		denomination = bigintPower(BigInt(10), BigInt(unit));
 	}
 
 	let parsedNumber = number;

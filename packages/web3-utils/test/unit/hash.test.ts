@@ -156,5 +156,5 @@ describe('hash', () => {
 		it.each(getStorageSlotNumForLongStringValidData)('%s', (input, output) => {
 			expect(getStorageSlotNumForLongString(input)).toEqual(output);
 		});
-	})
+	});
 });

@@ -91,49 +91,57 @@ describe('json rpc tests', () => {
 	});
 	describe('isBatchResponseValid', () => {
 		describe('valid cases', () => {
-			it.each(isBatchResponseValidTest)('isBatchResponseValid valid test', (input, output) => {
-				const result = isBatchResponse(input);
-				expect(result).toBe(output);
-			});
+			it.each(isBatchResponseValidTest)(
+				'isBatchResponseValid valid test',
+				(input, output) => {
+					const result = isBatchResponse(input);
+					expect(result).toBe(output);
+				},
+			);
 		});
 	});
 	describe('isBatchRequest', () => {
 		describe('valid cases', () => {
 			it.each(isBatchRequestValidData)('isBatchRqeuest valid data', (input, output) => {
 				expect(isBatchRequest(input)).toBe(output);
-			})
-		})
-	})
+			});
+		});
+	});
 	describe('toPayloadValid', () => {
 		describe('valid cases', () => {
-			beforeEach (() => {
-				setRequestIdStart(undefined)
+			beforeEach(() => {
+				setRequestIdStart(undefined);
 			});
 			it.each(toPayloadValidTest)('toPayload valid test', async (input, output) => {
-				const result = await new Promise((resolve) => {
-					resolve(toPayload(input))
-				})
+				const result = await new Promise(resolve => {
+					resolve(toPayload(input));
+				});
 				expect(result).toStrictEqual(output);
 			});
 			it('should give payload that has requestid set', async () => {
-				setRequestIdStart(1)
-				const result = await new Promise((resolve) => {
-					resolve(toPayload({ method: 'delete' }))
-				})
-				expect(result).toStrictEqual({method: 'delete', id:2, params: undefined, jsonrpc: '2.0'});
+				setRequestIdStart(1);
+				const result = await new Promise(resolve => {
+					resolve(toPayload({ method: 'delete' }));
+				});
+				expect(result).toStrictEqual({
+					method: 'delete',
+					id: 2,
+					params: undefined,
+					jsonrpc: '2.0',
+				});
 			});
 		});
 	});
 	describe('toBatchPayload', () => {
 		it('should batch payload', async () => {
-			setRequestIdStart(0)
-			const result = await new Promise((resolve) => {
-				resolve(toBatchPayload([{ method: 'delete' }, {method: 'add'}]))
-			})
+			setRequestIdStart(0);
+			const result = await new Promise(resolve => {
+				resolve(toBatchPayload([{ method: 'delete' }, { method: 'add' }]));
+			});
 			expect(result).toStrictEqual([
-				{method: 'delete', id:1, params: undefined, jsonrpc: '2.0'},
-				{method: 'add', id:2, params: undefined, jsonrpc: '2.0'}
+				{ method: 'delete', id: 1, params: undefined, jsonrpc: '2.0' },
+				{ method: 'add', id: 2, params: undefined, jsonrpc: '2.0' },
 			]);
 		});
-	})
+	});
 });

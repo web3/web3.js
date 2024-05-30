@@ -24,7 +24,7 @@ import {
 	HexString,
 	Numbers,
 } from 'web3-types';
-import {FormatterError} from 'web3-errors';
+import { FormatterError } from 'web3-errors';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
 import { isDataFormatValid, convertScalarValueValid } from '../fixtures/formatter';
 import { format, isDataFormat, convertScalarValue, convert } from '../../src/formatter';
@@ -585,40 +585,6 @@ describe('formatter', () => {
 				).toEqual(result);
 			});
 
-			it('should format array of objects with', () => {
-				const schema = {
-					type: 'array',
-					items: {
-						type: 'object',
-						properties: {
-							prop1: {
-								oneOf: [{ format: 'address' }, { type: 'string' }],
-							},
-							prop2: {
-								format: 'bytes',
-							},
-						},
-					},
-				};
-
-				const data = [
-					{
-						prop1: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401',
-						prop2: new Uint8Array(hexToBytes('FF')),
-					},
-					{ prop1: 'some string', prop2: new Uint8Array(hexToBytes('FF')) },
-				];
-
-				const result = [
-					{ prop1: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', prop2: '0xff' },
-					{ prop1: 'some string', prop2: '0xff' },
-				];
-
-				expect(
-					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),
-				).toEqual(result);
-			});
-
 			it('should format array of different objects', () => {
 				const schema = {
 					type: 'array',
@@ -773,79 +739,7 @@ describe('formatter', () => {
 				).toEqual(result);
 			});
 		});
-
 		describe('object values', () => {
-
-			describe('convert', () => {
-				it('should convert array values correctly when schema is an array and items are objects', () => {
-					const schema = {
-						type: 'object',
-						properties: {
-							transactions: {
-								type: 'array',
-								oneOf: [
-									{
-										items: {
-											type: 'object',
-											properties: {
-												type: { enum: ['A'] },
-												value: { type: 'string' }
-											}
-										}
-									},
-									{
-										items: {
-											type: 'object',
-											properties: {
-												type: { enum: ['B'] },
-												value: { type: 'number' }
-											}
-										}
-									}
-								]
-							}
-						}
-					};
-					const data = {
-						transactions: [
-							{ type: 'B', value: 42 },
-							{ type: 'B', value: 43 }
-						]
-					};
-					  expect(convert(data, schema, [], {
-						number: FMT_NUMBER.HEX,
-						bytes: FMT_BYTES.HEX,
-					})).toEqual(data)
-   				 });
-			});
-
-			it('should delete the array property if schema for array items is nullish', () => {
-				const schema = {
-					type: 'object',
-					properties: {
-						transactions: {
-							type: 'array',
-							items: undefined  // Simulate a missing or null schema for items
-						}
-					}
-				};
-			
-				const data = {
-					transactions: [
-						{ type: 'A', value: 'some string' },
-						{ type: 'B', value: 42 }
-					]
-				};
-			
-				const result = convert(data, schema, [], {
-					number: FMT_NUMBER.HEX,
-					bytes: FMT_BYTES.HEX,
-				});
-			
-				expect(result).toEqual({});
-			});
-			
-			
 			it('should format simple object', () => {
 				const schema = {
 					type: 'object',
@@ -885,9 +779,9 @@ describe('formatter', () => {
 			it('should throw FormatterError when jsonSchema is invalid', () => {
 				const invalidSchema1 = {};
 				const data = { key: 'value' };
-			
+
 				expect(() => format(invalidSchema1, data)).toThrow(FormatterError);
-			  });
+			});
 
 			it('should format nested objects', () => {
 				const schema = {
@@ -933,52 +827,7 @@ describe('formatter', () => {
 
 				expect(result).toEqual(expected);
 			});
-
-		it('should return empty when no proerties or items', () => {
-			const data = { key: 'value' };
-			const schema = {
-				type: 'object',
-			};
-			const f = { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX };
-			const result = convert(data, schema, [], f, []);
-			expect(result).toEqual({});
 		});
-		
-		it('should format nested objects with oneOf', () => {
-			const schema = {
-				type: 'object',
-				properties: {
-				  details: {
-					type: 'object',
-					oneOf: [
-					  { properties: { type: { enum: ['A'] }, value: { type: 'string' } } },
-					  { properties: { type: { enum: ['B'] }, value: { type: 'number' } } }
-					]
-				  }
-				}
-			  }
-
-			const data = 
-				{
-					details: {
-						type: 'B',
-						value: 42
-					}
-				}
-			const result = convert(data, schema, [], {
-				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.UINT8ARRAY,
-			}, [['details', 1]]);
-
-		expect(result).toEqual({
-					details: {
-					type: 'B',
-					value: 42
-					}
-			});
-			
-		})
-	});
 		describe('isDataFormat', () => {
 			describe('valid cases', () => {
 				it.each(isDataFormatValid)('%s', (input, output) => {
@@ -1001,6 +850,126 @@ describe('formatter', () => {
 						}),
 					).toBe(BigInt(100));
 				});
+			});
+		});
+	});
+
+	describe('convert', () => {
+		it('should convert array values correctly when schema is an array and items are objects', () => {
+			const schema = {
+				type: 'object',
+				properties: {
+					transactions: {
+						type: 'array',
+						oneOf: [
+							{
+								items: {
+									type: 'object',
+									properties: {
+										address: { format: 'string' },
+										value: { type: 'string' },
+									},
+								},
+							},
+							{
+								items: {
+									type: 'object',
+									properties: {
+										address: { format: 'string' },
+										value: { type: 'number' },
+									},
+								},
+							},
+						],
+					},
+				},
+			};
+			const data = {
+				transactions: [
+					{ address: 'B', value: '42' },
+					{ address: 'B', value: 43 },
+				],
+			};
+			expect(
+				convert(data, schema, [], {
+					number: FMT_NUMBER.HEX,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toEqual(data);
+		});
+
+		it('should delete the array property if schema for array items is nullish', () => {
+			const schema = {
+				type: 'object',
+				properties: {
+					transactions: {
+						type: 'array',
+						items: undefined, // Simulate a missing or null schema for items
+					},
+				},
+			};
+
+			const data = {
+				transactions: [
+					{ type: 'A', value: 'some string' },
+					{ type: 'B', value: 42 },
+				],
+			};
+
+			const result = convert(data, schema, [], {
+				number: FMT_NUMBER.HEX,
+				bytes: FMT_BYTES.HEX,
+			});
+
+			expect(result).toEqual({});
+		});
+
+		it('should return empty when no proerties or items', () => {
+			const data = { key: 'value' };
+			const schema = {
+				type: 'object',
+			};
+			const f = { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX };
+			const result = convert(data, schema, [], f, []);
+			expect(result).toEqual({});
+		});
+
+		it('should format nested objects with oneOf', () => {
+			const schema = {
+				type: 'object',
+				properties: {
+					details: {
+						type: 'object',
+						oneOf: [
+							{ properties: { type: { enum: ['A'] }, value: { type: 'string' } } },
+							{ properties: { type: { enum: ['B'] }, value: { type: 'number' } } },
+						],
+					},
+				},
+			};
+
+			const data = {
+				details: {
+					type: 'B',
+					value: 42,
+				},
+			};
+			const result = convert(
+				data,
+				schema,
+				[],
+				{
+					number: FMT_NUMBER.BIGINT,
+					bytes: FMT_BYTES.UINT8ARRAY,
+				},
+				[['details', 1]],
+			);
+
+			expect(result).toEqual({
+				details: {
+					type: 'B',
+					value: 42,
+				},
 			});
 		});
 	});

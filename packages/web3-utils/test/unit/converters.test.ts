@@ -330,7 +330,7 @@ describe('converters', () => {
 			});
 
 			it('an interesting case that needs investigation', () => {
-				// This case is to be investigated further
+				// TODO: This case is to be investigated further
 				expect(
 					toHex(
 						'101611154195520776335741463917853444671577865378275924493376429267637792638729',
@@ -354,6 +354,14 @@ describe('converters', () => {
 	});
 
 	describe('fromWei', () => {
+		beforeEach(() => {
+			jest.spyOn(console, 'warn').mockImplementation(() => {
+				// do nothing
+			});
+		});
+		afterAll(() => {
+			jest.restoreAllMocks();
+		});
 		describe('valid cases', () => {
 			it.each(fromWeiValidData)('%s', (input, output) => {
 				expect(fromWei(input[0], input[1])).toEqual(output);
@@ -385,6 +393,9 @@ describe('converters', () => {
 					// do nothing
 				});
 			});
+			afterAll(() => {
+				jest.restoreAllMocks();
+			});
 			it.each(toWeiValidDataWarnings)('%s', (input, output) => {
 				toWei(input[0], input[1]);
 				expect(console.warn).toHaveBeenCalledWith(output);
@@ -407,7 +418,9 @@ describe('converters', () => {
 
 			// mock utils.uint8ArrayToHexString to return an empty string
 			jest.mock('web3-validator');
-			jest.spyOn(utils, 'uint8ArrayToHexString').mockReturnValue(undefined as unknown as string);
+			jest.spyOn(utils, 'uint8ArrayToHexString').mockReturnValue(
+				undefined as unknown as string,
+			);
 
 			const result = toChecksumAddress(address);
 			expect(result).toBe('');

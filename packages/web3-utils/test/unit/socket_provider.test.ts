@@ -31,7 +31,6 @@ import { SocketProvider } from '../../src/socket_provider';
 const dummySocketConnection = { dummy: 'dummy' };
 
 class TestProvider extends SocketProvider<any, any, any> {
-
 	protected _socketConnection?: typeof dummySocketConnection;
 
 	protected _openSocketConnection() {
@@ -124,9 +123,9 @@ describe('SocketProvider', () => {
 			it('should error when failing to _validateProviderPath', () => {
 				expect(() => {
 					// eslint-disable-next-line no-new
-					new TestProvider("", socketOption, { delay: 0 });
-				}).toThrow(InvalidClientError)
-			})
+					new TestProvider('', socketOption, { delay: 0 });
+				}).toThrow(InvalidClientError);
+			});
 		});
 		describe('testing _reconnect() method', () => {
 			it('should not be called when { autoReconnect: false }', () => {
@@ -371,7 +370,9 @@ describe('SocketProvider', () => {
 				const funcBSpy = jest
 					// spy on provider.super._onDisconnect
 					.spyOn(
-						Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(provider))),
+						Object.getPrototypeOf(
+							Object.getPrototypeOf(Object.getPrototypeOf(provider)),
+						),
 						'_onDisconnect',
 					)
 					.mockReturnValue(new EventEmitter());
@@ -652,16 +653,15 @@ describe('SocketProvider', () => {
 	});
 
 	describe('_onConnect', () => {
-
 		beforeEach(() => {
-			jest.spyOn(console, 'error').mockImplementation(() => { 
+			jest.spyOn(console, 'error').mockImplementation(() => {
 				// do nothing
 			}); // Spy on console.error to suppress and check calls
-		})
+		});
 
 		afterEach(() => {
 			jest.restoreAllMocks(); // Restore all mocks after each test
-		  });
+		});
 
 		it('should set the connection status to "connected"', () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
@@ -674,46 +674,46 @@ describe('SocketProvider', () => {
 		it('should set _accounts and _chainId when _getAccounts and _getChainId resolve', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
 			jest.spyOn(provider as any, '_getAccounts').mockResolvedValueOnce([123]);
-			jest.spyOn(provider as any, '_getChainId').mockResolvedValueOnce("1");
-			
-			await new Promise ((resolve) => {
+			jest.spyOn(provider as any, '_getChainId').mockResolvedValueOnce('1');
+
+			await new Promise(resolve => {
 				provider['_onConnect']();
-				resolve("");
-			})
+				resolve('');
+			});
 			expect((provider as any)._chainId).toBe('1');
 			expect((provider as any)._accounts).toEqual([123]);
 		});
 		it('chainID should change when connecting twice', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
-			
-			await new Promise ((resolve) => {
+
+			await new Promise(resolve => {
 				jest.spyOn(provider as any, '_getAccounts').mockResolvedValueOnce([123]);
-				jest.spyOn(provider as any, '_getChainId').mockResolvedValueOnce("1");
+				jest.spyOn(provider as any, '_getChainId').mockResolvedValueOnce('1');
 				provider['_onConnect']();
-				resolve("");
-			})
+				resolve('');
+			});
 			expect((provider as any)._chainId).toBe('1');
 			expect((provider as any)._accounts).toEqual([123]);
 
-			await new Promise ((resolve) => {
+			await new Promise(resolve => {
 				jest.spyOn(provider as any, '_getAccounts').mockResolvedValueOnce([123]);
-				jest.spyOn(provider as any, '_getChainId').mockResolvedValueOnce("2");
+				jest.spyOn(provider as any, '_getChainId').mockResolvedValueOnce('2');
 				provider['_onConnect']();
-				resolve("");
-			})
+				resolve('');
+			});
 			expect((provider as any)._chainId).toBe('2');
 			expect((provider as any)._accounts).toEqual([123]);
 		});
 		it('should catch errors when _getAccounts and _getChainId throws', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
-			jest.spyOn(provider as any, '_getChainId').mockRejectedValueOnce(new Error(""));
-			jest.spyOn(provider as any, '_getAccounts').mockRejectedValueOnce(new Error(""));
+			jest.spyOn(provider as any, '_getChainId').mockRejectedValueOnce(new Error(''));
+			jest.spyOn(provider as any, '_getAccounts').mockRejectedValueOnce(new Error(''));
 			jest.spyOn(provider, 'request').mockReturnValue(new Error() as unknown as Promise<any>);
-			
-			await new Promise ((resolve) => {
+
+			await new Promise(resolve => {
 				provider['_onConnect']();
-				resolve("");
-			})
+				resolve('');
+			});
 			expect((provider as any)._chainId).toBe('');
 			expect((provider as any)._accounts).toEqual([]);
 		});
@@ -723,16 +723,14 @@ describe('SocketProvider', () => {
 			jest.spyOn(provider as any, '_getAccounts').mockResolvedValueOnce([]);
 			(provider as any)._eventEmitter.emit = jest.fn(() => {
 				throw new Error('event emitter failed');
-			})
-			
+			});
 
-			await new Promise ((resolve) => {
+			await new Promise(resolve => {
 				provider['_onConnect']();
-				resolve("");
-			})
+				resolve('');
+			});
 			// I would check if console.error is called, but facing a race condition
 			expect((provider as any)._eventEmitter.emit).toHaveBeenCalledTimes(1);
-
 		});
 	});
 
@@ -740,49 +738,49 @@ describe('SocketProvider', () => {
 		it('should return data from the chainId method', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
 			const chainId = 1;
-			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({result: chainId});
+			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({ result: chainId });
 			const result = await provider['_getChainId']();
 			expect(result).toBe(chainId);
-		})
+		});
 
 		it('should be returning undefined from the chainId method', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
-			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({result: undefined});
+			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({ result: undefined });
 			const result = await provider['_getChainId']();
-			expect(result).toBe("");
-		})
+			expect(result).toBe('');
+		});
 
 		it('should return empty from the chainId method', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
 			jest.spyOn(provider as any, 'request').mockResolvedValueOnce(undefined);
 			const result = await provider['_getChainId']();
-			expect(result).toBe("");
-		})
-	})
+			expect(result).toBe('');
+		});
+	});
 
 	describe('_getAccounts', () => {
 		it('should return data from the _getAccounts method', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
 			const accounts = [1];
-			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({result: accounts});
+			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({ result: accounts });
 			const result = await provider['_getAccounts']();
 			expect(result).toBe(accounts);
-		})
+		});
 
 		it('should returning undefined from the _getAccounts method', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
-			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({result: undefined});
+			jest.spyOn(provider as any, 'request').mockResolvedValueOnce({ result: undefined });
 			const result = await provider['_getAccounts']();
 			expect(result).toEqual([]);
-		})
+		});
 
 		it('should return empty from the _getAccounts method', async () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
 			jest.spyOn(provider as any, 'request').mockResolvedValueOnce(undefined);
 			const result = await provider['_getAccounts']();
 			expect(result).toEqual([]);
-		})
-	})
+		});
+	});
 
 	describe('_onMessage', () => {
 		it('should resolve the deferred promise for valid responses with errors', () => {
@@ -846,7 +844,11 @@ describe('SocketProvider', () => {
 		it('should emit "message" event for notifications', () => {
 			const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
 			const event = {
-				data: JSON.stringify({ jsonrpc: '2.0', method: 'notification_1_subscription', params: {} }),
+				data: JSON.stringify({
+					jsonrpc: '2.0',
+					method: 'notification_1_subscription',
+					params: {},
+				}),
 			};
 
 			const eventEmitterSpy = jest.spyOn(provider['_eventEmitter'], 'emit');

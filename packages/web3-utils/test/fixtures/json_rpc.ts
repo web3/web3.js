@@ -28,13 +28,13 @@ const responseWithNotfication = {
 export const isResponseWithResultValidTest: [any, boolean][] = [
 	[responseWithResult, true],
 	[responseWithError, false],
-	[{...responseWithResult, id: '1'}, true],
+	[{ ...responseWithResult, id: '1' }, true],
 ];
 
 export const isResponseWithErrorValidTest: [any, boolean][] = [
 	[responseWithResult, false],
 	[responseWithError, true],
-	[{...responseWithError, id: '1'}, true],
+	[{ ...responseWithError, id: '1' }, true],
 ];
 
 export const isResponseWithNotificationValidTest: [JsonRpcNotification, boolean][] = [
@@ -67,32 +67,40 @@ export const toPayloadValidTest: [any, any][] = [
 		},
 	],
 	[
-		{ method: 'add', jsonrpc: '1.0', id: 1},
+		{ method: 'add', jsonrpc: '1.0', id: 1 },
 		{
 			method: 'add',
 			id: 1,
 			jsonrpc: '1.0',
-			params: undefined
+			params: undefined,
 		},
-	]
+	],
 ];
 
 export const isResponseRpcErrorValidData: [any, boolean][] = [
 	[responseWithRpcError, true],
 	[responseWithError, false],
-]
+];
 
 export const isBatchRequestValidData: [any, boolean][] = [
-	[[{
-		method: 'add',
-		id: 1,
-		jsonrpc: '1.0',
-		params: undefined
-	}], true],
-	[{
-		method: 'add',
-		id: 1,
-		jsonrpc: '1.0',
-		params: undefined
-	}, false]
-]
+	[
+		[
+			{
+				method: 'add',
+				id: 1,
+				jsonrpc: '1.0',
+				params: undefined,
+			},
+		],
+		true,
+	],
+	[
+		{
+			method: 'add',
+			id: 1,
+			jsonrpc: '1.0',
+			params: undefined,
+		},
+		false,
+	],
+];

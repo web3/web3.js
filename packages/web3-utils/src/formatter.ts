@@ -58,7 +58,7 @@ const findSchemaByDataPath = (
 	for (const dataPart of dataPath) {
 		if (result.oneOf && previousDataPath) {
 			const currentDataPath = previousDataPath;
-            const path = oneOfPath.find(([key]) => key === currentDataPath);
+			const path = oneOfPath.find(([key]) => key === currentDataPath);
 			if (path && path[0] === previousDataPath) {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 				result = result.oneOf[path[1]];
@@ -72,7 +72,7 @@ const findSchemaByDataPath = (
 			result = (result.properties as Record<string, JsonSchema>)[dataPart];
 		} else if (result.items && (result.items as JsonSchema).properties) {
 			const node = (result.items as JsonSchema).properties as Record<string, JsonSchema>;
-			
+
 			result = node[dataPart];
 		} else if (result.items && isObject(result.items)) {
 			result = result.items;

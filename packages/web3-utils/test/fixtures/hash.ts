@@ -286,9 +286,13 @@ export const encodePackedInvalidData: [any, string][] = [
 		{ type: 'bytes32', value: '0x1' },
 		'Invalid value given "0x1". Error: can not parse as byte data.',
 	],
+	[
+		[[{ type: 'string', value: '31323334' }], [{ type: '', value: '31323334' }]],
+		'Autodetection of array types is not supported.',
+	],
 ];
 
-export const keccak256ValidData: [string | Uint8Array | bigint, string][] = [
+export const keccak256ValidData: [string | Uint8Array | bigint | number[], string][] = [
 	['my data', '0x8e0c48154711500d6fa119cc31df4dec339091e8b426cf4109a769fe89baad31'],
 	[
 		new Uint8Array(Buffer.from('my data')),
@@ -299,6 +303,8 @@ export const keccak256ValidData: [string | Uint8Array | bigint, string][] = [
 		'0x2d19cd91fbcc44e6412f92c11da7907cdedb1ace04c47447b42a61f1cd63b85a',
 	],
 	[BigInt(3), '0x2a80e1ef1d7842f27f2e6be0972bb708b9a135c38860dbe73c27c3486c34f4de'],
+	[[0x3], '0x69c322e3248a5dfc29d73c5b0553b0185a35cd5bb6386747517ef7e53b15e287'],
+	[new Uint8Array([0x3]), '0x69c322e3248a5dfc29d73c5b0553b0185a35cd5bb6386747517ef7e53b15e287'],
 ];
 
 export const elementaryNameValidData: [any, string][] = [
@@ -351,7 +357,7 @@ export const soliditySha3BigIntValidData: [Sha3Input[], string][] = [
 	 */
 ];
 
-export const getStorageSlotNumForLongStringValidData: [string|number, string | undefined][]
-	= [
-		[0, "0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563"]
-	];
+export const getStorageSlotNumForLongStringValidData: [string | number, string | undefined][] = [
+	[0, '0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563'],
+	['0', '0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563'],
+];

@@ -69,7 +69,7 @@ export const toTwosComplementData: [[Numbers, number | undefined], HexString][] 
 	[['13', 32], '0x0000000000000000000000000000000d'],
 	[['-13', 32], '0xfffffffffffffffffffffffffffffff3'],
 	[[-16, 2], '0xf0'],
-	[['0x1', undefined], '0x0000000000000000000000000000000000000000000000000000000000000001']
+	[['0x1', undefined], '0x0000000000000000000000000000000000000000000000000000000000000001'],
 ];
 
 export const fromTwosComplementData: [[Numbers, number | undefined], number | bigint][] = [
@@ -82,7 +82,7 @@ export const fromTwosComplementData: [[Numbers, number | undefined], number | bi
 	[[1000, 64], 1000],
 	[[-1000, 64], -1000],
 	[[BigInt(9), 1], -7],
-	[['0x0000000000000000000000000000000000000000000000000000000000000001', undefined], 1]
+	[['0x0000000000000000000000000000000000000000000000000000000000000001', undefined], 1],
 ];
 
 export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
