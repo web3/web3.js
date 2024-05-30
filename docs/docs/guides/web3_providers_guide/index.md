@@ -27,7 +27,7 @@ Web3.js supports several types of providers for different use cases. Here are th
 1. [HTTP Provider](#http-provider)
 2. [WebSocket Provider](#websocket-provider)
 3. [IPC Provider (for Node.js)](#ipc-provider)
-4. [Third-party Providers (Compliant with EIP 1193)](#injected-provider)
+4. [Injected Providers (Compliant with EIP 1193)](#injected-provider)
 
 HTTP and WebSocket providers can be supplied as URL strings. All provider types can be supplied by constructing one of the [`SupportedProviders`](/api/web3/namespace/types#SupportedProviders) types.
 
