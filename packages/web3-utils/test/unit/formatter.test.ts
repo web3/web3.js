@@ -943,6 +943,7 @@ describe('formatter', () => {
 			const result = convert(data, schema, [], f, []);
 			expect(result).toEqual({});
 		});
+		
 		it('should format nested objects with oneOf', () => {
 			const schema = {
 				type: 'object',

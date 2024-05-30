@@ -151,8 +151,6 @@ export const keccak256Wrapper = (
 	let processedData;
 	if (typeof data === 'bigint' || typeof data === 'number') {
 		processedData = utf8ToBytes(data.toString());
-	} else if (Array.isArray(data)) {
-		processedData = new Uint8Array(data);
 	} else if (typeof data === 'string' && !isHexStrict(data)) {
 		processedData = utf8ToBytes(data);
 	} else {
