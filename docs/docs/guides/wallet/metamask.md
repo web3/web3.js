@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-sidebar_label: Connecting to Metamask
+sidebar_label: 'Tutorial: Connecting to Metamask'
 ---
 
 # Connecting to Metamask
