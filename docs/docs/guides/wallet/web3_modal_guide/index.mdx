@@ -104,8 +104,8 @@ const USDTAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7';
 function Components() {
   const { isConnected } = useWeb3ModalAccount()
   const { walletProvider } = useWeb3ModalProvider()
-  const [USDTBalance, setUSDTBalance] = useState(0); 
-  const [smartContractName, setSmartContractName] = useState(''); 
+  const [USDTBalance, setUSDTBalance] = useState(0);
+  const [smartContractName, setSmartContractName] = useState('');
 
   async function getContractInfo() {
     if (!isConnected) throw Error('not connected');
@@ -126,5 +126,5 @@ function Components() {
 ```
 
 :::info
-- To learn how to set up Web3modal with vue, click [here](/guides/web3_modal_guide/vue).
+- To learn how to set up Web3modal with vue, click [here](/guides/wallet/web3_modal_guide/vue).
 :::

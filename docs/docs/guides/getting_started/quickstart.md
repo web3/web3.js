@@ -43,7 +43,7 @@ import { Web3 } from 'web3';
 
 ## Initialize `Web3` with a provider
 
-[Providers](/guides/web3_providers_guide/) are objects that are responsible for enabling connectivity with the Ethereum network. The `Web3` object must be initialized with a valid provider to function as intended. Web3.js supports [HTTP](/guides/web3_providers_guide/#http-provider), [WebSocket](/guides/web3_providers_guide/#websocket-provider), and [IPC](/guides/web3_providers_guide/#ipc-provider) providers, and exposes packages for working with each type of provider.
+[Providers](/guides/web3_providers_guide/) are services that are responsible for enabling connectivity with the Ethereum network. The `Web3` object must be initialized with a valid provider to function as intended. Web3.js supports [HTTP](/guides/web3_providers_guide/#http-provider), [WebSocket](/guides/web3_providers_guide/#websocket-provider), and [IPC](/guides/web3_providers_guide/#ipc-provider) providers, and exposes packages for working with each type of provider.
 
 Web3.js is in compliance with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193), the Ethereum Provider JavaScript API, so any EIP-1193 provider can be used to initialize the `Web3` object.
 
@@ -248,7 +248,7 @@ console.log(eventTransfer);
 Web3.js allows user to subscribe to events for real-time notification of important contract interactions. Here is an example of creating a subscription to the Uniswap token's `Transfer` event:
 
 :::note
-You MUST initialize the `Web3` object with a [WebSocket](/guides/web3_providers_guide/#websocket-provider) provider to subscribe to live events.
+HTTP providers do not support real-time event subscriptions. Use one of the other [provider types](/guides/web3_providers_guide/#providers-types) to subscribe to real-time events.
 :::
 
 ```ts
