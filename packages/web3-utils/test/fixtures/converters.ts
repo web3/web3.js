@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -433,4 +433,67 @@ export const toBoolInvalidData: [boolean | string | number | unknown, string][] 
 	[BigInt(100), 'not a valid boolean'],
 	['100', 'not a valid boolean'],
 	[{}, 'not a valid boolean'],
+];
+
+
+export const numberToBytesValidData: [Numbers, Uint8Array][] = [
+	[72, new Uint8Array([72])],
+    [14194, new Uint8Array([55, 114])],
+    [18444, new Uint8Array([72, 12])],
+    [39954, new Uint8Array([156, 18])],
+    [4806, new Uint8Array([18, 198])],
+];
+
+export const numberToBytesInvalidData: [any, string][] = [
+	['0x0c1g', 'value "0x0c1g" at "/0" must pass "int" validation'],
+	['0c1g', 'value "0c1g" at "/0" must pass "int" validation'],
+	['0x123', 'value "0x123" at "/0" must pass "bytes" validation'],
+	[12, 'value "0xc" at "/0" must pass "bytes" validation'],
+	[['string'], 'value "["string"]" at "/0" must pass "int" validation'],
+	[[-72, 12], 'value "[-72,12]" at "/0" must pass "int" validation'],
+	[[567, 10098], 'value "[567,10098]" at "/0" must pass "int" validation'],
+	[[786, 12, 34, -2, 3], 'value "[786,12,34,-2,3]" at "/0" must pass "int" validation'],
+	[[9.5, 12.9], 'value "[9.5,12.9]" at "/0" must pass "int" validation'],
+	['data', 'value "data" at "/0" must pass "int" validation'],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	[null, 'value "null" at "/0" must pass "int" validation'],
+	[{}, 'value "{}" at "/0" must pass "int" validation'],
+	[undefined, 'value at "/0" is required'],
+];
+
+export const concatBytesArrayValidData: [Bytes[], HexString][] = [
+	[[new Uint8Array([0, 72])], '0x0048'],
+	[[new Uint8Array([55, 114])], '0x3772'],
+	[[new Uint8Array([72, 12])], '0x480c'],
+	[[new Uint8Array([156, 18])], '0x9c12'],
+	[[new Uint8Array([18, 198])], '0x12c6'],
+];
+
+export const concatBytesArrayInvalidData: [any, string][] = [
+	[undefined, 'Required'],
+	[['byte'], `value "byte" at "/0/0" must pass "bytes" validation`],
+	['string', 'Expected array, received string'],
+];
+
+export const utf8ToK256ValidData: [string, number][] = [
+	['I have 100£', 32],
+	['I \u1234data', 32],
+	['I ♥ data', 32],
+	['I \u0000 data', 32],
+	['\u0000 null suffix', 32],
+	['null prefix\u0000', 32],
+	['\u0000', 32],
+];
+
+export const utf8ToK256InvalidData: [any, any][] = [
+	[12, 0],
+	[BigInt(12), 0],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	[null, 0],
+	[undefined, 0],
+	[{}, 0],
+	[true, 0],
+	[false, 0],
 ];

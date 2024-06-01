@@ -19,7 +19,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * @module Utils
  */
 
-import { Numbers } from 'web3-types';
+import { Bytes, Numbers } from 'web3-types';
 import { NibbleWidthError } from 'web3-errors';
 import { isHexStrict, validator, utils as validatorUtils, bigintPower } from 'web3-validator';
 import { numberToHex, toHex, toNumber } from './converters.js';
@@ -164,3 +164,5 @@ export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | b
 
 	return toNumber(BigInt(val) - complement);
 };
+
+export const concat = (bytes: Bytes[]) => `0x${bytes.map(d => toHex(d).substring(2)).join('')}`;

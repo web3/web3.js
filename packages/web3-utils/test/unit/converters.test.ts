@@ -41,6 +41,9 @@ import {
 	bytesToUint8Array,
 	toBigInt,
 	toBool,
+	numberToBytes,
+	concatBytesArray,
+	utf8ToK256,
 } from '../../src/converters';
 
 import {
@@ -75,6 +78,12 @@ import {
 	numberToHexstrictValidData,
 	toBoolValidData,
 	toBoolInvalidData,
+	numberToBytesValidData,
+	numberToBytesInvalidData,
+	concatBytesArrayValidData,
+	concatBytesArrayInvalidData,
+	utf8ToK256ValidData,
+	utf8ToK256InvalidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -431,6 +440,48 @@ describe('converters', () => {
 		describe('invalid cases', () => {
 			it.each(toBoolInvalidData)('%s', (input, output) => {
 				expect(() => toBool(input)).toThrow(output);
+			});
+		});
+	});
+
+	describe('numberToBytes', () => {
+		describe('valid cases', () => {
+			it.each(numberToBytesValidData)('%s', (input, output) => {
+				expect(numberToBytes(input)).toEqual(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(numberToBytesInvalidData)('%s', (input, output) => {
+				expect(() => numberToBytes(input)).toThrow(output);
+			});
+		});
+	});
+
+	describe('concatBytesArray', () => {
+		describe('valid cases', () => {
+			it.each(concatBytesArrayValidData)('%s', (input, output) => {
+				expect(concatBytesArray(input)).toEqual(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(concatBytesArrayInvalidData)('%s', (input, output) => {
+				expect(() => concatBytesArray(input)).toThrow(output);
+			});
+		});
+	});
+
+	describe('utf8ToK256', () => {
+		describe('valid cases', () => {
+			it.each(utf8ToK256ValidData)('%s', (input, output) => {
+				expect(utf8ToK256(input)).toHaveLength(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(utf8ToK256InvalidData)('%s', (input, output) => {
+				expect(() => utf8ToK256(input)).toHaveLength(output);
 			});
 		});
 	});

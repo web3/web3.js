@@ -702,3 +702,12 @@ export const toBool = (value: boolean | string | number | unknown): boolean => {
 
 	throw new InvalidBooleanError(value);
 };
+
+export const numberToBytes = (value: Numbers) => hexToBytes(numberToHex(value));
+
+export const concatBytesArray = (value: Bytes[]) =>{
+	validator.validate(['bytes[]'], [value]);
+	return `0x${value.map(d => toHex(d).substring(2)).join('')}`;
+}
+
+export const utf8ToK256 = (value: string) => keccak256(utf8ToBytes(value));

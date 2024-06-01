@@ -171,6 +171,15 @@ console.log(web3.utils.hexToNumberString("0xa"));
 
 console.log(web3.utils.toBigInt("0xa")); 
 // 10n (bigint)
+
+console.log(web3.utils.numberToBytes(72));
+// new Uint8Array([72]) (Uint8Array)
+
+console.log(web3.utils.concatBytesArray(new Uint8Array([0, 72])));
+// 0x0048 (string)
+
+console.log(web3.utils.utf8ToK256('100£'));
+// K256 Array (K256)
 ```
 
 ### Hashing Functions
