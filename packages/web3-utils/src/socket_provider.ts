@@ -187,13 +187,13 @@ export abstract class SocketProvider<
 	protected _validateProviderPath(path: string): boolean {
 		return !!path;
 	}
-	
+
 	/**
 	 *
 	 * @returns the pendingRequestQueue size
 	 */
 	// eslint-disable-next-line class-methods-use-this
-	public getPendingRequestQueueSize()  {
+	public getPendingRequestQueueSize() {
 		return this._pendingRequestsQueue.size;
 	}
 
@@ -350,31 +350,33 @@ export abstract class SocketProvider<
 
 	/**
 	 * Safely disconnects the socket, async and waits for request size to be 0 before disconnecting
-	 * @param forceDisconnect - If true, will clear queue after 5 attempts of waiting for both pending and sent queue to be 0  
+	 * @param forceDisconnect - If true, will clear queue after 5 attempts of waiting for both pending and sent queue to be 0
 	 * @param ms - Determines the ms of setInterval
 	 * @param code - The code to be sent to the server
 	 * @param data - The data to be sent to the server
 	 */
-	public async safeDisconnect(code?: number, data?: string, forceDisconnect = false,ms = 1000) {
+	public async safeDisconnect(code?: number, data?: string, forceDisconnect = false, ms = 1000) {
 		let retryAttempt = 0;
-		const checkQueue = async () => 
+		const checkQueue = async () =>
 			new Promise(resolve => {
 				const interval = setInterval(() => {
-					if (forceDisconnect && retryAttempt === 5) {
+					if (forceDisconnect && retryAttempt >= 5) {
 						this.clearQueues();
 					}
-					if (this.getPendingRequestQueueSize() === 0 && this.getSentRequestsQueueSize() === 0) {
+					if (
+						this.getPendingRequestQueueSize() === 0 &&
+						this.getSentRequestsQueueSize() === 0
+					) {
 						clearInterval(interval);
 						resolve(true);
 					}
-					retryAttempt+=1;
-				}, ms)
-			})
-		
+					retryAttempt += 1;
+				}, ms);
+			});
+
 		await checkQueue();
 		this.disconnect(code, data);
 	}
-
 
 	/**
 	 * Removes all listeners for the specified event type.
@@ -512,7 +514,7 @@ export abstract class SocketProvider<
 		if (isNullish(responses) || responses.length === 0) {
 			return;
 		}
-		
+
 		for (const response of responses) {
 			if (
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
@@ -544,7 +546,7 @@ export abstract class SocketProvider<
 			this._sentRequestsQueue.delete(requestId);
 		}
 	}
-	
+
 	public clearQueues(event?: ConnectionEvent) {
 		this._clearQueues(event);
 	}

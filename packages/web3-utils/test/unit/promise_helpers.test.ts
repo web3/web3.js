@@ -60,6 +60,14 @@ describe('promise helpers', () => {
 				new Error('time out'),
 			);
 		});
+		it('throws if result is an instance of Error', async () => {
+			const dummyError = new Error('dummy error');
+			const asyncHelper = async () => {
+				return dummyError;
+			};
+
+			await expect(waitWithTimeout(asyncHelper(), 1000)).rejects.toThrow(dummyError);
+		});
 	});
 	describe('rejectIfTimeout', () => {
 		it('%s', async () => {

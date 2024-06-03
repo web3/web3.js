@@ -58,7 +58,7 @@ export const padRightData: [[Numbers, number, string], HexString][] = [
 	[['15.5', 8, '0'], '15.50000'],
 ];
 
-export const toTwosComplementData: [[Numbers, number], HexString][] = [
+export const toTwosComplementData: [[Numbers, number | undefined], HexString][] = [
 	[[13, 32], '0x0000000000000000000000000000000d'],
 	[[256, 30], '0x000000000000000000000000000100'],
 	[[0, 32], '0x00000000000000000000000000000000'],
@@ -69,9 +69,10 @@ export const toTwosComplementData: [[Numbers, number], HexString][] = [
 	[['13', 32], '0x0000000000000000000000000000000d'],
 	[['-13', 32], '0xfffffffffffffffffffffffffffffff3'],
 	[[-16, 2], '0xf0'],
+	[['0x1', undefined], '0x0000000000000000000000000000000000000000000000000000000000000001'],
 ];
 
-export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
+export const fromTwosComplementData: [[Numbers, number | undefined], number | bigint][] = [
 	[['0x0000000000000000000000000000000d', 32], 13],
 	[['0x000000000000000000000000000100', 30], 256],
 	[['0x00000000000000000020000000000000', 32], BigInt('9007199254740992')],
@@ -81,6 +82,7 @@ export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
 	[[1000, 64], 1000],
 	[[-1000, 64], -1000],
 	[[BigInt(9), 1], -7],
+	[['0x0000000000000000000000000000000000000000000000000000000000000001', undefined], 1],
 ];
 
 export const toTwosComplementInvalidData: [[Numbers, number], string][] = [

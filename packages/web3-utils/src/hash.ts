@@ -17,25 +17,25 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * This package provides utility functions for Ethereum dapps and other web3.js packages.
- * 
+ *
  * For using Utils functions, first install Web3 package using `npm i web3` or `yarn add web3`.
- * After that, Web3 Utils functions will be available as mentioned below. 
+ * After that, Web3 Utils functions will be available as mentioned below.
  * ```ts
  * import { Web3 } from 'web3';
  * const web3 = new Web3();
- * 
+ *
  * const value = web3.utils.fromWei("1", "ether")
- * 
+ *
  * ```
- * 
+ *
  * For using individual package install `web3-utils` package using `npm i web3-utils` or `yarn add web3-utils` and only import required functions.
- * This is more efficient approach for building lightweight applications. 
+ * This is more efficient approach for building lightweight applications.
  * ```ts
  * import { fromWei, soliditySha3Raw } from 'web3-utils';
- * 
+ *
  * console.log(fromWei("1", "ether"));
  * console.log(soliditySha3Raw({ type: "string", value: "helloworld" }))
- * 
+ *
  * ```
  * @module Utils
  */
@@ -172,7 +172,6 @@ const getType = (arg: Sha3Input): [string, EncodingTypes] => {
 	if (Array.isArray(arg)) {
 		throw new Error('Autodetection of array types is not supported.');
 	}
-
 	let type;
 	let value;
 	// if type is given

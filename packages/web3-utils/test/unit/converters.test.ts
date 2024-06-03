@@ -15,6 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { InvalidBytesError } from 'web3-errors';
+import { validator, utils } from 'web3-validator';
+
 import {
 	asciiToHex,
 	bytesToHex,
@@ -325,6 +328,16 @@ describe('converters', () => {
 			it.each(toHexValidData)('%s', (input, output) => {
 				expect(toHex(input, true)).toEqual(output[1]);
 			});
+
+			it('an interesting case that needs investigation', () => {
+				// TODO: This case is to be investigated further
+				expect(
+					toHex(
+						'101611154195520776335741463917853444671577865378275924493376429267637792638729',
+						true,
+					),
+				).toBe('uint');
+			});
 		});
 
 		describe('invalid cases', () => {
@@ -341,6 +354,14 @@ describe('converters', () => {
 	});
 
 	describe('fromWei', () => {
+		beforeEach(() => {
+			jest.spyOn(console, 'warn').mockImplementation(() => {
+				// do nothing
+			});
+		});
+		afterAll(() => {
+			jest.restoreAllMocks();
+		});
 		describe('valid cases', () => {
 			it.each(fromWeiValidData)('%s', (input, output) => {
 				expect(fromWei(input[0], input[1])).toEqual(output);
@@ -372,13 +393,14 @@ describe('converters', () => {
 					// do nothing
 				});
 			});
+			afterAll(() => {
+				jest.restoreAllMocks();
+			});
 			it.each(toWeiValidDataWarnings)('%s', (input, output) => {
 				toWei(input[0], input[1]);
-				// expect(() => toWei(input[0], input[1])).toThrow(output);
-				expect(console.warn).toHaveBeenCalledWith(output)
+				expect(console.warn).toHaveBeenCalledWith(output);
 			});
-
-		})
+		});
 	});
 	describe('toChecksumAddress', () => {
 		describe('valid cases', () => {
@@ -390,6 +412,33 @@ describe('converters', () => {
 			it.each(toCheckSumInvalidData)('%s', (input, output) => {
 				expect(() => toChecksumAddress(input)).toThrow(output);
 			});
+		});
+		it('should return an empty string if hash is nullish', () => {
+			const address = '0xc1912fee45d61c87cc5ea59dae31190fffff232d';
+
+			// mock utils.uint8ArrayToHexString to return an empty string
+			jest.mock('web3-validator');
+			jest.spyOn(utils, 'uint8ArrayToHexString').mockReturnValue(
+				undefined as unknown as string,
+			);
+
+			const result = toChecksumAddress(address);
+			expect(result).toBe('');
+
+			jest.mock('web3-validator').restoreAllMocks();
+		});
+
+		it('should return an empty string if hash is equal to "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"', () => {
+			const address = '0xc1912fee45d61c87cc5ea59dae31190fffff232d';
+
+			// mock utils.uint8ArrayToHexString to return '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+			jest.mock('web3-validator');
+			const hash = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+			jest.spyOn(utils, 'uint8ArrayToHexString').mockReturnValue(hash);
+			const result = toChecksumAddress(address);
+			expect(result).toBe('');
+
+			jest.mock('web3-validator').restoreAllMocks();
 		});
 	});
 	describe('bytesToUint8Array', () => {
@@ -403,6 +452,18 @@ describe('converters', () => {
 			describe('invalid cases', () => {
 				it.each(bytesToUint8ArrayInvalidData)('%s', (input, output) => {
 					expect(() => bytesToUint8Array(input)).toThrow(output);
+				});
+
+				it('should throw InvalidBytesError for invalid input even if it passed the validator', () => {
+					const invalidData = 8;
+					// the package 'web3-validator' contains `validator`.
+					// Mock mock the `validator.validate(...)` to not throw an error, but return `false` instead.
+					jest.mock('web3-validator');
+
+					jest.spyOn(validator, 'validate').mockReturnValue(undefined);
+
+					expect(() => bytesToUint8Array(invalidData as any)).toThrow(InvalidBytesError);
+					jest.mock('web3-validator').restoreAllMocks();
 				});
 			});
 		});
