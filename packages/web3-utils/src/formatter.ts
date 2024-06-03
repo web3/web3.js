@@ -57,10 +57,8 @@ const findSchemaByDataPath = (
 
 	for (const dataPart of dataPath) {
 		if (result.oneOf && previousDataPath) {
-			const path = oneOfPath.find(function (element: [string, number]) {
-				return (this as unknown as string) === element[0];
-			}, previousDataPath ?? '');
-
+			const currentDataPath = previousDataPath;
+			const path = oneOfPath.find(([key]) => key === currentDataPath);
 			if (path && path[0] === previousDataPath) {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 				result = result.oneOf[path[1]];
@@ -74,10 +72,6 @@ const findSchemaByDataPath = (
 			result = (result.properties as Record<string, JsonSchema>)[dataPart];
 		} else if (result.items && (result.items as JsonSchema).properties) {
 			const node = (result.items as JsonSchema).properties as Record<string, JsonSchema>;
-
-			if (!node) {
-				return undefined;
-			}
 
 			result = node[dataPart];
 		} else if (result.items && isObject(result.items)) {
@@ -307,7 +301,7 @@ export const convert = (
 
 			// If value is an object, recurse into it
 			if (isObject(value)) {
-				convert(value, schema, dataPath, format);
+				convert(value, schema, dataPath, format, oneOfPath);
 				dataPath.pop();
 				continue;
 			}

@@ -99,7 +99,7 @@ let requestIdSeed: number | undefined;
 /**
  * Optionally use to make the jsonrpc `id` start from a specific number.
  * Without calling this function, the `id` will be filled with a Uuid.
- * But after this being called with a number, the `id` will be a number staring from the provided `start` variable.
+ * But after this being called with a number, the `id` will be a number starting from the provided `start` variable.
  * However, if `undefined` was passed to this function, the `id` will be a Uuid again.
  * @param start - a number to start incrementing from.
  * 	Or `undefined` to use a new Uuid (this is the default behavior)
