@@ -53,4 +53,17 @@ describe('Web3DeferredPromise', () => {
 			expect(promise.state).toBe('rejected');
 		});
 	});
+
+	describe('Web3DeferredPromise finally', () => {
+		it('should execute the callback when the promise is settled', async () => {
+			const promise = new Web3DeferredPromise<number>();
+			let callbackExecuted = false;
+			promise.resolve(1);
+			await promise.finally(() => {
+				callbackExecuted = true;
+			});
+
+			expect(callbackExecuted).toBe(true);
+		});
+	});
 });

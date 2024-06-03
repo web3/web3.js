@@ -18,6 +18,7 @@ import { JsonRpcNotification, SubscriptionParams } from 'web3-types';
 
 const responseWithResult = { jsonrpc: '2.0', id: 1, result: '' };
 const responseWithError = { jsonrpc: '2.0', id: 1, error: { code: 1, message: 'string' } };
+const responseWithRpcError = { jsonrpc: '2.0', id: 1, error: { code: -32000, message: 'string' } };
 const responseWithSubscription = { id: 1, jsonrpc: '2.0', result: '' };
 const responseWithNotfication = {
 	jsonrpc: '2.0',
@@ -27,11 +28,13 @@ const responseWithNotfication = {
 export const isResponseWithResultValidTest: [any, boolean][] = [
 	[responseWithResult, true],
 	[responseWithError, false],
+	[{ ...responseWithResult, id: '1' }, true],
 ];
 
 export const isResponseWithErrorValidTest: [any, boolean][] = [
 	[responseWithResult, false],
 	[responseWithError, true],
+	[{ ...responseWithError, id: '1' }, true],
 ];
 
 export const isResponseWithNotificationValidTest: [JsonRpcNotification, boolean][] = [
@@ -62,5 +65,42 @@ export const toPayloadValidTest: [any, any][] = [
 			jsonrpc: '2.0',
 			params: undefined,
 		},
+	],
+	[
+		{ method: 'add', jsonrpc: '1.0', id: 1 },
+		{
+			method: 'add',
+			id: 1,
+			jsonrpc: '1.0',
+			params: undefined,
+		},
+	],
+];
+
+export const isResponseRpcErrorValidData: [any, boolean][] = [
+	[responseWithRpcError, true],
+	[responseWithError, false],
+];
+
+export const isBatchRequestValidData: [any, boolean][] = [
+	[
+		[
+			{
+				method: 'add',
+				id: 1,
+				jsonrpc: '1.0',
+				params: undefined,
+			},
+		],
+		true,
+	],
+	[
+		{
+			method: 'add',
+			id: 1,
+			jsonrpc: '1.0',
+			params: undefined,
+		},
+		false,
 	],
 ];
