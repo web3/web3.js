@@ -175,7 +175,7 @@ npx hardhat init
 
 Initializing the Hardhat project will require responding to several prompts - select the default option for each prompt.
 
-After you initialize the Hardhat project, a number of new files and directories will be created, including a Hardhat configuration file called `hardhat.config.js`. Edit `hardhat.config.js` to include the [Web3.js plugin for Hardhat](https://hardhat.org/hardhat-runner/plugins/nomicfoundation-hardhat-web3-v4) and to configure the Hardhat development network's [mining mode](https://hardhat.org/hardhat-network/docs/reference#mining-modes) to produce blocks every 5 seconds.
+After you initialize the Hardhat project, a number of new files and directories will be created, including a Hardhat configuration file called `hardhat.config.js`. Edit `hardhat.config.js` to include the [Web3.js plugin for Hardhat](https://hardhat.org/hardhat-runner/plugins/nomicfoundation-hardhat-web3-v4).
 
 ```js
 require("@nomicfoundation/hardhat-toolbox");
@@ -183,15 +183,7 @@ require("@nomicfoundation/hardhat-web3-v4"); // <=== add this import
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.24",,
-  networks: { // <=== add this property
-    hardhat: {
-      mining: {
-        auto: false,
-        interval: 5000,
-      }
-    }
-  }
+  solidity: "0.8.24",
 };
 ```
 
@@ -233,18 +225,18 @@ const { Web3 } = require("hardhat");
 
 const web3 = new Web3("http://127.0.0.1:8545/");
 
-// Log the current block number to the console
+// Log the chain ID to the console
 web3.eth
-  .getBlockNumber()
+  .getChainId()
   .then((result) => {
-    console.log("Current block number: " + result);
+    console.log("Chain ID: " + result);
   })
   .catch((error) => {
     console.error(error);
   });
 ```
 
-This code sets up a Web3.js connection to the Hardhat development network and logs the current block number to the console.
+This code sets up a Web3.js connection to the Hardhat development network and logs the chain ID to the console.
 
 :::note
 This tutorial uses the default URL for the Hardhat development network (http://127.0.0.1:8545/). Make sure to use the actual URL that was provided when the Hardhat development network was started.
@@ -256,10 +248,10 @@ Run the following command to test the connection:
 node index.js
 ```
 
-If everything is working correctly, you should see the current block number logged to the console (the block number will be different depending on how long the Hardhat development network has been running):
+If everything is working correctly, you should see the chain ID logged to the console:
 
 ```bash
-Current block number: 42
+Chain ID: 31337
 ```
 
 ## Step 6: Deploy the Smart Contract with Web3.js
