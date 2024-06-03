@@ -20,7 +20,6 @@ import { isNullish } from 'web3-validator';
 export type Timer = ReturnType<typeof setInterval>;
 export type Timeout = ReturnType<typeof setTimeout>;
 
-
 /**
  * An alternative to the node function `isPromise` that exists in `util/types` because it is not available on the browser.
  * @param object - to check if it is a `Promise`
@@ -74,7 +73,6 @@ export async function waitWithTimeout<T>(
 	return result;
 }
 
-
 /**
  * Repeatedly calls an async function with a given interval until the result of the function is defined (not undefined or null),
  * or until a timeout is reached. It returns promise and intervalId.
@@ -85,25 +83,27 @@ export function pollTillDefinedAndReturnIntervalId<T>(
 	func: AsyncFunction<T>,
 	interval: number,
 ): [Promise<Exclude<T, undefined>>, Timer] {
-
 	let intervalId: Timer | undefined;
 	const polledRes = new Promise<Exclude<T, undefined>>((resolve, reject) => {
-		intervalId = setInterval(function intervalCallbackFunc(){
-			(async () => {
-				try {
-					const res = await waitWithTimeout(func, interval);
+		intervalId = setInterval(
+			(function intervalCallbackFunc() {
+				(async () => {
+					try {
+						const res = await waitWithTimeout(func, interval);
 
-					if (!isNullish(res)) {
+						if (!isNullish(res)) {
+							clearInterval(intervalId);
+							resolve(res as unknown as Exclude<T, undefined>);
+						}
+					} catch (error) {
 						clearInterval(intervalId);
-						resolve(res as unknown as Exclude<T, undefined>);
+						reject(error);
 					}
-				} catch (error) {
-					clearInterval(intervalId);
-					reject(error);
-				}
-			})() as unknown;
-			return intervalCallbackFunc;}() // this will immediate invoke first call
-			, interval);
+				})() as unknown;
+				return intervalCallbackFunc;
+			})(), // this will immediate invoke first call
+			interval,
+		);
 	});
 
 	return [polledRes as unknown as Promise<Exclude<T, undefined>>, intervalId!];
@@ -113,7 +113,7 @@ export function pollTillDefinedAndReturnIntervalId<T>(
  * Repeatedly calls an async function with a given interval until the result of the function is defined (not undefined or null),
  * or until a timeout is reached.
  * pollTillDefinedAndReturnIntervalId() function should be used instead of pollTillDefined if you need IntervalId in result.
- * This function will be deprecated in next major release so use pollTillDefinedAndReturnIntervalId(). 
+ * This function will be deprecated in next major release so use pollTillDefinedAndReturnIntervalId().
  * @param func - The function to call.
  * @param interval - The interval in milliseconds.
  */
@@ -146,7 +146,7 @@ export function rejectIfTimeout(timeout: number, error: Error): [Timer, Promise<
 /**
  * Sets an interval that repeatedly executes the given cond function with the specified interval between each call.
  * If the condition is met, the interval is cleared and a Promise that rejects with the returned value is returned.
- * @param cond - The function/confition to call.
+ * @param cond - The function/condition to call.
  * @param interval - The interval in milliseconds.
  * @returns - an array with the interval ID and the Promise.
  */
@@ -168,4 +168,3 @@ export function rejectIfConditionAtInterval<T>(
 	});
 	return [intervalId!, rejectIfCondition];
 }
-

@@ -23,6 +23,7 @@ import {
 	soliditySha3Raw,
 	encodePacked,
 	keccak256 as web3keccak256,
+	getStorageSlotNumForLongString,
 } from '../../src/hash';
 import {
 	sha3Data,
@@ -37,6 +38,7 @@ import {
 	encodePackedInvalidData,
 	keccak256ValidData,
 	soliditySha3BigIntValidData,
+	getStorageSlotNumForLongStringValidData,
 } from '../fixtures/hash';
 
 describe('hash', () => {
@@ -147,6 +149,12 @@ describe('hash', () => {
 			it.each(soliditySha3BigIntValidData)('%s', (input, output) => {
 				expect(soliditySha3(...input)).toEqual(output);
 			});
+		});
+	});
+
+	describe('getStorageSlotNumForLongString', () => {
+		it.each(getStorageSlotNumForLongStringValidData)('%s', (input, output) => {
+			expect(getStorageSlotNumForLongString(input)).toEqual(output);
 		});
 	});
 });
