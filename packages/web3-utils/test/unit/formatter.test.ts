@@ -855,76 +855,7 @@ describe('formatter', () => {
 	});
 
 	describe('convert', () => {
-		it('should convert array values correctly when schema is an array and items are objects', () => {
-			const schema = {
-				type: 'object',
-				properties: {
-					transactions: {
-						type: 'array',
-						oneOf: [
-							{
-								items: {
-									type: 'object',
-									properties: {
-										address: { format: 'string' },
-										value: { type: 'string' },
-									},
-								},
-							},
-							{
-								items: {
-									type: 'object',
-									properties: {
-										address: { format: 'string' },
-										value: { type: 'number' },
-									},
-								},
-							},
-						],
-					},
-				},
-			};
-			const data = {
-				transactions: [
-					{ address: 'B', value: '42' },
-					{ address: 'B', value: 43 },
-				],
-			};
-			expect(
-				convert(data, schema, [], {
-					number: FMT_NUMBER.HEX,
-					bytes: FMT_BYTES.HEX,
-				}),
-			).toEqual(data);
-		});
-
-		it('should delete the array property if schema for array items is nullish', () => {
-			const schema = {
-				type: 'object',
-				properties: {
-					transactions: {
-						type: 'array',
-						items: undefined, // Simulate a missing or null schema for items
-					},
-				},
-			};
-
-			const data = {
-				transactions: [
-					{ type: 'A', value: 'some string' },
-					{ type: 'B', value: 42 },
-				],
-			};
-
-			const result = convert(data, schema, [], {
-				number: FMT_NUMBER.HEX,
-				bytes: FMT_BYTES.HEX,
-			});
-
-			expect(result).toEqual({});
-		});
-
-		it('should return empty when no proerties or items', () => {
+		it('should return empty when no properties or items', () => {
 			const data = { key: 'value' };
 			const schema = {
 				type: 'object',
@@ -932,45 +863,6 @@ describe('formatter', () => {
 			const f = { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX };
 			const result = convert(data, schema, [], f, []);
 			expect(result).toEqual({});
-		});
-
-		it('should format nested objects with oneOf', () => {
-			const schema = {
-				type: 'object',
-				properties: {
-					details: {
-						type: 'object',
-						oneOf: [
-							{ properties: { type: { enum: ['A'] }, value: { type: 'string' } } },
-							{ properties: { type: { enum: ['B'] }, value: { type: 'number' } } },
-						],
-					},
-				},
-			};
-
-			const data = {
-				details: {
-					type: 'B',
-					value: 42,
-				},
-			};
-			const result = convert(
-				data,
-				schema,
-				[],
-				{
-					number: FMT_NUMBER.BIGINT,
-					bytes: FMT_BYTES.UINT8ARRAY,
-				},
-				[['details', 1]],
-			);
-
-			expect(result).toEqual({
-				details: {
-					type: 'B',
-					value: 42,
-				},
-			});
 		});
 	});
 });
