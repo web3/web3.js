@@ -3,7 +3,7 @@ sidebar_position: 1
 sidebar_label: 'Mastering Providers'
 ---
 
-# Web3js providers overview
+# Web3.js Providers Overview
 
 Providers are services that are responsible for enabling Web3.js connectivity with the Ethereum network. Using a provider to connect your application to an Ethereum node is necessary for querying data, sending transactions, and interacting with smart contracts. This guide will explore the different types of Web3.js providers, how to set them up, and how to use them in an application.
 
@@ -14,7 +14,7 @@ import { Web3 } from 'web3';
 
 const web3 = new Web3(/* PROVIDER*/);
 
-//calling any method that interact with the network would use the previous passed provider.
+// calling any method that interacts with the network will use the supplied provider
 await web3.eth.getBlockNumber();
 ```
 
@@ -40,8 +40,8 @@ HTTP is a request-response protocol and does not support persistent connection, 
 ``` ts title='Initialize an HTTP Provider'
 import { Web3, HttpProvider } from 'web3';
 
-//supply an HTTP provider as a URL string
-//highlight-next-line
+// supply an HTTP provider as a URL string
+// highlight-next-line
 const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_ID');
 
 await web3.eth.getBlockNumber()
@@ -49,8 +49,8 @@ await web3.eth.getBlockNumber()
 
 // OR
 
-//supply an HTTP provider by constructing a new HttpProvider
-//highlight-next-line
+// supply an HTTP provider by constructing a new HttpProvider
+// highlight-next-line
 const web3_2 = new Web3(new HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_ID'));
 
 await web3.eth.getBlockNumber()
@@ -87,15 +87,15 @@ const httpOptions = {
 const web3 = new Web3(new HttpProvider('https://eth.llamarpc.com', httpOptions));
 ```
 
-### WebSocket provider
+### WebSocket Provider
 
 WebSockets support a persistent connection between a client and a server, which means they are suitable for use cases that require real-time [event subscriptions](/guides/events_subscriptions/).
 
 ``` ts title='Initialize WS Provider'
 import { Web3, WebSocketProvider } from 'web3';
 
-//supply a WebSocket provider as a URL string
-//highlight-next-line
+// supply a WebSocket provider as a URL string
+// highlight-next-line
 const web3 = new Web3('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID');
 
 await web3.eth.getBlockNumber();	
@@ -103,8 +103,8 @@ await web3.eth.getBlockNumber();
 
 // OR
 
-//supply a WebSocket provider by constructing a new WebSocketProvider
-//highlight-next-line
+// supply a WebSocket provider by constructing a new WebSocketProvider
+// highlight-next-line
 const web3_2 = new Web3(new WebSocketProvider('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID'));
 
 await web3.eth.getBlockNumber();
@@ -116,12 +116,12 @@ await web3.eth.getBlockNumber();
 The [`WebSocketProvider` constructor](/api/web3-providers-ws/class/WebSocketProvider#constructor) accepts two optional parameters that can be used to configure the behavior of the `WebSocketProvider`: the first parameter must be of type [`ClientRequestArgs`](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) or of [`ClientOptions`](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/e5ee5eae6a592198e469ad9f412bab8d223fcbb6/types/ws/index.d.ts#L243) and the second parameter must be of type [`ReconnectOptions`](/api/web3/namespace/utils#ReconnectOptions).
 
 ```ts title='Configuring a WebSocket Provider'
-//include both optional parameters
+// include both optional parameters
 const provider = new WebSocketProvider(
   `ws://localhost:8545`,
   {
     headers: {
-      //for node services that require an API key in a header
+      // for node services that require an API key in a header
       'x-api-key': '<API key>',
     },
   },
@@ -132,7 +132,7 @@ const provider = new WebSocketProvider(
   }
 );
 
-//OR include only ReconnectOptions
+// OR include only ReconnectOptions
 const provider = new WebSocketProvider(
   `ws://localhost:8545`,
   {},
@@ -150,10 +150,10 @@ IPC (inter-process communication) providers offer high-performance local communi
 
 ``` ts title='Initialize IPC Provider'
 import { Web3 } from 'web3';
-//highlight-next-line
+// highlight-next-line
 import { IpcProvider } from 'web3-providers-ipc';
 
-//highlight-next-line
+// highlight-next-line
 const web3 = new Web3(new IpcProvider('/users/myuser/.ethereum/geth.ipc'));
 
 await web3.eth.getBlockNumber();
@@ -167,7 +167,7 @@ The [`IpcProvider` constructor](/api/web3-providers-ipc/class/IpcProvider#constr
 
 
 ```ts title='Configuring an IPC Provider'
-//include both optional parameters
+// include both optional parameters
 const provider = new IpcProvider(
   '/Users/myuser/Library/Ethereum/geth.ipc',
   {
@@ -180,7 +180,7 @@ const provider = new IpcProvider(
   }
 );
 
-//OR include only ReconnectOptions
+// OR include only ReconnectOptions
 const provider = new IpcProvider(
   '/Users/myuser/Library/Ethereum/geth.ipc',
   {},
@@ -208,22 +208,23 @@ Local providers can usually be accessed via IPC, HTTP, or WebSocket. The followi
 import { Web3 } from 'web3';
 import { IpcProvider } from 'web3-providers-ipc';
 
-//highlight-next-line
-//IPC provider
-const web3 = new Web3(new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'));//mac os path
-// on windows the path is: '\\\\.\\pipe\\geth.ipc'
-// on linux the path is: '/users/myuser/.ethereum/geth.ipc'
+// highlight-next-line
+// IPC provider
+const web3 = new Web3(new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc'));
+// the path above is for macOS
+// on Windows the path is: '\\\\.\\pipe\\geth.ipc'
+// on Linux the path is: '/users/myuser/.ethereum/geth.ipc'
 
-//highlight-next-line
-//HTTP provider
+// highlight-next-line
+// HTTP provider
 web3.setProvider('http://localhost:8545');
-// or
+// OR
 web3.setProvider(new Web3.providers.HttpProvider('http://localhost:8545'));
 
-//highlight-next-line
-//WebSocket provider
+// highlight-next-line
+// WebSocket provider
 web3.setProvider('ws://localhost:8546');
-// or
+// OR
 web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 ```
 
@@ -232,8 +233,6 @@ web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 Services like [Alchemy](https://www.alchemy.com/), [Infura](https://www.infura.io/), and [QuickNode](https://www.quicknode.com/) offer Ethereum node services that can be accessed via HTTP or Websocket.
 
 ```ts title='Alchemy, Infura, etc'
-// like Alchemy (https://www.alchemyapi.io/supernode)
-// or infura (https://mainnet.infura.io/v3/your_infura_key)
 import { Web3 } from 'web3';
 const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 ```
@@ -250,24 +249,24 @@ The following example should be run in a browser with the MetaMask extension ins
 <script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
 <script>
  window.addEventListener('load', function () {
- // Check if web3 is available
+  // check if web3 is available
   if (typeof window.ethereum !== 'undefined') {
 	
-    //highlight-start
-    // Use the browser injected Ethereum provider
+    // highlight-start
+    // use the browser injected Ethereum provider
     web3 = new Web3(window.ethereum);
-    //highlight-end
+    // highlight-end
 
-    // Request access to the user's MetaMask account
+    // request access to the user's MetaMask account
     window.ethereum.enable();
 
-    // Get the user's accounts
+    // get the user's accounts
     web3.eth.getAccounts().then(function (accounts) {
-     // Show the first account
+     // show the first account
      document.getElementById('log').innerHTML = 'Connected with MetaMask account: ' + accounts[0];
     });
   } else {
-    // If web3 is not available, give instructions to install MetaMask
+    // if window.ethereum is not available, give instructions to install MetaMask
     document.getElementById('log').innerHTML = 'Please install MetaMask to connect with the Ethereum network';
   }
  });
