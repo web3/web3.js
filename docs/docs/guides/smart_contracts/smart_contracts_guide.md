@@ -205,12 +205,12 @@ WARNING: These accounts, and their private keys, are publicly known.
 Any funds sent to them on Mainnet or any other live network WILL BE LOST.
 
 Account #0: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000 ETH)
-Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+Private Key: <redacted>
 
 ...
 
 Account #19: 0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199 (10000 ETH)
-Private Key: 0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e
+Private Key: <redacted>
 
 WARNING: These accounts, and their private keys, are publicly known.
 Any funds sent to them on Mainnet or any other live network WILL BE LOST.
