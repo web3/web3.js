@@ -10,6 +10,21 @@ Web3.js is a robust and flexible collection of **TypeScript and JavaScript** lib
 
 This documentation is the entrypoint to Web3.js for developers. It covers [basic](/guides/getting_started/quickstart) and [advanced](/guides/smart_contracts/mastering_smart_contracts) usage with examples, and includes comprehensive [API documentation](/api) as well as guides for common tasks, like [upgrading](/guides/web3_upgrade_guide/x/) from older versions.
 
+## Features of Web3.js v4
+
+- Flexible
+  - ECMAScript (ESM) and CommonJS (CJS) builds
+  - [Plugins](/guides/web3_plugin_guide/) for extending functionality
+- Efficient
+  - Modular, [package](/#packages)-based design reduces unneeded dependencies
+  - [Tree shakable with ESM](/guides/advanced/tree_shaking)
+  - Use of native [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) (instead of large [BigNumber](https://mikemcl.github.io/bignumber.js/) libraries)
+  - Efficient ABI [encoding](/api/web3-eth-abi/function/encodeFunctionCall) & [decoding](/api/web3-eth-abi/function/decodeParameter)
+- Developer-Friendly
+  - [Dynamic contract types](/guides/smart_contracts/infer_contract_types/) & full API in TypeScript
+  - Custom output [formatters](https://docs.web3js.org/api/web3-utils/function/format)
+  - In compliance with the [Ethereum JSON-RPC Specification](https://ethereum.github.io/execution-apis/api-documentation/)
+
 ## Using These Docs
 
 There is a lot to learn about Web3.js! Here are some tips for developers of different skill levels. Remember, you can always [reach out directly](/guides/feedback/#urgent-questions-or-concerns) with Discord or Twitter if you're feeling stuck.
@@ -67,21 +82,6 @@ Web3.js supports [plugins](/guides/web3_plugin_guide/), which are another way to
 - [EIP-4844 (Blob Transactions) Plugin](https://www.npmjs.com/package/web3-plugin-blob-tx)
 
 - [zkSync Plugin](https://www.npmjs.com/package/web3-plugin-zksync)
-
-## Features of Web3.js v4
-
-- Flexible
-  - ECMAScript (ESM) and CommonJS (CJS) builds
-  - [Plugins](/guides/web3_plugin_guide/) for extending functionality
-- Efficient
-  - Modular, [package](/#packages)-based design reduces unneeded dependencies
-  - [Tree shakable with ESM](/guides/advanced/tree_shaking)
-  - Use of native [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) (instead of large [BigNumber](https://mikemcl.github.io/bignumber.js/) libraries)
-  - Efficient ABI [encoding](/api/web3-eth-abi/function/encodeFunctionCall) & [decoding](/api/web3-eth-abi/function/decodeParameter)
-- Developer-Friendly
-  - [Dynamic contract types](/guides/smart_contracts/infer_contract_types/) & full API in TypeScript
-  - Custom output [formatters](https://docs.web3js.org/api/web3-utils/function/format)
-  - In compliance with the [Ethereum JSON-RPC Specification](https://ethereum.github.io/execution-apis/api-documentation/)
 
 ## Advantages Over Other Libraries
 
