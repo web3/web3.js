@@ -25,7 +25,19 @@ This documentation is the entrypoint to Web3.js for developers. It covers [basic
   - Custom output [formatters](https://docs.web3js.org/api/web3-utils/function/format)
   - In compliance with the [Ethereum JSON-RPC Specification](https://ethereum.github.io/execution-apis/api-documentation/)
 
-## Packages
+## Using These Docs
+
+There is a lot to learn about Web3.js! Here are some tips for developers of different skill levels. Remember, you can always [reach out directly](/guides/feedback/#urgent-questions-or-concerns) with Discord or Twitter if you're feeling stuck.
+
+### For Beginner Web3.js Developers
+
+New Web3.js developers should proceed to the [Quickstart](/guides/getting_started/quickstart) section to learn how to get started with Web3.js. Once you understand the basics, you may want to consider learning more about [providers](/guides/web3_providers_guide/), [wallets and accounts](/guides/wallet/), [smart contracts](/guides/smart_contracts/smart_contracts_guide), and how to [use Web3.js with the Hardhat development environment](/guides/hardhat_tutorial/).
+
+### For Intermediate & Advanced Web3.js Developers
+
+If you're already familiar with Ethereum and Web3.js development, you may want to review the Web3.js [package structure](#packages--plugins) and proceed directly to the [package-level documentation](/libdocs/ABI) and [API documentation](/api). Application developers may wish to review the [Web3.js configuration guide](/guides/web3_config/) or learn how to use Web3.js with tools like the [MetaMask](/guides/wallet/metamask) wallet or the [WalletConnect](/guides/wallet/web3_modal_guide/) wallet selection modal. Don't forget to review the [list of available plugins](https://web3js.org/plugins) or even [learn how to build your own Web3.js plugin](/guides/web3_plugin_guide/plugin_authors)!
+
+## Packages & Plugins
 
 Web3.js is a modular collection of packages, each of which serves a specific needs. This means developers don't need to install the entire Web3 library for most use cases. Instead, necessary packages are selectively installed for a more efficient development experience. Here is an overview of a selection of available packages:
 
@@ -60,6 +72,16 @@ Web3.js is a modular collection of packages, each of which serves a specific nee
 - [**Web3 Errors:**](/api/web3-errors) error codes and common error classes that are used by other Web3 packages
 
 - [**Web3 RPC Methods:**](/api/web3/namespace/rpcMethods) functions for making RPC requests to Ethereum using a given provider
+
+### Plugins
+
+Web3.js supports [plugins](/guides/web3_plugin_guide/), which are another way to encapsulate capabilities that support a specific need. There are plugins that exist to support native features, like those described by [EIPs](https://eips.ethereum.org/) as well as plugins that are designed to support specific smart contracts, middleware, or even other Ethereum-compatible networks. Visit the [Web3.js plugins homepage](https://web3js.org/plugins) to view a list of the most important Web3.js plugins, which includes:
+
+- [EIP-4337 (Account Abstraction) Plugin](https://www.npmjs.com/package/@chainsafe/web3-plugin-eip4337)
+
+- [EIP-4844 (Blob Transactions) Plugin](https://www.npmjs.com/package/web3-plugin-blob-tx)
+
+- [zkSync Plugin](https://www.npmjs.com/package/web3-plugin-zksync)
 
 ## Advantages Over Other Libraries
 

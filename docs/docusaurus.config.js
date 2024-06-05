@@ -123,7 +123,7 @@ const config = {
 					{
 						to: '/libdocs/ABI',
 						activeBasePath: '/libdocs',
-						label: 'Documentation',
+						label: 'Packages',
 						position: 'left',
 					},
 					{
