@@ -230,7 +230,7 @@ web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
 ### Remote Provider
 
-Services like [Alchemy](https://www.alchemy.com/), [Infura](https://www.infura.io/), and [QuickNode](https://www.quicknode.com/) offer Ethereum node services that can be accessed via HTTP or Websocket.
+Services like [Alchemy](https://www.alchemy.com/), [Infura](https://www.infura.io/), [QuickNode](https://www.quicknode.com/) and [GetBlock](https://getblock.io/) offer Ethereum node services that can be accessed via HTTP or Websocket.
 
 ```ts title='Alchemy, Infura, etc'
 import { Web3 } from 'web3';
