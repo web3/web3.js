@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 sidebar_label: 'Mastering Smart Contracts'
 ---
 # Mastering Smart Contracts
@@ -103,7 +103,7 @@ When you instantiate a `Contract`, you primarily provide one or two parameters, 
 1. **ABI (Application Binary Interface):** The ABI tells the `Contract` how to format calls and transactions so that the contract can understand them.
 
 :::tip
-If you do not know how to get the contract ABI, we recommend you to check the Step 4 at the [# Step 4: Deploying and Interacting with Smart Contracts](./smart_contracts_guide/#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial. And to look into the guide: [Infer Contract Types from JSON Artifact](./infer_contract_types).
+If you do not know how to get the contract ABI, we recommend you to check the Step 4 at the [# Step 4: Deploying and Interacting with Smart Contracts](./smart_contracts_guide#step-4-compile-the-solidity-code-with-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial. And to look into the guide: [Infer Contract Types from JSON Artifact](./infer_contract_types).
 :::
 
 2. (optional) **Contract Address:** The Ethereum address at which your contract is deployed. If the contract is not deployed yet, do not pass a second parameter or pass `undefined` to it.
@@ -274,7 +274,7 @@ console.log('Contract deployed at address: ' + tx.options.address);
 ```
 
 :::tip
-If you do not know how to get the contract bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./smart_contracts_guide#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
+If you do not know how to get the contract bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./smart_contracts_guide#step-4-compile-the-solidity-code-with-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
 :::
 
 - **getPastEvents**: Gets past events for this contract. It differs from `events` properties that it returns the past events as an array, rather than allowing to subscribe to them like when using `events` properties. More on the [API documentation](/api/web3-eth-contract/class/Contract#getPastEvents)
@@ -351,7 +351,7 @@ const bytecode = '0x60806040523480156100115760006000fd5b506040516102243803806102
 
 :::info
 And as mentioned in the tips inside previous sections: 
-If you do not know how to get the contract ABI and bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./smart_contracts_guide#step-4-compile-the-solidity-code-using-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
+If you do not know how to get the contract ABI and bytecode, we recommend you to check the Step 4 at the [Deploying and Interacting with Smart Contracts](./smart_contracts_guide#step-4-compile-the-solidity-code-with-the-solidity-compiler-and-get-its-abi-and-bytecode) tutorial.
 :::
 
 ### Do I always need the contract ByteCode?
