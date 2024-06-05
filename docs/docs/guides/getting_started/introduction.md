@@ -31,7 +31,7 @@ There is a lot to learn about Web3.js! Here are some tips for developers of diff
 
 ### For Beginner Web3.js Developers
 
-New Web3.js developers should proceed to the [Quickstart](/guides/getting_started/quickstart) section to learn how to get started with Web3.js. Once you understand the basics, you may want to consider learning more about [providers](/guides/web3_providers_guide/), [wallets and accounts](/guides/wallet/), [smart contracts](/guides/smart_contracts/), and how to [use Web3.js with the Hardhat development environment](/guides/hardhat_tutorial/).
+New Web3.js developers should proceed to the [Quickstart](/guides/getting_started/quickstart) section to learn how to get started with Web3.js. Once you understand the basics, you may want to consider learning more about [providers](/guides/web3_providers_guide/), [wallets and accounts](/guides/wallet/), [smart contracts](/guides/smart_contracts/smart_contracts_guide), and how to [use Web3.js with the Hardhat development environment](/guides/hardhat_tutorial/).
 
 ### For Intermediate & Advanced Web3.js Developers
 
