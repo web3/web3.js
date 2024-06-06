@@ -26,6 +26,7 @@ export class Web3TransactionMiddleware implements TransactionMiddleware {
 		
 		Promise<TransactionMiddlewareData> {
 		
+		// eslint-disable-next-line prefer-const
 		let txObj = { ...transaction };
 
 		// Add your logic here for transaction modification 
