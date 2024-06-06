@@ -57,6 +57,7 @@
 		"web3-eth-abi": ">= 4.1.1 < 5",
 		"web3-eth-contract": ">= 4.0.5 < 5",
 		"web3-types": ">= 1.1.1 < 5",
-		"web3-utils": ">= 4.0.5 < 5"
+		"web3-utils": ">= 4.0.5 < 5",
+		"web3-eth": ">= 4.7.0 < 5"
 	}
 }
