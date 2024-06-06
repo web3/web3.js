@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3PluginBase } from 'web3-core';
 // eslint-disable-next-line require-extensions/require-extensions
 import { Web3Context } from './reexported_web3_context';
-import { Web3TransactionMiddleware } from './transaction_middleware';
+import { Web3TransactionMiddleware } from './transaction_middleware.js';
 
 // Sample Transaction middleware plugin
 export class TransactionMiddlewarePlugin extends Web3PluginBase {
@@ -32,6 +32,7 @@ export class TransactionMiddlewarePlugin extends Web3PluginBase {
 	public link(parentContext: Web3Context): void {
 
 		if (this.txMiddleware){
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 			(parentContext as any).Web3Eth.setTransactionMiddleware(this.txMiddleware);
 		}
 

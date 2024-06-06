@@ -19,8 +19,10 @@ import { TransactionMiddleware, TransactionMiddlewareData } from "web3-eth";
 
 // Sample Transaction Middleware 
 export class Web3TransactionMiddleware implements TransactionMiddleware {
-	processTransaction(transaction: TransactionMiddlewareData, 
-		_options?: { [key: string]: unknown; } | undefined): 
+
+	// eslint-disable-next-line class-methods-use-this
+	public async processTransaction(transaction: TransactionMiddlewareData, 
+		_options?: { [key: string]: unknown } | undefined): 
 		
 		Promise<TransactionMiddlewareData> {
 		
