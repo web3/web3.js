@@ -18,7 +18,7 @@ import { Web3PluginBase } from 'web3-core';
 // eslint-disable-next-line require-extensions/require-extensions
 import { Web3Context } from './reexported_web3_context';
 // eslint-disable-next-line require-extensions/require-extensions
-import { Web3Middleware } from './middleware';
+import { Web3Middleware } from './request_manager_middleware';
 
 type CustomRpcApi = {
 	custom_rpc_method: () => string;
