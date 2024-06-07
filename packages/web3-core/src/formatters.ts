@@ -302,7 +302,6 @@ export const inputLogFormatter = (filter: Filter) => {
 	const val: Mutable<Filter> = isNullish(filter)
 		? {}
 		: mergeDeep({}, filter as Record<string, unknown>);
-
 	// If options !== undefined, don't blow out existing data
 	if (isNullish(val.fromBlock)) {
 		val.fromBlock = BlockTags.LATEST;
