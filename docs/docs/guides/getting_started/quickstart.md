@@ -191,7 +191,7 @@ const ABI =
 ];
 
 // instantiate the smart contract
-const uniswapToken = new web3.eth.Contract(abi, address);
+const uniswapToken = new web3.eth.Contract(ABI, address);
 ```
 
 ### Read Methods
