@@ -731,11 +731,13 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload);
 			});
 			it('should throw an error when payload batch request and response is not an array', async () => {
-				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue([{ method: 'my_method', params: [], id: 1, jsonrpc: '2.0' }]);
+				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue([
+					{ method: 'my_method', params: [], id: 1, jsonrpc: '2.0' },
+				]);
 				const manager = new Web3RequestManager();
 
 				const pr = new Promise(resolve => {
-					resolve({response: "random"});
+					resolve({ response: 'random' });
 				});
 				const myProvider = {
 					request: jest.fn().mockImplementation(async () => pr),
@@ -747,11 +749,16 @@ describe('Web3RequestManager', () => {
 				jest.clearAllMocks();
 			});
 			it('should throw an error when payload batch request is an array and response is not', async () => {
-				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue({ method: 'my_method', params: [], id: 1, jsonrpc: '2.0'});
+				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue({
+					method: 'my_method',
+					params: [],
+					id: 1,
+					jsonrpc: '2.0',
+				});
 				const manager = new Web3RequestManager();
 
 				const pr = new Promise(resolve => {
-					resolve([{response: "random"}, {response: "random2"}]);
+					resolve([{ response: 'random' }, { response: 'random2' }]);
 				});
 				const myProvider = {
 					request: jest.fn().mockImplementation(async () => pr),
@@ -764,7 +771,12 @@ describe('Web3RequestManager', () => {
 			});
 
 			it('should result in an error when theres an invalid response', async () => {
-				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue({ method: 'my_method', params: [], id: 1, jsonrpc: '2.0'});
+				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue({
+					method: 'my_method',
+					params: [],
+					id: 1,
+					jsonrpc: '2.0',
+				});
 				const manager = new Web3RequestManager();
 
 				const pr = new Promise(resolve => {

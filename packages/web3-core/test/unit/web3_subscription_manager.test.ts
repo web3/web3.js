@@ -154,7 +154,7 @@ describe('Web3SubscriptionManager', () => {
 			// const subManagers = new Web3SubscriptionManager(requestManager, subscriptions) as any
 			// // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			await expect(subManager.addSubscription(sub)).rejects.toThrow();
-		})
+		});
 
 		it('should try to subscribe the subscription', async () => {
 			sub = new ExampleSubscription(
@@ -212,11 +212,11 @@ describe('Web3SubscriptionManager', () => {
 		});
 
 		it('should unsubscribe to the subscription by id', async () => {
-			await subManager.unsubscribe(({id}) => {
-				if (id === "123"){
-					return true
+			await subManager.unsubscribe(({ id }) => {
+				if (id === '123') {
+					return true;
 				}
-				return false
+				return false;
 			});
 
 			expect(subManager.subscriptions).toEqual(new Map());
@@ -252,11 +252,13 @@ describe('Web3SubscriptionManager', () => {
 
 		afterEach(() => {
 			jest.clearAllMocks();
-		})
+		});
 		it('should error when no data is provided', () => {
-			const subManagers = new Web3SubscriptionManager(requestManager, subscriptions) as any
+			const subManagers = new Web3SubscriptionManager(requestManager, subscriptions) as any;
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			expect(() => {subManagers.messageListener()}).toThrow();
-		})
+			expect(() => {
+				subManagers.messageListener();
+			}).toThrow();
+		});
 	});
 });

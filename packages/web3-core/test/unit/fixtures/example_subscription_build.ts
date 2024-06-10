@@ -22,7 +22,7 @@ export class BuildSubscription extends Web3Subscription<
 	{ param1: string },
 	{ eth_subscribe: (newHeads: string) => void }
 > {
-    public buildSubscriptionParams() {
-        this._buildSubscriptionParams();
-    }
+	public buildSubscriptionParams() {
+		this._buildSubscriptionParams();
+	}
 }

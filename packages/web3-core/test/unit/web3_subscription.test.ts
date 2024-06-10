@@ -85,7 +85,7 @@ describe('Web3Subscription', () => {
 
 		it('should return returnFormat', () => {
 			expect(sub.getReturnFormat()).toBe(DEFAULT_RETURN_FORMAT);
-		})
+		});
 	});
 
 	describe('unsubscribe', () => {
@@ -96,7 +96,7 @@ describe('Web3Subscription', () => {
 		});
 		afterEach(() => {
 			jest.clearAllMocks();
-		})
+		});
 
 		it('should invoke request manager to unsubscribe', async () => {
 			await sub.unsubscribe();
@@ -119,8 +119,6 @@ describe('Web3Subscription', () => {
 			expect(newSub.id).toBeUndefined();
 			await newSub.unsubscribe();
 			expect(subscriptionManager.removeSubscription).toHaveBeenCalledTimes(0);
-			
-
 		});
 	});
 
@@ -131,8 +129,8 @@ describe('Web3Subscription', () => {
 			subscriptionManager.subscriptions.set('sub-id', sub);
 		});
 		it('should resubscribe', async () => {
-			jest.spyOn(sub, 'subscribe').mockImplementation()
-			jest.spyOn(sub, 'unsubscribe').mockImplementation()
+			jest.spyOn(sub, 'subscribe').mockImplementation();
+			jest.spyOn(sub, 'unsubscribe').mockImplementation();
 			await sub.resubscribe();
 			expect(sub.subscribe).toHaveBeenCalledTimes(1);
 			expect(sub.unsubscribe).toHaveBeenCalledTimes(1);
@@ -195,9 +193,7 @@ describe('Web3Subscription without subscription manager - (deprecated)', () => {
 			sub._processSubscriptionError(error);
 
 			expect(errorSpy).toHaveBeenCalledTimes(1);
-			expect(errorSpy).toHaveBeenCalledWith(
-				error
-			);
+			expect(errorSpy).toHaveBeenCalledWith(error);
 		});
 	});
 
@@ -229,49 +225,50 @@ describe('Web3Subscription without subscription manager - (deprecated)', () => {
 		let subscriptionManager: Web3SubscriptionManager<any, any>;
 		beforeEach(() => {
 			subscriptionManager = new Web3SubscriptionManager(requestManager, subscriptions);
-			sub = new ExampleSubscription({ param1: 'value' }, { subscriptionManager} );
+			sub = new ExampleSubscription({ param1: 'value' }, { subscriptionManager });
 			sub['_id'] = 'sub-id';
 		});
 		it('should get last block', () => {
 			expect(sub.lastBlock).toBeUndefined();
-		})
+		});
 	});
 
 	describe('processSubscriptionData', () => {
 		let subscriptionManager: Web3SubscriptionManager<any, any>;
 		beforeEach(() => {
 			subscriptionManager = new Web3SubscriptionManager(requestManager, subscriptions);
-			sub = new ExampleSubscription({ param1: 'value' }, { subscriptionManager} );
+			sub = new ExampleSubscription({ param1: 'value' }, { subscriptionManager });
 			sub['_id'] = 'sub-id';
 		});
 		afterEach(() => {
 			jest.clearAllMocks();
-		})
+		});
 		it('should call _processSubscriptionResult when data is type JsonRpcNotification', () => {
 			const responseWithNotification: JsonRpcNotification<Log> = {
 				jsonrpc: '2.0',
 				params: {
-					subscription: "",
-					result: {id: ""}
+					subscription: '',
+					result: { id: '' },
 				},
-				method: "",
+				method: '',
 			};
-			jest.spyOn(sub,'_processSubscriptionResult').mockReturnValue();
+			jest.spyOn(sub, '_processSubscriptionResult').mockReturnValue();
 			sub.processSubscriptionData(responseWithNotification);
 			expect(sub._processSubscriptionResult).toHaveBeenCalled();
-		})
+		});
 	});
 
 	describe('buildSubscriptionParams', () => {
 		let subscriptionManager: Web3SubscriptionManager<any, any>;
-		let buildSub: BuildSubscription; 
+		let buildSub: BuildSubscription;
 		beforeEach(() => {
 			buildSub = new BuildSubscription({ param1: 'value' }, { subscriptionManager });
 		});
-		
+
 		it('should _buildSubscriptionParams', () => {
-			expect(() => {buildSub.buildSubscriptionParams()}).toThrow();
-		})
-		
+			expect(() => {
+				buildSub.buildSubscriptionParams();
+			}).toThrow();
+		});
 	});
 });

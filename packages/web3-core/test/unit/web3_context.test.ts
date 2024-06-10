@@ -81,7 +81,7 @@ describe('Web3Context', () => {
 		it('should set httpProvider', () => {
 			const context = new Web3Context();
 			const url = 'http://test/abc';
-			context.setProvider(url)
+			context.setProvider(url);
 			const httpProvider = new HttpProvider(url);
 			expect(context.provider).toEqual(httpProvider);
 		});
@@ -114,35 +114,36 @@ describe('Web3Context', () => {
 			expect(context.requestManager.middleware).toEqual(middleware);
 		});
 		it('should instantiate a new Web3Context object with provided context object', () => {
-			const config = { defaultNetworkId: 'my-network-id', defaultHardfork: 'my-fork' }
+			const config = { defaultNetworkId: 'my-network-id', defaultHardfork: 'my-fork' };
 			const context = {
 				provider: 'http://test.com',
-				config
-				
+				config,
 			} as Web3ContextObject;
 			const newContext = Web3Context.fromContextObject(context);
 			expect(newContext.currentProvider).toBeInstanceOf(HttpProvider);
 			expect(newContext.requestManager).toBeInstanceOf(Web3RequestManager);
 			expect(newContext.config.defaultHardfork).toEqual(config.defaultHardfork);
 			expect(newContext.config.defaultNetworkId).toEqual(config.defaultNetworkId);
-		})
+		});
 
 		describe('accountsProvider', () => {
 			const createAccountProvider = (): Web3AccountProvider<Web3BaseWalletAccount> => {
 				const accountProvider = {
 					privateKeyToAccount: jest.fn().mockImplementation(() => {
-						return "";
+						return '';
 					}),
 					decrypt: jest.fn(),
 					create: jest.fn().mockImplementation(() => {
-						return "";
+						return '';
 					}),
 				};
 				return accountProvider;
-			}
+			};
 			const accountProvider = createAccountProvider();
 
-			class WalletExample<T extends Web3BaseWalletAccount = Web3BaseWalletAccount,> extends Web3BaseWallet<T> { 
+			class WalletExample<
+				T extends Web3BaseWalletAccount = Web3BaseWalletAccount,
+			> extends Web3BaseWallet<T> {
 				public create = jest.fn(() => this);
 				public add = jest.fn(() => this);
 				public get = jest.fn(() => {
@@ -161,7 +162,7 @@ describe('Web3Context', () => {
 				public save = jest.fn();
 				public load = jest.fn();
 			}
-			
+
 			const wallet = new WalletExample(accountProvider);
 			it('should set wallet in context', () => {
 				const context = new Web3Context({
@@ -170,7 +171,7 @@ describe('Web3Context', () => {
 				});
 
 				expect(context.wallet).toEqual(wallet);
-			})
+			});
 			it('should set the Accountsprovider when creating new context', () => {
 				const context = new Web3Context({
 					provider: 'http://test.com',
@@ -178,7 +179,7 @@ describe('Web3Context', () => {
 				});
 
 				expect(context.accountProvider).toEqual(accountProvider);
-			})
+			});
 
 			it('should set wallet', () => {
 				const context = new Web3Context({
@@ -186,8 +187,7 @@ describe('Web3Context', () => {
 					wallet,
 				});
 				expect(context.wallet).toEqual(wallet);
-
-			})
+			});
 		});
 	});
 
@@ -355,19 +355,17 @@ describe('Web3Context', () => {
 		it('should create a new type using registerNewTransactionType on a custom plugin', () => {
 			const context = new Context1('http://test/abc');
 			const pluginNamespace = 'plugin';
-			
+
 			class Plugin extends Web3PluginBase {
 				public constructor() {
 					super();
-					this.registerNewTransactionType(3, CustomTransactionType)
+					this.registerNewTransactionType(3, CustomTransactionType);
 				}
 				public pluginNamespace = pluginNamespace;
-				
-				
 			}
-			
+
 			expect(() => context.registerPlugin(new Plugin())).not.toThrow();
-		})
+		});
 		it('should throw ExistingPluginNamespaceError', () => {
 			const context = new Context1('http://test/abc');
 			const pluginNamespace = 'plugin';

@@ -287,10 +287,9 @@ describe('formatters', () => {
 
 		it('should format "from" if defaultAddress is provided', () => {
 			expect(formatters.inputCallFormatter({ ...txInput, to: '0xABCD' }, '0xABCDE')).toEqual(
-				expect.objectContaining({ from: '0xabcde', to: '0xabcd'})
+				expect.objectContaining({ from: '0xabcde', to: '0xabcd' }),
 			);
 		});
-
 	});
 
 	describe('inputTransactionFormatter', () => {
@@ -303,14 +302,16 @@ describe('formatters', () => {
 			};
 		});
 		it('should format and populate "from"', () => {
-			expect(formatters.inputTransactionFormatter({...txInput, to:'0xabcd', from: '0xABCDE'})).toEqual(
-				expect.objectContaining({ from: '0xabcde', to:"0xabcd"})
-			);
+			expect(
+				formatters.inputTransactionFormatter({ ...txInput, to: '0xabcd', from: '0xABCDE' }),
+			).toEqual(expect.objectContaining({ from: '0xabcde', to: '0xabcd' }));
 		});
 
 		it('should throw an error when from is undefined', () => {
-			expect(() => formatters.inputTransactionFormatter({...txInput})).toThrow(new FormatterError('The send transactions "from" field must be defined!'));
-		})
+			expect(() => formatters.inputTransactionFormatter({ ...txInput })).toThrow(
+				new FormatterError('The send transactions "from" field must be defined!'),
+			);
+		});
 	});
 
 	describe('outputTransactionFormatter', () => {
@@ -328,23 +329,23 @@ describe('formatters', () => {
 				maxPriorityFeePerGas: '0x7654321',
 				type: '0x1',
 			};
-	
+
 			const formattedTxOutput = formatters.outputTransactionFormatter(txInput);
 			// should return the mocked values;
 			expect(formattedTxOutput.blockNumber).toBe(123);
-			expect(formattedTxOutput.to).toBe("toChecksumAddress");
-			expect(formattedTxOutput.from).toBe("toChecksumAddress");
-			expect(formattedTxOutput.gas).toBe(123)
-			expect(formattedTxOutput.nonce).toBe(123)
-			expect(formattedTxOutput.transactionIndex).toBe(123)
-			expect(formattedTxOutput.value).toBe(12345)
-			expect(formattedTxOutput.maxFeePerGas).toBe(12345)
-			expect(formattedTxOutput.maxPriorityFeePerGas).toBe(12345)
-			expect(formattedTxOutput.type).toBe(123)
+			expect(formattedTxOutput.to).toBe('toChecksumAddress');
+			expect(formattedTxOutput.from).toBe('toChecksumAddress');
+			expect(formattedTxOutput.gas).toBe(123);
+			expect(formattedTxOutput.nonce).toBe(123);
+			expect(formattedTxOutput.transactionIndex).toBe(123);
+			expect(formattedTxOutput.value).toBe(12345);
+			expect(formattedTxOutput.maxFeePerGas).toBe(12345);
+			expect(formattedTxOutput.maxPriorityFeePerGas).toBe(12345);
+			expect(formattedTxOutput.type).toBe(123);
 		});
 
 		it('should make "to" property undefined', () => {
-			const txInput = {gas: '0x', nonce: "1", value: "0x"};
+			const txInput = { gas: '0x', nonce: '1', value: '0x' };
 			const formattedTxOutput = formatters.outputTransactionFormatter(txInput);
 
 			expect(formattedTxOutput.to).toBeUndefined();
@@ -352,13 +353,10 @@ describe('formatters', () => {
 	});
 
 	describe('inputLogFormatter', () => {
-
 		beforeAll(() => {
 			const actualUtils = jest.requireActual('web3-utils');
 			jest.spyOn(utils, 'mergeDeep').mockImplementation(actualUtils.mergeDeep);
-
-
-		})
+		});
 		it('should correctly format a filter with all fields provided', () => {
 			const filter: Filter = {
 				fromBlock: '0x1',
@@ -366,9 +364,9 @@ describe('formatters', () => {
 				address: '0x1234567890abcdef1234567890abcdef12345678',
 				topics: ['0x123', ['0x456', '0x789']],
 			};
-	
+
 			const formattedFilter = formatters.inputLogFormatter(filter);
-	
+
 			expect(formattedFilter.fromBlock).toBe('0x1');
 			expect(formattedFilter.toBlock).toBe('0x2');
 			expect(formattedFilter.address).toBe('0x1234567890abcdef1234567890abcdef12345678');
@@ -376,13 +374,13 @@ describe('formatters', () => {
 		});
 		it('should correctly format a filter with no fromBlock', () => {
 			const filter: Filter = {
-				address: ["0x123", "0x222"]
+				address: ['0x123', '0x222'],
 			};
-	
+
 			const formattedFilter = formatters.inputLogFormatter(filter);
-	
+
 			expect(formattedFilter.fromBlock).toBe('latest');
-			expect(formattedFilter.address).toEqual(['0x123', "0x222"]);
+			expect(formattedFilter.address).toEqual(['0x123', '0x222']);
 		});
 	});
 

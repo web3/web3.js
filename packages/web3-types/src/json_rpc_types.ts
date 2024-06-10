@@ -55,9 +55,8 @@ export interface JsonRpcNotification<T = JsonRpcResult> {
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly method: string; // for subscription
 	readonly params: SubscriptionParams<T>; // for subscription results
-	readonly result: never;
+	readonly result?: never;
 	readonly data?: never;
-	readonly error?: never;
 }
 
 export interface JsonRpcSubscriptionResult {
@@ -93,3 +92,5 @@ export type JsonRpcResponse<Result = JsonRpcResult, Error = JsonRpcResult> =
 	| JsonRpcResponseWithError<Error>
 	| JsonRpcResponseWithResult<Result>
 	| JsonRpcBatchResponse<Result, Error>
+	| JsonRpcBatchResponse<Result>
+	| JsonRpcNotification;

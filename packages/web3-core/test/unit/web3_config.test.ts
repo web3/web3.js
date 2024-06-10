@@ -129,39 +129,44 @@ describe('Web3Config', () => {
 	it('should throw when val does not match config.defaultCommon.defaultHardFork', () => {
 		const obj = new MyConfigObject();
 		const defaultCommon = {
-			defaultHardfork: "london" as Hardfork,
+			defaultHardfork: 'london' as Hardfork,
 			customChain: {
 				networkId: 1,
 				chainId: 1,
-			}
-		}
+			},
+		};
 		obj.setConfig({
-			defaultCommon
+			defaultCommon,
 		});
 		const newDefaultCommon = {
-			hardfork: "berlin" as Hardfork,
+			hardfork: 'berlin' as Hardfork,
 			customChain: {
 				networkId: 1,
 				chainId: 1,
-			}
-		}
+			},
+		};
 		expect(() => {
 			obj.defaultCommon = newDefaultCommon;
-		}).toThrow(new ConfigHardforkMismatchError(defaultCommon.defaultHardfork, newDefaultCommon.hardfork));
+		}).toThrow(
+			new ConfigHardforkMismatchError(
+				defaultCommon.defaultHardfork,
+				newDefaultCommon.hardfork,
+			),
+		);
 	});
 
 	it('defaulthardfork should throw when val does not match config.defaultCommon.hardfork', () => {
 		const obj = new MyConfigObject();
 		const defaultCommon = {
-			hardfork: "london" as Hardfork,
+			hardfork: 'london' as Hardfork,
 			customChain: {
 				networkId: 1,
 				chainId: 1,
-			}
-		}
-		const hardfork = 'berlin'
+			},
+		};
+		const hardfork = 'berlin';
 		obj.setConfig({
-			defaultCommon
+			defaultCommon,
 		});
 		expect(() => {
 			obj.defaultHardfork = hardfork;
@@ -171,27 +176,29 @@ describe('Web3Config', () => {
 	it('should throw when val does not match config.defaultChain', () => {
 		const obj = new MyConfigObject();
 		const defaultCommon = {
-			defaultHardfork: "london" as Hardfork,
+			defaultHardfork: 'london' as Hardfork,
 			customChain: {
 				networkId: 1,
 				chainId: 1,
 			},
 			defaultChain: 'mainnet',
-		}
+		};
 		obj.setConfig({
-			defaultCommon
+			defaultCommon,
 		});
 		const newDefaultCommon = {
-			hardfork: "london" as Hardfork,
+			hardfork: 'london' as Hardfork,
 			customChain: {
 				networkId: 1,
 				chainId: 1,
 			},
 			baseChain: 'sepolia' as ValidChains,
-		}
+		};
 		expect(() => {
 			obj.defaultCommon = newDefaultCommon;
-		}).toThrow(new ConfigChainMismatchError(defaultCommon.defaultChain, newDefaultCommon.baseChain));
+		}).toThrow(
+			new ConfigChainMismatchError(defaultCommon.defaultChain, newDefaultCommon.baseChain),
+		);
 	});
 
 	it('Updating transactionPollingInterval should update transactionReceiptPollingInterval and transactionConfirmationPollingInterval', () => {
