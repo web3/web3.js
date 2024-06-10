@@ -758,7 +758,7 @@ describe('Web3RequestManager', () => {
 				const manager = new Web3RequestManager();
 
 				const pr = new Promise(resolve => {
-					resolve([{ response: 'random' }, { response: 'random2' }]);
+					resolve([{ response: 'unknown response' }, { response: 'unknown response' }]);
 				});
 				const myProvider = {
 					request: jest.fn().mockImplementation(async () => pr),
@@ -769,8 +769,7 @@ describe('Web3RequestManager', () => {
 
 				jest.clearAllMocks();
 			});
-
-			it('should result in an error when theres an invalid response', async () => {
+			it('should throw an when invalid response', async () => {
 				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue({
 					method: 'my_method',
 					params: [],
@@ -780,15 +779,15 @@ describe('Web3RequestManager', () => {
 				const manager = new Web3RequestManager();
 
 				const pr = new Promise(resolve => {
-					resolve(successResponse);
+					resolve({ response: 'unknown response' });
 				});
 				const myProvider = {
 					request: jest.fn().mockImplementation(async () => pr),
 				} as any;
 				manager.setProvider(myProvider);
 
-				await manager.send(request);
-				expect(true).toBe(true);
+				await expect(manager.send(request)).rejects.toThrow();
+
 				jest.clearAllMocks();
 			});
 		});
