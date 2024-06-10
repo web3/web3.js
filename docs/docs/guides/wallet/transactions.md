@@ -5,7 +5,7 @@ sidebar_label: 'Tutorial: Sending Transactions'
 
 # Sending Transactions
 
-This tutorial will walk through the process of using accounts to send transactions on a [development network](https://ethereum.org/en/developers/docs/development-networks/), including how to subscribe to the events associated with a transaction. The topics covered in this tutorial include basic concepts of [Ethereum](https://ethereum.org/), such as [accounts](/guides/wallet/), [denominations of ether]((https://ethereum.org/en/developers/docs/intro-to-ether/#denominations)), [transactions](https://ethereum.org/en/developers/docs/transactions/), and [gas fees](https://ethereum.org/en/developers/docs/gas/), as well as the basics of the [Hardhat](https://hardhat.org/) development environment.
+This tutorial will walk through the process of using accounts to send transactions on a [development network](https://ethereum.org/en/developers/docs/development-networks/), including how to subscribe to the events associated with a transaction. The topics covered in this tutorial include basic concepts of [Ethereum](https://ethereum.org/), such as [accounts](/guides/wallet/), [denominations of ether](https://ethereum.org/en/developers/docs/intro-to-ether/#denominations), [transactions](https://ethereum.org/en/developers/docs/transactions/), and [gas fees](https://ethereum.org/en/developers/docs/gas/), as well as the basics of the [Hardhat](https://hardhat.org/) development environment.
 
 ## Overview
 
@@ -200,7 +200,7 @@ main();
 This script uses the [`web3.eth.sendTransaction`](/libdocs/Web3Eth#sendtransaction) function to send the transaction. The parameter to this function is defined by the [`Transaction`](/api/web3-types/interface/Transaction) interface.
 
 :::note
-By default, Web3.js uses the [wei denomination](https://ethereum.org/en/developers/docs/intro-to-ether/#denominations) for account balances and transaction values. The [`web3-utils`](/libdocs/Utils) package has helper functions that can be used to convert other denominations of ether [to](/libdocs/Utils#towei) and [from](/Utils#fromwei) wei.
+By default, Web3.js uses the [wei denomination](https://ethereum.org/en/developers/docs/intro-to-ether/#denominations) for account balances and transaction values. The [`web3-utils`](/libdocs/Utils) package has helper functions that can be used to convert other denominations of ether [to](/libdocs/Utils#towei) and [from](/libdocs/Utils#fromwei) wei.
 :::
 
 In this example, the account is created with a `Wallet`, which adds it to the internal Web3.js context (i.e. [`Web3Context`](/api/web3-core/class/Web3Context)). When a transaction is sent from an account that has been created with a `Wallet` and added to the context, Web3.js will automatically use that account's private key to sign the transaction. The steps required to send a transaction from an account that hasn't been created with a wallet and added to the context are described in [Step 6: Send a Raw Transaction](#step-6-send-a-raw-transaction).
