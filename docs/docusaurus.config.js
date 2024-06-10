@@ -41,7 +41,7 @@ const packages = [
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-	title: 'web3.js',
+	title: 'Web3.js',
 	tagline: 'Powerful TypeScript libraries for Ethereum interaction and utility functions',
 	url: 'https://docs.web3js.org',
 	baseUrl: '/',
@@ -52,7 +52,7 @@ const config = {
 	// GitHub pages deployment config.
 	// If you aren't using GitHub pages, you don't need these.
 	organizationName: 'ChainSafe', // Usually your GitHub org/user name.
-	projectName: 'web3.js', // Usually your repo name.
+	projectName: 'Web3.js', // Usually your repo name.
 
 	// Even if you don't use internalization, you can use this field to set useful
 	// metadata like html lang. For example, if your site is Chinese, you may want
@@ -109,37 +109,36 @@ const config = {
 		/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
 		({
 			navbar: {
-				title: 'Web3.js Docs',
+                title: 'Web3.js Docs',
 				logo: {
 					src: 'img/web3js.svg',
 				},
 				items: [
 					{
-						to: '/',
-						activeBasePath: '/',
+						to: '/guides/getting_started/quickstart',
+						activeBasePath: '/guides',
 						label: 'Guides & Tutorials',
 						position: 'left',
 					},
 					{
 						to: '/libdocs/ABI',
-						activeBasePath: '/libdocs/',
-						label: 'Documentation',
+						activeBasePath: '/libdocs',
+						label: 'Packages',
 						position: 'left',
 					},
 					{
-						to: 'api', // 'api' is the 'out' directory
+						to: '/api', // 'api' is the 'out' directory
 						label: 'API',
 						position: 'left',
 					},
 					{
-						to: 'glossary',
-						activeBasePath: '/glossary/',
+						to: '/glossary',
+						activeBasePath: '/glossary',
 						label: 'Glossary',
 						position: 'left',
 					},
 					{
 						to: '/web3_playground',
-						activeBasePath: '/',
 						label: 'Playground',
 						position: 'right',
 					},
