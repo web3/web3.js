@@ -94,7 +94,7 @@ The following is a list of [`Accounts`](/libdocs/Accounts) methods in the `web3.
 
 ## Wallets
 
-A Web3.js wallet is a collection of accounts and is represented with the [`Wallet`](/api/web3-eth-accounts/class/Wallet) class. The following snippet demonstrates creating a wallet with 2 new random accounts and using the second account to sign a message:
+A Web3.js wallet is a collection of accounts and is represented with the [`Wallet`](/api/web3-eth-accounts/class/Wallet) class. When a wallet is used to track an account, that account is added to an internal context (i.e. [`Web3Context`](/api/web3-core/class/Web3Context/)), which makes it easier to use that account in the future - this is described in more detail in the [transactions tutorial](/guides/wallet/transactions). The following snippet demonstrates creating a wallet with 2 new random accounts and using the second account to sign a message:
 
 ```js
 // create a wallet with 2 new random accounts
