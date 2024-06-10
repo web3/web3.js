@@ -255,8 +255,8 @@ describe('Web3SubscriptionManager', () => {
 		});
 		it('should error when no data is provided', () => {
 			const subManagers = new Web3SubscriptionManager(requestManager, subscriptions) as any;
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			expect(() => {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				subManagers.messageListener();
 			}).toThrow();
 		});
