@@ -222,3 +222,7 @@ Documentation:
 -   Set a try catch block if processesingError fails (#7022)
 
 ## [Unreleased]
+
+### Added
+
+-   Now when existing packages are added in web3, will be avalible for plugins via context. (#7088)
