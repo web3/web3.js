@@ -133,6 +133,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		this.transactionMiddleware = transactionMiddleware;
 	}
 
+	public getTransactionMiddleware (){
+		return this.transactionMiddleware;
+	}
+
 	/**
 	 * @returns Returns the ethereum protocol version of the node.
 	 *
