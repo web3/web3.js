@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { TransactionInfoAPI } from 'web3-types';
-import Web3Eth from '../../src/index';
+import Web3Eth, { TransactionMiddleware } from '../../src/index';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import {
 	getBlockNumberValidData,
@@ -62,6 +62,20 @@ describe('web3_eth_methods_with_parameters', () => {
 	beforeAll(() => {
 		web3Eth = new Web3Eth('http://127.0.0.1:8545');
 	});
+
+	it('should set and unset the transactionMiddleware correctly', () => {
+		const mockTransactionMiddleware: TransactionMiddleware = {
+		  processTransaction: jest.fn(),
+		};
+	
+		web3Eth.setTransactionMiddleware(mockTransactionMiddleware);
+	
+		expect(web3Eth.getTransactionMiddleware()).toBe(mockTransactionMiddleware);
+
+		web3Eth.setTransactionMiddleware(undefined as any);
+
+		expect(web3Eth.getTransactionMiddleware()).toBeUndefined();
+	  });
 
 	describe('should call RPC method with expected parameters', () => {
 		describe('only has returnFormat parameter', () => {

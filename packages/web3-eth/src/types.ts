@@ -33,6 +33,9 @@ import {
 	Numbers,
 	Transaction,
 	TransactionReceipt,
+	TransactionWithFromAndToLocalWalletIndex,
+	TransactionWithFromLocalWalletIndex,
+	TransactionWithToLocalWalletIndex,
 } from 'web3-types';
 
 export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
@@ -87,4 +90,18 @@ export interface RevertReasonWithCustomError extends RevertReason {
 	customErrorName: string;
 	customErrorDecodedSignature: string;
 	customErrorArguments: Record<string, unknown>;
+}
+
+export type TransactionMiddlewareData = Transaction
+| TransactionWithFromLocalWalletIndex
+| TransactionWithToLocalWalletIndex
+| TransactionWithFromAndToLocalWalletIndex;
+
+export interface TransactionMiddleware{
+	// for transaction processing before signing
+	processTransaction(
+		transaction:  TransactionMiddlewareData,
+		options?: { [key: string]: unknown },
+	): Promise<TransactionMiddlewareData>;
+
 }
