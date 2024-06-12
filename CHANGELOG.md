@@ -2555,7 +2555,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ### web3-rpc-providers
 
--   Alpha release 
+-   RC release
 
 ### Fixed
 
