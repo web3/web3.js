@@ -496,11 +496,16 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		transactionHash,
 		DEFAULT_RETURN_FORMAT,
 	);
-	const response = await ethRpcMethods.getTransactionReceipt(
-		web3Context.requestManager,
-		transactionHashFormatted,
-	);
-
+	let response;
+	try {
+		 response = await ethRpcMethods.getTransactionReceipt(
+			web3Context.requestManager,
+			transactionHashFormatted,
+		);
+	} catch (error) {
+		console.warn(error)
+	}
+	
 	return isNullish(response)
 		? response
 		: (format(
