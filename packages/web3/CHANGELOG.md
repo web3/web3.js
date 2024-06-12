@@ -373,7 +373,7 @@ Documentation:
 
 ### web3-rpc-providers
 
--   Alpha release 
+-   RC release 
 
 ### Fixed
 
