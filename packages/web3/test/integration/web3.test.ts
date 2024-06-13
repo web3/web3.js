@@ -67,8 +67,8 @@ describe('Web3 instance', () => {
 	});
 
 	afterEach(async () => {
-
-		if (isWs && !(web3?.provider instanceof HttpProvider)) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		if (isWs && (web3?.provider as any)?.transport !== 'https') {
 			// make sure we try to close the connection after it is established
 			if (
 				web3?.provider &&
