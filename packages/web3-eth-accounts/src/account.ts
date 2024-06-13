@@ -682,12 +682,8 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 		signTransaction: (_tx: Transaction) => {
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
 		},
-		sign: (data: Record<string, unknown> | string, noPreamble = false) =>
-			sign(
-				typeof data === 'string' ? data : JSON.stringify(data),
-				privateKeyUint8Array,
-				noPreamble,
-			),
+		sign: (data: Record<string, unknown> | string) =>
+			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyUint8Array),
 		encrypt: async (password: string, options?: Record<string, unknown>) =>
 			encrypt(privateKeyUint8Array, password, options),
 	};
