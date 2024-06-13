@@ -25,7 +25,7 @@ module.exports = {
     excludeReferences: true,
     tsconfig: "./docs/tsconfig.docs.json",
     excludeNotDocumented: true,
-    
+
     excludeNotDocumentedKinds: [
         "Namespace",
         "Enum",
@@ -49,11 +49,12 @@ module.exports = {
     excludeInternal: true,
     excludePrivate: true,
     excludeProtected: true,
-    
+
     visibilityFilters: {
         "protected": false,
         "private": false,
         "inherited": false,
         "external": false
-    }
+    },
+    useCodeBlocks: true
 };
