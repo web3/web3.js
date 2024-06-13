@@ -195,7 +195,7 @@ export const hashMessage = (message: string, noPreamble?: boolean): string => {
  * }
  * ```
  */
-export const sign = (data: string, privateKey: Bytes, noPreamble: boolean = false): SignResult => {
+export const sign = (data: string, privateKey: Bytes, noPreamble = false): SignResult => {
 	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	const hash = hashMessage(data, noPreamble);
@@ -682,7 +682,7 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 		signTransaction: (_tx: Transaction) => {
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
 		},
-		sign: (data: Record<string, unknown> | string, noPreamble: boolean = false) =>
+		sign: (data: Record<string, unknown> | string, noPreamble = false) =>
 			sign(
 				typeof data === 'string' ? data : JSON.stringify(data),
 				privateKeyUint8Array,
