@@ -67,7 +67,8 @@ describe('Web3 instance', () => {
 	});
 
 	afterEach(async () => {
-		if (isWs) {
+
+		if (isWs && !(web3?.provider instanceof HttpProvider)) {
 			// make sure we try to close the connection after it is established
 			if (
 				web3?.provider &&
