@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import HttpProvider from "web3-providers-http";
 import WebSocketProvider from "web3-providers-ws";
+import { isNullish } from "web3-validator";
 import {
     EthExecutionAPI, JsonRpcResult, ProviderConnectInfo, ProviderMessage,
     ProviderRpcError, Web3APIMethod, Web3APIPayload, Web3APIReturnType, Web3APISpec, Web3BaseProvider,
@@ -75,8 +76,7 @@ API extends Web3APISpec = EthExecutionAPI,
             try {
                 return ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as Promise<ResultType>;
             } catch(e: unknown) {
-                // eslint-disable-next-line no-null/no-null
-                if (typeof e === 'object' && e !== null && 'code' in e && (e as { code: number }).code === 429){
+                if (typeof e === 'object' && !isNullish(e) && 'code' in e && (e as { code: number }).code === 429){
                     // rate limiting error by quicknode;
                     throw new QuickNodeRateLimitError();
                     
