@@ -394,11 +394,11 @@ export const recover = (
 ): Address => {
 	if (typeof data === 'object') {
 		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
-		return recover(data.messageHash, signatureStr, prefixedOrR, s, prefixed);
+		return recover(data.messageHash, signatureStr, prefixedOrR);
 	}
 	if (typeof signatureOrV === 'string' && typeof prefixedOrR === 'string' && !isNullish(s)) {
 		const signatureStr = `${prefixedOrR}${s.slice(2)}${signatureOrV.slice(2)}`;
-		return recover(data, signatureStr, prefixed, s, prefixed);
+		return recover(data, signatureStr, prefixed);
 	}
 
 	if (isNullish(signatureOrV)) throw new InvalidSignatureError('signature string undefined');
