@@ -22,6 +22,7 @@ export * from './errors/connection_errors.js';
 export * from './errors/contract_errors.js';
 export * from './errors/ens_errors.js';
 export * from './errors/generic_errors.js';
+export * from './errors/quicknode_errors.js';
 export * from './errors/provider_errors.js';
 export * from './errors/signature_errors.js';
 export * from './errors/transaction_errors.js';

@@ -168,6 +168,9 @@ export const ERR_CORE_CHAIN_MISMATCH = 1102;
 // Schema error codes
 export const ERR_SCHEMA_FORMAT = 1200;
 
+export const ERR_QUICK_NODE_RATE_LIMIT = 1300;
+
+
 // RPC error codes (EIP-1474)
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md
 export const ERR_RPC_INVALID_JSON = -32700;

@@ -25,6 +25,7 @@ import {
     Web3ProviderMessageEventCallback,
     Web3ProviderStatus
 } from "web3-types";
+import { QuickNodeRateLimitError } from "web3-errors";
 import { Eip1193Provider } from "web3-utils";
 import { Transport, Network } from "./types.js";
 
@@ -71,8 +72,17 @@ API extends Web3APISpec = EthExecutionAPI,
     ): Promise<ResultType> {
 
         if (this.transport === Transport.HTTPS) {
-            return ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as Promise<ResultType>;
+            try {
+                return ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as Promise<ResultType>;
+            } catch(e) {
+                if (e.code && e.code === 429){
+                    // rate limiting error by quicknode;
+                    throw new QuickNodeRateLimitError();
+                    
+                }
+            }
         }
+        
         
         return ( (this.provider as WebSocketProvider).request(payload)) as unknown as Promise<ResultType>;
         
