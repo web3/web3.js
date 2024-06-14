@@ -269,3 +269,9 @@ Documentation:
 -   Updated type `Web3EthInterface.accounts` to includes `privateKeyToAccount`,`privateKeyToAddress`,and `privateKeyToPublicKey` (#6762)
 
 ## [Unreleased]
+
+### Added
+
+#### web3
+
+-   Now when existing packages are added in web3, will be avalible for plugins via context. (#7088)

@@ -16,7 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { toHex } from 'web3-utils';
-import { DEFAULT_RETURN_FORMAT } from 'web3-types';
+import { DEFAULT_RETURN_FORMAT, Hardfork, ValidChains } from 'web3-types';
+import { ConfigHardforkMismatchError, ConfigChainMismatchError } from 'web3-errors';
 import { Web3Config, Web3ConfigEvent } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
@@ -46,6 +47,8 @@ const defaultConfig = {
 	defaultTransactionType: '0x2',
 	defaultMaxPriorityFeePerGas: toHex(2500000000),
 	defaultReturnFormat: DEFAULT_RETURN_FORMAT,
+	transactionBuilder: undefined,
+	transactionTypeParser: undefined,
 };
 const setValue = {
 	string: 'newValue',
@@ -120,6 +123,81 @@ describe('Web3Config', () => {
 			obj.defaultChain = 'test';
 		}).toThrow(
 			'Web3Config chain doesnt match in defaultHardfork mainnet and common.hardfork test',
+		);
+	});
+
+	it('should throw when val does not match config.defaultCommon.defaultHardFork', () => {
+		const obj = new MyConfigObject();
+		const defaultCommon = {
+			defaultHardfork: 'london' as Hardfork,
+			customChain: {
+				networkId: 1,
+				chainId: 1,
+			},
+		};
+		obj.setConfig({
+			defaultCommon,
+		});
+		const newDefaultCommon = {
+			hardfork: 'berlin' as Hardfork,
+			customChain: {
+				networkId: 1,
+				chainId: 1,
+			},
+		};
+		expect(() => {
+			obj.defaultCommon = newDefaultCommon;
+		}).toThrow(
+			new ConfigHardforkMismatchError(
+				defaultCommon.defaultHardfork,
+				newDefaultCommon.hardfork,
+			),
+		);
+	});
+
+	it('defaulthardfork should throw when val does not match config.defaultCommon.hardfork', () => {
+		const obj = new MyConfigObject();
+		const defaultCommon = {
+			hardfork: 'london' as Hardfork,
+			customChain: {
+				networkId: 1,
+				chainId: 1,
+			},
+		};
+		const hardfork = 'berlin';
+		obj.setConfig({
+			defaultCommon,
+		});
+		expect(() => {
+			obj.defaultHardfork = hardfork;
+		}).toThrow(new ConfigHardforkMismatchError(defaultCommon.hardfork, hardfork));
+	});
+
+	it('should throw when val does not match config.defaultChain', () => {
+		const obj = new MyConfigObject();
+		const defaultCommon = {
+			defaultHardfork: 'london' as Hardfork,
+			customChain: {
+				networkId: 1,
+				chainId: 1,
+			},
+			defaultChain: 'mainnet',
+		};
+		obj.setConfig({
+			defaultCommon,
+		});
+		const newDefaultCommon = {
+			hardfork: 'london' as Hardfork,
+			customChain: {
+				networkId: 1,
+				chainId: 1,
+			},
+			baseChain: 'sepolia' as ValidChains,
+		};
+		expect(() => {
+			obj.defaultCommon = newDefaultCommon;
+		}).toThrow(
+			new ConfigChainMismatchError(defaultCommon.defaultChain, newDefaultCommon.baseChain),
 		);
 	});
 
