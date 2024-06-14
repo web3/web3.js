@@ -130,5 +130,3 @@ Documentation:
 -   Fix issue lquixada/cross-fetch#78, enabling to run web3.js in service worker (#6463)
 
 ## [Unreleased]
-
--   returns LimitExceededError when code is 429 (#7102)

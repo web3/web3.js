@@ -25,9 +25,8 @@ import {
 	Web3APISpec,
 	Web3BaseProvider,
 	Web3ProviderStatus,
-	JsonRpcResponseWithError,
 } from 'web3-types';
-import { InvalidClientError, MethodNotImplementedError, ResponseError, LimitExceededError } from 'web3-errors';
+import { InvalidClientError, MethodNotImplementedError, ResponseError } from 'web3-errors';
 import { HttpProviderOptions } from './types.js';
 
 export { HttpProviderOptions } from './types.js';
@@ -80,10 +79,6 @@ export default class HttpProvider<
 			body: JSON.stringify(payload),
 		});
 		if (!response.ok) { 
-			const errResponse = (response as unknown as JsonRpcResponseWithError);
-			if (errResponse.error.code  === 429) { // too many requests
-				throw new LimitExceededError(errResponse);
-			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			throw new ResponseError(await response.json())
 		};
