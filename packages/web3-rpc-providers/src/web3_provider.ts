@@ -74,8 +74,9 @@ API extends Web3APISpec = EthExecutionAPI,
         if (this.transport === Transport.HTTPS) {
             try {
                 return ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as Promise<ResultType>;
-            } catch(e) {
-                if (e.code && e.code === 429){
+            } catch(e: unknown) {
+                // eslint-disable-next-line no-null/no-null
+                if (typeof e === 'object' && e !== null && 'code' in e && (e as { code: number }).code === 429){
                     // rate limiting error by quicknode;
                     throw new QuickNodeRateLimitError();
                     
