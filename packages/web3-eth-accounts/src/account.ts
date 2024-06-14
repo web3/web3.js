@@ -156,14 +156,11 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
  * ```
  */
-export const hashMessage = (message: string, noPreamble?: boolean): string => {
+export const hashMessage = (message: string): string => {
 	const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
 
 	const messageBytes = hexToBytes(messageHex);
 
-	if (noPreamble) {
-		return sha3Raw(messageBytes);
-	}
 	const preamble = hexToBytes(
 		fromUtf8(`\x19Ethereum Signed Message:\n${messageBytes.byteLength}`),
 	);
@@ -195,10 +192,10 @@ export const hashMessage = (message: string, noPreamble?: boolean): string => {
  * }
  * ```
  */
-export const sign = (data: string, privateKey: Bytes, noPreamble = false): SignResult => {
+export const sign = (data: string, privateKey: Bytes): SignResult => {
 	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
-	const hash = hashMessage(data, noPreamble);
+	const hash = hashMessage(data);
 
 	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
 	const signatureBytes = signature.toCompactRawBytes();
@@ -394,21 +391,20 @@ export const recover = (
 	prefixedOrR?: boolean | string,
 	s?: string,
 	prefixed?: boolean,
-	noPreamble?: boolean,
 ): Address => {
 	if (typeof data === 'object') {
 		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
-		return recover(data.messageHash, signatureStr, prefixedOrR, s, prefixed, noPreamble);
+		return recover(data.messageHash, signatureStr, prefixedOrR, s, prefixed);
 	}
 	if (typeof signatureOrV === 'string' && typeof prefixedOrR === 'string' && !isNullish(s)) {
 		const signatureStr = `${prefixedOrR}${s.slice(2)}${signatureOrV.slice(2)}`;
-		return recover(data, signatureStr, prefixed, s, prefixed, noPreamble);
+		return recover(data, signatureStr, prefixed, s, prefixed);
 	}
 
 	if (isNullish(signatureOrV)) throw new InvalidSignatureError('signature string undefined');
 
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
-	const hashedMessage = prefixedOrR ? data : hashMessage(data, noPreamble);
+	const hashedMessage = prefixedOrR ? data : hashMessage(data);
 
 	let v = parseInt(signatureOrV.substring(V_INDEX), 16); // 0x + r + s + v
 	if (v > 26) {
