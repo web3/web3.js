@@ -24,13 +24,16 @@ import { Web3DeferredPromise } from 'web3-utils';
 import {
 	waitForSocketConnect,
 	waitForEvent,
+	describeIf,
+	getSystemTestBackend,
+	isWs,
 } from '../fixtures/system_test_utils';
 import { WebSocketProvider } from '../../src';
 
 
 
 // create helper functions to open server
-describe('geth tests', () => {
+describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => {
 	const wsProviderUrl = 'ws://127.0.0.1:3333';
 	const httpProviderUrl = 'http://127.0.0.1:3333';
 	let httpProvider: HttpProvider;
