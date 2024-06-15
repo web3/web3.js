@@ -32,7 +32,6 @@ import WebSocketProvider from '../../src/index';
 // create helper functions to open server
 describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => {
 	describe('WebSocketProvider - ganache', () => {
-		jest.setTimeout(17000);
 		const port = 7547;
 		const host = `ws://localhost:${port}`;
 		const jsonRpcPayload = {
@@ -85,7 +84,7 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 
 			const disconnectPromise = waitForEvent(webSocketProvider, 'disconnect');
 			await server.close();
-			expect(!!(await disconnectPromise)).toBe(true);
+			expect((await disconnectPromise)).toBe(true);
 			webSocketProvider.disconnect();
 		});
 
