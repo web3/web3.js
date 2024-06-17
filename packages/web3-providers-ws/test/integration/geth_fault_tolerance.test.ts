@@ -30,10 +30,7 @@ import {
 } from '../fixtures/system_test_utils';
 import { WebSocketProvider } from '../../src';
 
-
-
-// create helper functions to open server
-describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => {
+describeIf(getSystemTestBackend() === 'geth' && isWs)('geth tests', () => {
 	const wsProviderUrl = 'ws://127.0.0.1:3333';
 	const httpProviderUrl = 'http://127.0.0.1:3333';
 	let httpProvider: HttpProvider;
@@ -79,7 +76,9 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 	beforeEach(async () => {
 		await openServer();
 	})
-	// opens ws server port
+	afterAll(async() => {
+		await closeServer();
+	})
     
 
 	describe('WebSocketProvider fault tests - geth', () => {
@@ -121,6 +120,7 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 			await closeServer();
 			await errorPromise;
 			expect(err).toHaveBeenCalled();
+			webSocketProvider.disconnect();
 		});
 		it('"error" handler *DOES NOT* fire if disconnection is clean', async () => {
 			await openServer();
@@ -177,7 +177,37 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 
 			webSocketProvider.disconnect();
 		});
+		// TODO: investigate this test
+		// it('times out when connection is lost mid-chunk', async () => {
+		// 	const reconnectionOptions = {
+		// 		delay: 0,
+		// 		autoReconnect: false,
+		// 		maxAttempts: 0,
+		// 	};
+		// 	const webSocketProvider = new WebSocketProvider(wsProviderUrl, {}, reconnectionOptions);
+		// 	await waitForSocketConnect(webSocketProvider);
+		// 	await closeServer();
 
+		// 	const errorPromise = new Promise(resolve => {
+		// 		webSocketProvider.on('error', (err: any) => {
+		// 			expect(err).toBeInstanceOf(Error);
+		// 			if (err.cause.message === 'Chunk timeout') {
+		// 				resolve(true);
+		// 			}
+		// 		});
+		// 	});
+		// 	// send an event to be parsed and fail
+		// 	const event = {
+		// 		data: 'abc|--|ded',
+		// 		type: 'websocket',
+		// 		// @ts-expect-error run protected method
+		// 		target: webSocketProvider._socketConnection,
+		// 	};
+		// 	// @ts-expect-error run protected method
+		// 	webSocketProvider._parseResponses(event); // simulate chunks
+		// 	await errorPromise;
+		// 	expect(true).toBe(true);
+		// });
 		it('times out when server is closed', async () => {
 			const reconnectionOptions = {
 				delay: 100,
@@ -195,6 +225,7 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 			await closeServer();
 			await errorPromise;
 			expect(mockCallBack).toHaveBeenCalled();
+			webSocketProvider.disconnect();
 		});
 		it('with reconnect on, will try to connect until server is open then close', async () => {
 			await closeServer();
@@ -262,6 +293,7 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 				.rejects.toThrow(ConnectionNotOpenError);
 
 			expect(mockCallBack).toHaveBeenCalled();
+			webSocketProvider.disconnect();
 		});
 		it('clears pending requests on maxAttempts failed reconnection', async () => {
 			const reconnectionOptions = {
@@ -303,6 +335,80 @@ describeIf(getSystemTestBackend() === 'ganache' && isWs)('ganache tests', () => 
 			// @ts-expect-error run protected method
 			expect(webSocketProvider._pendingRequestsQueue.size).toBe(0);
 			expect(mockCallBack).toHaveBeenCalled();
+			webSocketProvider.disconnect();
+		});
+		it('queues requests made while connection is lost / executes on reconnect', async () => {
+			const reconnectionOptions = {
+				delay: 1000,
+				autoReconnect: true,
+				maxAttempts: 3,
+			};
+			const webSocketProvider = new WebSocketProvider(wsProviderUrl, {}, reconnectionOptions);
+			await waitForSocketConnect(webSocketProvider);
+
+			// simulate abrupt close code
+			await changeCloseCode(webSocketProvider);
+			const errorPromise = new Promise(resolve => {
+				webSocketProvider.on('error', () => {
+					resolve(true);
+				});
+			});
+			await closeServer();
+
+			await errorPromise;
+			// queue a request
+			const requestPromise = webSocketProvider.request(jsonRpcPayload);
+
+			await openServer();
+
+			await waitForSocketConnect(webSocketProvider);
+
+			// try to send a request
+			const result = await requestPromise;
+			expect(result.id).toEqual(jsonRpcPayload.id);
+			webSocketProvider.disconnect();
+		});
+		it('errors when requests continue after socket closed', async () => {
+			const reconnectOptions = {
+				autoReconnect: false,
+			};
+			const webSocketProvider = new WebSocketProvider(wsProviderUrl, {}, reconnectOptions);
+			await waitForSocketConnect(webSocketProvider);
+
+			const disconnectPromise = waitForEvent(webSocketProvider, 'disconnect');
+			await closeServer();
+
+			await disconnectPromise;
+			const errorPromise = new Promise(resolve => {
+				webSocketProvider.on('error', () => {
+					resolve(true);
+				});
+			});
+			await expect(webSocketProvider.request(jsonRpcPayload)).rejects.toThrow(
+				'Connection not open',
+			);
+			await errorPromise;
+		});
+		it('deferredPromise emits an error when request fails', async () => {
+			const webSocketProvider = new WebSocketProvider(wsProviderUrl);
+			await waitForSocketConnect(webSocketProvider);
+
+			// @ts-expect-error replace sendtoSocket so we don't execute request
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			webSocketProvider._sendToSocket = () => {};
+			webSocketProvider.on('error', (err: unknown) => {
+				expect(err).toBeInstanceOf(ConnectionNotOpenError);
+			});
+
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const request = webSocketProvider.request(jsonRpcPayload).catch(() => {});
+
+			// @ts-expect-error create a deferred promise error
+			webSocketProvider._clearQueues();
+
+			await request;
+			webSocketProvider.disconnect();
+			await closeServer();
 		});
 	});
 });
