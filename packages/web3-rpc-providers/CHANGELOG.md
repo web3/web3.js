@@ -35,5 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [1.0.0.rc.0]
+
+#### Added
+
+-   RC release 
+
 ## [Unreleased]
  - When error is returned with code 429, throw rate limit error (#7102)
