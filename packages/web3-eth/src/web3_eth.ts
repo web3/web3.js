@@ -48,7 +48,7 @@ import { toChecksumAddress, isNullish, ethUnitMap } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import * as rpcMethodsWrappers from './rpc_method_wrappers.js';
-import { SendTransactionOptions } from './types.js';
+import { SendTransactionOptions, TransactionMiddleware } from './types.js';
 import {
 	LogsSubscription,
 	NewPendingTransactionsSubscription,
@@ -99,6 +99,9 @@ export const registeredSubscriptions = {
  * ```
  */
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
+	
+	private transactionMiddleware?: TransactionMiddleware;
+
 	public constructor(
 		providerOrContext?: SupportedProviders<any> | Web3ContextInitOptions | string,
 	) {
@@ -124,6 +127,14 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			...(providerOrContext as Web3ContextInitOptions),
 			registeredSubscriptions,
 		});
+	}
+
+	public setTransactionMiddleware(transactionMiddleware: TransactionMiddleware){
+		this.transactionMiddleware = transactionMiddleware;
+	}
+
+	public getTransactionMiddleware (){
+		return this.transactionMiddleware;
 	}
 
 	/**
@@ -1081,7 +1092,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		returnFormat: ReturnFormat = this.defaultReturnFormat as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {
-		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options);
+		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options, this.transactionMiddleware);
 	}
 
 	/**

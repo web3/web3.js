@@ -71,7 +71,6 @@ describe('Web3SubscriptionManager', () => {
 				expect.any(Function),
 			);
 		});
-
 		it('should register the subscription types', () => {
 			subManager = new Web3SubscriptionManager(requestManager, {
 				example: ExampleSubscription as never,
@@ -150,6 +149,12 @@ describe('Web3SubscriptionManager', () => {
 				'Subscription with id "123" already exists',
 			);
 		});
+		it('should error when there is no sub id', async () => {
+			(sub as any).id = undefined;
+			// const subManagers = new Web3SubscriptionManager(requestManager, subscriptions) as any
+			// // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			await expect(subManager.addSubscription(sub)).rejects.toThrow();
+		});
 
 		it('should try to subscribe the subscription', async () => {
 			sub = new ExampleSubscription(
@@ -206,7 +211,18 @@ describe('Web3SubscriptionManager', () => {
 			);
 		});
 
-		it('should try to unsubscribe the subscription', async () => {
+		it('should unsubscribe to the subscription by id', async () => {
+			await subManager.unsubscribe(({ id }) => {
+				if (id === '123') {
+					return true;
+				}
+				return false;
+			});
+
+			expect(subManager.subscriptions).toEqual(new Map());
+		});
+
+		it('should unsubscribe in the subscription under the condition', async () => {
 			await subManager.removeSubscription(sub);
 
 			expect(sub.sendUnsubscribeRequest).toHaveBeenCalledTimes(1);
@@ -219,6 +235,30 @@ describe('Web3SubscriptionManager', () => {
 			await subManager.removeSubscription(sub);
 
 			expect(subManager.subscriptions).toEqual(new Map());
+		});
+	});
+	describe('messageListener', () => {
+		let subscription: ExampleSubscription;
+
+		beforeEach(() => {
+			subManager = new Web3SubscriptionManager(requestManager, subscriptions);
+			jest.spyOn(subManager, 'supportsSubscriptions').mockReturnValue(true);
+			subscription = new ExampleSubscription(
+				{ param1: 'param1' },
+				{ subscriptionManager: subManager },
+			);
+			(subscription as any).id = '123';
+		});
+
+		afterEach(() => {
+			jest.clearAllMocks();
+		});
+		it('should error when no data is provided', () => {
+			const subManagers = new Web3SubscriptionManager(requestManager, subscriptions) as any;
+			expect(() => {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				subManagers.messageListener();
+			}).toThrow();
 		});
 	});
 });

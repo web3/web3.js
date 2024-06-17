@@ -429,22 +429,12 @@ export class Web3RequestManager<
 		) {
 			return this._buildResponse(payload, response, error);
 		}
-
 		if (jsonRpc.isBatchRequest(payload) && !Array.isArray(response)) {
 			throw new ResponseError(response, 'Got normal response for a batch request.');
 		}
 
 		if (!jsonRpc.isBatchRequest(payload) && Array.isArray(response)) {
 			throw new ResponseError(response, 'Got batch response for a normal request.');
-		}
-
-		if (
-			(jsonRpc.isResponseWithError(response) || jsonRpc.isResponseWithResult(response)) &&
-			!jsonRpc.isBatchRequest(payload)
-		) {
-			if (response.id && payload.id !== response.id) {
-				throw new InvalidResponseError<ErrorType>(response);
-			}
 		}
 
 		throw new ResponseError(response, 'Invalid response');

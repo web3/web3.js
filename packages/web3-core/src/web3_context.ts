@@ -219,6 +219,9 @@ export class Web3Context<
 			newContextChild.setConfig({ [event.name]: event.newValue });
 		});
 
+		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
+		this[ContextRef.name] = newContextChild;
+		
 		return newContextChild;
 	}
 

@@ -70,6 +70,7 @@ import {
 	SendSignedTransactionOptions,
 	SendTransactionEvents,
 	SendTransactionOptions,
+	TransactionMiddleware,
 } from './types.js';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionFromOrToAttr } from './utils/transaction_builder.js';
@@ -544,13 +545,14 @@ export function sendTransaction<
 	ResolveType = FormatType<TransactionReceipt, ReturnFormat>,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transaction:
+	transactionObj:
 		| Transaction
 		| TransactionWithFromLocalWalletIndex
 		| TransactionWithToLocalWalletIndex
 		| TransactionWithFromAndToLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
+	transactionMiddleware?: TransactionMiddleware
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
@@ -562,6 +564,12 @@ export function sendTransaction<
 						options,
 						returnFormat,
 					});
+
+					let transaction = {...transactionObj};
+					
+					if(!isNullish(transactionMiddleware)){
+						transaction = await transactionMiddleware.processTransaction(transaction);
+					}
 
 					let transactionFormatted:
 						| Transaction

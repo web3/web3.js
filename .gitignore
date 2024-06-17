@@ -47,3 +47,5 @@ packages/web3/.in3/
 benchmark-data.txt
 
 .eslintcache
+
+.history

@@ -235,21 +235,20 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 	],
 	['-0x01', ['-0x1', 'int256']],
 	['123c', ['0x123c', 'bytes']],
-	[new Uint8Array([
-		221, 128, 128, 128, 148, 186, 248,
-		242, 159, 130, 231, 84, 254, 199,
-		252, 69, 21, 58, 104, 102, 201,
-		137, 255, 3, 196, 10, 128, 128,
-		128, 128
-		]), ['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes']],
-	[Buffer.from([
-		221, 128, 128, 128, 148, 186, 248,
-		242, 159, 130, 231, 84, 254, 199,
-		252, 69, 21, 58, 104, 102, 201,
-		137, 255, 3, 196, 10, 128, 128,
-		128, 128
-		]), ['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes']]
-
+	[
+		new Uint8Array([
+			221, 128, 128, 128, 148, 186, 248, 242, 159, 130, 231, 84, 254, 199, 252, 69, 21, 58,
+			104, 102, 201, 137, 255, 3, 196, 10, 128, 128, 128, 128,
+		]),
+		['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes'],
+	],
+	[
+		Buffer.from([
+			221, 128, 128, 128, 148, 186, 248, 242, 159, 130, 231, 84, 254, 199, 252, 69, 21, 58,
+			104, 102, 201, 137, 255, 3, 196, 10, 128, 128, 128, 128,
+		]),
+		['0xdd80808094baf8f29f82e754fec7fc45153a6866c989ff03c40a80808080', 'bytes'],
+	],
 ];
 
 export const toHexInvalidData: [any, string][] = [
@@ -320,15 +319,15 @@ const conversionBaseData: [[Numbers, EtherUnits | number], string][] = [
 
 export const fromWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
 	...conversionBaseData,
-    [['0xff', 'wei'], '255'],
-    [[1e+22, 'ether'], '10000'],
-    [[19999999999999991611392, 'ether'], '19999.999999999991611392'],
-    [[1.9999999999999991611392e+22, 'ether'], '19999.999999999991611392'],
+	[['0xff', 'wei'], '255'],
+	[[1e22, 'ether'], '10000'],
+	[[19999999999999991611392, 'ether'], '19999.999999999991611392'],
+	[[1.9999999999999991611392e22, 'ether'], '19999.999999999991611392'],
 	[['1000000', 'ether'], '0.000000000001'],
 	[['1123456789123456789', 'ether'], '1.123456789123456789'],
 	[['1123', 'kwei'], '1.123'],
-	[['1234100' ,'kwei'], '1234.1'],
-	[['3308685546611893', 'ether'], '0.003308685546611893']
+	[['1234100', 'kwei'], '1234.1'],
+	[['3308685546611893', 'ether'], '0.003308685546611893'],
 ];
 
 export const toWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
@@ -339,17 +338,24 @@ export const toWeiValidData: [[Numbers, EtherUnits | number], Numbers][] = [
 	[['1000000', 'ether'], 0.000000000001],
 	[['1123456789123456789', 'ether'], '1.123456789123456789123'],
 	[['1123', 'kwei'], '1.12345'],
-	[['1234100' ,'kwei'], '1234.1'],
+	[['1234100', 'kwei'], '1234.1'],
 	[['3308685546611893', 'ether'], '0.0033086855466118933'],
 	[['1123', 'kwei'], 1.12345],
-
 ];
 
 export const toWeiValidDataWarnings: [[Numbers, EtherUnits], string][] = [
-	[[0.0000000000000000000001, 'ether'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
-	[[0.0000000000000000000001, 'ether'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
-	[[1999999000000009900000, 'kwei'], 'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods'],
-
+	[
+		[0.0000000000000000000001, 'ether'],
+		'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods',
+	],
+	[
+		[0.0000000000000000000001, 'ether'],
+		'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods',
+	],
+	[
+		[1999999000000009900000, 'kwei'],
+		'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods',
+	],
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [
@@ -362,8 +368,14 @@ export const fromWeiInvalidData: [[any, any], string][] = [
 	[[{}, 'kwei'], 'Invalid value given "{}". Error: can not parse as number data'],
 	[['data', 'kwei'], 'Invalid value given "data". Error: can not parse as number data.'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
-	[['1234', -1], 'Invalid value given "-1". Error: not a valid unit. Must be a positive integer.'],
-	[['1234', 3.3], 'Invalid value given "3.3". Error: not a valid unit. Must be a positive integer.']
+	[
+		['1234', -1],
+		'Invalid value given "-1". Error: not a valid unit. Must be a positive integer.',
+	],
+	[
+		['1234', 3.3],
+		'Invalid value given "3.3". Error: not a valid unit. Must be a positive integer.',
+	],
 ];
 
 export const toWeiInvalidData: [[any, any], string][] = [
@@ -374,6 +386,7 @@ export const toWeiInvalidData: [[any, any], string][] = [
 	[[{}, 'kwei'], 'value "{}" at "/0" must pass "number" validation'],
 	[['data', 'kwei'], 'value "data" at "/0" must pass "number" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
+	[['123', -1], 'Invalid value given "-1". Error: not a valid unit. Must be a positive integer.'],
 ];
 export const toCheckSumValidData: [string, string][] = [
 	['0x0089d53f703f7e0843953d48133f74ce247184c2', '0x0089d53F703f7E0843953D48133f74cE247184c2'],
@@ -397,6 +410,7 @@ export const bytesToUint8ArrayValidData: [Bytes, Uint8Array][] = [
 	['0x1234', new Uint8Array([18, 52])],
 	['0x1234', new Uint8Array([18, 52])],
 	[new Uint8Array(hexToBytes('0c12')), new Uint8Array(hexToBytes('0c12'))],
+	[[72, 12] as any, new Uint8Array([72, 12])],
 ];
 
 export const toBigIntValidData: [any, bigint][] = [
