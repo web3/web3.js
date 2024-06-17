@@ -88,8 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Dependencies updated
 
-## [Unreleased]
-
 ### Added
 
 Transaction middleware (#7088)
+
+## [Unreleased]

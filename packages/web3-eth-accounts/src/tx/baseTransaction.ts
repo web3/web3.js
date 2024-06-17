@@ -578,7 +578,11 @@ export abstract class BaseTransaction<TransactionObject> {
 		return postfix;
 	}
 	// eslint-disable-next-line class-methods-use-this
-	private _ecsign(msgHash: Uint8Array, privateKey: Uint8Array, chainId?: bigint): ECDSASignature {
+	protected _ecsign(
+		msgHash: Uint8Array,
+		privateKey: Uint8Array,
+		chainId?: bigint,
+	): ECDSASignature {
 		const signature = secp256k1.sign(msgHash, privateKey);
 		const signatureBytes = signature.toCompactRawBytes();
 
