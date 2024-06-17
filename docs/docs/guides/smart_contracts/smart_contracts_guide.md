@@ -164,7 +164,7 @@ In this step, we will set up Web3.js and Hardhat.
 First, install the required packages with npm:
 
 ```bash
-npm i web3 hardhat @nomicfoundation/hardhat-web3-v4
+npm i web3 hardhat
 ```
 
 Next, initialize the Hardhat project:
@@ -173,19 +173,7 @@ Next, initialize the Hardhat project:
 npx hardhat init
 ```
 
-Initializing the Hardhat project will require responding to several prompts - select the default option for each prompt.
-
-After you initialize the Hardhat project, a number of new files and directories will be created, including a Hardhat configuration file called `hardhat.config.js`. Edit `hardhat.config.js` to include the [Web3.js plugin for Hardhat](https://hardhat.org/hardhat-runner/plugins/nomicfoundation-hardhat-web3-v4).
-
-```js
-require("@nomicfoundation/hardhat-toolbox");
-require("@nomicfoundation/hardhat-web3-v4"); // <=== add this import
-
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
-  solidity: "0.8.24",
-};
-```
+Initializing the Hardhat project will require responding to several prompts - select the default option for each prompt. After you initialize the Hardhat project, a number of new files and directories will be created.
 
 To start the Hardhat development network, execute the following command:
 
@@ -221,7 +209,7 @@ The Hardhat development network needs to remain running in the terminal that was
 Next, create a new file called `index.js` in your project directory and add the following code to it:
 
 ```js
-const { Web3 } = require("hardhat");
+const { Web3 } = require("web3");
 
 const web3 = new Web3("http://127.0.0.1:8545/");
 
@@ -261,7 +249,7 @@ In this step, we will use Web3.js to deploy the smart contract to the developmen
 Create a file named `deploy.js` and fill it with the following code:
 
 ```js
-const { Web3 } = require("hardhat");
+const { Web3 } = require("web3");
 const path = require("path");
 const fs = require("fs");
 
@@ -330,7 +318,7 @@ In this step, we will use Web3.js to interact with the smart contract on the dev
 Create a file named `interact.js` and fill it with the following code:
 
 ```js
-const { Web3 } = require("hardhat");
+const { Web3 } = require("web3");
 const path = require("path");
 const fs = require("fs");
 

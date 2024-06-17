@@ -248,4 +248,12 @@ Documentation:
 
 -   Fixed issue with simple transactions, Within `checkRevertBeforeSending` if there is no data set in transaction, set gas to be `21000` (#7043)
 
+## [4.8.0]
+
+### Added
+
+-   `sendTransaction` in `rpc_method_wrappers` accepts optional param of `TransactionMiddleware` (#7088)
+-   WebEth has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` (#7088)
+- `TransactionMiddleware` and `TransactionMiddleware` data types are exported (#7088)
+
 ## [Unreleased]

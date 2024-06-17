@@ -730,6 +730,66 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload);
 			});
+			it('should throw an error when payload batch request and response is not an array', async () => {
+				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue([
+					{ method: 'my_method', params: [], id: 1, jsonrpc: '2.0' },
+				]);
+				const manager = new Web3RequestManager();
+
+				const pr = new Promise(resolve => {
+					resolve({ response: 'random' });
+				});
+				const myProvider = {
+					request: jest.fn().mockImplementation(async () => pr),
+				} as any;
+				manager.setProvider(myProvider);
+
+				await expect(manager.send(request)).rejects.toThrow();
+
+				jest.clearAllMocks();
+			});
+			it('should throw an error when payload batch request is an array and response is not', async () => {
+				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue({
+					method: 'my_method',
+					params: [],
+					id: 1,
+					jsonrpc: '2.0',
+				});
+				const manager = new Web3RequestManager();
+
+				const pr = new Promise(resolve => {
+					resolve([{ response: 'unknown response' }, { response: 'unknown response' }]);
+				});
+				const myProvider = {
+					request: jest.fn().mockImplementation(async () => pr),
+				} as any;
+				manager.setProvider(myProvider);
+
+				await expect(manager.send(request)).rejects.toThrow();
+
+				jest.clearAllMocks();
+			});
+			it('should throw an when invalid response', async () => {
+				jest.spyOn(jsonRpc, 'toPayload').mockReturnValue({
+					method: 'my_method',
+					params: [],
+					id: 1,
+					jsonrpc: '2.0',
+				});
+				const manager = new Web3RequestManager();
+
+				const pr = new Promise(resolve => {
+					resolve({ response: 'unknown response' });
+				});
+				const myProvider = {
+					request: jest.fn().mockImplementation(async () => pr),
+				} as any;
+				manager.setProvider(myProvider);
+
+				await expect(manager.send(request)).rejects.toThrow();
+
+				jest.clearAllMocks();
+			});
 		});
 
 		describe('legacy-request-provider', () => {

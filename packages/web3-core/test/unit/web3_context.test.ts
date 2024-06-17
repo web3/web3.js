@@ -24,10 +24,14 @@ import {
 	JsonRpcResponse,
 	Web3APIMethod,
 	Web3APIReturnType,
+	Web3AccountProvider,
+	Web3BaseWalletAccount,
+	Web3BaseWallet,
 } from 'web3-types';
-import { Web3Context, Web3PluginBase } from '../../src/web3_context';
+import { Web3Context, Web3PluginBase, Web3ContextObject } from '../../src/web3_context';
 import { Web3RequestManager } from '../../src/web3_request_manager';
 import { RequestManagerMiddleware } from '../../src/types';
+import { CustomTransactionType } from './fixtures/custom_transaction_type';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 class Context1 extends Web3Context<{}> {}
@@ -64,12 +68,29 @@ describe('Web3Context', () => {
 			expect(context.currentProvider).toBeInstanceOf(HttpProvider);
 		});
 
+		it('should return undefined when getting givenprovider', () => {
+			const context = new Web3Context('http://test.com');
+			expect(context.givenProvider).toBeUndefined();
+		});
 		it('should set return current provider for the request manager', () => {
 			const context = new Web3Context('http://test.com');
-
 			context.currentProvider = 'http://test/abc';
 
 			expect(context.currentProvider).toBeInstanceOf(HttpProvider);
+		});
+		it('should set httpProvider', () => {
+			const context = new Web3Context();
+			const url = 'http://test/abc';
+			context.setProvider(url);
+			const httpProvider = new HttpProvider(url);
+			expect(context.provider).toEqual(httpProvider);
+		});
+
+		it('get batch request', () => {
+			const context = new Web3Context();
+			const BatchRequestClass = context.BatchRequest;
+
+			expect(new BatchRequestClass()).toBeInstanceOf(context.BatchRequest);
 		});
 
 		it('should set middleware for the request manager', () => {
@@ -91,6 +112,82 @@ describe('Web3Context', () => {
 
 			context.setRequestManagerMiddleware(middleware);
 			expect(context.requestManager.middleware).toEqual(middleware);
+		});
+		it('should instantiate a new Web3Context object with provided context object', () => {
+			const config = { defaultNetworkId: 'my-network-id', defaultHardfork: 'my-fork' };
+			const context = {
+				provider: 'http://test.com',
+				config,
+			} as Web3ContextObject;
+			const newContext = Web3Context.fromContextObject(context);
+			expect(newContext.currentProvider).toBeInstanceOf(HttpProvider);
+			expect(newContext.requestManager).toBeInstanceOf(Web3RequestManager);
+			expect(newContext.config.defaultHardfork).toEqual(config.defaultHardfork);
+			expect(newContext.config.defaultNetworkId).toEqual(config.defaultNetworkId);
+		});
+
+		describe('accountsProvider', () => {
+			const createAccountProvider = (): Web3AccountProvider<Web3BaseWalletAccount> => {
+				const accountProvider = {
+					privateKeyToAccount: jest.fn().mockImplementation(() => {
+						return '';
+					}),
+					decrypt: jest.fn(),
+					create: jest.fn().mockImplementation(() => {
+						return '';
+					}),
+				};
+				return accountProvider;
+			};
+			const accountProvider = createAccountProvider();
+
+			class WalletExample<
+				T extends Web3BaseWalletAccount = Web3BaseWalletAccount,
+			> extends Web3BaseWallet<T> {
+				public create = jest.fn(() => this);
+				public add = jest.fn(() => this);
+				public get = jest.fn(() => {
+					return {
+						address: 'mockAddress',
+						privateKey: 'mockPrivateKey',
+						signTransaction: jest.fn(),
+						sign: jest.fn(),
+						encrypt: jest.fn(),
+					} as unknown as T;
+				});
+				public remove = jest.fn(() => true);
+				public clear = jest.fn(() => this);
+				public encrypt = jest.fn(async () => Promise.resolve([]));
+				public decrypt = jest.fn();
+				public save = jest.fn();
+				public load = jest.fn();
+			}
+
+			const wallet = new WalletExample(accountProvider);
+			it('should set wallet in context', () => {
+				const context = new Web3Context({
+					provider: 'http://test.com',
+					wallet,
+				});
+
+				expect(context.wallet).toEqual(wallet);
+			});
+			it('should set the Accountsprovider when creating new context', () => {
+				const context = new Web3Context({
+					provider: 'http://test.com',
+					accountProvider,
+				});
+
+				expect(context.accountProvider).toEqual(accountProvider);
+			});
+
+			it('should set wallet', () => {
+				const context = new Web3Context({
+					provider: 'http://test.com',
+					wallet,
+				});
+				expect(context.wallet).toEqual(wallet);
+			});
 		});
 	});
 
@@ -255,6 +352,20 @@ describe('Web3Context', () => {
 	});
 
 	describe('registerPlugin', () => {
+		it('should create a new type using registerNewTransactionType on a custom plugin', () => {
+			const context = new Context1('http://test/abc');
+			const pluginNamespace = 'plugin';
+
+			class Plugin extends Web3PluginBase {
+				public constructor() {
+					super();
+					this.registerNewTransactionType(3, CustomTransactionType);
+				}
+				public pluginNamespace = pluginNamespace;
+			}
+
+			expect(() => context.registerPlugin(new Plugin())).not.toThrow();
+		});
 		it('should throw ExistingPluginNamespaceError', () => {
 			const context = new Context1('http://test/abc');
 			const pluginNamespace = 'plugin';

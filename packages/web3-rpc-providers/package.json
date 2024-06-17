@@ -1,6 +1,6 @@
 {
 	"name": "web3-rpc-providers",
-	"version": "0.1.0",
+	"version": "1.0.0-rc.0",
 	"description": "Web3 Providers package",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -58,7 +58,7 @@
 	"dependencies": {
 		"web3-providers-http": "^4.1.0",
 		"web3-providers-ws": "^4.0.7",
-		"web3-types": "^1.6.0",
-		"web3-utils": "^4.2.3"
+		"web3-types": "^1.7.0",
+		"web3-utils": "^4.3.0"
 	}
 }

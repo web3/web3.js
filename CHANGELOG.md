@@ -2526,4 +2526,41 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Change `estimateGas` method to add possibility pass Transaction type (#7000)
 
+## [4.10.0]
+
+### Added
+
+#### web3
+
+-   Now when existing packages are added in web3, will be avalible for plugins via context. (#7088)
+
+#### web3-core
+
+-   Now when existing packages are added in web3, will be avalible for plugins via context. (#7088)
+
+#### web3-eth
+
+-   `sendTransaction` in `rpc_method_wrappers` accepts optional param of `TransactionMiddleware` (#7088)
+-   WebEth has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` (#7088)
+
+#### web3-eth-ens
+
+-   `getText` now supports first param Address
+-   `getName` has optional second param checkInterfaceSupport
+
+### web3-types
+
+-   Added `result` as optional `never` and `error` as optional `never in type `JsonRpcNotification` (#7091)
+-   Added `JsonRpcNotfication` as a union type in `JsonRpcResponse` (#7091)
+
+### web3-rpc-providers
+
+-   RC release
+
+### Fixed
+
+#### web3-eth-ens
+
+-   `getName` reverse resolution
+
 ## [Unreleased]

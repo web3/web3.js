@@ -17,29 +17,29 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * The web3 accounts package contains functions to generate Ethereum accounts and sign transactions & data.
- * 
+ *
  * For using accounts functions, first install Web3 package using `npm i web3` or `yarn add web3` based on your package manager usage.
- * After that, Accounts functions will be available as mentioned in following snippet. 
+ * After that, Accounts functions will be available as mentioned in following snippet.
  * ```ts
  * import {Web3} from 'web3';
- * 
+ *
  * const web3 = new Web3();
  * const account = web3.eth.accounts.create();
  * const result = web3.eth.accounts.hashMessage("Test Message");
- * 
+ *
  * ```
- * 
+ *
  * For using individual package install `web3-eth-accounts` package using `npm i web3-eth-accounts` or `yarn add web3-eth-accounts` and only import required functions.
- * This is more efficient approach for building lightweight applications. 
+ * This is more efficient approach for building lightweight applications.
  * ```ts
  * import {create,hashMessage} from 'web3-eth-accounts';
- * 
+ *
  * const account = create();
  * const result = hashMessage("Test Message");
- * 
+ *
  * ```
  * @module Accounts
- * 
+ *
  */
 
 import {
@@ -98,24 +98,23 @@ import type {
 	SignResult,
 } from './types.js';
 
-
 /**
  * Get the private key Uint8Array after the validation.
- * Note: This function is not exported through main web3 package, so for using it directly import from accounts package. 
+ * Note: This function is not exported through main web3 package, so for using it directly import from accounts package.
  * @param data - Private key
- * @param ignoreLength - Optional, ignore length check during validation 
+ * @param ignoreLength - Optional, ignore length check during validation
  * @returns The Uint8Array private key
  *
  * ```ts
  * parseAndValidatePrivateKey("0x08c673022000ece7964ea4db2d9369c50442b2869cbd8fc21baaca59e18f642c")
- * 
+ *
  * > Uint8Array(32) [
  * 186,  26, 143, 168, 235, 179,  90,  75,
  * 101,  63,  84, 221, 152, 150,  30, 203,
  *   8, 113,  94, 226,  53, 213, 216,   5,
  * 194, 159,  17,  53, 219,  97, 121, 248
  * ]
- * 
+ *
  * ```
  */
 export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Uint8Array => {
@@ -127,7 +126,7 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 	}
 
 	try {
-		privateKeyUint8Array = isUint8Array(data) ? (data ) : bytesToUint8Array(data);
+		privateKeyUint8Array = isUint8Array(data) ? data : bytesToUint8Array(data);
 	} catch {
 		throw new InvalidPrivateKeyError();
 	}
@@ -149,11 +148,11 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
  *
  * ```ts
  * web3.eth.accounts.hashMessage("Hello world")
- * 
+ *
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
- * 
+ *
  * web3.eth.accounts.hashMessage(web3.utils.utf8ToHex("Hello world")) // Will be hex decoded in hashMessage
- * 
+ *
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
  * ```
  */
@@ -228,7 +227,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * Signing a legacy transaction
  * ```ts
  * import {signTransaction, Transaction} from 'web3-eth-accounts';
- * 
+ *
  * signTransaction(new Transaction({
  *	to: '0x118C2E5F57FD62C2B5b46a5ae9216F4FF4011a07',
  *	value: '0x186A0',
@@ -238,7 +237,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  *	chainId: 1,
  *	nonce: 0 }),
  * '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
- * 
+ *
  * > {
  * messageHash: '0x28b7b75f7ba48d588a902c1ff4d5d13cc0ca9ac0aaa39562368146923fb853bf',
  * v: '0x25',
@@ -247,11 +246,11 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * rawTransaction: '0xf869808609184e72a0008352081294118c2e5f57fd62c2b5b46a5ae9216f4ff4011a07830186a08025a00601b0017b0e20dd0eeda4b895fbc1a9e8968990953482214f880bae593e71b5a0690d984493560552e3ebdcc19a65b9c301ea9ddc82d3ab8cfde60485fd5722ce',
  * transactionHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
  * ```
- * 
+ *
  * Signing an eip 1559 transaction
  * ```ts
  * import {signTransaction, Transaction} from 'web3-eth-accounts';
- * 
+ *
  * signTransaction(new Transaction({
  *	to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
  *	maxPriorityFeePerGas: '0x3B9ACA00',
@@ -271,11 +270,11 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * transactionHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
  * }
  * ```
- * 
+ *
  * Signing an eip 2930 transaction
  * ```ts
  * import {signTransaction, Transaction} from 'web3-eth-accounts';
- * 
+ *
  * signTransaction(new Transaction ({
  *	chainId: 1,
  *	nonce: 0,
@@ -294,7 +293,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  *		},
  *	],
  * }),"0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318")
- * 
+ *
  * > {
  * messageHash: '0xc55ea24bdb4c379550a7c9a6818ac39ca33e75bc78ddb862bd82c31cc1c7a073',
  * v: '0x26',
@@ -366,11 +365,11 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  * @param s - S value in signature
  * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with `"\\x19Ethereum Signed Message:\\n" + message.length + message`, and assumed to be already prefixed.
  * @returns The Ethereum address used to sign this data
- * 
+ *
  * ```ts
  * const data = 'Some data';
  * const sigObj = web3.eth.accounts.sign(data, '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728')
- * 
+ *
  * > {
  *   message: 'Some data',
  *   messageHash: '0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655',
@@ -379,10 +378,10 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  *   s: '0x53e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb150',
  *   signature: '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b'
  * }
- * 
+ *
  * // now recover
  * web3.eth.accounts.recover(data, sigObj.v, sigObj.r, sigObj.s)
- * 
+ *
  * > 0xEB014f8c8B418Db6b45774c326A0E64C78914dC0
  * ```
  */
@@ -422,7 +421,7 @@ export const recover = (
 	const address = toChecksumAddress(`0x${publicHash.slice(-40)}`);
 
 	return address;
-};;
+};
 
 /**
  * Get the ethereum Address from a private key
@@ -433,7 +432,7 @@ export const recover = (
  * @example
  * ```ts
  * web3.eth.accounts.privateKeyToAddress("0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728")
- * 
+ *
  * > "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0"
  * ```
  */
@@ -462,7 +461,7 @@ export const privateKeyToAddress = (privateKey: Bytes): string => {
  * @example
  * ```ts
  * web3.eth.accounts.privateKeyToPublicKey("0x1e046a882bb38236b646c9f135cf90ad90a140810f439875f2a6dd8e50fa261f", true)
- * 
+ *
  * > "0x42beb65f179720abaa3ec9a70a539629cbbc5ec65bb57e7fc78977796837e537662dd17042e6449dc843c281067a4d6d8d1a1775a13c41901670d5de7ee6503a" // uncompressed public key
  * ```
  */
@@ -485,7 +484,7 @@ export const privateKeyToPublicKey = (privateKey: Bytes, isCompressed: boolean):
  *
  * Encrypt using scrypt options:
  * ```ts
- * 
+ *
  * web3.eth.accounts.encrypt(
  *    '0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
  *    '123',
@@ -659,7 +658,7 @@ export const encrypt = async (
  *
  * ```ts
  * web3.eth.accounts.privateKeyToAccount("0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
- * 
+ *
  * >    {
  * 			address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
  * 			privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
@@ -740,8 +739,8 @@ export const create = (): Web3Account => {
  *      mac: 'efbf6d3409f37c0084a79d5fdf9a6f5d97d11447517ef1ea8374f51e581b7efd'
  *    }
  *   }, '123').then(console.log);
- * 
- * 
+ *
+ *
  * > {
  * address: '0xcdA9A91875fc35c8Ac1320E098e584495d66e47c',
  * privateKey: '67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
