@@ -17,12 +17,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * The web3.eth.abi functions let you encode and decode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
- * 
+ *
  *  For using Web3 ABI functions, first install Web3 package using `npm i web3` or `yarn add web3`.
- * After that, Web3 ABI functions will be available. 
+ * After that, Web3 ABI functions will be available.
  * ```ts
  * import { Web3 } from 'web3';
- * 
+ *
  * const web3 = new Web3();
  * const encoded = web3.eth.abi.encodeFunctionSignature({
  *     name: 'myMethod',
@@ -35,14 +35,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *         name: 'myString'
  *     }]
  * });
- * 
+ *
  * ```
- * 
+ *
  * For using individual package install `web3-eth-abi` package using `npm i web3-eth-abi` or `yarn add web3-eth-abi` and only import required functions.
- * This is more efficient approach for building lightweight applications. 
+ * This is more efficient approach for building lightweight applications.
  * ```ts
  * import { encodeFunctionSignature } from 'web3-eth-abi';
- * 
+ *
  * const encoded = encodeFunctionSignature({
  *     name: 'myMethod',
  *     type: 'function',
@@ -54,12 +54,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *         name: 'myString'
  *     }]
  * });
- * 
+ *
  * ```
- * 
+ *
  *  @module ABI
  */
-
 
 // This code was taken from: https://github.com/Mrtenz/eip-712/tree/master
 
@@ -231,7 +230,7 @@ const encodeData = (
 ): string => {
 	const [types, values] = typedData.types[type].reduce<[string[], unknown[]]>(
 		([_types, _values], field) => {
-			if (isNullish(data[field.name]) || isNullish(data[field.name])) {
+			if (isNullish(data[field.name]) || isNullish(field.type)) {
 				throw new AbiError(`Cannot encode data: missing data for '${field.name}'`, {
 					data,
 					field,

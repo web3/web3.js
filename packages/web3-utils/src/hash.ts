@@ -74,61 +74,6 @@ import { leftPad, rightPad, toTwosComplement } from './string_manipulation.js';
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
 /**
- * computes the Keccak-256 hash of the input and returns a hexstring
- * @param data - the input to hash
- * @returns - the Keccak-256 hash of the input
- *
- * @example
- * ```ts
- * console.log(web3.utils.sha3('web3.js'));
- * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
- *
- * console.log(web3.utils.sha3(''));
- * > undefined
- * ```
- */
-export const sha3 = (data: Bytes): string | undefined => {
-	let updatedData: Uint8Array;
-
-	if (typeof data === 'string') {
-		if (data.startsWith('0x') && isHexStrict(data)) {
-			updatedData = hexToBytes(data);
-		} else {
-			updatedData = utf8ToBytes(data);
-		}
-	} else {
-		updatedData = data;
-	}
-	const hash = bytesToHex(keccak256(validatorUtils.ensureIfUint8Array(updatedData)));
-
-	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
-	return hash === SHA3_EMPTY_BYTES ? undefined : hash;
-};
-
-/**
- * Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
- * @param data - the input to hash
- * @returns - the Keccak-256 hash of the input
- *
- * @example
- * ```ts
- * conosle.log(web3.utils.sha3Raw('web3.js'));
- * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
- *
- * console.log(web3.utils.sha3Raw(''));
- * > 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
- * ```
- */
-export const sha3Raw = (data: Bytes): string => {
-	const hash = sha3(data);
-	if (isNullish(hash)) {
-		return SHA3_EMPTY_BYTES;
-	}
-
-	return hash;
-};
-
-/**
  * A wrapper for ethereum-cryptography/keccak256 to allow hashing a `string` and a `bigint` in addition to `UInt8Array`
  * @param data - the input to hash
  * @returns - the Keccak-256 hash of the input
@@ -162,6 +107,61 @@ export const keccak256Wrapper = (
 };
 
 export { keccak256Wrapper as keccak256 };
+
+/**
+ * computes the Keccak-256 hash of the input and returns a hexstring
+ * @param data - the input to hash
+ * @returns - the Keccak-256 hash of the input
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.sha3('web3.js'));
+ * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
+ *
+ * console.log(web3.utils.sha3(''));
+ * > undefined
+ * ```
+ */
+export const sha3 = (data: Bytes): string | undefined => {
+	let updatedData: Uint8Array;
+
+	if (typeof data === 'string') {
+		if (data.startsWith('0x') && isHexStrict(data)) {
+			updatedData = hexToBytes(data);
+		} else {
+			updatedData = utf8ToBytes(data);
+		}
+	} else {
+		updatedData = data;
+	}
+	const hash = keccak256Wrapper(updatedData);
+
+	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
+	return hash === SHA3_EMPTY_BYTES ? undefined : hash;
+};
+
+/**
+ * Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
+ * @param data - the input to hash
+ * @returns - the Keccak-256 hash of the input
+ *
+ * @example
+ * ```ts
+ * conosle.log(web3.utils.sha3Raw('web3.js'));
+ * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
+ *
+ * console.log(web3.utils.sha3Raw(''));
+ * > 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
+ * ```
+ */
+export const sha3Raw = (data: Bytes): string => {
+	const hash = sha3(data);
+	if (isNullish(hash)) {
+		return SHA3_EMPTY_BYTES;
+	}
+
+	return hash;
+};
 
 /**
  * returns type and value

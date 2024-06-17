@@ -35,7 +35,7 @@ import {
 	isSocket,
 	isWs,
 	itIf,
-	waitForOpenConnection
+	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
 
 /* eslint-disable jest/no-standalone-expect */
@@ -58,7 +58,7 @@ describe('Web3 instance', () => {
 		try {
 			await closeOpenConnection(web3);
 		} catch (e) {
-			console.warn("Failed to close open con", e)
+			console.warn('Failed to close open con', e);
 		}
 	});
 
@@ -67,7 +67,11 @@ describe('Web3 instance', () => {
 	});
 
 	afterEach(async () => {
-		if (isWs) {
+		if (
+			isWs &&
+			web3?.provider?.supportsSubscriptions &&
+			web3.provider?.supportsSubscriptions()
+		) {
 			// make sure we try to close the connection after it is established
 			if (
 				web3?.provider &&
@@ -126,7 +130,6 @@ describe('Web3 instance', () => {
 
 	it('should be able use "utils"', () => {
 		web3 = new Web3();
-
 		expect(web3.utils.hexToNumber('0x5')).toBe(5);
 	});
 
@@ -312,7 +315,7 @@ describe('Web3 instance', () => {
 			} catch (e) {
 				// ignored
 			}
-		})
+		});
 
 		it('should update defaults on contract instance', () => {
 			const hardfork = 'berlin';
@@ -331,6 +334,5 @@ describe('Web3 instance', () => {
 				// ignored
 			}
 		});
-
 	});
 });

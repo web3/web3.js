@@ -154,10 +154,14 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isSocket || web3Context?.provider instanceof HttpProvider) {
+	if (
+		!isSocket ||
+		web3Context?.provider instanceof HttpProvider ||
+		(web3Context?.provider?.supportsSubscriptions &&
+			!web3Context.provider?.supportsSubscriptions())
+	) {
 		return;
 	}
-
 	// make sure we try to close the connection after it is established
 	if (
 		web3Context?.provider &&
@@ -165,20 +169,17 @@ export const closeOpenConnection = async (web3Context: Web3Context) => {
 	) {
 		await waitForOpenConnection(web3Context);
 	}
-
 	// If an error happened during closing, that is acceptable at tests, just print a 'warn'.
 	if (web3Context?.provider) {
 		(web3Context.provider as unknown as Web3BaseProvider).on('error', (err: any) => {
 			console.warn('error while trying to close the connection', err);
 		});
 	}
-
 	// Wait a bit to ensure the connection does not have a pending data that
 	//	could cause an error if written after closing the connection.
 	await new Promise<void>(resolve => {
 		setTimeout(resolve, 500);
 	});
-
 	if (
 		web3Context?.provider &&
 		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
