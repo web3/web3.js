@@ -157,7 +157,7 @@ export const closeOpenConnection = async (web3Context: Web3Context) => {
 	if (
 		!isSocket ||
 		web3Context?.provider instanceof HttpProvider ||
-		(web3Context.provider?.supportsSubscriptions &&
+		(web3Context?.provider?.supportsSubscriptions &&
 			!web3Context.provider?.supportsSubscriptions())
 	) {
 		return;
