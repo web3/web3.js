@@ -944,7 +944,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			returnFormat,
 		);
 		if (!response) throw new TransactionNotFound();
-		// add something new to trigger cache
+		
 		return response;
 	}
 
