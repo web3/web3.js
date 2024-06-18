@@ -29,8 +29,7 @@ start() {
 
 stop() {
 	echo "Stopping geth ..."
-	docker ps -q --filter ancestor="ethereum/client-go" | xargs -r docker stop
-	docker ps -a -q --filter ancestor="ethereum/client-go" | xargs -r docker rm
+	docker ps -a -q --filter ancestor="ethereum/client-go" | xargs -r docker stop
 }
 
 case $1 in
