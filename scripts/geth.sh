@@ -20,13 +20,16 @@ start() {
         docker run -d -p $WEB3_SYSTEM_TEST_PORT:$WEB3_SYSTEM_TEST_PORT ethereum/client-go:v1.13.14-amd64 --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port $WEB3_SYSTEM_TEST_PORT --http --http.addr 0.0.0.0 --http.port $WEB3_SYSTEM_TEST_PORT --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev
 		echo "Waiting for geth..."
 		npx wait-port -t 10000 "$WEB3_SYSTEM_TEST_PORT"
+		echo "docker run -d -p 3333:3333 ethereum/client-go:v1.13.14-amd64 --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port 3333 --http --http.addr 0.0.0.0 --http.port 3334 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev"
+        docker run -d -p 3333:3333 ethereum/client-go:v1.13.14-amd64 --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port 3333 --http --http.addr 0.0.0.0 --http.port 3333 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev
+		npx wait-port -t 10000 3333
 		echo "Geth started"
 	fi
 }
 
 stop() {
 	echo "Stopping geth ..."
-	docker ps -q --filter ancestor="ethereum/client-go" | xargs -r docker stop
+	docker ps -a -q --filter ancestor="ethereum/client-go" | xargs -r docker stop
 }
 
 case $1 in
