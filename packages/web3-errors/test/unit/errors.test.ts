@@ -27,7 +27,6 @@ import * as transactionErrors from '../../src/errors/transaction_errors';
 import * as utilsErrors from '../../src/errors/utils_errors';
 import * as responseErrors from '../../src/errors/response_errors';
 import * as schemaErrors from '../../src/errors/schema_errors';
-import * as quickNodeErrors from '../../src/errors/quicknode_errors';
 
 import { ConvertValueToString } from '../fixtures/errors';
 import { BaseWeb3Error } from '../../src/web3_error_base';
