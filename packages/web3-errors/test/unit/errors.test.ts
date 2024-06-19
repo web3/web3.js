@@ -53,7 +53,6 @@ describe('errors', () => {
 			...transactionErrors,
 			...utilsErrors,
 			...schemaErrors,
-			...quickNodeErrors
 		})) {
 			if (ErrorClass === transactionErrors.InvalidPropertiesForTransactionTypeError) break;
 			// To disable error for the abstract class
