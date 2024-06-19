@@ -24,11 +24,12 @@ import {
     Web3Eip1193ProviderEventCallback,
     Web3ProviderEventCallback,
     Web3ProviderMessageEventCallback,
-    Web3ProviderStatus
+    Web3ProviderStatus,
+    JsonRpcResponseWithResult,
 } from "web3-types";
-import { QuickNodeRateLimitError } from "web3-errors";
 import { Eip1193Provider } from "web3-utils";
 import { Transport, Network } from "./types.js";
+import { QuickNodeRateLimitError } from './errors.js';
 
 /* 
 This class can be used to create new providers only when there is custom logic required in each Request method like
@@ -73,19 +74,17 @@ API extends Web3APISpec = EthExecutionAPI,
     ): Promise<ResultType> {
 
         if (this.transport === Transport.HTTPS) {
-            try {
-                return ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as Promise<ResultType>;
-            } catch(e: unknown) {
-                if (typeof e === 'object' && !isNullish(e) && 'code' in e && (e as { code: number }).code === 429){
+                const res = await ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as JsonRpcResponseWithResult<ResultType>;
+                
+                if (typeof res === 'object' && !isNullish(res) && 'error' in res && !isNullish(res.error) && 'code' in res.error && (res.error as { code: number }).code === 429){
                     // rate limiting error by quicknode;
                     throw new QuickNodeRateLimitError();
                     
                 }
+                return res as unknown as Promise<ResultType>;
             }
-        }
         
-        
-        return ( (this.provider as WebSocketProvider).request(payload)) as unknown as Promise<ResultType>;
+        return (this.provider as WebSocketProvider).request(payload) as unknown as Promise<ResultType>;
         
     }
 
