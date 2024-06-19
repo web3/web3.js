@@ -503,7 +503,8 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 			transactionHashFormatted,
 		);
 	} catch (error) {
-		if (error.message === 'transaction indexing is in progress') { // geth indexing error, we poll until transactions stopped indexing
+		// geth indexing error, we poll until transactions stopped indexing
+		if (typeof error === 'object' && !isNullish(error) && 'message' in error && (error as { message: string }).message === 'transaction indexing is in progress') { 
 			console.warn('Transaction indexing is in progress.')
 		} else {
 			throw error;
