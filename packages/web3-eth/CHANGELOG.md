@@ -257,3 +257,7 @@ Documentation:
 - `TransactionMiddleware` and `TransactionMiddleware` data types are exported (#7088)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
