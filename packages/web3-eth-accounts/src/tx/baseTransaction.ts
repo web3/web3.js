@@ -159,7 +159,7 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * tx type is unknown (e.g. when instantiated with
 	 * the tx factory).
 	 *
-	 * See `Capabilites` in the `types` module for a reference
+	 * See `Capabilities` in the `types` module for a reference
 	 * on all supported capabilities.
 	 */
 	public supports(capability: Capability) {
