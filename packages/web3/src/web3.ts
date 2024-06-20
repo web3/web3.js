@@ -174,13 +174,10 @@ export class Web3<
 
 				if (typeof addressOrOptionsOrContext === 'string') {
 					address = addressOrOptionsOrContext;
-				}
-				if (isContractInitOptions(addressOrOptionsOrContext)) {
+				} else if (isContractInitOptions(addressOrOptionsOrContext)) {
 					options = addressOrOptionsOrContext as object;
 				} else if (isContractInitOptions(optionsOrContextOrReturnFormat)) {
 					options = optionsOrContextOrReturnFormat as object;
-				} else {
-					options = {};
 				}
 
 				if (addressOrOptionsOrContext instanceof Web3Context) {
