@@ -25,7 +25,7 @@ exports[`rpc errors EIP1193ProviderRpcError test constructor with un registered 
   "cause": undefined,
   "code": 99999,
   "innerError": undefined,
-  "message": "An Rpc error has occured with a code of 99999",
+  "message": "An Rpc error has occurred with a code of 99999",
   "name": "EIP1193ProviderRpcError",
 }
 `;
@@ -285,7 +285,7 @@ exports[`rpc errors rpcErrors.RpcError test constructor 1`] = `
   "id": 1,
   "innerError": undefined,
   "jsonRpc": "2.0",
-  "message": "An Rpc error has occured with a code of 123",
+  "message": "An Rpc error has occurred with a code of 123",
   "name": "RpcError",
 }
 `;

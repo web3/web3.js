@@ -71,7 +71,7 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 		}
 	}
 
-	public static convertToString(value: unknown, unquotValue = false) {
+	public static convertToString(value: unknown, unquoteValue = false) {
 		// Using "null" value intentionally for validation
 		// eslint-disable-next-line no-null/no-null
 		if (value === null || value === undefined) return 'undefined';
@@ -81,7 +81,7 @@ export abstract class BaseWeb3Error extends Error implements Web3Error {
 			(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
 		);
 
-		return unquotValue && ['bigint', 'string'].includes(typeof value)
+		return unquoteValue && ['bigint', 'string'].includes(typeof value)
 			? result.replace(/['\\"]+/g, '')
 			: result;
 	}

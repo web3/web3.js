@@ -269,7 +269,7 @@ export class ChainIdMismatchError extends InvalidValueError {
 		super(
 			JSON.stringify(value),
 			// https://github.com/ChainSafe/web3.js/blob/8783f4d64e424456bdc53b34ef1142d0a7cee4d7/packages/web3-eth-accounts/src/index.js#L176
-			'Chain Id doesnt match in tx.chainId tx.common.customChain.chainId',
+			'Chain Id doesn\'t match in tx.chainId tx.common.customChain.chainId',
 		);
 	}
 }
@@ -278,7 +278,7 @@ export class ChainMismatchError extends InvalidValueError {
 	public code = ERR_TX_CHAIN_MISMATCH;
 
 	public constructor(value: { txChain: unknown; baseChain: unknown }) {
-		super(JSON.stringify(value), 'Chain doesnt match in tx.chain tx.common.basechain');
+		super(JSON.stringify(value), 'Chain doesn\'t match in tx.chain tx.common.basechain');
 	}
 }
 
@@ -286,7 +286,7 @@ export class HardforkMismatchError extends InvalidValueError {
 	public code = ERR_TX_HARDFORK_MISMATCH;
 
 	public constructor(value: { txHardfork: unknown; commonHardfork: unknown }) {
-		super(JSON.stringify(value), 'hardfork doesnt match in tx.hardfork tx.common.hardfork');
+		super(JSON.stringify(value), 'hardfork doesn\'t match in tx.hardfork tx.common.hardfork');
 	}
 }
 
