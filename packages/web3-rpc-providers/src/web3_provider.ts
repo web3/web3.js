@@ -71,7 +71,7 @@ API extends Web3APISpec = EthExecutionAPI,
     >(
         payload: Web3APIPayload<EthExecutionAPI, Method>,
         requestOptions?: RequestInit,
-    ): Promise<ResultType> {
+    ): Promise<JsonRpcResponseWithResult<ResultType>> {
 
         if (this.transport === Transport.HTTPS) {
                 const res = await ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as JsonRpcResponseWithResult<ResultType>;
@@ -81,10 +81,10 @@ API extends Web3APISpec = EthExecutionAPI,
                     throw new QuickNodeRateLimitError();
                     
                 }
-                return res as unknown as Promise<ResultType>;
+                return res;
             }
         
-        return (this.provider as WebSocketProvider).request(payload) as unknown as Promise<ResultType>;
+        return (this.provider as WebSocketProvider).request(payload);
         
     }
 
