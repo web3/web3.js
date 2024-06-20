@@ -85,16 +85,16 @@ export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
 		return undefined;
 	}
 
-	if (typeof blockNumber === 'string' && isBlockTag(blockNumber)) {
-		return blockNumber;
+	if (typeof blockNumber === 'string') {
+		if (isBlockTag(blockNumber))
+			return blockNumber;
+
+		if (isHexStrict(blockNumber))
+			return blockNumber.toLowerCase();
 	}
 
 	if (blockNumber === 'genesis') {
 		return '0x0';
-	}
-
-	if (typeof blockNumber === 'string' && isHexStrict(blockNumber)) {
-		return blockNumber.toLowerCase();
 	}
 
 	return numberToHex(blockNumber);
@@ -156,9 +156,7 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 	if (!options.input && options.data) {
 		modifiedOptions.input = options.data;
 		delete modifiedOptions.data;
-	}
-
-	if (options.input && !options.input.startsWith('0x')) {
+	} else if (options.input && !options.input.startsWith('0x')) {
 		modifiedOptions.input = `0x${options.input}`;
 	}
 
@@ -360,6 +358,7 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 	if (log.blockNumber && isHexStrict(log.blockNumber)) {
 		modifiedLog.blockNumber = hexToNumber(log.blockNumber);
 	}
+
 	if (log.transactionIndex && isHexStrict(log.transactionIndex)) {
 		modifiedLog.transactionIndex = hexToNumber(log.transactionIndex);
 	}

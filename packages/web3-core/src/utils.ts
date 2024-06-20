@@ -33,9 +33,9 @@ export const isWeb3Provider = <API extends Web3APISpec>(
 export const isMetaMaskProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
 ): provider is MetaMaskProvider<API> =>
- typeof provider !== 'string' &&
-'request' in provider &&
-provider.request.constructor.name === 'AsyncFunction' && 'isMetaMask' in provider && provider.isMetaMask;
+	typeof provider !== 'string' &&
+	'request' in provider &&
+	provider.request.constructor.name === 'AsyncFunction' && 'isMetaMask' in provider && provider.isMetaMask;
 
 
 export const isLegacyRequestProvider = <API extends Web3APISpec>(
@@ -62,7 +62,7 @@ export const isLegacySendAsyncProvider = <API extends Web3APISpec>(
 
 export const isSupportedProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
-): provider is SupportedProviders<API> => 
+): provider is SupportedProviders<API> =>
 	provider &&
 	(isWeb3Provider(provider) ||
 		isEIP1193Provider(provider) ||
@@ -72,11 +72,14 @@ export const isSupportedProvider = <API extends Web3APISpec>(
 export const isSupportSubscriptions = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
 ): boolean => {
-	if (provider && 'supportsSubscriptions' in provider) {
+	if (!provider)
+		return false
+
+	if ('supportsSubscriptions' in provider) {
 		return provider.supportsSubscriptions();
 	}
 
-	if (provider && typeof provider !== 'string' && 'on' in provider) {
+	if (typeof provider !== 'string' && 'on' in provider) {
 		return true;
 	}
 

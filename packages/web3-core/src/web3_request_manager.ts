@@ -124,7 +124,7 @@ export class Web3RequestManager<
 		let newProvider: SupportedProviders<API> | undefined;
 
 		// autodetect provider
-		if (provider && typeof provider === 'string' && this.providers) {
+		if (typeof provider === 'string' && this.providers) {
 			// HTTP
 			if (/^http(s)?:\/\//i.test(provider)) {
 				newProvider = new this.providers.HttpProvider<API>(provider);
@@ -471,10 +471,10 @@ export class Web3RequestManager<
 			id: jsonRpc.isBatchRequest(payload)
 				? payload[0].id
 				: 'id' in payload
-				? payload.id
-				: // Have to use the null here explicitly
-				  // eslint-disable-next-line no-null/no-null
-				  null,
+					? payload.id
+					: // Have to use the null here explicitly
+					// eslint-disable-next-line no-null/no-null
+					null,
 		};
 
 		if (error) {
