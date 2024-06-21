@@ -56,8 +56,10 @@ export const watchTransactionByPolling = <
 	let confirmations = 1;
 	const intervalId = setInterval(() => {
 		(async () => {
-			if (confirmations >= web3Context.transactionConfirmationBlocks)
+			if (confirmations >= web3Context.transactionConfirmationBlocks){
 				clearInterval(intervalId);
+				return;
+			}
 
 			const nextBlock = await ethRpcMethods.getBlockByNumber(
 				web3Context.requestManager,
