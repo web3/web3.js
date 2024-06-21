@@ -89,4 +89,4 @@ Web3.js supports [plugins](/guides/web3_plugin_guide/), which are another way to
 
 - **Modular Design**: Web3.js is designed to be modular, which allows developers to use specific packages according to their needs. This leads to smaller bundle sizes and faster load times for web applications.
 
-- **Active Development and Support**: Web3.js sees regular updates and active development. This support is crucial for developers needing assurance that the library they're using will keep pace with the evolving Ethereum landscape.
+- **Active Development and Support**: Web3.js sees regular updates and active development. This support is crucial for developers needing assurance that the library they're using will keep pace with the evolving Ethereum landscape and that's it.
