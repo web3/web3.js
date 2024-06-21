@@ -237,6 +237,8 @@ import { Web3 } from 'web3';
 const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 ```
 
+Web3.js provides helpful utilities for working with certain well-known remote providers. Read more about these utilities in the [Web3.js External Providers](#web3js-external-providers) section.
+
 ### Injected Provider
 
 Injected providers are supplied by an external third-party, most often a wallet or a web browser that is designed to be used with the Ethereum network. In addition to providing network connectivity, injected providers often supply one or more [accounts](/guides/wallet/). Web3.js supports any injected provider that is compliant with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) and has been tested with multiple EIP-1193 providers, including [MetaMask](https://docs.metamask.io/wallet/reference/provider-api/), [Hardhat](https://hardhat.org/hardhat-runner/docs/advanced/hardhat-runtime-environment), and [Incubed (IN3)](https://in3.readthedocs.io/en/develop/index.html).
@@ -271,4 +273,39 @@ The following example should be run in a browser with the MetaMask extension ins
   }
  });
 </script>
+```
+
+## Web3.js External Providers
+
+The `web3-rpc-providers` package provides helpful utilities for working with certain well-known remote providers. The following example demonstrates using this package to create a WebSocket connection for the Ethereum Sepolia test network with QuickNode:
+
+```js
+import { Web3 } from "web3";
+import { Network, QuickNodeProvider, Transport } from "web3-rpc-providers";
+
+const web3 = new Web3(new QuickNodeProvider(Network.ETH_SEPOLIA, Transport.WebSocket));
+console.log(await web3.eth.getChainId());
+// ↳ 11155111n
+```
+
+External providers can also be configured to use API tokens and custom hosts, as in the following example:
+
+```js
+import { Web3 } from "web3";
+import { QuickNodeProvider, Transport } from "web3-rpc-providers";
+
+const defaultSepoliaToken = "382a3b5a4b938f2d6e8686c19af4b22921fde2cd";
+const defaultSepoliaHost = "dimensional-fabled-glitter.ethereum-sepolia.quiknode.pro";
+const web3 = new Web3(
+  new QuickNodeProvider(
+    // omit network parameter
+    undefined,
+    Transport.WebSocket,
+    defaultSepoliaToken,
+    defaultSepoliaHost,
+  ),
+);
+
+console.log(await web3.eth.getChainId());
+// ↳ 11155111n
 ```
