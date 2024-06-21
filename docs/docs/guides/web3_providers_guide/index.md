@@ -277,7 +277,7 @@ The following example should be run in a browser with the MetaMask extension ins
 
 ## Web3.js External Providers
 
-The `web3-rpc-providers` package provides helpful utilities for working with certain well-known remote providers. The following example demonstrates using this package to create a WebSocket connection for the Ethereum Sepolia test network with QuickNode:
+The `web3-rpc-providers` package provides helpful utilities for working with certain well-known remote providers. The following example demonstrates using this package to create a WebSocket connection for the Ethereum [Sepolia](https://ethereum.org/en/developers/docs/networks/#sepolia) test network with [QuickNode](https://www.quicknode.com/):
 
 ```js
 import { Web3 } from "web3";
@@ -288,7 +288,7 @@ console.log(await web3.eth.getChainId());
 // ↳ 11155111n
 ```
 
-External providers can also be configured to use API tokens and custom hosts, as in the following example:
+External providers can also be configured to use account tokens and custom hosts, as in the following example:
 
 ```js
 import { Web3 } from "web3";
