@@ -9,7 +9,7 @@ sidebar_label: 'Web3 Config Guide'
 
 There is list of configuration params that can be set for modifying behavior of different functions in web3.js packages. Following is list of configuration options with details:
 
-- [handleRevert]( /api/web3-core/class/Web3Config#handleRevert) 
+- [handleRevert](/api/web3-core/class/Web3Config#handleRevert) 
 - [defaultAccount](/api/web3-core/class/Web3Config#defaultAccount)
 - [defaultBlock](/api/web3-core/class/Web3Config#defaultBlock) 
 - [transactionBlockTimeout](/api/web3-core/class/Web3Config#transactionBlockTimeout)  
@@ -201,6 +201,48 @@ console.log(web3.getContextObject().config)
 */
 ```
 
+### handleRevert
+When `handleRevert` is set to True, the following methods will retrieve specific error types and error messages:
+```ts
+- web3.eth.sendTransaction()
+- web3.eth.call()
+- myContract.methods.myMethod().call()
+- myContract.methods.myMethod().send()
+```
+
+The error types will be one of the following:
+```ts
+- InvalidResponseError
+- ContractExecutionError
+- TransactionRevertWithCustomError
+- TransactionRevertedWithoutReasonError
+- TransactionRevertInstructionError
+- TransactionPollingTimeoutError
+```
+
+For example, the error message could be `TransactionRevertInstructionError('Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes')`. The default value is `false`, and handleRevert is only supported for `sendTransaction` and not for `sendSignedTransaction` at this time.
+
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.handleRevert = true;
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `handleRevert` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.handleRevert = true;
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
