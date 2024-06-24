@@ -244,6 +244,39 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### defaultAccount
+This `defaultAccount` is used as the default `from` property, if no `from` property is specified in for the following methods:
+```ts
+- web3.eth.sendTransaction()
+- web3.eth.call()
+- myContract.methods.myMethod().call()
+- myContract.methods.myMethod().send()
+```
+
+The default value for `defaultAccount` is `undefined`. It is worth noting that the `defaultAccount` here can be any string, as there is no validation during the config phase.
+
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultAccount = "0x0000000000000000000000000000000000000000";
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultAccount` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultAccount = "0x0000000000000000000000000000000000000000";
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
 ```ts
