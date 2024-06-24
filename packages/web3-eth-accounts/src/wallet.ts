@@ -258,6 +258,7 @@ export class Wallet<
 
 		// Setting length clears the Array in JS.
 		this.length = 0;
+		this.length = 0;
 
 		return this;
 	}
