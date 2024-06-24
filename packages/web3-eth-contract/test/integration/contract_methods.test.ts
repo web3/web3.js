@@ -151,7 +151,6 @@ describe('contract', () => {
 				// TODO hardhat reverts but sends an undefined receipt, needs investigation
 				if (getSystemTestBackend() === BACKEND.HARDHAT) {
 					// eslint-disable-next-line jest/no-conditional-expect
-					console.log("before revertrrrrrr")
 					await expect(
 						contractDeployed.methods.reverts().send(sendOptions),
 					).rejects.toMatchObject({
