@@ -1268,7 +1268,23 @@ export class Contract<Abi extends ContractAbi>
 
 				send: (options?: PayableTxOptions | NonPayableTxOptions): ContractMethodSend =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
-
+				populateTransaction: (
+					options?: PayableTxOptions | NonPayableTxOptions,
+					contractOptions?: ContractOptions,
+				) => {
+					let modifiedContractOptions = contractOptions ?? options;
+					modifiedContractOptions = {
+						...modifiedContractOptions,
+						input: undefined,
+						from: modifiedContractOptions?.from ?? this.defaultAccount ?? undefined,
+					};
+					return getSendTxParams({
+						abi,
+						params,
+						options: { ...options, dataInputFill: this.config.contractDataInputFill },
+						contractOptions: modifiedContractOptions as ContractOptions,
+					});
+				},
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: PayableCallOptions | NonPayableCallOptions,
 					returnFormat: ReturnFormat = this
