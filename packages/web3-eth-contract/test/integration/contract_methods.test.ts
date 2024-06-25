@@ -148,7 +148,7 @@ describe('contract', () => {
 			});
 
 			it('should returns errors on reverts', async () => {
-				// TODO hardhat reverts but sends an undefined receipt, needs investigation
+				// hardhat errors during revert when sending the transaction so no receipt will be returned.
 				if (getSystemTestBackend() === BACKEND.HARDHAT) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					await expect(
