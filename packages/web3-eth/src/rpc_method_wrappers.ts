@@ -496,11 +496,22 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		transactionHash,
 		DEFAULT_RETURN_FORMAT,
 	);
-	const response = await ethRpcMethods.getTransactionReceipt(
-		web3Context.requestManager,
-		transactionHashFormatted,
-	);
-
+	let response;
+	try {
+		 response = await ethRpcMethods.getTransactionReceipt(
+			web3Context.requestManager,
+			transactionHashFormatted,
+		);
+	} catch (error) {
+		// geth indexing error, we poll until transactions stopped indexing
+		if (typeof error === 'object' && !isNullish(error) && 'message' in error && (error as { message: string }).message === 'transaction indexing is in progress') { 
+			console.warn('Transaction indexing is in progress.')
+		} else {
+			throw error;
+		}
+		
+	}
+	
 	return isNullish(response)
 		? response
 		: (format(
