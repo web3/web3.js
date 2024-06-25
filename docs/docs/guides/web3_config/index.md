@@ -347,6 +347,30 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### transactionConfirmationBlocks
+This defines the number of blocks it requires until a transaction is considered confirmed. Different chains have varying security considerations and requirements for confirmation block numbers. The default value is 24.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.transactionConfirmationBlocks = 60;
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `transactionConfirmationBlocks` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.transactionConfirmationBlocks = 60;
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
