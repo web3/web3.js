@@ -322,6 +322,31 @@ web3.defaultBlock = "finalized"; // (For POS networks) The finalized block is on
 web3.defaultBlock = "safe"; // (For POS networks) The safe head block is one which under normal network conditions, is expected to be included in the canonical chain. Under normal network conditions the safe head and the actual tip of the chain will be equivalent (with safe head trailing only by a few seconds). Safe heads will be less likely to be reorged than the proof of work network`s latest blocks.
 ```
 
+### transactionBlockTimeout
+The `transactionBlockTimeout` is used over socket-based connections. This option defines the amount of new blocks it should wait until the **first confirmation** happens, otherwise the PromiEvent rejects with a timeout error. The default value is 50. 
+
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.transactionBlockTimeout = 60;
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `transactionBlockTimeout` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.transactionBlockTimeout = 60;
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
