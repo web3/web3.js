@@ -462,6 +462,30 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### transactionSendTimeout
+The `transactionSendTimeout` is used to wait for Ethereum Node to return the sent transaction result. Note: If the RPC call stuck at the Node and therefor timed-out, the transaction may still be pending or even mined by the Network. We recommend checking the pending transactions in such a case. Default is 750 seconds (12.5 minutes).
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.transactionSendTimeout = 600000; // 600000 ms = 600 s = 10 min
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `transactionSendTimeout` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.transactionSendTimeout  = 600000; // 600000 ms = 600 s = 10 min
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
