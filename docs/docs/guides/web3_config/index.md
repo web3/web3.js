@@ -277,6 +277,52 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### defaultBlock
+The following methods require a `blockNumber` parameter during its execution process, the `defaultBlock` is used for these methods. 
+```ts
+- web3.eth.getBalance()
+- web3.eth.getCode()
+- web3.eth.getTransactionCount()
+- web3.eth.getStorageAt()
+- web3.eth.call()
+- myContract.methods.myMethod().call()
+```
+
+You can override it by passing in the defaultBlock as last parameter. The default value is "latest".
+
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultBlock = 20167235;
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultBlock` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultBlock = "earliest";
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
+#### All available choices for defaultBlock:
+```ts
+web3.defaultBlock = 20167235; // A block number
+web3.defaultBlock = "earliest"; // The genesis block
+web3.defaultBlock = "latest"; // The latest block (current head of the blockchain)
+web3.defaultBlock = "pending"; // The currently mined block (including pending transactions)
+web3.defaultBlock = "finalized"; // (For POS networks) The finalized block is one which has been accepted as canonical by greater than 2/3 of validators
+web3.defaultBlock = "safe"; // (For POS networks) The safe head block is one which under normal network conditions, is expected to be included in the canonical chain. Under normal network conditions the safe head and the actual tip of the chain will be equivalent (with safe head trailing only by a few seconds). Safe heads will be less likely to be reorged than the proof of work network`s latest blocks.
+```
+
+
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
 ```ts
