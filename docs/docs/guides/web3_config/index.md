@@ -396,6 +396,30 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### transactionPollingTimeout
+The `transactionPollingTimeout` is used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. It can be set based on the average transaction confirmation time on the network. Note: If this method times out, the transaction may still be pending. Default is 750 seconds (12.5 minutes).
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.transactionPollingTimeout = 600000; // 600000 ms = 600 s = 10 min
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `transactionPollingTimeout` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.transactionPollingTimeout = 600000; // 600000 ms = 600 s = 10 min
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
 ```ts
