@@ -31,11 +31,11 @@ import {
 	TransactionCall,
 } from 'web3-types';
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
+import type { ContractOptions } from 'web3-types';
 import { LogsSubscription } from './log_subscription.js';
 
 export type NonPayableTxOptions = NonPayableCallOptions;
 export type PayableTxOptions = PayableCallOptions;
-import type { ContractOptions } from 'web3-types';
 export type { ContractAbiWithSignature, EventLog, ContractOptions } from 'web3-types';
 
 export interface ContractEventOptions {
