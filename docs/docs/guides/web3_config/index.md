@@ -18,7 +18,7 @@ There is list of configuration params that can be set for modifying behavior of 
 - [transactionPollingTimeout](/api/web3-core/class/Web3Config#transactionPollingTimeout)  
 - [transactionReceiptPollingInterval](/api/web3-core/class/Web3Config#transactionReceiptPollingInterval)  
 - [transactionSendTimeout](/api/web3-core/class/Web3Config#transactionSendTimeout)  
-- [transactionConfirmationPollingInterval](/api/web3-core/class/Web3Config#transactionConfirmationPollingInterval)  
+- [Deprecated][transactionConfirmationPollingInterval](/api/web3-core/class/Web3Config#transactionConfirmationPollingInterval)
 - [blockHeaderTimeout](/api/web3-core/class/Web3Config#blockHeaderTimeout)
 - [maxListenersWarningThreshold](/api/web3-core/class/Web3Config#maxListenersWarningThreshold)  
 - [contractDataInputFill](/api/web3-core/class/Web3Config#contractDataInputFill)
@@ -485,6 +485,9 @@ web3.eth.transactionSendTimeout  = 600000; // 600000 ms = 600 s = 10 min
 console.log(web3.eth.getContextObject().config)
 ```
 :::
+
+### transactionConfirmationPollingInterval
+The `transactionConfirmationPollingInterval` is deprecated. Please use `transactionReceiptPollingInterval` or `transactionPollingInterval` instead.
 
 
 ### defaultReturnFormat
