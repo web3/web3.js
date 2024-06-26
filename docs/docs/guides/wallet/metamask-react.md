@@ -3,9 +3,9 @@ sidebar_position: 4
 sidebar_label: 'Tutorial: Connecting to Metamask with React'
 ---
 
-<iframe width="100%" height="700px"  src="https://stackblitz.com/~/github.com/danforbes/web3-metamask-react?embed=1&file=src%2FApp.tsx"></iframe>
-
 # Connecting to Metamask with React
+
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/stackblitz-starters-rinwzp?embed=1&file=src%2FApp.tsx"></iframe>
 
 This tutorial builds on the previous tutorial that used [vanilla JavaScript with Web3.js and MetaMask](/guides/wallet/metamask-vanilla). In this tutorial, [React](https://react.dev/) and TypeScript will be used to implement similar capabilities.
 
