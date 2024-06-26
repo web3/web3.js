@@ -537,6 +537,34 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### contractDataInputFill
+The `contractDataInputFill` will allow you to set the hash of the method signature and encoded parameters to the property either `data`, `input` or `both` within your contract. This will affect the contracts send, call and estimateGas methods. Default is `data`.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.contractDataInputFill = 'input';
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `contractDataInputFill` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.contractDataInputFill = 'both';
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
+#### All available choices for contractDataInputFill:
+```ts
+contractDataInputFill: 'data' | 'input' | 'both';
+```
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
