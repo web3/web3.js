@@ -513,6 +513,30 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### maxListenersWarningThreshold
+The `maxListenersWarningThreshold` is used to set the `maxListeners` property in `EventEmitter`. Default is 100.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.maxListenersWarningThreshold = 200;
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `maxListenersWarningThreshold` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.maxListenersWarningThreshold = 200;
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
