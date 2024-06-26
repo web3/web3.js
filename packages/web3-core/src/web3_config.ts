@@ -144,7 +144,7 @@ export abstract class Web3Config
 	 * The `contractDataInputFill` options property will allow you to set the hash of the method signature and encoded parameters to the property
 	 * either `data`, `input` or both within your contract.
 	 * This will affect the contracts send, call and estimateGas methods
-	 * Default is `input`.
+	 * Default is `data`.
 	 */
 	public get contractDataInputFill() {
 		return this.config.contractDataInputFill;
