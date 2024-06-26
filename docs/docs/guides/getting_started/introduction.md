@@ -35,7 +35,7 @@ New Web3.js developers should proceed to the [Quickstart](/guides/getting_starte
 
 ### For Intermediate & Advanced Web3.js Developers
 
-If you're already familiar with Ethereum and Web3.js development, you may want to review the Web3.js [package structure](#packages--plugins) and proceed directly to the [package-level documentation](/libdocs/ABI) and [API documentation](/api). Application developers may wish to review the [Web3.js configuration guide](/guides/web3_config/) or learn how to use Web3.js with tools like the [MetaMask](/guides/wallet/metamask) wallet or the [WalletConnect](/guides/wallet/web3_modal_guide/) wallet selection modal. Don't forget to review the [list of available plugins](https://web3js.org/plugins) or even [learn how to build your own Web3.js plugin](/guides/web3_plugin_guide/plugin_authors)!
+If you're already familiar with Ethereum and Web3.js development, you may want to review the Web3.js [package structure](#packages--plugins) and proceed directly to the [package-level documentation](/libdocs/ABI) and [API documentation](/api). Application developers may wish to review the [Web3.js configuration guide](/guides/web3_config/) or learn how to use Web3.js with tools like the [MetaMask](/guides/wallet/metamask-react) wallet or the [WalletConnect](/guides/wallet/web3_modal_guide/) wallet selection modal. Don't forget to review the [list of available plugins](https://web3js.org/plugins) or even [learn how to build your own Web3.js plugin](/guides/web3_plugin_guide/plugin_authors)!
 
 ## Packages & Plugins
 

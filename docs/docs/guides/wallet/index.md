@@ -299,5 +299,5 @@ The following is a list of [`Wallet`](/libdocs/Wallet) methods in the `web3.eth.
 This document is just an introduction to Web3.js accounts and wallets. Here are some suggestions for what to review next:
 
 - Learn how to [transfer ETH](/guides/wallet/transactions) from one account to another.
-- Build a front-end application that uses [injected accounts](/guides/wallet/metamask) from the MetaMask wallet.
+- Build a front-end application that uses [injected accounts](/guides/wallet/metamask-vanilla) from the MetaMask wallet.
 - Use an account to [deploy and interact with a smart contract](/guides/smart_contracts/smart_contracts_guide).
