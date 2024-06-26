@@ -566,6 +566,30 @@ console.log(web3.eth.getContextObject().config)
 contractDataInputFill: 'data' | 'input' | 'both';
 ```
 
+### defaultNetworkId
+Each network has its own network ID. The defaultNetwork allows you to set the default network ID to increase code readability. If this parameter is not set, it will fetch the network ID from the connected RPC request. Default is `undefined`.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultNetworkId = 56;
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultNetworkId` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultNetworkId = '0x1';
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
 ```ts
