@@ -489,6 +489,30 @@ console.log(web3.eth.getContextObject().config)
 ### transactionConfirmationPollingInterval
 The `transactionConfirmationPollingInterval` is deprecated. Please use `transactionReceiptPollingInterval` or `transactionPollingInterval` instead.
 
+### blockHeaderTimeout
+The `blockHeaderTimeout` is used over socket-based connections. After sending a transaction, it will listen for the appearance of new blocks and proceed with subsequent operations based on the transaction results within them. This option defines the amount seconds it should wait for 'newBlockHeaders' event before falling back to polling to fetch transaction receipt. Default is 10 seconds.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.blockHeaderTimeout = 20; // 20 s
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `blockHeaderTimeout` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.blockHeaderTimeout = 20; // 20 s
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
