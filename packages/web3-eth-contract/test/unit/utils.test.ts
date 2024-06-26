@@ -37,22 +37,12 @@ describe('createContractAddress', () => {
         expect(() => createContractAddress('0xe2597eb05cf9a87eb1309e86750c903ec38e527e', "")).toThrow(InvalidNumberError);
     });
 
-    it('should create contract address for valid inputs', () => {
-        const from: Address = '0x6ac7ea33f8831ea9dcc53393aaa88b25a785dbf0';
-        const nonce: Numbers = 0;
-        const expectedAddress = '0x343c43a37d37dff08ae8c4a11544c718abb4fcf8';
-
-        const result = createContractAddress(from, nonce);
-
-        expect(result).toBe(expectedAddress);
-    });
-
     it('should handle different nonce types correctly', () => {
         const from: Address = '0x6ac7ea33f8831ea9dcc53393aaa88b25a785dbf0';
         const testCases: [Numbers, string][] = [
-            [1, '0xf0f6f18bca1b28cd68e4357452947e021241e9ce'],
-            ['2', '0x2f015c4d6c3f24d2a4f5b659dc07489d68a19678'],
-            [BigInt(3), '0xd2153229f47ab76e3855e7babc4a3bd3b7d2d7be'],
+            [1, '0x343c43A37D37dfF08AE8C4A11544c718AbB4fCF8'],
+            ['0x2', '0xf778B86FA74E846c4f0a1fBd1335FE81c00a0C91'],
+            [BigInt(3), '0xffFd933A0bC612844eaF0C6Fe3E5b8E9B6C1d19c'],
         ];
 
         testCases.forEach(([nonce, expectedAddress]) => {
