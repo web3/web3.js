@@ -26,7 +26,8 @@ There is list of configuration params that can be set for modifying behavior of 
 - [defaultChain](/api/web3-core/class/Web3Config#defaultChain)  
 - [defaultHardfork](/api/web3-core/class/Web3Config#defaultHardfork)  
 - [defaultCommon](/api/web3-core/class/Web3Config#defaultCommon)  
-- [defaultTransactionType](/api/web3-core/class/Web3Config#defaultTransactionType)  
+- [defaultTransactionType](/api/web3-core/class/Web3Config#defaultTransactionType)
+- [defaultMaxPriorityFeePerGas](/api/web3-core/class/Web3Config#defaultMaxPriorityFeePerGas)
 - [defaultReturnFormat](/api/web3-core/class/Web3Config#defaultReturnFormat)  
 
 ## Global level Config
@@ -740,6 +741,32 @@ import { Web3 } from 'web3';
 const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultTransactionType  = 0x0;
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
+### defaultMaxPriorityFeePerGas
+The `defaultMaxPriorityFeePerGas` is used to send transactions with the maximum priority gas fee. The default value is 2500000000 (2.5gwei) in hexstring format.
+```ts
+import { Web3 } from 'web3';
+import { numberToHex } from 'web3-utils'
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultMaxPriorityFeePerGas = numberToHex(2100000000); // 2.1gwei
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultMaxPriorityFeePerGas` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+import { numberToHex } from 'web3-utils'
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultMaxPriorityFeePerGas = numberToHex(2100000000); // 2.1gwei
 
 console.log(web3.eth.getContextObject().config)
 ```
