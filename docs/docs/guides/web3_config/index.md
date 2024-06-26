@@ -721,6 +721,29 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### defaultTransactionType
+The `defaultTransactionType` is used set the transaction type. Transactions with type 0x0 are legacy transactions that use the transaction format existing before typed transactions were introduced in EIP-2718. Transactions with type 0x1 are transactions introduced in EIP-2930. Transactions with type 0x2 are transactions introduced in EIP-1559, included in Ethereum's London fork. Default is `0x02`.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultTransactionType = 0x0;
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultTransactionType` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultTransactionType  = 0x0;
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
 
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
