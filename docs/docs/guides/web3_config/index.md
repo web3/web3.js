@@ -590,6 +590,138 @@ console.log(web3.eth.getContextObject().config)
 ```
 :::
 
+### defaultChain
+The `defaultChain` is used for building the `baseChain` property of the tx options in a transaction. If the `defaultCommon.basechain` is set, the`defaultChain` should be consistent with it. Default is `mainnet`.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultChain = 'ropsten';
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultChain` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultChain = 'ropsten';
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+#### All available choices for defaultChain:
+```ts
+'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia'
+```
+
+
+### defaultHardfork
+The `defaultHardfork` is used for building the `defaultHardfork` property of the tx options in a transaction. If the `defaultCommon.defaultHardfork` is set, the`defaultHardfork` should be consistent with it. Default is `london`.
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultHardfork = 'berlin';
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultHardfork` can be configured both globally and at the package level:
+```ts
+import { Web3 } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultHardfork = 'istanbul';
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+#### All available choices for contractDataInputFill:
+```ts
+'chainstart'
+'frontier'
+'homestead'
+'dao'
+'tangerineWhistle'
+'spuriousDragon'
+'byzantium'
+'constantinople'
+'petersburg'
+'istanbul'
+'muirGlacier'
+'berlin'
+'london'
+'altair'
+'arrowGlacier'
+'grayGlacier'
+'bellatrix'
+'merge'
+'capella'
+'sharding'
+```
+
+### defaultCommon
+The `defaultCommon` is used for building the `common` property of the tx options in a transaction. It should be consistent with the `defaultHardfork` and `defaultChain`. The `defaultCommon` property does contain the following Common object:
+```
+- customChain - Object: The custom chain properties
+  - name - string: (optional) The name of the chain
+  - networkId - number: Network ID of the custom chain
+  - chainId - number: Chain ID of the custom chain
+- baseChain - string: (optional) 'goerli', 'kovan', 'mainnet', 'rinkeby', 'ropsten' or 'sepolia'
+- hardfork - string: (optional) chainstart, homestead, dao, tangerineWhistle, spuriousDragon, byzantium, constantinople, petersburg, istanbul, berlin, or london
+```
+
+The default value of `defaultCommon` is `undefined`.
+
+```ts
+import { Web3, Hardfork } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.defaultHardfork = 'berlin'
+web3.defaultChain = 'goerli'
+
+web3.defaultCommon = {
+    baseChain: 'goerli',
+    hardfork: 'berlin' as Hardfork,
+    customChain: {
+        networkId: 1,
+        chainId: 1,
+    },
+};
+
+console.log(web3.getContextObject().config)
+```
+:::info
+The `defaultCommon` can be configured both globally and at the package level:
+```ts
+import { Web3, Hardfork } from 'web3';
+
+const web3 = new Web3('http://127.0.0.1:7545');
+
+web3.eth.defaultHardfork = 'berlin'
+web3.eth.defaultChain = 'goerli'
+
+web3.eth.defaultCommon = {
+    baseChain: 'goerli',
+    hardfork: 'berlin' as Hardfork,
+    customChain: {
+        networkId: 1,
+        chainId: 1,
+    },
+};
+
+console.log(web3.eth.getContextObject().config)
+```
+:::
+
+
 ### defaultReturnFormat
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
 ```ts
