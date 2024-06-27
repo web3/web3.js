@@ -221,7 +221,7 @@ The error types will be one of the following:
 - TransactionPollingTimeoutError
 ```
 
-For example, the error message could be `TransactionRevertInstructionError('Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes')`. The default value is `false`, and handleRevert is only supported for `sendTransaction` and not for `sendSignedTransaction` at this time.
+For example, the error message could be `TransactionRevertInstructionError('Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes')`. The default value is `false`, and handleRevert is only supported for `sendTransaction` and not for `sendSignedTransaction` for now.
 
 ```ts
 import { Web3 } from 'web3';
@@ -254,7 +254,7 @@ This `defaultAccount` is used as the default `from` property, if no `from` prope
 - myContract.methods.myMethod().send()
 ```
 
-The default value for `defaultAccount` is `undefined`. It is worth noting that the `defaultAccount` here can be any string, as there is no validation during the config phase.
+The default value for `defaultAccount` is `undefined`.
 
 ```ts
 import { Web3 } from 'web3';
@@ -574,7 +574,7 @@ import { Web3 } from 'web3';
 
 const web3 = new Web3('http://127.0.0.1:7545');
 
-web3.defaultNetworkId = 56;
+web3.defaultNetworkId = 1;
 
 console.log(web3.getContextObject().config)
 ```
