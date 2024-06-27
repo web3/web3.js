@@ -1282,11 +1282,11 @@ export class Contract<Abi extends ContractAbi>
 						abi,
 						params,
 						options: { ...options, dataInputFill: this.config.contractDataInputFill },
-						contractOptions: modifiedContractOptions as ContractOptions,
+						contractOptions: modifiedContractOptions,
 					});
-					// @ts-ignore
+					// @ts-expect-error remove unnecessary field
 					if (tx.dataInputFill) {
-						// @ts-ignore
+						// @ts-expect-error remove unnecessary field
 						delete tx.dataInputFill;
 					}
 					return tx;
