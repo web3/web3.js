@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RLP } from '@ethereumjs/rlp';
-import { InvalidAddressError, InvalidNumberError, Web3ContractError } from 'web3-errors';
+import { InvalidAddressError, InvalidMethodParamsError, InvalidNumberError, Web3ContractError } from 'web3-errors';
 import {
 	TransactionForAccessList,
 	AbiFunctionFragment,
@@ -234,3 +234,21 @@ export const createContractAddress = (from: Address, nonce: Numbers): Address =>
 
     return toChecksumAddress(contractAddress);
 }
+
+export const create2ContractAddress = (from: Address, salt: HexString, initCode: HexString): Address => {
+    if(!isAddress(from))
+       throw new InvalidAddressError(`Invalid address given ${from}`);
+
+    if(!isHexString(salt))
+        throw new InvalidMethodParamsError(`Invalid salt value ${salt}`);
+
+    if(!isHexString(initCode))
+        throw new InvalidMethodParamsError(`Invalid initCode value ${initCode}`);
+
+	const initCodeHash = keccak256(initCode);
+	const initCodeHashPadded = initCodeHash.padStart(64, '0'); // Pad to 32 bytes (64 hex characters)
+	const create2Params = ['0xff', from, salt, initCodeHashPadded].map(x => x.replace(/0x/, ''));
+	const create2Address = `0x${  create2Params.join('')}`;
+
+	return toChecksumAddress(`0x${  keccak256(create2Address).slice(26)}`); // Slice to get the last 20 bytes (40 hex characters) & checksum
+  }
