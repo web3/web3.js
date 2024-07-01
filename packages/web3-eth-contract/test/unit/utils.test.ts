@@ -18,7 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { InvalidAddressError, InvalidNumberError } from "web3-errors";
 import { Address, Numbers } from "web3-types";
 import { CreateTestData, testData } from '../fixtures/create';
-import { createContractAddress } from "../../src/utils";
+import { create2ContractAddress, createContractAddress } from "../../src/utils";
+import { create2TestData } from "../fixtures/create2";
 
 
 describe('createContractAddress', () => {
@@ -69,4 +70,25 @@ describe('createContractAddress', () => {
 
         expect(address1).not.toBe(address2);
     });
+});
+
+describe('create2ContractAddress', () => {
+
+    it.each(create2TestData)('creates correct contract address for input: %o', (testCase) => {
+        const result = create2ContractAddress(testCase.address, testCase.salt, testCase.init_code);
+        expect(result).toBe(testCase.result);
+      });
+
+      it('should throw an InvalidAddressError if the from address is invalid', () => {
+        expect(() => create2ContractAddress('0xinvalidaddress', create2TestData[0].salt, create2TestData[0].init_code)).toThrow('Invalid address given 0xinvalidaddress');
+      });
+    
+      it('should throw an InvalidMethodParamsError if the salt is invalid', () => {
+        expect(() => create2ContractAddress(create2TestData[0].address, '0xinvalidsalt', create2TestData[0].init_code)).toThrow('Invalid salt value 0xinvalidsalt');
+      });
+    
+      it('should throw an InvalidMethodParamsError if the initCode is invalid', () => {
+        expect(() => create2ContractAddress(create2TestData[0].address, create2TestData[0].salt, '0xinvalidcode')).toThrow('Invalid initCode value 0xinvalidcode');
+      });
+
 });
