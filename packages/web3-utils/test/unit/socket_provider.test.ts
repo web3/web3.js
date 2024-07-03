@@ -203,6 +203,9 @@ describe('SocketProvider', () => {
 				expect(removeSocketListenersSpy).toHaveBeenCalled();
 				expect(connectSpy).toHaveBeenCalled();
 			});
+			it('on attempt to _reconnect, request.deferredPromise should reject and not throw ', () => {
+
+			});
 
 			it('should clear the queues and emit an error event when the number of reconnect attempts reaches the maximum attempts', async () => {
 				const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
@@ -252,7 +255,6 @@ describe('SocketProvider', () => {
 				expect(deleteSpy).toHaveBeenCalledTimes(sentRequestsQueueSize);
 			});
 		});
-
 		describe('testing connect() method', () => {
 			it('should call method reconnect in case of error at _openSocketConnection', async () => {
 				const provider = new TestProvider(socketPath, socketOption);
