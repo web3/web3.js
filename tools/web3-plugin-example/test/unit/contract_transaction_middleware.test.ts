@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3, Contract } from 'web3';
-import { GreeterAbi, GreeterBytecode } from "web3-eth-contract/test/shared_fixtures/build/Greeter";
+import { GreeterAbi, GreeterBytecode } from './fixtures/Greeter';
 import { TransactionMiddlewarePlugin } from '../../src/transaction_middleware_plugin';
 import { blockMockResult, receiptMockResult } from './fixtures/transactions_data';
 
