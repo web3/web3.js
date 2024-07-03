@@ -39,6 +39,7 @@ import {
 	ALL_EVENTS,
 	ALL_EVENTS_ABI,
 	SendTransactionEvents,
+	TransactionMiddleware,
 } from 'web3-eth';
 import {
 	encodeEventSignature,
@@ -433,7 +434,7 @@ export class Contract<Abi extends ContractAbi>
 	 */
 
 	public readonly options: ContractOptions;
-
+	private transactionMiddleware?: TransactionMiddleware;
 	/**
 	 * Set to true if you want contracts' defaults to sync with global defaults.
 	 */
@@ -638,6 +639,14 @@ export class Contract<Abi extends ContractAbi>
 				this.setConfig({ [event.name]: event.newValue });
 			});
 		}
+	}
+
+	public setTransactionMiddleware(transactionMiddleware: TransactionMiddleware){
+		this.transactionMiddleware = transactionMiddleware;
+	}
+
+	public getTransactionMiddleware (){
+		return this.transactionMiddleware;
 	}
 
 	/**
@@ -1400,7 +1409,7 @@ export class Contract<Abi extends ContractAbi>
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
 			contractAbi: this._jsonInterface,
-		});
+		}, this.transactionMiddleware);
 
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
@@ -1444,7 +1453,8 @@ export class Contract<Abi extends ContractAbi>
 			contractAbi: this._jsonInterface,
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
-		});
+		},
+		this.transactionMiddleware);
 	}
 
 	private async _contractMethodEstimateGas<
