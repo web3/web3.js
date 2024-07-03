@@ -203,6 +203,10 @@ export class Web3<
 
 				super(jsonInterface, address, options, context, dataFormat);
 				super.subscribeToContextEvents(self);
+
+				const TxMiddleware = eth.getTransactionMiddleware();
+				if(!isNullish(TxMiddleware))
+					super.setTransactionMiddleware(TxMiddleware);
 			}
 		}
 
