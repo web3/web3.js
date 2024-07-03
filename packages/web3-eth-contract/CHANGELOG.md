@@ -387,3 +387,7 @@ Documentation:
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
 
 ## [Unreleased]
+
+### Added
+
+-   Added functions, `createContractAddress` for `CREATE` and `createContractAddress` for `CREATE2` feature (#7129)
