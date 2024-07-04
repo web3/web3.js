@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Eth } from 'web3-eth';
 import { FMT_BYTES, FMT_NUMBER } from 'web3-types';
-import { Contract } from '../../src';
+import { Contract, createContractAddress } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
@@ -57,6 +57,18 @@ describe('contract', () => {
 				provider: getSystemTestProvider(),
 			});
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+
+		it('should get correct contract address before deploymet using CREATE', async () => {
+			const nonce = await web3Eth.getTransactionCount(sendOptions.from as string);
+
+			// get contract address before deployment
+			const address = createContractAddress(sendOptions.from as string, nonce);
+			
+			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(deployedContract).toBeDefined();
+			expect(deployedContract.options.address).toEqual(address);
 		});
 
 		afterAll(async () => {

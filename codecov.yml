@@ -73,7 +73,7 @@ component_management:
           - /packages/web3-validator/src/
 
 comment:
-  layout: 'header, diff, flags, components'
+  layout: 'header, diff, flags'
   behavior: 'default'
   require_changes: false
   require_base: no

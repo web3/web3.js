@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Web3Modal with Vue'
+sidebar_label: 'Web3Modal with React'
 ---
 
-# Web3Modal with Vue and web3js
+# Web3Modal with React and web3js
 
 ## Live code editor
 
@@ -112,11 +112,10 @@ ReactDOM.createRoot(document.getElementById('app')!).render(
 )
 ```
 
-You are finished and have successfully created Web3modal with Vue!
+You are finished and have successfully created Web3modal with React!
 
 :::info
 - For additional information take a look into the interactive code editor above.
-- You can view different examples of setting up walletconnect with web3.js [here](https://github.com/ChainSafe/web3modal/tree/add-examples/examples/vue-web3)
 - Learn more about Web3modal [here](https://docs.walletconnect.com/web3modal/about)
 :::
 
