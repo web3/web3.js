@@ -35,9 +35,7 @@ import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 import { processAsync } from '../shared_fixtures/utils';
-import { CTransactionMiddleware } from 
-// eslint-disable-next-line import/no-relative-packages
-'../../../../fixtures/transaction_middleware';
+import { ContractTransactionMiddleware } from "../fixtures/contract_transaction_middleware";
 
 jest.mock('web3-eth', () => {
 	const allAutoMocked = jest.createMockFromModule('web3-eth');
@@ -793,7 +791,7 @@ describe('Contract', () => {
 
 		it('should be able to set and get transaction middleware', () => {
 			const contract = new Contract(sampleStorageContractABI);
-			const middleware = new CTransactionMiddleware();
+			const middleware = new ContractTransactionMiddleware();
 
 			expect(contract.getTransactionMiddleware()).toBeUndefined();
 

@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { CTransactionMiddleware } from 
 // eslint-disable-next-line import/no-relative-packages
-"../../../../fixtures/transaction_middleware";
+"../fixtures/transaction_middleware";
 
 import { blockMockResult, receiptMockResult } from 
 // eslint-disable-next-line import/no-relative-packages
