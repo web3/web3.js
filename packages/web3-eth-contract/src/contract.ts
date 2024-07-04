@@ -1446,7 +1446,7 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		const returnTxOptions : SendTransactionOptions<Contract<Abi>> = {
+		const returnTxOptions: SendTransactionOptions<Contract<Abi>> = {
 			transactionResolver: (receipt: TransactionReceipt) => {
 				if (receipt.status === BigInt(0)) {
 					throw new Web3ContractError("code couldn't be stored", receipt);
