@@ -35,7 +35,9 @@ import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 import { processAsync } from '../shared_fixtures/utils';
-import { CTransactionMiddleware } from '../../../../fixtures/transaction_middleware';
+import { CTransactionMiddleware } from 
+// eslint-disable-next-line import/no-relative-packages
+'../../../../fixtures/transaction_middleware';
 
 jest.mock('web3-eth', () => {
 	const allAutoMocked = jest.createMockFromModule('web3-eth');
