@@ -35,6 +35,7 @@ import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 import { processAsync } from '../shared_fixtures/utils';
+import { CTransactionMiddleware } from '../../../../fixtures/transaction_middleware';
 
 jest.mock('web3-eth', () => {
 	const allAutoMocked = jest.createMockFromModule('web3-eth');
@@ -786,6 +787,17 @@ describe('Contract', () => {
 			expect(contract.methods.greet).toBeDefined();
 			expect(contract.methods.increment).toBeDefined();
 			expect(contract.methods.setGreeting).toBeDefined();
+		});
+
+		it('should be able to set and get transaction middleware', () => {
+			const contract = new Contract(sampleStorageContractABI);
+			const middleware = new CTransactionMiddleware();
+
+			expect(contract.getTransactionMiddleware()).toBeUndefined();
+
+			contract.setTransactionMiddleware(middleware);
+			expect(contract.getTransactionMiddleware()).toBeDefined();
+			expect(contract.getTransactionMiddleware()).toEqual(middleware);
 		});
 
 		it('defaults set and get should work', () => {
