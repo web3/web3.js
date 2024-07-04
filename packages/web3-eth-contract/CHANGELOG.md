@@ -387,3 +387,8 @@ Documentation:
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
 
 ## [Unreleased]
+
+### Added
+
+-   `populateTransaction` was added to contract methods (#7124)
+
