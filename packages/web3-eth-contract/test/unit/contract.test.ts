@@ -276,6 +276,61 @@ describe('Contract', () => {
 			sendTransactionSpy.mockClear();
 		});
 
+		it('should pass middleware to sendTransaction when middleware is there and deploy().send() is called', async () => {
+			const contract = new Contract(GreeterAbi);
+			const middleware = new ContractTransactionMiddleware();
+			contract.setTransactionMiddleware(middleware)
+
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const sendTransactionSpy = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx, _dataFormat, _options, _middleware) => {
+					
+					expect(_middleware).toBeDefined();
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(newContract) as any;
+				});
+
+			await contract
+				.deploy({
+					input: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+			
+			sendTransactionSpy.mockClear();
+		});
+
+		it('should pass middleware to sendTransaction when middleware is there and contract.method.send() is called', async () => {
+
+			const contract = new Contract(GreeterAbi, '0x12264916b10Ae90076dDa6dE756EE1395BB69ec2');
+			const middleware = new ContractTransactionMiddleware();
+			contract.setTransactionMiddleware(middleware);
+
+			const spyTx = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx, _dataformat, _options, _middleware) => {
+
+					expect(_middleware).toBeDefined();
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return { status: '0x1', on: () => {} } as any;
+
+				});
+
+			const receipt = await contract.methods.setGreeting('Hello').send({
+				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
+				gas: '1000000'
+			});
+
+			expect(receipt.status).toBe('0x1');
+
+			spyTx.mockClear();
+		});
+
 		it('should deploy contract with input property with no ABI', async () => {
 			const input = `${GreeterBytecode}0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b4d79204772656574696e67000000000000000000000000000000000000000000`;
 			const contract = new Contract([]);
