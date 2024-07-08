@@ -507,18 +507,21 @@ describe('SocketProvider', () => {
 				provider._sendToSocket = () => {
 					throw new Error('any error');
 				};
-				provider.request(payload1).then(() => {
-					// nothing
-				}).catch(() => {
-					// nothing
-				});
+				provider
+					.request(payload1)
+					.then(() => {
+						// nothing
+					})
+					.catch(() => {
+						// nothing
+					});
 				// @ts-expect-error run protected method
 				provider._onConnect();
 
 				expect(errorEventSpy).toHaveBeenCalledWith(expect.any(Error));
 				expect(provider.getPendingRequestQueueSize()).toBe(0);
 				expect(provider.getSentRequestsQueueSize()).toBe(0);
-			})
+			});
 		});
 
 		describe('testing _clearQueues() method', () => {

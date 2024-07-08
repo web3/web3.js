@@ -16,8 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* eslint-disable max-classes-per-file */
 
-import EventEmitter3  from 'eventemitter3';
-
+import EventEmitter3 from 'eventemitter3';
 
 /**
  * This class copy the behavior of Node.js EventEmitter class.
@@ -35,5 +34,4 @@ export class EventEmitter extends EventEmitter3 {
 	public getMaxListeners(): number {
 		return this.maxListeners;
 	}
-
 }
