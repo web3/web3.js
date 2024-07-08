@@ -2575,6 +2575,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3
 
+-   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
 
 #### web3-eth-contract
 
