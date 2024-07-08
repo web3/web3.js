@@ -203,9 +203,6 @@ describe('SocketProvider', () => {
 				expect(removeSocketListenersSpy).toHaveBeenCalled();
 				expect(connectSpy).toHaveBeenCalled();
 			});
-			it('on attempt to _reconnect, request.deferredPromise should reject and not throw ', () => {
-
-			});
 
 			it('should clear the queues and emit an error event when the number of reconnect attempts reaches the maximum attempts', async () => {
 				const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
@@ -497,6 +494,30 @@ describe('SocketProvider', () => {
 
 				expect(deleteSpy).toHaveBeenCalled();
 			});
+		});
+		describe('testing _onConnect() method', () => {
+			it('should catch error when succesfully connecting with _sendPendingRequests in queue and _sendToSocket throws', async () => {
+				const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
+				provider.setStatus('connecting');
+				const payload1 = { id: 1, method: 'some_rpc_method' };
+				const errorEventSpy = jest.fn();
+				provider.on('error', errorEventSpy);
+
+				provider.request(payload1);
+
+				provider.on('error', () => {
+				});
+				// @ts-expect-error access protected method
+				provider._sendToSocket = () => {
+					throw new Error('any error');
+				};
+				// @ts-expect-error run protected method
+				provider._onConnect();
+
+				expect(errorEventSpy).toHaveBeenCalledWith(expect.any(Error));
+				expect(provider.getPendingRequestQueueSize()).toBe(0);
+				expect(provider.getSentRequestsQueueSize()).toBe(0);
+			})
 		});
 
 		describe('testing _clearQueues() method', () => {

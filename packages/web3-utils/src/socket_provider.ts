@@ -507,9 +507,9 @@ export abstract class SocketProvider<
 				this._sendToSocket(value.payload as Web3APIPayload<API, any>);
 				this._pendingRequestsQueue.delete(id);
 				this._sentRequestsQueue.set(id, value);
-			} catch (error) { // happens when the connection is closed before the request is sent
+			} catch (error) { // catches if sendTosocket fails
 				this._pendingRequestsQueue.delete(id);
-            	this._eventEmitter.emit('error when trying to send pending requests', error);
+            	this._eventEmitter.emit('error', error);
 			}
 		}
 	}
