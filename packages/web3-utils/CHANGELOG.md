@@ -229,3 +229,5 @@ Documentation:
 -   `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
 
 ## [Unreleased]
+
+-   `_sendPendingRequests` will catch unhandled errors from `_sendToSocket` (#6968)
