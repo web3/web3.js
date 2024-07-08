@@ -252,7 +252,6 @@ describe('SocketProvider', () => {
 				expect(deleteSpy).toHaveBeenCalledTimes(sentRequestsQueueSize);
 			});
 		});
-
 		describe('testing connect() method', () => {
 			it('should call method reconnect in case of error at _openSocketConnection', async () => {
 				const provider = new TestProvider(socketPath, socketOption);
@@ -494,6 +493,34 @@ describe('SocketProvider', () => {
 					});
 
 				expect(deleteSpy).toHaveBeenCalled();
+			});
+		});
+		describe('testing _onConnect() method', () => {
+			it('should catch error when succesfully connecting with _sendPendingRequests in queue and _sendToSocket throws', async () => {
+				const provider = new TestProvider(socketPath, socketOption, { delay: 0 });
+				provider.setStatus('connecting');
+				const payload1 = { id: 1, method: 'some_rpc_method' };
+				const errorEventSpy = jest.fn();
+				provider.on('error', errorEventSpy);
+
+				// @ts-expect-error access protected method
+				provider._sendToSocket = () => {
+					throw new Error('any error');
+				};
+				provider
+					.request(payload1)
+					.then(() => {
+						// nothing
+					})
+					.catch(() => {
+						// nothing
+					});
+				// @ts-expect-error run protected method
+				provider._onConnect();
+
+				expect(errorEventSpy).toHaveBeenCalledWith(expect.any(Error));
+				expect(provider.getPendingRequestQueueSize()).toBe(0);
+				expect(provider.getSentRequestsQueueSize()).toBe(0);
 			});
 		});
 
