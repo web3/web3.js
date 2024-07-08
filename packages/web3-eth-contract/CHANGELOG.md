@@ -387,3 +387,7 @@ Documentation:
 -   `defaultReturnFormat` was added to all methods that have `ReturnType` param. (#6947)
 
 ## [Unreleased]
+
+### Added
+
+-   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)

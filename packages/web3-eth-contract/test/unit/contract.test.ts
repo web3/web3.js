@@ -35,6 +35,7 @@ import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 import { processAsync } from '../shared_fixtures/utils';
+import { ContractTransactionMiddleware } from "../fixtures/contract_transaction_middleware";
 
 jest.mock('web3-eth', () => {
 	const allAutoMocked = jest.createMockFromModule('web3-eth');
@@ -273,6 +274,61 @@ describe('Contract', () => {
 			expect(deployedContract).toBeDefined();
 			expect(deployedContract.options.address).toStrictEqual(deployedAddr);
 			sendTransactionSpy.mockClear();
+		});
+
+		it('should pass middleware to sendTransaction when middleware is there and deploy().send() is called', async () => {
+			const contract = new Contract(GreeterAbi);
+			const middleware = new ContractTransactionMiddleware();
+			contract.setTransactionMiddleware(middleware)
+
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const sendTransactionSpy = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx, _dataFormat, _options, _middleware) => {
+					
+					expect(_middleware).toBeDefined();
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(newContract) as any;
+				});
+
+			await contract
+				.deploy({
+					input: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+			
+			sendTransactionSpy.mockClear();
+		});
+
+		it('should pass middleware to sendTransaction when middleware is there and contract.method.send() is called', async () => {
+
+			const contract = new Contract(GreeterAbi, '0x12264916b10Ae90076dDa6dE756EE1395BB69ec2');
+			const middleware = new ContractTransactionMiddleware();
+			contract.setTransactionMiddleware(middleware);
+
+			const spyTx = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx, _dataformat, _options, _middleware) => {
+
+					expect(_middleware).toBeDefined();
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return { status: '0x1', on: () => {} } as any;
+
+				});
+
+			const receipt = await contract.methods.setGreeting('Hello').send({
+				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
+				gas: '1000000'
+			});
+
+			expect(receipt.status).toBe('0x1');
+
+			spyTx.mockClear();
 		});
 
 		it('should deploy contract with input property with no ABI', async () => {
@@ -786,6 +842,17 @@ describe('Contract', () => {
 			expect(contract.methods.greet).toBeDefined();
 			expect(contract.methods.increment).toBeDefined();
 			expect(contract.methods.setGreeting).toBeDefined();
+		});
+
+		it('should be able to set and get transaction middleware', () => {
+			const contract = new Contract(sampleStorageContractABI);
+			const middleware = new ContractTransactionMiddleware();
+
+			expect(contract.getTransactionMiddleware()).toBeUndefined();
+
+			contract.setTransactionMiddleware(middleware);
+			expect(contract.getTransactionMiddleware()).toBeDefined();
+			expect(contract.getTransactionMiddleware()).toEqual(middleware);
 		});
 
 		it('defaults set and get should work', () => {
