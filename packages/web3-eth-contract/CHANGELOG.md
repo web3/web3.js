@@ -390,4 +390,6 @@ Documentation:
 
 ### Added
 
+-   `populateTransaction` was added to contract methods (#7124)
+
 -   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)

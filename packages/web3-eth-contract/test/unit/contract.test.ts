@@ -16,13 +16,20 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as eth from 'web3-eth';
-import { ValidChains, Hardfork, AccessListResult, Address, ETH_DATA_FORMAT , DEFAULT_RETURN_FORMAT } from 'web3-types';
+import {
+	ValidChains,
+	Hardfork,
+	AccessListResult,
+	Address,
+	ETH_DATA_FORMAT,
+	DEFAULT_RETURN_FORMAT,
+} from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
-import { Web3Context , Web3ConfigEvent } from 'web3-core';
+import { Web3Context, Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
 import { AbiItem } from 'web3-utils';
 import { stringify } from 'flatted';
-import {Abi} from '../fixtures/AbiItem'
+import { Abi } from '../fixtures/AbiItem';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -541,7 +548,7 @@ describe('Contract', () => {
 			// calling with wrong parameters should throw
 			try {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				await(deployedContract.methods.setGreeting as any)(arg, 'test').send(sendOptions);
+				await (deployedContract.methods.setGreeting as any)(arg, 'test').send(sendOptions);
 				expect(true).toBe(false);
 			} catch (error) {
 				// eslint-disable-next-line jest/no-conditional-expect
@@ -555,7 +562,7 @@ describe('Contract', () => {
 			// calling with wrong parameters should throw
 			try {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				await(deployedContract.methods.setGreeting as any)(arg, true, 'test').send(
+				await (deployedContract.methods.setGreeting as any)(arg, true, 'test').send(
 					sendOptions,
 				);
 				expect(true).toBe(false);
@@ -1908,6 +1915,33 @@ describe('Contract', () => {
 			});
 			const contract = new Contract(GreeterAbi, web3Context);
 			expect(contract.config).toStrictEqual(web3Context.config);
+		});
+
+		it('should populate method to tx object', () => {
+			const expectedProvider = 'http://127.0.0.1:8545';
+			const web3Context = new Web3Context({
+				provider: expectedProvider,
+				config: { handleRevert: true, defaultTransactionType: '0x2' },
+			});
+			const contract = new Contract(
+				GreeterAbi,
+				'0x00000000219ab540356cBB839Cbe05303d7705F1',
+				web3Context,
+			);
+
+			const tx = contract.methods
+				.greet()
+				.populateTransaction({ from: '0x00000000219ab540356cBB839Cbe05303d7705F2' });
+			expect(tx).toEqual({
+				to: '0x00000000219AB540356cBb839cbe05303D7705F1',
+				gas: undefined,
+				gasPrice: undefined,
+				from: '0x00000000219ab540356cBB839Cbe05303d7705F2',
+				input: undefined,
+				maxPriorityFeePerGas: undefined,
+				maxFeePerGas: undefined,
+				data: '0xcfae3217',
+			});
 		});
 	});
 });
