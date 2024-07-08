@@ -2573,6 +2573,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ### Added
 
+#### web3
+
+
 #### web3-eth-contract
 
 -   `populateTransaction` was added to contract methods (#7124)
+-   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)
