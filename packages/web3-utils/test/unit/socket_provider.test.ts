@@ -503,14 +503,15 @@ describe('SocketProvider', () => {
 				const errorEventSpy = jest.fn();
 				provider.on('error', errorEventSpy);
 
-				provider.request(payload1);
-
-				provider.on('error', () => {
-				});
 				// @ts-expect-error access protected method
 				provider._sendToSocket = () => {
 					throw new Error('any error');
 				};
+				provider.request(payload1).then(() => {
+					// nothing
+				}).catch(() => {
+					// nothing
+				});
 				// @ts-expect-error run protected method
 				provider._onConnect();
 
