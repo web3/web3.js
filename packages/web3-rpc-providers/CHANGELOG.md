@@ -42,3 +42,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   RC release 
 
 ## [Unreleased]
+ - When error is returned with code 429, throw rate limit error (#7102)
+ - Change request return type `Promise<ResultType>` to `Promise<JsonRpcResponseWithResult<ResultType>>` (#7102)
