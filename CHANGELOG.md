@@ -2623,6 +2623,8 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
  - When error is returned with code 429, throw rate limit error (#7102)
 
-#### web3-utils
-
 #### web3
+
+-   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
+
+## [Unreleased]
