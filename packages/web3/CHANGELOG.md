@@ -408,20 +408,12 @@ Documentation:
 
 -   Update dependancies (#7109)
 
-#### web3-rpc-providers
-
- - Change request return type `Promise<ResultType>` to `Promise<JsonRpcResponseWithResult<ResultType>>` (#7102)
-
 ### Added
 
 #### web3-eth-contract
 
 -   `populateTransaction` was added to contract methods (#7124)
 -   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)
-
-#### web3-rpc-providers
-
- - When error is returned with code 429, throw rate limit error (#7102)
 
 #### web3
 
