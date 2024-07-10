@@ -2564,3 +2564,20 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   `getName` reverse resolution
 
 ## [Unreleased]
+
+### Fixed
+
+#### web3-eth
+
+-   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
+
+### Added
+
+#### web3
+
+-   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
+
+#### web3-eth-contract
+
+-   `populateTransaction` was added to contract methods (#7124)
+-   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)

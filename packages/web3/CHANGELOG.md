@@ -382,3 +382,9 @@ Documentation:
 -   `getName` reverse resolution
 
 ## [Unreleased]
+
+### Added
+
+#### web3
+
+-   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)

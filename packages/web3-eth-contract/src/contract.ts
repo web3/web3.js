@@ -39,6 +39,8 @@ import {
 	ALL_EVENTS,
 	ALL_EVENTS_ABI,
 	SendTransactionEvents,
+	TransactionMiddleware,
+	SendTransactionOptions,
 } from 'web3-eth';
 import {
 	encodeEventSignature,
@@ -433,7 +435,7 @@ export class Contract<Abi extends ContractAbi>
 	 */
 
 	public readonly options: ContractOptions;
-
+	private transactionMiddleware?: TransactionMiddleware;
 	/**
 	 * Set to true if you want contracts' defaults to sync with global defaults.
 	 */
@@ -638,6 +640,14 @@ export class Contract<Abi extends ContractAbi>
 				this.setConfig({ [event.name]: event.newValue });
 			});
 		}
+	}
+
+	public setTransactionMiddleware(transactionMiddleware: TransactionMiddleware) {
+		this.transactionMiddleware = transactionMiddleware;
+	}
+
+	public getTransactionMiddleware() {
+		return this.transactionMiddleware;
 	}
 
 	/**
@@ -1268,7 +1278,29 @@ export class Contract<Abi extends ContractAbi>
 
 				send: (options?: PayableTxOptions | NonPayableTxOptions): ContractMethodSend =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
-
+				populateTransaction: (
+					options?: PayableTxOptions | NonPayableTxOptions,
+					contractOptions?: ContractOptions,
+				) => {
+					let modifiedContractOptions = contractOptions ?? this.options;
+					modifiedContractOptions = {
+						...modifiedContractOptions,
+						input: undefined,
+						from: modifiedContractOptions?.from ?? this.defaultAccount ?? undefined,
+					};
+					const tx = getSendTxParams({
+						abi,
+						params,
+						options: { ...options, dataInputFill: this.config.contractDataInputFill },
+						contractOptions: modifiedContractOptions,
+					});
+					// @ts-expect-error remove unnecessary field
+					if (tx.dataInputFill) {
+						// @ts-expect-error remove unnecessary field
+						delete tx.dataInputFill;
+					}
+					return tx;
+				},
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: PayableCallOptions | NonPayableCallOptions,
 					returnFormat: ReturnFormat = this
@@ -1396,11 +1428,17 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		const transactionToSend = sendTransaction(this, tx, this.defaultReturnFormat, {
-			// TODO Should make this configurable by the user
-			checkRevertBeforeSending: false,
-			contractAbi: this._jsonInterface,
-		});
+		const transactionToSend = (isNullish(this.transactionMiddleware)) ?
+			sendTransaction(this, tx, this.defaultReturnFormat, {
+				// TODO Should make this configurable by the user
+				checkRevertBeforeSending: false,
+				contractAbi: this._jsonInterface, // explicitly not passing middleware so if some one is using old eth package it will not break
+			}) :
+			sendTransaction(this, tx, this.defaultReturnFormat, {
+				// TODO Should make this configurable by the user
+				checkRevertBeforeSending: false,
+				contractAbi: this._jsonInterface,
+			}, this.transactionMiddleware);
 
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
@@ -1429,8 +1467,9 @@ export class Contract<Abi extends ContractAbi>
 			options: { ...options, dataInputFill: this.contractDataInputFill },
 			contractOptions: modifiedContractOptions,
 		});
-		return sendTransaction(this, tx, this.defaultReturnFormat, {
-			transactionResolver: receipt => {
+
+		const returnTxOptions: SendTransactionOptions<Contract<Abi>> = {
+			transactionResolver: (receipt: TransactionReceipt) => {
 				if (receipt.status === BigInt(0)) {
 					throw new Web3ContractError("code couldn't be stored", receipt);
 				}
@@ -1444,7 +1483,12 @@ export class Contract<Abi extends ContractAbi>
 			contractAbi: this._jsonInterface,
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
-		});
+		};
+
+		return (
+			(isNullish(this.transactionMiddleware)) ?
+				sendTransaction(this, tx, this.defaultReturnFormat, returnTxOptions) : // not calling this with undefined Middleware because it will not break if Eth package is not updated
+				sendTransaction(this, tx, this.defaultReturnFormat, returnTxOptions, this.transactionMiddleware));
 	}
 
 	private async _contractMethodEstimateGas<

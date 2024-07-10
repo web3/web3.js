@@ -79,16 +79,9 @@ export const isBloomValidData: [any, true][] = [
 ];
 
 export const isContractInitValidData: ContractInitOptions[] = [
-	{dataInputFill: "data"},
-	{syncWithContext: true},
-	{gas: "100000",
-	syncWithContext: true,
-	dataInputFill: "data",
-	},
+	{ dataInputFill: 'data' },
+	{ syncWithContext: true },
+	{ gas: '100000', syncWithContext: true, dataInputFill: 'data' },
 ];
 
-export const isContractInitInvalidData: unknown[] = [
-	"",
-	12,
-	{}
-];
+export const isContractInitInvalidData: unknown[] = ['', 12, {}];

@@ -33,6 +33,8 @@ export class TransactionMiddlewarePlugin extends Web3PluginBase {
 	public link(parentContext: Web3Context): void {
 
 		if (this.txMiddleware){
+			// Following can modify Web3-Eth and also Web3-Eth-Contract packages transactions
+			
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 			(parentContext as any).Web3Eth.setTransactionMiddleware(this.txMiddleware);
 		}
