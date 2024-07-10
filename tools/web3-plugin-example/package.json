@@ -1,6 +1,6 @@
 {
 	"name": "web3-plugin-example",
-	"version": "1.1.2",
+	"version": "1.1.1",
 	"description": "Example implementations of Web3.js' 4.x plugin system",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"engines": {
