@@ -228,6 +228,10 @@ Documentation:
 -   `toWei` support numbers in scientific notation (#6908)
 -   `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
 
-## [Unreleased]
+## [4.3.1]
+
+### Fixed
 
 -   `_sendPendingRequests` will catch unhandled errors from `_sendToSocket` (#6968)
+
+## [Unreleased]

@@ -162,4 +162,10 @@ Documentation:
 
 -   Dependencies updated
 
+## [4.1.3]
+
+### Changed
+
+- baseTransaction method updated (#7095)
+
 ## [Unreleased]

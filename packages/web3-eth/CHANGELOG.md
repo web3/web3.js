@@ -256,8 +256,10 @@ Documentation:
 -   WebEth has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` (#7088)
 - `TransactionMiddleware` and `TransactionMiddleware` data types are exported (#7088)
 
-## [Unreleased]
+## [4.8.1]
 
 ### Fixed
 
 -   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
+
+## [Unreleased]
