@@ -2612,6 +2612,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Dependencies updated
 
+#### web3-rpc-providers
+
+ - Change request return type `Promise<ResultType>` to `Promise<JsonRpcResponseWithResult<ResultType>>` (#7102)
+
 ### Added
 
 #### web3-eth-contract
