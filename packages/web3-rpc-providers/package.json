@@ -1,6 +1,6 @@
 {
 	"name": "web3-rpc-providers",
-	"version": "1.1.0-rc.0",
+	"version": "1.0.0-rc.1",
 	"description": "Web3 Providers package",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
