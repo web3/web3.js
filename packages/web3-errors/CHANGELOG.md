@@ -165,11 +165,5 @@ Documentation:
 ### Fixed
 
 -   Fixed grammar and spelling in `transactionTimeoutHint` (#6559)
-  
-## [1.1.5]
-
-### Fixed
-
--   Fixed the undefined data in `Eip838ExecutionError` constructor (#6433)
 
 ## [Unreleased]
