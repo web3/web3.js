@@ -18,7 +18,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 export function isUint8Array(data: unknown | Uint8Array): data is Uint8Array {
 	return (
 		data instanceof Uint8Array ||
-		(data as { constructor: { name: string } })?.constructor?.name === 'Uint8Array'
+		(data as { constructor: { name: string } })?.constructor?.name === 'Uint8Array' ||
+		(data as { constructor: { name: string } })?.constructor?.name === 'Buffer'
 	);
 }
 

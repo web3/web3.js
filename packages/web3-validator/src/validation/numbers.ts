@@ -28,6 +28,10 @@ export const isBigInt = (value: ValidInputTypes): boolean => typeof value === 'b
 // 	you can find more at: https://github.com/babel/babel/issues/13109 and https://github.com/web3/web3.js/issues/6187
 /** @internal */
 export const bigintPower = (base: bigint, expo: bigint) => {
+	// edge case
+	if (expo === BigInt(0)) {
+		return BigInt(1);
+	}
 	let res = base;
 	for (let index = 1; index < expo; index += 1) {
 		res *= base;

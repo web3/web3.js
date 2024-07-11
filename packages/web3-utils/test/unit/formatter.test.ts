@@ -24,9 +24,10 @@ import {
 	HexString,
 	Numbers,
 } from 'web3-types';
+import { FormatterError } from 'web3-errors';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
 import { isDataFormatValid, convertScalarValueValid } from '../fixtures/formatter';
-import { format, isDataFormat, convertScalarValue } from '../../src/formatter';
+import { format, isDataFormat, convertScalarValue, convert } from '../../src/formatter';
 import { hexToBytes } from '../../src/converters';
 
 type TestTransactionInfoType = {
@@ -519,6 +520,115 @@ describe('formatter', () => {
 				).toEqual(result);
 			});
 
+			it('should format array of objects', () => {
+				const schema = {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							prop1: {
+								format: 'uint',
+							},
+							prop2: {
+								format: 'bytes',
+							},
+						},
+					},
+				};
+
+				const data = [
+					{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
+					{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
+				];
+
+				const result = [
+					{ prop1: '0xa', prop2: '0xff' },
+					{ prop1: '0xa', prop2: '0xff' },
+				];
+
+				expect(
+					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),
+				).toEqual(result);
+			});
+
+			it('should format array of objects with oneOf', () => {
+				const schema = {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							prop1: {
+								oneOf: [{ format: 'address' }, { type: 'string' }],
+							},
+							prop2: {
+								format: 'bytes',
+							},
+						},
+					},
+				};
+
+				const data = [
+					{
+						prop1: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401',
+						prop2: new Uint8Array(hexToBytes('FF')),
+					},
+					{ prop1: 'some string', prop2: new Uint8Array(hexToBytes('FF')) },
+				];
+
+				const result = [
+					{ prop1: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', prop2: '0xff' },
+					{ prop1: 'some string', prop2: '0xff' },
+				];
+
+				expect(
+					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),
+				).toEqual(result);
+			});
+
+			it('should format array of different objects', () => {
+				const schema = {
+					type: 'array',
+					items: [
+						{
+							type: 'object',
+							properties: {
+								prop1: {
+									format: 'uint',
+								},
+								prop2: {
+									format: 'bytes',
+								},
+							},
+						},
+						{
+							type: 'object',
+							properties: {
+								prop1: {
+									format: 'string',
+								},
+								prop2: {
+									format: 'uint',
+								},
+							},
+						},
+					],
+				};
+
+				const data = [
+					{ prop1: 10, prop2: new Uint8Array(hexToBytes('FF')) },
+					{ prop1: 'test', prop2: 123 },
+				];
+
+				const result = [
+					{ prop1: 10, prop2: '0xff' },
+					{ prop1: 'test', prop2: 123 },
+				];
+
+				expect(
+					format(schema, data, { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX }),
+				).toEqual(result);
+			});
+
 			it('should format array values with object type', () => {
 				const schema = {
 					type: 'object',
@@ -629,7 +739,6 @@ describe('formatter', () => {
 				).toEqual(result);
 			});
 		});
-
 		describe('object values', () => {
 			it('should format simple object', () => {
 				const schema = {
@@ -665,6 +774,13 @@ describe('formatter', () => {
 				});
 
 				expect(result).toEqual(expected);
+			});
+
+			it('should throw FormatterError when jsonSchema is invalid', () => {
+				const invalidSchema1 = {};
+				const data = { key: 'value' };
+
+				expect(() => format(invalidSchema1, data)).toThrow(FormatterError);
 			});
 
 			it('should format nested objects', () => {
@@ -735,6 +851,18 @@ describe('formatter', () => {
 					).toBe(BigInt(100));
 				});
 			});
+		});
+	});
+
+	describe('convert', () => {
+		it('should return empty when no properties or items', () => {
+			const data = { key: 'value' };
+			const schema = {
+				type: 'object',
+			};
+			const f = { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX };
+			const result = convert(data, schema, [], f, []);
+			expect(result).toEqual({});
 		});
 	});
 });

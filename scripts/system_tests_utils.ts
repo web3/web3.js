@@ -48,6 +48,8 @@ import {
 	SupportedProviders,
 	Web3APISpec,
 	Web3EthExecutionAPI,
+	FMT_NUMBER,
+	FMT_BYTES,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -152,10 +154,14 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isSocket || web3Context?.provider instanceof HttpProvider) {
+	if (
+		!isSocket ||
+		web3Context?.provider instanceof HttpProvider ||
+		(web3Context?.provider?.supportsSubscriptions &&
+			!web3Context.provider?.supportsSubscriptions())
+	) {
 		return;
 	}
-
 	// make sure we try to close the connection after it is established
 	if (
 		web3Context?.provider &&
@@ -163,20 +169,17 @@ export const closeOpenConnection = async (web3Context: Web3Context) => {
 	) {
 		await waitForOpenConnection(web3Context);
 	}
-
 	// If an error happened during closing, that is acceptable at tests, just print a 'warn'.
 	if (web3Context?.provider) {
 		(web3Context.provider as unknown as Web3BaseProvider).on('error', (err: any) => {
 			console.warn('error while trying to close the connection', err);
 		});
 	}
-
 	// Wait a bit to ensure the connection does not have a pending data that
 	//	could cause an error if written after closing the connection.
 	await new Promise<void>(resolve => {
 		setTimeout(resolve, 500);
 	});
-
 	if (
 		web3Context?.provider &&
 		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
@@ -504,3 +507,12 @@ export const objectBigintToString = (obj: object): object =>
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		JSON.stringify(obj, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
 	);
+
+export const mapFormatToType: { [key: string]: string } = {
+	[FMT_NUMBER.NUMBER]: 'number',
+	[FMT_NUMBER.HEX]: 'string',
+	[FMT_NUMBER.STR]: 'string',
+	[FMT_NUMBER.BIGINT]: 'bigint',
+	[FMT_BYTES.HEX]: 'string',
+	[FMT_BYTES.UINT8ARRAY]: 'object',
+};

@@ -32,6 +32,7 @@ import {
 	utils,
 	utils as validatorUtils,
 	validator,
+	bigintPower,
 } from 'web3-validator';
 
 import {
@@ -41,6 +42,7 @@ import {
 	InvalidBytesError,
 	InvalidNumberError,
 	InvalidUnitError,
+	InvalidIntegerError,
 } from 'web3-errors';
 import { isUint8Array } from './uint8array.js';
 
@@ -76,6 +78,9 @@ export const ethUnitMap = {
 	gether: BigInt('1000000000000000000000000000'),
 	tether: BigInt('1000000000000000000000000000000'),
 };
+
+const PrecisionLossWarning =
+	'Warning: Using type `number` with values that are large or contain many decimals may cause loss of precision, it is recommended to use type `string` or `BigInt` when using conversion methods';
 
 export type EtherUnits = keyof typeof ethUnitMap;
 /**
@@ -362,6 +367,10 @@ export const toHex = (
 		return returnType ? 'bigint' : numberToHex(value);
 	}
 
+	if (isUint8Array(value)) {
+		return returnType ? 'bytes' : bytesToHex(value);
+	}
+
 	if (typeof value === 'object' && !!value) {
 		return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
 	}
@@ -378,6 +387,15 @@ export const toHex = (
 			return returnType ? 'bytes' : `0x${value}`;
 		}
 		if (isHex(value) && !isInt(value) && isUInt(value)) {
+			// This condition seems problematic because meeting
+			// both conditions `!isInt(value) && isUInt(value)` should be impossible.
+			// But a value pass for those conditions: "101611154195520776335741463917853444671577865378275924493376429267637792638729"
+			// Note that according to the docs: it is supposed to be treated as a string (https://docs.web3js.org/guides/web3_upgrade_guide/x/web3_utils_migration_guide#conversion-to-hex)
+			// In short, the strange is that isInt(value) is false but isUInt(value) is true for the value above.
+			// TODO: isUInt(value) should be investigated.
+
+			// However, if `toHex('101611154195520776335741463917853444671577865378275924493376429267637792638729', true)` is called, it will return `true`.
+			// But, if `toHex('101611154195520776335741463917853444671577865378275924493376429267637792638729')` is called, it will throw inside `numberToHex`.
 			return returnType ? 'uint' : numberToHex(value);
 		}
 
@@ -411,13 +429,14 @@ export const toHex = (
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
-            if (value > 1e+20) {
-                // JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
-                // leading to potential parsing errors and incorrect representations.
-                // For instance, String(10000000000000000000000) yields '1e+22'.
-                // Using BigInt prevents this
-                return BigInt(value);
-            }
+		if (value > 1e20) {
+			console.warn(PrecisionLossWarning);
+			// JavaScript converts numbers >= 10^21 to scientific notation when coerced to strings,
+			// leading to potential parsing errors and incorrect representations.
+			// For instance, String(10000000000000000000000) yields '1e+22'.
+			// Using BigInt prevents this
+			return BigInt(value);
+		}
 		return value;
 	}
 
@@ -485,11 +504,19 @@ export const toBigInt = (value: unknown): bigint => {
  * > 0.000000001
  * ```
  */
-export const fromWei = (number: Numbers, unit: EtherUnits): string => {
-	const denomination = ethUnitMap[unit];
+export const fromWei = (number: Numbers, unit: EtherUnits | number): string => {
+	let denomination;
+	if (typeof unit === 'string') {
+		denomination = ethUnitMap[unit];
 
-	if (!denomination) {
-		throw new InvalidUnitError(unit);
+		if (!denomination) {
+			throw new InvalidUnitError(unit);
+		}
+	} else {
+		if (unit < 0 || !Number.isInteger(unit)) {
+			throw new InvalidIntegerError(unit);
+		}
+		denomination = bigintPower(BigInt(10), BigInt(unit));
 	}
 
 	// value in wei would always be integer
@@ -525,8 +552,9 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 	if (fraction === '') {
 		return integer;
 	}
+	const updatedValue = `${integer}.${fraction}`;
 
-	return `${integer}.${fraction}`;
+	return updatedValue.slice(0, integer.length + numberOfZerosInDenomination + 1);
 };
 
 /**
@@ -543,19 +571,47 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
  * ```
  */
 // todo in 1.x unit defaults to 'ether'
-export const toWei = (number: Numbers, unit: EtherUnits): string => {
+export const toWei = (number: Numbers, unit: EtherUnits | number): string => {
 	validator.validate(['number'], [number]);
 
-	const denomination = ethUnitMap[unit];
+	let denomination;
+	if (typeof unit === 'string') {
+		denomination = ethUnitMap[unit];
+		if (!denomination) {
+			throw new InvalidUnitError(unit);
+		}
+	} else {
+		if (unit < 0 || !Number.isInteger(unit)) {
+			throw new InvalidIntegerError(unit);
+		}
 
-	if (!denomination) {
-		throw new InvalidUnitError(unit);
+		denomination = bigintPower(BigInt(10), BigInt(unit));
+	}
+
+	let parsedNumber = number;
+	if (typeof parsedNumber === 'number') {
+		if (parsedNumber < 1e-15) {
+			console.warn(PrecisionLossWarning);
+		}
+		if (parsedNumber > 1e20) {
+			console.warn(PrecisionLossWarning);
+
+			parsedNumber = BigInt(parsedNumber);
+		} else {
+			// in case there is a decimal point, we need to convert it to string
+			parsedNumber = parsedNumber.toLocaleString('fullwide', {
+				useGrouping: false,
+				maximumFractionDigits: 20,
+			});
+		}
 	}
 
 	// if value is decimal e.g. 24.56 extract `integer` and `fraction` part
 	// to avoid `fraction` to be null use `concat` with empty string
 	const [integer, fraction] = String(
-		typeof number === 'string' && !isHexStrict(number) ? number : toNumber(number),
+		typeof parsedNumber === 'string' && !isHexStrict(parsedNumber)
+			? parsedNumber
+			: toNumber(parsedNumber),
 	)
 		.split('.')
 		.concat('');
@@ -568,19 +624,14 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	// 2456 * 1000000 -> 2456000000
 	const updatedValue = value * denomination;
 
-	// count number of zeros in denomination
-	const numberOfZerosInDenomination = denomination.toString().length - 1;
-
-	// check which either `fraction` or `denomination` have lower number of zeros
-	const decimals = Math.min(fraction.length, numberOfZerosInDenomination);
-
+	// check if whole number was passed in
+	const decimals = fraction.length;
 	if (decimals === 0) {
 		return updatedValue.toString();
 	}
 
-	// Add zeros to make length equal to required decimal points
-	// If string is larger than decimal points required then remove last zeros
-	return updatedValue.toString().padStart(decimals, '0').slice(0, -decimals);
+	// trim the value to remove extra zeros
+	return updatedValue.toString().slice(0, -decimals);
 };
 
 /**

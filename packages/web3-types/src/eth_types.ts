@@ -47,6 +47,7 @@ export enum BlockTags {
 	PENDING = 'pending',
 	SAFE = 'safe',
 	FINALIZED = 'finalized',
+	COMMITTED = 'committed',
 }
 export type BlockTag = `${BlockTags}`;
 
@@ -130,6 +131,13 @@ export interface BlockInput {
 	readonly baseFeePerGas?: HexString;
 }
 
+export interface Withdrawals {
+	readonly index: Numbers;
+	readonly validatorIndex: Numbers;
+	readonly address: Address;
+	readonly amount: Numbers;
+}
+
 export interface BlockOutput {
 	readonly gasLimit: bigint | number;
 	readonly gasUsed: bigint | number;
@@ -142,33 +150,46 @@ export interface BlockOutput {
 	readonly miner?: HexString;
 	readonly baseFeePerGas?: bigint | number;
 	readonly parentHash?: HexString32Bytes;
-}
 
-export interface Withdrawals {
-	readonly index: Numbers;
-	readonly validatorIndex: Numbers;
-	readonly address: Address;
-	readonly amount: Numbers;
-}
-
-export interface BlockHeaderOutput {
+	// Added properties
+	readonly blobGasUsed?: bigint | number;
+	readonly excessBlobGas?: bigint | number;
+	readonly extraData?: Bytes;
 	readonly hash?: HexString32Bytes;
-	readonly parentHash?: HexString32Bytes;
+	readonly logsBloom?: Bytes;
+	readonly nonce?: bigint | number;
+	readonly parentBeaconBlockRoot?: HexString32Bytes;
 	readonly receiptsRoot?: HexString32Bytes;
-	readonly miner?: HexString;
+	readonly sha3Uncles: HexString32Bytes[];
 	readonly stateRoot?: HexString32Bytes;
 	readonly transactionsRoot?: HexString32Bytes;
 	readonly withdrawalsRoot?: HexString32Bytes;
-	readonly logsBloom?: Bytes;
+	readonly mixHash?: HexString32Bytes;
+	readonly uncles?: Uncles;
+	readonly withdrawals?: Withdrawals[];
+}
+
+export interface BlockHeaderOutput {
+	readonly baseFeePerGas?: Numbers;
+	readonly blobGasUsed?: Numbers;
 	readonly difficulty?: Numbers;
-	readonly number?: Numbers;
+	readonly excessBlobGas?: Numbers;
+	readonly extraData?: Bytes;
 	readonly gasLimit: Numbers;
 	readonly gasUsed: Numbers;
-	readonly timestamp: Numbers;
-	readonly extraData?: Bytes;
+	readonly hash?: HexString32Bytes;
+	readonly logsBloom?: Bytes;
+	readonly miner?: HexString;
 	readonly nonce?: Numbers;
+	readonly number?: Numbers;
+	readonly parentBeaconBlockRoot?: HexString32Bytes;
+	readonly parentHash?: HexString32Bytes;
+	readonly receiptsRoot?: HexString32Bytes;
 	readonly sha3Uncles: HexString32Bytes[];
-	readonly baseFeePerGas?: Numbers;
+	readonly stateRoot?: HexString32Bytes;
+	readonly timestamp: Numbers;
+	readonly transactionsRoot?: HexString32Bytes;
+	readonly withdrawalsRoot?: HexString32Bytes;
 
 	// These fields are returned when the RPC client is Nethermind,
 	// but aren't available in other clients such as Geth
@@ -533,13 +554,13 @@ export interface Eip712TypedData {
 /**
  * To contain the gas Fee Data to be used with EIP-1559 transactions.
  * EIP-1559 was applied to Ethereum after London hardfork.
- *  
+ *
  * Typically you will only need `maxFeePerGas` and `maxPriorityFeePerGas` for a transaction following EIP-1559.
  * However, if you want to get informed about the fees of last block, you can use `baseFeePerGas` too.
- * 
- * 
+ *
+ *
  * 	@see https://eips.ethereum.org/EIPS/eip-1559
- * 
+ *
  */
 export interface FeeData {
 	/**
@@ -549,20 +570,20 @@ export interface FeeData {
 
 	/**
 	 * The baseFeePerGas returned from the last available block.
-	 * 
+	 *
 	 * If EIP-1559 is not supported, this will be `undefined`
-	 * 
-	 * However, the user will only pay (the future baseFeePerGas + the maxPriorityFeePerGas). 
+	 *
+	 * However, the user will only pay (the future baseFeePerGas + the maxPriorityFeePerGas).
 	 * And this value is just for getting informed about the fees of last block.
 	 */
 	readonly baseFeePerGas?: Numbers;
 
 	/**
 	 * The maximum fee that the user would be willing to pay per-gas.
-	 * 
+	 *
 	 * However, the user will only pay (the future baseFeePerGas + the maxPriorityFeePerGas).
 	 * And the `maxFeePerGas` could be used to prevent paying more than it, if `baseFeePerGas` went too high.
-	 * 
+	 *
 	 * If EIP-1559 is not supported, this will be `undefined`
 	 */
 	readonly maxFeePerGas?: Numbers;

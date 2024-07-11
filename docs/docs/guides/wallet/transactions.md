@@ -1,347 +1,475 @@
 ---
-sidebar_position: 5
+sidebar_position: 2
 sidebar_label: 'Tutorial: Sending Transactions'
 ---
 
-# Transactions
+# Sending Transactions
 
-This guide provides insights into sending transactions using web3.js, covering various scenarios from utilizing a local wallet to sending raw transactions.
+This tutorial will walk through the process of using accounts to send transactions on a [development network](https://ethereum.org/en/developers/docs/development-networks/), including how to subscribe to the events associated with a transaction. The topics covered in this tutorial include basic concepts of [Ethereum](https://ethereum.org/), such as [accounts](/guides/wallet/), [denominations of ether](https://ethereum.org/en/developers/docs/intro-to-ether/#denominations), [transactions](https://ethereum.org/en/developers/docs/transactions/), and [gas fees](https://ethereum.org/en/developers/docs/gas/), as well as the basics of the [Hardhat](https://hardhat.org/) development environment.
 
-## Sending transactions with a local wallet
+## Overview
 
-The simplest way to sign and send transactions is using a local wallet:
+Here is a high-level overview of the steps we will be taking in this tutorial:
 
-```typescript
-// 1st step: initialize `web3` instance
-import { Web3 } from 'web3';
+1. Review prerequisites
+2. Create a new directory and initialize a new Node.js project
+3. Set up Web3.js and Hardhat
+4. Send a transaction and review the results
+5. Send a transaction and subscribe to its events
+6. Send a raw transaction
 
-const web3 = new Web3(/* PROVIDER*/);
+:::tip
+If you encounter any issues while following this guide or have any questions, don't hesitate to seek assistance. Our friendly community is ready to help you out! Join our [Discord](https://discord.gg/F4NUfaCC) server and head to the **#web3js-general** channel to connect with other developers and get the support you need. 
+:::
 
-// 2nd step: add an account to wallet
-const privateKey = '0x7b907534ec13b19c67c2a738fdaa69014298c71f2221d7e5dec280232e996610';
-const account = web3.eth.accounts.wallet.add(privateKey).get(0);
-// Make sure the account has enough eth on balance to send the transaction
+## Step 1: Prerequisites
 
-// 3rd step: sign and send the transaction
-//highlight-start
-// Magic happens inside sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed using that account.
-const receipt = await web3.eth.sendTransaction({
-  from: account?.address,
-  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
-  value: '0x1',
-  gas: '300000',
-  // other transaction's params
-});
-//highlight-end
+This tutorial assumes basic familiarity with the command line as well as familiarity with JavaScript and [Node.js](https://nodejs.org/). Before starting this tutorial, ensure that Node.js and its package manager, npm, are installed.
+
+```bash
+$: node -v
+# your version may be different, but it's best to use the current stable version
+v18.16.1
+$: npm -v
+9.5.1
 ```
 
-## Sending a raw transaction
+## Step 2: Create a New Directory and Initialize a New Node.js Project
 
-```ts 
-import { Web3 } from 'web3';
+First, create a new project directory for the project and navigate into it:
 
-// 1st - initialize the provider
-const web3 = new Web3('https://ethereum-sepolia.publicnode.com');
+```bash
+mkdir account-transactions-tutorial
+cd account-transactions-tutorial
+```
 
-// 2nd - create an account
-const account = web3.eth.accounts.privateKeyToAccount('0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba');
+Next, initialize a new Node.js project using npm:
 
-// 3rd - create a raw transaction object
-const rawTransaction = {
-  from: account.address,
-  to: '0x5875da5854c2adadbc1a7a448b5b2a09b26baff8', //random wallet or contract address
-  value: 1, //optional - value in wei
-  maxFeePerGas: (await web3.eth.getBlock()).baseFeePerGas * 2n, //updated depending on the network
-  maxPriorityFeePerGas: 100000, //high
-  gasLimit: 2000000
-  nonce: await web3.eth.getTransactionCount(account.address), //optional - get the current nonce of the account 
-  data: "0x0" //optional - encoded function signature and arguments 
-};
+```bash
+npm init -y
+```
 
-// 4th - sign the raw transaction with the private key
-const signedTransaction = await web3.eth.accounts.signTransaction(rawTransaction, account.privateKey);
+This will create a new `package.json` file in your project directory.
 
-// 5th - send the signed transaction
-const txReceipt = await web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
+## Step 3: Set Up Web3.js and Hardhat
 
-console.log('Transaction Receipt:', txReceipt);
-/* ↳
-Transaction Receipt: {
-  blockHash: '0xd73a824348ebb8c1895fbe7b2c506c287cfaadc8104628a140e7b39d7e41d50f',
-  blockNumber: 4972805n,
-  cumulativeGasUsed: 15266381n,
-  effectiveGasPrice: 118637814298n,
-  from: '0xa3286628134bad128faeef82f44e99aa64085c94',
+Install the required packages with npm:
+
+```bash
+npm i web3 hardhat
+```
+
+Next, initialize the Hardhat project:
+
+```bash
+npx hardhat init
+```
+
+Initializing the Hardhat project will require responding to several prompts - select the default option for each prompt. After the Hardhat project has been initialized, a number of new files and directories will be created.
+
+To start the Hardhat development network, execute the following command:
+
+```bash
+npx hardhat node
+```
+
+Executing this command will produce the following output, which provides the URL that can be used to connect to the development network as well as the development network's test accounts:
+
+```bash
+Started HTTP and WebSocket JSON-RPC server at http://127.0.0.1:8545/
+
+Accounts
+========
+
+WARNING: These accounts, and their private keys, are publicly known.
+Any funds sent to them on Mainnet or any other live network WILL BE LOST.
+
+Account #0: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000 ETH)
+Private Key: <redacted>
+
+...
+
+Account #19: 0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199 (10000 ETH)
+Private Key: <redacted>
+
+WARNING: These accounts, and their private keys, are publicly known.
+Any funds sent to them on Mainnet or any other live network WILL BE LOST.
+```
+
+:::info
+The Hardhat development network's test accounts are funded with ETH for testing purpose. These accounts will be used in this tutorial to send transactions.
+:::
+
+The Hardhat development network needs to remain running in the terminal that was used to start it. Open a new terminal instance in the project directory to execute the remaining commands in this tutorial.
+
+Next, create a new file called `index.js` in your project directory and add the following code to it:
+
+```js
+const { Web3 } = require("web3");
+
+const web3 = new Web3("http://127.0.0.1:8545/");
+
+// Log the chain ID to the console
+web3.eth
+  .getChainId()
+  .then((result) => {
+    console.log("Chain ID: " + result);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+This code sets up a Web3.js connection to the Hardhat development network and logs the chain ID to the console.
+
+:::note
+This tutorial uses the default URL for the Hardhat development network (http://127.0.0.1:8545/). Make sure to use the actual URL that was provided when the Hardhat development network was started.
+:::
+
+Run the following command to test the connection:
+
+```bash
+node index.js
+```
+
+If everything is working correctly, the chain ID of the Hardhat development network should be logged to the console:
+
+```bash
+Chain ID: 31337
+```
+
+## Step 4: Send a Transaction and Review the Results
+
+Create a new file called `transaction-receipt.js` in your project directory and add the following code to it:
+
+:::note
+Replace the value of the `privateKey` variable with one of the private keys of the Hardhat development network's test accounts.
+:::
+
+```js
+const { Web3 } = require("web3");
+
+async function main() {
+  const web3 = new Web3("http://127.0.0.1:8545/");
+
+  // create a new Web3.js account object with the private key of a Hardhat test account
+  const privateKey = "<redacted>";
+  // the account is created with a wallet, which makes it easier to use
+  const sender = web3.eth.accounts.wallet.add(privateKey)[0];
+
+  // generate a new random Web3.js account object to receive the transaction
+  const receiver = web3.eth.accounts.create();
+
+  // log initial balances
+  console.log(
+    "Initial sender balance:",
+    // account balance in wei
+    await web3.eth.getBalance(sender.address)
+  );
+  console.log(
+    "Initial receiver balance:",
+    // account balance in wei
+    await web3.eth.getBalance(receiver.address)
+  );
+
+  // sign and send the transaction
+  const receipt = await web3.eth.sendTransaction({
+    from: sender.address,
+    to: receiver.address,
+    // amount in wei
+    value: 100,
+  });
+
+  // log transaction receipt
+  console.log(receipt);
+
+  // log final balances
+  console.log(
+    "Final sender balance:",
+    await web3.eth.getBalance(sender.address)
+  );
+  console.log(
+    "Final receiver balance:",
+    await web3.eth.getBalance(receiver.address)
+  );
+}
+
+main();
+```
+
+This script uses the [`web3.eth.sendTransaction`](/libdocs/Web3Eth#sendtransaction) function to send the transaction. The parameter to this function is defined by the [`Transaction`](/api/web3-types/interface/Transaction) interface.
+
+:::note
+By default, Web3.js uses the [wei denomination](https://ethereum.org/en/developers/docs/intro-to-ether/#denominations) for account balances and transaction values. The [`web3-utils`](/libdocs/Utils) package has helper functions that can be used to convert other denominations of ether [to](/libdocs/Utils#towei) and [from](/libdocs/Utils#fromwei) wei.
+:::
+
+In this example, the account is created with a `Wallet`, which adds it to the internal Web3.js context (i.e. [`Web3Context`](/api/web3-core/class/Web3Context)). When a transaction is sent from an account that has been created with a `Wallet` and added to the context, Web3.js will automatically use that account's private key to sign the transaction. The steps required to send a transaction from an account that hasn't been created with a wallet and added to the context are described in [Step 6: Send a Raw Transaction](#step-6-send-a-raw-transaction).
+
+Execute the following command to run the code from `transaction-receipt.js`:
+
+```bash
+node transaction-receipt.js
+```
+
+The output should look similar to the following:
+
+```
+Initial sender balance: 10000000000000000000000n
+Initial receiver balance: 0n
+{
+  blockHash: '0x9a7250ca7947b84972bf973da232656280f2bb5eab71777a34fb49c08585a2b2',
+  blockNumber: 1n,
+  cumulativeGasUsed: 21000n,
+  effectiveGasPrice: 3375000000n,
+  from: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
   gasUsed: 21000n,
   logs: [],
   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
   status: 1n,
-  to: '0x5875da5854c2adadbc1a7a448b5b2a09b26baff8',
-  transactionHash: '0x247e4540f9b399655da90e8a0c3d9ec165f62a304f6364f45518a4d6a531cd36',
-  transactionIndex: 156n,
-  type: 0n
+  to: '0xc14a6278b4a8d4f9eb198b75b7013d58b1de94da',
+  transactionHash: '0xaf4b89e10c811e3f2c954447e40f7ecac073ca41fa4a896a3a86299cae24b339',
+  transactionIndex: 0n,
+  type: 2n
 }
-*/
+Final sender balance: 9999999929124999999900n
+Final receiver balance: 100n
 ```
 
-## Sending a transaction with Browser Injection (Metamask)
+Note that the sender's balance has decreased by more than the amount that was transferred to the receiver. This is because the sender's balance is also used to pay for the transaction's [gas fees](https://ethereum.org/en/developers/docs/gas/). The transaction receipt specifies the amount of gas that was used (`cumulativeGasUsed`) and the gas price in wei (`effectiveGasPrice`). The total amount deducted from the sender's balance is equal to the amount transferred plus the cost of the gas fees (`cumulativeGasUsed` multiplied by `effectiveGasPrice`).
 
-This is an example html file that will send a transaction when the button element is clicked.
+## Step 5: Send a Transaction and Subscribe to Its Events
 
-To run this example you'll need Metamask, the `index.html` file below in your folder and you'll need a local server:
+In the previous example, the `transaction-receipt.js` script demonstrates sending a transaction to the network and reviewing the results after it has been successfully received. However, there are more stages to the [transaction lifecycle](https://ethereum.org/en/developers/docs/transactions/#transaction-lifecycle) and Web3.js makes it easy to subscribe to these lifecycle stages and create custom handlers for each one. Web3.js supports subscriptions for the following transaction lifecycle events:
 
-```bash
-npm i http-server
-```
+- Sending - Web3.js is preparing to send the transaction to the network
+- Sent - the transaction has been sent to the network
+- Transaction hash - a hash of the transaction has been generated
+- Receipt - the transaction has been included in a block
+- Confirmation - the block in which the transaction was included has been [finalized](https://ethereum.org/en/glossary/#finality)
+- Error - a problem with the transaction was encountered
 
-```bash
-npx http-server
-```
+Create a new file called `transaction-events.js` in your project directory and add the following code to it:
 
-Afterwards your file will be served on a local port, which will usually be on `http://127.0.0.1:8080`
+```js
+const { Web3 } = require("web3");
 
-``` html
-<!DOCTYPE html>
-<html lang='en'>
-  <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>Send Transaction Example</title>
-    <script src='https://cdn.jsdelivr.net/npm/web3@4.3.0/+esm'></script>
-  </head>
+const web3 = new Web3("http://127.0.0.1:8545/");
 
-  <body>
-    <button id='sendButton'>Send Transaction</button>
-    <script>
-      // Wrap the code inside an async function
-      (async function () {
-        try {
-          // Check if MetaMask is installed and connected
-          if (typeof window.ethereum === 'undefined') {
-            throw new Error('MetaMask is not installed or not properly configured');
-          }
+const privateKey = "<redacted>";
+const sender = web3.eth.accounts.wallet.add(privateKey)[0];
 
-          // Connect to the Ethereum network using MetaMask
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+const receiver = web3.eth.accounts.create();
 
-          const web3 = new Web3(window.ethereum);
-
-          // Add event listener to the Send Transaction button
-          const sendButton = document.getElementById('sendButton');
-          sendButton.addEventListener('click', async () => {
-            try {
-              await web3.eth.sendTransaction({ from: accounts[0], to: '0x38E2fb54587208f29B1452Bb8136d271BE0912EF' });
-            } catch (error) {
-              console.error(error);
-            }
-          });
-        } catch (error) {
-          console.error(error);
-        }
-      })();
-    </script>
-  </body>
-</html>
-```
-
-
-## Contract Deployment
-
-```typescript title='Deploy a contract'
-// 1st step: initialize `web3` instance
-import { Web3 } from 'web3';
-
-const web3 = new Web3(/* PROVIDER*/);
-
-// 2nd step: add an account to wallet
-const privateKey = '0x7b907534ec13b19c67c2a738fdaa69014298c71f2221d7e5dec280232e996610';
-const account = web3.eth.accounts.wallet.add(privateKey).get(0);
-// Make sure the account has enough eth on balance to send the transaction
-
-// fill ContractAbi and ContractBytecode with your contract's abi and bytecode
-
-async function deploy() {
-  // 3rd step: sign and send the transaction
-  // In any function where you can pass from the address set address of the account that exists in a wallet, it will be automatically signed.
-
-  try {
-    // deploy
-    const contract = new web3.eth.Contract(ContractAbi);
-    const contractDeployed = await contract
-      .deploy({
-        input: ContractBytecode,
-        arguments: ['Constructor param1', 'Constructor param2'],
-      })
-      .send({
-        from: account?.address,
-        gas: '1000000',
-        // other transaction's params
-      });
-
-    // call method
-    await contractDeployed.methods.transfer('0xe2597eb05cf9a87eb1309e86750c903ec38e527e', '0x1').send({
-      from: account?.address,
-      gas: '1000000',
-      // other transaction's params
-    });
-  } catch (error) {
-    // catch transaction error
-    console.error(error);
-  }
-}
-
-(async () => {
-  await deploy();
-})();
-```
-
-
-## Interacting with contract methods
-
-``` ts title='Interact with contracts using a wallet under the hood'
-// 1st step: initialize `web3` instance
-import { Web3 } from 'web3';
-
-const web3 = new Web3(/* PROVIDER*/);
-
-// 2nd step: add an account to wallet
-const privateKeyString = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba';
-
-const wallet = web3.eth.accounts.wallet.add(privateKeyString);
-// Make sure the account has enough eth on balance to send the transaction
-
-async function contractMethod() {
-  try {
-    // 3rd step: instantiate the contract with the ABI and contract address
-    const myContract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-
-    // 4th step: call contract method and send the tx
-    await myContract.methods.doSomething().send({
-      from: wallet[0].address,
-      gas: '1000000',
-      // other transaction's params
-    });
-  } catch (error) {
-    // catch transaction error
-    console.error(error);
-  }
-}
-
-(async () => {
-  await contractMethod();
-})();
-```
-
-## Sending a transaction and listening to the events
-
-```ts title='Transactions with Web3PromiEvent'
-import { Web3 } from 'web3';
-
-// 1st - initialize the provider
-const web3 = new Web3(/* PROVIDER*/);
-
-// 2nd - add an account to wallet
-const privateKey = '0x4651f9c219fc6401fe0b3f82129467c717012287ccb61950d2a8ede0687857ba';
-const account = web3.eth.accounts.wallet.add(privateKey).get(0);
-// Make sure the account has enough eth on balance to send the transaction
-
-// 3rd - sign and send the transaction
-// Magic happens behind sendTransaction. If a transaction is sent from an account that exists in a wallet, it will be automatically signed.
-const transaction = web3.eth.sendTransaction({
-  from: account?.address,
-  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
-  value: '0x1',
-  gas: '300000',
-  // other transaction's params
-});
-
-// highlight-start
-// 4th - listen to the transaction events
-transaction
-  .on('sending', (sending) => {
-    // Sending example
-    console.log('Sending:', sending);
+web3.eth
+  .sendTransaction({
+    from: sender.address,
+    to: receiver.address,
+    value: 100,
   })
-  .on('sent', (sent) => {
-    // Sent example
-    console.log('Sent:', sent);
+  .on("sending", (sending) => {
+    console.log("Sending:", sending);
   })
-  .on('transactionHash', (transactionHash) => {
-    // Transaction hash example
-    console.log('Transaction Hash:', transactionHash);
+  .on("sent", (sent) => {
+    console.log("Sent:", sent);
   })
-  .on('confirmation', (confirmation) => {
-    // Confirmation example
-    console.log('Confirmation:', confirmation);
+  .on("transactionHash", (transactionHash) => {
+    console.log("Transaction Hash:", transactionHash);
   })
-  .on('error', (error) => {
-    // Error example
-    console.error('Error:', error);
+  .on("receipt", (receipt) => {
+    console.log("Receipt:", receipt);
+  })
+  .on("confirmation", (confirmation) => {
+    console.log("Confirmation:", confirmation);
+    process.exit(0);
+  })
+  .on("error", (error) => {
+    console.log("Error:", error);
+    process.exit(1);
   });
-// highlight-end
-/* ↳
+```
+
+Execute the following command to run the code from `transaction-events.js`:
+
+```bash
+node transaction-events.js
+```
+
+The output should look similar to the following:
+
+```
 Sending: {
-  from: '0xA3286628134baD128faeef82F44e99AA64085C94',
-  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
-  value: '0x1',
-  gas: '0x493e0',
+  from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  to: '0x077bd1F472a0C7eD3214583d4B0fE8b21e4b3b5A',
+  value: '0x64',
   gasPrice: undefined,
   maxPriorityFeePerGas: '0x9502f900',
-  maxFeePerGas: '0x2b53cf7960'
+  maxFeePerGas: '0xfd51da80'
 }
 Sent: {
-  from: '0xA3286628134baD128faeef82F44e99AA64085C94',
-  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
-  value: '0x1',
-  gas: '0x493e0',
+  from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  to: '0x077bd1F472a0C7eD3214583d4B0fE8b21e4b3b5A',
+  value: '0x64',
   gasPrice: undefined,
   maxPriorityFeePerGas: '0x9502f900',
-  maxFeePerGas: '0x2b53cf7960'
+  maxFeePerGas: '0xfd51da80'
 }
-Transaction Hash: 0xa7493bc3eb6e7f41b54291cfd19d90111e68ea2cd9718da937ca4dcc1f831dde
+Transaction Hash: 0x66b4cd592e82ea09dee4015277aee9299bafce369819a82b4797a06ba010c6b1
 Receipt: {
-  blockHash: '0xe049c2cd2a473dad2af5ccf40c2df788cd42a237616cc84cc3861937f1aa2195',
-  blockNumber: 4972912n,
-  cumulativeGasUsed: 1018070n,
-  effectiveGasPrice: 100635626363n,
-  from: '0xa3286628134bad128faeef82f44e99aa64085c94',
+  blockHash: '0xeedfe16bb67dae4cc2064f68ddcef1b83deb4b1eaf19b99c2a175aafaded36b9',
+  blockNumber: 2n,
+  cumulativeGasUsed: 21000n,
+  effectiveGasPrice: 3265778125n,
+  from: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
   gasUsed: 21000n,
   logs: [],
-  logsBloom: '0x...00',
+  logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
   status: 1n,
-  to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
-  transactionHash: '0xa7493bc3eb6e7f41b54291cfd19d90111e68ea2cd9718da937ca4dcc1f831dde',
-  transactionIndex: 15n,
+  to: '0x077bd1f472a0c7ed3214583d4b0fe8b21e4b3b5a',
+  transactionHash: '0x66b4cd592e82ea09dee4015277aee9299bafce369819a82b4797a06ba010c6b1',
+  transactionIndex: 0n,
   type: 2n
 }
 Confirmation: {
   confirmations: 1n,
   receipt: {
-    blockHash: '0xe049c2cd2a473dad2af5ccf40c2df788cd42a237616cc84cc3861937f1aa2195',
-    blockNumber: 4972912n,
-    cumulativeGasUsed: 1018070n,
-    effectiveGasPrice: 100635626363n,
-    from: '0xa3286628134bad128faeef82f44e99aa64085c94',
+    blockHash: '0xeedfe16bb67dae4cc2064f68ddcef1b83deb4b1eaf19b99c2a175aafaded36b9',
+    blockNumber: 2n,
+    cumulativeGasUsed: 21000n,
+    effectiveGasPrice: 3265778125n,
+    from: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
     gasUsed: 21000n,
     logs: [],
-    logsBloom: '0x...000',
+    logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
     status: 1n,
-    to: '0xe4beef667408b99053dc147ed19592ada0d77f59',
-    transactionHash: '0xa7493bc3eb6e7f41b54291cfd19d90111e68ea2cd9718da937ca4dcc1f831dde',
-    transactionIndex: 15n,
+    to: '0x077bd1f472a0c7ed3214583d4b0fe8b21e4b3b5a',
+    transactionHash: '0x66b4cd592e82ea09dee4015277aee9299bafce369819a82b4797a06ba010c6b1',
+    transactionIndex: 0n,
     type: 2n
   },
-  latestBlockHash: '0xe049c2cd2a473dad2af5ccf40c2df788cd42a237616cc84cc3861937f1aa2195'
+  latestBlockHash: '0xeedfe16bb67dae4cc2064f68ddcef1b83deb4b1eaf19b99c2a175aafaded36b9'
 }
-Confirmation: {
-  confirmations: 2n,
-  receipt: {...},
-  latestBlockHash: '0xf20261fc59d059c9dfd048e44c7fe1499d45822d9fe804bca70ac56559b54b1b'
-}
-Confirmation: {
-  confirmations: 3n,
-  receipt: {...},
-  latestBlockHash: '0xb52380054ad2382620615ba7b7b40638021d85c5904a402cd11d00fd4db9fba9'
-}
-*/
 ```
+
+Because the transaction should succeed, the error event should not be logged to the console. To review an error event, use a random account to send the transaction by changing the value of the `sender` variable as follows:
+
+```js
+const sender = web3.eth.accounts.wallet.create(1)[0];
+```
+
+This change will cause an error since the new random account does not have a balance that can be used to pay the transaction's gas fees.
+
+Re-run the updated script as before. The output should look similar to the following:
+
+```
+Sending: {
+  from: '0x2F2f42075567cd9823961A4e04171cEbdc45E390',
+  to: '0xb52F3110C8d3eFDa5137A8A935eE35aACCBB3613',
+  value: '0x64',
+  gasPrice: undefined,
+  maxPriorityFeePerGas: '0x9502f900',
+  maxFeePerGas: '0xf04caa9a'
+}
+Error: InvalidResponseError: Returned error: Sender doesn't have enough funds to send tx. The max upfront cost is: 84666712806350 and the sender's balance is: 0.
+    at Web3RequestManager._processJsonRpcResponse (.../web3-core/lib/commonjs/web3_request_manager.js:281:23)
+    at Web3RequestManager.<anonymous> (.../web3-core/lib/commonjs/web3_request_manager.js:167:29)
+    at Generator.next (<anonymous>)
+    at fulfilled (.../web3-core/lib/commonjs/web3_request_manager.js:21:58)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  cause: {
+    code: -32000,
+    message: "Sender doesn't have enough funds to send tx. The max upfront cost is: 84666712806350 and the sender's balance is: 0.",
+    data: {
+      message: "Sender doesn't have enough funds to send tx. The max upfront cost is: 84666712806350 and the sender's balance is: 0.",
+      data: null
+    }
+  },
+  code: 101,
+  data: {
+    message: "Sender doesn't have enough funds to send tx. The max upfront cost is: 84666712806350 and the sender's balance is: 0.",
+    data: null
+  },
+  request: {
+    jsonrpc: '2.0',
+    id: 'bf7e8ddd-f2bb-45ab-9168-8c577cd1bcb9',
+    method: 'eth_sendRawTransaction',
+    params: [
+      '0x02f86c827a6980849502f90084f04caa9a82520994b52f3110c8d3efda5137a8a935ee35aaccbb36136480c080a040b3b5d9a72ced0ec70750157a34972233b51e49a511a813763487f84905841ca06237e4a9b1e00934c6fabd32588ed44b6b55bb4aadb67939410a7a0cb801e2f1'
+    ]
+  }
+}
+```
+
+## Step 6: Send a Raw Transaction
+
+The previous examples have relied on the helpful Web3.js context to automatically sign transactions with accounts that have been created with a `Wallet`. The final example in this tutorial will demonstrate using a non-wallet account to manually sign a transaction.
+
+Create a new file called `raw-transaction.js` in your project directory and add the following code to it:
+
+```js
+const { Web3 } = require("web3");
+
+async function main() {
+  const web3 = new Web3("http://127.0.0.1:8545/");
+
+  const privateKey = "<redacted>";
+  // import the Hardhat test account without the use of a wallet
+  const sender = web3.eth.accounts.privateKeyToAccount(privateKey);
+
+  const receiver = web3.eth.accounts.create();
+
+  // used to calculate the transaction's maxFeePerGas
+  const block = await web3.eth.getBlock();
+
+  const transaction = {
+    from: sender.address,
+    to: receiver.address,
+    value: 100,
+    // the following two properties must be included in raw transactions
+    maxFeePerGas: block.baseFeePerGas * 2n,
+    maxPriorityFeePerGas: 100000,
+  };
+
+  const signedTransaction = await web3.eth.accounts.signTransaction(
+    transaction,
+    sender.privateKey
+  );
+  const receipt = await web3.eth.sendSignedTransaction(
+    signedTransaction.rawTransaction
+  );
+  console.log(receipt);
+}
+
+main();
+```
+
+In this example, the [`signTransaction`](/api/web3-eth-accounts/function/signTransaction) function is used to manually sign the transaction with the sender's private key before using the [`sendSignedTransaction`](/api/web3-eth/function/sendSignedTransaction) function to send the transaction to the network. Note that, unlike in the previous examples, which relied on the helpful Web3.js context to construct the final transaction, this examples requires the inclusion of the [`maxFeePerGas`](/api/web3-types/interface/Transaction#maxFeePerGas) and [`maxPriorityFeePerGas`](/api/web3-types/interface/Transaction#maxPriorityFeePerGas) properties on the [`Transaction`](/api/web3-types/interface/Transaction) object. The exact meaning of these properties is out of the scope of this tutorial, but notice that `maxFeePerGas` is calculated using an actual value retrieved from the network ([`baseFeePerGas`](/api/web3-types/interface/BlockBase#baseFeePerGas)) while `maxPriorityFeePerGas` is set to a value that is simply deemed to be high enough.
+
+Execute the following command to run the code from `raw-transaction.js`:
+
+```bash
+node raw-transaction.js
+```
+
+The output should look similar to the following:
+
+```
+{
+  blockHash: '0xb83ccddddb4e715e51765182e184251d55bd4bc5da982691b169d21e39b62559',
+  blockNumber: 3n,
+  cumulativeGasUsed: 21000n,
+  effectiveGasPrice: 670289871n,
+  from: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  gasUsed: 21000n,
+  logs: [],
+  logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+  status: 1n,
+  to: '0x9f676309956465c7e4d188f58149a9e8f945d477',
+  transactionHash: '0xe56a9aee0f4927d5ce1eefaf2a323d32eb51e762bcf2ef33989c101302379bfc',
+  transactionIndex: 0n,
+  type: 2n
+}
+```
+
+## Conclusion
+
+This tutorial demonstrated using accounts to send transactions, including how to subscribe to the events associated with a transaction. The easiest way to send a transaction from an account is to create the account with a `Wallet`, which adds that account to the Web3.js context and automates the process of using the account's private key to sign the transaction. However, for non-wallet accounts or in situations where it's necessary to decouple the processes of signing and sending a transaction (e.g. offline signing), Web3.js provides easy interfaces for manually signing a transaction before sending it.

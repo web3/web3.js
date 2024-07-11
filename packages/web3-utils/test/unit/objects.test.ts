@@ -79,5 +79,14 @@ describe('objects', () => {
 
 			expect(result.a).toStrictEqual(new Uint8Array([1, 2]));
 		});
+
+		it('should return the destination object if it is not iterable', () => {
+			const destination = 123; // Replace with your desired destination object
+			const sources: Record<string, unknown>[] = []; // Replace with your desired sources array
+
+			const result = mergeDeep(destination as unknown as Record<string, unknown>, ...sources);
+
+			expect(result).toBe(destination);
+		});
 	});
 });

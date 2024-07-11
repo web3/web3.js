@@ -1,6 +1,6 @@
 {
 	"name": "web3-validator",
-	"version": "2.0.5",
+	"version": "2.0.6",
 	"description": "JSON-Schema compatible validator for web3",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -11,7 +11,6 @@
 			"require": "./lib/commonjs/index.js"
 		}
 	},
-	"browser": "./dist/web3-validator.min.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
@@ -33,7 +32,7 @@
 		"build:types": "tsc --build tsconfig.types.json",
 		"build:web": "npx webpack",
 		"build:check": "node -e \"require('./lib')\"",
-		"lint": "eslint --ext .js,.ts .",
+		"lint": "eslint --cache --cache-strategy content --ext .ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
@@ -47,8 +46,8 @@
 	"dependencies": {
 		"ethereum-cryptography": "^2.0.0",
 		"util": "^0.12.5",
-		"web3-errors": "^1.1.4",
-		"web3-types": "^1.5.0",
+		"web3-errors": "^1.2.0",
+		"web3-types": "^1.6.0",
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {

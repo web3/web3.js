@@ -16,13 +16,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { ENSNetworkNotSyncedError, ENSUnsupportedNetworkError, RevertInstructionError } from 'web3-errors';
+import {
+	ENSNetworkNotSyncedError,
+	ENSUnsupportedNetworkError,
+	RevertInstructionError,
+} from 'web3-errors';
 import { isSyncing } from 'web3-eth';
 import { Contract } from 'web3-eth-contract';
 import { getId } from 'web3-net';
 import {
 	Address,
-	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
 	FMT_NUMBER,
 	PayableCallOptions,
@@ -30,6 +33,7 @@ import {
 	TransactionReceipt,
 	Web3NetAPI,
 } from 'web3-types';
+import { isAddress } from 'web3-validator';
 import { PublicResolverAbi } from './abi/ens/PublicResolver.js';
 import { networkIds, registryAddresses } from './config.js';
 import { Registry } from './registry.js';
@@ -37,25 +41,25 @@ import { Resolver } from './resolver.js';
 
 /**
  * This class is designed to interact with the ENS system on the Ethereum blockchain.
-* For using ENS package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used as mentioned in following snippet.
-* ```ts
-* 
-* import { Web3 } from 'web3';
-* 
-* const web3 = new Web3('https://127.0.0.1:4545');
-* 
-* console.log(await web3.eth.ens.getAddress('ethereum.eth'))
-* ```
-* For using individual package install `web3-eth-ens` packages using: `npm i web3-eth-ens` or `yarn add web3-eth-ens`. This is more efficient approach for building lightweight applications.
-*
-* ```ts
-*import { ENS } from 'web3-eth-ens';
-*
-* const ens = new ENS(undefined,'https://127.0.0.1:4545');
-*
-* console.log(await ens.getAddress('vitalik.eth'));
-* ```
-*/
+ * For using ENS package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that ENS features can be used as mentioned in following snippet.
+ * ```ts
+ *
+ * import { Web3 } from 'web3';
+ *
+ * const web3 = new Web3('https://127.0.0.1:4545');
+ *
+ * console.log(await web3.eth.ens.getAddress('ethereum.eth'))
+ * ```
+ * For using individual package install `web3-eth-ens` packages using: `npm i web3-eth-ens` or `yarn add web3-eth-ens`. This is more efficient approach for building lightweight applications.
+ *
+ * ```ts
+ *import { ENS } from 'web3-eth-ens';
+ *
+ * const ens = new ENS(undefined,'https://127.0.0.1:4545');
+ *
+ * console.log(await ens.getAddress('vitalik.eth'));
+ * ```
+ */
 export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * The registryAddress property can be used to define a custom registry address when you are connected to an unknown chain. It defaults to the main registry address.
@@ -171,18 +175,19 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param key - The key to resolve https://github.com/ethereum/ercs/blob/master/ERCS/erc-634.md#global-keys
 	 * @returns - The value content stored in the resolver for the specified key
 	 */
-	public async getText(ENSName: string, key: string): Promise<string> {
-		return this._resolver.getText(ENSName, key);
+	public async getText(ENSNameOrAddr: string | Address, key: string): Promise<string> {
+		if(isAddress(ENSNameOrAddr))
+			return this._resolver.getText(await(this._resolver.getName(ENSNameOrAddr,false)), key);
+		return this._resolver.getText(ENSNameOrAddr, key);
 	}
-
 
 	/**
 	 * Resolves the name of an ENS node.
 	 * @param ENSName - The node to resolve
 	 * @returns - The name
 	 */
-	public async getName(ENSName: string): Promise<string> {
-		return this._resolver.getName(ENSName);
+	public async getName(ENSName: string, checkInterfaceSupport = true): Promise<string> {
+		return this._resolver.getName(ENSName, checkInterfaceSupport);
 	}
 
 	/**
@@ -246,7 +251,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 			return this._detectedAddress;
 		}
 		const networkType = await getId(this, {
-			...DEFAULT_RETURN_FORMAT,
+			...this.defaultReturnFormat,
 			number: FMT_NUMBER.HEX,
 		}); // get the network from provider
 		const addr = registryAddresses[networkIds[networkType]];
@@ -292,10 +297,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * const receipt = await ens.setAddress('web3js.eth','0xe2597eb05cf9a87eb1309e86750c903ec38e527e');
 	 *```
 	 */
-	 public async setAddress(
+	public async setAddress(
 		name: string,
 		address: Address,
-		txConfig: PayableCallOptions
+		txConfig: PayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
 		return this._resolver.setAddress(name, address, txConfig);
 	}

@@ -264,9 +264,9 @@ export async function call(
 }
 
 // TODO Not sure how to best validate Partial<TransactionWithSender>
-export async function estimateGas(
+export async function estimateGas<TransactionType = TransactionWithSenderAPI>(
 	requestManager: Web3RequestManager,
-	transaction: Partial<TransactionWithSenderAPI>,
+	transaction: Partial<TransactionType>,
 	blockNumber: BlockNumberOrTag,
 ) {
 	validator.validate(['blockNumberOrTag'], [blockNumber]);

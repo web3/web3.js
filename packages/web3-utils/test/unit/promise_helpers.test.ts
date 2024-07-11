@@ -60,6 +60,14 @@ describe('promise helpers', () => {
 				new Error('time out'),
 			);
 		});
+		it('throws if result is an instance of Error', async () => {
+			const dummyError = new Error('dummy error');
+			const asyncHelper = async () => {
+				return dummyError;
+			};
+
+			await expect(waitWithTimeout(asyncHelper(), 1000)).rejects.toThrow(dummyError);
+		});
 	});
 	describe('rejectIfTimeout', () => {
 		it('%s', async () => {
@@ -147,20 +155,26 @@ describe('promise helpers', () => {
 		});
 
 		it('should return interval id if not resolved in specific time', async () => {
-
 			let counter = 0;
+			// eslint-disable-next-line @typescript-eslint/require-await
 			const asyncHelper = async () => {
 				if (counter <= 3000000) {
 					counter += 1;
 					return undefined;
 				}
-				return "result";
+				return 'result';
 			};
 
 			const testError = new Error('Test P2 Error');
 
-			const [neverResolvePromise, intervalId] = pollTillDefinedAndReturnIntervalId(asyncHelper, 100);
-			const promiCheck = Promise.race([neverResolvePromise, rejectIfTimeout(500,testError)[1]]);
+			const [neverResolvePromise, intervalId] = pollTillDefinedAndReturnIntervalId(
+				asyncHelper,
+				100,
+			);
+			const promiCheck = Promise.race([
+				neverResolvePromise,
+				rejectIfTimeout(500, testError)[1],
+			]);
 
 			await expect(promiCheck).rejects.toThrow(testError);
 			expect(intervalId).toBeDefined();
@@ -188,6 +202,7 @@ describe('promise helpers', () => {
 		it('reject if later throws', async () => {
 			const dummyError = new Error('error');
 			let counter = 0;
+			// eslint-disable-next-line @typescript-eslint/require-await
 			const asyncHelper = async () => {
 				if (counter === 0) {
 					counter += 1;

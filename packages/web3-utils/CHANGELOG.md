@@ -174,7 +174,7 @@ Documentation:
 ### Added
 
 -   `SocketProvider` now contains public function `getPendingRequestQueueSize`, `getSentRequestsQueueSize` and `clearQueues` (#6479)
--   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6479) 
+-   Added `safeDisconnect` as a `SocketProvider` method to disconnect only when request queue size and send request queue size is 0 (#6479)
 -   Add `isContractInitOptions` method (#6555)
 
 ### Fixed
@@ -203,6 +203,31 @@ Documentation:
 
 ### Fixed
 
-- fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
+-   fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
+
+## [4.2.3]
+
+### Changed
+
+-   Method `format` was changed. Now it has default value `DEFAULT_RETURN_FORMAT` for `returnFormat` parameter (#6947)
+
+### Fixed
+
+-   fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
+-   fixed isUint8Array not returning true for Buffer (#6957)
+
+## [4.3.0]
+
+### Added
+
+-   `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
+-   `toWei` and `fromWei` now supports integers as a unit. (#7053)
+
+### Fixed
+
+-   `toWei` support numbers in scientific notation (#6908)
+-   `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
 
 ## [Unreleased]
+
+-   `_sendPendingRequests` will catch unhandled errors from `_sendToSocket` (#6968)

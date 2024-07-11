@@ -21,7 +21,6 @@ import { DataFormat } from 'web3-types';
 import { NewHeadsSubscription } from '../web3_subscriptions.js';
 import { transactionReceiptSchema } from '../schemas.js';
 import { WaitProps, watchTransactionByPolling } from './watch_transaction_by_polling.js';
-
 /**
  * This function watches a Transaction by subscribing to new heads.
  * It is used by `watchTransactionForConfirmations`, in case the provider supports subscription.
@@ -33,6 +32,7 @@ export const watchTransactionBySubscription = <
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
+	customTransactionReceiptSchema,
 	returnFormat,
 }: WaitProps<ReturnFormat, ResolveType>) => {
 	// The following variable will stay true except if the data arrived,
@@ -66,7 +66,11 @@ export const watchTransactionBySubscription = <
 							confirmations as Numbers,
 							returnFormat,
 						),
-						receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
+						receipt: format(
+							customTransactionReceiptSchema ?? transactionReceiptSchema,
+							transactionReceipt,
+							returnFormat,
+						),
 						latestBlockHash: format(
 							{ format: 'bytes32' },
 							newBlockHeader.parentHash as Bytes,
@@ -85,6 +89,7 @@ export const watchTransactionBySubscription = <
 						web3Context,
 						transactionReceipt,
 						transactionPromiEvent,
+						customTransactionReceiptSchema,
 						returnFormat,
 					});
 				});
@@ -94,6 +99,7 @@ export const watchTransactionBySubscription = <
 				watchTransactionByPolling({
 					web3Context,
 					transactionReceipt,
+					customTransactionReceiptSchema,
 					transactionPromiEvent,
 					returnFormat,
 				});

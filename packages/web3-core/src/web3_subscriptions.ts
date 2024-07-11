@@ -30,7 +30,6 @@ import {
 	Web3APISpec,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
-import { SubscriptionError } from 'web3-errors';
 
 // eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
@@ -82,16 +81,6 @@ export abstract class Web3Subscription<
 		super();
 		const { requestManager } = options as { requestManager: Web3RequestManager<API> };
 		const { subscriptionManager } = options as { subscriptionManager: Web3SubscriptionManager };
-		if (requestManager && subscriptionManager) {
-			throw new SubscriptionError(
-				'Only requestManager or subscriptionManager should be provided at Subscription constructor',
-			);
-		}
-		if (!requestManager && !subscriptionManager) {
-			throw new SubscriptionError(
-				'Either requestManager or subscriptionManager should be provided at Subscription constructor',
-			);
-		}
 		if (requestManager) {
 			// eslint-disable-next-line deprecation/deprecation
 			this._subscriptionManager = new Web3SubscriptionManager(requestManager, {}, true);

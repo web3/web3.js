@@ -101,7 +101,7 @@ export class LogsSubscription extends Web3Subscription<
 	public readonly topics?: (Topic | Topic[] | null)[];
 
 	/**
-	 * The {@doclink glossary/json_interface | JSON Interface} of the event.
+	 * The {@doclink glossary#json-interface-abi | JSON Interface} of the event.
 	 */
 	public readonly abi: AbiEventFragment & { signature: HexString };
 

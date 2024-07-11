@@ -38,14 +38,17 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	returnFormat: ReturnFormat,
 ): Promise<FormatType<{ maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers }, ReturnFormat>> {
-	const block = await getBlock(web3Context, web3Context.defaultBlock, false, returnFormat);
-
+	const block = await getBlock(web3Context, web3Context.defaultBlock, false, ETH_DATA_FORMAT);
 	if (isNullish(block.baseFeePerGas)) throw new Eip1559NotSupportedError();
 
-	if (!isNullish(transaction.gasPrice)) {
+	let gasPrice: Numbers | undefined;
+	if (isNullish(transaction.gasPrice) && BigInt(block.baseFeePerGas) === BigInt(0)) {
+		gasPrice = await getGasPrice(web3Context, returnFormat);
+	}
+	if (!isNullish(transaction.gasPrice) || !isNullish(gasPrice)) {
 		const convertedTransactionGasPrice = format(
 			{ format: 'uint' },
-			transaction.gasPrice as Numbers,
+			transaction.gasPrice ?? gasPrice,
 			returnFormat,
 		);
 

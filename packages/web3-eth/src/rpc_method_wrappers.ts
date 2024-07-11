@@ -70,6 +70,7 @@ import {
 	SendSignedTransactionOptions,
 	SendTransactionEvents,
 	SendTransactionOptions,
+	TransactionMiddleware,
 } from './types.js';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionFromOrToAttr } from './utils/transaction_builder.js';
@@ -122,7 +123,11 @@ export async function getHashRate<ReturnFormat extends DataFormat>(
 ) {
 	const response = await ethRpcMethods.getHashRate(web3Context.requestManager);
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -135,7 +140,11 @@ export async function getGasPrice<ReturnFormat extends DataFormat>(
 ) {
 	const response = await ethRpcMethods.getGasPrice(web3Context.requestManager);
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -148,7 +157,11 @@ export async function getMaxPriorityFeePerGas<ReturnFormat extends DataFormat>(
 ) {
 	const response = await ethRpcMethods.getMaxPriorityFeePerGas(web3Context.requestManager);
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 /**
  * View additional documentations here: {@link Web3Eth.getBlockNumber}
@@ -160,7 +173,11 @@ export async function getBlockNumber<ReturnFormat extends DataFormat>(
 ) {
 	const response = await ethRpcMethods.getBlockNumber(web3Context.requestManager);
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -181,7 +198,11 @@ export async function getBalance<ReturnFormat extends DataFormat>(
 		address,
 		blockNumberFormatted,
 	);
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -205,7 +226,11 @@ export async function getStorageAt<ReturnFormat extends DataFormat>(
 		storageSlotFormatted,
 		blockNumberFormatted,
 	);
-	return format({ format: 'bytes' }, response as Bytes, returnFormat);
+	return format(
+		{ format: 'bytes' },
+		response as Bytes,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -226,7 +251,11 @@ export async function getCode<ReturnFormat extends DataFormat>(
 		address,
 		blockNumberFormatted,
 	);
-	return format({ format: 'bytes' }, response as Bytes, returnFormat);
+	return format(
+		{ format: 'bytes' },
+		response as Bytes,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -257,7 +286,11 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 			hydrated,
 		);
 	}
-	return format(blockSchema, response as unknown as Block, returnFormat);
+	return format(
+		blockSchema,
+		response as unknown as Block,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -286,7 +319,11 @@ export async function getBlockTransactionCount<ReturnFormat extends DataFormat>(
 		);
 	}
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -315,7 +352,11 @@ export async function getBlockUncleCount<ReturnFormat extends DataFormat>(
 		);
 	}
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -349,7 +390,11 @@ export async function getUncle<ReturnFormat extends DataFormat>(
 		);
 	}
 
-	return format(blockSchema, response as unknown as Block, returnFormat);
+	return format(
+		blockSchema,
+		response as unknown as Block,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -359,7 +404,7 @@ export async function getUncle<ReturnFormat extends DataFormat>(
 export async function getTransaction<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: Bytes,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const transactionHashFormatted = format(
 		{ format: 'bytes32' },
@@ -373,7 +418,9 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: formatTransaction(response, returnFormat, { fillInputAndData: true });
+		: formatTransaction(response, returnFormat, {
+				fillInputAndData: true,
+		  });
 }
 
 /**
@@ -387,9 +434,13 @@ export async function getPendingTransactions<ReturnFormat extends DataFormat>(
 	const response = await ethRpcMethods.getPendingTransactions(web3Context.requestManager);
 
 	return response.map(transaction =>
-		formatTransaction(transaction as unknown as Transaction, returnFormat, {
-			fillInputAndData: true,
-		}),
+		formatTransaction(
+			transaction as unknown as Transaction,
+			returnFormat ?? web3Context.defaultReturnFormat,
+			{
+				fillInputAndData: true,
+			},
+		),
 	);
 }
 
@@ -426,7 +477,9 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 
 	return isNullish(response)
 		? response
-		: formatTransaction(response, returnFormat, { fillInputAndData: true });
+		: formatTransaction(response, returnFormat ?? web3Context.defaultReturnFormat, {
+				fillInputAndData: true,
+		  });
 }
 
 /**
@@ -443,17 +496,28 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		transactionHash,
 		DEFAULT_RETURN_FORMAT,
 	);
-	const response = await ethRpcMethods.getTransactionReceipt(
-		web3Context.requestManager,
-		transactionHashFormatted,
-	);
-
+	let response;
+	try {
+		 response = await ethRpcMethods.getTransactionReceipt(
+			web3Context.requestManager,
+			transactionHashFormatted,
+		);
+	} catch (error) {
+		// geth indexing error, we poll until transactions stopped indexing
+		if (typeof error === 'object' && !isNullish(error) && 'message' in error && (error as { message: string }).message === 'transaction indexing is in progress') { 
+			console.warn('Transaction indexing is in progress.')
+		} else {
+			throw error;
+		}
+		
+	}
+	
 	return isNullish(response)
 		? response
 		: (format(
 				transactionReceiptSchema,
 				response as unknown as TransactionReceipt,
-				returnFormat,
+				returnFormat ?? web3Context.defaultReturnFormat,
 		  ) as TransactionReceipt);
 }
 
@@ -476,7 +540,11 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	);
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -488,13 +556,14 @@ export function sendTransaction<
 	ResolveType = FormatType<TransactionReceipt, ReturnFormat>,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transaction:
+	transactionObj:
 		| Transaction
 		| TransactionWithFromLocalWalletIndex
 		| TransactionWithToLocalWalletIndex
 		| TransactionWithFromAndToLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
+	transactionMiddleware?: TransactionMiddleware
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
@@ -506,6 +575,12 @@ export function sendTransaction<
 						options,
 						returnFormat,
 					});
+
+					let transaction = {...transactionObj};
+					
+					if(!isNullish(transactionMiddleware)){
+						transaction = await transactionMiddleware.processTransaction(transaction);
+					}
 
 					let transactionFormatted:
 						| Transaction
@@ -519,7 +594,7 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 					);
-					
+
 					try {
 						transactionFormatted = await sendTxHelper.populateGasPrice({
 							transaction,
@@ -548,7 +623,7 @@ export function sendTransaction<
 						const transactionHashFormatted = format(
 							{ format: 'bytes32' },
 							transactionHash as Bytes,
-							returnFormat,
+							returnFormat ?? web3Context.defaultReturnFormat,
 						);
 						sendTxHelper.emitSent(transactionFormatted);
 						sendTxHelper.emitTransactionHash(
@@ -558,11 +633,15 @@ export function sendTransaction<
 						const transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
-							returnFormat,
+							returnFormat ?? web3Context.defaultReturnFormat,
 						);
 
 						const transactionReceiptFormatted = sendTxHelper.getReceiptWithEvents(
-							format(transactionReceiptSchema, transactionReceipt, returnFormat),
+							format(
+								transactionReceiptSchema,
+								transactionReceipt,
+								returnFormat ?? web3Context.defaultReturnFormat,
+							),
 						);
 
 						sendTxHelper.emitReceipt(transactionReceiptFormatted);
@@ -661,7 +740,7 @@ export function sendSignedTransaction<
 						const transactionHashFormatted = format(
 							{ format: 'bytes32' },
 							transactionHash as Bytes,
-							returnFormat,
+							returnFormat ?? web3Context.defaultReturnFormat,
 						);
 
 						sendTxHelper.emitTransactionHash(
@@ -671,11 +750,15 @@ export function sendSignedTransaction<
 						const transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
-							returnFormat,
+							returnFormat ?? web3Context.defaultReturnFormat,
 						);
 
 						const transactionReceiptFormatted = sendTxHelper.getReceiptWithEvents(
-							format(transactionReceiptSchema, transactionReceipt, returnFormat),
+							format(
+								transactionReceiptSchema,
+								transactionReceipt,
+								returnFormat ?? web3Context.defaultReturnFormat,
+							),
 						);
 
 						sendTxHelper.emitReceipt(transactionReceiptFormatted);
@@ -715,7 +798,7 @@ export async function sign<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	message: Bytes,
 	addressOrIndex: Address | number,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const messageFormatted = format({ format: 'bytes' }, message, DEFAULT_RETURN_FORMAT);
 	if (web3Context.wallet?.get(addressOrIndex)) {
@@ -747,7 +830,7 @@ export async function sign<ReturnFormat extends DataFormat>(
 export async function signTransaction<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const response = await ethRpcMethods.signTransaction(
 		web3Context.requestManager,
@@ -781,7 +864,7 @@ export async function call<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-	returnFormat: ReturnFormat,
+	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
 ) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
@@ -818,7 +901,11 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	);
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 // TODO - Add input formatting to filter
@@ -853,7 +940,11 @@ export async function getLogs<ReturnFormat extends DataFormat>(
 			return res;
 		}
 
-		return format(logSchema, res as unknown as Log, returnFormat);
+		return format(
+			logSchema,
+			res as unknown as Log,
+			returnFormat ?? web3Context.defaultReturnFormat,
+		);
 	});
 
 	return result;
@@ -873,7 +964,7 @@ export async function getChainId<ReturnFormat extends DataFormat>(
 		{ format: 'uint' },
 		// Response is number in hex formatted string
 		response as unknown as number,
-		returnFormat,
+		returnFormat ?? web3Context.defaultReturnFormat,
 	);
 }
 
@@ -903,7 +994,11 @@ export async function getProof<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	);
 
-	return format(accountSchema, response as unknown as AccountObject, returnFormat);
+	return format(
+		accountSchema,
+		response as unknown as AccountObject,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 // TODO Throwing an error with Geth, but not Infura
@@ -943,7 +1038,11 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 		rewardPercentilesFormatted,
 	);
 
-	return format(feeHistorySchema, response as unknown as FeeHistory, returnFormat);
+	return format(
+		feeHistorySchema,
+		response as unknown as FeeHistory,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -966,7 +1065,11 @@ export async function createAccessList<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	)) as unknown as AccessListResult;
 
-	return format(accessListResultSchema, response, returnFormat);
+	return format(
+		accessListResultSchema,
+		response,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
 }
 
 /**
@@ -987,5 +1090,5 @@ export async function signTypedData<ReturnFormat extends DataFormat>(
 		useLegacy,
 	);
 
-	return format({ format: 'bytes' }, response, returnFormat);
+	return format({ format: 'bytes' }, response, returnFormat ?? web3Context.defaultReturnFormat);
 }

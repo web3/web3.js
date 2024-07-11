@@ -21,6 +21,7 @@ import {
 	JsonRpcResponse,
 	TransactionReceipt,
 	Web3BaseWalletAccount,
+	TransactionCall
 } from 'web3-types';
 import { Web3Context, Web3EventMap, Web3PromiEvent } from 'web3-core';
 import {
@@ -150,6 +151,28 @@ describe('sendTxHelper class', () => {
 		await sendTxHelper.handleError({ error, tx: receipt });
 		expect(f).toHaveBeenCalledWith(error);
 		promiEvent.off('error', f);
+	});
+
+	it('add gas to simple transaction in checkRevertBeforeSending', async () => {
+		const _sendTxHelper = new SendTxHelper({
+			web3Context,
+			promiEvent: promiEvent as PromiEvent,
+			options: {
+				checkRevertBeforeSending: true,
+			},
+			returnFormat: DEFAULT_RETURN_FORMAT,
+		});
+
+		const tx = {from:"0x"} as TransactionCall
+
+        await _sendTxHelper.checkRevertBeforeSending(tx);
+
+        const expectedTx = {
+            ...tx,
+            gas: 21000,
+        };
+		expect(utils.getRevertReason).toHaveBeenCalledWith(web3Context, expectedTx, undefined);
+
 	});
 	it('emit handleError with handleRevert', async () => {
 		const error = new ContractExecutionError({ code: 1, message: 'error' });

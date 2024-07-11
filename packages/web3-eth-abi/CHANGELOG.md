@@ -164,4 +164,16 @@ Documentation:
 
 -   Fixed an issue with detecting Uint8Array (#6486)
 
+## [4.2.1]
+
+### Changed
+
+-   Dependencies updated
+
+## [4.2.2]
+
+### Changed
+
+-   Dependencies updated
+
 ## [Unreleased]

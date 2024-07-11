@@ -207,4 +207,24 @@ Documentation:
 
 -	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
 
+## [4.4.0]
+
+### Added
+
+-   `defaultReturnFormat` was added to the configuration options. (#6947)
+
+### Changed
+
+-   Interface `RequestManagerMiddleware` was changed (#7003)
+
+### Fixed
+
+-   Set a try catch block if processesingError fails (#7022)
+
+## [4.5.0]
+
+### Added
+
+-   Now when existing packages are added in web3, will be avalible for plugins via context. (#7088)
+
 ## [Unreleased]

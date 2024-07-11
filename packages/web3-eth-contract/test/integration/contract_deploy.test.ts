@@ -15,7 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Eth } from 'web3-eth';
-import { Contract } from '../../src';
+import { FMT_BYTES, FMT_NUMBER } from 'web3-types';
+import { Contract, createContractAddress } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
@@ -30,7 +31,8 @@ import {
 	sendFewSampleTxs,
 	closeOpenConnection,
 	getSystemTestBackend,
-	BACKEND
+	BACKEND,
+	mapFormatToType,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -55,6 +57,18 @@ describe('contract', () => {
 				provider: getSystemTestProvider(),
 			});
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+
+		it('should get correct contract address before deploymet using CREATE', async () => {
+			const nonce = await web3Eth.getTransactionCount(sendOptions.from as string);
+
+			// get contract address before deployment
+			const address = createContractAddress(sendOptions.from as string, nonce);
+			
+			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(deployedContract).toBeDefined();
+			expect(deployedContract.options.address).toEqual(address);
 		});
 
 		afterAll(async () => {
@@ -109,8 +123,33 @@ describe('contract', () => {
 						from: acc.address,
 						gas: '1000000',
 					});
+				expect(typeof estimatedGas).toBe('bigint');
 				expect(Number(estimatedGas)).toBeGreaterThan(0);
 			});
+			it.each(Object.values(FMT_NUMBER))(
+				'should return estimated gas of contract constructor %p with correct type',
+				async format => {
+					const returnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
+
+					const estimatedGas = await new Contract(
+						GreeterAbi,
+						{
+							provider: getSystemTestProvider(),
+						},
+						returnFormat,
+					)
+						.deploy({
+							data: GreeterBytecode,
+							arguments: ['My Greeting'],
+						})
+						.estimateGas({
+							from: acc.address,
+							gas: '1000000',
+						});
+					expect(typeof estimatedGas).toBe(mapFormatToType[format as string]);
+					expect(Number(estimatedGas)).toBeGreaterThan(0);
+				},
+			);
 			it('should return estimated gas of contract constructor without arguments', async () => {
 				const estimatedGas = await new Contract(ERC721TokenAbi, undefined, {
 					provider: getSystemTestProvider(),
@@ -256,7 +295,7 @@ describe('contract', () => {
 		});
 
 		it('should fail with errors on "intrinsic gas too low" OOG', async () => {
-			if (getSystemTestBackend() !== BACKEND.HARDHAT){
+			if (getSystemTestBackend() !== BACKEND.HARDHAT) {
 				// eslint-disable-next-line jest/no-conditional-expect
 				await expect(
 					contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
@@ -265,7 +304,9 @@ describe('contract', () => {
 				// eslint-disable-next-line jest/no-conditional-expect
 				await expect(
 					contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
-				).rejects.toThrow('Returned error: Transaction requires at least 109656 gas but got 100');
+				).rejects.toThrow(
+					'Returned error: Transaction requires at least 109656 gas but got 100',
+				);
 			}
 		});
 
@@ -283,7 +324,7 @@ describe('contract', () => {
 		it('should fail with errors on revert', async () => {
 			const revert = new Contract(DeployRevertAbi);
 			revert.provider = getSystemTestProvider();
-			if (getSystemTestBackend() !== BACKEND.HARDHAT){
+			if (getSystemTestBackend() !== BACKEND.HARDHAT) {
 				// eslint-disable-next-line jest/no-conditional-expect
 				await expect(
 					revert
@@ -293,15 +334,17 @@ describe('contract', () => {
 						.send(sendOptions),
 				).rejects.toThrow("code couldn't be stored");
 			} else {
-			// eslint-disable-next-line jest/no-conditional-expect
-			await expect(
-				revert
-					.deploy({
-						data: DeployRevertBytecode,
-					})
-					.send(sendOptions),
-			).rejects.toThrow("Error happened while trying to execute a function inside a smart contract");
-				}	
+				// eslint-disable-next-line jest/no-conditional-expect
+				await expect(
+					revert
+						.deploy({
+							data: DeployRevertBytecode,
+						})
+						.send(sendOptions),
+				).rejects.toThrow(
+					'Error happened while trying to execute a function inside a smart contract',
+				);
+			}
 		});
 	});
 });

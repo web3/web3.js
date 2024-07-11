@@ -99,7 +99,9 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 				break;
 			case 'NUMBER_BIGINT':
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect(result).toBe(BigInt(expectedGasEstimate));
+				expect(typeof result).toBe('bigint');
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(result.toString()).toBe(expectedGasEstimate.toString());
 				break;
 			default:
 				throw new Error('Unhandled format');

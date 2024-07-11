@@ -33,7 +33,7 @@ import {
 	ContractAbiWithSignature,
 } from 'web3-types';
 import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
-import { isNullish } from 'web3-validator';
+import { isNullish, JsonSchema } from 'web3-validator';
 import {
 	ContractExecutionError,
 	InvalidResponseError,
@@ -122,7 +122,14 @@ export class SendTxHelper<
 
 	public async checkRevertBeforeSending(tx: TransactionCall) {
 		if (this.options.checkRevertBeforeSending !== false) {
-			const reason = await getRevertReason(this.web3Context, tx, this.options.contractAbi);
+			let formatTx = tx;
+			if (isNullish(tx.data) && isNullish(tx.input) && isNullish(tx.gas)) { // eth.call runs into error if data isnt filled and gas is not defined, its a simple transaction so we fill it with 21000
+				formatTx = {
+					...tx,
+					gas: 21000
+				}
+			}
+			const reason = await getRevertReason(this.web3Context, formatTx, this.options.contractAbi);
 			if (reason !== undefined) {
 				throw await getTransactionError<ReturnFormat>(
 					this.web3Context,
@@ -257,9 +264,11 @@ export class SendTxHelper<
 	public emitConfirmation({
 		receipt,
 		transactionHash,
+		customTransactionReceiptSchema,
 	}: {
 		receipt: ResolveType;
 		transactionHash: TransactionHash;
+		customTransactionReceiptSchema?: JsonSchema;
 	}) {
 		if (this.promiEvent.listenerCount('confirmation') > 0) {
 			watchTransactionForConfirmations<
@@ -272,6 +281,7 @@ export class SendTxHelper<
 				receipt as unknown as TransactionReceipt,
 				transactionHash,
 				this.returnFormat,
+				customTransactionReceiptSchema,
 			);
 		}
 	}

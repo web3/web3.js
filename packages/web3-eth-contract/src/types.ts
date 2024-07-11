@@ -28,13 +28,15 @@ import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	FormatType,
+	TransactionCall,
 } from 'web3-types';
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
+import type { ContractOptions } from 'web3-types';
 import { LogsSubscription } from './log_subscription.js';
 
 export type NonPayableTxOptions = NonPayableCallOptions;
 export type PayableTxOptions = PayableCallOptions;
-export { ContractAbiWithSignature, EventLog, ContractOptions } from 'web3-types';
+export type { ContractAbiWithSignature, EventLog, ContractOptions } from 'web3-types';
 
 export interface ContractEventOptions {
 	/**
@@ -177,6 +179,10 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 		FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 	>;
+	populateTransaction(
+		tx?: PayableTxOptions | NonPayableTxOptions,
+		contractOptions?: ContractOptions,
+	): TransactionCall;
 
 	/**
 	 * Returns the amount of gas consumed by executing the method locally without creating a new transaction on the blockchain.
@@ -375,6 +381,15 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 	>;
 
+	/**
+	 *
+	 * @param tx
+	 * @param contractOptions
+	 */
+	populateTransaction(
+		tx?: PayableTxOptions | NonPayableTxOptions,
+		contractOptions?: ContractOptions,
+	): TransactionCall;
 	/**
 	 * Returns the amount of gas consumed by executing the method locally without creating a new transaction on the blockchain.
 	 * The returned amount can be used as a gas estimate for executing the transaction publicly. The actual gas used can be
