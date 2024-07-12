@@ -156,6 +156,17 @@ exports[`errors Eip838ExecutionError should get the data from error.data.origina
 }
 `;
 
+exports[`errors Eip838ExecutionError should return correctly when data is undefined 1`] = `
+{
+  "cause": undefined,
+  "code": undefined,
+  "data": undefined,
+  "innerError": undefined,
+  "message": "Error",
+  "name": "Eip838ExecutionError",
+}
+`;
+
 exports[`errors InvalidConnectionError should have valid json structure 1`] = `
 {
   "cause": undefined,
