@@ -70,6 +70,10 @@ export const mockRpcResponseHydrated: Block = {
 	...mockRpcResponse,
 	transactions: [hydratedTransaction, hydratedTransaction, hydratedTransaction],
 };
+export const noTransactionBlock: Block = {
+	...mockRpcResponse,
+	transactions: [],
+}
 
 /**
  * Array consists of:
