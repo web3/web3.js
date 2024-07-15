@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3APIPayload, EthExecutionAPI, Web3APIMethod } from "web3-types";
 import { Network, Transport } from "../../src/types";
 import { Web3ExternalProvider } from "../../src/web3_provider";
+import { QuickNodeRateLimitError } from '../../src/errors';
 
 jest.mock('web3-providers-ws', () => {
   return {
@@ -77,5 +78,33 @@ describe('Web3ExternalProvider', () => {
 
     const result = await provider.request(payload);
     expect(result).toEqual({ result: 'mock-result' });
+  });
+  it('should return a rate limiting error when code is 429', async () => {
+    const network: Network = Network.ETH_MAINNET;
+    const transport: Transport = Transport.HTTPS;
+    const token = 'your-token';
+
+    const mockHttpProvider = {
+      request: jest.fn(),
+    };
+
+    const mockResponse = {
+      jsonrpc: '2.0',
+      id: '458408f4-7e2c-43f1-b61d-1fe09a9ee25a',
+      error: {
+        code: 429,
+        message: 'the method eth_stuff does not exist/is not available'
+      }
+    };
+    mockHttpProvider.request.mockResolvedValue(mockResponse);
+
+    const provider = new MockWeb3ExternalProvider(network, transport, token);
+    (provider as any).provider = mockHttpProvider; 
+
+    const payload: Web3APIPayload<EthExecutionAPI, Web3APIMethod<EthExecutionAPI>> = {
+      method: 'eth_getBalance',
+      params: ['0x0123456789012345678901234567890123456789', 'latest'],
+    };
+    await expect(provider.request(payload)).rejects.toThrow(QuickNodeRateLimitError);
   });
 });

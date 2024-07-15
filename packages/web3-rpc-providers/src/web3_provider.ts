@@ -17,16 +17,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import HttpProvider from "web3-providers-http";
 import WebSocketProvider from "web3-providers-ws";
+import { isNullish } from "web3-validator";
 import {
     EthExecutionAPI, JsonRpcResult, ProviderConnectInfo, ProviderMessage,
     ProviderRpcError, Web3APIMethod, Web3APIPayload, Web3APIReturnType, Web3APISpec, Web3BaseProvider,
     Web3Eip1193ProviderEventCallback,
     Web3ProviderEventCallback,
     Web3ProviderMessageEventCallback,
-    Web3ProviderStatus
+    Web3ProviderStatus,
+    JsonRpcResponseWithResult,
 } from "web3-types";
 import { Eip1193Provider } from "web3-utils";
 import { Transport, Network } from "./types.js";
+import { QuickNodeRateLimitError } from './errors.js';
 
 /* 
 This class can be used to create new providers only when there is custom logic required in each Request method like
@@ -68,13 +71,20 @@ API extends Web3APISpec = EthExecutionAPI,
     >(
         payload: Web3APIPayload<EthExecutionAPI, Method>,
         requestOptions?: RequestInit,
-    ): Promise<ResultType> {
+    ): Promise<JsonRpcResponseWithResult<ResultType>> {
 
         if (this.transport === Transport.HTTPS) {
-            return ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as Promise<ResultType>;
-        }
+                const res = await ( (this.provider as HttpProvider).request(payload, requestOptions)) as unknown as JsonRpcResponseWithResult<ResultType>;
+                
+                if (typeof res === 'object' && !isNullish(res) && 'error' in res && !isNullish(res.error) && 'code' in res.error && (res.error as { code: number }).code === 429){
+                    // rate limiting error by quicknode;
+                    throw new QuickNodeRateLimitError();
+                    
+                }
+                return res;
+            }
         
-        return ( (this.provider as WebSocketProvider).request(payload)) as unknown as Promise<ResultType>;
+        return (this.provider as WebSocketProvider).request(payload);
         
     }
 
