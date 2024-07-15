@@ -92,7 +92,7 @@ describe('getBlock', () => {
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
 			const expectedMockRpcResponse = noTransactionBlock;
 			// TODO: Fix format to default have a default in oneOf if no schema is matched
-			let formattedResult = format(
+			const formattedResult = format(
 				blockSchema,
 				expectedMockRpcResponse,
 				expectedReturnFormat,
