@@ -27,7 +27,7 @@ async function txLegacy() {
 
   const sender = wallet[0].address;
   const recipient = "0x807BFe4940016B5a7FdA19482042917B02e68359";
-  const value = 1; //wei
+  const value = 1; // wei
   const nonce = await web3.eth.getTransactionCount(sender);
   const gas = 21000;
   const gasPrice = await web3.eth.getGasPrice();
