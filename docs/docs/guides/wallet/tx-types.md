@@ -8,7 +8,7 @@ sidebar_label: 'Transaction Types'
 In this tutorial, we will explore how to send different types of [transactions](https://ethereum.org/en/developers/docs/transactions/) using web3.js, focusing on Ethereum's evolving transaction formats. We'll start with [legacy transactions (Transaction Type 0)](#transaction-type-0-legacy). Next, we'll delve into Transaction [Type 1 (EIP-2930)](#transaction-type-1-eip-2930), which introduces access lists to optimize gas usage. Finally, we'll cover [Transaction Type 2 (EIP-1559)](#transaction-type-2-eip-1559), the current default, which allows users to specify maximum fees and priority tips for more efficient and cost-effective transactions. Each section will include practical code examples to demonstrate sending raw transactions and interacting with ERC20 tokens on the Sepolia test network
 
 :::note
-Web3.js uses transactions type 2 by default
+Web3.js uses transaction type 2 by default
 :::
 
 ## Transaction Type 0 (Legacy)
