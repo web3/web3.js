@@ -20,7 +20,7 @@ A Legacy Transaction refers to a transaction that was created using an older ver
 ```ts
 import { Web3 } from "web3";
 
-const web3 = new Web3("https://rpc2.sepolia.org");
+const web3 = new Web3("https://rpc2.sepolia.org"); // RPC node url
 
 async function txLegacy() {
   const wallet = web3.eth.wallet.add("YOUR_PRIVATE_KEY"); // make sure you have funds
