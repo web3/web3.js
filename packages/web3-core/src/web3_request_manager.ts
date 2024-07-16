@@ -454,9 +454,7 @@ export class Web3RequestManager<
 		// This message means that there was an error while executing the code of the smart contract
 		// However, more processing will happen at a higher level to decode the error data,
 		//	according to the Error ABI, if it was available as of EIP-838.
-		if (error?.message.includes('revert')) {
-			throw new ContractExecutionError(error);
-		}
+		if (error?.message.includes('revert')) throw new ContractExecutionError(error);
 
 		return false;
 	}
