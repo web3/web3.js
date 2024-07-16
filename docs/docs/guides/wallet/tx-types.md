@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-sidebar_label: 'Transaction types'
+sidebar_label: 'Transaction Types'
 ---
 
 # Transactions
