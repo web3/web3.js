@@ -18,7 +18,7 @@ Web3.js uses transaction type 2 by default
 A Legacy Transaction refers to a transaction that was created using an older version of Ethereum's transaction format, also known as "transaction type 0". This transaction format was used before the EIP-1559 upgrade, which was implemented in August 2021.
 
 ```ts
-import { Web3 } from"web3";
+import { Web3 } from "web3";
 
 const web3 = new Web3("https://rpc2.sepolia.org");
 
