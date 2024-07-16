@@ -28,7 +28,7 @@ import { isBytes, isNullish } from 'web3-validator';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { getBlock } from '../../../src/rpc_method_wrappers';
-import { mockRpcResponse, mockRpcResponseHydrated, testData } from './fixtures/get_block';
+import { mockRpcResponse, mockRpcResponseHydrated, testData, noTransactionBlock } from './fixtures/get_block';
 import { blockSchema } from '../../../src/schemas';
 
 jest.mock('web3-rpc-methods');
@@ -73,6 +73,33 @@ describe('getBlock', () => {
 				expectedMockRpcResponse,
 				expectedReturnFormat,
 			);
+			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
+			(
+				(inputBlockIsBytes
+					? ethRpcMethods.getBlockByHash
+					: ethRpcMethods.getBlockByNumber) as jest.Mock
+			).mockResolvedValueOnce(expectedMockRpcResponse);
+
+			const result = await getBlock(web3Context, ...inputParameters, expectedReturnFormat);
+			expect(result).toStrictEqual(expectedFormattedResult);
+		},
+	);
+
+	it.each(testData)(
+		`should format the block to include transactions as an empty array if no transactions are present\nTitle: %s\nInput parameters: %s\n`,
+		async (_, inputParameters) => {
+			const [inputBlock] = inputParameters;
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.UINT8ARRAY };
+			const expectedMockRpcResponse = noTransactionBlock;
+			// TODO: Fix format to default have a default in oneOf if no schema is matched
+			const formattedResult = format(
+				blockSchema,
+				expectedMockRpcResponse,
+				expectedReturnFormat,
+			);
+			const expectedFormattedResult  = {...formattedResult,
+				transactions: []
+			};
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes
