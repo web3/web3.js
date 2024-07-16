@@ -45,21 +45,29 @@ export const decodeContractErrorData = (
 					errorName = "Error";
 					errorSignature = "Error(string)";
 					// decode abi.inputs according to EIP-838
-					errorArgs = decodeParameters([
-						{
-							type: 'string',
-						},
-					], error.data.substring(10));
+					errorArgs = decodeParameters(
+						[
+							{
+								name: 'message',
+								type: 'string',
+							},
+						],
+						error.data.substring(10),
+					);
 			   
 				} else if (error.data.startsWith('0x4e487b71')) {
 					errorName = "Panic";
 					errorSignature = "Panic(uint256)";
 					// decode abi.inputs according to EIP-838
-					errorArgs = decodeParameters([
-						{
-							type: 'uint256',
-						},
-					], error.data.substring(10));
+					errorArgs = decodeParameters(
+						[
+							{
+								name: 'code',
+								type: 'uint256',
+							},
+						],
+						error.data.substring(10),
+					);
 				}
 				else {
 				 	console.error('No matching error abi found for error data', error.data, );
