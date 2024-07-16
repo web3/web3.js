@@ -185,7 +185,7 @@ When a user creates an EIP-1559 transaction, they specify the maximum fee they a
 ### Raw Transaction
 
 ```ts
-import { Web3 } from"web3";
+import { Web3 } from "web3";
 
 const web3 = new Web3("https://rpc2.sepolia.org");
 
