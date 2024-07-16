@@ -23,7 +23,7 @@ import { Web3 } from "web3";
 const web3 = new Web3("https://rpc2.sepolia.org");
 
 async function txLegacy() {
-  const wallet = web3.eth.wallet.add("YOUR_PRIVATE_KEY"); //make sure you have funds
+  const wallet = web3.eth.wallet.add("YOUR_PRIVATE_KEY"); // make sure you have funds
 
   const sender = wallet[0].address;
   const recipient = "0x807BFe4940016B5a7FdA19482042917B02e68359";
