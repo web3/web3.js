@@ -117,7 +117,7 @@ This EIP was introduced in April 2021, it introduces a feature called 'Access Li
 ### Raw Transaction
 
 ```ts
-import { Web3 } from"web3";
+import { Web3 } from "web3";
 
 const web3 = new Web3("https://rpc2.sepolia.org");
 
