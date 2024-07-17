@@ -108,3 +108,27 @@ contract Test {
     }
 ]
 ```
+
+## Events 
+
+description
+
+## Logs
+
+description
+
+```ts
+import {web3} from "web3"
+```
+
+:::note
+note
+:::
+
+:::info
+info
+:::
+
+:::warning
+warning
+:::
