@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-abi",
-	"version": "4.2.2",
+	"version": "4.2.3",
 	"description": "Web3 module encode and decode EVM in/output.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -44,8 +44,8 @@
 	"dependencies": {
 		"abitype": "0.7.1",
 		"web3-errors": "^1.2.0",
-		"web3-types": "^1.6.0",
-		"web3-utils": "^4.3.0",
+		"web3-types": "^1.7.0",
+		"web3-utils": "^4.3.1",
 		"web3-validator": "^2.0.6"
 	},
 	"devDependencies": {
