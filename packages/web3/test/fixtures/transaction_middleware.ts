@@ -14,24 +14,25 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* eslint-disable max-classes-per-file */
 
-import EventEmitter3 from 'eventemitter3';
+import { TransactionMiddleware, TransactionMiddlewareData } from "web3-eth";
 
-/**
- * This class copy the behavior of Node.js EventEmitter class.
- * It is used to provide the same interface for the browser environment.
- */
-export class EventEmitter extends EventEmitter3 {
-	// must be defined for backwards compatibility
-	private maxListeners = Number.MAX_SAFE_INTEGER;
+// Sample Transaction Middleware 
+export class CTransactionMiddleware implements TransactionMiddleware {
 
-	public setMaxListeners(maxListeners: number) {
-		this.maxListeners = maxListeners;
-		return this;
+	// eslint-disable-next-line class-methods-use-this
+	public async processTransaction(transaction: TransactionMiddlewareData, 
+		_options?: { [key: string]: unknown } | undefined): 
+		
+		Promise<TransactionMiddlewareData> {
+		
+		// eslint-disable-next-line prefer-const
+		let txObj = { ...transaction };
+
+		// Add your logic here for transaction modification 
+		txObj.data = '0x123';
+
+		return Promise.resolve(txObj);
 	}
 
-	public getMaxListeners(): number {
-		return this.maxListeners;
-	}
 }

@@ -23,7 +23,7 @@ import {
 	compareBlockNumbersInvalidData,
 	compareBlockNumbersValidData,
 	isContractInitValidData,
-	isContractInitInvalidData
+	isContractInitInvalidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -40,19 +40,15 @@ describe('validation', () => {
 		);
 	});
 	describe('isContractInit', () => {
-		describe('should return true', () => { 
-			it.each([...isContractInitValidData])(
-				'%s', (input) => {
-					expect(isContractInitOptions(input)).toBe(true);
-				}
-			)
+		describe('should return true', () => {
+			it.each([...isContractInitValidData])('%s', input => {
+				expect(isContractInitOptions(input)).toBe(true);
+			});
 		});
-		describe('should return false', () => { 
-			it.each([...isContractInitInvalidData])(
-				'%s', (input) => {
-					expect(isContractInitOptions(input)).toBe(false);
-				}
-			)
+		describe('should return false', () => {
+			it.each([...isContractInitInvalidData])('%s', input => {
+				expect(isContractInitOptions(input)).toBe(false);
+			});
 		});
 	});
 });

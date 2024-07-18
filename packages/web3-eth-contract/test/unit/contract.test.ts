@@ -16,13 +16,20 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as eth from 'web3-eth';
-import { ValidChains, Hardfork, AccessListResult, Address, ETH_DATA_FORMAT , DEFAULT_RETURN_FORMAT } from 'web3-types';
+import {
+	ValidChains,
+	Hardfork,
+	AccessListResult,
+	Address,
+	ETH_DATA_FORMAT,
+	DEFAULT_RETURN_FORMAT,
+} from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
-import { Web3Context , Web3ConfigEvent } from 'web3-core';
+import { Web3Context, Web3ConfigEvent } from 'web3-core';
 import { Web3ValidatorError } from 'web3-validator';
 import { AbiItem } from 'web3-utils';
 import { stringify } from 'flatted';
-import {Abi} from '../fixtures/AbiItem'
+import { Abi } from '../fixtures/AbiItem';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -35,6 +42,7 @@ import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 import { processAsync } from '../shared_fixtures/utils';
+import { ContractTransactionMiddleware } from "../fixtures/contract_transaction_middleware";
 
 jest.mock('web3-eth', () => {
 	const allAutoMocked = jest.createMockFromModule('web3-eth');
@@ -275,6 +283,61 @@ describe('Contract', () => {
 			sendTransactionSpy.mockClear();
 		});
 
+		it('should pass middleware to sendTransaction when middleware is there and deploy().send() is called', async () => {
+			const contract = new Contract(GreeterAbi);
+			const middleware = new ContractTransactionMiddleware();
+			contract.setTransactionMiddleware(middleware)
+
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const sendTransactionSpy = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx, _dataFormat, _options, _middleware) => {
+					
+					expect(_middleware).toBeDefined();
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(newContract) as any;
+				});
+
+			await contract
+				.deploy({
+					input: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+			
+			sendTransactionSpy.mockClear();
+		});
+
+		it('should pass middleware to sendTransaction when middleware is there and contract.method.send() is called', async () => {
+
+			const contract = new Contract(GreeterAbi, '0x12264916b10Ae90076dDa6dE756EE1395BB69ec2');
+			const middleware = new ContractTransactionMiddleware();
+			contract.setTransactionMiddleware(middleware);
+
+			const spyTx = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx, _dataformat, _options, _middleware) => {
+
+					expect(_middleware).toBeDefined();
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return { status: '0x1', on: () => {} } as any;
+
+				});
+
+			const receipt = await contract.methods.setGreeting('Hello').send({
+				from: '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2',
+				gas: '1000000'
+			});
+
+			expect(receipt.status).toBe('0x1');
+
+			spyTx.mockClear();
+		});
+
 		it('should deploy contract with input property with no ABI', async () => {
 			const input = `${GreeterBytecode}0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b4d79204772656574696e67000000000000000000000000000000000000000000`;
 			const contract = new Contract([]);
@@ -485,7 +548,7 @@ describe('Contract', () => {
 			// calling with wrong parameters should throw
 			try {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				await(deployedContract.methods.setGreeting as any)(arg, 'test').send(sendOptions);
+				await (deployedContract.methods.setGreeting as any)(arg, 'test').send(sendOptions);
 				expect(true).toBe(false);
 			} catch (error) {
 				// eslint-disable-next-line jest/no-conditional-expect
@@ -499,7 +562,7 @@ describe('Contract', () => {
 			// calling with wrong parameters should throw
 			try {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				await(deployedContract.methods.setGreeting as any)(arg, true, 'test').send(
+				await (deployedContract.methods.setGreeting as any)(arg, true, 'test').send(
 					sendOptions,
 				);
 				expect(true).toBe(false);
@@ -786,6 +849,17 @@ describe('Contract', () => {
 			expect(contract.methods.greet).toBeDefined();
 			expect(contract.methods.increment).toBeDefined();
 			expect(contract.methods.setGreeting).toBeDefined();
+		});
+
+		it('should be able to set and get transaction middleware', () => {
+			const contract = new Contract(sampleStorageContractABI);
+			const middleware = new ContractTransactionMiddleware();
+
+			expect(contract.getTransactionMiddleware()).toBeUndefined();
+
+			contract.setTransactionMiddleware(middleware);
+			expect(contract.getTransactionMiddleware()).toBeDefined();
+			expect(contract.getTransactionMiddleware()).toEqual(middleware);
 		});
 
 		it('defaults set and get should work', () => {
@@ -1841,6 +1915,33 @@ describe('Contract', () => {
 			});
 			const contract = new Contract(GreeterAbi, web3Context);
 			expect(contract.config).toStrictEqual(web3Context.config);
+		});
+
+		it('should populate method to tx object', () => {
+			const expectedProvider = 'http://127.0.0.1:8545';
+			const web3Context = new Web3Context({
+				provider: expectedProvider,
+				config: { handleRevert: true, defaultTransactionType: '0x2' },
+			});
+			const contract = new Contract(
+				GreeterAbi,
+				'0x00000000219ab540356cBB839Cbe05303d7705F1',
+				web3Context,
+			);
+
+			const tx = contract.methods
+				.greet()
+				.populateTransaction({ from: '0x00000000219ab540356cBB839Cbe05303d7705F2' });
+			expect(tx).toEqual({
+				to: '0x00000000219AB540356cBb839cbe05303D7705F1',
+				gas: undefined,
+				gasPrice: undefined,
+				from: '0x00000000219ab540356cBB839Cbe05303d7705F2',
+				input: undefined,
+				maxPriorityFeePerGas: undefined,
+				maxFeePerGas: undefined,
+				data: '0xcfae3217',
+			});
 		});
 	});
 });

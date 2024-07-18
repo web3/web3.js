@@ -78,9 +78,10 @@ export default class HttpProvider<
 			},
 			body: JSON.stringify(payload),
 		});
-
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		if (!response.ok) throw new ResponseError(await response.json());
+		if (!response.ok) { 
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			throw new ResponseError(await response.json())
+		};
 
 		return (await response.json()) as JsonRpcResponseWithResult<ResultType>;
 	}

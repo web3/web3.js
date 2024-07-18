@@ -1,9 +1,9 @@
 ---
-sidebar_position: 3
-sidebar_label: 'Tutorial: Connecting to Metamask'
+sidebar_position: 4
+sidebar_label: 'Tutorial: Connecting to Metamask with Vanilla JS'
 ---
 
-# Connecting to Metamask
+# Connecting to Metamask with Vanilla JS
 
 [MetaMask](https://metamask.io/) is a powerful [wallet application](https://ethereum.org/en/wallets/) that makes it easy for Ethereum users to securely manage their accounts. Web3.js developers who are building front-end user-facing applications ("[dApps](https://ethereum.org/en/dapps/#what-are-dapps)") can easily integrate their dApp with MetaMask to allow users to safely use their own accounts. This tutorial covers the basics of using Web3.js with MetaMask, including using MetaMask as the Web3.js [provider](/guides/web3_providers_guide/) and using a MetaMask account to [sign](https://ethereum.org/en/glossary/#digital-signatures) a message.
 

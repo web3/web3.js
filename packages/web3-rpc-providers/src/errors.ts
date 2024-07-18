@@ -14,24 +14,15 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* eslint-disable max-classes-per-file */
 
-import EventEmitter3 from 'eventemitter3';
+import { BaseWeb3Error } from 'web3-errors';
+import {  } from 'web3-types';
 
-/**
- * This class copy the behavior of Node.js EventEmitter class.
- * It is used to provide the same interface for the browser environment.
- */
-export class EventEmitter extends EventEmitter3 {
-	// must be defined for backwards compatibility
-	private maxListeners = Number.MAX_SAFE_INTEGER;
+const ERR_QUICK_NODE_RATE_LIMIT = 1300;
+export class QuickNodeRateLimitError extends BaseWeb3Error {
+	public code = ERR_QUICK_NODE_RATE_LIMIT;
 
-	public setMaxListeners(maxListeners: number) {
-		this.maxListeners = maxListeners;
-		return this;
-	}
-
-	public getMaxListeners(): number {
-		return this.maxListeners;
+	public constructor() {
+		super(`Too many requests, Quicknode has reached its rate limit.`);
 	}
 }

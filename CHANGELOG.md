@@ -2564,3 +2564,71 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   `getName` reverse resolution
 
 ## [Unreleased]
+
+### Fixed
+
+#### web3-eth
+
+-   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
+
+### Added
+
+#### web3
+
+-   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
+
+#### web3-eth-contract
+
+-   `populateTransaction` was added to contract methods (#7124)
+-   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)
+
+## [4.11.0]
+
+### Fixed
+
+#### web3-eth-abi
+
+-   fix encodedata in EIP-712 (#7095)
+
+#### web3-utils
+
+-   `_sendPendingRequests` will catch unhandled errors from `_sendToSocket` (#6968)
+
+#### web3-eth
+
+-   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
+
+### Changed
+
+#### web3-eth-accounts
+
+- baseTransaction method updated (#7095)
+
+#### web3-providers-ws
+
+-   Update dependancies (#7109)
+
+#### web3-plugin-example
+
+-   Dependencies updated
+
+#### web3-rpc-providers
+
+ - Change request return type `Promise<ResultType>` to `Promise<JsonRpcResponseWithResult<ResultType>>` (#7102)
+
+### Added
+
+#### web3-eth-contract
+
+-   `populateTransaction` was added to contract methods (#7124)
+-   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)
+
+#### web3-rpc-providers
+
+ - When error is returned with code 429, throw rate limit error (#7102)
+
+#### web3
+
+-   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
+
+## [Unreleased]

@@ -426,7 +426,7 @@ export abstract class SocketProvider<
 			this._reconnectAttempts += 1;
 			setTimeout(() => {
 				this._removeSocketListeners();
-				this.connect();
+				this.connect(); // this can error out
 				this.isReconnecting = false;
 			}, this._reconnectOptions.delay);
 		} else {
@@ -503,9 +503,15 @@ export abstract class SocketProvider<
 
 	private _sendPendingRequests() {
 		for (const [id, value] of this._pendingRequestsQueue.entries()) {
-			this._sendToSocket(value.payload as Web3APIPayload<API, any>);
-			this._pendingRequestsQueue.delete(id);
-			this._sentRequestsQueue.set(id, value);
+			try {
+				this._sendToSocket(value.payload as Web3APIPayload<API, any>);
+				this._pendingRequestsQueue.delete(id);
+				this._sentRequestsQueue.set(id, value);
+			} catch (error) {
+				// catches if sendTosocket fails
+				this._pendingRequestsQueue.delete(id);
+				this._eventEmitter.emit('error', error);
+			}
 		}
 	}
 

@@ -15,7 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3ContractError } from 'web3-errors';
+import { RLP } from '@ethereumjs/rlp';
+import { InvalidAddressError, InvalidMethodParamsError, InvalidNumberError, Web3ContractError } from 'web3-errors';
 import {
 	TransactionForAccessList,
 	AbiFunctionFragment,
@@ -26,8 +27,10 @@ import {
 	NonPayableCallOptions,
 	PayableCallOptions,
 	ContractOptions,
+	Numbers,
 } from 'web3-types';
-import { isNullish, mergeDeep, isContractInitOptions } from 'web3-utils';
+import { isNullish, mergeDeep, isContractInitOptions, keccak256, toChecksumAddress, hexToNumber } from 'web3-utils';
+import { isAddress, isHexString } from 'web3-validator';
 import { encodeMethodABI } from './encoding.js';
 import { Web3ContractContext } from './types.js';
 
@@ -210,3 +213,42 @@ export const getCreateAccessListParams = ({
 
 	return txParams;
 };
+
+
+export const createContractAddress = (from: Address, nonce: Numbers): Address => {
+	if(!isAddress(from))
+		throw new InvalidAddressError(`Invalid address given ${from}`);
+
+	let nonceValue = nonce;
+	if(typeof nonce === "string" && isHexString(nonce))
+		nonceValue = hexToNumber(nonce);
+	else if(typeof nonce === "string" && !isHexString(nonce))
+		throw new InvalidNumberError("Invalid nonce value format");
+
+	const rlpEncoded = RLP.encode(
+        [from, nonceValue]
+    );
+    const result = keccak256(rlpEncoded);
+
+    const contractAddress = '0x'.concat(result.substring(26));
+
+    return toChecksumAddress(contractAddress);
+}
+
+export const create2ContractAddress = (from: Address, salt: HexString, initCode: HexString): Address => {
+    if(!isAddress(from))
+       throw new InvalidAddressError(`Invalid address given ${from}`);
+
+    if(!isHexString(salt))
+        throw new InvalidMethodParamsError(`Invalid salt value ${salt}`);
+
+    if(!isHexString(initCode))
+        throw new InvalidMethodParamsError(`Invalid initCode value ${initCode}`);
+
+	const initCodeHash = keccak256(initCode);
+	const initCodeHashPadded = initCodeHash.padStart(64, '0'); // Pad to 32 bytes (64 hex characters)
+	const create2Params = ['0xff', from, salt, initCodeHashPadded].map(x => x.replace(/0x/, ''));
+	const create2Address = `0x${  create2Params.join('')}`;
+
+	return toChecksumAddress(`0x${  keccak256(create2Address).slice(26)}`); // Slice to get the last 20 bytes (40 hex characters) & checksum
+  }

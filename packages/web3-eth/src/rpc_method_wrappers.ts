@@ -286,11 +286,21 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 			hydrated,
 		);
 	}
-	return format(
+	const res = format(
 		blockSchema,
 		response as unknown as Block,
 		returnFormat ?? web3Context.defaultReturnFormat,
 	);
+
+	if (!isNullish(res)) {
+		const result = {
+			...res,
+			transactions: res.transactions ?? [],
+		}
+		return result;
+	}
+	
+	return res;
 }
 
 /**

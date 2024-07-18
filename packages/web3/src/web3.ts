@@ -203,6 +203,15 @@ export class Web3<
 
 				super(jsonInterface, address, options, context, dataFormat);
 				super.subscribeToContextEvents(self);
+
+				// eslint-disable-next-line no-use-before-define
+				if (!isNullish(eth)) {
+					// eslint-disable-next-line no-use-before-define
+					const TxMiddleware = eth.getTransactionMiddleware();
+					if (!isNullish(TxMiddleware)) {
+						super.setTransactionMiddleware(TxMiddleware);
+					}
+				}
 			}
 		}
 
