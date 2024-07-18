@@ -38,7 +38,6 @@ import {
 	GreeterWithOverloadingBytecode,
 } from '../shared_fixtures/build/GreeterWithOverloading';
 import { AllGetPastEventsData, getLogsData, getPastEventsData } from '../fixtures/unitTestFixtures';
-import { getSystemTestProvider } from '../fixtures/system_test_utils';
 import { erc721Abi } from '../fixtures/erc721';
 import { ERC20TokenAbi } from '../shared_fixtures/build/ERC20Token';
 import { processAsync } from '../shared_fixtures/utils';
@@ -150,7 +149,7 @@ describe('Contract', () => {
 		});
 
 		it('should set the provider, from options, upon instantiation', () => {
-			const provider = getSystemTestProvider();
+			const provider = "http://127.0.0.1:4545";
 			const contract = new Contract([], '', {
 				provider,
 			});
@@ -162,7 +161,7 @@ describe('Contract', () => {
 		});
 
 		it('should set the provider, from context, upon instantiation', () => {
-			const provider = getSystemTestProvider();
+			const provider = "http://127.0.0.1:4545";
 			const contract = new Contract(
 				[],
 				'',
