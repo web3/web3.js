@@ -173,3 +173,7 @@ Documentation:
 - Added `InvalidIntegerError` error for fromWei and toWei (#7052)
 
 ## [Unreleased]
+
+### Fixed
+
+- Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
