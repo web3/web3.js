@@ -205,10 +205,10 @@ console.log(web3.getContextObject().config)
 ### handleRevert
 When `handleRevert` is set to True, the following methods will retrieve specific error types and error messages:
 ```ts
-- web3.eth.sendTransaction()
-- web3.eth.call()
-- myContract.methods.myMethod().call()
-- myContract.methods.myMethod().send()
+- web3.eth.sendTransaction();
+- web3.eth.call();
+- myContract.methods.myMethod().call();
+- myContract.methods.myMethod().send();
 ```
 
 The error types will be one of the following:
@@ -230,7 +230,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.handleRevert = true;
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `handleRevert` can be configured both globally and at the package level:
@@ -241,17 +241,17 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.handleRevert = true;
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
 ### defaultAccount
 This `defaultAccount` is used as the default `from` property, if no `from` property is specified in for the following methods:
 ```ts
-- web3.eth.sendTransaction()
-- web3.eth.call()
-- myContract.methods.myMethod().call()
-- myContract.methods.myMethod().send()
+- web3.eth.sendTransaction();
+- web3.eth.call();
+- myContract.methods.myMethod().call();
+- myContract.methods.myMethod().send();
 ```
 
 The default value for `defaultAccount` is `undefined`.
@@ -263,7 +263,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.defaultAccount = "0x0000000000000000000000000000000000000000";
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultAccount` can be configured both globally and at the package level:
@@ -274,19 +274,19 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultAccount = "0x0000000000000000000000000000000000000000";
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
 ### defaultBlock
 The following methods require a `blockNumber` parameter during its execution process, the `defaultBlock` is used for these methods. 
 ```ts
-- web3.eth.getBalance()
-- web3.eth.getCode()
-- web3.eth.getTransactionCount()
-- web3.eth.getStorageAt()
-- web3.eth.call()
-- myContract.methods.myMethod().call()
+- web3.eth.getBalance();
+- web3.eth.getCode();
+- web3.eth.getTransactionCount();
+- web3.eth.getStorageAt();
+- web3.eth.call();
+- myContract.methods.myMethod().call();
 ```
 
 You can override it by passing in the defaultBlock as last parameter. The default value is "latest".
@@ -298,7 +298,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.defaultBlock = 20167235;
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultBlock` can be configured both globally and at the package level:
@@ -309,7 +309,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultBlock = "earliest";
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -333,7 +333,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.transactionBlockTimeout = 60;
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `transactionBlockTimeout` can be configured both globally and at the package level:
@@ -344,7 +344,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.transactionBlockTimeout = 60;
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -357,7 +357,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.transactionConfirmationBlocks = 60;
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `transactionConfirmationBlocks` can be configured both globally and at the package level:
@@ -368,7 +368,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.transactionConfirmationBlocks = 60;
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -382,7 +382,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.transactionPollingInterval = 2000; // 2000 ms = 2 s
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 /* ↳
   ...
   transactionPollingInterval: 2000,
@@ -402,7 +402,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.transactionPollingInterval = 2000; // 2000 ms = 2 s
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 /* ↳
   ...
   transactionPollingInterval: 2000,
@@ -424,7 +424,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.transactionPollingTimeout = 600000; // 600000 ms = 600 s = 10 min
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `transactionPollingTimeout` can be configured both globally and at the package level:
@@ -435,7 +435,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.transactionPollingTimeout = 600000; // 600000 ms = 600 s = 10 min
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -448,7 +448,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.transactionReceiptPollingInterval = 2000; // 2000 ms = 2 s
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `transactionReceiptPollingInterval` can be configured both globally and at the package level:
@@ -459,7 +459,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.transactionReceiptPollingInterval = undefined;
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -472,7 +472,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.transactionSendTimeout = 600000; // 600000 ms = 600 s = 10 min
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `transactionSendTimeout` can be configured both globally and at the package level:
@@ -483,7 +483,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.transactionSendTimeout  = 600000; // 600000 ms = 600 s = 10 min
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -499,7 +499,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.blockHeaderTimeout = 20; // 20 s
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `blockHeaderTimeout` can be configured both globally and at the package level:
@@ -510,7 +510,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.blockHeaderTimeout = 20; // 20 s
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -523,7 +523,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.maxListenersWarningThreshold = 200;
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `maxListenersWarningThreshold` can be configured both globally and at the package level:
@@ -534,7 +534,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.maxListenersWarningThreshold = 200;
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -547,7 +547,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.contractDataInputFill = 'input';
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `contractDataInputFill` can be configured both globally and at the package level:
@@ -558,7 +558,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.contractDataInputFill = 'both';
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -576,7 +576,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.defaultNetworkId = 1;
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultNetworkId` can be configured both globally and at the package level:
@@ -587,7 +587,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultNetworkId = '0x1';
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -600,7 +600,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.defaultChain = 'ropsten';
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultChain` can be configured both globally and at the package level:
@@ -611,7 +611,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultChain = 'ropsten';
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 #### All available choices for defaultChain:
@@ -629,7 +629,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.defaultHardfork = 'berlin';
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultHardfork` can be configured both globally and at the package level:
@@ -640,7 +640,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultHardfork = 'istanbul';
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 #### All available choices for contractDataInputFill:
@@ -697,7 +697,7 @@ web3.defaultCommon = {
     },
 };
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultCommon` can be configured both globally and at the package level:
@@ -718,7 +718,7 @@ web3.eth.defaultCommon = {
     },
 };
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -731,7 +731,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.defaultTransactionType = 0x0;
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultTransactionType` can be configured both globally and at the package level:
@@ -742,7 +742,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultTransactionType  = 0x0;
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -756,7 +756,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.defaultMaxPriorityFeePerGas = numberToHex(2100000000); // 2.1gwei
 
-console.log(web3.getContextObject().config)
+console.log(web3.getContextObject().config);
 ```
 :::info
 The `defaultMaxPriorityFeePerGas` can be configured both globally and at the package level:
@@ -768,7 +768,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 web3.eth.defaultMaxPriorityFeePerGas = numberToHex(2100000000); // 2.1gwei
 
-console.log(web3.eth.getContextObject().config)
+console.log(web3.eth.getContextObject().config);
 ```
 :::
 
@@ -803,12 +803,12 @@ export enum FMT_NUMBER {
     HEX = 'NUMBER_HEX',
     STR = 'NUMBER_STR',
     BIGINT = 'NUMBER_BIGINT',
-}
+};
 ```
 #### All available choices for bytes data:     
 ```ts
 export enum FMT_BYTES {
     HEX = 'BYTES_HEX',
     UINT8ARRAY = 'BYTES_UINT8ARRAY',
-}
+};
 ```
