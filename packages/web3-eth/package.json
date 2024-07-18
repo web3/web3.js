@@ -40,7 +40,7 @@
 		"test:e2e:sepolia": "jest --config=./test/e2e/jest.config.js --forceExit",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
+		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand",
 		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit --coverage=true --coverage-reporters=text",
 		"test:e2e:electron": "npx cypress run --headless --browser electron",
 		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
