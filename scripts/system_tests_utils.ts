@@ -58,8 +58,7 @@ import {Web3, WebSocketProvider } from 'web3';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
-// eslint-disable-next-line import/no-extraneous-dependencies
-//import HttpProvider from 'web3-providers-http';
+
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { IpcProvider } from 'web3-providers-ipc';
 import accountsString from './accounts.json';
@@ -167,7 +166,7 @@ export const closeOpenConnection = async (web3Context: Web3Context) => {
 		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
 	) {
 		(web3Context.provider as unknown as Web3BaseProvider).reset();
-		(web3Context.provider as unknown as Web3BaseProvider).disconnect();//ß1000, '');
+		(web3Context.provider as unknown as Web3BaseProvider).disconnect();
 		
 	}
 };
