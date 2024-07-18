@@ -54,12 +54,12 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Web3 from 'web3';
+import {Web3, WebSocketProvider } from 'web3';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import HttpProvider from 'web3-providers-http';
+//import HttpProvider from 'web3-providers-http';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { IpcProvider } from 'web3-providers-ipc';
 import accountsString from './accounts.json';
@@ -73,7 +73,7 @@ export const getEnvVar = (name: string): string | undefined =>
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 	global.Cypress ? Cypress.env(name) : process.env[name];
 
-export const DEFAULT_SYSTEM_PROVIDER = 'http://127.0.0.1:8545';
+export const DEFAULT_SYSTEM_PROVIDER = getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? "";
 export const DEFAULT_SYSTEM_ENGINE = 'node';
 export const BACKEND = {
 	GETH: 'geth',
@@ -83,13 +83,17 @@ export const BACKEND = {
 	MAINNET: 'mainnet',
 };
 
-export const getSystemTestProviderUrl = (): string =>
-	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
+export const getSystemTestProviderUrl = (): string  =>
+	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? "";
 
 export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecutionAPI>():
 	| string
 	| SupportedProviders<API> => {
 	const url = getSystemTestProviderUrl();
+
+	if(url === "")
+		throw new Error("undefined URL in env var WEB3_SYSTEM_TEST_PROVIDER");
+
 	if (url.includes('ipc')) {
 		return new IpcProvider<API>(url);
 	}
@@ -155,36 +159,16 @@ export const waitForOpenConnection = async (
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
 	if (
-		!isSocket ||
-		web3Context?.provider instanceof HttpProvider ||
-		(web3Context?.provider?.supportsSubscriptions &&
-			!web3Context.provider?.supportsSubscriptions())
-	) {
-		return;
-	}
-	// make sure we try to close the connection after it is established
-	if (
-		web3Context?.provider &&
-		(web3Context.provider as unknown as Web3BaseProvider).getStatus() === 'connecting'
-	) {
-		await waitForOpenConnection(web3Context);
-	}
-	// If an error happened during closing, that is acceptable at tests, just print a 'warn'.
-	if (web3Context?.provider) {
-		(web3Context.provider as unknown as Web3BaseProvider).on('error', (err: any) => {
-			console.warn('error while trying to close the connection', err);
-		});
-	}
-	// Wait a bit to ensure the connection does not have a pending data that
-	//	could cause an error if written after closing the connection.
-	await new Promise<void>(resolve => {
-		setTimeout(resolve, 500);
-	});
-	if (
-		web3Context?.provider &&
+		web3Context?.provider && (
+			web3Context?.provider instanceof WebSocketProvider  ||
+			web3Context?.provider instanceof IpcProvider 
+
+		) &&
 		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
 	) {
-		(web3Context.provider as unknown as Web3BaseProvider).disconnect(1000, '');
+		(web3Context.provider as unknown as Web3BaseProvider).reset();
+		(web3Context.provider as unknown as Web3BaseProvider).disconnect();//ß1000, '');
+		
 	}
 };
 
@@ -246,6 +230,8 @@ export const refillAccount = async (from: string, to: string, value: string | nu
 		to,
 		value,
 	});
+
+	await closeOpenConnection(web3Eth);
 };
 
 let mainAcc: string;
@@ -256,6 +242,7 @@ export const createNewAccount = async (config?: {
 	password?: string;
 	doNotImport?: boolean;
 }): Promise<{ address: string; privateKey: string }> => {
+
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
 
 	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
@@ -267,6 +254,7 @@ export const createNewAccount = async (config?: {
 			await web3.hardhat.impersonateAccount(acc.address);
 			// await impersonateAccount(acc.address);
 			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
+			await closeOpenConnection(web3);
 		} else {
 			const web3Personal = new Personal(clientUrl);
 			if (!config?.doNotImport) {
@@ -279,6 +267,7 @@ export const createNewAccount = async (config?: {
 			}
 
 			await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 100000000);
+			await closeOpenConnection(web3Personal);
 		}
 	}
 
@@ -288,17 +277,21 @@ export const createNewAccount = async (config?: {
 			const web3 = new Web3(url);
 			web3.registerPlugin(new HardhatPlugin());
 			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
+			await closeOpenConnection(web3);
 		} else {
 			const web3Personal = new Personal(clientUrl);
 			if (!mainAcc) {
 				[mainAcc] = await web3Personal.getAccounts();
 			}
 			await refillAccount(mainAcc, acc.address, '100000000000000000');
+			await closeOpenConnection(web3Personal);
 		}
 	}
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
 };
+
+
 let tempAccountList: { address: string; privateKey: string }[] = [];
 const walletsOnWorker = 20;
 
