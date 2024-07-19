@@ -640,6 +640,7 @@ export const sepoliaBlockHydrated = {
 	uncles: [],
 };
 
+
 export const sepoliaBlock = {
 	difficulty: '0x0',
 	extraData: '0x496c6c756d696e61746520446d6f63726174697a6520447374726962757465',
