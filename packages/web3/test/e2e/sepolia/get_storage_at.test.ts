@@ -48,6 +48,8 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 				| 'pending'
 				| 'finalized'
 				| 'safe'
+				| 'blockHash'
+				| 'blockNumber';
 		}>({
 			storageSlot: ['0x1', '1', 1, BigInt(1)],
 			block: [
@@ -55,14 +57,38 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 				'pending',
 				'safe',
 				'finalized',
+				'blockHash',
+				'blockNumber',
 			],
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
-		const result = await web3.eth.getStorageAt(
-			getE2ETestContractAddress(),
-			storageSlot,
-			sepoliaBlockData[block],
-		);
+		let result;
+		if (block === 'blockHash' || block === 'blockNumber') {
+			const blockNumber = await web3.eth.getBlockNumber();
+			
+			if (block === 'blockHash') {
+				const blockHash = await web3.eth.getBlock(blockNumber);
+				result = await web3.eth.getStorageAt(
+					getE2ETestContractAddress(),
+					storageSlot,
+					blockHash.hash,
+				)
+			} else {
+				result = await web3.eth.getStorageAt(
+					getE2ETestContractAddress(),
+					storageSlot,
+					blockNumber,
+				)
+			}
+			
+		} else {
+			result = await web3.eth.getStorageAt(
+				getE2ETestContractAddress(),
+				storageSlot,
+				sepoliaBlockData[block],
+			);
+		}
+		
  {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
