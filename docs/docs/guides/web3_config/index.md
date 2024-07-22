@@ -9,26 +9,26 @@ sidebar_label: 'Web3 Config Guide'
 
 There is list of configuration params that can be set for modifying behavior of different functions in web3.js packages. Following is list of configuration options with details:
 
-- [handleRevert](/api/web3-core/class/Web3Config#handleRevert) 
-- [defaultAccount](/api/web3-core/class/Web3Config#defaultAccount)
-- [defaultBlock](/api/web3-core/class/Web3Config#defaultBlock) 
-- [transactionBlockTimeout](/api/web3-core/class/Web3Config#transactionBlockTimeout)  
-- [transactionConfirmationBlocks](/api/web3-core/class/Web3Config#transactionConfirmationBlocks)  
-- [transactionPollingInterval](/api/web3-core/class/Web3Config#transactionPollingInterval)  
-- [transactionPollingTimeout](/api/web3-core/class/Web3Config#transactionPollingTimeout)  
-- [transactionReceiptPollingInterval](/api/web3-core/class/Web3Config#transactionReceiptPollingInterval)  
-- [transactionSendTimeout](/api/web3-core/class/Web3Config#transactionSendTimeout)  
-- [Deprecated][transactionConfirmationPollingInterval](/api/web3-core/class/Web3Config#transactionConfirmationPollingInterval)
-- [blockHeaderTimeout](/api/web3-core/class/Web3Config#blockHeaderTimeout)
-- [maxListenersWarningThreshold](/api/web3-core/class/Web3Config#maxListenersWarningThreshold)  
-- [contractDataInputFill](/api/web3-core/class/Web3Config#contractDataInputFill)
-- [defaultNetworkId](/api/web3-core/class/Web3Config#defaultNetworkId)  
-- [defaultChain](/api/web3-core/class/Web3Config#defaultChain)  
-- [defaultHardfork](/api/web3-core/class/Web3Config#defaultHardfork)  
-- [defaultCommon](/api/web3-core/class/Web3Config#defaultCommon)  
-- [defaultTransactionType](/api/web3-core/class/Web3Config#defaultTransactionType)
-- [defaultMaxPriorityFeePerGas](/api/web3-core/class/Web3Config#defaultMaxPriorityFeePerGas)
-- [defaultReturnFormat](/api/web3-core/class/Web3Config#defaultReturnFormat)  
+- [handleRevert](/guides/web3_config/#handlerevert)
+- [defaultAccount](/guides/web3_config/#defaultaccount)
+- [defaultBlock](/guides/web3_config/#defaultblock)
+- [transactionBlockTimeout](/guides/web3_config/#transactionblocktimeout)  
+- [transactionConfirmationBlocks](/guides/web3_config/#transactionconfirmationblocks)  
+- [transactionPollingInterval](/guides/web3_config/#transactionpollinginterval)  
+- [transactionPollingTimeout](/guides/web3_config/#transactionpollingtimeout)  
+- [transactionReceiptPollingInterval](/guides/web3_config/#transactionreceiptpollinginterval)  
+- [transactionSendTimeout](/guides/web3_config/#transactionsendtimeout)  
+- [[Deprecated] transactionConfirmationPollingInterval](/guides/web3_config/#transactionconfirmationpollinginterval)
+- [blockHeaderTimeout](/guides/web3_config/#blockheadertimeout)
+- [maxListenersWarningThreshold](/guides/web3_config/#maxlistenerswarningthreshold)  
+- [contractDataInputFill](/guides/web3_config/#contractdatainputfill)
+- [defaultNetworkId](/guides/web3_config/#defaultnetworkid)  
+- [defaultChain](/guides/web3_config/#defaultchain)  
+- [defaultHardfork](/guides/web3_config/#defaulthardfork)  
+- [defaultCommon](/guides/web3_config/#defaultcommon)  
+- [defaultTransactionType](/guides/web3_config/#defaulttransactiontype)
+- [defaultMaxPriorityFeePerGas](/guides/web3_config/#defaultmaxpriorityfeepergas)
+- [defaultReturnFormat](/guides/web3_config/#defaultreturnformat)  
 
 ## Global level Config
 
@@ -202,26 +202,24 @@ console.log(web3.getContextObject().config)
 */
 ```
 
-### handleRevert
+## Explanation of Configuration Parameters
+
+### [handleRevert](/api/web3-core/class/Web3Config#handleRevert)
 The following methods will retrieve specific error types and error messages when `handleRevert` is set to `true`:
-```ts
-- web3.eth.sendTransaction();
-- web3.eth.call();
-- myContract.methods.myMethod().call();
-- myContract.methods.myMethod().send();
-```
+- [`web3.eth.sendTransaction()`](/api/web3-eth/function/sendTransaction);
+- [`web3.eth.call()`](/api/web3-eth/function/call);
+- [`myContract.methods.myMethod().call()`](/libdocs/Contract#call);
+- [`myContract.methods.myMethod().send()`](/libdocs/Contract#send);
 
 The error types will be one of the following:
-```ts
-- InvalidResponseError
-- ContractExecutionError
-- TransactionRevertWithCustomError
-- TransactionRevertedWithoutReasonError
-- TransactionRevertInstructionError
-- TransactionPollingTimeoutError
-```
+- [InvalidResponseError](/api/web3-errors/class/InvalidResponseError)
+- [ContractExecutionError](/api/web3-errors/class/ContractExecutionError)
+- [TransactionRevertWithCustomError](/api/web3-errors/class/TransactionRevertWithCustomError)
+- [TransactionRevertedWithoutReasonError](/api/web3-errors/class/TransactionRevertedWithoutReasonError)
+- [TransactionRevertInstructionError](/api/web3-errors/class/TransactionRevertInstructionError)
+- [TransactionPollingTimeoutError](/api/web3-errors/class/TransactionPollingTimeoutError)
 
-For example, the error message could be `TransactionRevertInstructionError('Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes')`. The `handleRevert` is only supported for `sendTransaction` and not for `sendSignedTransaction` for now.
+For example, the error message could be `TransactionRevertInstructionError('Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes')`. The `handleRevert` is only supported for [`sendTransaction`](/api/web3-eth/function/sendTransaction) and not for [`sendSignedTransaction`](/api/web3-eth/function/sendSignedTransaction) for now.
 
 The default value of `handleRevert` is `false`.
 
@@ -247,14 +245,12 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### defaultAccount
+### [defaultAccount](/api/web3-core/class/Web3Config#defaultAccount)
 This `defaultAccount` is used as the default `from` property, if no `from` property is specified in for the following methods:
-```ts
-- web3.eth.sendTransaction();
-- web3.eth.call();
-- myContract.methods.myMethod().call();
-- myContract.methods.myMethod().send();
-```
+- [`web3.eth.sendTransaction()`](/api/web3-eth/function/sendTransaction);
+- [`web3.eth.call()`](/api/web3-eth/function/call);
+- [`myContract.methods.myMethod().call()`](/libdocs/Contract#call);
+- [`myContract.methods.myMethod().send()`](/libdocs/Contract#send);
 
 The default value of `defaultAccount` is `undefined`.
 
@@ -280,16 +276,14 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### defaultBlock
+### [defaultBlock](/api/web3-core/class/Web3Config#defaultBlock)
 The following methods require a `blockNumber` parameter during its execution process, the `defaultBlock` is used for these methods. 
-```ts
-- web3.eth.getBalance();
-- web3.eth.getCode();
-- web3.eth.getTransactionCount();
-- web3.eth.getStorageAt();
-- web3.eth.call();
-- myContract.methods.myMethod().call();
-```
+- [`web3.eth.getBalance()`](/api/web3-eth/function/getBalance);
+- [`web3.eth.getCode()`](/api/web3-eth/function/getCode);
+- [`web3.eth.getTransactionCount()`](/api/web3-eth/function/getTransactionCount);
+- [`web3.eth.getStorageAt()`](/api/web3-eth/function/getStorageAt);
+- [`web3.eth.call()`](/api/web3-eth/function/call);
+- [`myContract.methods.myMethod().call()`](/libdocs/Contract#call);
 
 You can override it by passing in the defaultBlock as last parameter.
 
@@ -327,8 +321,8 @@ web3.defaultBlock = "finalized"; // (For POS networks) The finalized block is on
 web3.defaultBlock = "safe"; // (For POS networks) The safe head block is one which under normal network conditions, is expected to be included in the canonical chain. Under normal network conditions the safe head and the actual tip of the chain will be equivalent (with safe head trailing only by a few seconds). Safe heads will be less likely to be reorged than the proof of work network`s latest blocks.
 ```
 
-### transactionBlockTimeout
-The `transactionBlockTimeout` is used over socket-based connections. This option defines the amount of new blocks it should wait until the **first confirmation** happens, otherwise the PromiEvent rejects with a timeout error.
+### [transactionBlockTimeout](/api/web3-core/class/Web3Config#transactionBlockTimeout)
+The `transactionBlockTimeout` is used over socket-based connections. This option defines the number of new blocks to wait for the **first confirmation**, otherwise the PromiEvent rejects with a timeout error.
 
 The default value of `transactionBlockTimeout` is 50. 
 
@@ -354,8 +348,8 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### transactionConfirmationBlocks
-This defines the number of blocks it requires until a transaction is considered confirmed. Different chains have varying security considerations and requirements for confirmation block numbers.
+### [transactionConfirmationBlocks](/api/web3-core/class/Web3Config#transactionConfirmationBlocks)
+This defines the number of blocks required for a transaction to be considered confirmed. Different chains have varying security considerations and requirements for confirmation block numbers.
 
 The default value of `transactionConfirmationBlocks` is 24.
 
@@ -382,8 +376,8 @@ console.log(web3.eth.getContextObject().config);
 :::
 
 
-### transactionPollingInterval
-The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Modifying this value can reduce the wait time for confirmations or decrease the number of network requests. Setting the `transactionPollingInterval` would also set `transactionReceiptPollingInterval` and `transactionConfirmationPollingInterval` to the same value. 
+### [transactionPollingInterval](/api/web3-core/class/Web3Config#transactionPollingInterval)
+The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Modifying this value can reduce the wait time for confirmations or decrease the number of network requests. Setting the `transactionPollingInterval` would also set [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) and [`transactionConfirmationPollingInterval`](/guides/web3_config/#transactionconfirmationpollinginterval) to the same value. 
 
 The default value of `transactionPollingInterval` is 1000 ms.
 
@@ -427,8 +421,8 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### transactionPollingTimeout
-The `transactionPollingTimeout` is used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. It can be set based on the average transaction confirmation time on the network. Note: If this method times out, the transaction may still be pending. 
+### [transactionPollingTimeout](/api/web3-core/class/Web3Config#transactionPollingTimeout)
+The `transactionPollingTimeout` is used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. It can be set based on the average transaction confirmation time on the network. Note: If the `transactionPollingTimeout` is exceeded, the transaction may still be pending. 
 
 The default value of `transactionPollingTimeout` is 750 seconds (12.5 minutes).
 ```ts
@@ -453,8 +447,8 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### transactionReceiptPollingInterval
-The `transactionReceiptPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Compared to `transactionPollingInterval`, it takes higher precedence. When this value is set, it will be read first.
+### [transactionReceiptPollingInterval](/api/web3-core/class/Web3Config#transactionReceiptPollingInterval)
+The `transactionReceiptPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Compared to [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval), it takes higher precedence. When this value is set, it will be read first.
 
 The default value of `transactionReceiptPollingInterval` is `undefined`.
 ```ts
@@ -479,8 +473,8 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### transactionSendTimeout
-The `transactionSendTimeout` is used to wait for Ethereum Node to return the sent transaction result. Note: If the RPC call stuck at the Node and therefor timed-out, the transaction may still be pending or even mined by the Network. We recommend checking the pending transactions in such a case.
+### [transactionSendTimeout](/api/web3-core/class/Web3Config#transactionSendTimeout)
+The `transactionSendTimeout` option is used to specify how long to wait for the network to return the sent transaction result. Note: If the RPC call times out, the transaction may still be pending or even mined by the network. We recommend checking the pending transactions in such a case.
 
 The default value of `transactionSendTimeout` is 750 seconds (12.5 minutes).
 ```ts
@@ -505,10 +499,10 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### transactionConfirmationPollingInterval
-The `transactionConfirmationPollingInterval` is deprecated. Please use `transactionReceiptPollingInterval` or `transactionPollingInterval` instead.
+### [transactionConfirmationPollingInterval](/api/web3-core/class/Web3Config#transactionConfirmationPollingInterval)
+The `transactionConfirmationPollingInterval` option is deprecated. Please use [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) or [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval) instead.
 
-### blockHeaderTimeout
+### [blockHeaderTimeout](/api/web3-core/class/Web3Config#blockHeaderTimeout)
 The `blockHeaderTimeout` is used over socket-based connections. After sending a transaction, it will listen for the appearance of new blocks and proceed with subsequent operations based on the transaction results within them. This option defines the amount seconds it should wait for 'newBlockHeaders' event before falling back to polling to fetch transaction receipt.
 
 The default value of `blockHeaderTimeout` is 10 seconds.
@@ -535,7 +529,7 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### maxListenersWarningThreshold
+### [maxListenersWarningThreshold](/api/web3-core/class/Web3Config#maxListenersWarningThreshold)
 The `maxListenersWarningThreshold` is used to set the `maxListeners` property in `EventEmitter`.
 
 The default value of `maxListenersWarningThreshold` is 100.
@@ -561,8 +555,8 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### contractDataInputFill
-The `contractDataInputFill` will allow you to set the hash of the method signature and encoded parameters to the property either `data`, `input` or `both` within your contract. This will affect the contracts send, call and estimateGas methods.
+### [contractDataInputFill](/api/web3-core/class/Web3Config#contractDataInputFill)
+The `contractDataInputFill` will allow you to set the hash of the method signature and encoded parameters to the property either `data`, `input` or `both` within your contract. This will affect the contracts [`send`](/libdocs/Contract#send), [`call`](/libdocs/Contract#call) and [`estimateGas`](/libdocs/Contract#estimategas) methods.
 
 The default value of `contractDataInputFill` is `data`.
 ```ts
@@ -589,10 +583,12 @@ console.log(web3.eth.getContextObject().config);
 
 #### All available choices for contractDataInputFill:
 ```ts
-contractDataInputFill: 'data' | 'input' | 'both';
+'data'
+'input'
+'both'
 ```
 
-### defaultNetworkId
+### [defaultNetworkId](/api/web3-core/class/Web3Config#defaultNetworkId)
 Each network has its own network ID. The defaultNetwork allows you to set the default network ID to increase code readability. If this parameter is not set, it will fetch the network ID from the connected RPC request.
 
 The default value of `defaultNetworkId` is `undefined`.
@@ -618,8 +614,8 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### defaultChain
-The `defaultChain` is used for building the `baseChain` property of the tx options in a transaction. If the `defaultCommon.basechain` is set, the`defaultChain` should be consistent with it.
+### [defaultChain](/api/web3-core/class/Web3Config#defaultChain)
+The `defaultChain` is used for building the [`baseChain`](/api/web3-types/interface/Common#baseChain) property of the tx options in a transaction. If the `defaultCommon.basechain` is set, the `defaultChain` should be consistent with it.
 
 The default value of `defaultChain` is `mainnet`.
 ```ts
@@ -645,12 +641,17 @@ console.log(web3.eth.getContextObject().config);
 :::
 #### All available choices for defaultChain:
 ```ts
-'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia'
+'goerli'
+'kovan'
+'mainnet'
+'rinkeby'
+'ropsten'
+'sepolia'
 ```
 
 
-### defaultHardfork
-The `defaultHardfork` is used for building the `defaultHardfork` property of the tx options in a transaction. If the `defaultCommon.defaultHardfork` is set, the`defaultHardfork` should be consistent with it.
+### [defaultHardfork](/api/web3-core/class/Web3Config#defaultHardfork)
+The `defaultHardfork` is used for building the `defaultHardfork` property of the tx options in a transaction. If the `defaultCommon.defaultHardfork` is set, the `defaultHardfork` should be consistent with it.
 
 The default value of `defaultHardfork` is `london`.
 ```ts
@@ -674,7 +675,7 @@ web3.eth.defaultHardfork = 'london';
 console.log(web3.eth.getContextObject().config);
 ```
 :::
-#### All available choices for contractDataInputFill:
+#### All available choices for defaultHardFork:
 ```ts
 'chainstart'
 'frontier'
@@ -698,16 +699,8 @@ console.log(web3.eth.getContextObject().config);
 'sharding'
 ```
 
-### defaultCommon
-The `defaultCommon` is used for building the `common` property of the tx options in a transaction. It should be consistent with the `defaultHardfork` and `defaultChain`. The `defaultCommon` property does contain the following Common object:
-```
-- customChain - Object: The custom chain properties
-  - name - string: (optional) The name of the chain
-  - networkId - number: Network ID of the custom chain
-  - chainId - number: Chain ID of the custom chain
-- baseChain - string: (optional) 'goerli', 'kovan', 'mainnet', 'rinkeby', 'ropsten' or 'sepolia'
-- hardfork - string: (optional) chainstart, homestead, dao, tangerineWhistle, spuriousDragon, byzantium, constantinople, petersburg, istanbul, berlin, or london
-```
+### [defaultCommon](/api/web3-core/class/Web3Config#defaultCommon)
+The `defaultCommon` is used for building the `common` property of the tx options in a transaction. It should be consistent with the [`defaultHardfork`](/guides/web3_config/#defaulthardfork) and [`defaultChain`](/guides/web3_config/#defaultchain). Please check the `defaultCommon` property [here](/libdocs/Contract/#defaultcommon)
 
 The default value of `defaultCommon` is `undefined`.
 
@@ -753,8 +746,8 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### defaultTransactionType
-The `defaultTransactionType` is used set the transaction type. Transactions with type 0x0 are legacy transactions that use the transaction format existing before typed transactions were introduced in EIP-2718. Transactions with type 0x1 are transactions introduced in EIP-2930. Transactions with type 0x2 are transactions introduced in EIP-1559, included in Ethereum's London fork.
+### [defaultTransactionType](/api/web3-core/class/Web3Config#defaultTransactionType)
+The `defaultTransactionType` is used set the transaction type. Transactions with type 0x0 are legacy transactions that use the transaction format existing before typed transactions were introduced in [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718). Transactions with type 0x1 are transactions introduced in [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930). Transactions with type 0x2 are transactions introduced in [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559), included in Ethereum's London fork.
 
 The default value of `defaultTransactionType` is `0x02`.
 ```ts
@@ -779,7 +772,7 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### defaultMaxPriorityFeePerGas
+### [defaultMaxPriorityFeePerGas](/api/web3-core/class/Web3Config#defaultMaxPriorityFeePerGas)
 The `defaultMaxPriorityFeePerGas` is used to send transactions with the maximum priority gas fee.
 
 The default value of `defaultMaxPriorityFeePerGas` is 2500000000 (2.5gwei) in hexstring format.
@@ -807,7 +800,7 @@ console.log(web3.eth.getContextObject().config);
 ```
 :::
 
-### defaultReturnFormat
+### [defaultReturnFormat](/api/web3-core/class/Web3Config#defaultReturnFormat)
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
 ```ts
 import { Web3, FMT_NUMBER, FMT_BYTES } from 'web3';
