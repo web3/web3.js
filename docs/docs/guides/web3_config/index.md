@@ -232,18 +232,6 @@ web3.handleRevert = false;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `handleRevert` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.handleRevert = false;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [defaultAccount](/api/web3-core/class/Web3Config#defaultAccount)
 This `defaultAccount` is used as the default `from` property, if no `from` property is specified in for the following methods:
@@ -263,18 +251,6 @@ web3.defaultAccount = undefined;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultAccount` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultAccount = undefined;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [defaultBlock](/api/web3-core/class/Web3Config#defaultBlock)
 The following methods require a `blockNumber` parameter during its execution process, the `defaultBlock` is used for these methods. 
@@ -298,18 +274,6 @@ web3.defaultBlock = "latest";
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultBlock` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultBlock = "latest";
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 #### All available choices for defaultBlock:
 ```ts
@@ -335,18 +299,6 @@ web3.transactionBlockTimeout = 50;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `transactionBlockTimeout` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.transactionBlockTimeout = 50;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [transactionConfirmationBlocks](/api/web3-core/class/Web3Config#transactionConfirmationBlocks)
 This defines the number of blocks required for a transaction to be considered confirmed. Different chains have varying security considerations and requirements for confirmation block numbers.
@@ -362,19 +314,6 @@ web3.transactionConfirmationBlocks = 24;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `transactionConfirmationBlocks` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.transactionConfirmationBlocks = 24;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
-
 
 ### [transactionPollingInterval](/api/web3-core/class/Web3Config#transactionPollingInterval)
 The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Modifying this value can reduce the wait time for confirmations or decrease the number of network requests. Setting the `transactionPollingInterval` would also set [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) and [`transactionConfirmationPollingInterval`](/guides/web3_config/#transactionconfirmationpollinginterval) to the same value. 
@@ -399,27 +338,6 @@ console.log(web3.getContextObject().config);
   ...
 */
 ```
-:::info
-The `transactionPollingInterval` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.transactionPollingInterval = 1000; // 1000 ms = 1 s
-
-console.log(web3.eth.getContextObject().config);
-/* ↳
-  ...
-  transactionPollingInterval: 1000,
-  transactionPollingTimeout: 750000,
-  transactionReceiptPollingInterval: 1000,
-  transactionSendTimeout: 750000,
-  transactionConfirmationPollingInterval: 1000,
-  ...
-*/
-```
-:::
 
 ### [transactionPollingTimeout](/api/web3-core/class/Web3Config#transactionPollingTimeout)
 The `transactionPollingTimeout` is used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. It can be set based on the average transaction confirmation time on the network. Note: If the `transactionPollingTimeout` is exceeded, the transaction may still be pending. 
@@ -434,18 +352,6 @@ web3.transactionPollingTimeout = 750000; // 750000 ms = 750 s
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `transactionPollingTimeout` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.transactionPollingTimeout = 750000; // 750000 ms = 750 s
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [transactionReceiptPollingInterval](/api/web3-core/class/Web3Config#transactionReceiptPollingInterval)
 The `transactionReceiptPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Compared to [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval), it takes higher precedence. When this value is set, it will be read first.
@@ -460,18 +366,6 @@ web3.transactionReceiptPollingInterval = undefined;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `transactionReceiptPollingInterval` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.transactionReceiptPollingInterval = undefined;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [transactionSendTimeout](/api/web3-core/class/Web3Config#transactionSendTimeout)
 The `transactionSendTimeout` option is used to specify how long to wait for the network to return the sent transaction result. Note: If the RPC call times out, the transaction may still be pending or even mined by the network. We recommend checking the pending transactions in such a case.
@@ -486,18 +380,6 @@ web3.transactionSendTimeout = 750000; // 750000 ms = 750 s
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `transactionSendTimeout` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.transactionSendTimeout  = 750000; // 750000 ms = 750 s
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [transactionConfirmationPollingInterval](/api/web3-core/class/Web3Config#transactionConfirmationPollingInterval)
 The `transactionConfirmationPollingInterval` option is deprecated. Please use [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) or [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval) instead.
@@ -516,18 +398,6 @@ web3.blockHeaderTimeout = 10; // 10 s
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `blockHeaderTimeout` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.blockHeaderTimeout = 10; // 10 s
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [maxListenersWarningThreshold](/api/web3-core/class/Web3Config#maxListenersWarningThreshold)
 The `maxListenersWarningThreshold` is used to set the `maxListeners` property in `EventEmitter`.
@@ -542,18 +412,6 @@ web3.maxListenersWarningThreshold = 100;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `maxListenersWarningThreshold` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.maxListenersWarningThreshold = 100;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [contractDataInputFill](/api/web3-core/class/Web3Config#contractDataInputFill)
 The `contractDataInputFill` will allow you to set the hash of the method signature and encoded parameters to the property either `data`, `input` or `both` within your contract. This will affect the contracts [`send`](/libdocs/Contract#send), [`call`](/libdocs/Contract#call) and [`estimateGas`](/libdocs/Contract#estimategas) methods.
@@ -568,18 +426,6 @@ web3.contractDataInputFill = 'data';
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `contractDataInputFill` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.contractDataInputFill = 'data';
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 #### All available choices for contractDataInputFill:
 ```ts
@@ -601,18 +447,6 @@ web3.defaultNetworkId = undefined;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultNetworkId` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultNetworkId = undefined;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [defaultChain](/api/web3-core/class/Web3Config#defaultChain)
 The `defaultChain` is used for building the [`baseChain`](/api/web3-types/interface/Common#baseChain) property of the tx options in a transaction. If the `defaultCommon.basechain` is set, the `defaultChain` should be consistent with it.
@@ -627,18 +461,7 @@ web3.defaultChain = 'mainnet';
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultChain` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
 
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultChain = 'mainnet';
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 #### All available choices for defaultChain:
 ```ts
 'goerli'
@@ -663,18 +486,7 @@ web3.defaultHardfork = 'london';
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultHardfork` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
 
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultHardfork = 'london';
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 #### All available choices for defaultHardFork:
 ```ts
 'chainstart'
@@ -723,28 +535,6 @@ web3.defaultCommon = {
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultCommon` can be configured both globally and at the package level:
-```ts
-import { Web3, Hardfork } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultHardfork = 'berlin'
-web3.eth.defaultChain = 'goerli'
-
-web3.eth.defaultCommon = {
-    baseChain: 'goerli',
-    hardfork: 'berlin' as Hardfork,
-    customChain: {
-        networkId: 1,
-        chainId: 1,
-    },
-};
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [defaultTransactionType](/api/web3-core/class/Web3Config#defaultTransactionType)
 The `defaultTransactionType` is used set the transaction type. Transactions with type 0x0 are legacy transactions that use the transaction format existing before typed transactions were introduced in [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718). Transactions with type 0x1 are transactions introduced in [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930). Transactions with type 0x2 are transactions introduced in [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559), included in Ethereum's London fork.
@@ -759,18 +549,6 @@ web3.defaultTransactionType = 0x02;
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultTransactionType` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultTransactionType  = 0x02;
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [defaultMaxPriorityFeePerGas](/api/web3-core/class/Web3Config#defaultMaxPriorityFeePerGas)
 The `defaultMaxPriorityFeePerGas` is used to send transactions with the maximum priority gas fee.
@@ -786,19 +564,6 @@ web3.defaultMaxPriorityFeePerGas = numberToHex(2500000000); // 2.5gwei
 
 console.log(web3.getContextObject().config);
 ```
-:::info
-The `defaultMaxPriorityFeePerGas` can be configured both globally and at the package level:
-```ts
-import { Web3 } from 'web3';
-import { numberToHex } from 'web3-utils'
-
-const web3 = new Web3('http://127.0.0.1:7545');
-
-web3.eth.defaultMaxPriorityFeePerGas = numberToHex(2500000000); // 2.5gwei
-
-console.log(web3.eth.getContextObject().config);
-```
-:::
 
 ### [defaultReturnFormat](/api/web3-core/class/Web3Config#defaultReturnFormat)
 The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
@@ -811,19 +576,7 @@ web3.defaultReturnFormat = {
 };
 
 ```
-:::info
-The `defaultReturnFormat` can be configured both globally and at the package level:
-```ts
-import { Web3Eth, FMT_NUMBER, FMT_BYTES } from 'web3-eth';
 
-const eth = new Web3Eth()
-eth.defaultReturnFormat = {
-    number: FMT_NUMBER.BIGINT,
-    bytes: FMT_BYTES.HEX,
-};
-
-```
-:::
 #### All available choices for numeric data:
 ```ts 
 export enum FMT_NUMBER {
