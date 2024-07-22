@@ -267,3 +267,4 @@ Documentation:
 ### Fixed
 
 -   Adds transaction property to be an empty list rather than undefined when no transactions are included in the block (#7151)
+-   Change method `getTransactionReceipt` to not be casted as `TransactionReceipt` to give proper return type (#7159)
