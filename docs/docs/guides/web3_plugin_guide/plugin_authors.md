@@ -239,7 +239,7 @@ Middleware allows plugins to intercept network interactions and inject custom lo
 
 ### Request Middleware
 
-Request middleware allows plugins to modify RPC requests before they are sent to the network and modify RPC responses before they are returned to the user. Request middleware must implement the [`RequestManagerMiddleware`](/api/web3-core/interface/RequestManagerMiddleware) interface, which specifies two functions: [`processRequest`](/api/web3-core/interface/RequestManagerMiddleware#processRequest) and [`processResponse`](/api/web3-core/interface/RequestManagerMiddleware#processResponse). Here is a simple example of request middleware that prints RPC requests and responses to the console:
+Request middleware allows plugins to modify RPC requests before they are sent to the network and modify RPC responses before they are returned to Web3.js for further internal processing. Request middleware must implement the [`RequestManagerMiddleware`](/api/web3-core/interface/RequestManagerMiddleware) interface, which specifies two functions: [`processRequest`](/api/web3-core/interface/RequestManagerMiddleware#processRequest) and [`processResponse`](/api/web3-core/interface/RequestManagerMiddleware#processResponse). Here is a simple example of request middleware that prints RPC requests and responses to the console:
 
 ```ts
 export class RequestMiddleware<API> implements RequestManagerMiddleware<API> {
