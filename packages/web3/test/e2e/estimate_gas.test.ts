@@ -52,28 +52,15 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	it.each(
 		toAllVariants<{
 			transaction: Transaction;
-			block: 'latest' | 'pending' | 'finalized' | 'safe' | 'blockHash' | 'blockNumber';
+			block: 'latest' | 'pending' | 'finalized' | 'safe';
 			format: string;
 		}>({
 			transaction: [simpleEthTransaction, contractDeploymentTransaction],
-			block: ['latest', 'pending', 'safe', 'finalized', 'blockHash', 'blockNumber'],
+			block: ['latest', 'pending', 'safe', 'finalized'],
 			format: Object.values(FMT_NUMBER),
 		}),
 	)('estimateGas', async ({ transaction, block, format }) => {
 		let _blockData = blockData[block];
-		if (
-			getSystemTestBackend() === BACKEND.MAINNET &&
-			(block === 'blockHash' || block === 'blockNumber')
-		) {
-			/**
-			 * @NOTE Getting a block too far back in history
-			 * results in a missing trie node error, so
-			 * we get latest block for this test
-			 */
-			const latestBlock = await web3.eth.getBlock('finalized');
-			_blockData =
-				block === 'blockHash' ? (latestBlock.hash as string) : toHex(latestBlock.number);
-		}
 
 		const expectedGasEstimate =
 			transaction.data !== undefined

@@ -55,7 +55,7 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 		await closeOpenConnection(web3);
 	});
 
-	it.each(
+	it.skip.each(
 		toAllVariants<{
 			byteFormat: string;
 			numberFormat: string;

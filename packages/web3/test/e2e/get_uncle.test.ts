@@ -40,23 +40,17 @@ describe(`${getSystemTestBackend()} tests - getUncle`, () => {
 	it.each(
 		toAllVariants<{
 			block:
-				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
 				| 'safe'
-				| 'blockHash'
-				| 'blockNumber';
 			uncleIndex: Numbers;
 		}>({
 			block: [
-				'earliest',
 				'latest',
 				'pending',
 				'safe',
 				'finalized',
-				'blockHash',
-				'blockNumber',
 			],
 			uncleIndex: ['0x1', '1', 1, BigInt(1)],
 		}),

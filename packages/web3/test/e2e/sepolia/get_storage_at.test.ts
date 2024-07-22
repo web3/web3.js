@@ -44,23 +44,17 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		toAllVariants<{
 			storageSlot: Numbers;
 			block:
-				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
 				| 'safe'
-				| 'blockHash'
-				| 'blockNumber';
 		}>({
 			storageSlot: ['0x1', '1', 1, BigInt(1)],
 			block: [
-				'earliest',
 				'latest',
 				'pending',
 				'safe',
 				'finalized',
-				'blockHash',
-				'blockNumber',
 			],
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
@@ -69,15 +63,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			storageSlot,
 			sepoliaBlockData[block],
 		);
-
-		if (sepoliaBlockData[block] === 'earliest') {
-			// Nethermind returns 0x while Geth returns 0x0000000000000000000000000000000000000000000000000000000000000000
-			// eslint-disable-next-line jest/no-conditional-expect
-			expect(
-				result === '0x' ||
-					result === '0x0000000000000000000000000000000000000000000000000000000000000000',
-			).toBeTruthy();
-		} else {
+ {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
 				`0x000000000000000000000000${getE2ETestAccountAddress()

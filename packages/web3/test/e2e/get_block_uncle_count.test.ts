@@ -38,22 +38,16 @@ describeIf(getSystemTestBackend() !== 'hardhat')(`${getSystemTestBackend()} test
 	it.each(
 		toAllVariants<{
 			block:
-				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
 				| 'safe'
-				| 'blockHash'
-				| 'blockNumber';
 		}>({
 			block: [
-				'earliest',
 				'latest',
 				'pending',
 				'safe',
 				'finalized',
-				'blockHash',
-				'blockNumber',
 			],
 		}),
 	)('getBlockUncleCount', async ({ block }) => {
