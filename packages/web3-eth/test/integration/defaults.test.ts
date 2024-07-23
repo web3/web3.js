@@ -331,7 +331,7 @@ describe('defaults', () => {
 
 		it('transactionConfirmationBlocks implementation', async () => {
 			const tempAcc2 = await createTempAccount();
-			const waitConfirmations = 2;
+			const waitConfirmations = 1;
 			const eth = new Web3Eth(getSystemTestProvider());
 			eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 		
