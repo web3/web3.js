@@ -50,6 +50,7 @@ import {
 	Web3EthExecutionAPI,
 	FMT_NUMBER,
 	FMT_BYTES,
+	TransactionReceipt,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -165,10 +166,10 @@ export const closeOpenConnection = async (web3Context: Web3Context) => {
 		) &&
 		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
 	) {
-		(web3Context.provider as unknown as Web3BaseProvider).reset();
-		(web3Context.provider as unknown as Web3BaseProvider).disconnect();
 		
-	}
+            (web3Context.provider as unknown as Web3BaseProvider).reset();
+			(web3Context.provider as unknown as Web3BaseProvider).disconnect();
+		}
 };
 
 export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => {
@@ -224,11 +225,14 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 export const refillAccount = async (from: string, to: string, value: string | number) => {
 	const web3Eth = new Web3Eth(DEFAULT_SYSTEM_PROVIDER);
 
-	await web3Eth.sendTransaction({
+	const receipt = await web3Eth.sendTransaction({
 		from,
 		to,
 		value,
 	});
+
+	if(receipt.status !== BigInt(1))
+		throw new Error("refillAccount failed");
 
 	await closeOpenConnection(web3Eth);
 };
@@ -477,16 +481,21 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 	const web3 = new Web3(DEFAULT_SYSTEM_PROVIDER);
 	const fromAcc = await createLocalAccount(web3);
 	const toAcc = createAccount();
-	const res = [];
+	const res : TransactionReceipt[]= [];
 	for (let i = 0; i < cnt; i += 1) {
+
+		const receipt = await web3.eth.sendTransaction({
+			to: toAcc.address,
+			value: '0x1',
+			from: fromAcc.address,
+			gas: '300000',
+		});
+
+		if(receipt.status !== BigInt(1))
+			throw new Error("sendFewSampleTxs failed ");
+
 		res.push(
-			// eslint-disable-next-line no-await-in-loop
-			await web3.eth.sendTransaction({
-				to: toAcc.address,
-				value: '0x1',
-				from: fromAcc.address,
-				gas: '300000',
-			}),
+			receipt
 		);
 	}
 	await closeOpenConnection(web3);
