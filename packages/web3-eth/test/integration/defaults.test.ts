@@ -288,7 +288,7 @@ describe('defaults', () => {
 			expect(eth2.transactionSendTimeout).toBe(120);
 			await closeOpenConnection(eth2);
 		});
-		it('transactionBlockTimeout', async () => {
+		it('transactionBlockTimeout', () => {
 			// default
 			expect(web3Eth.transactionBlockTimeout).toBe(50);
 
@@ -611,6 +611,7 @@ describe('defaults', () => {
 			expect(status).toBe(BigInt(1));
 
 			await new Promise<void>((resolve) => {
+				// eslint-disable-next-line @typescript-eslint/no-misused-promises
 				const timeout = setTimeout(async () => {
 					if (confirmationCount >= 2) {
 						clearTimeout(timeout);
@@ -651,13 +652,13 @@ describe('defaults', () => {
 			expect(web3Eth.defaultNetworkId).toBe(3);
 
 			// set by create new instance
-			const eth2_2 = new Web3Eth({
+			const eth2 = new Web3Eth({
 				provider: web3Eth.provider,
 				config: {
 					defaultNetworkId: 4,
 				},
 			});
-			expect(eth2_2.defaultNetworkId).toBe(4);
+			expect(eth2.defaultNetworkId).toBe(4);
 			const res = await defaultTransactionBuilder({
 				transaction: {
 					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
@@ -665,7 +666,7 @@ describe('defaults', () => {
 					value: '0x174876e800',
 					gas: '0x5208',
 				},
-				web3Context: eth2_2 as Web3Context,
+				web3Context: eth2 as Web3Context,
 			});
 			expect(res.networkId).toBe(4);
 
@@ -678,12 +679,12 @@ describe('defaults', () => {
 					gas: '0x5208',
 					networkId: 5,
 				},
-				web3Context: eth2_2 as Web3Context,
+				web3Context: eth2 as Web3Context,
 			});
 
 			expect(resWithPassNetworkId.networkId).toBe(BigInt(5));
 
-			await closeOpenConnection(eth2_2);
+			await closeOpenConnection(eth2);
 		});
 		it('defaultChain', async () => {
 			// default
@@ -791,20 +792,20 @@ describe('defaults', () => {
 			});
 			expect(web3Eth.defaultTransactionType).toBe('0x3');
 
-			//revert back to default
+			// revert back to default
 			web3Eth.setConfig({
 				defaultTransactionType: '0x2',
 			});
 
 			// set by create new instance
-			const eth_2 = new Web3Eth({
+			const eth = new Web3Eth({
 				provider:  web3Eth.provider,
 				config: {
 					defaultTransactionType: '0x4444',
 				},
 			});
 			
-			expect(eth_2.defaultTransactionType).toBe('0x4444');
+			expect(eth.defaultTransactionType).toBe('0x4444');
 
 			const res = getTransactionType(
 				{
@@ -817,7 +818,7 @@ describe('defaults', () => {
 					chainId: '0x1',
 					gasLimit: '0x5208',
 				},
-				eth_2,
+				eth,
 			);
 			expect(res).toBe('0x4444');
 
@@ -838,7 +839,7 @@ describe('defaults', () => {
 					gasLimit: '0x5208',
 					maxFeePerGas: '0x32',
 				},
-				eth_2,
+				eth,
 			);
 			expect(maxFeePerGasOverride).toBe('0x2');
 			const maxPriorityFeePerGasOverride = getTransactionType(
@@ -853,7 +854,7 @@ describe('defaults', () => {
 					gasLimit: '0x5208',
 					maxPriorityFeePerGas: '0x32',
 				},
-				eth_2,
+				eth,
 			);
 			expect(maxPriorityFeePerGasOverride).toBe('0x2');
 			const hardforkOverride = getTransactionType(
@@ -868,7 +869,7 @@ describe('defaults', () => {
 					gasLimit: '0x5208',
 					hardfork: 'london',
 				},
-				eth_2,
+				eth,
 			);
 			expect(hardforkOverride).toBe('0x2');
 			const commonOverride = getTransactionType(
@@ -886,7 +887,7 @@ describe('defaults', () => {
 						hardfork: 'london',
 					},
 				},
-				eth_2,
+				eth,
 			);
 			expect(commonOverride).toBe('0x2');
 
@@ -910,7 +911,7 @@ describe('defaults', () => {
 						},
 					],
 				},
-				eth_2,
+				eth,
 			);
 			expect(accessListOverride).toBe('0x1');
 
@@ -926,7 +927,7 @@ describe('defaults', () => {
 					gasLimit: '0x5208',
 					hardfork: 'berlin',
 				},
-				eth_2,
+				eth,
 			);
 			expect(hardforkBerlinOverride).toBe('0x0');
 
@@ -945,10 +946,10 @@ describe('defaults', () => {
 						hardfork: 'berlin',
 					},
 				},
-				eth_2,
+				eth,
 			);
 			expect(commonBerlinOverride).toBe('0x0');
-			await closeOpenConnection(eth_2);
+			await closeOpenConnection(eth);
 		});
 		it('defaultMaxPriorityFeePerGas', async () => {
 			// default

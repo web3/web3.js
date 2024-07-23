@@ -481,9 +481,9 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 	const web3 = new Web3(DEFAULT_SYSTEM_PROVIDER);
 	const fromAcc = await createLocalAccount(web3);
 	const toAcc = createAccount();
-	const res : TransactionReceipt[]= [];
+	const res: TransactionReceipt[]= [];
 	for (let i = 0; i < cnt; i += 1) {
-
+		// eslint-disable-next-line no-await-in-loop
 		const receipt = await web3.eth.sendTransaction({
 			to: toAcc.address,
 			value: '0x1',
