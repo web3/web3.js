@@ -22,7 +22,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * copied over to each package's test directory. Because web3 package is the only package
  * running these E2E tests that use Sepolia and Mainnet, this util exists here for now.
  */
-
 import { getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
 // eslint-disable-next-line import/no-relative-packages
 import secrets from '../../../../.secrets.json';

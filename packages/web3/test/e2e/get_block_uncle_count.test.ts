@@ -51,7 +51,14 @@ describeIf(getSystemTestBackend() !== 'hardhat')(`${getSystemTestBackend()} test
 			],
 		}),
 	)('getBlockUncleCount', async ({ block }) => {
-		const result = await web3.eth.getBlockUncleCount(blockData[block]);
+		let _blockData = blockData[block]; 
+		if (block === 'blockHash' || block === 'blockNumber') {
+			const latestBlock = await web3.eth.getBlock('finalized');
+			_blockData =
+				block === 'blockHash' ? (latestBlock.hash as string) : Number(latestBlock.number); 
+
+		}
+		const result = await web3.eth.getBlockUncleCount(_blockData);
 
 		expect(result).toBe(BigInt(0));
 	});

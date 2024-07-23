@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { BlockNumberOrTag }from 'web3-types';
 import Web3, { Numbers } from '../../../src';
 import {
 	getSystemE2ETestProvider,
@@ -62,33 +63,21 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			],
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
-		let result;
+		let blockData = sepoliaBlockData[block] as BlockNumberOrTag;
 		if (block === 'blockHash' || block === 'blockNumber') {
 			const blockNumber = await web3.eth.getBlockNumber();
-			
+			blockData = blockNumber;
 			if (block === 'blockHash') {
-				const blockHash = await web3.eth.getBlock(blockNumber);
-				result = await web3.eth.getStorageAt(
-					getE2ETestContractAddress(),
-					storageSlot,
-					blockHash.hash,
-				)
-			} else {
-				result = await web3.eth.getStorageAt(
-					getE2ETestContractAddress(),
-					storageSlot,
-					blockNumber,
-				)
+				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
 			}
 			
-		} else {
-			result = await web3.eth.getStorageAt(
-				getE2ETestContractAddress(),
-				storageSlot,
-				sepoliaBlockData[block],
-			);
 		}
-		
+
+		const result = await web3.eth.getStorageAt(
+			getE2ETestContractAddress(),
+			storageSlot,
+			blockData,
+		);
  {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(

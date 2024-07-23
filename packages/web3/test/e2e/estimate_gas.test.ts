@@ -61,6 +61,18 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 		}),
 	)('estimateGas', async ({ transaction, block, format }) => {
 		let _blockData = blockData[block];
+		if (
+			(block === 'blockHash' || block === 'blockNumber')
+		) {
+			/**
+			 * @NOTE Getting a block too far back in history
+			 * results in a missing trie node error, so
+			 * we get latest block for this test
+			 */
+			const latestBlock = await web3.eth.getBlock('finalized');
+			_blockData =
+				block === 'blockHash' ? (latestBlock.hash as string) : toHex(latestBlock.number);
+		}
 
 		const expectedGasEstimate =
 			transaction.data !== undefined
