@@ -419,4 +419,21 @@ Documentation:
 
 -   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
 
+## [4.11.1]
+
+### Fixed
+
+#### web3-errors
+
+- Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
+
+#### web3-eth
+
+-   Adds transaction property to be an empty list rather than undefined when no transactions are included in the block (#7151)
+-   Change method `getTransactionReceipt` to not be casted as `TransactionReceipt` to give proper return type (#7159)
+
+#### web3
+
+-   Remove redundant constructor of contractBuilder (#7150)
+
 ## [Unreleased]
