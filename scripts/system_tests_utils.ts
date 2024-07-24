@@ -73,7 +73,7 @@ export const getEnvVar = (name: string): string | undefined =>
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 	global.Cypress ? Cypress.env(name) : process.env[name];
 
-export const DEFAULT_SYSTEM_PROVIDER = getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? "";
+export const DEFAULT_SYSTEM_PROVIDER = 'http://127.0.0.1:8545';
 export const DEFAULT_SYSTEM_ENGINE = 'node';
 export const BACKEND = {
 	GETH: 'geth',
@@ -84,15 +84,12 @@ export const BACKEND = {
 };
 
 export const getSystemTestProviderUrl = (): string  =>
-	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? "";
+	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
 
 export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecutionAPI>():
 	| string
 	| SupportedProviders<API> => {
 	const url = getSystemTestProviderUrl();
-
-	if(url === "")
-		throw new Error("undefined URL in env var WEB3_SYSTEM_TEST_PROVIDER");
 
 	if (url.includes('ipc')) {
 		return new IpcProvider<API>(url);
