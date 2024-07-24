@@ -514,3 +514,28 @@ export const mapFormatToType: { [key: string]: string } = {
 	[FMT_BYTES.HEX]: 'string',
 	[FMT_BYTES.UINT8ARRAY]: 'object',
 };
+
+export const waitForCondition = async (
+	conditionFunc : () => boolean,
+	logicFunc: () => Promise<void> | void,
+	maxIterations: number = 10, // 10 times
+	duration: number = 8000,	// check after each 8 seconds 
+): Promise<void> => {
+	return new Promise<void>((resolve) => {
+		let iterations = 0;
+		const interval = setInterval(async () => {
+			if (iterations>0 && conditionFunc()) { // wait duration before first check
+				clearInterval(interval);
+				await logicFunc();
+				resolve();
+			} else {
+				iterations++;
+				if (iterations >= maxIterations) {
+					clearInterval(interval);
+					await logicFunc();
+					throw new Error('Condition not met after 10 iterations.');
+				}
+			}
+		}, duration);
+	});
+}
