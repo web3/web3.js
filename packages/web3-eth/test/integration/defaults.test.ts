@@ -41,6 +41,7 @@ import {
 	getSystemTestProvider,
 	isIpc,
 	sendFewSampleTxs,
+	waitForCondition
 } from '../fixtures/system_test_utils';
 
 import {
@@ -363,15 +364,11 @@ describe('defaults', () => {
 		
 			expect(confirmationCount).toBe(waitConfirmations);
 
-			await new Promise<void>((resolve) => {
-				const timeout = setTimeout(() => {
-					if (confirmationCount >= waitConfirmations) {
-						clearTimeout(timeout);
-						resolve();
-					}
-				}, 5000);
-			});
-			await closeOpenConnection(eth);
+			await waitForCondition( 
+				() => confirmationCount >= waitConfirmations, 
+				async () => await closeOpenConnection(eth)),
+				10,
+				5000
 		});
 
 		it('transactionPollingInterval and transactionPollingTimeout', async () => {
@@ -610,17 +607,9 @@ describe('defaults', () => {
 			const status = await confirmationPromise;
 			expect(status).toBe(BigInt(1));
 
-			await new Promise<void>((resolve) => {
-				// eslint-disable-next-line @typescript-eslint/no-misused-promises
-				const timeout = setTimeout(async () => {
-					if (confirmationCount >= 2) {
-						clearTimeout(timeout);
-						resolve();
-					}
-				}, 8000)
-			});
-
-			await closeOpenConnection(tempEth);
+			await waitForCondition( 
+				() => confirmationCount >= 2, 
+				async () => await closeOpenConnection(tempEth));
 		});
 
 		it('maxListenersWarningThreshold test default config', () => {
