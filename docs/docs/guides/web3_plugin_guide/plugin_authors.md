@@ -233,6 +233,73 @@ public link(parentContext: Web3Context) {
 }
 ```
 
+## Plugin Middleware
+
+Middleware allows plugins to intercept network interactions and inject custom logic. There are two types of plugin middleware: [request middleware](#request-middleware) and [transaction middleware](#transaction-middleware). In both cases, the middleware is implemented as a new class and registered with the plugin in the plugin's `link` method. Keep reading to learn how to add middleware to a plugin.
+
+### Request Middleware
+
+Request middleware allows plugins to modify RPC requests before they are sent to the network and modify RPC responses before they are returned to Web3.js for further internal processing. Request middleware must implement the [`RequestManagerMiddleware`](/api/web3-core/interface/RequestManagerMiddleware) interface, which specifies two functions: [`processRequest`](/api/web3-core/interface/RequestManagerMiddleware#processRequest) and [`processResponse`](/api/web3-core/interface/RequestManagerMiddleware#processResponse). Here is a simple example of request middleware that prints RPC requests and responses to the console:
+
+```ts
+export class RequestMiddleware<API> implements RequestManagerMiddleware<API> {
+  public async processRequest<ParamType = unknown[]>(
+    request: JsonRpcPayload<ParamType>
+  ): Promise<JsonRpcPayload<ParamType>> {
+    const reqObj = { ...request } as JsonRpcPayload;
+    console.log("Request:", reqObj);
+    return Promise.resolve(reqObj as JsonRpcPayload<ParamType>);
+  }
+
+  public async processResponse<
+    Method extends Web3APIMethod<API>,
+    ResponseType = Web3APIReturnType<API, Method>
+  >(
+    response: JsonRpcResponse<ResponseType>
+  ): Promise<JsonRpcResponse<ResponseType>> {
+    const resObj = { ...response };
+    console.log("Response:", resObj);
+    return Promise.resolve(resObj);
+  }
+}
+```
+
+To add request middleware to a plugin, use the [`Web3RequestManager.setMiddleware`](/api/web3-core/class/Web3RequestManager#setMiddleware) method in the plugin's `link` method as demonstrated below:
+
+```ts
+public link(parentContext: Web3Context): void {
+  parentContext.requestManager.setMiddleware(new RequestMiddleware());
+  super.link(parentContext);
+}
+```
+
+### Transaction Middleware
+
+Transaction middleware allows plugins to modify transaction data before it is sent to the network. Transaction middleware must implement the [`TransactionMiddleware`](/api/web3-eth/interface/TransactionMiddleware) interface, which specifies one function: [`processTransaction`](/api/web3-eth/interface/TransactionMiddleware#processTransaction). Here is a simple example of transaction middleware that prints transaction data to the console:
+
+```ts
+export class TxnMiddleware implements TransactionMiddleware {
+  public async processTransaction(
+    transaction: TransactionMiddlewareData
+  ): Promise<TransactionMiddlewareData> {
+    const txObj = { ...transaction };
+    console.log("Transaction data:", txObj);
+    return Promise.resolve(txObj);
+  }
+}
+```
+
+To add transaction middleware to a plugin, use the [`Web3Eth.setTransactionMiddleware`](/api/web3-eth/class/Web3Eth#setTransactionMiddleware) method in the plugin's `link` method as demonstrated below:
+
+```ts
+public link(parentContext: Web3Context): void {
+  (parentContext as any).Web3Eth.setTransactionMiddleware(
+    new TxnMiddleware()
+  );
+  super.link(parentContext);
+}
+```
+
 ## Setting Up Module Augmentation
 
 In order to provide type safety and IntelliSense for your plugin when it's registered by the user, you must [augment](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) the `Web3Context` module. In simpler terms, you will be making TypeScript aware that you are modifying the interface of the class `Web3Context`, and any class that extends it, to include the interface of your plugin (i.e. your plugin's added methods, properties, etc.). As a result, your plugin object will be accessible within a namespace of your choice, which will be available within any `Web3Context` object.

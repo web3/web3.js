@@ -142,12 +142,6 @@ export class Web3<
 				addressOrOptionsOrContext?: Address | ContractInitOptions,
 				optionsOrContextOrReturnFormat?: ContractInitOptions,
 				contextOrReturnFormat?: Web3Context | DataFormat,
-			);
-			public constructor(
-				jsonInterface: Abi,
-				addressOrOptionsOrContext?: Address | ContractInitOptions,
-				optionsOrContextOrReturnFormat?: ContractInitOptions,
-				contextOrReturnFormat?: Web3Context | DataFormat,
 				returnFormat?: DataFormat,
 			) {
 				if (

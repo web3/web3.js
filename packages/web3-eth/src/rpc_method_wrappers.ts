@@ -521,14 +521,13 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		}
 		
 	}
-	
 	return isNullish(response)
 		? response
 		: (format(
 				transactionReceiptSchema,
 				response as unknown as TransactionReceipt,
 				returnFormat ?? web3Context.defaultReturnFormat,
-		  ) as TransactionReceipt);
+		  ));
 }
 
 /**
