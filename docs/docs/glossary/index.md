@@ -116,7 +116,7 @@ A `proxy` in Web3.js serves as an intermediary between your application and an E
 ## HttpProvider
 `HttpProvider` in Web3.js connects an application to an Ethereum node over HTTP. It allows for sending transactions, reading blockchain data, and interacting with smart contracts. You create a Web3 instance with the node’s URL to establish the connection. It’s essential for DApps needing blockchain interaction but can block the event loop, so alternatives like `WebSocketProvider` might be used for better performance. Proper security measures are crucial when exposing HTTP endpoints.
 
-```javascript title='HttpProvider example'
+```typescript
 import { Web3 } from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 ```
@@ -169,7 +169,7 @@ transferEvent.on('data', (event) => {
 
 #### Example
 
-```javascript title='Event Log in web3.js'
+```typescript
 import { Web3 } from 'web3';
 const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
 
