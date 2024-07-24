@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { BlockNumberOrTag }from 'web3-types';
 import Web3, { Numbers } from '../../../src';
 import {
 	getSystemE2ETestProvider,
@@ -63,10 +62,10 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			],
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
-		let blockData = sepoliaBlockData[block] as BlockNumberOrTag;
+		let blockData = sepoliaBlockData[block];
 		if (block === 'blockHash' || block === 'blockNumber') {
 			const blockNumber = await web3.eth.getBlockNumber();
-			blockData = blockNumber;
+			blockData = Number(blockNumber);
 			if (block === 'blockHash') {
 				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
 			}
