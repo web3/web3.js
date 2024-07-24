@@ -73,12 +73,10 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 		switch (format) {
 			case 'NUMBER_NUMBER':
 				// eslint-disable-next-line jest/no-conditional-expect
-				console.log(block, isNumber(result));
 				expect(isNumber(result)).toBeTruthy();
 				break;
 			case 'NUMBER_HEX':
 				// eslint-disable-next-line jest/no-conditional-expect
-				console.log(block, isNumber(result));
 				expect(isHexStrict(result)).toBeTruthy();
 				break;
 			case 'NUMBER_STR':

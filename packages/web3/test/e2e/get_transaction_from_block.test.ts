@@ -28,7 +28,6 @@ import { mainnetBlockData, mainnetTransactionFromBlock } from './fixtures/mainne
 describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
-	console.log(getSystemTestBackend())
 	let web3: Web3;
 
 	beforeAll(() => {
