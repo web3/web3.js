@@ -60,10 +60,18 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			],
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
+		let blockData = mainnetBlockData[block];
+		if (block === 'blockHash' || block === 'blockNumber') {
+			const blockNumber = await web3.eth.getBlockNumber();
+			blockData = blockNumber;
+			if (block === 'blockHash') {
+				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
+			}
+		}
 		const result = await web3.eth.getStorageAt(
 			getE2ETestContractAddress(),
 			storageSlot,
-			mainnetBlockData[block],
+			blockData,
 		);
 
 		if (mainnetBlockData[block] === 'earliest') {

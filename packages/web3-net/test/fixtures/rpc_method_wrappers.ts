@@ -30,3 +30,5 @@ export const getPeerCountValidData: [DataFormat, any, any][] = [
 	[{ number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX }, '0x2', 2],
 	[{ number: FMT_NUMBER.BIGINT, bytes: FMT_BYTES.HEX }, '0x2', BigInt('2')],
 ];
+
+export

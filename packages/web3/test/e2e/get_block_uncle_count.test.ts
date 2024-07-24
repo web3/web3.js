@@ -42,12 +42,16 @@ describeIf(getSystemTestBackend() !== 'hardhat')(`${getSystemTestBackend()} test
 				| 'pending'
 				| 'finalized'
 				| 'safe'
+				| 'blockHash'
+				| 'blockNumber'
 		}>({
 			block: [
 				'latest',
 				'pending',
 				'safe',
 				'finalized',
+				'blockHash',
+				'blockNumber',
 			],
 		}),
 	)('getBlockUncleCount', async ({ block }) => {

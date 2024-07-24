@@ -52,11 +52,11 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	it.each(
 		toAllVariants<{
 			transaction: Transaction;
-			block: 'latest' | 'pending' | 'finalized' | 'safe';
+			block: 'latest' | 'pending' | 'finalized' | 'safe' | 'blockHash' | 'blockNumber';
 			format: string;
 		}>({
 			transaction: [simpleEthTransaction, contractDeploymentTransaction],
-			block: ['latest', 'pending', 'safe', 'finalized'],
+			block: ['latest', 'pending', 'safe', 'finalized', 'blockHash', 'blockNumber'],
 			format: Object.values(FMT_NUMBER),
 		}),
 	)('estimateGas', async ({ transaction, block, format }) => {

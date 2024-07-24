@@ -62,7 +62,12 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should getCode for deployed contract', async ({ block, format }) => {
-		const result = await web3.eth.getCode(getE2ETestContractAddress(), blockData[block], {
+		let _blockData = blockData[block];
+		if (block === 'blockHash' || block === 'blockNumber') {
+			const latestBlock = await web3.eth.getBlock('finalized');
+			_blockData = block === 'blockHash' ? latestBlock.hash as string : toHex(latestBlock.number);
+		}
+		const result = await web3.eth.getCode(getE2ETestContractAddress(), _blockData, {
 			number: FMT_NUMBER.HEX,
 			bytes: format as FMT_BYTES,
 		});

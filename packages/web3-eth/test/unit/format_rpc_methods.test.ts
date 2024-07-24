@@ -52,4 +52,13 @@ describe('web3_eth_methods formatting', () => {
 			});
 		});
 	});
+
+	describe('getTransactionReceipt', () => {
+		it.each(getTransactionReceiptValidData)(
+			'returnType: %s mockRpcResponse: %s output: %s',
+			async (returnType, mockRpcResponse, output) => {
+
+			}
+		);
+	})
 });

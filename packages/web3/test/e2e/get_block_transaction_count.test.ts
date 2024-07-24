@@ -44,6 +44,8 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 				| 'pending'
 				| 'finalized'
 				| 'safe'
+				| 'blockHash'
+				| 'blockNumber';
 			format: string;
 		}>({
 			block: [
@@ -51,6 +53,8 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 				'pending',
 				'safe',
 				'finalized',
+				'blockHash', 
+				'blockNumber',
 			],
 			format: Object.values(FMT_NUMBER),
 		}),

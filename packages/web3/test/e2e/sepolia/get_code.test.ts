@@ -42,10 +42,10 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 
 	it.each(
 		toAllVariants<{
-			block: 'latest' | 'pending' | 'finalized' | 'safe';
+			block: 'latest' | 'pending' | 'finalized' | 'safe' | 'blockHash' | 'blockNumber';
 			format: string;
 		}>({
-			block: ['latest', 'pending', 'safe', 'finalized'],
+			block: ['latest', 'pending', 'safe', 'finalized', 'blockHash', 'blockNumber'],
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should getCode for deployed contract', async ({ block, format }) => {

@@ -70,7 +70,6 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			if (block === 'blockHash') {
 				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
 			}
-			
 		}
 
 		const result = await web3.eth.getStorageAt(
