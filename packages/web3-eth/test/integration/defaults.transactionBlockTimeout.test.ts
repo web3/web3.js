@@ -28,7 +28,6 @@ import {
 	getSystemTestProvider,
 	isSocket,
 	itIf,
-	waitForOpenConnection,
 	createLocalAccount,
 	sendFewSampleTxs,
 	getSystemTestBackend,
@@ -46,10 +45,10 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('defaults', () => {
 	let clientUrl: string | SupportedProviders;
 	let account1: Web3Account;
 	let account2: Web3Account;
-	let transactionBlockTimeout: number, 
-		transactionSendTimeout: number, 
-		transactionPollingTimeout: number, 
-		blockHeaderTimeout: number;
+	let transactionBlockTimeout: number; 
+	let transactionSendTimeout: number; 
+	let transactionPollingTimeout: number; 
+	let blockHeaderTimeout: number;
 
 	beforeEach(() => {
 		clientUrl = getSystemTestProvider();
@@ -69,7 +68,7 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('defaults', () => {
 		await closeOpenConnection(web3);
 	});
 
-	it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
+	test('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
 		account1 = await createLocalAccount(web3);
 		account2 = await createLocalAccount(web3);
 

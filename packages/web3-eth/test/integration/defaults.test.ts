@@ -366,9 +366,9 @@ describe('defaults', () => {
 
 			await waitForCondition( 
 				() => confirmationCount >= waitConfirmations, 
-				async () => await closeOpenConnection(eth)),
+				async () => { await closeOpenConnection(eth)},
 				10,
-				5000
+				5000);
 		});
 
 		it('transactionPollingInterval and transactionPollingTimeout', async () => {
@@ -609,7 +609,7 @@ describe('defaults', () => {
 
 			await waitForCondition( 
 				() => confirmationCount >= 2, 
-				async () => await closeOpenConnection(tempEth));
+				async () => { await closeOpenConnection(tempEth)});
 		});
 
 		it('maxListenersWarningThreshold test default config', () => {

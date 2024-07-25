@@ -166,6 +166,10 @@ export const closeOpenConnection = async (web3Context: Web3Context) => {
 		
             (web3Context.provider as unknown as Web3BaseProvider).reset();
 			(web3Context.provider as unknown as Web3BaseProvider).disconnect();
+
+			await new Promise(resolve => {
+				setTimeout(resolve, 1000);
+			  });
 		}
 };
 
@@ -516,26 +520,32 @@ export const mapFormatToType: { [key: string]: string } = {
 };
 
 export const waitForCondition = async (
-	conditionFunc : () => boolean,
+	conditionFunc: () => boolean,
 	logicFunc: () => Promise<void> | void,
-	maxIterations: number = 10, // 10 times
-	duration: number = 8000,	// check after each 8 seconds 
+	maxIterations = 10, // 10 times
+	duration = 8000,	// check after each 8 seconds 
 ): Promise<void> => {
-	return new Promise<void>((resolve) => {
+	return new Promise<void>((resolve, reject) => {
 		let iterations = 0;
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		const interval = setInterval(async () => {
-			if (iterations>0 && conditionFunc()) { // wait duration before first check
-				clearInterval(interval);
-				await logicFunc();
-				resolve();
-			} else {
-				iterations++;
-				if (iterations >= maxIterations) {
+			try {
+				if (iterations > 0 && conditionFunc()) { // wait duration before first check
 					clearInterval(interval);
 					await logicFunc();
-					throw new Error('Condition not met after 10 iterations.');
+					resolve();
+				} else {
+					iterations += 1;
+					if (iterations >= maxIterations) {
+						clearInterval(interval);
+						await logicFunc();
+						reject(new Error('Condition not met after 10 iterations.'));
+					}
 				}
+			} catch (error) {
+				clearInterval(interval);
+				reject(error);
 			}
 		}, duration);
 	});
-}
+};

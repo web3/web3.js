@@ -25,7 +25,6 @@ import {
 	describeIf,
 	closeOpenConnection,
 	isSocket,
-	//waitForOpenConnection,
 	createLocalAccount,
 	isIpc,
 	sendFewSampleTxs,
@@ -47,7 +46,6 @@ describeIf(isSocket)('watch subscription transaction', () => {
 		web3 = new Web3(clientUrl);
 		account1 = await createLocalAccount(web3);
 		account2 = createAccount();
-		//await waitForOpenConnection(web3.eth);
 	});
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
