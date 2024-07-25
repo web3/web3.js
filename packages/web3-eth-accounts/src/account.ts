@@ -170,6 +170,23 @@ export const hashMessage = (message: string): string => {
 	return sha3Raw(ethMessage); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
 
+export const pureSign = (hash: HexString, privateKey: Bytes): SignResult => {
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
+
+	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
+	const signatureBytes = signature.toCompactRawBytes();
+	const r = signature.r.toString(16).padStart(64, '0');
+	const s = signature.s.toString(16).padStart(64, '0');
+	const v = signature.recovery! + 27;
+
+	return {
+		messageHash: hash,
+		v: numberToHex(v),
+		r: `0x${r}`,
+		s: `0x${s}`,
+		signature: `${bytesToHex(signatureBytes)}${v.toString(16)}`,
+	};
+};
 /**
  * Signs arbitrary data with a given private key.
  * :::info
@@ -193,23 +210,17 @@ export const hashMessage = (message: string): string => {
  * ```
  */
 export const sign = (data: string, privateKey: Bytes): SignResult => {
-	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
-
 	const hash = hashMessage(data);
 
-	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
-	const signatureBytes = signature.toCompactRawBytes();
-	const r = signature.r.toString(16).padStart(64, '0');
-	const s = signature.s.toString(16).padStart(64, '0');
-	const v = signature.recovery! + 27;
+	const { messageHash, v, r, s, signature } = pureSign(hash, privateKey);
 
 	return {
 		message: data,
-		messageHash: hash,
-		v: numberToHex(v),
-		r: `0x${r}`,
-		s: `0x${s}`,
-		signature: `${bytesToHex(signatureBytes)}${v.toString(16)}`,
+		messageHash,
+		v,
+		r,
+		s,
+		signature,
 	};
 };
 
