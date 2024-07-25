@@ -825,7 +825,8 @@ describe('Contract', () => {
 
 		it('should clone new contract', () => {
 			const contract = new Contract(sampleStorageContractABI);
-
+			contract.maxListenersWarningThreshold = 1000;
+			
 			const clonnedContract = contract.clone();
 			expect(stringify(contract)).toStrictEqual(stringify(clonnedContract));
 		});
