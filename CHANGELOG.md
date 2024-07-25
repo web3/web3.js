@@ -2649,3 +2649,9 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Remove redundant constructor of contractBuilder (#7150)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-eth-accounts
+
+-   Added public function `pureSign` (#7174)

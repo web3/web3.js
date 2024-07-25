@@ -171,4 +171,4 @@ Documentation:
 ## [Unreleased]
 ### Added
 
--   Added public function `pureSign` (#)
+-   Added public function `pureSign` (#7174)
