@@ -115,9 +115,9 @@ export abstract class Web3Config
 		for (const key of keys) {
 			this._triggerConfigChange(key, options[key]);
 
-			if(!isNullish(options[key] && 
+			if(!isNullish(options[key]) && 
 				typeof options[key] === 'number' &&
-				key === 'maxListenersWarningThreshold' as keyof Web3ConfigOptions) ) 
+				key === 'maxListenersWarningThreshold' ) 
 			{
 				// additionally set in event emitter
 				this.setMaxListenerWarningThreshold(Number(options[key]));

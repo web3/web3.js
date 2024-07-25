@@ -815,9 +815,9 @@ describe('Contract', () => {
 				'0x00000000219ab540356cBB839Cbe05303d7705Fa',
 				{ gas: '0x97254' },
 			);
-
+			contract.maxListenersWarningThreshold = 1000;
+			
 			const clonnedContract = contract.clone();
-
 			expect(stringify(contract)).toStrictEqual(stringify(clonnedContract));
 
 			contract.options.jsonInterface = GreeterAbi;
