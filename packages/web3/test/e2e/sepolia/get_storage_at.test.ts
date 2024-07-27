@@ -79,6 +79,14 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			blockData,
 		);
  {
+	if (sepoliaBlockData[block] === 'earliest') {
+		// Nethermind returns 0x while Geth returns 0x0000000000000000000000000000000000000000000000000000000000000000
+		// eslint-disable-next-line jest/no-conditional-expect
+		expect(
+			result === '0x' ||
+				result === '0x0000000000000000000000000000000000000000000000000000000000000000',
+		).toBeTruthy();
+	} else {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
 				`0x000000000000000000000000${getE2ETestAccountAddress()
@@ -86,5 +94,6 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 					.toLowerCase()}`,
 			);
 		}
+	}
 	});
 });
