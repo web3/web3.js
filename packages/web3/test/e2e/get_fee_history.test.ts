@@ -24,13 +24,13 @@ import { toAllVariants } from '../shared_fixtures/utils';
 describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData: {
-		earlest: 'earliest';
+		earliest: 'earliest';
 		latest: 'latest';
 		pending: 'pending';
 		finalized: 'finalized';
 		safe: 'safe';
 	} = {
-		earlest: 'earliest',
+		earliest: 'earliest',
 		latest: 'latest',
 		pending: 'pending',
 		finalized: 'finalized',
