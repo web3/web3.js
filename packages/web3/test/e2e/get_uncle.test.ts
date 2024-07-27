@@ -40,6 +40,7 @@ describe(`${getSystemTestBackend()} tests - getUncle`, () => {
 	it.each(
 		toAllVariants<{
 			block:
+				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
@@ -47,6 +48,7 @@ describe(`${getSystemTestBackend()} tests - getUncle`, () => {
 			uncleIndex: Numbers;
 		}>({
 			block: [
+				'earliest',
 				'latest',
 				'pending',
 				'safe',

@@ -38,6 +38,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')(`${getSystemTestBackend()} test
 	it.each(
 		toAllVariants<{
 			block:
+				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
@@ -46,6 +47,7 @@ describeIf(getSystemTestBackend() !== 'hardhat')(`${getSystemTestBackend()} test
 				| 'blockNumber'
 		}>({
 			block: [
+				'earliest',
 				'latest',
 				'pending',
 				'safe',

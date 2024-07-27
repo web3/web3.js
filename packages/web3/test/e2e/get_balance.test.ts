@@ -43,6 +43,7 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 	it.each(
 		toAllVariants<{
 			block:
+				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
@@ -52,6 +53,7 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 			format: string;
 		}>({
 			block: [
+				'earliest',
 				'latest',
 				'pending',
 				'safe',

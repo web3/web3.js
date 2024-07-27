@@ -44,6 +44,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		toAllVariants<{
 			storageSlot: Numbers;
 			block:
+				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
@@ -53,6 +54,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		}>({
 			storageSlot: ['0x1', '1', 1, BigInt(1)],
 			block: [
+				'earliest',
 				'latest',
 				'pending',
 				'safe',

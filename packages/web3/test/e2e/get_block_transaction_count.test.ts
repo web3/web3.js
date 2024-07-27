@@ -40,6 +40,7 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 	it.each(
 		toAllVariants<{
 			block:
+				| 'earliest'
 				| 'latest'
 				| 'pending'
 				| 'finalized'
@@ -49,6 +50,7 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 			format: string;
 		}>({
 			block: [
+				'earliest',
 				'latest',
 				'pending',
 				'safe',

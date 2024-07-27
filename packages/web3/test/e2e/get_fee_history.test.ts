@@ -24,11 +24,13 @@ import { toAllVariants } from '../shared_fixtures/utils';
 describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData: {
+		earlest: 'earliest';
 		latest: 'latest';
 		pending: 'pending';
 		finalized: 'finalized';
 		safe: 'safe';
 	} = {
+		earlest: 'earliest',
 		latest: 'latest',
 		pending: 'pending',
 		finalized: 'finalized',
@@ -48,12 +50,12 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	it.each(
 		toAllVariants<{
 			blockCount: Numbers;
-			newestBlock: 'latest' | 'pending' | 'finalized' | 'safe';
+			newestBlock: 'earliest' | 'latest' | 'pending' | 'finalized' | 'safe';
 			rewardPercentiles: Numbers[];
 			format: string;
 		}>({
 			blockCount: [1, '2', 3, BigInt(4)],
-			newestBlock: ['latest', 'pending', 'safe', 'finalized'],
+			newestBlock: ['earliest', 'latest', 'pending', 'safe', 'finalized'],
 			rewardPercentiles: [['0xa', '20', 30, BigInt(40)]],
 			format: Object.values(FMT_NUMBER),
 		}),
