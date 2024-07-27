@@ -63,7 +63,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		let blockData = mainnetBlockData[block];
 		if (block === 'blockHash' || block === 'blockNumber') {
 			const blockNumber = await web3.eth.getBlockNumber();
-			blockData = blockNumber;
+			blockData = Number(blockNumber);
 			if (block === 'blockHash') {
 				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
 			}
