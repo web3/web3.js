@@ -29,12 +29,19 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 		pending: 'pending';
 		finalized: 'finalized';
 		safe: 'safe';
+		blockNumber: number;
+		blockHash: string;
 	} = {
 		earliest: 'earliest',
 		latest: 'latest',
 		pending: 'pending',
 		finalized: 'finalized',
 		safe: 'safe',
+		blockNumber: getSystemTestBackend() === 'sepolia' ? 3240768 : 17029884,
+		blockHash:
+			getSystemTestBackend() === 'sepolia'
+				? '0xe5e66eab79bf9236eface52c33ecdbad381069e533dc70e3f54e2f7727b5f6ca'
+				: '0x2850e4a813762b2de589fa5268eacb92572defaf9520608deb129699e504cab2',
 	};
 
 	let web3: Web3;
@@ -50,12 +57,12 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	it.each(
 		toAllVariants<{
 			blockCount: Numbers;
-			newestBlock: 'earliest' | 'latest' | 'pending' | 'finalized' | 'safe';
+			newestBlock: 'earliest' | 'latest' | 'pending' | 'finalized' | 'safe' | 'blockNumber';
 			rewardPercentiles: Numbers[];
 			format: string;
 		}>({
 			blockCount: [1, '2', 3, BigInt(4)],
-			newestBlock: ['earliest', 'latest', 'pending', 'safe', 'finalized'],
+			newestBlock: ['earliest', 'latest', 'pending', 'safe', 'finalized', 'blockNumber'],
 			rewardPercentiles: [['0xa', '20', 30, BigInt(40)]],
 			format: Object.values(FMT_NUMBER),
 		}),
