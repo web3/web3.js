@@ -41,7 +41,10 @@ export const getE2ETestAccountAddress = (): string => {
 	if (process.env.TEST_ACCOUNT_ADDRESS !== undefined) {
 		return process.env.TEST_ACCOUNT_ADDRESS;
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
+	} else if (
+		getSystemTestBackend() === BACKEND.SEPOLIA ||
+		getSystemTestBackend() === BACKEND.MAINNET
+	) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET'].ACCOUNT
 			.address;
 	}
@@ -63,7 +66,10 @@ export const getAllowedSendTransaction = (): boolean => {
 
 		return Boolean(process.env.ALLOWED_SEND_TRANSACTION);
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
+	} else if (
+		getSystemTestBackend() === BACKEND.SEPOLIA ||
+		getSystemTestBackend() === BACKEND.MAINNET
+	) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET']
 			.ALLOWED_SEND_TRANSACTION;
 	}
@@ -75,7 +81,10 @@ export const getE2ETestAccountPrivateKey = (): string => {
 	if (process.env.TEST_ACCOUNT_PRIVATE_KEY !== undefined) {
 		return process.env.TEST_ACCOUNT_PRIVATE_KEY;
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
+	} else if (
+		getSystemTestBackend() === BACKEND.SEPOLIA ||
+		getSystemTestBackend() === BACKEND.MAINNET
+	) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET'].ACCOUNT
 			.privateKey;
 	}

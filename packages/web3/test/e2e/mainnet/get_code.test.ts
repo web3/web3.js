@@ -65,7 +65,8 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 		let _blockData = blockData[block];
 		if (block === 'blockHash' || block === 'blockNumber') {
 			const latestBlock = await web3.eth.getBlock('finalized');
-			_blockData = block === 'blockHash' ? latestBlock.hash as string : toHex(latestBlock.number);
+			_blockData =
+				block === 'blockHash' ? (latestBlock.hash as string) : toHex(latestBlock.number);
 		}
 		const result = await web3.eth.getCode(getE2ETestContractAddress(), _blockData, {
 			number: FMT_NUMBER.HEX,

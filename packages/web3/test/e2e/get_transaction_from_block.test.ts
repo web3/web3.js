@@ -20,14 +20,19 @@ import { Numbers, TransactionInfo } from 'web3-types';
 
 import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
+import {
+	closeOpenConnection,
+	getSystemTestBackend,
+	BACKEND,
+} from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlockData, sepoliaTransactionFromBlock } from './fixtures/sepolia';
 import { mainnetBlockData, mainnetTransactionFromBlock } from './fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
+	const blockData =
+		getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 	let web3: Web3;
 
 	beforeAll(() => {
@@ -40,24 +45,11 @@ describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 
 	it.each(
 		toAllVariants<{
-			block:
-				| 'latest'
-				| 'pending'
-				| 'finalized'
-				| 'safe'
-				| 'blockHash'
-				| 'blockNumber';
+			block: 'latest' | 'pending' | 'finalized' | 'safe' | 'blockHash' | 'blockNumber';
 			transactionIndex: Numbers;
 			format: string;
 		}>({
-			block: [
-				'latest',
-				'pending',
-				'safe',
-				'finalized',
-				'blockHash',
-				'blockNumber',
-			],
+			block: ['latest', 'pending', 'safe', 'finalized', 'blockHash', 'blockNumber'],
 			transactionIndex: ['0x1', '1', 1, BigInt(1)],
 		}),
 	)('getTransactionFromBlock', async ({ block, transactionIndex }) => {

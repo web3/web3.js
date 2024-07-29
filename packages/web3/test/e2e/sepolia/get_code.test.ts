@@ -52,16 +52,13 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 		let blockData = sepoliaBlockData[block] as BlockNumberOrTag;
 		if (block === 'blockHash' || block === 'blockNumber') {
 			const latestBlock = await web3.eth.getBlock('finalized');
-			blockData = block === 'blockHash' ? latestBlock.hash as string : toHex(latestBlock.number);
+			blockData =
+				block === 'blockHash' ? (latestBlock.hash as string) : toHex(latestBlock.number);
 		}
-		const result = await web3.eth.getCode(
-			getE2ETestContractAddress(),
-			blockData,
-			{
-				number: FMT_NUMBER.HEX,
-				bytes: format as FMT_BYTES,
-			},
-		);
+		const result = await web3.eth.getCode(getE2ETestContractAddress(), blockData, {
+			number: FMT_NUMBER.HEX,
+			bytes: format as FMT_BYTES,
+		});
 
 		switch (format) {
 			case 'BYTES_HEX':

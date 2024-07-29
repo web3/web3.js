@@ -18,14 +18,19 @@ import { toHex } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER, Transaction } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
+import {
+	closeOpenConnection,
+	getSystemTestBackend,
+	BACKEND,
+} from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { mainnetBlockData } from './fixtures/mainnet';
 import { sepoliaBlockData } from './fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
+	const blockData =
+		getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 	const simpleEthTransaction: Transaction = {
 		from: '0x0000000000000000000000000000000000000000',
 		to: '0x0000000000000000000000000000000000000000',
@@ -61,9 +66,7 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 		}),
 	)('estimateGas', async ({ transaction, block, format }) => {
 		let _blockData = blockData[block];
-		if (
-			(block === 'blockHash' || block === 'blockNumber')
-		) {
+		if (block === 'blockHash' || block === 'blockNumber') {
 			/**
 			 * @NOTE Getting a block too far back in history
 			 * results in a missing trie node error, so
