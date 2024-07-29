@@ -45,11 +45,26 @@ describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 
 	it.each(
 		toAllVariants<{
-			block: 'latest' | 'pending' | 'finalized' | 'safe' | 'blockHash' | 'blockNumber';
+			block:
+				| 'earliest'
+				| 'latest'
+				| 'pending'
+				| 'finalized'
+				| 'safe'
+				| 'blockHash'
+				| 'blockNumber';
 			transactionIndex: Numbers;
 			format: string;
 		}>({
-			block: ['latest', 'pending', 'safe', 'finalized', 'blockHash', 'blockNumber'],
+			block: [
+				'earliest',
+				'latest',
+				'pending',
+				'safe',
+				'finalized',
+				'blockHash',
+				'blockNumber',
+			],
 			transactionIndex: ['0x1', '1', 1, BigInt(1)],
 		}),
 	)('getTransactionFromBlock', async ({ block, transactionIndex }) => {
