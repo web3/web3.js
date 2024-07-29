@@ -36,15 +36,15 @@ yarn
 
 if [[ ${BACKEND} == "infura" ]]
 then
-    if [ ! $INFURA_HTTP ] || [ ! $INFURA_WSS ]
+    if [ ! $INFURA_MAINNET_HTTP ] || [ ! $INFURA_MAINNET_WS ]
     then
         echo "No Infura provider URL specified"
         exit 1
     elif [ $MODE == "http" ]
     then
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_MAINNET_HTTP
     else
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_MAINNET_WS
     fi
 fi
 yarn "test:$BACKEND:$MODE"
@@ -55,15 +55,15 @@ yarn
 
 if [[ ${BACKEND} == "infura" ]]
 then
-    if [ ! $INFURA_HTTP ] || [ ! $INFURA_WSS ]
+    if [ ! $INFURA_MAINNET_HTTP ] || [ ! $INFURA_MAINNET_WS ]
     then
         echo "No Infura provider URL specified"
         exit 1
     elif [ $MODE == "http" ]
     then
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_MAINNET_HTTP
     else
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_MAINNET_WS
     fi
 fi
 yarn "test:$BACKEND:$MODE"
