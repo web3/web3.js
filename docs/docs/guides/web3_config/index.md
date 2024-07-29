@@ -314,7 +314,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [transactionPollingInterval](/api/web3-core/class/Web3Config#transactionPollingInterval)
-The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Modifying this value can reduce the wait time for confirmations or decrease the number of network requests. Setting the `transactionPollingInterval` would also set [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) and [`transactionConfirmationPollingInterval`](/guides/web3_config/#transactionconfirmationpollinginterval) to the same value. 
+This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Modifying this value can reduce the wait time for confirmations or decrease the number of network requests. Setting the `transactionPollingInterval` would also set [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) and [`transactionConfirmationPollingInterval`](/guides/web3_config/#transactionconfirmationpollinginterval) to the same value.
 
 The default value of `transactionPollingInterval` is 1000 ms.
 
@@ -338,7 +338,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [transactionPollingTimeout](/api/web3-core/class/Web3Config#transactionPollingTimeout)
-The `transactionPollingTimeout` is used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. It can be set based on the average transaction confirmation time on the network. Note: If the `transactionPollingTimeout` is exceeded, the transaction may still be pending. 
+This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. It can be set based on the average transaction confirmation time on the network. Note: If the `transactionPollingTimeout` is exceeded, the transaction may still be pending.
 
 The default value of `transactionPollingTimeout` is 750 seconds (12.5 minutes).
 ```ts
@@ -352,7 +352,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [transactionReceiptPollingInterval](/api/web3-core/class/Web3Config#transactionReceiptPollingInterval)
-The `transactionReceiptPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Compared to [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval), it takes higher precedence. When this value is set, it will be read first.
+This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network. Compared to [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval), it takes higher precedence. When this value is set, it will be read first.
 
 The default value of `transactionReceiptPollingInterval` is `undefined`.
 ```ts
@@ -383,7 +383,7 @@ console.log(web3.getContextObject().config);
 The `transactionConfirmationPollingInterval` option is deprecated. Please use [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) or [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval) instead.
 
 ### [blockHeaderTimeout](/api/web3-core/class/Web3Config#blockHeaderTimeout)
-The `blockHeaderTimeout` is used over socket-based connections. After sending a transaction, it will listen for the appearance of new blocks and proceed with subsequent operations based on the transaction results within them. This option defines the amount seconds it should wait for 'newBlockHeaders' event before falling back to polling to fetch transaction receipt.
+After sending a transaction, it will listen for the appearance of new blocks and proceed with subsequent operations based on the transaction results within them. This option defines the amount seconds it should wait for 'newBlockHeaders' in case if subscription fails it auto reverts to polling for looking blockHeaderTimeout.
 
 The default value of `blockHeaderTimeout` is 10 seconds.
 
