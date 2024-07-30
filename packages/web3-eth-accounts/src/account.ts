@@ -170,7 +170,7 @@ export const hashMessage = (message: string): string => {
 	return sha3Raw(ethMessage); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
 
-export const pureSign = (hash: HexString, privateKey: Bytes): SignResult => {
+export const signMessageWithPrivateKey = (hash: HexString, privateKey: Bytes): SignResult => {
 	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
 	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
@@ -212,7 +212,7 @@ export const pureSign = (hash: HexString, privateKey: Bytes): SignResult => {
 export const sign = (data: string, privateKey: Bytes): SignResult => {
 	const hash = hashMessage(data);
 
-	const { messageHash, v, r, s, signature } = pureSign(hash, privateKey);
+	const { messageHash, v, r, s, signature } = signMessageWithPrivateKey(hash, privateKey);
 
 	return {
 		message: data,

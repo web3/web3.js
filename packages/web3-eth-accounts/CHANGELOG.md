@@ -171,4 +171,4 @@ Documentation:
 ## [Unreleased]
 ### Added
 
--   Added public function `pureSign` (#7174)
+-   Added public function `signMessageWithPrivateKey` (#7174)
