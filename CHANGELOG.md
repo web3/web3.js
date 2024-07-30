@@ -2654,4 +2654,4 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-accounts
 
--   Added public function `pureSign` (#7174)
+-   Added public function `signMessageWithPrivateKey` (#7174)
