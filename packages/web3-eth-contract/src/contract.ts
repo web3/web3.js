@@ -215,7 +215,7 @@ const contractSubscriptions = {
 	newBlockHeaders: NewHeadsSubscription,
 };
 
-export class ContractMethodHandler extends Web3Context<
+export class BaseContractMethodEncapsulator extends Web3Context<
 	EthExecutionAPI,
 	typeof contractSubscriptions
 > {
@@ -252,7 +252,7 @@ export class ContractMethodHandler extends Web3Context<
 	}
 }
 
-export class ContractDeployMethod<Abi extends ContractAbi> extends ContractMethodHandler {
+export class ContractDeployEncapsulator<Abi extends ContractAbi> extends ContractMethodHandler {
 	protected _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
@@ -364,7 +364,34 @@ export class ContractDeployMethod<Abi extends ContractAbi> extends ContractMetho
 	}
 }
 
-export class ContractMethod<Abi extends ContractAbi> extends ContractMethodHandler {
+export class ContractMethodEncapsulator<Abi extends ContractAbi> extends ContractMethodHandler {
+	private readonly _abi: Abi;
+	private readonly _methodAbi: AbiFunctionFragment;
+	private readonly _abiParams: unknown[];
+	private readonly _internalErrorsAbis: AbiErrorFragment[];
+	private readonly _defaultAccount: string | undefined;
+	private readonly _config: ContractConfig;
+
+	constructor(
+		abi: Abi,
+		methodAbi: AbiFunctionFragment,
+		abiParams: unknown[],
+		internalErrorsAbis: AbiErrorFragment[],
+		defaultAccount: string | undefined,
+		config: ContractConfig,
+		web3Context: Web3Context<EthExecutionAPI, ContractSubscriptions>,
+		transactionMiddleware?: TransactionMiddleware,
+	) {
+		super(web3Context, transactionMiddleware);
+
+		this._abi = abi;
+		this._methodAbi = methodAbi;
+		this._abiParams = abiParams;
+		this._internalErrorsAbis = internalErrorsAbis;
+		this._defaultAccount = defaultAccount;
+		this._config = config;
+	}
+
 	protected async _contractMethodCall<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
@@ -477,6 +504,91 @@ export class ContractMethod<Abi extends ContractAbi> extends ContractMethodHandl
 			}
 		});
 		return transactionToSend;
+	}
+
+	public async call(
+		methodAbi: AbiFunctionFragment,
+		abiParams: unknown[],
+		internalErrorsAbis: AbiErrorFragment[],
+		options?: PayableCallOptions | NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	) {
+		return this._contractMethodCall(methodAbi, abiParams, internalErrorsAbis, options, block);
+	}
+
+	public send(
+		methodAbi: AbiFunctionFragment,
+		abiParams: unknown[],
+		internalErrorsAbis: AbiErrorFragment[],
+		options?: PayableTxOptions | NonPayableTxOptions,
+	): ContractMethodSend {
+		return this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options);
+	}
+
+	public populateTransaction(
+		methodAbi: AbiFunctionFragment,
+		abiParams: unknown[],
+		abi: Abi,
+		params: ContractOverloadedMethodInputs<keyof Abi>,
+		options?: PayableTxOptions | NonPayableTxOptions,
+		contractOptions?: ContractOptions,
+	) {
+		let modifiedContractOptions = contractOptions ?? this.options;
+		modifiedContractOptions = {
+			...modifiedContractOptions,
+			input: undefined,
+			from: modifiedContractOptions?.from ?? this.defaultAccount ?? undefined,
+		};
+		const tx = getSendTxParams({
+			abi,
+			params,
+			options: { ...options, dataInputFill: this.config.contractDataInputFill },
+			contractOptions: modifiedContractOptions,
+		});
+		// @ts-expect-error remove unnecessary field
+		if (tx.dataInputFill) {
+			// @ts-expect-error remove unnecessary field
+			delete tx.dataInputFill;
+		}
+		return tx;
+	}
+
+	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		methodAbi: AbiFunctionFragment,
+		abiParams: unknown[],
+		options?: PayableCallOptions | NonPayableCallOptions,
+		returnFormat: ReturnFormat = this.defaultReturnFormat as unknown as ReturnFormat,
+	) {
+		return this._contractMethodEstimateGas({
+			abi: methodAbi,
+			params: abiParams,
+			returnFormat,
+			options,
+		});
+	}
+
+	public encodeABI(methodAbi: AbiFunctionFragment, abiParams: unknown[]) {
+		return encodeMethodABI(methodAbi, abiParams);
+	}
+
+	public decodeData(methodAbi: AbiFunctionFragment, data: HexString) {
+		return decodeMethodParams(methodAbi, data);
+	}
+
+	public async createAccessList(
+		methodAbi: AbiFunctionFragment,
+		abiParams: unknown[],
+		internalErrorsAbis: AbiErrorFragment[],
+		options?: PayableCallOptions | NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	) {
+		return this._contractMethodCreateAccessList(
+			methodAbi,
+			abiParams,
+			internalErrorsAbis,
+			options,
+			block,
+		);
 	}
 }
 
@@ -1460,73 +1572,24 @@ export class Contract<Abi extends ContractAbi>
 					throw new Web3ValidatorError(errors);
 				}
 			}
-			const method = {
-				arguments: abiParams,
-
-				call: async (
-					options?: PayableCallOptions | NonPayableCallOptions,
-					block?: BlockNumberOrTag,
-				) => this._contractMethodCall(methodAbi, abiParams, internalErrorsAbis, options, block),
-
-				send: (options?: PayableTxOptions | NonPayableTxOptions): ContractMethodSend =>
-					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
-				populateTransaction: (
-					options?: PayableTxOptions | NonPayableTxOptions,
-					contractOptions?: ContractOptions,
-				) => {
-					let modifiedContractOptions = contractOptions ?? this.options;
-					modifiedContractOptions = {
-						...modifiedContractOptions,
-						input: undefined,
-						from: modifiedContractOptions?.from ?? this.defaultAccount ?? undefined,
-					};
-					const tx = getSendTxParams({
-						abi,
-						params,
-						options: { ...options, dataInputFill: this.config.contractDataInputFill },
-						contractOptions: modifiedContractOptions,
-					});
-					// @ts-expect-error remove unnecessary field
-					if (tx.dataInputFill) {
-						// @ts-expect-error remove unnecessary field
-						delete tx.dataInputFill;
-					}
-					return tx;
-				},
-				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-					options?: PayableCallOptions | NonPayableCallOptions,
-					returnFormat: ReturnFormat = this.defaultReturnFormat as unknown as ReturnFormat,
-				) =>
-					this._contractMethodEstimateGas({
-						abi: methodAbi,
-						params: abiParams,
-						returnFormat,
-						options,
-					}),
-
-				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
-				decodeData: (data: HexString) => decodeMethodParams(methodAbi, data),
-
-				createAccessList: async (
-					options?: PayableCallOptions | NonPayableCallOptions,
-					block?: BlockNumberOrTag,
-				) =>
-					this._contractMethodCreateAccessList(
-						methodAbi,
-						abiParams,
-						internalErrorsAbis,
-						options,
-						block,
-					),
-			};
+			const contractMethod = new ContractMethodEncapsulator<Abi>(
+				this.abi,
+				methodAbi,
+				abiParams,
+				internalErrorsAbis,
+				this.defaultAccount,
+				this.config,
+				this.web3Context,
+				this.transactionMiddleware,
+			);
 
 			if (methodAbi.stateMutability === 'payable') {
-				return method as PayableMethodObject<
+				return contractMethod as unknown as PayableMethodObject<
 					ContractOverloadedMethodInputs<T>,
 					ContractOverloadedMethodOutputs<T>
 				>;
 			}
-			return method as NonPayableMethodObject<
+			return contractMethod as unknown as NonPayableMethodObject<
 				ContractOverloadedMethodInputs<T>,
 				ContractOverloadedMethodOutputs<T>
 			>;
