@@ -169,3 +169,6 @@ Documentation:
 - baseTransaction method updated (#7095)
 
 ## [Unreleased]
+### Added
+
+-   Added public function `signMessageWithPrivateKey` (#7174)
