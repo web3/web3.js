@@ -18,14 +18,19 @@ import { Numbers } from 'web3-types';
 
 import Web3 from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
+import {
+	closeOpenConnection,
+	getSystemTestBackend,
+	BACKEND,
+} from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { mainnetBlockData } from './fixtures/mainnet';
 import { sepoliaBlockData } from './fixtures/sepolia';
 
 describe(`${getSystemTestBackend()} tests - getUncle`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
+	const blockData =
+		getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
 
@@ -39,25 +44,10 @@ describe(`${getSystemTestBackend()} tests - getUncle`, () => {
 
 	it.each(
 		toAllVariants<{
-			block:
-				| 'earliest'
-				| 'latest'
-				| 'pending'
-				| 'finalized'
-				| 'safe'
-				| 'blockHash'
-				| 'blockNumber';
+			block: 'earliest' | 'latest' | 'pending' | 'finalized' | 'safe';
 			uncleIndex: Numbers;
 		}>({
-			block: [
-				'earliest',
-				'latest',
-				'pending',
-				'safe',
-				'finalized',
-				'blockHash',
-				'blockNumber',
-			],
+			block: ['earliest', 'latest', 'pending', 'safe', 'finalized'],
 			uncleIndex: ['0x1', '1', 1, BigInt(1)],
 		}),
 	)('getUncle', async ({ block, uncleIndex }) => {

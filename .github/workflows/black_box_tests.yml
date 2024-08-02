@@ -29,9 +29,9 @@ jobs:
       needs: build
       runs-on: ubuntu-latest
       env:
-        INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
-        INFURA_WSS: ${{ secrets.INFURA_WSS }}
-        INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        INFURA_MAINNET_HTTP: ${{ secrets.INFURA_MAINNET_HTTP }}
+        INFURA_MAINNET_WS: ${{ secrets.INFURA_MAINNET_WS }}
+        INFURA_SEPOLIA_WS: ${{ secrets.INFURA_SEPOLIA_WS }}
         MODE: ${{ matrix.mode }}
       strategy:
         fail-fast: false
