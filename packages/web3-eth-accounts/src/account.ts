@@ -170,6 +170,12 @@ export const hashMessage = (message: string): string => {
 	return sha3Raw(ethMessage); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
 
+/**
+ * Takes a hash of a message and a private key, signs the message using the SECP256k1 elliptic curve algorithm, and returns the signature components.
+ * @param hash - The hash of the message to be signed, represented as a hexadecimal string. 
+ * @param privateKey - The private key used to sign the message, represented as a byte array.
+ * @returns - The signature Object containing the message, messageHash, signature r, s, v
+ */
 export const signMessageWithPrivateKey = (hash: HexString, privateKey: Bytes): SignResult => {
 	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
 
