@@ -114,6 +114,14 @@ export abstract class Web3Config
 		const keys = Object.keys(options) as (keyof Web3ConfigOptions)[];
 		for (const key of keys) {
 			this._triggerConfigChange(key, options[key]);
+
+			if(!isNullish(options[key]) && 
+				typeof options[key] === 'number' &&
+				key === 'maxListenersWarningThreshold' ) 
+			{
+				// additionally set in event emitter
+				this.setMaxListenerWarningThreshold(Number(options[key]));
+			}
 		}
 		Object.assign(this.config, options);
 	}
