@@ -16,14 +16,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3 from '../../src';
 import { getSystemE2ETestProvider, getE2ETestAccountAddress } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
+import {
+	closeOpenConnection,
+	getSystemTestBackend,
+	BACKEND,
+} from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlockData } from './fixtures/sepolia';
 import { mainnetBlockData } from './fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
+	const blockData =
+		getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
 
@@ -63,7 +68,8 @@ describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
 		);
 
 		if (block === 'blockHash' || block === 'blockNumber') {
-			const expectedTxCount = getSystemTestBackend() === BACKEND.SEPOLIA ? BigInt(1) : BigInt(11);
+			const expectedTxCount =
+				getSystemTestBackend() === BACKEND.SEPOLIA ? BigInt(1) : BigInt(11);
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(expectedTxCount);
 		} else {

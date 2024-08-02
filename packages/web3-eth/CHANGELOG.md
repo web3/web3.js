@@ -262,8 +262,11 @@ Documentation:
 
 -   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
 
-## [Unreleased]
+## [4.8.2]
 
 ### Fixed
 
 -   Adds transaction property to be an empty list rather than undefined when no transactions are included in the block (#7151)
+-   Change method `getTransactionReceipt` to not be casted as `TransactionReceipt` to give proper return type (#7159)
+
+## [Unreleased]
