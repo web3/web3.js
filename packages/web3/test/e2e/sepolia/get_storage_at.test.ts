@@ -64,12 +64,20 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			],
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
+		let blockData = sepoliaBlockData[block];
+		if (block === 'blockHash' || block === 'blockNumber') {
+			const blockNumber = await web3.eth.getBlockNumber();
+			blockData = Number(blockNumber);
+			if (block === 'blockHash') {
+				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
+			}
+		}
+
 		const result = await web3.eth.getStorageAt(
 			getE2ETestContractAddress(),
 			storageSlot,
-			sepoliaBlockData[block],
+			blockData,
 		);
-
 		if (sepoliaBlockData[block] === 'earliest') {
 			// Nethermind returns 0x while Geth returns 0x0000000000000000000000000000000000000000000000000000000000000000
 			// eslint-disable-next-line jest/no-conditional-expect
