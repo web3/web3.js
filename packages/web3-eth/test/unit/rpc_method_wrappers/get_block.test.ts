@@ -28,7 +28,12 @@ import { isBytes, isNullish } from 'web3-validator';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { getBlock } from '../../../src/rpc_method_wrappers';
-import { mockRpcResponse, mockRpcResponseHydrated, testData, noTransactionBlock } from './fixtures/get_block';
+import {
+	mockRpcResponse,
+	mockRpcResponseHydrated,
+	testData,
+	noTransactionBlock,
+} from './fixtures/get_block';
 import { blockSchema } from '../../../src/schemas';
 
 jest.mock('web3-rpc-methods');
@@ -97,9 +102,7 @@ describe('getBlock', () => {
 				expectedMockRpcResponse,
 				expectedReturnFormat,
 			);
-			const expectedFormattedResult  = {...formattedResult,
-				transactions: []
-			};
+			const expectedFormattedResult = { ...formattedResult, transactions: [] };
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes

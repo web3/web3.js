@@ -177,7 +177,7 @@ Documentation:
 
 ### Added
 
-- Added methods (privateKeyToAddress, parseAndValidatePrivateKey, and privateKeyToPublicKey) to web3.eth.accounts (#6620)
+-   Added methods (privateKeyToAddress, parseAndValidatePrivateKey, and privateKeyToPublicKey) to web3.eth.accounts (#6620)
 
 ### Changed
 
@@ -197,7 +197,6 @@ Documentation:
 
 -   Added EIP-6963 utility function `requestEIP6963Providers` for multi provider discovery ( other details are in root changelog )
 
-
 ## [4.7.0]
 
 ### added
@@ -208,17 +207,17 @@ Documentation:
 
 #### web3-eth-ens
 
-- Added function getText and getName in ENS and resolver classes (#6914)
+-   Added function getText and getName in ENS and resolver classes (#6914)
 
 ### fixed
 
 #### web3-validator
 
-- Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
+-   Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
 
 #### web3-utils
 
-- fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
+-   fixed erroneous parsing of big numbers in the `toNumber(...)` function (#6880)
 
 ## [4.8.0]
 
@@ -236,26 +235,24 @@ Documentation:
 
 #### web3-eth-contract
 
--	Fix an issue with smart contract function overloading (#6922)
+-   Fix an issue with smart contract function overloading (#6922)
 
 #### web3-utils
 
-- fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
-- fixed isUint8Array not returning true for Buffer (#6957)
-
+-   fixed toHex incorrectly hexing Uint8Arrays and Buffer (#6957)
+-   fixed isUint8Array not returning true for Buffer (#6957)
 
 ### Added
 
 #### web3-eth-contract
 
--	Added a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)
--	Added contract.deploy(...).decodeData(...) and contract.decodeMethodData(...) that decode data based on the ABI (#6950)
+-   Added a console warning in case of an ambiguous call to a solidity method with parameter overloading (#6942)
+-   Added contract.deploy(...).decodeData(...) and contract.decodeMethodData(...) that decode data based on the ABI (#6950)
 
 #### web3-eth
 
--   method `getBlock` now includes properties of eip 4844, 4895, 4788 when returning block (#6933) 
+-   method `getBlock` now includes properties of eip 4844, 4895, 4788 when returning block (#6933)
 -   update type `withdrawalsSchema`, `blockSchema` and `blockHeaderSchema` schemas to include properties of eip 4844, 4895, 4788 (#6933)
-
 
 #### web3-types
 
@@ -276,7 +273,7 @@ Documentation:
 
 #### web3-errors
 
-- Added `InvalidIntegerError` error for fromWei and toWei (#7052)
+-   Added `InvalidIntegerError` error for fromWei and toWei (#7052)
 
 #### web3-eth
 
@@ -302,8 +299,8 @@ Documentation:
 
 #### web3-utils
 
-- `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
-- `toWei` and `fromWei` now supports integers as a unit. (#7053)  
+-   `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
+-   `toWei` and `fromWei` now supports integers as a unit. (#7053)
 
 ### Fixed
 
@@ -313,13 +310,13 @@ Documentation:
 
 #### web3-utils
 
-- `toWei` support numbers in scientific notation (#6908)
-- `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
+-   `toWei` support numbers in scientific notation (#6908)
+-   `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
 
 #### web3-validator
 
-- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
--  `browser` entry point that was pointing to an non-existing bundle file was removed from `package.json` (#7015)
+-   The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
+-   `browser` entry point that was pointing to an non-existing bundle file was removed from `package.json` (#7015)
 
 #### web3-core
 
@@ -373,14 +370,13 @@ Documentation:
 
 ### web3-rpc-providers
 
--   RC release 
+-   RC release
 
 ### Fixed
 
 #### web3-eth-ens
 
 -   `getName` reverse resolution
-
 
 ## [4.11.0]
 
@@ -402,7 +398,7 @@ Documentation:
 
 #### web3-eth-accounts
 
-- baseTransaction method updated (#7095)
+-   baseTransaction method updated (#7095)
 
 #### web3-providers-ws
 
@@ -425,7 +421,7 @@ Documentation:
 
 #### web3-errors
 
-- Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
+-   Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
 
 #### web3-eth
 

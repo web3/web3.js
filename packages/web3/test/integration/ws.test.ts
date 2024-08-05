@@ -16,12 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { WebSocketProvider } from 'web3-providers-ws';
-import {
-    describeIf, getSystemTestProvider, isWs,
-} from '../shared_fixtures/system_tests_utils';
+import { describeIf, getSystemTestProvider, isWs } from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
-
-
 
 describe('Web3 instance', () => {
 	let web3: Web3;
@@ -33,11 +29,13 @@ describe('Web3 instance', () => {
 
 	describeIf(isWs)('web3 ws tests', () => {
 		it('should connect and disconnect using safe disconnect subscription successfully', async () => {
-            const subscription = await web3.eth.subscribe("newBlockHeaders");
-            // eslint-disable-next-line
-            subscription.unsubscribe();
-            // eslint-disable-next-line
-            await expect((web3.currentProvider as WebSocketProvider).safeDisconnect()).resolves.not.toThrow();
+			const subscription = await web3.eth.subscribe('newBlockHeaders');
+			// eslint-disable-next-line
+			subscription.unsubscribe();
+			// eslint-disable-next-line
+			await expect(
+				(web3.currentProvider as WebSocketProvider).safeDisconnect(),
+			).resolves.not.toThrow();
 		});
 	});
 });

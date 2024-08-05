@@ -218,7 +218,9 @@ describe('test Params Overloading', () => {
 		it('should call the first one when the signature is not passed but also show a warning', async () => {
 			const originalWarn = console.warn;
 			console.warn = function (message: string) {
-				expect(message).toMatch('Multiple methods found that is compatible with the given inputs.');
+				expect(message).toMatch(
+					'Multiple methods found that is compatible with the given inputs.',
+				);
 			};
 			const abi = contract.methods['funcWithParamsOverloading_pure'](
 				'0x12eca7a3959a42973ef4452e44948650be8b8610',
@@ -258,7 +260,8 @@ describe('test Params Overloading', () => {
 		});
 
 		it('uint8', async () => {
-			const abi = contract.methods['funcWithParamsOverloading_pure(uint8)']('0x12').encodeABI();
+			const abi =
+				contract.methods['funcWithParamsOverloading_pure(uint8)']('0x12').encodeABI();
 			expect(abi.substring(0, 10)).toBe('0xf2f11ccd');
 		});
 	});
@@ -279,7 +282,8 @@ describe('test Params Overloading', () => {
 		});
 
 		it('uint8', async () => {
-			const abi = contract.methods['funcWithParamsOverloading_view(uint8)']('0x12').encodeABI();
+			const abi =
+				contract.methods['funcWithParamsOverloading_view(uint8)']('0x12').encodeABI();
 			expect(abi.substring(0, 10)).toBe('0xda202a6f');
 		});
 

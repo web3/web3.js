@@ -64,7 +64,7 @@ describe('contract', () => {
 
 			// get contract address before deployment
 			const address = createContractAddress(sendOptions.from as string, nonce);
-			
+
 			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(deployedContract).toBeDefined();

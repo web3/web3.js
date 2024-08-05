@@ -18,8 +18,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ExistingPluginNamespaceError } from 'web3-errors';
 import {
 	EthExecutionAPI,
-	HexString, Numbers, SupportedProviders, Transaction, Web3AccountProvider, Web3APISpec, Web3BaseProvider, Web3BaseWallet,
-	Web3BaseWalletAccount
+	HexString,
+	Numbers,
+	SupportedProviders,
+	Transaction,
+	Web3AccountProvider,
+	Web3APISpec,
+	Web3BaseProvider,
+	Web3BaseWallet,
+	Web3BaseWalletAccount,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
 import { BaseTransaction, TransactionFactory } from 'web3-eth-accounts';
@@ -130,7 +137,7 @@ export class Web3Context<
 			registeredSubscriptions,
 			accountProvider,
 			wallet,
-			requestManagerMiddleware
+			requestManagerMiddleware,
 		} = providerOrContext as Web3ContextInitOptions<API, RegisteredSubs>;
 
 		this.setConfig(config ?? {});
@@ -140,7 +147,7 @@ export class Web3Context<
 			new Web3RequestManager<API>(
 				provider,
 				config?.enableExperimentalFeatures?.useSubscriptionWhenCheckingBlockTimeout,
-				requestManagerMiddleware
+				requestManagerMiddleware,
 			);
 
 		if (subscriptionManager) {
@@ -221,7 +228,7 @@ export class Web3Context<
 
 		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
 		this[ContextRef.name] = newContextChild;
-		
+
 		return newContextChild;
 	}
 
@@ -359,10 +366,10 @@ export class Web3Context<
 		return true;
 	}
 
-	public setRequestManagerMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>){
+	public setRequestManagerMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>) {
 		this.requestManager.setMiddleware(requestManagerMiddleware);
 	}
-	
+
 	/**
 	 * Will return the {@link Web3BatchRequest} constructor.
 	 */

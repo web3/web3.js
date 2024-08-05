@@ -25,7 +25,6 @@ import { interfaceIds, methodsInInterface } from './config.js';
 import { Registry } from './registry.js';
 import { namehash } from './utils.js';
 
-
 //  Default public resolver
 //  https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol
 
@@ -105,42 +104,28 @@ export class Resolver {
 		return resolverContract.methods.contenthash(namehash(ENSName)).call();
 	}
 
-	public async setAddress(
-		ENSName: string,
-		address: Address,
-		txConfig: PayableCallOptions,
-	) {
+	public async setAddress(ENSName: string, address: Address, txConfig: PayableCallOptions) {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setAddr);
 
-		return resolverContract.methods
-			.setAddr(namehash(ENSName), address)
-			.send(txConfig);
+		return resolverContract.methods.setAddr(namehash(ENSName), address).send(txConfig);
 	}
 
-	public async getText(
-		ENSName: string,
-		key: string,
-	) {
+	public async getText(ENSName: string, key: string) {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.text);
 
-		return resolverContract.methods
-			.text(namehash(ENSName), key).call()
+		return resolverContract.methods.text(namehash(ENSName), key).call();
 	}
 
-	public async getName(
-		address: string,
-		checkInterfaceSupport = true
-	) {
+	public async getName(address: string, checkInterfaceSupport = true) {
 		const reverseName = `${address.toLowerCase().substring(2)}.addr.reverse`;
 
 		const resolverContract = await this.getResolverContractAdapter(reverseName);
-		
-		if(checkInterfaceSupport)
+
+		if (checkInterfaceSupport)
 			await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
-		
-		return resolverContract.methods
-			.name(namehash(reverseName)).call()
+
+		return resolverContract.methods.name(namehash(reverseName)).call();
 	}
 }

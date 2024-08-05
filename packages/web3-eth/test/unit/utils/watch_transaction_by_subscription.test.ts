@@ -27,12 +27,10 @@ import {
 } from '../rpc_method_wrappers/fixtures/send_signed_transaction';
 import { blockMockResult } from '../../fixtures/transactions_data';
 
-
 jest.mock('web3-providers-ws');
 
 const testMessage =
 	'Title: %s\ninputSignedTransaction: %s\nexpectedTransactionHash: %s\nexpectedTransactionReceipt: %s\n';
-
 
 describe('watchTransactionBySubscription', () => {
 	const CONFIRMATION_BLOCKS = 5;
@@ -41,34 +39,29 @@ describe('watchTransactionBySubscription', () => {
 
 		beforeEach(() => {
 			web3Context = new Web3Context({
-			 	provider: new WebSocketProvider('wss://localhost:8546'),}
-		);
+				provider: new WebSocketProvider('wss://localhost:8546'),
+			});
 
 			(web3Context.provider as any).supportsSubscriptions = () => true;
 			web3Context.transactionConfirmationBlocks = CONFIRMATION_BLOCKS;
-			web3Context.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout =
-			true;
-
+			web3Context.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;
 		});
 
 		it.each(testData)(
 			`should call getBlockByNumber if blockHeaderTimeout reached\n ${testMessage}`,
-			async (_, inputTransaction,) => {
-
+			async (_, inputTransaction) => {
 				let blockNum = 100;
 				let ethGetBlockByNumberCount = 0;
-				web3Context.requestManager.send = jest.fn(async (request) => {
-	
+				web3Context.requestManager.send = jest.fn(async request => {
 					if (request.method === 'eth_getBlockByNumber') {
 						ethGetBlockByNumberCount += 1;
-						return Promise.resolve( 
-							{	...blockMockResult.result, 
-								number: (request as any).params[0]
-							});
+						return Promise.resolve({
+							...blockMockResult.result,
+							number: (request as any).params[0],
+						});
 					}
 					if (request.method === 'eth_call') {
-	
-						return Promise.resolve("0x");
+						return Promise.resolve('0x');
 					}
 					if (request.method === 'eth_blockNumber') {
 						blockNum += 1;
@@ -80,9 +73,9 @@ describe('watchTransactionBySubscription', () => {
 					if (request.method === 'eth_getTransactionReceipt') {
 						return Promise.resolve(expectedTransactionReceipt);
 					}
-	
+
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-					return Promise.reject(new Error("Unknown Request")) as any;
+					return Promise.reject(new Error('Unknown Request')) as any;
 				});
 
 				const promiEvent = rpcMethodWrappers.sendSignedTransaction(
@@ -93,33 +86,35 @@ describe('watchTransactionBySubscription', () => {
 
 				let confirmationsCount = 0;
 				const confirmationPromise = new Promise<void>((resolve, reject) => {
-					
 					const handleConfirmation = (confirmation: { confirmations: bigint }) => {
-					  confirmationsCount += 1;
-					  
-					  if (confirmation.confirmations >= CONFIRMATION_BLOCKS) {
-						resolve();
-					  }
+						confirmationsCount += 1;
+
+						if (confirmation.confirmations >= CONFIRMATION_BLOCKS) {
+							resolve();
+						}
 					};
-				  
+
 					const handleError = (_error: any) => {
-					  reject();
+						reject();
 					};
-				  
+
 					promiEvent
-					  .on('confirmation', handleConfirmation)
-					  .on('error', handleError)
-					  .then((res) => {
-						// eslint-disable-next-line jest/no-conditional-expect
-						expect(res).toBeDefined();
-					  })
-					  .catch(reject);
-				  });
+						.on('confirmation', handleConfirmation)
+						.on('error', handleError)
+						.then(res => {
+							// eslint-disable-next-line jest/no-conditional-expect
+							expect(res).toBeDefined();
+						})
+						.catch(reject);
+				});
 
 				// Wait for the confirmationPromise to resolve or timeout after 5 seconds
 				let timeoutId;
 				const timeout = new Promise((_res, reject) => {
-					timeoutId = setTimeout(() => reject(new Error('Timeout waiting for confirmations')), 500000);
+					timeoutId = setTimeout(
+						() => reject(new Error('Timeout waiting for confirmations')),
+						500000,
+					);
 				});
 
 				await Promise.race([confirmationPromise, timeout]);
@@ -128,10 +123,7 @@ describe('watchTransactionBySubscription', () => {
 
 				expect(confirmationsCount).toBe(CONFIRMATION_BLOCKS);
 				expect(ethGetBlockByNumberCount).toBe(CONFIRMATION_BLOCKS - 1); // means polling called getblock 4 times as first confirmation is receipt it self
-					
-			}
+			},
 		);
-
-		
 	});
 });

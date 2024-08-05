@@ -22,7 +22,7 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
-	BACKEND
+	BACKEND,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../../../shared_fixtures/system_tests_utils';
 import {

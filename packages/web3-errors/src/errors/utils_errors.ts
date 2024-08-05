@@ -81,7 +81,6 @@ export class InvalidIntegerError extends InvalidValueError {
 
 	public constructor(value: unknown) {
 		super(value, 'not a valid unit. Must be a positive integer');
-	
 	}
 }
 

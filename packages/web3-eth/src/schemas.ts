@@ -257,10 +257,10 @@ export const withdrawalsSchema = {
 export const blockSchema = {
 	type: 'object',
 	properties: {
-        baseFeePerGas: {
+		baseFeePerGas: {
 			format: 'uint',
 		},
-        blobGasUsed: {
+		blobGasUsed: {
 			format: 'uint',
 		},
 		difficulty: {
@@ -345,13 +345,13 @@ export const blockSchema = {
 				format: 'bytes32',
 			},
 		},
-        withdrawals: {
+		withdrawals: {
 			type: 'array',
 			items: {
 				...withdrawalsSchema,
 			},
 		},
-        withdrawalsRoot: {
+		withdrawalsRoot: {
 			format: 'bytes32',
 		},
 	},
@@ -360,16 +360,16 @@ export const blockSchema = {
 export const blockHeaderSchema = {
 	type: 'object',
 	properties: {
-        author: {
+		author: {
 			format: 'bytes32',
 		},
-        excessDataGas: {
+		excessDataGas: {
 			format: 'uint',
 		},
-        baseFeePerGas: {
+		baseFeePerGas: {
 			format: 'uint',
 		},
-        blobGasUsed: {
+		blobGasUsed: {
 			format: 'uint',
 		},
 		difficulty: {
@@ -444,13 +444,13 @@ export const blockHeaderSchema = {
 				format: 'bytes32',
 			},
 		},
-        withdrawals: {
+		withdrawals: {
 			type: 'array',
 			items: {
 				...withdrawalsSchema,
 			},
 		},
-        withdrawalsRoot: {
+		withdrawalsRoot: {
 			format: 'bytes32',
 		},
 	},

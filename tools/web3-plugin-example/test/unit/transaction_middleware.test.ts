@@ -20,8 +20,7 @@ import { TransactionMiddlewarePlugin } from '../../src/transaction_middleware_pl
 import { blockMockResult, receiptMockResult } from './fixtures/transactions_data';
 
 describe('Transaction Middleware', () => {
-
-    // This will allow Transaction modification before signing and gas estimations
+	// This will allow Transaction modification before signing and gas estimations
 	it('should modify transaction before signing', async () => {
 		const web3 = new Web3('http://127.0.0.1:8545');
 		const plugin = new TransactionMiddlewarePlugin();
@@ -29,34 +28,32 @@ describe('Transaction Middleware', () => {
 		/// Mock block starts - Mock web3 internal calls for test
 		let blockNum = 1000;
 
-		web3.requestManager.send = jest.fn(async (request) => {
+		web3.requestManager.send = jest.fn(async request => {
 			blockNum += 1;
 
-			if(request.method === 'eth_getBlockByNumber'){
-
+			if (request.method === 'eth_getBlockByNumber') {
 				return Promise.resolve(blockMockResult.result);
 			}
-			if(request.method === 'eth_call'){
-
-				return Promise.resolve("0x");
+			if (request.method === 'eth_call') {
+				return Promise.resolve('0x');
 			}
-			if(request.method === 'eth_blockNumber'){
-
+			if (request.method === 'eth_blockNumber') {
 				return Promise.resolve(blockNum.toString(16));
 			}
-			if(request.method === 'eth_sendTransaction'){
+			if (request.method === 'eth_sendTransaction') {
+				// Test that middleware modified transaction
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect((request.params as any)[0].data).toBe('0x123');
 
-                // Test that middleware modified transaction
-                // eslint-disable-next-line jest/no-conditional-expect
-				expect((request.params as any)[0].data).toBe("0x123");
-
-				return Promise.resolve("0xdf7756865c2056ce34c4eabe4eff42ad251a9f920a1c620c00b4ea0988731d3f");
+				return Promise.resolve(
+					'0xdf7756865c2056ce34c4eabe4eff42ad251a9f920a1c620c00b4ea0988731d3f',
+				);
 			}
 			if (request.method === 'eth_getTransactionReceipt') {
 				return Promise.resolve(receiptMockResult.result);
 			}
-			
-			return Promise.resolve("Unknown Request" as any);
+
+			return Promise.resolve('Unknown Request' as any);
 		});
 
 		/// Mock block ends here
@@ -67,10 +64,9 @@ describe('Transaction Middleware', () => {
 			from: '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
 			to: '0x6f1DF96865D09d21e8f3f9a7fbA3b17A11c7C53C',
 			value: '0x1',
-			data: '0x1'
+			data: '0x1',
 		};
-		
-        await web3.eth.sendTransaction(transaction as any);
 
+		await web3.eth.sendTransaction(transaction as any);
 	});
 });

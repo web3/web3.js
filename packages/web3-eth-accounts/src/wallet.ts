@@ -26,18 +26,18 @@ type BrowserError = { code: number; name: string };
  * These accounts can be used when using web3.eth.sendTransaction() or web3.eth.contract.methods.contractfunction().send();
  *
  * For using Wallet functionality, install Web3 package using `npm i web3` or `yarn add web3`.
- * After that, Wallet functionality will be available as mentioned below. 
- * 
+ * After that, Wallet functionality will be available as mentioned below.
+ *
  * ```ts
  * import { Web3 } from 'web3';
  * const web3 = new Web3('http://127.0.0.1:7545');
- * 
+ *
  * const wallet = await web3.eth.accounts.wallet.create(2);
- * 
+ *
  * const signature = wallet.at(0).sign("Test Data"); // use wallet
- * 
+ *
  * // fund account before sending following transaction ...
- * 
+ *
  * const receipt = await web3.eth.sendTransaction({ // internally sign transaction using wallet
  *    from: wallet.at(0).address,
  *    to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",

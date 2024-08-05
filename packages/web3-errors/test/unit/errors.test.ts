@@ -329,7 +329,7 @@ describe('errors', () => {
 				} as JsonRpcError<contractErrors.ProviderErrorData>).toJSON(),
 			).toMatchSnapshot();
 		});
-        it('should return correctly when data is undefined', () => {
+		it('should return correctly when data is undefined', () => {
 			expect(
 				new contractErrors.Eip838ExecutionError({
 					data: undefined,
@@ -391,10 +391,7 @@ describe('errors', () => {
 
 	describe('SchemaFormatError', () => {
 		it('should have valid json structure', () => {
-			expect(
-				new schemaErrors.SchemaFormatError("unsupported"
-				).toJSON(),
-			).toMatchSnapshot();
+			expect(new schemaErrors.SchemaFormatError('unsupported').toJSON()).toMatchSnapshot();
 		});
 	});
 });

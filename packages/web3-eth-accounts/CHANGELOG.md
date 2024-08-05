@@ -136,7 +136,6 @@ Documentation:
 
 -   Fixed "The `r` and `s` returned by `sign` to does not always consist of 64 characters" (#6411)
 
-
 ## [4.1.0]
 
 ### Added
@@ -147,7 +146,7 @@ Documentation:
 
 ### Fixed
 
--   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344) 
+-   Fixed `recover` function, `v` will be normalized to value 0,1 (#6344)
 
 ## [4.1.1]
 
@@ -166,9 +165,10 @@ Documentation:
 
 ### Changed
 
-- baseTransaction method updated (#7095)
+-   baseTransaction method updated (#7095)
 
 ## [Unreleased]
+
 ### Added
 
 -   Added public function `signMessageWithPrivateKey` (#7174)
