@@ -232,7 +232,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultAccount](/api/web3-core/class/Web3Config#defaultAccount)
-This `defaultAccount` is used as the default `from` property, if no `from` property is specified in for the following methods:
+The `defaultAccount` option is used as the default `from` property, if no `from` property is specified in for the following methods:
 - [`web3.eth.sendTransaction()`](/api/web3-eth/function/sendTransaction);
 - [`web3.eth.call()`](/api/web3-eth/function/call);
 - [`myContract.methods.myMethod().call()`](/libdocs/Contract#call);
@@ -251,7 +251,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultBlock](/api/web3-core/class/Web3Config#defaultBlock)
-The following methods require a `blockNumber` parameter during its execution process, the `defaultBlock` is used for these methods. 
+The following methods require a `blockNumber` parameter during its execution process, the `defaultBlock` option is used for these methods. 
 - [`web3.eth.getBalance()`](/api/web3-eth/function/getBalance);
 - [`web3.eth.getCode()`](/api/web3-eth/function/getCode);
 - [`web3.eth.getTransactionCount()`](/api/web3-eth/function/getTransactionCount);
@@ -259,7 +259,7 @@ The following methods require a `blockNumber` parameter during its execution pro
 - [`web3.eth.call()`](/api/web3-eth/function/call);
 - [`myContract.methods.myMethod().call()`](/libdocs/Contract#call);
 
-You can override it by passing in the defaultBlock as last parameter.
+You can override it by passing in the `defaultBlock` as last parameter.
 
 The default value of `defaultBlock` is "latest".
 
@@ -284,7 +284,7 @@ web3.defaultBlock = "safe"; // (For POS networks) The safe head block is one whi
 ```
 
 ### [transactionBlockTimeout](/api/web3-core/class/Web3Config#transactionBlockTimeout)
- This option defines the number of new blocks to wait for the **first confirmation**, otherwise the PromiEvent rejects with a timeout error.
+ This option defines the number of new blocks to wait for the **first confirmation**, otherwise the [`PromiEvent`](/api/web3/class/Web3PromiEvent) rejects with a timeout error.
 
 The default value of `transactionBlockTimeout` is 50. 
 
@@ -366,7 +366,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [transactionSendTimeout](/api/web3-core/class/Web3Config#transactionSendTimeout)
-The `transactionSendTimeout` option is used to specify how long to wait for the network to return the sent transaction result. Note: If the RPC call times out, the transaction may still be pending or even mined by the network. We recommend checking the pending transactions in such a case.
+The `transactionSendTimeout` option is used to specify how long to wait for the network to return the sent transaction result. Note: If the RPC call times out, the transaction may still be pending or even mined by the network. It is recommended that the pending transactions be checked in such a case.
 
 The default value of `transactionSendTimeout` is 750 seconds (12.5 minutes).
 ```ts
@@ -398,7 +398,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [maxListenersWarningThreshold](/api/web3-core/class/Web3Config#maxListenersWarningThreshold)
-The `maxListenersWarningThreshold` is used to set the `maxListeners` property in `EventEmitter`.
+The `maxListenersWarningThreshold` is used to set the `maxListeners` property in [`EventEmitter`](/api/web3-utils/class/EventEmitter).
 
 The default value of `maxListenersWarningThreshold` is 100.
 ```ts
@@ -412,7 +412,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [contractDataInputFill](/api/web3-core/class/Web3Config#contractDataInputFill)
-The `contractDataInputFill` will allow you to set the hash of the method signature and encoded parameters to the property either `data`, `input` or `both` within your contract. This will affect the contracts [`send`](/libdocs/Contract#send), [`call`](/libdocs/Contract#call) and [`estimateGas`](/libdocs/Contract#estimategas) methods.
+The `contractDataInputFill` option allows users to specify whether the [`data`](/api/web3/namespace/types#data) or [`input`](/api/web3/namespace/types#input) property (or both properties) should be set to the hash of the method signature and encoded parameters. This will affect the contracts [`send`](/libdocs/Contract#send), [`call`](/libdocs/Contract#call) and [`estimateGas`](/libdocs/Contract#estimategas) methods.
 
 The default value of `contractDataInputFill` is `data`.
 ```ts
@@ -433,7 +433,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultNetworkId](/api/web3-core/class/Web3Config#defaultNetworkId)
-Each network has its own network ID. The defaultNetwork allows you to set the default network ID to increase code readability. If this parameter is not set, it will fetch the network ID from the connected RPC request.
+Each network has its own [network ID](https://docs.goquorum.consensys.io/concepts/network-and-chain-id). The `defaultNetworkId` option allows users to set the default network ID. If this option is not set, Web3 will fetch the network ID with an RPC request.
 
 The default value of `defaultNetworkId` is `undefined`.
 ```ts
@@ -447,7 +447,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultChain](/api/web3-core/class/Web3Config#defaultChain)
-The `defaultChain` is used for building the [`baseChain`](/api/web3-types/interface/Common#baseChain) property of the tx options in a transaction. If the `defaultCommon.basechain` is set, the `defaultChain` should be consistent with it.
+The `defaultChain` option is used to set the [`Common`](/api/web3-eth-contract/class/Contract#defaultCommon) `baseChain` property. The value of this option should be consistent with [`defaultCommon.baseChain`](/guides/web3_config/#defaultcommon) if both options are set.
 
 The default value of `defaultChain` is `mainnet`.
 ```ts
@@ -472,7 +472,7 @@ console.log(web3.getContextObject().config);
 
 
 ### [defaultHardfork](/api/web3-core/class/Web3Config#defaultHardfork)
-The `defaultHardfork` is used for building the `defaultHardfork` property of the tx options in a transaction. If the `defaultCommon.defaultHardfork` is set, the `defaultHardfork` should be consistent with it.
+The `defaultHardfork` option is used to set the [`Common`](/api/web3-eth-contract/class/Contract#defaultCommon) `hardfork` property. The value of this option should be consistent with [`defaultCommon.hardfork`](/guides/web3_config/#defaultcommon) if both options are set.
 
 The default value of `defaultHardfork` is `london`.
 ```ts
@@ -510,7 +510,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultCommon](/api/web3-core/class/Web3Config#defaultCommon)
-The `defaultCommon` is used for building the `common` property of the tx options in a transaction. It should be consistent with the [`defaultHardfork`](/guides/web3_config/#defaulthardfork) and [`defaultChain`](/guides/web3_config/#defaultchain). Please check the `defaultCommon` property [here](/libdocs/Contract/#defaultcommon)
+The `defaultCommon` option is used to set the [`defaultCommon`](/libdocs/Contract#defaultcommon) value for smart contract transactions. It should be consistent with the [`defaultHardfork`](/guides/web3_config/#defaulthardfork) and [`defaultChain`](/guides/web3_config/#defaultchain) options if they are set.
 
 The default value of `defaultCommon` is `undefined`.
 
@@ -535,7 +535,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultTransactionType](/api/web3-core/class/Web3Config#defaultTransactionType)
-The `defaultTransactionType` is used set the transaction type. Transactions with type 0x0 are legacy transactions that use the transaction format existing before typed transactions were introduced in [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718). Transactions with type 0x1 are transactions introduced in [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930). Transactions with type 0x2 are transactions introduced in [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559), included in Ethereum's London fork.
+The `defaultTransactionType` option is used to set the transaction type. Transactions with type 0x0 are legacy transactions that use the transaction format that existed before [typed transactions](https://ethereum.org/en/developers/docs/transactions/#typed-transaction-envelope) were introduced in [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718). Transactions with type 0x1 are transactions introduced in [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930). Transactions with type 0x2 are transactions introduced in [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559), included in Ethereum's London fork.
 
 The default value of `defaultTransactionType` is `0x02`.
 ```ts
@@ -549,7 +549,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultMaxPriorityFeePerGas](/api/web3-core/class/Web3Config#defaultMaxPriorityFeePerGas)
-The `defaultMaxPriorityFeePerGas` is used to send transactions with the maximum priority gas fee.
+The `defaultMaxPriorityFeePerGas` option is used to set the [`defaultMaxPriorityFeePerGas`](/api/web3-eth-contract/class/Contract#defaultMaxPriorityFeePerGas) value for [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) smart contract transactions ([transaction type](#defaulttransactiontype) 0x2).
 
 The default value of `defaultMaxPriorityFeePerGas` is 2500000000 (2.5gwei) in hexstring format.
 ```ts
@@ -564,7 +564,7 @@ console.log(web3.getContextObject().config);
 ```
 
 ### [defaultReturnFormat](/api/web3-core/class/Web3Config#defaultReturnFormat)
-The `defaultReturnFormat` allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
+The `defaultReturnFormat` option allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
 ```ts
 import { Web3, FMT_NUMBER, FMT_BYTES } from 'web3';
 
