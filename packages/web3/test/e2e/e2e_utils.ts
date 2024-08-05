@@ -22,7 +22,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * copied over to each package's test directory. Because web3 package is the only package
  * running these E2E tests that use Sepolia and Mainnet, this util exists here for now.
  */
-
 import { getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
 // eslint-disable-next-line import/no-relative-packages
 import secrets from '../../../../.secrets.json';
@@ -42,7 +41,10 @@ export const getE2ETestAccountAddress = (): string => {
 	if (process.env.TEST_ACCOUNT_ADDRESS !== undefined) {
 		return process.env.TEST_ACCOUNT_ADDRESS;
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
+	} else if (
+		getSystemTestBackend() === BACKEND.SEPOLIA ||
+		getSystemTestBackend() === BACKEND.MAINNET
+	) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET'].ACCOUNT
 			.address;
 	}
@@ -64,7 +66,10 @@ export const getAllowedSendTransaction = (): boolean => {
 
 		return Boolean(process.env.ALLOWED_SEND_TRANSACTION);
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
+	} else if (
+		getSystemTestBackend() === BACKEND.SEPOLIA ||
+		getSystemTestBackend() === BACKEND.MAINNET
+	) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET']
 			.ALLOWED_SEND_TRANSACTION;
 	}
@@ -76,7 +81,10 @@ export const getE2ETestAccountPrivateKey = (): string => {
 	if (process.env.TEST_ACCOUNT_PRIVATE_KEY !== undefined) {
 		return process.env.TEST_ACCOUNT_PRIVATE_KEY;
 		// eslint-disable-next-line no-else-return
-	} else if (getSystemTestBackend() === BACKEND.SEPOLIA || getSystemTestBackend() === BACKEND.MAINNET) {
+	} else if (
+		getSystemTestBackend() === BACKEND.SEPOLIA ||
+		getSystemTestBackend() === BACKEND.MAINNET
+	) {
 		return secrets[getSystemTestBackend().toUpperCase() as 'SEPOLIA' | 'MAINNET'].ACCOUNT
 			.privateKey;
 	}

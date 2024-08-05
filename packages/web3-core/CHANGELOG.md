@@ -228,3 +228,7 @@ Documentation:
 -   Now when existing packages are added in web3, will be avalible for plugins via context. (#7088)
 
 ## [Unreleased]
+
+### Fixed
+
+-   `setConfig()` fix for `setMaxListenerWarningThreshold` fix (#5079)

@@ -171,6 +171,29 @@ export const hashMessage = (message: string): string => {
 };
 
 /**
+ * Takes a hash of a message and a private key, signs the message using the SECP256k1 elliptic curve algorithm, and returns the signature components.
+ * @param hash - The hash of the message to be signed, represented as a hexadecimal string. 
+ * @param privateKey - The private key used to sign the message, represented as a byte array.
+ * @returns - The signature Object containing the message, messageHash, signature r, s, v
+ */
+export const signMessageWithPrivateKey = (hash: HexString, privateKey: Bytes): SignResult => {
+	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
+
+	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
+	const signatureBytes = signature.toCompactRawBytes();
+	const r = signature.r.toString(16).padStart(64, '0');
+	const s = signature.s.toString(16).padStart(64, '0');
+	const v = signature.recovery! + 27;
+
+	return {
+		messageHash: hash,
+		v: numberToHex(v),
+		r: `0x${r}`,
+		s: `0x${s}`,
+		signature: `${bytesToHex(signatureBytes)}${v.toString(16)}`,
+	};
+};
+/**
  * Signs arbitrary data with a given private key.
  * :::info
  * The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message
@@ -193,23 +216,17 @@ export const hashMessage = (message: string): string => {
  * ```
  */
 export const sign = (data: string, privateKey: Bytes): SignResult => {
-	const privateKeyUint8Array = parseAndValidatePrivateKey(privateKey);
-
 	const hash = hashMessage(data);
 
-	const signature = secp256k1.sign(hash.substring(2), privateKeyUint8Array);
-	const signatureBytes = signature.toCompactRawBytes();
-	const r = signature.r.toString(16).padStart(64, '0');
-	const s = signature.s.toString(16).padStart(64, '0');
-	const v = signature.recovery! + 27;
+	const { messageHash, v, r, s, signature } = signMessageWithPrivateKey(hash, privateKey);
 
 	return {
 		message: data,
-		messageHash: hash,
-		v: numberToHex(v),
-		r: `0x${r}`,
-		s: `0x${s}`,
-		signature: `${bytesToHex(signatureBytes)}${v.toString(16)}`,
+		messageHash,
+		v,
+		r,
+		s,
+		signature,
 	};
 };
 

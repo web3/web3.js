@@ -60,10 +60,18 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 			],
 		}),
 	)('getStorageAt', async ({ storageSlot, block }) => {
+		let blockData = mainnetBlockData[block];
+		if (block === 'blockHash' || block === 'blockNumber') {
+			const blockNumber = await web3.eth.getBlockNumber();
+			blockData = Number(blockNumber);
+			if (block === 'blockHash') {
+				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
+			}
+		}
 		const result = await web3.eth.getStorageAt(
 			getE2ETestContractAddress(),
 			storageSlot,
-			mainnetBlockData[block],
+			blockData,
 		);
 
 		if (mainnetBlockData[block] === 'earliest') {
@@ -72,7 +80,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		} else if (block === 'blockHash' || block === 'blockNumber') {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
-				'0x000000000000000000000000000000000000000000000000007d5a864f06b2d5',
+				'0x00000000000000000000000000000000000000000000000000b8b61e3be91403',
 			);
 		} else {
 			// eslint-disable-next-line jest/no-conditional-expect

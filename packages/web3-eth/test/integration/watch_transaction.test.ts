@@ -25,11 +25,11 @@ import {
 	describeIf,
 	closeOpenConnection,
 	isSocket,
-	waitForOpenConnection,
 	createLocalAccount,
 	isIpc,
 	sendFewSampleTxs,
 	createAccount,
+	waitForCondition,
 } from '../fixtures/system_test_utils';
 
 const waitConfirmations = 2;
@@ -46,7 +46,6 @@ describeIf(isSocket)('watch subscription transaction', () => {
 		web3 = new Web3(clientUrl);
 		account1 = await createLocalAccount(web3);
 		account2 = createAccount();
-		await waitForOpenConnection(web3.eth);
 	});
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
@@ -83,10 +82,18 @@ describeIf(isSocket)('watch subscription transaction', () => {
 					}
 				});
 			});
+
 			await receiptPromise;
 			await sendFewSampleTxs(isIpc ? 2 * waitConfirmations : waitConfirmations);
-			await confirmationPromise;
-			await closeOpenConnection(web3.eth);
+
+			const resourcePromise = waitForCondition( 
+				() => shouldBe >= waitConfirmations, 
+				async () => {
+					sentTx.removeAllListeners();
+					await closeOpenConnection(web3);}
+				);
+
+			await Promise.all([confirmationPromise,resourcePromise]);
 		});
 	});
 });

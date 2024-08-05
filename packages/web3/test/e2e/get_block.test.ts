@@ -21,7 +21,11 @@ import { format as formatter } from 'web3-utils';
 
 import Web3, { FMT_BYTES, FMT_NUMBER } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
-import { closeOpenConnection, getSystemTestBackend, BACKEND } from '../shared_fixtures/system_tests_utils';
+import {
+	closeOpenConnection,
+	getSystemTestBackend,
+	BACKEND,
+} from '../shared_fixtures/system_tests_utils';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sepoliaBlock, sepoliaBlockData, sepoliaBlockHydrated } from './fixtures/sepolia';
 import { mainnetBlockHydrated } from './fixtures/mainnet_block_hydrated';
@@ -29,7 +33,8 @@ import { mainnetBlock, mainnetBlockData } from './fixtures/mainnet';
 
 describe(`${getSystemTestBackend()} tests - getBlock`, () => {
 	const provider = getSystemE2ETestProvider();
-	const blockData = getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
+	const blockData =
+		getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
 
 	let web3: Web3;
 

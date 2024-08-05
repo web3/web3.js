@@ -26,7 +26,8 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
-	BACKEND
+	BACKEND,
+	closeOpenConnection
 } from '../fixtures/system_test_utils';
 
 describe('Web3Eth.getRevertReason', () => {
@@ -47,6 +48,10 @@ describe('Web3Eth.getRevertReason', () => {
 		);
 		simpleRevertContractAddress = (await web3Eth.sendTransaction(simpleRevertDeployTransaction))
 			.contractAddress as Address;
+	});
+
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	it('should return reason for a contract call', async () => {
