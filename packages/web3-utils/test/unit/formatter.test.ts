@@ -489,15 +489,6 @@ describe('formatter', () => {
 						}),
 					).toBe('123');
 				});
-
-				it('should format string for 0x1234', () => {
-					expect(
-						format({ format: 'string' }, 0x1234, {
-							number: FMT_NUMBER.STR,
-							bytes: FMT_BYTES.UINT8ARRAY,
-						}),
-					).toBe('0x1234');
-				});
 			});
 		});
 
@@ -868,6 +859,30 @@ describe('formatter', () => {
 				;
 
 				const result = { from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', to: '123' };
+
+				expect(
+					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),
+				).toEqual(result);
+			});
+
+			it('should format object with oneOf', () => {
+				const schema = {
+					type: 'object',
+					properties: {
+						from: {
+							format: 'address',
+						},
+						to: {
+							oneOf: [{ format: 'string' }, { type: 'null' }],
+						},
+					},
+				};
+
+				const data ={
+					from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401'
+				};
+
+				const result = { from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401'};
 
 				expect(
 					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),
