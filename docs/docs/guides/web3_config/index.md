@@ -209,7 +209,7 @@ The following methods will retrieve specific error types and error messages when
 - [`web3.eth.sendTransaction()`](/api/web3-eth/function/sendTransaction);
 - [`myContract.methods.myMethod().send()`](/libdocs/Contract#send);
 
-The error types will be one of the following:
+The error type will be one of the following:
 - [InvalidResponseError](/api/web3-errors/class/InvalidResponseError)
 - [ContractExecutionError](/api/web3-errors/class/ContractExecutionError)
 - [TransactionRevertWithCustomError](/api/web3-errors/class/TransactionRevertWithCustomError)
@@ -217,12 +217,12 @@ The error types will be one of the following:
 - [TransactionRevertInstructionError](/api/web3-errors/class/TransactionRevertInstructionError)
 - [TransactionPollingTimeoutError](/api/web3-errors/class/TransactionPollingTimeoutError)
 
-For example, the error message could be `TransactionRevertInstructionError('Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes')`. The `handleRevert` is only supported for [`sendTransaction`](/api/web3-eth/function/sendTransaction) and not for [`sendSignedTransaction`](/api/web3-eth/function/sendSignedTransaction) for now.
+For example, the error message could be `TransactionRevertInstructionError('Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes')`. The `handleRevert` option is only supported for [`sendTransaction`](/api/web3-eth/function/sendTransaction) and not for [`sendSignedTransaction`](/api/web3-eth/function/sendSignedTransaction) for now.
 
 The default value of `handleRevert` is `false`.
 
 ### [defaultAccount](/api/web3-core/class/Web3Config#defaultAccount)
-The `defaultAccount` option is used as the default `from` property, if no `from` property is specified in for the following methods:
+The `defaultAccount` option is used as the default `from` property, if no `from` property is specified for the following methods:
 - [`web3.eth.sendTransaction()`](/api/web3-eth/function/sendTransaction);
 - [`web3.eth.call()`](/api/web3-eth/function/call);
 - [`myContract.methods.myMethod().call()`](/libdocs/Contract#call);
@@ -231,7 +231,7 @@ The `defaultAccount` option is used as the default `from` property, if no `from`
 The default value of `defaultAccount` is `undefined`.
 
 ### [defaultBlock](/api/web3-core/class/Web3Config#defaultBlock)
-The following methods require a `blockNumber` parameter during its execution process, the `defaultBlock` option is used for these methods. 
+The following methods accept an optional `blockNumber` parameter, the `defaultBlock` option is used for these methods if no `blockNumber` parameter is provided. 
 - [`web3.eth.getBalance()`](/api/web3-eth/function/getBalance);
 - [`web3.eth.getCode()`](/api/web3-eth/function/getCode);
 - [`web3.eth.getTransactionCount()`](/api/web3-eth/function/getTransactionCount);
@@ -239,7 +239,7 @@ The following methods require a `blockNumber` parameter during its execution pro
 - [`web3.eth.call()`](/api/web3-eth/function/call);
 - [`myContract.methods.myMethod().call()`](/libdocs/Contract#call);
 
-You can override it by passing in the `defaultBlock` as last parameter.
+If a `blockNumber` parameter is provided to one of the above function calls, it will override this option.
 
 The default value of `defaultBlock` is "latest".
 
