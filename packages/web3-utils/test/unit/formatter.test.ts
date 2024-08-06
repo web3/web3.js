@@ -865,7 +865,7 @@ describe('formatter', () => {
 				).toEqual(result);
 			});
 
-			it('should format object with oneOf', () => {
+			it('should format object with oneOf when property is undefined', () => {
 				const schema = {
 					type: 'object',
 					properties: {
