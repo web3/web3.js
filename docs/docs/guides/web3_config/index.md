@@ -306,7 +306,7 @@ The default value of `transactionSendTimeout` is 750 seconds (12.5 minutes).
 The `transactionConfirmationPollingInterval` option is deprecated. Please use [`transactionReceiptPollingInterval`](/guides/web3_config/#transactionreceiptpollinginterval) or [`transactionPollingInterval`](/guides/web3_config/#transactionpollinginterval) instead.
 
 ### [blockHeaderTimeout](/api/web3-core/class/Web3Config#blockHeaderTimeout)
-After sending a transaction, it will listen for the appearance of new blocks and proceed with subsequent operations based on the transaction results within them. This option defines the amount seconds it should wait for 'newBlockHeaders' in case if subscription fails it auto reverts to polling for looking blockHeaderTimeout.
+After sending a transaction, Web3 will listen for the appearance of new blocks and proceed with subsequent operations based on the transaction results within them. This option defines the number of seconds Web3 should wait for the appearance of new blocks before reverting to polling to fetch the transaction receipt.
 
 The default value of `blockHeaderTimeout` is 10 seconds.
 
