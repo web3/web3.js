@@ -2654,7 +2654,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
--   Fixed ormat schema with `oneOf` doesn't work correctly (#7055)
+-   Fixed format schema with `oneOf` doesn't work correctly (#7055)
 
 ### Added
 
