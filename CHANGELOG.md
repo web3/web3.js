@@ -2650,6 +2650,12 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ## [Unreleased]
 
+### Fixed
+
+#### web3-utils
+
+-   Fixed ormat schema with `oneOf` doesn't work correctly (#7055)
+
 ### Added
 
 #### web3-eth-accounts
