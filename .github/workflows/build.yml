@@ -206,8 +206,8 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         env:
-            INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-            INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+            INFURA_SEPOLIA_HTTP: ${{ secrets.INFURA_SEPOLIA_HTTP }}
+            INFURA_SEPOLIA_WS: ${{ secrets.INFURA_SEPOLIA_WS }}
         strategy:
             fail-fast: false
             matrix:

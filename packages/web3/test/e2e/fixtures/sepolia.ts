@@ -636,8 +636,108 @@ export const sepoliaBlockHydrated = {
 			value: '0x143c70de9f84c8',
 		},
 	],
+
 	transactionsRoot: '0xbd2f86bc39fbe1ac6e24ce390d268404c199da060116437803875d2c0bfe7970',
 	uncles: [],
+	withdrawals: [
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x3112f',
+			index: '0x3a477e',
+			validatorIndex: '0x38b',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a477f',
+			validatorIndex: '0x38c',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4780',
+			validatorIndex: '0x38d',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x23743',
+			index: '0x3a4781',
+			validatorIndex: '0x38e',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4782',
+			validatorIndex: '0x38f',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4783',
+			validatorIndex: '0x390',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4784',
+			validatorIndex: '0x391',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4785',
+			validatorIndex: '0x392',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4786',
+			validatorIndex: '0x393',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x25915',
+			index: '0x3a4787',
+			validatorIndex: '0x394',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4788',
+			validatorIndex: '0x395',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4789',
+			validatorIndex: '0x396',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a478a',
+			validatorIndex: '0x397',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a478b',
+			validatorIndex: '0x398',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a478c',
+			validatorIndex: '0x399',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x3112f',
+			index: '0x3a478d',
+			validatorIndex: '0x39a',
+		},
+	],
+	withdrawalsRoot: '0xb99e42eaca3fc1000aa8be987cf107e08030c0e9ca93dc6ea6b7df69e377f953',
 };
 
 export const sepoliaBlock = {
@@ -694,6 +794,105 @@ export const sepoliaBlock = {
 	],
 	transactionsRoot: '0xbd2f86bc39fbe1ac6e24ce390d268404c199da060116437803875d2c0bfe7970',
 	uncles: [],
+	withdrawals: [
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x3112f',
+			index: '0x3a477e',
+			validatorIndex: '0x38b',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a477f',
+			validatorIndex: '0x38c',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4780',
+			validatorIndex: '0x38d',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x23743',
+			index: '0x3a4781',
+			validatorIndex: '0x38e',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4782',
+			validatorIndex: '0x38f',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4783',
+			validatorIndex: '0x390',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4784',
+			validatorIndex: '0x391',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4785',
+			validatorIndex: '0x392',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4786',
+			validatorIndex: '0x393',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x25915',
+			index: '0x3a4787',
+			validatorIndex: '0x394',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4788',
+			validatorIndex: '0x395',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a4789',
+			validatorIndex: '0x396',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a478a',
+			validatorIndex: '0x397',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a478b',
+			validatorIndex: '0x398',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x2ef5d',
+			index: '0x3a478c',
+			validatorIndex: '0x399',
+		},
+		{
+			address: '0xe276bc378a527a8792b353cdca5b5e53263dfb9e',
+			amount: '0x3112f',
+			index: '0x3a478d',
+			validatorIndex: '0x39a',
+		},
+	],
+	withdrawalsRoot: '0xb99e42eaca3fc1000aa8be987cf107e08030c0e9ca93dc6ea6b7df69e377f953',
 };
 
 export const sepoliaBlockData: {

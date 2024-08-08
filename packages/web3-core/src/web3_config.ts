@@ -114,6 +114,14 @@ export abstract class Web3Config
 		const keys = Object.keys(options) as (keyof Web3ConfigOptions)[];
 		for (const key of keys) {
 			this._triggerConfigChange(key, options[key]);
+
+			if(!isNullish(options[key]) && 
+				typeof options[key] === 'number' &&
+				key === 'maxListenersWarningThreshold' ) 
+			{
+				// additionally set in event emitter
+				this.setMaxListenerWarningThreshold(Number(options[key]));
+			}
 		}
 		Object.assign(this.config, options);
 	}
@@ -144,7 +152,7 @@ export abstract class Web3Config
 	 * The `contractDataInputFill` options property will allow you to set the hash of the method signature and encoded parameters to the property
 	 * either `data`, `input` or both within your contract.
 	 * This will affect the contracts send, call and estimateGas methods
-	 * Default is `input`.
+	 * Default is `data`.
 	 */
 	public get contractDataInputFill() {
 		return this.config.contractDataInputFill;
