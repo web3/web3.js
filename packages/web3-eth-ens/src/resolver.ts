@@ -29,12 +29,47 @@ import { namehash } from './utils.js';
 //  Default public resolver
 //  https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol
 
+
+import { LRUCache } from './LRUCache.js';
+
+// Define the cache capacity
+const CACHE_CAPACITY = 100; // You can adjust this number as needed
+const resolverCache = new LRUCache<string, any>(CACHE_CAPACITY);
+
 export class Resolver {
 	private readonly registry: Registry;
 
 	public constructor(registry: Registry) {
 		this.registry = registry;
 	}
+
+	async queryENSName(name: string): Promise<any> {
+		// Check cache first
+		const cachedResult = resolverCache.get(name);
+		if (cachedResult) {
+			return cachedResult;
+		}
+
+		// Perform the network request
+		const result = await this.fetchENSName(name);
+
+		// Store result in cache
+		resolverCache.put(name, result);
+
+		return result;
+	}
+
+	private async fetchENSName(name: string): Promise<any> {
+		// Replace this with your actual network request logic
+		// Example:
+		const response = await fetch(`https://api.example.com/ens/${name}`);
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		return await response.json();
+	}
+
+
 
 	private async getResolverContractAdapter(ENSName: string) {
 		//  TODO : (Future 4.1.0 TDB) cache resolver contract if frequently queried same ENS name, refresh cache based on TTL and usage, also limit cache size, optional cache with a flag
@@ -136,10 +171,10 @@ export class Resolver {
 		const reverseName = `${address.toLowerCase().substring(2)}.addr.reverse`;
 
 		const resolverContract = await this.getResolverContractAdapter(reverseName);
-		
-		if(checkInterfaceSupport)
+
+		if (checkInterfaceSupport)
 			await this.checkInterfaceSupport(resolverContract, methodsInInterface.name);
-		
+
 		return resolverContract.methods
 			.name(namehash(reverseName)).call()
 	}
