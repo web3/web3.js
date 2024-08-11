@@ -120,11 +120,7 @@ describe('ens', () => {
 
 			const sendOptions = { from: mockAddress };
 			await ens.setAddress(ENS_NAME, mockAddress, sendOptions);
-			expect(setAddressMock).toHaveBeenCalledWith(
-				ENS_NAME,
-				mockAddress,
-				sendOptions,
-			);
+			expect(setAddressMock).toHaveBeenCalledWith(ENS_NAME, mockAddress, sendOptions);
 		});
 		it('getAddress', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function

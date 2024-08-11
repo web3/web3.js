@@ -172,7 +172,7 @@ export const hashMessage = (message: string): string => {
 
 /**
  * Takes a hash of a message and a private key, signs the message using the SECP256k1 elliptic curve algorithm, and returns the signature components.
- * @param hash - The hash of the message to be signed, represented as a hexadecimal string. 
+ * @param hash - The hash of the message to be signed, represented as a hexadecimal string.
  * @param privateKey - The private key used to sign the message, represented as a byte array.
  * @returns - The signature Object containing the message, messageHash, signature r, s, v
  */

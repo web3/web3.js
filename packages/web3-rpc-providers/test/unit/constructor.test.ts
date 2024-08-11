@@ -22,41 +22,38 @@ import { Web3ExternalProvider } from '../../src/web3_provider';
 import { Network, Transport } from '../../src/types';
 
 class MockWeb3ExternalProviderA extends Web3ExternalProvider {
-  public constructor(network: Network, transport: Transport, token: string){
-    super(network, transport, token, "");
-  }
-  // eslint-disable-next-line class-methods-use-this
-  public getRPCURL(_network: Network, _transport: Transport, _token: string, _host=""): string {
-    let transport = "";
-    if (_transport === Transport.HTTPS)
-      transport = "http://";
-    else if (_transport === Transport.WebSocket)
-      transport = "wss://";
+	public constructor(network: Network, transport: Transport, token: string) {
+		super(network, transport, token, '');
+	}
+	// eslint-disable-next-line class-methods-use-this
+	public getRPCURL(_network: Network, _transport: Transport, _token: string, _host = ''): string {
+		let transport = '';
+		if (_transport === Transport.HTTPS) transport = 'http://';
+		else if (_transport === Transport.WebSocket) transport = 'wss://';
 
-    return `${transport}example.com/`;
-  }
+		return `${transport}example.com/`;
+	}
 }
 
 describe('Web3ExternalProvider', () => {
-  it('should initialize the provider correctly', () => {
-    const network: Network = Network.ETH_MAINNET;
-    const transport: Transport = Transport.HTTPS;
-    const token = 'your-token';
+	it('should initialize the provider correctly', () => {
+		const network: Network = Network.ETH_MAINNET;
+		const transport: Transport = Transport.HTTPS;
+		const token = 'your-token';
 
-    const provider = new MockWeb3ExternalProviderA(network, transport, token);
+		const provider = new MockWeb3ExternalProviderA(network, transport, token);
 
-    expect(provider.provider).toBeInstanceOf(HttpProvider);
-  });
+		expect(provider.provider).toBeInstanceOf(HttpProvider);
+	});
 
-  it('should initialize the provider with WebSocketProvider for WebSocket transport', () => {
-    const network: Network = Network.ETH_MAINNET;
-    const transport: Transport = Transport.WebSocket;
-    const token = 'your-token';
+	it('should initialize the provider with WebSocketProvider for WebSocket transport', () => {
+		const network: Network = Network.ETH_MAINNET;
+		const transport: Transport = Transport.WebSocket;
+		const token = 'your-token';
 
-    const provider = new MockWeb3ExternalProviderA(network, transport, token);
+		const provider = new MockWeb3ExternalProviderA(network, transport, token);
 
-    expect(provider.provider).toBeInstanceOf(WebSocketProvider);
-  });
-
+		expect(provider.provider).toBeInstanceOf(WebSocketProvider);
+	});
 });
 /* eslint-enable max-classes-per-file */

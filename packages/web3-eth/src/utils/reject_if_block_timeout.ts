@@ -34,25 +34,24 @@ function resolveByPolling(
 	transactionHash?: Bytes,
 ): [Promise<never>, ResourceCleaner] {
 	const pollingInterval = web3Context.transactionPollingInterval;
-	const [intervalId, promiseToError] =
-		rejectIfConditionAtInterval(async () => {
-			let lastBlockNumber;
-			try {
-				lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-			} catch (error) {
-				console.warn('An error happen while trying to get the block number', error);
-				return undefined;
-			}
-			const numberOfBlocks = lastBlockNumber - starterBlockNumber;
-			if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
-				return new TransactionBlockTimeoutError({
-					starterBlockNumber,
-					numberOfBlocks,
-					transactionHash,
-				});
-			}
+	const [intervalId, promiseToError] = rejectIfConditionAtInterval(async () => {
+		let lastBlockNumber;
+		try {
+			lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
+		} catch (error) {
+			console.warn('An error happen while trying to get the block number', error);
 			return undefined;
-		}, pollingInterval);
+		}
+		const numberOfBlocks = lastBlockNumber - starterBlockNumber;
+		if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
+			return new TransactionBlockTimeoutError({
+				starterBlockNumber,
+				numberOfBlocks,
+				transactionHash,
+			});
+		}
+		return undefined;
+	}, pollingInterval);
 
 	const clean = () => {
 		clearInterval(intervalId);

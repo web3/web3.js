@@ -44,9 +44,12 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 	}
 
 	if (schema?.type === 'array' && schema?.items) {
-		if (Array.isArray(schema.items) && schema.items.length > 1
-		    && schema.maxItems !== undefined
-		    && new Set(schema.items.map((item: JsonSchema) => item.$id)).size === schema.items.length) {
+		if (
+			Array.isArray(schema.items) &&
+			schema.items.length > 1 &&
+			schema.maxItems !== undefined &&
+			new Set(schema.items.map((item: JsonSchema) => item.$id)).size === schema.items.length
+		) {
 			const arr: Partial<[ZodTypeAny, ...ZodTypeAny[]]> = [];
 			for (const item of schema.items) {
 				const zItem = convertToZod(item);
@@ -57,10 +60,12 @@ const convertToZod = (schema: JsonSchema): ZodType => {
 			return z.tuple(arr as [ZodTypeAny, ...ZodTypeAny[]]);
 		}
 		const nextSchema = Array.isArray(schema.items) ? schema.items[0] : schema.items;
-        let zodArraySchema = z.array(convertToZod(nextSchema));
+		let zodArraySchema = z.array(convertToZod(nextSchema));
 
-        zodArraySchema = schema.minItems !== undefined ? zodArraySchema.min(schema.minItems) : zodArraySchema;
-        zodArraySchema = schema.maxItems !== undefined ? zodArraySchema.max(schema.maxItems) : zodArraySchema;
+		zodArraySchema =
+			schema.minItems !== undefined ? zodArraySchema.min(schema.minItems) : zodArraySchema;
+		zodArraySchema =
+			schema.maxItems !== undefined ? zodArraySchema.max(schema.maxItems) : zodArraySchema;
 		return zodArraySchema;
 	}
 

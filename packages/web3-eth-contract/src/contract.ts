@@ -1428,17 +1428,23 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		const transactionToSend = (isNullish(this.transactionMiddleware)) ?
-			sendTransaction(this, tx, this.defaultReturnFormat, {
-				// TODO Should make this configurable by the user
-				checkRevertBeforeSending: false,
-				contractAbi: this._jsonInterface, // explicitly not passing middleware so if some one is using old eth package it will not break
-			}) :
-			sendTransaction(this, tx, this.defaultReturnFormat, {
-				// TODO Should make this configurable by the user
-				checkRevertBeforeSending: false,
-				contractAbi: this._jsonInterface,
-			}, this.transactionMiddleware);
+		const transactionToSend = isNullish(this.transactionMiddleware)
+			? sendTransaction(this, tx, this.defaultReturnFormat, {
+					// TODO Should make this configurable by the user
+					checkRevertBeforeSending: false,
+					contractAbi: this._jsonInterface, // explicitly not passing middleware so if some one is using old eth package it will not break
+			  })
+			: sendTransaction(
+					this,
+					tx,
+					this.defaultReturnFormat,
+					{
+						// TODO Should make this configurable by the user
+						checkRevertBeforeSending: false,
+						contractAbi: this._jsonInterface,
+					},
+					this.transactionMiddleware,
+			  );
 
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('error', (error: unknown) => {
@@ -1485,10 +1491,15 @@ export class Contract<Abi extends ContractAbi>
 			checkRevertBeforeSending: false,
 		};
 
-		return (
-			(isNullish(this.transactionMiddleware)) ?
-				sendTransaction(this, tx, this.defaultReturnFormat, returnTxOptions) : // not calling this with undefined Middleware because it will not break if Eth package is not updated
-				sendTransaction(this, tx, this.defaultReturnFormat, returnTxOptions, this.transactionMiddleware));
+		return isNullish(this.transactionMiddleware)
+			? sendTransaction(this, tx, this.defaultReturnFormat, returnTxOptions) // not calling this with undefined Middleware because it will not break if Eth package is not updated
+			: sendTransaction(
+					this,
+					tx,
+					this.defaultReturnFormat,
+					returnTxOptions,
+					this.transactionMiddleware,
+			  );
 	}
 
 	private async _contractMethodEstimateGas<

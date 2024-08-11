@@ -75,9 +75,7 @@ const validateTxTypeAndHandleErrors = (
 	}
 };
 
-export const defaultTransactionTypeParser: TransactionTypeParser = (
-	transaction
-) => {
+export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;
 	if (!isNullish(tx.type)) {
 		let txSchema;
@@ -139,7 +137,7 @@ export const detectTransactionType = (
 	web3Context?: Web3Context<EthExecutionAPI>,
 ) =>
 	(web3Context?.transactionTypeParser ?? defaultTransactionTypeParser)(
-		transaction as unknown as Record<string, unknown>
+		transaction as unknown as Record<string, unknown>,
 	);
 
 export const detectRawTransactionType = (transaction: Uint8Array) =>

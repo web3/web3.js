@@ -170,12 +170,12 @@ Documentation:
 
 ### Added
 
-- Added `InvalidIntegerError` error for fromWei and toWei (#7052)
+-   Added `InvalidIntegerError` error for fromWei and toWei (#7052)
 
 ## [1.2.1]
 
 ### Fixed
 
-- Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
+-   Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
 
 ## [Unreleased]

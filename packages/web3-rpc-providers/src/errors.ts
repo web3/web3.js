@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { BaseWeb3Error } from 'web3-errors';
-import {  } from 'web3-types';
+import {} from 'web3-types';
 
 const ERR_QUICK_NODE_RATE_LIMIT = 1300;
 export class QuickNodeRateLimitError extends BaseWeb3Error {

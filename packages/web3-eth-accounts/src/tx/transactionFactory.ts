@@ -137,7 +137,7 @@ export class TransactionFactory {
 	 */
 	public static fromBlockBodyData(data: Uint8Array | Uint8Array[], txOptions: TxOptions = {}) {
 		if (isUint8Array(data)) {
-			return this.fromSerializedData(data , txOptions);
+			return this.fromSerializedData(data, txOptions);
 		}
 		if (Array.isArray(data)) {
 			// It is a legacy transaction

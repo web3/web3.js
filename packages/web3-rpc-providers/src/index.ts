@@ -22,4 +22,4 @@ export * from './web3_provider_quicknode.js';
 export * from './web3_provider.js';
 
 // default providers
-export const mainnet = new QuickNodeProvider(); 
+export const mainnet = new QuickNodeProvider();
