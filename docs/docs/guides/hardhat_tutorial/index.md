@@ -127,7 +127,7 @@ Running the above command will generate a folder called `artifacts` containing t
 
 ![images](./asset/artifacts.png)
 
-To deploy the contract, we will modify the `script/deploy.ts` file as shown below.
+To deploy the contract, we will modify the `scripts/deploy.ts` file as shown below.
 
 First, we import the initialized web3 object from hardhat. Next we get the artifacts.
 
