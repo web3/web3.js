@@ -37,6 +37,7 @@ const packages = [
 	'web3-providers-http',
 	'web3-providers-ws',
 	'web3-providers-ipc',
+	'web3-rpc-providers',
 ];
 
 /** @type {import('@docusaurus/types').Config} */
