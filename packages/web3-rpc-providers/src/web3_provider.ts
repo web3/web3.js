@@ -28,8 +28,6 @@ import {
 } from "web3-types";
 import { Eip1193Provider } from "web3-utils";
 import { Transport, Network } from "./types.js";
-import { QuickNodeRateLimitError } from './errors.js';
-import { ResponseError } from "web3-errors";
 
 /* 
 This class can be used to create new providers only when there is custom logic required in each Request method like
@@ -74,15 +72,7 @@ export abstract class Web3ExternalProvider<
     ): Promise<JsonRpcResponseWithResult<ResultType>> {
 
         if (this.transport === Transport.HTTPS) {
-            try {
-                return await ((this.provider as HttpProvider).request(payload, requestOptions)) as unknown as JsonRpcResponseWithResult<ResultType>;
-            } catch (error) {
-                if (error instanceof ResponseError && error.statusCode === 429){
-                    throw new QuickNodeRateLimitError(error);
-                }
-                throw error;
-            }
-
+            return await ((this.provider as HttpProvider).request(payload, requestOptions)) as unknown as JsonRpcResponseWithResult<ResultType>;
         }
 
         return (this.provider as WebSocketProvider).request(payload);
