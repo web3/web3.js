@@ -15,10 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3APIPayload, EthExecutionAPI, Web3APIMethod, JsonRpcResponse } from "web3-types";
+import { ResponseError } from "web3-errors";
 import { Network, Transport } from "../../src/types";
 import { Web3ExternalProvider } from "../../src/web3_provider";
 import { QuickNodeRateLimitError } from '../../src/errors';
-import { ResponseError } from "web3-errors";
+import { QuickNodeProvider } from '../../src/web3_provider_quicknode';
 
 jest.mock('web3-providers-ws', () => {
   return {
@@ -112,7 +113,7 @@ describe('Web3ExternalProvider', () => {
     // Mock the request method to throw the ResponseError
     mockHttpProvider.request.mockRejectedValue(mockError);
 
-    const provider = new MockWeb3ExternalProvider(network, transport, token);
+    const provider = new QuickNodeProvider(network, transport, token);
     (provider as any).provider = mockHttpProvider; 
 
     const payload: Web3APIPayload<EthExecutionAPI, Web3APIMethod<EthExecutionAPI>> = {
