@@ -215,6 +215,9 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * The minimum amount of gas the tx must have (DataFee + TxFee + Creation Fee)
 	 */
 	public getBaseFee(): bigint {
+		if( !this.common ) {
+			return BigInt(0);
+		}
 		const txFee = this.common.param('gasPrices', 'tx');
 		let fee = this.getDataFee();
 		if (txFee) fee += txFee;
@@ -229,6 +232,9 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * The amount of gas paid for the data in this tx
 	 */
 	public getDataFee(): bigint {
+		if( !this.common ) {
+			return BigInt(0);
+		}
 		const txDataZero = this.common.param('gasPrices', 'txDataZero');
 		const txDataNonZero = this.common.param('gasPrices', 'txDataNonZero');
 
