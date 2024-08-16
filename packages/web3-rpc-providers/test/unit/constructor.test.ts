@@ -18,8 +18,43 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import HttpProvider from 'web3-providers-http';
 import WebSocketProvider from 'web3-providers-ws';
+import WebSocket from 'isomorphic-ws';
+
 import { Web3ExternalProvider } from '../../src/web3_provider';
 import { Network, Transport } from '../../src/types';
+
+// Mock implementation so ws doesnt have openhandle after test exits as it attempts to connects at start
+jest.mock('isomorphic-ws', () => {
+  return {
+    __esModule: true,
+    default: jest.fn().mockImplementation(() => {
+      const eventListeners: { [key: string]: Function[] } = {};
+
+      return {
+        addEventListener: jest.fn((event, handler) => {
+          if (!eventListeners[event]) {
+            eventListeners[event] = [];
+          }
+          eventListeners[event].push(handler);
+        }),
+        removeEventListener: jest.fn((event, handler) => {
+          if (eventListeners[event]) {
+            eventListeners[event] = eventListeners[event].filter(h => h !== handler);
+          }
+        }),
+        dispatchEvent: jest.fn((event) => {
+          const eventType = event.type;
+          if (eventListeners[eventType]) {
+            eventListeners[eventType].forEach(handler => handler(event));
+          }
+        }),
+        close: jest.fn(),
+        send: jest.fn(),
+        readyState: WebSocket.OPEN,
+      };
+    }),
+  };
+});
 
 class MockWeb3ExternalProviderA extends Web3ExternalProvider {
   public constructor(network: Network, transport: Transport, token: string){
@@ -33,7 +68,7 @@ class MockWeb3ExternalProviderA extends Web3ExternalProvider {
     else if (_transport === Transport.WebSocket)
       transport = "wss://";
 
-    return `${transport}example.com/`;
+    return `${transport}127.0.0.1/`;
   }
 }
 
@@ -54,7 +89,6 @@ describe('Web3ExternalProvider', () => {
     const token = 'your-token';
 
     const provider = new MockWeb3ExternalProviderA(network, transport, token);
-
     expect(provider.provider).toBeInstanceOf(WebSocketProvider);
   });
 
