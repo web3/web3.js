@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* eslint-disable max-classes-per-file */
+
 
 import HttpProvider from 'web3-providers-http';
 import WebSocketProvider from 'web3-providers-ws';
@@ -28,6 +28,7 @@ jest.mock('isomorphic-ws', () => {
   return {
     __esModule: true,
     default: jest.fn().mockImplementation(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-types 
       const eventListeners: { [key: string]: Function[] } = {};
 
       return {
@@ -35,6 +36,7 @@ jest.mock('isomorphic-ws', () => {
           if (!eventListeners[event]) {
             eventListeners[event] = [];
           }
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           eventListeners[event].push(handler);
         }),
         removeEventListener: jest.fn((event, handler) => {
@@ -45,6 +47,7 @@ jest.mock('isomorphic-ws', () => {
         dispatchEvent: jest.fn((event) => {
           const eventType = event.type;
           if (eventListeners[eventType]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             eventListeners[eventType].forEach(handler => handler(event));
           }
         }),
@@ -93,4 +96,3 @@ describe('Web3ExternalProvider', () => {
   });
 
 });
-/* eslint-enable max-classes-per-file */
