@@ -100,7 +100,7 @@ The [sendTransaction](/api/web3-eth/function/sendTransaction) method is used to 
 :::important
 Please be cautious when sending transactions, especially when dealing with smart contracts, as they may execute specific functions that can have irreversible effects. Always ensure that the details in your transaction object are accurate and intended.
 
-[Here](guides/wallet/transactions) you can find more examples how to send transaction.
+[Here](/guides/wallet/transactions) you can find more examples how to send transaction.
 :::
 
 ## sign

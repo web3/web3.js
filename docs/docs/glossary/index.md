@@ -108,3 +108,86 @@ contract Test {
     }
 ]
 ```
+
+## Proxy
+
+A `proxy` in Web3.js serves as an intermediary between your application and an Ethereum node, **facilitating communication** by **forwarding requests and responses**. Configuring a proxy can help overcome network restrictions, enhance security, and improve load balancing. You can set up a proxy using either HttpProvider or WebSocketProvider in Web3.js.
+
+## HttpProvider
+
+[HttpProvider](https://docs.web3js.org/guides/web3_providers_guide/#http-provider) in Web3.js connects an application to an Ethereum node over HTTP. It allows for sending transactions, reading blockchain data, and interacting with smart contracts. You create a Web3 instance with the node’s URL to establish the connection. It’s essential for DApps needing blockchain interaction but can block the event loop, so alternatives like `WebSocketProvider` might be used for better performance when real-time communication is needed.
+
+```typescript
+import { Web3 } from 'web3';
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+```
+
+## WebSocketProvider
+[WebSocketProvider](https://docs.web3js.org/guides/web3_providers_guide/#websocket-provider) in Web3.js connects your application to an Ethereum node via WebSocket, enabling real-time and asynchronous communication. This provider is ideal for applications needing real-time updates, such as new blocks or smart contract events. It offers better performance for high-throughput applications compared to `HttpProvider`. Ensure secure connections with `wss://` for exposed endpoints. Handle reconnections gracefully for reliable operation.
+
+```javascript title='WebSocketProvider example'
+import { Web3 } from 'web3';
+const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+```
+
+## Events
+
+The `Events` class in Web3.js is a crucial part of the library that enables developers to interact with and listen for events emitted by smart contracts on the Ethereum network. Events in **smart contracts** are similar to `logs` or `messages` that the **contract emits to notify** external applications about specific actions or state changes. Web3.js provides a comprehensive set of tools to handle these events, making it possible to build responsive and interactive decentralized applications (dApps).
+
+#### Example
+
+```solidity title='Event in solidity'
+contract MyContract {
+  event Transfer(address indexed from, address indexed to, uint value);
+
+  function transfer(address recipient, uint amount) public {
+    // ... transfer logic ...
+    emit Transfer(msg.sender, recipient, amount);
+  }
+}
+```
+
+```javascript title='Event in web3.js'
+import { Web3 } from 'web3';
+const MyContract = require('./MyContract.json'); // Assuming ABI is loaded
+
+const web3 = new Web3('wss://mainnet.infura.io/v3/YOUR_INFURA_ID'); // Replace with your provider URL
+const contractAddress = '0x...'; // Replace with your contract address
+
+const myContract = new web3.eth.Contract(MyContract.abi, contractAddress);
+
+const transferEvent = myContract.events.Transfer(); // Access the Transfer event
+
+transferEvent.on('data', (event) => {
+  console.log('Transfer Event:', event);
+  // Process the event data (from, to, value)
+});
+```
+
+## Event logs
+
+`Logs` in Web3.js are a part of **Ethereum transactions** that contain **information about events triggered** within smart contracts. They provide a way to record and retrieve significant occurrences within the blockchain. `Event logs` are particularly useful for tracking changes, and debugging.
+
+#### Example
+
+```typescript
+import { Web3 } from 'web3';
+const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
+
+const options = {
+  fromBlock: 0,
+  toBlock: 'latest',
+  address: '0xYourContractAddress',
+  topics: [
+    web3.utils.sha3('Transfer(address,address,uint256)')
+  ]
+};
+
+web3.eth.getPastLogs(options)
+  .then((logs) => {
+    console.log(logs);
+  })
+  .catch((error) => {
+    console.error('Error retrieving logs:', error);
+  });
+`

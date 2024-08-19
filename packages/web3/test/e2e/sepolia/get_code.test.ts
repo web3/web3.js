@@ -14,8 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { hexToBytes } from 'web3-utils';
-
+import { hexToBytes, toHex } from 'web3-utils';
+import { BlockNumberOrTag } from 'web3-types';
 import Web3, { FMT_BYTES, FMT_NUMBER } from '../../../src';
 import {
 	closeOpenConnection,
@@ -49,14 +49,16 @@ describe(`${getSystemTestBackend()} tests - getCode`, () => {
 			format: Object.values(FMT_BYTES),
 		}),
 	)('should getCode for deployed contract', async ({ block, format }) => {
-		const result = await web3.eth.getCode(
-			getE2ETestContractAddress(),
-			sepoliaBlockData[block],
-			{
-				number: FMT_NUMBER.HEX,
-				bytes: format as FMT_BYTES,
-			},
-		);
+		let blockData = sepoliaBlockData[block] as BlockNumberOrTag;
+		if (block === 'blockHash' || block === 'blockNumber') {
+			const latestBlock = await web3.eth.getBlock('finalized');
+			blockData =
+				block === 'blockHash' ? (latestBlock.hash as string) : toHex(latestBlock.number);
+		}
+		const result = await web3.eth.getCode(getE2ETestContractAddress(), blockData, {
+			number: FMT_NUMBER.HEX,
+			bytes: format as FMT_BYTES,
+		});
 
 		switch (format) {
 			case 'BYTES_HEX':

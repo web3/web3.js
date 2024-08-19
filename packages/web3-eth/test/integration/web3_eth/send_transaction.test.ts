@@ -99,6 +99,8 @@ describe('Web3Eth.sendTransaction', () => {
 			to: '0x0000000000000000000000000000000000000000',
 			value: BigInt(1),
 		});
+
+		await closeOpenConnection(web3EthWithWallet);
 	});
 
 	it('should make a simple value transfer - with local wallet indexed receiver', async () => {
@@ -130,6 +132,8 @@ describe('Web3Eth.sendTransaction', () => {
 			to: wallet.get(0)?.address.toLowerCase(),
 			value: BigInt(1),
 		});
+
+		await closeOpenConnection(web3EthWithWallet);
 	});
 
 	it('should make a simple value transfer - with local wallet indexed sender and receiver', async () => {
@@ -165,6 +169,8 @@ describe('Web3Eth.sendTransaction', () => {
 			to: wallet.get(1)?.address.toLowerCase(),
 			value: BigInt(1),
 		});
+
+		await closeOpenConnection(web3EthWithWallet);
 	});
 	it('should make a transaction with no value transfer', async () => {
 		const transaction: Transaction = {
