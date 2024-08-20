@@ -15,6 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {ClientOptions, ClientRequestArgs} from "web3-providers-ws";
+import { ReconnectOptions } from 'web3-utils';
+
 export enum Transport {
     HTTPS = "https",
     WebSocket = "wss"
@@ -41,4 +44,10 @@ export enum Network {
 
     BNB_MAINNET = "bnb_mainnet",
     BNB_TESTNET = "bnb_testnet"
+};
+
+// Combining the ws types
+export type SocketOptions = {
+    socketOptions?: ClientOptions | ClientRequestArgs;
+    reconnectOptions?: Partial<ReconnectOptions>;
 };
