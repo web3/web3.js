@@ -239,6 +239,7 @@ exports[`errors InvalidResponseError should have valid json structure 1`] = `
   "message": "Returned error: error message",
   "name": "InvalidResponseError",
   "request": undefined,
+  "statusCode": undefined,
 }
 `;
 
@@ -316,6 +317,7 @@ exports[`errors ResponseError should have valid json structure with data 1`] = `
   "message": "Returned error: error message",
   "name": "ResponseError",
   "request": undefined,
+  "statusCode": undefined,
 }
 `;
 
@@ -336,6 +338,7 @@ exports[`errors ResponseError should have valid json structure without data 1`] 
   "message": "Returned error: error message",
   "name": "ResponseError",
   "request": undefined,
+  "statusCode": undefined,
 }
 `;
 
@@ -357,6 +360,7 @@ exports[`errors ResponseError should include the array of inner errors 1`] = `
   "message": "Returned error: error message,error message",
   "name": "ResponseError",
   "request": undefined,
+  "statusCode": undefined,
 }
 `;
 
