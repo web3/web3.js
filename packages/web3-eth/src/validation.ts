@@ -297,9 +297,7 @@ export const validateTransactionForSigning = (
 	validateHardfork(transaction);
 
 	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT);
-	
-	// TODO: uncomment and make it optional
-	// validateGas(formattedTransaction);
+	validateGas(formattedTransaction);
 
 	if (
 		isNullish(formattedTransaction.nonce) ||
