@@ -55,6 +55,7 @@ import {
 import {
 	getSendTxParams,
 } from './utils.js';
+// eslint-disable-next-line import/no-cycle
 import { Contract } from './contract.js';
 
 export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
@@ -225,7 +226,7 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 			format(
 				{ format: 'bytes' },
 				this.deployData as Bytes,
-				this.parent.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
+				this.parent.defaultReturnFormat,
 			),
 		);
 	}
