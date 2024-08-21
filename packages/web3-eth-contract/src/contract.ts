@@ -121,7 +121,6 @@ import {
 	getSendTxParams,
 	isWeb3ContractContext,
 } from './utils.js';
-// eslint-disable-next-line import/no-cycle
 import { DeployerMethodClass } from './contract-deployer-method-class.js';
 
 type ContractBoundMethod<
@@ -1260,7 +1259,7 @@ export class Contract<Abi extends ContractAbi>
 				this,
 				tx,
 				block,
-				this.defaultReturnFormat ,
+				this.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
 			);
 			return decodeMethodReturn(abi, result);
 		} catch (error: unknown) {
