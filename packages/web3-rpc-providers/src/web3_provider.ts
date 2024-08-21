@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import HttpProvider from "web3-providers-http";
+import HttpProvider, { HttpProviderOptions } from "web3-providers-http";
 import WebSocketProvider from "web3-providers-ws";
 import {
     EthExecutionAPI, JsonRpcResult, ProviderConnectInfo, ProviderMessage,
@@ -27,7 +27,8 @@ import {
     JsonRpcResponseWithResult,
 } from "web3-types";
 import { Eip1193Provider } from "web3-utils";
-import { Transport, Network } from "./types.js";
+import { Transport, Network, SocketOptions } from "./types.js";
+import { ProviderConfigOptionsError } from "./errors.js";
 
 /* 
 This class can be used to create new providers only when there is custom logic required in each Request method like
@@ -50,16 +51,36 @@ export abstract class Web3ExternalProvider<
         network: Network,
         transport: Transport,
         token: string,
-        host: string) {
+        host: string,
+        providerConfigOptions?: HttpProviderOptions | SocketOptions) {
 
         super();
 
+        if(providerConfigOptions!== undefined && 
+            transport === Transport.HTTPS && 
+            !('providerOptions' in providerConfigOptions)){
+
+            throw new ProviderConfigOptionsError("HTTP Provider");
+        } 
+        else if(providerConfigOptions!== undefined &&
+             transport === Transport.WebSocket && 
+             !( 'socketOptions' in providerConfigOptions ||
+                'reconnectOptions' in providerConfigOptions 
+        )){
+            throw new ProviderConfigOptionsError("Websocket Provider");
+        }
+
         this.transport = transport;
         if (transport === Transport.HTTPS) {
-            this.provider = new HttpProvider(this.getRPCURL(network, transport, token, host));
+            this.provider = new HttpProvider(
+                this.getRPCURL(network, transport, token, host), 
+                providerConfigOptions as HttpProviderOptions);
         }
         else if (transport === Transport.WebSocket) {
-            this.provider = new WebSocketProvider(this.getRPCURL(network, transport, token, host));
+            this.provider = new WebSocketProvider(
+                this.getRPCURL(network, transport, token, host), 
+                (providerConfigOptions as SocketOptions)?.socketOptions, 
+                (providerConfigOptions as SocketOptions)?.reconnectOptions);
         }
     }
 
@@ -134,3 +155,4 @@ export abstract class Web3ExternalProvider<
             this.provider.removeListener(_type as any, _listener as any);
     }
 }
+
