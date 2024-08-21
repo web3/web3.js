@@ -310,7 +310,7 @@ console.log(await web3.eth.getChainId());
 // ↳ 11155111n
 ```
 
-Constructors for external providers accept an optional argument for fine-tuning the configuring of the transport mechanism. See [Configuring HTTP Providers](#configuring-http-providers) and [Configuring WebSocket Providers](#configuring-websocket-providers) for more details. The following example demonstrates using this option to fine-tune the configuration for the default HTTP provider:
+Constructors for external providers accept an optional argument for fine-tuning the configuration of the transport mechanism. See [Configuring HTTP Providers](#configuring-http-providers) and [Configuring WebSocket Providers](#configuring-websocket-providers) for more details. The following example demonstrates using this option to fine-tune the configuration for the default HTTP provider:
 
 ```js
 import { Web3 } from "web3";
