@@ -80,7 +80,7 @@ export default class HttpProvider<
 		});
 		if (!response.ok) { 
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-			throw new ResponseError(await response.json())
+			throw new ResponseError(await response.json(), undefined, undefined, response.status);
 		};
 
 		return (await response.json()) as JsonRpcResponseWithResult<ResultType>;

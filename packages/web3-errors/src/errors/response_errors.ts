@@ -45,11 +45,13 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 	public code = ERR_RESPONSE;
 	public data?: ErrorType | ErrorType[];
 	public request?: JsonRpcPayload<RequestType>;
+	public statusCode?: number;
 
 	public constructor(
 		response: JsonRpcResponse<unknown, ErrorType>,
 		message?: string,
 		request?: JsonRpcPayload<RequestType>,
+		statusCode?: number
 	) {
 		super(
 			message ??
@@ -66,6 +68,7 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 				: response?.error?.data;
 		}
 
+		this.statusCode = statusCode;
 		this.request = request;
 		let errorOrErrors: JsonRpcError | JsonRpcError[] | undefined;
 		if (`error` in response) {
@@ -82,7 +85,7 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 	}
 
 	public toJSON() {
-		return { ...super.toJSON(), data: this.data, request: this.request };
+		return { ...super.toJSON(), data: this.data, request: this.request, statusCode: this.statusCode };
 	}
 }
 

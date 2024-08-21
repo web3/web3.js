@@ -15,14 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/* eslint-disable max-classes-per-file */
+
 import { BaseWeb3Error } from 'web3-errors';
-import {  } from 'web3-types';
 
 const ERR_QUICK_NODE_RATE_LIMIT = 1300;
 export class QuickNodeRateLimitError extends BaseWeb3Error {
 	public code = ERR_QUICK_NODE_RATE_LIMIT;
 
-	public constructor() {
-		super(`Too many requests, Quicknode has reached its rate limit.`);
+	public constructor(error?: Error) {
+		super(`You've reach the rate limit of free RPC calls from our Partner Quick Nodes. There are two options you can either create a paid Quick Nodes account and get 20% off for 2 months using WEB3JS referral code, or use Free public RPC endpoint.`, error);
 	}
 }
+
+const ERR_PROVIDER_CONFIG_OPTIONS = 1301;
+export class ProviderConfigOptionsError extends BaseWeb3Error {
+	public code = ERR_PROVIDER_CONFIG_OPTIONS;
+
+	public constructor(msg: string) {
+		super(`Invalid provider config options given for ${msg}`);
+	}
+}
+/* eslint-enable max-classes-per-file */
