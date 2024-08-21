@@ -77,16 +77,15 @@ export const getSendTxParams = ({
 		throw new Web3ContractError('Contract address not specified');
 	}
 
-	// in case of preparing a tx to be sent later by some other account, 'from' is not required
-	// TODO: is it OK to remove this check?
-	// if (!options?.from && !contractOptions.from) {
-	// 	throw new Web3ContractError('Contract "from" address not specified');
-	// }
+	if (!options?.from && !contractOptions.from) {
+		throw new Web3ContractError('Contract "from" address not specified');
+	}
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
 			gas: contractOptions.gas,
 			gasPrice: contractOptions.gasPrice,
+			from: contractOptions.from,
 			input: contractOptions.input,
 			maxPriorityFeePerGas: contractOptions.maxPriorityFeePerGas,
 			maxFeePerGas: contractOptions.maxFeePerGas,
@@ -94,11 +93,6 @@ export const getSendTxParams = ({
 		},
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
-	// Because of the next condition, in case 'from' is not provided in contractOptions,
-	// the 'txParams.from' will not be undefined.
-	if (contractOptions.from) {
-		txParams.from = contractOptions.from
-	}
 	const dataInput = dataInputEncodeMethodHelper(txParams, abi, params, options?.dataInputFill);
 	txParams = { ...txParams, data: dataInput.data, input: dataInput.input };
 

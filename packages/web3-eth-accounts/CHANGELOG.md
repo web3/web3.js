@@ -172,3 +172,6 @@ Documentation:
 ### Added
 
 -   Added public function `signMessageWithPrivateKey` (#7174)
+
+### Fixed
+-   Fix `TransactionFactory.registerTransactionType` not working, if there is a version mistatch between `web3-eth` and `web3-eth-accounts` by saving `extraTxTypes` at `globals`.  (#7197)

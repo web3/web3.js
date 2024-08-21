@@ -15,21 +15,42 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Transport, Network } from "./types.js";
+import { EthExecutionAPI, JsonRpcResponseWithResult, Web3APIMethod, Web3APIPayload, Web3APIReturnType, Web3APISpec } from "web3-types";
+import { ResponseError } from "web3-errors";
+import { HttpProviderOptions } from "web3-providers-http";
+import { Transport, Network, SocketOptions } from "./types.js";
 import { Web3ExternalProvider } from "./web3_provider.js";
+import { QuickNodeRateLimitError } from "./errors.js";
 
 const isValid = (str: string) => str !== undefined && str.trim().length > 0;
 
-export class QuickNodeProvider extends Web3ExternalProvider {
+export class QuickNodeProvider<
+API extends Web3APISpec = EthExecutionAPI,
+> extends Web3ExternalProvider {
 
-    public constructor(
-        network: Network = Network.ETH_MAINNET,
-        transport: Transport = Transport.HTTPS,
-        token = "", 
-        host = "") {
+    // eslint-disable-next-line default-param-last
+    public constructor( network: Network = Network.ETH_MAINNET, transport: Transport = Transport.HTTPS, token = "", host = "", providerConfigOptions?: HttpProviderOptions | SocketOptions) {
 
-        super(network, transport, token, host);
+        super(network, transport, token, host, providerConfigOptions);
 
+    }
+
+    public async request<
+        Method extends Web3APIMethod<API>,
+        ResultType = Web3APIReturnType<API, Method>,
+    >(
+        payload: Web3APIPayload<EthExecutionAPI, Method>,
+        requestOptions?: RequestInit,
+    ): Promise<JsonRpcResponseWithResult<ResultType>> {
+
+        try {
+            return await super.request(payload, requestOptions);
+        } catch (error) {
+            if (error instanceof ResponseError && error.statusCode === 429){
+                throw new QuickNodeRateLimitError(error);
+            }
+            throw error;
+        }
     }
 
     // eslint-disable-next-line class-methods-use-this
