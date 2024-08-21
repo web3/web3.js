@@ -309,3 +309,21 @@ const web3 = new Web3(
 console.log(await web3.eth.getChainId());
 // ↳ 11155111n
 ```
+
+Constructors for external providers accept an optional argument for fine-tuning the configuring of the transport mechanism. See [Configuring HTTP Providers](#configuring-http-providers) and [Configuring WebSocket Providers](#configuring-websocket-providers) for more details. The following example demonstrates using this option to fine-tune the configuration for the default HTTP provider:
+
+```js
+import { Web3 } from "web3";
+import { QuickNodeProvider } from "web3-rpc-providers";
+
+const web3 = new Web3(
+  // use default arguments for network, transport, token, and host
+  new QuickNodeProvider(undefined, undefined, undefined, undefined, {
+    providerOptions: {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  }),
+);
+```
