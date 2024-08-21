@@ -15,8 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* eslint-disable max-classes-per-file */
-
 import {
 	Web3Context,
 	Web3EventEmitter,
@@ -42,7 +40,6 @@ import {
 	ALL_EVENTS_ABI,
 	SendTransactionEvents,
 	TransactionMiddleware,
-	SendTransactionOptions,
 } from 'web3-eth';
 import {
 	encodeEventSignature,
@@ -54,7 +51,6 @@ import {
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
 import {
-	AbiConstructorFragment,
 	AbiErrorFragment,
 	AbiEventFragment,
 	AbiFragment,
@@ -69,7 +65,6 @@ import {
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
-	Bytes,
 	EthExecutionAPI,
 	Filter,
 	FilterAbis,
@@ -89,7 +84,6 @@ import {
 	TransactionReceipt,
 	FormatType,
 	DecodedParams,
-	TransactionCall,
 } from 'web3-types';
 import {
 	format,
@@ -127,6 +121,7 @@ import {
 	getSendTxParams,
 	isWeb3ContractContext,
 } from './utils.js';
+import { DeployerMethodClass } from './contract-deployer-method-class.js';
 
 type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
@@ -169,11 +164,6 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 
 export type ContractMethodSend = Web3PromiEvent<
 	FormatType<TransactionReceipt, DataFormat>,
-	SendTransactionEvents<DataFormat>
->;
-export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
-	// eslint-disable-next-line no-use-before-define
-	Contract<Abi>,
 	SendTransactionEvents<DataFormat>
 >;
 
@@ -219,180 +209,6 @@ const contractSubscriptions = {
 };
 
 
-/*
- * This class is only supposed to be used for the return of `new Contract(...).deploy(...)` method.
- */
-export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
-
-	protected readonly args: never[] | ContractConstructorArgs<FullContractAbi>;
-	protected readonly constructorAbi: AbiConstructorFragment;
-	protected readonly contractOptions: ContractOptions;
-	protected readonly deployData?: string;
-
-	protected _contractMethodDeploySend(
-		tx: TransactionCall,
-	) {
-		// eslint-disable-next-line no-use-before-define
-		const returnTxOptions: SendTransactionOptions<Contract<FullContractAbi>> = {
-			transactionResolver: (receipt: TransactionReceipt) => {
-				if (receipt.status === BigInt(0)) {
-					throw new Web3ContractError("code couldn't be stored", receipt);
-				}
-
-				const newContract = this.parent.clone();
-
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-				newContract.options.address = receipt.contractAddress;
-				return newContract;
-			},
-			
-			contractAbi: this.parent.options.jsonInterface,
-			// TODO Should make this configurable by the user
-			checkRevertBeforeSending: false,
-		};
-
-		return isNullish(this.parent.getTransactionMiddleware())
-			? sendTransaction(this.parent, tx, this.parent.defaultReturnFormat, returnTxOptions) // not calling this with undefined Middleware because it will not break if Eth package is not updated
-			: sendTransaction(
-					this.parent,
-					tx,
-					this.parent.defaultReturnFormat,
-					returnTxOptions,
-					this.parent.getTransactionMiddleware(),
-			  );
-	}
-
-	public constructor(
-		// eslint-disable-next-line no-use-before-define
-		public parent: Contract<FullContractAbi>,
-		public deployOptions:
-			| {
-					/**
-					 * The byte code of the contract.
-					 */
-					data?: HexString;
-					input?: HexString;
-					/**
-					 * The arguments which get passed to the constructor on deployment.
-					 */
-					arguments?: ContractConstructorArgs<FullContractAbi>;
-			  }
-			| undefined,
-	) {
-		
-		const { args, abi, contractOptions, deployData} = this.calculateDeployParams();
-
-		this.args = args;
-		this.constructorAbi = abi;
-		this.contractOptions = contractOptions;
-		this.deployData = deployData;
-	}
-
-	public send(options?: PayableTxOptions): ContractDeploySend<FullContractAbi> {
-		const modifiedOptions = { ...options };
-
-		const tx = this.populateTransaction(modifiedOptions);
-
-		return this._contractMethodDeploySend(tx);
-	}
-
-	public populateTransaction(
-		txOptions?: PayableTxOptions | NonPayableTxOptions,
-	) {
-		const modifiedContractOptions = {
-			...this.contractOptions,
-			from: this.contractOptions.from ?? this.parent.defaultAccount ?? undefined,
-		};
-
-		// args, abi, contractOptions, deployData
-
-		const tx = getSendTxParams({
-			abi: this.constructorAbi,
-			params: this.args as unknown[],
-			options: { ...txOptions, dataInputFill: this.parent.contractDataInputFill },
-			contractOptions: modifiedContractOptions,
-		});
-
-		// @ts-expect-error remove unnecessary field
-		if (tx.dataInputFill) {
-			// @ts-expect-error remove unnecessary field
-			delete tx.dataInputFill;
-		}
-		return tx;
-	}
-
-	protected calculateDeployParams() {
-		let abi = this.parent.options.jsonInterface.find(
-			j => j.type === 'constructor',
-		) as AbiConstructorFragment;
-		if (!abi) {
-			abi = {
-				type: 'constructor',
-				stateMutability: '',
-			} as AbiConstructorFragment;
-		}
-
-		const _input = format(
-			{ format: 'bytes' },
-			this.deployOptions?.input ?? this.parent.options.input,
-			DEFAULT_RETURN_FORMAT,
-		);
-
-		const _data = format(
-			{ format: 'bytes' },
-			this.deployOptions?.data ?? this.parent.options.data,
-			DEFAULT_RETURN_FORMAT,
-		);
-
-		if ((!_input || _input.trim() === '0x') && (!_data || _data.trim() === '0x')) {
-			throw new Web3ContractError('contract creation without any data provided.');
-		}
-
-		const args = this.deployOptions?.arguments ?? [];
-
-		const contractOptions: ContractOptions = {
-			...this.parent.options,
-			input: _input,
-			data: _data,
-		};
-		const deployData = _input ?? _data;
-
-		return { args, abi, contractOptions, deployData}
-	}
-
-	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		options?: PayableCallOptions,
-		returnFormat: ReturnFormat = this.parent.defaultReturnFormat as ReturnFormat,
-	) {
-		const modifiedOptions = { ...options };
-		return this.parent.contractMethodEstimateGas({
-			abi: this.constructorAbi as AbiFunctionFragment,
-			params: this.args as unknown[],
-			returnFormat,
-			options: modifiedOptions,
-			contractOptions: this.contractOptions,
-		});
-	}
-
-	public encodeABI() {
-		return encodeMethodABI(
-			this.constructorAbi,
-			this.args as unknown[],
-			format(
-				{ format: 'bytes' },
-				this.deployData as Bytes,
-				this.parent.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
-			),
-		);
-	}
-
-	public decodeData(data: HexString) {
-		return {
-			...decodeMethodParams(this.constructorAbi, data.replace(this.deployData as string, ''), false),
-			__method__: this.constructorAbi.type,
-		};
-	}
-};
 
 /**
  * The `web3.eth.Contract` makes it easy to interact with smart contracts on the ethereum blockchain.
