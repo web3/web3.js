@@ -226,7 +226,7 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 			format(
 				{ format: 'bytes' },
 				this.deployData as Bytes,
-				this.parent.defaultReturnFormat,
+				this.parent.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
 			),
 		);
 	}
