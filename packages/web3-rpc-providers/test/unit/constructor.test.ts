@@ -16,12 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import HttpProvider from 'web3-providers-http';
+import HttpProvider, { HttpProviderOptions } from 'web3-providers-http';
 import WebSocketProvider from 'web3-providers-ws';
 import WebSocket from 'isomorphic-ws';
 
 import { Web3ExternalProvider } from '../../src/web3_provider';
-import { Network, Transport } from '../../src/types';
+import { Network, SocketOptions, Transport } from '../../src/types';
+import { ProviderConfigOptionsError } from '../../src/errors';
 
 // Mock implementation so ws doesnt have openhandle after test exits as it attempts to connects at start
 jest.mock('isomorphic-ws', () => {
@@ -60,11 +61,11 @@ jest.mock('isomorphic-ws', () => {
 });
 
 class MockWeb3ExternalProviderA extends Web3ExternalProvider {
-  public constructor(network: Network, transport: Transport, token: string){
-    super(network, transport, token, "");
+  public constructor(network: Network, transport: Transport, token: string, host?: string, providerConfigOptions?: HttpProviderOptions | SocketOptions) {
+    super(network, transport, token, host ?? "", providerConfigOptions);
   }
   // eslint-disable-next-line class-methods-use-this
-  public getRPCURL(_network: Network, _transport: Transport, _token: string, _host=""): string {
+  public getRPCURL(_network: Network, _transport: Transport, _token: string, _host = ""): string {
     let transport = "";
     if (_transport === Transport.HTTPS)
       transport = "http://";
@@ -76,10 +77,12 @@ class MockWeb3ExternalProviderA extends Web3ExternalProvider {
 }
 
 describe('Web3ExternalProvider', () => {
+  const network: Network = Network.ETH_MAINNET;
+  const transport: Transport = Transport.HTTPS;
+  const token = 'test-token';
+  const host = 'test-host';
+
   it('should initialize the provider correctly', () => {
-    const network: Network = Network.ETH_MAINNET;
-    const transport: Transport = Transport.HTTPS;
-    const token = 'your-token';
 
     const provider = new MockWeb3ExternalProviderA(network, transport, token);
 
@@ -87,12 +90,72 @@ describe('Web3ExternalProvider', () => {
   });
 
   it('should initialize the provider with WebSocketProvider for WebSocket transport', () => {
-    const network: Network = Network.ETH_MAINNET;
-    const transport: Transport = Transport.WebSocket;
-    const token = 'your-token';
+    const transport1: Transport = Transport.WebSocket;
 
-    const provider = new MockWeb3ExternalProviderA(network, transport, token);
+    const provider = new MockWeb3ExternalProviderA(network, transport1, token);
     expect(provider.provider).toBeInstanceOf(WebSocketProvider);
   });
 
+  it('should throw ProviderConfigOptionsError for HTTP provider with missing providerOptions', () => {
+    const providerConfigOptions: HttpProviderOptions | SocketOptions = { /* missing providerOptions */ };
+    expect(() => new MockWeb3ExternalProviderA(network, transport, token, host, providerConfigOptions)).toThrow(ProviderConfigOptionsError);
+  });
+
+  it('should throw ProviderConfigOptionsError for HTTP provider with WS providerOptions', () => {
+    const providerConfigOptions: SocketOptions = {
+      socketOptions: { /* options */ },
+      reconnectOptions: { /* options */ },
+    };
+    expect(() => new MockWeb3ExternalProviderA(network, transport, token, host, providerConfigOptions)).toThrow(ProviderConfigOptionsError);
+  });
+
+  it('should throw ProviderConfigOptionsError for WebSocket provider with missing socketOptions and reconnectOptions', () => {
+    const providerConfigOptions: HttpProviderOptions | SocketOptions = { /* missing socketOptions and reconnectOptions */ };
+    expect(() => new MockWeb3ExternalProviderA(network, Transport.WebSocket, token, host, providerConfigOptions)).toThrow(ProviderConfigOptionsError);
+  });
+
+  it('should throw ProviderConfigOptionsError for WebSocket provider with HTTP options', () => {
+    const providerConfigOptions: HttpProviderOptions = { providerOptions: { /* options */ } };
+    expect(() => new MockWeb3ExternalProviderA(network, Transport.WebSocket, token, host, providerConfigOptions)).toThrow(ProviderConfigOptionsError);
+  });
+
+  it('should create provider instance and not throw ProviderConfigOptionsError for WebSocket provider with missing reconnectOptions', () => {
+    const providerConfigOptions: SocketOptions = {
+      socketOptions: { /* options */ },
+    };
+
+    // Create an instance of the MockWeb3ExternalProviderA
+    const provider = new MockWeb3ExternalProviderA(network, Transport.WebSocket, token, host, providerConfigOptions);
+
+    // Expect that the provider is created successfully
+    expect(provider).toBeInstanceOf(MockWeb3ExternalProviderA);
+  });
+
+  it('should create provider instance and not throw ProviderConfigOptionsError for WebSocket provider with missing socketOptions', () => {
+    const providerConfigOptions: SocketOptions = {
+      reconnectOptions: { /* options */ },
+    };
+
+    // Create an instance of the MockWeb3ExternalProviderA
+    const provider = new MockWeb3ExternalProviderA(network, Transport.WebSocket, token, host, providerConfigOptions);
+
+    // Expect that the provider is created successfully
+    expect(provider).toBeInstanceOf(MockWeb3ExternalProviderA);
+  });
+
+  it('should create an HttpProvider with providerOptions', () => {
+    const providerConfigOptions: HttpProviderOptions = { providerOptions: { /* options */ } };
+    const provider = new MockWeb3ExternalProviderA(network, transport, token, host, providerConfigOptions);
+    expect(provider.provider).toBeInstanceOf(HttpProvider);
+  });
+
+  it('should create a WebSocketProvider with socketOptions and reconnectOptions', () => {
+    const providerConfigOptions: SocketOptions = {
+      socketOptions: { /* options */ },
+      reconnectOptions: { /* options */ },
+    };
+    const provider = new MockWeb3ExternalProviderA(network, Transport.WebSocket, token, host, providerConfigOptions);
+    expect(provider.provider).toBeInstanceOf(WebSocketProvider);
+  });
 });
+
