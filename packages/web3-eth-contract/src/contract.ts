@@ -121,6 +121,7 @@ import {
 	getSendTxParams,
 	isWeb3ContractContext,
 } from './utils.js';
+// eslint-disable-next-line import/no-cycle
 import { DeployerMethodClass } from './contract-deployer-method-class.js';
 
 type ContractBoundMethod<
