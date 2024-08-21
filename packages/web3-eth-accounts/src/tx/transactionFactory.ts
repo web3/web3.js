@@ -31,7 +31,15 @@ import type {
 } from './types.js';
 import { BaseTransaction } from './baseTransaction.js';
 
-const extraTxTypes: Map<Numbers, typeof BaseTransaction<unknown>> = new Map();
+let extraTxTypes: Map<Numbers, typeof BaseTransaction<unknown>>;
+//  use the global object, to work fine even if web3-eth and web3-eth-accounts was on a different versions:
+const typedGlobal = global as unknown as {extraTxTypes: Map<Numbers, typeof BaseTransaction<unknown>>}
+if (!typedGlobal.extraTxTypes) {
+    extraTxTypes = new Map();
+    typedGlobal.extraTxTypes = extraTxTypes;
+} else {
+    extraTxTypes = typedGlobal.extraTxTypes;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TransactionFactory {

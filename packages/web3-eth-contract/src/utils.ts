@@ -28,6 +28,7 @@ import {
 	PayableCallOptions,
 	ContractOptions,
 	Numbers,
+	AbiConstructorFragment,
 } from 'web3-types';
 import { isNullish, mergeDeep, isContractInitOptions, keccak256, toChecksumAddress, hexToNumber } from 'web3-utils';
 import { isAddress, isHexString } from 'web3-validator';
@@ -36,7 +37,7 @@ import { Web3ContractContext } from './types.js';
 
 const dataInputEncodeMethodHelper = (
 	txParams: TransactionCall | TransactionForAccessList,
-	abi: AbiFunctionFragment,
+	abi: AbiFunctionFragment | AbiConstructorFragment,
 	params: unknown[],
 	dataInputFill?: 'data' | 'input' | 'both',
 ): { data?: HexString; input?: HexString } => {
@@ -60,7 +61,7 @@ export const getSendTxParams = ({
 	options,
 	contractOptions,
 }: {
-	abi: AbiFunctionFragment;
+	abi: AbiFunctionFragment | AbiConstructorFragment;
 	params: unknown[];
 	options?: (PayableCallOptions | NonPayableCallOptions) & {
 		input?: HexString;
