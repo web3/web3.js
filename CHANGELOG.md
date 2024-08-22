@@ -2563,101 +2563,46 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   `getName` reverse resolution
 
-## [Unreleased]
+## [4.12.0]
 
 ### Fixed
 
-#### web3-eth
+#### web3-core
 
--   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
-
-### Added
-
-#### web3
-
--   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
-
-#### web3-eth-contract
-
--   `populateTransaction` was added to contract methods (#7124)
--   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)
-
-## [4.11.0]
-
-### Fixed
-
-#### web3-eth-abi
-
--   fix encodedata in EIP-712 (#7095)
-
-#### web3-utils
-
--   `_sendPendingRequests` will catch unhandled errors from `_sendToSocket` (#6968)
-
-#### web3-eth
-
--   Fixed geth issue when running a new instance, transactions will index when there are no blocks created (#7098)
-
-### Changed
+-   `setConfig()` fix for `setMaxListenerWarningThreshold` fix (#5079)
 
 #### web3-eth-accounts
 
-- baseTransaction method updated (#7095)
-
-#### web3-providers-ws
-
--   Update dependancies (#7109)
-
-#### web3-plugin-example
-
--   Dependencies updated
-
-#### web3-rpc-providers
-
- - Change request return type `Promise<ResultType>` to `Promise<JsonRpcResponseWithResult<ResultType>>` (#7102)
-
-### Added
-
-#### web3-eth-contract
-
--   `populateTransaction` was added to contract methods (#7124)
--   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)
-
-#### web3-rpc-providers
-
- - When error is returned with code 429, throw rate limit error (#7102)
-
-#### web3
-
--   `web3.eth.Contract` will get transaction middleware and use it, if `web3.eth` has transaction middleware. (#7138)
-
-## [4.11.1]
-
-### Fixed
-
-#### web3-errors
-
-- Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
-
-#### web3-eth
-
--   Adds transaction property to be an empty list rather than undefined when no transactions are included in the block (#7151)
--   Change method `getTransactionReceipt` to not be casted as `TransactionReceipt` to give proper return type (#7159)
-
-#### web3
-
--   Remove redundant constructor of contractBuilder (#7150)
-
-## [Unreleased]
-
-### Fixed
-
-#### web3-utils
-
--   Fixed format schema with `oneOf` doesn't work correctly (#7055)
+-   Fix `TransactionFactory.registerTransactionType` not working, if there is a version mistatch between `web3-eth` and `web3-eth-accounts` by saving `extraTxTypes` at `globals`.  (#7197)
 
 ### Added
 
 #### web3-eth-accounts
 
 -   Added public function `signMessageWithPrivateKey` (#7174)
+
+#### web3-eth-contract
+
+-	Added `populateTransaction` to the `contract.deploy(...)` properties. (#7197)
+
+#### web3-providers-http
+
+- Added `statusCode` of response in ResponseError, `statusCode` is optional property in ResponseError.
+
+#### web3-rpc-providers
+
+-   Updated rate limit error of QuickNode provider for HTTP transport
+-   Added optional `HttpProviderOptions | SocketOptions` in `Web3ExternalProvider` and `QuickNodeProvider` for provider configs
+
+#### web3-errors
+
+- Added optional `statusCode` property of response in ResponseError.
+
+### Changed
+
+#### web3-eth-contract
+
+-   The returnred properties of `contract.deploy(...)` are structured with a newly created class named `DeployerMethodClass`. (#7197)
+-	Add a missed accepted type for the `abi` parameter, at `dataInputEncodeMethodHelper` and `getSendTxParams`. (#7197)
+
+## [Unreleased]
