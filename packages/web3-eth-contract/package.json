@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-contract",
-	"version": "4.6.0",
+	"version": "4.7.0",
 	"description": "Web3 module to interact with Ethereum smart contracts.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -46,9 +46,9 @@
 	},
 	"dependencies": {
 		"@ethereumjs/rlp": "^5.0.2",
-		"web3-core": "^4.5.0",
-		"web3-errors": "^1.2.0",
-		"web3-eth": "^4.8.1",
+		"web3-core": "^4.5.1",
+		"web3-errors": "^1.3.0",
+		"web3-eth": "^4.8.2",
 		"web3-eth-abi": "^4.2.3",
 		"web3-types": "^1.7.0",
 		"web3-utils": "^4.3.1",
@@ -69,7 +69,7 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^29.1.1",
 		"typescript": "^4.7.4",
-		"web3-eth-accounts": "^4.1.3",
+		"web3-eth-accounts": "^4.2.0",
 		"web3-providers-ws": "^4.0.8"
 	}
 }
