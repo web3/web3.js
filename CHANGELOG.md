@@ -2689,9 +2689,12 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   The returnred properties of `contract.deploy(...)` are structured with a newly created class named `DeployerMethodClass`. (#7197)
 -	Add a missed accepted type for the `abi` parameter, at `dataInputEncodeMethodHelper` and `getSendTxParams`. (#7197)
 
-## [Unreleased]
+## [4.12.1]
+
 ### Fixed
 
 #### web3-eth-accounts
 
 -   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
+
+## [Unreleased]
