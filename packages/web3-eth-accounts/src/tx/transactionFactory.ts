@@ -31,15 +31,7 @@ import type {
 } from './types.js';
 import { BaseTransaction } from './baseTransaction.js';
 
-let extraTxTypes: Map<Numbers, typeof BaseTransaction<unknown>>;
-//  use the global object, to work fine even if web3-eth and web3-eth-accounts was on a different versions:
-const typedGlobal = global as unknown as {extraTxTypes: Map<Numbers, typeof BaseTransaction<unknown>>}
-if (!typedGlobal.extraTxTypes) {
-    extraTxTypes = new Map();
-    typedGlobal.extraTxTypes = extraTxTypes;
-} else {
-    extraTxTypes = typedGlobal.extraTxTypes;
-}
+const extraTxTypes: Map<Numbers, typeof BaseTransaction<unknown>> = new Map();
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TransactionFactory {
@@ -145,7 +137,7 @@ export class TransactionFactory {
 	 */
 	public static fromBlockBodyData(data: Uint8Array | Uint8Array[], txOptions: TxOptions = {}) {
 		if (isUint8Array(data)) {
-			return this.fromSerializedData(data , txOptions);
+			return this.fromSerializedData(data, txOptions);
 		}
 		if (Array.isArray(data)) {
 			// It is a legacy transaction
