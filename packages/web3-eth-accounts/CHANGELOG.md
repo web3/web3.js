@@ -177,8 +177,9 @@ Documentation:
 ### Fixed
 -   Fix `TransactionFactory.registerTransactionType` not working, if there is a version mistatch between `web3-eth` and `web3-eth-accounts` by saving `extraTxTypes` at `globals`.  (#7197)
 
-## [Unreleased]
+## [4.2.1]
 
 ### Fixed
 -   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
 
+## [Unreleased]
