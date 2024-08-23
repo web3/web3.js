@@ -350,6 +350,27 @@ export const convert = (
 	return object;
 };
 
+/**
+ * Given data that can be interpreted according to the provided schema, returns equivalent data that has been formatted
+ * according to the provided return format.
+ *
+ * @param schema - how to interpret the data
+ * @param data - data to be formatted
+ * @param returnFormat - how to format the data
+ * @returns - formatted data
+ *
+ * @example
+ *
+ * ```js
+ * import { FMT_NUMBER, utils } from "web3";
+ *
+ * console.log(
+ *   utils.format({ format: "uint" }, "221", { number: FMT_NUMBER.HEX }),
+ * );
+ * // 0xdd
+ * ```
+ *
+ */
 export const format = <
 	DataType extends Record<string, unknown> | unknown[] | unknown,
 	ReturnType extends DataFormat,
