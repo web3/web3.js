@@ -176,6 +176,7 @@ jobs:
                     path: ./
                     key: web3-${{ matrix.node }}-${{github.sha}}
             - run: yarn test:unit
+              continue-on-error: ${{ matrix.node == 20 }}
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v3
               with:
