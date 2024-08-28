@@ -18,11 +18,17 @@ module.exports = {
 	},
 	overrides: [
 		{
-		  "files": ["*.test.ts"],
-		  "rules": {
-			"@typescript-eslint/no-unsafe-call": "off",
-			"import/no-unresolved": "off"
-		  }
-		}
-	  ]
+			files: ['*.test.ts'],
+			rules: {
+				'@typescript-eslint/no-unsafe-call': 'off',
+				'import/no-unresolved': 'off',
+			},
+		},
+		{
+			files: ['*.ts'],
+			rules: {
+				'default-param-last': 'off',
+			},
+		},
+	],
 };
