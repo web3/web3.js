@@ -163,7 +163,6 @@ Documentation:
 
 -   add `asEIP1193Provider` to `Web3BaseProvider` so every inherited class can have the returned value of `request` method, fully compatible with EIP-1193. (#6407)
 
-
 ## [1.3.0]
 
 ### Added
@@ -200,7 +199,7 @@ Documentation:
 
 ### Added
 
-- Added `result` as optional `never` and `error` as optional `never in type `JsonRpcNotification` (#7091)
-- Added `JsonRpcNotfication` as a union type in `JsonRpcResponse` (#7091)
+-   Added `result` as optional `never` and `error` as optional `never in type `JsonRpcNotification` (#7091)
+-   Added `JsonRpcNotfication` as a union type in `JsonRpcResponse` (#7091)
 
 ## [Unreleased]

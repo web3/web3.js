@@ -55,7 +55,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import {Web3, WebSocketProvider } from 'web3';
+import { Web3, WebSocketProvider } from 'web3';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
@@ -83,7 +83,7 @@ export const BACKEND = {
 	MAINNET: 'mainnet',
 };
 
-export const getSystemTestProviderUrl = (): string  =>
+export const getSystemTestProviderUrl = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
 
 export const getSystemTestProvider = <API extends Web3APISpec = Web3EthExecutionAPI>():
@@ -156,21 +156,18 @@ export const waitForOpenConnection = async (
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
 	if (
-		web3Context?.provider && (
-			web3Context?.provider instanceof WebSocketProvider  ||
-			web3Context?.provider instanceof IpcProvider 
-
-		) &&
+		web3Context?.provider &&
+		(web3Context?.provider instanceof WebSocketProvider ||
+			web3Context?.provider instanceof IpcProvider) &&
 		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
 	) {
-		
-            (web3Context.provider as unknown as Web3BaseProvider).reset();
-			(web3Context.provider as unknown as Web3BaseProvider).disconnect();
+		(web3Context.provider as unknown as Web3BaseProvider).reset();
+		(web3Context.provider as unknown as Web3BaseProvider).disconnect();
 
-			await new Promise(resolve => {
-				setTimeout(resolve, 1000);
-			  });
-		}
+		await new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		});
+	}
 };
 
 export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => {
@@ -232,8 +229,7 @@ export const refillAccount = async (from: string, to: string, value: string | nu
 		value,
 	});
 
-	if(receipt.status !== BigInt(1))
-		throw new Error("refillAccount failed");
+	if (receipt.status !== BigInt(1)) throw new Error('refillAccount failed');
 
 	await closeOpenConnection(web3Eth);
 };
@@ -246,7 +242,6 @@ export const createNewAccount = async (config?: {
 	password?: string;
 	doNotImport?: boolean;
 }): Promise<{ address: string; privateKey: string }> => {
-
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
 
 	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
@@ -294,7 +289,6 @@ export const createNewAccount = async (config?: {
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
 };
-
 
 let tempAccountList: { address: string; privateKey: string }[] = [];
 const walletsOnWorker = 20;
@@ -482,7 +476,7 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 	const web3 = new Web3(DEFAULT_SYSTEM_PROVIDER);
 	const fromAcc = await createLocalAccount(web3);
 	const toAcc = createAccount();
-	const res: TransactionReceipt[]= [];
+	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < cnt; i += 1) {
 		// eslint-disable-next-line no-await-in-loop
 		const receipt = await web3.eth.sendTransaction({
@@ -492,12 +486,9 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 			gas: '300000',
 		});
 
-		if(receipt.status !== BigInt(1))
-			throw new Error("sendFewSampleTxs failed ");
+		if (receipt.status !== BigInt(1)) throw new Error('sendFewSampleTxs failed ');
 
-		res.push(
-			receipt
-		);
+		res.push(receipt);
 	}
 	await closeOpenConnection(web3);
 	return res;
@@ -523,14 +514,15 @@ export const waitForCondition = async (
 	conditionFunc: () => boolean,
 	logicFunc: () => Promise<void> | void,
 	maxIterations = 10, // 10 times
-	duration = 8000,	// check after each 8 seconds 
+	duration = 8000, // check after each 8 seconds
 ): Promise<void> => {
 	return new Promise<void>((resolve, reject) => {
 		let iterations = 0;
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		const interval = setInterval(async () => {
 			try {
-				if (iterations > 0 && conditionFunc()) { // wait duration before first check
+				if (iterations > 0 && conditionFunc()) {
+					// wait duration before first check
 					clearInterval(interval);
 					await logicFunc();
 					resolve();

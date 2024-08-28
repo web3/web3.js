@@ -56,7 +56,6 @@ describe('rpc_method_wrappers', () => {
 				},
 			);
 		});
-		
 
 		it('isListening', async () => {
 			await isListening(web3Net);

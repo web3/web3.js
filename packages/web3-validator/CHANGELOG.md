@@ -166,13 +166,13 @@ Documentation:
 
 ### Fixed
 
-- Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
+-   Multi-dimensional arrays(with a fix length) are now handled properly when parsing ABIs (#6798)
 
 ## [2.0.6]
 
 ### Fixed
 
-- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
--  `browser` entry point that was pointing to an non-existing bundle file was removed from `package.json` (#7015)
+-   The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
+-   `browser` entry point that was pointing to an non-existing bundle file was removed from `package.json` (#7015)
 
 ## [Unreleased]

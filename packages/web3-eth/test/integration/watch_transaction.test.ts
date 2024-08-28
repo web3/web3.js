@@ -86,14 +86,15 @@ describeIf(isSocket)('watch subscription transaction', () => {
 			await receiptPromise;
 			await sendFewSampleTxs(isIpc ? 2 * waitConfirmations : waitConfirmations);
 
-			const resourcePromise = waitForCondition( 
-				() => shouldBe >= waitConfirmations, 
+			const resourcePromise = waitForCondition(
+				() => shouldBe >= waitConfirmations,
 				async () => {
 					sentTx.removeAllListeners();
-					await closeOpenConnection(web3);}
-				);
+					await closeOpenConnection(web3);
+				},
+			);
 
-			await Promise.all([confirmationPromise,resourcePromise]);
+			await Promise.all([confirmationPromise, resourcePromise]);
 		});
 	});
 });

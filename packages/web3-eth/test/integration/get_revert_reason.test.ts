@@ -27,7 +27,7 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	BACKEND,
-	closeOpenConnection
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('Web3Eth.getRevertReason', () => {
@@ -163,7 +163,7 @@ describe('Web3Eth.getRevertReason', () => {
 			case BACKEND.HARDHAT:
 				expect(response).toMatchObject({
 					data: '',
-					reason: "Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0x72090e4d)",
+					reason: 'Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0x72090e4d)',
 					signature: '0x72090e4d',
 					customErrorName: 'ErrorWithNoParams',
 					customErrorDecodedSignature: 'ErrorWithNoParams()',
@@ -202,7 +202,7 @@ describe('Web3Eth.getRevertReason', () => {
 			case BACKEND.HARDHAT:
 				expect(response).toMatchObject({
 					data: '000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
-					reason: "Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000)",
+					reason: 'Error: VM Exception while processing transaction: reverted with an unrecognized custom error (return data: 0xc85bda60000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000)',
 					signature: '0xc85bda60',
 					customErrorName: 'ErrorWithParams',
 					customErrorDecodedSignature: 'ErrorWithParams(uint256,string)',

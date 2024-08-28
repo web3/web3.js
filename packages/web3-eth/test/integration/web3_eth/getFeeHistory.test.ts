@@ -22,7 +22,7 @@ import {
 	describeIf,
 	getSystemTestBackend,
 	closeOpenConnection,
-	BACKEND
+	BACKEND,
 } from '../../fixtures/system_test_utils';
 import { feeHistorySchema } from '../../../src/schemas';
 
