@@ -195,7 +195,7 @@ Documentation:
 
 ### Fixed
 
--   Fix `Web3Config` to properly update within other web3 packages when `setConfig` is used  (#6555)
+-   Fix `Web3Config` to properly update within other web3 packages when `setConfig` is used (#6555)
 
 ### Added
 
@@ -205,7 +205,7 @@ Documentation:
 
 ### Changed
 
--	Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
+-   Web3config `contractDataInputFill` has been defaulted to `data`, istead of `input`. (#6622)
 
 ## [4.4.0]
 
@@ -234,3 +234,8 @@ Documentation:
 -   `setConfig()` fix for `setMaxListenerWarningThreshold` fix (#5079)
 
 ## [Unreleased]
+
+### Added
+
+-   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions`
+-   Adds a new property (`config`) to `Web3RequestManager`

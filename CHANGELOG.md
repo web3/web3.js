@@ -2698,3 +2698,24 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-core
+
+-   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions`
+-   Adds a new property (`config`) to `Web3RequestManager`
+
+#### web3-eth
+
+-   Adds the same `{transactionSchema?: ValidationSchemaInput}` that exists in `formatTransaction` to `validateTransactionForSigning`
+
+### Changed
+
+#### web3-eth
+
+-   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`
+
+#### web3-eth-personal
+
+-   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`

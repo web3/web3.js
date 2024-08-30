@@ -254,7 +254,7 @@ Documentation:
 
 -   `sendTransaction` in `rpc_method_wrappers` accepts optional param of `TransactionMiddleware` (#7088)
 -   WebEth has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` (#7088)
-- `TransactionMiddleware` and `TransactionMiddleware` data types are exported (#7088)
+-   `TransactionMiddleware` and `TransactionMiddleware` data types are exported (#7088)
 
 ## [4.8.1]
 
@@ -270,3 +270,11 @@ Documentation:
 -   Change method `getTransactionReceipt` to not be casted as `TransactionReceipt` to give proper return type (#7159)
 
 ## [Unreleased]
+
+### Changed
+
+-   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`
+
+### Added
+
+-   Adds the same `{transactionSchema?: ValidationSchemaInput}` that exists in `formatTransaction` to `validateTransactionForSigning`
