@@ -119,7 +119,6 @@ export class Web3Context<
 			isSupportedProvider(providerOrContext as SupportedProviders<API>)
 		) {
 			this._requestManager = new Web3RequestManager<API>(
-				{},
 				providerOrContext as undefined | string | SupportedProviders<API>,
 			);
 			this._subscriptionManager = new Web3SubscriptionManager(
@@ -146,7 +145,7 @@ export class Web3Context<
 		this._requestManager =
 			requestManager ??
 			new Web3RequestManager<API>(
-				this.config,
+				config,
 				provider,
 				config?.enableExperimentalFeatures?.useSubscriptionWhenCheckingBlockTimeout,
 				requestManagerMiddleware,

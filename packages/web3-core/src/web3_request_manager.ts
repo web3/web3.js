@@ -75,18 +75,18 @@ export class Web3RequestManager<
 }> {
 	private _provider?: SupportedProviders<API>;
 	private readonly useRpcCallSpecification?: boolean;
-	public config: Web3ConfigOptions;
+	public config: Partial<Web3ConfigOptions>;
 	public middleware?: RequestManagerMiddleware<API>;
 
 	public constructor(
-		config: Web3ConfigOptions,
 		provider?: SupportedProviders<API> | string,
 		useRpcCallSpecification?: boolean,
 		requestManagerMiddleware?: RequestManagerMiddleware<API>,
+		config?: Partial<Web3ConfigOptions>,
 	) {
 		super();
 
-		this.config = config;
+		this.config = config ?? {};
 
 		if (!isNullish(provider)) {
 			this.setProvider(provider);
