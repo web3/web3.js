@@ -25,6 +25,7 @@ import {
 } from 'web3-types';
 import { ConfigHardforkMismatchError, ConfigChainMismatchError } from 'web3-errors';
 import { isNullish, toHex } from 'web3-utils';
+import { ValidationSchemaInput } from 'web3-validator';
 import { TransactionTypeParser } from './types.js';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context.js';
@@ -59,6 +60,7 @@ export interface Web3ConfigOptions {
 	};
 	transactionBuilder?: TransactionBuilder;
 	transactionTypeParser?: TransactionTypeParser;
+	customTransactionSchema?: ValidationSchemaInput;
 	defaultReturnFormat: DataFormat;
 }
 
@@ -101,6 +103,7 @@ export abstract class Web3Config
 		},
 		transactionBuilder: undefined,
 		transactionTypeParser: undefined,
+		customTransactionSchema: undefined,
 		defaultReturnFormat: DEFAULT_RETURN_FORMAT,
 	};
 
@@ -115,10 +118,11 @@ export abstract class Web3Config
 		for (const key of keys) {
 			this._triggerConfigChange(key, options[key]);
 
-			if(!isNullish(options[key]) && 
+			if (
+				!isNullish(options[key]) &&
 				typeof options[key] === 'number' &&
-				key === 'maxListenersWarningThreshold' ) 
-			{
+				key === 'maxListenersWarningThreshold'
+			) {
 				// additionally set in event emitter
 				this.setMaxListenerWarningThreshold(Number(options[key]));
 			}

@@ -73,7 +73,9 @@ export const sendTransaction = async (
 	tx: Transaction,
 	passphrase: string,
 ) => {
-	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT);
+	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT, {
+		transactionSchema: requestManager.config.customTransactionSchema,
+	});
 
 	return personalRpcMethods.sendTransaction(requestManager, formattedTx, passphrase);
 };
@@ -83,7 +85,9 @@ export const signTransaction = async (
 	tx: Transaction,
 	passphrase: string,
 ) => {
-	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT);
+	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT, {
+		transactionSchema: requestManager.config.customTransactionSchema,
+	});
 
 	return personalRpcMethods.signTransaction(requestManager, formattedTx, passphrase);
 };

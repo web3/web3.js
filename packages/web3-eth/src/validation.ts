@@ -27,7 +27,14 @@ import {
 	TransactionWithSenderAPI,
 	ETH_DATA_FORMAT,
 } from 'web3-types';
-import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
+import {
+	ValidationSchemaInput,
+	isAddress,
+	isHexStrict,
+	isHexString32Bytes,
+	isNullish,
+	isUInt,
+} from 'web3-validator';
 import {
 	ChainMismatchError,
 	HardforkMismatchError,
@@ -282,6 +289,9 @@ export const validateGas = (transaction: InternalTransaction) => {
 export const validateTransactionForSigning = (
 	transaction: InternalTransaction,
 	overrideMethod?: (transaction: InternalTransaction) => void,
+	options: {
+		transactionSchema?: ValidationSchemaInput;
+	} = { transactionSchema: undefined },
 ) => {
 	if (!isNullish(overrideMethod)) {
 		overrideMethod(transaction);
@@ -296,7 +306,9 @@ export const validateTransactionForSigning = (
 	validateBaseChain(transaction);
 	validateHardfork(transaction);
 
-	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT);
+	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT, {
+		transactionSchema: options.transactionInfoSchema,
+	});
 	validateGas(formattedTransaction);
 
 	if (

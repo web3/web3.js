@@ -116,4 +116,8 @@ describe('formatTransaction', () => {
 			}),
 		);
 	});
+
+	it.todo('Accepts a custom schema', () => {
+		// TODO(nico):
+	});
 });

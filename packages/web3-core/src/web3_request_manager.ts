@@ -53,6 +53,7 @@ import {
 } from './utils.js';
 import { Web3EventEmitter } from './web3_event_emitter.js';
 import { RequestManagerMiddleware } from './types.js';
+import { Web3ConfigEvent, Web3ConfigOptions } from './web3_config.js';
 
 export enum Web3RequestManagerEvent {
 	PROVIDER_CHANGED = 'PROVIDER_CHANGED',
@@ -74,14 +75,18 @@ export class Web3RequestManager<
 }> {
 	private _provider?: SupportedProviders<API>;
 	private readonly useRpcCallSpecification?: boolean;
+	public config: Web3ConfigOptions;
 	public middleware?: RequestManagerMiddleware<API>;
 
 	public constructor(
+		config: Web3ConfigOptions,
 		provider?: SupportedProviders<API> | string,
 		useRpcCallSpecification?: boolean,
 		requestManagerMiddleware?: RequestManagerMiddleware<API>,
 	) {
 		super();
+
+		this.config = config;
 
 		if (!isNullish(provider)) {
 			this.setProvider(provider);
@@ -146,6 +151,10 @@ export class Web3RequestManager<
 		this._provider = newProvider;
 		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this._provider);
 		return true;
+	}
+
+	public setConfig(options: Partial<Web3ConfigOptions>) {
+		Object.assign(this.config, options);
 	}
 
 	public setMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>) {
