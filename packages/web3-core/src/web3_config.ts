@@ -25,7 +25,7 @@ import {
 } from 'web3-types';
 import { ConfigHardforkMismatchError, ConfigChainMismatchError } from 'web3-errors';
 import { isNullish, toHex } from 'web3-utils';
-import { ValidationSchemaInput, Schema } from 'web3-validator';
+import { ValidationSchemaInput } from 'web3-validator';
 import { TransactionTypeParser } from './types.js';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context.js';
@@ -523,11 +523,11 @@ export abstract class Web3Config
 		this.config.transactionTypeParser = val;
 	}
 
-	public get customTransactionSchema() {
+	public get customTransactionSchema(): ValidationSchemaInput | undefined {
 		return this.config.customTransactionSchema;
 	}
 
-	public set customTransactionSchema(schema: ValidationSchemaInput) {
+	public set customTransactionSchema(schema: ValidationSchemaInput | undefined) {
 		this._triggerConfigChange('customTransactionSchema', schema);
 		this.config.customTransactionSchema = schema;
 	}

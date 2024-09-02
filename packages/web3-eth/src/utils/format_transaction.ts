@@ -29,7 +29,7 @@ export function formatTransaction<
 	transaction: TransactionType,
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	options: {
-		transactionSchema?: ValidationSchemaInput | typeof transactionSchema;
+		transactionSchema?: ValidationSchemaInput | typeof transactionSchema | undefined;
 		fillInputAndData?: boolean;
 	} = {
 		transactionSchema: transactionInfoSchema,

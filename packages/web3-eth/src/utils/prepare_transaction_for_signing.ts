@@ -140,6 +140,7 @@ export const prepareTransactionForSigning = async (
 
 	validateTransactionForSigning(
 		formattedTransaction as unknown as FormatType<Transaction, typeof ETH_DATA_FORMAT>,
+		undefined,
 		{
 			transactionSchema: web3Context.config.customTransactionSchema,
 		},

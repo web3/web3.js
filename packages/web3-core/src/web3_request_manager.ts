@@ -53,7 +53,7 @@ import {
 } from './utils.js';
 import { Web3EventEmitter } from './web3_event_emitter.js';
 import { RequestManagerMiddleware } from './types.js';
-import { Web3ConfigEvent, Web3ConfigOptions } from './web3_config.js';
+import { Web3ConfigOptions } from './web3_config.js';
 
 export enum Web3RequestManagerEvent {
 	PROVIDER_CHANGED = 'PROVIDER_CHANGED',

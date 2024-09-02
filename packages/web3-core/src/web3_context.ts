@@ -145,10 +145,10 @@ export class Web3Context<
 		this._requestManager =
 			requestManager ??
 			new Web3RequestManager<API>(
-				config,
 				provider,
 				config?.enableExperimentalFeatures?.useSubscriptionWhenCheckingBlockTimeout,
 				requestManagerMiddleware,
+				config,
 			);
 
 		if (subscriptionManager) {

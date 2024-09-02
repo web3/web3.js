@@ -307,7 +307,7 @@ export const validateTransactionForSigning = (
 	validateHardfork(transaction);
 
 	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT, {
-		transactionSchema: options.transactionInfoSchema,
+		transactionSchema: options.transactionSchema,
 	});
 	validateGas(formattedTransaction);
 
