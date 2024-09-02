@@ -22,9 +22,9 @@ import {
 } from 'web3-types';
 import { bytesToHex, format, hexToBytes, keccak256 } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
+import { ValidationSchemaInput } from 'web3-validator';
 import { detectRawTransactionType } from './detect_transaction_type.js';
 import { formatTransaction } from './format_transaction.js';
-import { ValidationSchemaInput } from 'web3-validator';
 
 /**
  * Decodes an [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded transaction.

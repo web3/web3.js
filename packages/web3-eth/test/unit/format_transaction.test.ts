@@ -131,6 +131,6 @@ describe('formatTransaction', () => {
 					},
 				},
 			}).feeCurrency,
-		).not.toBeUndefined();
+		).toBeDefined();
 	});
 });
