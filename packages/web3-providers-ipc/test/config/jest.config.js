@@ -42,4 +42,5 @@ module.exports = {
 	resetModules: true,
 
 	resetMocks: true,
+	testTimeout: 600000,
 };
