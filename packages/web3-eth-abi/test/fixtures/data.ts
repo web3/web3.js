@@ -976,6 +976,40 @@ export const validDecodeContractErrorData: {
 }[] = [
 	{
 		input: [
+			[],
+			{
+				code: 12,
+				message: 'message',
+				data: '0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612063616c6c207265766572740000000000000000000000',
+			},
+		],
+		output: {
+			errorName: 'Error',
+			errorSignature: 'Error(string)',
+			errorArgs: {
+				message: 'This is a call revert',
+			},
+		},
+	},
+	{
+		input: [
+			[],
+			{
+				code: 12,
+				message: 'message',
+				data: '0x4e487b71000000000000000000000000000000000000000000000000000000000000002a00000000000000000000000000000000000000000000000000000000000000',
+			},
+		],
+		output: {
+			errorName: 'Panic',
+			errorSignature: 'Panic(uint256)',
+			errorArgs: {
+				code: 42,
+			},
+		},
+	},
+	{
+		input: [
 			[
 				{ inputs: [], name: 'ErrorWithNoParams', type: 'error' },
 				{
