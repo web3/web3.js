@@ -82,7 +82,7 @@ export const requestEIP6963Providers = async () =>
   });
 
 
-export const onNewProviderDiscovered = (callback: (providerEvent: EIP6963AnnounceProviderEvent) => void) => {
+export const onNewProviderDiscovered = (callback: (providerEvent: EIP6963ProvidersMapUpdateEvent) => void) => {
   if (typeof window === 'undefined') {
     throw new Error("window object not available, EIP-6963 is intended to be used within a browser");
   }
