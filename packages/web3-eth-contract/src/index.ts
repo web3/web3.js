@@ -45,6 +45,7 @@ import { Contract } from './contract.js';
 export * from './encoding.js';
 
 export * from './contract.js';
+export * from './contract-deployer-method-class.js';
 export * from './log_subscription.js';
 export * from './types.js';
 export * from './utils.js';

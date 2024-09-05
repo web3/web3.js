@@ -129,4 +129,10 @@ Documentation:
 
 -   Fix issue lquixada/cross-fetch#78, enabling to run web3.js in service worker (#6463)
 
+## [4.2.0]
+
+### Added
+
+- Added `statusCode` of response in ResponseError, `statusCode` is optional property in ResponseError.
+
 ## [Unreleased]

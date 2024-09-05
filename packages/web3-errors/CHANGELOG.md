@@ -178,4 +178,10 @@ Documentation:
 
 - Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
 
+## [1.3.0]
+
+### Added
+
+- Added optional `statusCode` property of response in ResponseError.
+
 ## [Unreleased]

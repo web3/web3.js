@@ -436,4 +436,55 @@ Documentation:
 
 -   Remove redundant constructor of contractBuilder (#7150)
 
+
+## [4.12.0]
+
+### Fixed
+
+#### web3-core
+
+-   `setConfig()` fix for `setMaxListenerWarningThreshold` fix (#5079)
+
+#### web3-eth-accounts
+
+-   Fix `TransactionFactory.registerTransactionType` not working, if there is a version mistatch between `web3-eth` and `web3-eth-accounts` by saving `extraTxTypes` at `globals`.  (#7197)
+
+### Added
+
+#### web3-eth-accounts
+
+-   Added public function `signMessageWithPrivateKey` (#7174)
+
+#### web3-eth-contract
+
+-	Added `populateTransaction` to the `contract.deploy(...)` properties. (#7197)
+
+#### web3-providers-http
+
+- Added `statusCode` of response in ResponseError, `statusCode` is optional property in ResponseError.
+
+#### web3-rpc-providers
+
+-   Updated rate limit error of QuickNode provider for HTTP transport
+-   Added optional `HttpProviderOptions | SocketOptions` in `Web3ExternalProvider` and `QuickNodeProvider` for provider configs
+
+#### web3-errors
+
+- Added optional `statusCode` property of response in ResponseError.
+
+### Changed
+
+#### web3-eth-contract
+
+-   The returnred properties of `contract.deploy(...)` are structured with a newly created class named `DeployerMethodClass`. (#7197)
+-	Add a missed accepted type for the `abi` parameter, at `dataInputEncodeMethodHelper` and `getSendTxParams`. (#7197)
+
+## [4.12.1]
+
+### Fixed
+
+#### web3-eth-accounts
+
+-   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
+
 ## [Unreleased]

@@ -393,5 +393,15 @@ Documentation:
 -   `populateTransaction` was added to contract methods (#7124)
 -   Contract has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` for `deploy` and `send` functions (#7138)
 
-## [Unreleased]
+## [4.7.0]
 
+### Added
+
+-	Added `populateTransaction` to the `contract.deploy(...)` properties. (#7197)
+
+### Changed
+
+-   The returnred properties of `contract.deploy(...)` are structured with a newly created class named `DeployerMethodClass`. (#7197)
+-	Add a missed accepted type for the `abi` parameter, at `dataInputEncodeMethodHelper` and `getSendTxParams`. (#7197)
+
+## [Unreleased]
