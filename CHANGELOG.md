@@ -2697,4 +2697,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
 
+-   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
+
 ## [Unreleased]
