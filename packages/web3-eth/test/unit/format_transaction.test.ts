@@ -26,6 +26,7 @@ import {
 	numbersAsNumberTransaction,
 	bytesAsUint8ArrayTransaction,
 	customFieldTransaction,
+	CustomFieldTransaction,
 } from '../fixtures/format_transaction';
 import { objectBigintToString } from '../fixtures/system_test_utils';
 import { transactionSchema } from '../../src';
@@ -120,17 +121,25 @@ describe('formatTransaction', () => {
 	});
 
 	it('Accepts a custom schema', () => {
-		expect(formatTransaction(customFieldTransaction).feeCurrency).toBeUndefined();
 		expect(
-			formatTransaction(customFieldTransaction, undefined, {
-				transactionSchema: {
-					...transactionSchema,
-					properties: {
-						...transactionSchema.properties,
-						feeCurrency: 'address',
+			formatTransaction<typeof DEFAULT_RETURN_FORMAT, CustomFieldTransaction>(
+				customFieldTransaction,
+			).feeCurrency,
+		).toBeUndefined();
+		expect(
+			formatTransaction<typeof DEFAULT_RETURN_FORMAT, CustomFieldTransaction>(
+				customFieldTransaction,
+				undefined,
+				{
+					transactionSchema: {
+						...transactionSchema,
+						properties: {
+							...transactionSchema.properties,
+							feeCurrency: { format: 'address' },
+						},
 					},
 				},
-			}).feeCurrency,
+			).feeCurrency,
 		).toBeDefined();
 	});
 });

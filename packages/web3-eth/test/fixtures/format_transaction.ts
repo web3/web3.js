@@ -210,8 +210,9 @@ export const numbersAsBigIntTransaction: FormatType<
 	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 };
 
+export type CustomFieldTransaction = Transaction & { feeCurrency: `0x${string}` };
 export const customFieldTransaction: FormatType<
-	Transaction,
+	CustomFieldTransaction,
 	{ number: FMT_NUMBER.BIGINT; bytes: typeof DEFAULT_RETURN_FORMAT.bytes }
 > = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
