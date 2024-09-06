@@ -296,7 +296,7 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 		const result = {
 			...res,
 			transactions: res.transactions ?? [],
-		};
+		}
 		return result;
 	}
 
@@ -530,11 +530,11 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 	}
 	return isNullish(response)
 		? response
-		: format(
+		: (format(
 				transactionReceiptSchema,
 				response as unknown as TransactionReceipt,
 				returnFormat ?? web3Context.defaultReturnFormat,
-		  );
+		  ));
 }
 
 /**
@@ -579,7 +579,7 @@ export function sendTransaction<
 		| TransactionWithFromAndToLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
-	transactionMiddleware?: TransactionMiddleware,
+	transactionMiddleware?: TransactionMiddleware
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
@@ -592,9 +592,9 @@ export function sendTransaction<
 						returnFormat,
 					});
 
-					let transaction = { ...transactionObj };
+					let transaction = {...transactionObj};
 
-					if (!isNullish(transactionMiddleware)) {
+					if(!isNullish(transactionMiddleware)){
 						transaction = await transactionMiddleware.processTransaction(transaction);
 					}
 

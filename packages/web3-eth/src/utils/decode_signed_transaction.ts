@@ -38,7 +38,6 @@ export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 	options: { fillInputAndData?: boolean; transactionSchema?: ValidationSchemaInput } = {
 		fillInputAndData: false,
-		transactionSchema: undefined,
 	},
 ): SignedTransactionInfoAPI {
 	return {
