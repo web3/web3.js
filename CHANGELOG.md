@@ -2698,3 +2698,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Correction in documentation for `web3.eth.sendTransaction` (#7245)
