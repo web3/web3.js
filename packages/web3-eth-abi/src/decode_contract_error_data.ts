@@ -39,6 +39,36 @@ export const decodeContractErrorData = (
 				errorSignature = jsonInterfaceMethodToString(errorAbi);
 				// decode abi.inputs according to EIP-838
 				errorArgs = decodeParameters([...errorAbi.inputs], error.data.substring(10));
+			} else if (error.data.startsWith('0x08c379a0')) {
+				// If ABI was not provided, check for the 2 famous errors: 'Error(string)' or 'Panic(uint256)'
+
+				errorName = 'Error';
+				errorSignature = 'Error(string)';
+				// decode abi.inputs according to EIP-838
+				errorArgs = decodeParameters(
+					[
+						{
+							name: 'message',
+							type: 'string',
+						},
+					],
+					error.data.substring(10),
+				);
+			} else if (error.data.startsWith('0x4e487b71')) {
+				errorName = 'Panic';
+				errorSignature = 'Panic(uint256)';
+				// decode abi.inputs according to EIP-838
+				errorArgs = decodeParameters(
+					[
+						{
+							name: 'code',
+							type: 'uint256',
+						},
+					],
+					error.data.substring(10),
+				);
+			} else {
+				console.error('No matching error abi found for error data', error.data);
 			}
 		} catch (err) {
 			console.error(err);

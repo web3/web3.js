@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 sidebar_label: Tree Shaking Guide
 ---
 
@@ -26,7 +26,7 @@ import TabItem from '@theme/TabItem';
 
 :::note
 For further information about `sideEffects` see [webpack docs](https://webpack.js.org/guides/tree-shaking/)
-::: 
+:::
 
 ## Step 3: Set tsconfig Module to ES2015
 
@@ -44,8 +44,8 @@ For further information about `sideEffects` see [webpack docs](https://webpack.j
 
 <Tabs groupId='prog-lang' queryString>
 
-  <TabItem value='javascript' label='JavaScript'
-  	attributes={{className: 'javascript-tab'}}>
+<TabItem value='javascript' label='JavaScript'
+attributes={{className: 'javascript-tab'}}>
 
 ```javascript
 const { Web3Eth } = require('web3-eth');
@@ -69,8 +69,8 @@ If you only need a few functions from `web3-utils`:
 
 <Tabs groupId='prog-lang' queryString>
 
-  <TabItem value='javascript' label='JavaScript'
-  	attributes={{className: 'javascript-tab'}}>
+<TabItem value='javascript' label='JavaScript'
+attributes={{className: 'javascript-tab'}}>
 
 ```javascript
 const { numberToHex, hexToNumber } = require('web3-utils');
