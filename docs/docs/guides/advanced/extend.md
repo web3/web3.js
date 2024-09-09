@@ -14,24 +14,24 @@ The legacy `extend` method accepts a single parameter that should implement the 
 Here is a complete example of using the legacy `extend` method:
 
 ```js
-import { Web3 } from "web3";
+import { Web3 } from 'web3';
 
-const web3 = new Web3("https://eth.llamarpc.com");
+const web3 = new Web3('https://eth.llamarpc.com');
 
 async function main() {
-  web3.extend({
-    property: "BlockReceipts",
-    methods: [
-      {
-        name: "getBlockReceipts",
-        // https://www.quicknode.com/docs/ethereum/eth_getBlockReceipts
-        call: "eth_getBlockReceipts",
-      },
-    ],
-  });
+	web3.extend({
+		property: 'BlockReceipts',
+		methods: [
+			{
+				name: 'getBlockReceipts',
+				// https://www.quicknode.com/docs/ethereum/eth_getBlockReceipts
+				call: 'eth_getBlockReceipts',
+			},
+		],
+	});
 
-  const receipts = await web3.BlockReceipts.getBlockReceipts("latest");
-  console.log(receipts);
+	const receipts = await web3.BlockReceipts.getBlockReceipts('latest');
+	console.log(receipts);
 }
 
 main();

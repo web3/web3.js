@@ -17,7 +17,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ContractExecutionError } from 'web3-errors';
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { getSystemTestProvider, createTempAccount, getSystemTestBackend, BACKEND} from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	getSystemTestBackend,
+	BACKEND,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
@@ -154,8 +159,8 @@ describe('contract', () => {
 					await expect(
 						contractDeployed.methods.reverts().send(sendOptions),
 					).rejects.toMatchObject({
-						"name": "ContractExecutionError",
-						"receipt": undefined,
+						name: 'ContractExecutionError',
+						receipt: undefined,
 					});
 				} else {
 					// eslint-disable-next-line jest/no-conditional-expect

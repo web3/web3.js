@@ -137,7 +137,6 @@ export const encodeMethodABI = (
 		params = inferTypesAndEncodeParameters(args).replace('0x', '');
 	}
 
-
 	if (isAbiConstructorFragment(abi)) {
 		if (!deployData)
 			throw new Web3ContractError(

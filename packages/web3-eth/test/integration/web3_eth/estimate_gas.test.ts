@@ -24,7 +24,7 @@ import {
 	itIf,
 	isGeth,
 	getSystemTestBackend,
-	BACKEND
+	BACKEND,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.estimateGas', () => {

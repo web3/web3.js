@@ -21,25 +21,25 @@ import { Address, EthPersonalAPI, HexString, Transaction } from 'web3-types';
 import * as rpcWrappers from './rpc_method_wrappers.js';
 
 /**
-* Eth Personal allows you to interact with the Ethereum node’s accounts.
-* For using Eth Personal package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager.
-* ```ts
-* 
-*import { Web3 } from 'web3';
-*  const web3 = new Web3('http://127.0.0.1:7545');
-*
-*  console.log(await web3.eth.personal.getAccounts());
-* 
-* ```
-* For using individual package install `web3-eth-personal` packages using: `npm i web3-eth-personal` or `yarn add web3-eth-personal`.
-*
-* ```ts
-* import {Personal} from 'web3-eth-personal';
-* 
-* const personal = new Personal('http://127.0.0.1:7545');
-* console.log(await personal.getAccounts());
-* ```
-*/
+ * Eth Personal allows you to interact with the Ethereum node’s accounts.
+ * For using Eth Personal package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager.
+ * ```ts
+ *
+ *import { Web3 } from 'web3';
+ *  const web3 = new Web3('http://127.0.0.1:7545');
+ *
+ *  console.log(await web3.eth.personal.getAccounts());
+ *
+ * ```
+ * For using individual package install `web3-eth-personal` packages using: `npm i web3-eth-personal` or `yarn add web3-eth-personal`.
+ *
+ * ```ts
+ * import {Personal} from 'web3-eth-personal';
+ *
+ * const personal = new Personal('http://127.0.0.1:7545');
+ * console.log(await personal.getAccounts());
+ * ```
+ */
 export class Personal extends Web3Context<EthPersonalAPI> {
 	/**
 	 *Returns a list of accounts the node controls by using the provider and calling the RPC method personal_listAccounts. Using `web3.eth.accounts.create()` will not add accounts into this list. For that use `web3.eth.personal.newAccount()`.

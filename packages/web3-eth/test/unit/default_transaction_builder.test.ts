@@ -242,7 +242,6 @@ describe('defaultTransactionBuilder', () => {
 			expect(result.value).toBe('0x0');
 		});
 
-
 		it('should not populate with 0x0 if provided', async () => {
 			const input = { ...transaction };
 			delete input.maxPriorityFeePerGas;
