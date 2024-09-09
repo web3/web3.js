@@ -35,6 +35,8 @@ export interface EIP6963ProviderDetail<API = Web3APISpec> {
   provider: EIP1193Provider<API>;
 }
 
+export type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>;
+
 export interface EIP6963AnnounceProviderEvent<API = Web3APISpec> extends CustomEvent {
   type: Eip6963EventName.eip6963announceProvider;
   detail: EIP6963ProviderDetail<API>;
@@ -44,15 +46,15 @@ export interface EIP6963RequestProviderEvent extends Event {
   type: Eip6963EventName.eip6963requestProvider;
 }
 
-export const eip6963ProvidersMap: Map<string, EIP6963ProviderDetail> = new Map();
+export const eip6963ProvidersMap: EIP6963ProviderResponse = new Map();
 
 export const web3ProvidersMapUpdated = "web3:providersMapUpdated";
 export interface EIP6963ProvidersMapUpdateEvent extends CustomEvent {
   type: string;
-  detail: Map<string, EIP6963ProviderDetail>;
+  detail: EIP6963ProviderResponse;
 }
 
-export const requestEIP6963Providers = async () => 
+export const requestEIP6963Providers = async (): Promise<EIP6963ProviderResponse> =>
    new Promise((resolve, reject) => {
     if (typeof window === 'undefined') {
       reject(new Error("window object not available, EIP-6963 is intended to be used within a browser"));
