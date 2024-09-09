@@ -17,6 +17,18 @@ import web3Utils from 'web3-utils';
 import * as web3Utils from 'web3-utils';
 ```
 
+## No `BN` property
+
+The `web3-utils` package no longer includes a `BN` property for using the [the `bn.js` package](https://github.com/indutny/bn.js/) for working with (big) numbers. In 4.x, [the native JavaScript `BigInt` type](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) is used.
+
+```ts
+// 1.x
+new Web3.utils.BN(1);
+
+// 4.x
+BigInt(4);
+```
+
 ## Unit conversion functions
 
 The `toWei` does not have an optional second parameter. You have to pass the source unit explicitly.
