@@ -2697,7 +2697,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
 
-
 #### web3
 
 -   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` is now `Promise<EIP6963ProviderResponse>`. (#7239)
