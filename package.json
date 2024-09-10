@@ -30,6 +30,9 @@
 			"tools/*"
 		]
 	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,css,md}": "prettier --write"
+	},
 	"scripts": {
 		"version": "yarn run bootstrap && yarn build",
 		"bootstrap": "lerna bootstrap",
@@ -93,11 +96,10 @@
 		"test:blackbox:infura:ws": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream && yarn post-blackbox",
 		"test:manual:long-connection-ws": "node packages/web3/test/stress/long_ws_tests/nodejs_test/long_connection_ws.js",
 		"test:stress": "yarn test:stress:geth:ws && yarn test:stress:geth:http && yarn test:stress:geth:ipc && yarn test:e2e:stress:geth:ws:chrome",
-		"husky:install": "husky install",
-		"husky:uninstall": "husky uninstall",
 		"postinstall": "yarn build",
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix",
-		"publish:canary": "lerna publish --canary --dist-tag dev --preid dev.$(git rev-parse --short HEAD) --exact --graph-type all --force-publish \"*\" --no-verify-access --yes"
+		"publish:canary": "lerna publish --canary --dist-tag dev --preid dev.$(git rev-parse --short HEAD) --exact --graph-type all --force-publish \"*\" --no-verify-access --yes",
+		"prepare": "husky install"
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.12.0",
@@ -120,6 +122,7 @@
 		"husky": "^8.0.3",
 		"jest": "^29.7.0",
 		"lerna": "^6.6.2",
+		"lint-staged": "^15.2.9",
 		"npm-auth-to-token": "^1.0.0",
 		"prettier": "^2.7.1",
 		"prettier-plugin-solidity": "^1.0.0-beta.20",

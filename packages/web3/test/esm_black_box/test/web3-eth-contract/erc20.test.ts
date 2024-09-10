@@ -25,7 +25,7 @@ import {
 	isWs,
 	getSystemTestProvider,
 	createNewAccount,
-	BACKEND
+	BACKEND,
 } from '../../../shared_fixtures/system_tests_utils';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../../../shared_fixtures/contracts/ERC20Token';
 

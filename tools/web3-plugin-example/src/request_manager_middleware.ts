@@ -42,16 +42,13 @@ export class Web3Middleware<API> implements RequestManagerMiddleware<API> {
 				}
 				return req;
 			});
-		} else if (
-				(reqObj ).method === 'eth_call' &&
-				Array.isArray((reqObj ).params)
-			) {
-				(reqObj ) = {
-					...(reqObj ),
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					params: [...((reqObj ).params ?? []), '0x0', '0x1'],
-				};
-			}
+		} else if (reqObj.method === 'eth_call' && Array.isArray(reqObj.params)) {
+			reqObj = {
+				...reqObj,
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				params: [...(reqObj.params ?? []), '0x0', '0x1'],
+			};
+		}
 
 		return Promise.resolve(reqObj as JsonRpcPayload<ParamType>);
 	}

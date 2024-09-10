@@ -92,16 +92,16 @@ export interface RevertReasonWithCustomError extends RevertReason {
 	customErrorArguments: Record<string, unknown>;
 }
 
-export type TransactionMiddlewareData = Transaction
-| TransactionWithFromLocalWalletIndex
-| TransactionWithToLocalWalletIndex
-| TransactionWithFromAndToLocalWalletIndex;
+export type TransactionMiddlewareData =
+	| Transaction
+	| TransactionWithFromLocalWalletIndex
+	| TransactionWithToLocalWalletIndex
+	| TransactionWithFromAndToLocalWalletIndex;
 
-export interface TransactionMiddleware{
+export interface TransactionMiddleware {
 	// for transaction processing before signing
 	processTransaction(
-		transaction:  TransactionMiddlewareData,
+		transaction: TransactionMiddlewareData,
 		options?: { [key: string]: unknown },
 	): Promise<TransactionMiddlewareData>;
-
 }

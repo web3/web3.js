@@ -206,25 +206,25 @@ export const abiSchemaToJsonSchema = (
 			nestedTuple.$id = abiName;
 			(lastSchema.items as JsonSchema[]).push(nestedTuple);
 		} else if (baseType === 'tuple' && isArray) {
-            const arraySize = arraySizes[0];
-            const item: JsonSchema = {
-                type: 'array',
-                $id: abiName,
-                items: abiSchemaToJsonSchema(abiComponents, abiName),
-                ...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
-            };
+			const arraySize = arraySizes[0];
+			const item: JsonSchema = {
+				type: 'array',
+				$id: abiName,
+				items: abiSchemaToJsonSchema(abiComponents, abiName),
+				...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
+			};
 
-            (lastSchema.items as JsonSchema[]).push(item);
+			(lastSchema.items as JsonSchema[]).push(item);
 		} else if (isArray) {
-		    const arraySize = arraySizes[0];
-            const item: JsonSchema = {
-                type: 'array',
-                $id: abiName,
-                items: convertEthType(abiType),
-                ...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
-            };
+			const arraySize = arraySizes[0];
+			const item: JsonSchema = {
+				type: 'array',
+				$id: abiName,
+				items: convertEthType(abiType),
+				...(arraySize >= 0 && { minItems: arraySize, maxItems: arraySize }),
+			};
 
-            (lastSchema.items as JsonSchema[]).push(item);
+			(lastSchema.items as JsonSchema[]).push(item);
 		} else if (Array.isArray(lastSchema.items)) {
 			// Array of non-tuple items
 			lastSchema.items.push({ $id: abiName, ...convertEthType(abiType) });
@@ -446,17 +446,14 @@ const charCodeMap = {
 	F: 70,
 	a: 97,
 	f: 102,
-  } as const
+} as const;
 
-  function charCodeToBase16(char: number) {
-	if (char >= charCodeMap.zero && char <= charCodeMap.nine)
-	  return char - charCodeMap.zero
-	if (char >= charCodeMap.A && char <= charCodeMap.F)
-	  return char - (charCodeMap.A - 10)
-	if (char >= charCodeMap.a && char <= charCodeMap.f)
-	  return char - (charCodeMap.a - 10)
-	return undefined
-  }
+function charCodeToBase16(char: number) {
+	if (char >= charCodeMap.zero && char <= charCodeMap.nine) return char - charCodeMap.zero;
+	if (char >= charCodeMap.A && char <= charCodeMap.F) return char - (charCodeMap.A - 10);
+	if (char >= charCodeMap.a && char <= charCodeMap.f) return char - (charCodeMap.a - 10);
+	return undefined;
+}
 
 export function hexToUint8Array(hex: string): Uint8Array {
 	let offset = 0;
@@ -468,21 +465,19 @@ export function hexToUint8Array(hex: string): Uint8Array {
 	}
 	const length = (hex.length - offset) / 2;
 	const bytes = new Uint8Array(length);
-	for (let index = 0, j = offset; index < length; index+=1) {
-	  // eslint-disable-next-line no-plusplus
-	  const nibbleLeft = charCodeToBase16(hex.charCodeAt(j++))
-	  // eslint-disable-next-line no-plusplus
-	  const nibbleRight = charCodeToBase16(hex.charCodeAt(j++))
-	  if (nibbleLeft === undefined || nibbleRight === undefined) {
-		throw new InvalidBytesError(
-			`Invalid byte sequence ("${hex[j - 2]}${
-				hex[j - 1]
-			  }" in "${hex}").`,
-		)
-	  }
-	  bytes[index] = nibbleLeft * 16 + nibbleRight
+	for (let index = 0, j = offset; index < length; index += 1) {
+		// eslint-disable-next-line no-plusplus
+		const nibbleLeft = charCodeToBase16(hex.charCodeAt(j++));
+		// eslint-disable-next-line no-plusplus
+		const nibbleRight = charCodeToBase16(hex.charCodeAt(j++));
+		if (nibbleLeft === undefined || nibbleRight === undefined) {
+			throw new InvalidBytesError(
+				`Invalid byte sequence ("${hex[j - 2]}${hex[j - 1]}" in "${hex}").`,
+			);
+		}
+		bytes[index] = nibbleLeft * 16 + nibbleRight;
 	}
-	return bytes
+	return bytes;
 }
 
 // @TODO: Remove this function and its usages once all sub dependencies uses version 1.3.3 or above of @noble/hashes

@@ -117,22 +117,21 @@ describe('contract', () => {
 
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
-			const promievent = contract
-				.deploy(deployOptions)
-				.send(sendOptions);
-			const receiptPromise = new Promise<void>((resolve) => {
-				 // eslint-disable-next-line @typescript-eslint/no-floating-promises
-				 promievent
-					.on('receipt', () => {
-						resolve()
-					})
-			})
-
-			const confirmationPRomise = new Promise<void>((resolve) => {
+			const promievent = contract.deploy(deployOptions).send(sendOptions);
+			const receiptPromise = new Promise<void>(resolve => {
 				// eslint-disable-next-line @typescript-eslint/no-floating-promises
-				promievent
-				.on('confirmation',  () => {confirmationHandler(); resolve();})
-			})
+				promievent.on('receipt', () => {
+					resolve();
+				});
+			});
+
+			const confirmationPRomise = new Promise<void>(resolve => {
+				// eslint-disable-next-line @typescript-eslint/no-floating-promises
+				promievent.on('confirmation', () => {
+					confirmationHandler();
+					resolve();
+				});
+			});
 			await promievent;
 			await receiptPromise;
 

@@ -21,9 +21,9 @@ import { Web3 } from '../../src/web3';
 
 describe('Web3 object', () => {
 	it('should be able to set and read web3 providers', () => {
-		const web3NoProvider = new Web3("");
+		const web3NoProvider = new Web3('');
 		expect(web3NoProvider).toBeTruthy();
-		expect(web3NoProvider.provider).toBe("");
+		expect(web3NoProvider.provider).toBe('');
 
 		const web3 = new Web3('http://somenode');
 		expect(web3).toBeTruthy();
