@@ -38,13 +38,10 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 	}
 
 	public link(parentContext: Web3Context): void {
-
-		if (this.web3Middleware)
-			parentContext.requestManager.setMiddleware(this.web3Middleware);
+		if (this.web3Middleware) parentContext.requestManager.setMiddleware(this.web3Middleware);
 
 		super.link(parentContext);
 	}
-
 
 	public async customRpcMethod() {
 		return this.requestManager.send({
@@ -59,7 +56,6 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 			params: [parameter1, parameter2],
 		});
 	}
-
 }
 
 // Module Augmentation

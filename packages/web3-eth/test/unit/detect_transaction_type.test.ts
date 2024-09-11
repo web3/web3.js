@@ -28,7 +28,6 @@ import {
 	transactionTypeValidationError,
 } from '../fixtures/detect_transaction_type';
 
-
 jest.mock('../../src/rpc_method_wrappers');
 
 describe('detectTransactionType', () => {

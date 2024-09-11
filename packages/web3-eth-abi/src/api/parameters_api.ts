@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * 
+ *
  *  @module ABI
  */
 
@@ -26,7 +26,6 @@ import { decodeParameters as decodeParametersInternal } from '../coders/decode.j
 import { encodeParameters } from '../coders/encode.js';
 
 export { encodeParameters, inferTypesAndEncodeParameters } from '../coders/encode.js';
-
 
 /**
  * Encodes a parameter based on its type to its ABI representation.

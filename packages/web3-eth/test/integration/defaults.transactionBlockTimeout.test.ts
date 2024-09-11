@@ -32,8 +32,7 @@ import {
 	sendFewSampleTxs,
 	getSystemTestBackend,
 	describeIf,
-	BACKEND
-
+	BACKEND,
 } from '../fixtures/system_test_utils';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
@@ -45,9 +44,9 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('defaults', () => {
 	let clientUrl: string | SupportedProviders;
 	let account1: Web3Account;
 	let account2: Web3Account;
-	let transactionBlockTimeout: number; 
-	let transactionSendTimeout: number; 
-	let transactionPollingTimeout: number; 
+	let transactionBlockTimeout: number;
+	let transactionSendTimeout: number;
+	let transactionPollingTimeout: number;
 	let blockHeaderTimeout: number;
 
 	beforeEach(() => {
@@ -62,7 +61,7 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('defaults', () => {
 
 	afterEach(async () => {
 		web3.eth.transactionBlockTimeout = transactionBlockTimeout;
-		web3.eth.transactionSendTimeout = transactionSendTimeout ;
+		web3.eth.transactionSendTimeout = transactionSendTimeout;
 		web3.eth.transactionPollingTimeout = transactionPollingTimeout;
 		web3.eth.blockHeaderTimeout = blockHeaderTimeout;
 		await closeOpenConnection(web3);
@@ -89,7 +88,7 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('defaults', () => {
 		// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 		// eslint-disable-next-line no-void
 		await sendFewSampleTxs(2);
-		
+
 		// Increase other timeouts so only `transactionBlockTimeout` would be reached
 		web3.eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
 		web3.eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
@@ -99,7 +98,6 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('defaults', () => {
 		await expect(sentTx).rejects.toThrow(/was not mined within [0-9]+ blocks/);
 
 		await expect(sentTx).rejects.toThrow(TransactionBlockTimeoutError);
-
 	});
 
 	// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
@@ -139,7 +137,6 @@ describeIf(getSystemTestBackend() !== BACKEND.HARDHAT)('defaults', () => {
 			await expect(sentTx).rejects.toThrow(/was not mined within [0-9]+ blocks/);
 
 			await expect(sentTx).rejects.toThrow(TransactionBlockTimeoutError);
-
 		},
 	);
 });

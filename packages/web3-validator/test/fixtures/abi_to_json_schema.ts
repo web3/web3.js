@@ -746,55 +746,55 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		},
 		json: {
 			fullSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: 'a',
-                        items: [
-                            {
-                              type: 'array',
-                              $id: 'a',
-                              items: {
-                                  format: 'uint',
-                                  required: true,
-                              },
-                              minItems: 2,
-                              maxItems: 2,
-                            }
-                        ],
-                        maxItems: 3,
-                        minItems: 3,
-                    }
-                ],
-                maxItems: 1,
-                minItems: 1,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: 'a',
+						items: [
+							{
+								type: 'array',
+								$id: 'a',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+								minItems: 2,
+								maxItems: 2,
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			shortSchema: {
-                type: 'array',
-                items: [
-                 {
-                     type: 'array',
-                     $id: '/0/0',
-                     items: [
-                         {
-                             type: 'array',
-                             $id: '/0/0',
-                             items: {
-                                 format: 'uint',
-                                 required: true,
-                             },
-                             minItems: 2,
-                             maxItems: 2,
-                         }
-                     ],
-                     maxItems: 3,
-                     minItems: 3,
-                 }
-                ],
-                maxItems: 1,
-                minItems: 1,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: '/0/0',
+						items: [
+							{
+								type: 'array',
+								$id: '/0/0',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+								minItems: 2,
+								maxItems: 2,
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			data: [
 				[
 					[1, 1],
@@ -825,51 +825,51 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		},
 		json: {
 			fullSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: 'a',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: 'a',
-                                items: {
-                                    format: 'uint',
-                                    required: true,
-                                }
-                            }
-                        ],
-                        maxItems: 3,
-                        minItems: 3,
-                    }
-                ],
-                maxItems: 1,
-                minItems: 1,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: 'a',
+						items: [
+							{
+								type: 'array',
+								$id: 'a',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			shortSchema: {
-                type: 'array',
-                items: [
-                 {
-                     type: 'array',
-                     $id: '/0/0',
-                     items: [
-                         {
-                             type: 'array',
-                             $id: '/0/0',
-                             items: {
-                                 format: 'uint',
-                                 required: true,
-                             }
-                         }
-                     ],
-                     maxItems: 3,
-                     minItems: 3,
-                 }
-                ],
-                maxItems: 1,
-                minItems: 1,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: '/0/0',
+						items: [
+							{
+								type: 'array',
+								$id: '/0/0',
+								items: {
+									format: 'uint',
+									required: true,
+								},
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			data: [
 				[
 					[1, 1],
@@ -924,77 +924,77 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		},
 		json: {
 			fullSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: 'a',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: 'a',
-                                items: {
-                                    type: 'array',
-                                    items: [
-                                        {
-                                            $id: 'level',
-                                            format: 'uint',
-                                            required: true,
-                                        },
-                                        {
-                                            $id: 'message',
-                                            format: 'string',
-                                            required: true,
-                                        }
-                                    ],
-                                    maxItems: 2,
-                                    minItems: 2,
-                                }
-                            }
-                        ],
-                        maxItems: 3,
-                        minItems: 3,
-                    }
-                ],
-                maxItems: 1,
-                minItems: 1
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: 'a',
+						items: [
+							{
+								type: 'array',
+								$id: 'a',
+								items: {
+									type: 'array',
+									items: [
+										{
+											$id: 'level',
+											format: 'uint',
+											required: true,
+										},
+										{
+											$id: 'message',
+											format: 'string',
+											required: true,
+										},
+									],
+									maxItems: 2,
+									minItems: 2,
+								},
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			shortSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: '/0/0',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: '/0/0',
-                                items: {
-                                    type: 'array',
-                                    items: [
-                                        {
-                                            $id: '/0/0/0',
-                                            format: 'uint',
-                                            required: true,
-                                        },
-                                        {
-                                            $id: '/0/0/1',
-                                            format: 'string',
-                                            required: true,
-                                        }
-                                    ],
-                                    maxItems: 2,
-                                    minItems: 2,
-                                }
-                            }
-                        ],
-                        maxItems: 3,
-                        minItems: 3,
-                    }
-                ],
-                maxItems: 1,
-                minItems: 1
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: '/0/0',
+						items: [
+							{
+								type: 'array',
+								$id: '/0/0',
+								items: {
+									type: 'array',
+									items: [
+										{
+											$id: '/0/0/0',
+											format: 'uint',
+											required: true,
+										},
+										{
+											$id: '/0/0/1',
+											format: 'string',
+											required: true,
+										},
+									],
+									maxItems: 2,
+									minItems: 2,
+								},
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			data: [
 				[
 					[
@@ -1071,81 +1071,81 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		},
 		json: {
 			fullSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: 'a',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: 'a',
-                                items: {
-                                    type: 'array',
-                                    items: [
-                                        {
-                                            $id: 'level',
-                                            format: 'uint',
-                                            required: true,
-                                        },
-                                        {
-                                            $id: 'message',
-                                            format: 'string',
-                                            required: true,
-                                        }
-                                    ],
-                                    maxItems: 2,
-                                    minItems: 2,
-                                },
-                                minItems: 3,
-                                maxItems: 3,
-                            }
-                        ],
-                        maxItems: 5,
-                        minItems: 5,
-                    }
-                ],
-                maxItems: 1,
-                minItems: 1,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: 'a',
+						items: [
+							{
+								type: 'array',
+								$id: 'a',
+								items: {
+									type: 'array',
+									items: [
+										{
+											$id: 'level',
+											format: 'uint',
+											required: true,
+										},
+										{
+											$id: 'message',
+											format: 'string',
+											required: true,
+										},
+									],
+									maxItems: 2,
+									minItems: 2,
+								},
+								minItems: 3,
+								maxItems: 3,
+							},
+						],
+						maxItems: 5,
+						minItems: 5,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			shortSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: '/0/0',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: '/0/0',
-                                items: {
-                                    type: 'array',
-                                    items: [
-                                        {
-                                            $id: '/0/0/0',
-                                            format: 'uint',
-                                            required: true,
-                                        },
-                                        {
-                                            $id: '/0/0/1',
-                                            format: 'string',
-                                            required: true,
-                                        }
-                                    ],
-                                    maxItems: 2,
-                                    minItems: 2,
-                                },
-                                minItems: 3,
-                                maxItems: 3,
-                            }
-                        ],
-                        maxItems: 5,
-                        minItems: 5,
-                    }
-                ],
-                maxItems: 1,
-                minItems: 1,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: '/0/0',
+						items: [
+							{
+								type: 'array',
+								$id: '/0/0',
+								items: {
+									type: 'array',
+									items: [
+										{
+											$id: '/0/0/0',
+											format: 'uint',
+											required: true,
+										},
+										{
+											$id: '/0/0/1',
+											format: 'string',
+											required: true,
+										},
+									],
+									maxItems: 2,
+									minItems: 2,
+								},
+								minItems: 3,
+								maxItems: 3,
+							},
+						],
+						maxItems: 5,
+						minItems: 5,
+					},
+				],
+				maxItems: 1,
+				minItems: 1,
+			},
 			data: [
 				[
 					[
@@ -1433,186 +1433,186 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 				'bool',
 			],
 			data: [
-                [
-                    [
-                        [
-                            [0, 0],
-                            [1, 1],
-                        ],
-                        [
-                            [2, 2],
-                            [3, 3],
-                        ],
-                    ],
-                    [
-                        [
-                            [0, 0],
-                            [-1, -1],
-                        ],
-                        [
-                            [-2, -2],
-                            [-3, -3],
-                        ],
-                        [
-                            [-4, -4],
-                            [-5, -5],
-                        ],
-                    ],
-                    [
-                        [
-                            [4, 4],
-                            [5, 5],
-                        ],
-                    ]
-                ],
-                123,
-                true,
-            ],
+				[
+					[
+						[
+							[0, 0],
+							[1, 1],
+						],
+						[
+							[2, 2],
+							[3, 3],
+						],
+					],
+					[
+						[
+							[0, 0],
+							[-1, -1],
+						],
+						[
+							[-2, -2],
+							[-3, -3],
+						],
+						[
+							[-4, -4],
+							[-5, -5],
+						],
+					],
+					[
+						[
+							[4, 4],
+							[5, 5],
+						],
+					],
+				],
+				123,
+				true,
+			],
 		},
 		json: {
 			fullSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: 'rects',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: 'rects',
-                                items: {
-                                    type: 'array',
-                                    items: [
-                                        {
-                                            type: 'array',
-                                            items: [
-                                                {
-                                                    $id: 'x',
-                                                    format: 'int256',
-                                                    required: true,
-                                                },
-                                                {
-                                                    $id: 'y',
-                                                    format: 'int256',
-                                                    required: true
-                                                }
-                                            ],
-                                            maxItems: 2,
-                                            minItems: 2,
-                                            $id: 'start',
-                                        },
-                                        {
-                                            type: 'array',
-                                            items: [
-                                                {
-                                                    $id: 'x',
-                                                    format: 'int256',
-                                                    required: true,
-                                                },
-                                                {
-                                                    $id: 'y',
-                                                    format: 'int256',
-                                                    required: true,
-                                                }
-                                            ],
-                                            maxItems: 2,
-                                            minItems: 2,
-                                            $id: 'end',
-                                        }
-                                    ],
-                                    maxItems: 2,
-                                    minItems: 2,
-                                }
-                            }
-                        ],
-                        maxItems: 3,
-                        minItems: 3,
-                    },
-                    {
-                        $id: 'numberValue',
-                        format: 'uint256',
-                        required: true,
-                    },
-                    {
-                        $id: 'boolValue',
-                        format: 'bool',
-                        required: true,
-                    }
-                ],
-                maxItems: 3,
-                minItems: 3,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: 'rects',
+						items: [
+							{
+								type: 'array',
+								$id: 'rects',
+								items: {
+									type: 'array',
+									items: [
+										{
+											type: 'array',
+											items: [
+												{
+													$id: 'x',
+													format: 'int256',
+													required: true,
+												},
+												{
+													$id: 'y',
+													format: 'int256',
+													required: true,
+												},
+											],
+											maxItems: 2,
+											minItems: 2,
+											$id: 'start',
+										},
+										{
+											type: 'array',
+											items: [
+												{
+													$id: 'x',
+													format: 'int256',
+													required: true,
+												},
+												{
+													$id: 'y',
+													format: 'int256',
+													required: true,
+												},
+											],
+											maxItems: 2,
+											minItems: 2,
+											$id: 'end',
+										},
+									],
+									maxItems: 2,
+									minItems: 2,
+								},
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+					{
+						$id: 'numberValue',
+						format: 'uint256',
+						required: true,
+					},
+					{
+						$id: 'boolValue',
+						format: 'bool',
+						required: true,
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
+			},
 			shortSchema: {
 				type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: '/0/0',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: '/0/0',
-                                items: {
-                                    type: 'array',
-                                    items: [
-                                        {
-                                            type: 'array',
-                                            items: [
-                                                {
-                                                    $id: '/0/0/0/0',
-                                                    format: 'int256',
-                                                    required: true,
-                                                },
-                                                {
-                                                    $id: '/0/0/0/1',
-                                                    format: 'int256',
-                                                    required: true,
-                                                }
-                                            ],
-                                            maxItems: 2,
-                                            minItems: 2,
-                                            $id: '/0/0/0',
-                                        },
-                                        {
-                                            type: 'array',
-                                            items: [
-                                                {
-                                                    $id: '/0/0/1/0',
-                                                    format: 'int256',
-                                                    required: true,
-                                                },
-                                                {
-                                                    $id: '/0/0/1/1',
-                                                    format: 'int256',
-                                                    required: true,
-                                                }
-                                            ],
-                                            maxItems: 2,
-                                            minItems: 2,
-                                            $id: '/0/0/1',
-                                        }
-                                    ],
-                                    maxItems: 2,
-                                    minItems: 2,
-                                }
-                            }
-                        ],
-                        maxItems: 3,
-                        minItems: 3,
-                    },
-                    {
-                        $id: '/0/1',
-                        format: 'uint256',
-                        required: true,
-                    },
-                    {
-                        $id: '/0/2',
-                        format: 'bool',
-                        required: true,
-                    }
-                ],
-                maxItems: 3,
-                minItems: 3,
+				items: [
+					{
+						type: 'array',
+						$id: '/0/0',
+						items: [
+							{
+								type: 'array',
+								$id: '/0/0',
+								items: {
+									type: 'array',
+									items: [
+										{
+											type: 'array',
+											items: [
+												{
+													$id: '/0/0/0/0',
+													format: 'int256',
+													required: true,
+												},
+												{
+													$id: '/0/0/0/1',
+													format: 'int256',
+													required: true,
+												},
+											],
+											maxItems: 2,
+											minItems: 2,
+											$id: '/0/0/0',
+										},
+										{
+											type: 'array',
+											items: [
+												{
+													$id: '/0/0/1/0',
+													format: 'int256',
+													required: true,
+												},
+												{
+													$id: '/0/0/1/1',
+													format: 'int256',
+													required: true,
+												},
+											],
+											maxItems: 2,
+											minItems: 2,
+											$id: '/0/0/1',
+										},
+									],
+									maxItems: 2,
+									minItems: 2,
+								},
+							},
+						],
+						maxItems: 3,
+						minItems: 3,
+					},
+					{
+						$id: '/0/1',
+						format: 'uint256',
+						required: true,
+					},
+					{
+						$id: '/0/2',
+						format: 'bool',
+						required: true,
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
 			},
 			data: [
 				[
@@ -1685,50 +1685,50 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 		},
 		json: {
 			fullSchema: {
-                type: 'array',
-                items: [
-                    {
-                        type: 'array',
-                        $id: 'x1',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: 'x1',
-                                items: {
-                                    format: 'uint256',
-                                    required: true,
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        type: 'array',
-                        $id: 'x2',
-                        items: [
-                            {
-                                type: 'array',
-                                $id: 'x2',
-                                items: {
-                                    format: 'uint256',
-                                    required: true,
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        $id: 'x3',
-                        format: 'uint256',
-                        required: true,
-                    }
-                ],
-                maxItems: 3,
-                minItems: 3,
-            },
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: 'x1',
+						items: [
+							{
+								type: 'array',
+								$id: 'x1',
+								items: {
+									format: 'uint256',
+									required: true,
+								},
+							},
+						],
+					},
+					{
+						type: 'array',
+						$id: 'x2',
+						items: [
+							{
+								type: 'array',
+								$id: 'x2',
+								items: {
+									format: 'uint256',
+									required: true,
+								},
+							},
+						],
+					},
+					{
+						$id: 'x3',
+						format: 'uint256',
+						required: true,
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
+			},
 			shortSchema: {
 				type: 'array',
 				items: [
 					{
-                        $id: '/0/0',
+						$id: '/0/0',
 						type: 'array',
 						items: [
 							{
@@ -1742,7 +1742,7 @@ const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 						],
 					},
 					{
-                        $id: '/0/1',
+						$id: '/0/1',
 						type: 'array',
 						items: [
 							{

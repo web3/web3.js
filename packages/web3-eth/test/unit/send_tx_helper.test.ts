@@ -21,7 +21,7 @@ import {
 	JsonRpcResponse,
 	TransactionReceipt,
 	Web3BaseWalletAccount,
-	TransactionCall
+	TransactionCall,
 } from 'web3-types';
 import { Web3Context, Web3EventMap, Web3PromiEvent } from 'web3-core';
 import {
@@ -163,16 +163,15 @@ describe('sendTxHelper class', () => {
 			returnFormat: DEFAULT_RETURN_FORMAT,
 		});
 
-		const tx = {from:"0x"} as TransactionCall
+		const tx = { from: '0x' } as TransactionCall;
 
-        await _sendTxHelper.checkRevertBeforeSending(tx);
+		await _sendTxHelper.checkRevertBeforeSending(tx);
 
-        const expectedTx = {
-            ...tx,
-            gas: 21000,
-        };
+		const expectedTx = {
+			...tx,
+			gas: 21000,
+		};
 		expect(utils.getRevertReason).toHaveBeenCalledWith(web3Context, expectedTx, undefined);
-
 	});
 	it('emit handleError with handleRevert', async () => {
 		const error = new ContractExecutionError({ code: 1, message: 'error' });
