@@ -299,7 +299,7 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 		}
 		return result;
 	}
-
+	
 	return res;
 }
 
@@ -511,22 +511,18 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 	);
 	let response;
 	try {
-		response = await ethRpcMethods.getTransactionReceipt(
+		 response = await ethRpcMethods.getTransactionReceipt(
 			web3Context.requestManager,
 			transactionHashFormatted,
 		);
 	} catch (error) {
 		// geth indexing error, we poll until transactions stopped indexing
-		if (
-			typeof error === 'object' &&
-			!isNullish(error) &&
-			'message' in error &&
-			(error as { message: string }).message === 'transaction indexing is in progress'
-		) {
-			console.warn('Transaction indexing is in progress.');
+		if (typeof error === 'object' && !isNullish(error) && 'message' in error && (error as { message: string }).message === 'transaction indexing is in progress') { 
+			console.warn('Transaction indexing is in progress.')
 		} else {
 			throw error;
 		}
+
 	}
 	return isNullish(response)
 		? response
@@ -593,7 +589,7 @@ export function sendTransaction<
 					});
 
 					let transaction = {...transactionObj};
-
+					
 					if(!isNullish(transactionMiddleware)){
 						transaction = await transactionMiddleware.processTransaction(transaction);
 					}

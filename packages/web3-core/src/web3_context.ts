@@ -138,7 +138,7 @@ export class Web3Context<
 			registeredSubscriptions,
 			accountProvider,
 			wallet,
-			requestManagerMiddleware,
+			requestManagerMiddleware
 		} = providerOrContext as Web3ContextInitOptions<API, RegisteredSubs>;
 
 		this.setConfig(config ?? {});
@@ -232,7 +232,7 @@ export class Web3Context<
 
 		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
 		this[ContextRef.name] = newContextChild;
-
+		
 		return newContextChild;
 	}
 
@@ -372,10 +372,10 @@ export class Web3Context<
 		return true;
 	}
 
-	public setRequestManagerMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>) {
+	public setRequestManagerMiddleware(requestManagerMiddleware: RequestManagerMiddleware<API>){
 		this.requestManager.setMiddleware(requestManagerMiddleware);
 	}
-
+	
 	/**
 	 * Will return the {@link Web3BatchRequest} constructor.
 	 */
