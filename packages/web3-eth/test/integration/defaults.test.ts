@@ -41,7 +41,7 @@ import {
 	getSystemTestProvider,
 	isIpc,
 	sendFewSampleTxs,
-	waitForCondition
+	waitForCondition,
 } from '../fixtures/system_test_utils';
 
 import {
@@ -78,83 +78,72 @@ describe('defaults', () => {
 		await closeOpenConnection(web3Eth);
 		await closeOpenConnection(contract);
 	});
-		it('defaultAccount', async () => {
-			const tempAcc2 = await createTempAccount();
-			const tempAcc3 = await createTempAccount();
-			const contractMsgFrom = await new Contract(
-				MsgSenderAbi,
-				web3Eth.getContextObject() as any,
-			)
-				.deploy({
-					data: MsgSenderBytecode,
-					arguments: ['test'],
-				})
-				.send({ from: tempAcc2.address, gas: '2700000' });
-			// default
-			expect(web3Eth.defaultAccount).toBeUndefined();
+	it('defaultAccount', async () => {
+		const tempAcc2 = await createTempAccount();
+		const tempAcc3 = await createTempAccount();
+		const contractMsgFrom = await new Contract(MsgSenderAbi, web3Eth.getContextObject() as any)
+			.deploy({
+				data: MsgSenderBytecode,
+				arguments: ['test'],
+			})
+			.send({ from: tempAcc2.address, gas: '2700000' });
+		// default
+		expect(web3Eth.defaultAccount).toBeUndefined();
 
-			// after set
-			web3Eth.setConfig({
-				defaultAccount: tempAcc.address,
-			});
-			expect(web3Eth.defaultAccount).toBe(tempAcc.address);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					defaultAccount: tempAcc3.address,
-				},
-			});
-			expect(eth2.defaultAccount).toBe(tempAcc3.address);
-
-			// check utils
-			expect(getTransactionFromOrToAttr('from', eth2)).toBe(tempAcc3.address);
-			// TODO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
-			//  set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
-			contractMsgFrom.setConfig({
-				defaultAccount: tempAcc.address,
-			});
-
-			const tx = await contractMsgFrom.methods
-				.setTestString('test2')
-				.send({ gas: '1000000' });
-			const txSend = await web3Eth.sendTransaction({
-				to: tempAcc2.address,
-				value: '0x1',
-			});
-			expect(tx.from).toBe(tempAcc.address.toLowerCase());
-			expect(txSend.from).toBe(tempAcc.address.toLowerCase());
-
-			const tx2 = await contractMsgFrom.methods.setTestString('test3').send({
-				from: tempAcc2.address,
-			});
-			const tx2Send = await web3Eth.sendTransaction({
-				to: tempAcc.address,
-				value: '0x1',
-				from: tempAcc2.address,
-			});
-			expect(tx2.from).toBe(tempAcc2.address.toLowerCase());
-			expect(tx2Send.from).toBe(tempAcc2.address.toLowerCase());
-
-			const fromDefault = await contractMsgFrom.methods?.from().call();
-			const fromPass = await contractMsgFrom.methods?.from().call({ from: tempAcc.address });
-			const fromPass2 = await contractMsgFrom.methods
-				?.from()
-				.call({ from: tempAcc2.address });
-			expect((fromDefault as unknown as string).toLowerCase()).toBe(
-				tempAcc.address.toLowerCase(),
-			);
-			expect((fromPass as unknown as string).toLowerCase()).toBe(
-				tempAcc.address.toLowerCase(),
-			);
-			expect((fromPass2 as unknown as string).toLowerCase()).toBe(
-				tempAcc2.address.toLowerCase(),
-			);
-			await closeOpenConnection(eth2);
-			await closeOpenConnection(contractMsgFrom);
+		// after set
+		web3Eth.setConfig({
+			defaultAccount: tempAcc.address,
 		});
-		it('handleRevert', () => {
-			/*
+		expect(web3Eth.defaultAccount).toBe(tempAcc.address);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
+				defaultAccount: tempAcc3.address,
+			},
+		});
+		expect(eth2.defaultAccount).toBe(tempAcc3.address);
+
+		// check utils
+		expect(getTransactionFromOrToAttr('from', eth2)).toBe(tempAcc3.address);
+		// TODO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
+		//  set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
+		contractMsgFrom.setConfig({
+			defaultAccount: tempAcc.address,
+		});
+
+		const tx = await contractMsgFrom.methods.setTestString('test2').send({ gas: '1000000' });
+		const txSend = await web3Eth.sendTransaction({
+			to: tempAcc2.address,
+			value: '0x1',
+		});
+		expect(tx.from).toBe(tempAcc.address.toLowerCase());
+		expect(txSend.from).toBe(tempAcc.address.toLowerCase());
+
+		const tx2 = await contractMsgFrom.methods.setTestString('test3').send({
+			from: tempAcc2.address,
+		});
+		const tx2Send = await web3Eth.sendTransaction({
+			to: tempAcc.address,
+			value: '0x1',
+			from: tempAcc2.address,
+		});
+		expect(tx2.from).toBe(tempAcc2.address.toLowerCase());
+		expect(tx2Send.from).toBe(tempAcc2.address.toLowerCase());
+
+		const fromDefault = await contractMsgFrom.methods?.from().call();
+		const fromPass = await contractMsgFrom.methods?.from().call({ from: tempAcc.address });
+		const fromPass2 = await contractMsgFrom.methods?.from().call({ from: tempAcc2.address });
+		expect((fromDefault as unknown as string).toLowerCase()).toBe(
+			tempAcc.address.toLowerCase(),
+		);
+		expect((fromPass as unknown as string).toLowerCase()).toBe(tempAcc.address.toLowerCase());
+		expect((fromPass2 as unknown as string).toLowerCase()).toBe(tempAcc2.address.toLowerCase());
+		await closeOpenConnection(eth2);
+		await closeOpenConnection(contractMsgFrom);
+	});
+	it('handleRevert', () => {
+		/*
             //TO DO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
             /* set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
 
@@ -164,907 +153,908 @@ describe('defaults', () => {
             contract.methods.myMethod(…).call(…)
 
             */
-			// default
-			expect(web3Eth.handleRevert).toBe(false);
+		// default
+		expect(web3Eth.handleRevert).toBe(false);
 
-			// after set
-			web3Eth.setConfig({
+		// after set
+		web3Eth.setConfig({
+			handleRevert: true,
+		});
+		expect(web3Eth.handleRevert).toBe(true);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
 				handleRevert: true,
-			});
-			expect(web3Eth.handleRevert).toBe(true);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					handleRevert: true,
-				},
-			});
-			expect(eth2.handleRevert).toBe(true);
+			},
 		});
-		it('defaultBlock', async () => {
-			const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
-			// default
-			expect(web3Eth.defaultBlock).toBe('latest');
+		expect(eth2.handleRevert).toBe(true);
+	});
+	it('defaultBlock', async () => {
+		const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+		// default
+		expect(web3Eth.defaultBlock).toBe('latest');
 
-			web3Eth.setConfig({
-				defaultBlock: 'safe',
-			});
-			expect(web3Eth.defaultBlock).toBe('safe');
+		web3Eth.setConfig({
+			defaultBlock: 'safe',
+		});
+		expect(web3Eth.defaultBlock).toBe('safe');
 
-			web3Eth.setConfig({
-				defaultBlock: 'finalized',
-			});
-			expect(web3Eth.defaultBlock).toBe('finalized');
+		web3Eth.setConfig({
+			defaultBlock: 'finalized',
+		});
+		expect(web3Eth.defaultBlock).toBe('finalized');
 
-			// after set
-			web3Eth.setConfig({
+		// after set
+		web3Eth.setConfig({
+			defaultBlock: 'earliest',
+		});
+		expect(web3Eth.defaultBlock).toBe('earliest');
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			provider: web3Eth.provider,
+			config: {
 				defaultBlock: 'earliest',
-			});
-			expect(web3Eth.defaultBlock).toBe('earliest');
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				provider: web3Eth.provider,
-				config: {
-					defaultBlock: 'earliest',
-				},
-			});
-			expect(eth2.defaultBlock).toBe('earliest');
-
-			// check implementation
-			const acc = await createNewAccount({ refill: true, unlock: true });
-
-			await sendFewTxes({
-				from: acc.address,
-				times: 1,
-				value: '0x1',
-			});
-			const balance = await eth2.getBalance(acc.address);
-			const code = await eth2.getCode(contractDeployed?.options?.address as string);
-			const storage = await eth2.getStorageAt(
-				contractDeployed?.options?.address as string,
-				0,
-			);
-			const transactionCount = await eth2.getTransactionCount(acc.address);
-			expect(storage === '0x' ? 0 : Number(hexToNumber(storage))).toBe(0);
-			expect(code).toBe('0x');
-			expect(balance).toBe(BigInt(0));
-			expect(transactionCount).toBe(BigInt(0));
-
-			// pass blockNumber to rewrite defaultBlockNumber
-			const balanceWithBlockNumber = await eth2.getBalance(acc.address, 'latest');
-			const transactionCountWithBlockNumber = await eth2.getTransactionCount(
-				acc.address,
-				'latest',
-			);
-			const codeWithBlockNumber = await eth2.getCode(
-				contractDeployed?.options?.address as string,
-				'latest',
-			);
-			const storageWithBlockNumber = await eth2.getStorageAt(
-				contractDeployed?.options?.address as string,
-				0,
-				'latest',
-			);
-			expect(Number(hexToNumber(storageWithBlockNumber))).toBe(10);
-			expect(transactionCountWithBlockNumber).toBe(BigInt(1));
-			expect(Number(balanceWithBlockNumber)).toBeGreaterThan(0);
-			expect(codeWithBlockNumber.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
-
-			// set new default block to config
-			eth2.setConfig({
-				defaultBlock: 'latest',
-			});
-			const balanceLatest = await eth2.getBalance(acc.address);
-			const codeLatest = await eth2.getCode(contractDeployed?.options?.address as string);
-			const storageLatest = await eth2.getStorageAt(
-				contractDeployed?.options?.address as string,
-				0,
-			);
-			const transactionCountLatest = await eth2.getTransactionCount(acc.address);
-			expect(codeLatest.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
-			expect(Number(hexToNumber(storageLatest))).toBe(10);
-			expect(transactionCountLatest).toBe(BigInt(1));
-			expect(Number(balanceLatest)).toBeGreaterThan(0);
-			await closeOpenConnection(eth2);
-			await closeOpenConnection(contractDeployed);
+			},
 		});
-		it('transactionSendTimeout', async () => {
-			// default
-			expect(web3Eth.transactionSendTimeout).toBe(750 * 1000);
+		expect(eth2.defaultBlock).toBe('earliest');
 
-			// after set
-			web3Eth.setConfig({
-				transactionSendTimeout: 1,
-			});
-			expect(web3Eth.transactionSendTimeout).toBe(1);
+		// check implementation
+		const acc = await createNewAccount({ refill: true, unlock: true });
 
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				provider: web3Eth.provider,
-				config: {
-					transactionSendTimeout: 120,
-				},
-			});
-			expect(eth2.transactionSendTimeout).toBe(120);
-			await closeOpenConnection(eth2);
+		await sendFewTxes({
+			from: acc.address,
+			times: 1,
+			value: '0x1',
 		});
-		it('transactionBlockTimeout', () => {
-			// default
-			expect(web3Eth.transactionBlockTimeout).toBe(50);
+		const balance = await eth2.getBalance(acc.address);
+		const code = await eth2.getCode(contractDeployed?.options?.address as string);
+		const storage = await eth2.getStorageAt(contractDeployed?.options?.address as string, 0);
+		const transactionCount = await eth2.getTransactionCount(acc.address);
+		expect(storage === '0x' ? 0 : Number(hexToNumber(storage))).toBe(0);
+		expect(code).toBe('0x');
+		expect(balance).toBe(BigInt(0));
+		expect(transactionCount).toBe(BigInt(0));
 
-			// after set
-			web3Eth.setConfig({
-				transactionBlockTimeout: 1,
-			});
-			expect(web3Eth.transactionBlockTimeout).toBe(1);
+		// pass blockNumber to rewrite defaultBlockNumber
+		const balanceWithBlockNumber = await eth2.getBalance(acc.address, 'latest');
+		const transactionCountWithBlockNumber = await eth2.getTransactionCount(
+			acc.address,
+			'latest',
+		);
+		const codeWithBlockNumber = await eth2.getCode(
+			contractDeployed?.options?.address as string,
+			'latest',
+		);
+		const storageWithBlockNumber = await eth2.getStorageAt(
+			contractDeployed?.options?.address as string,
+			0,
+			'latest',
+		);
+		expect(Number(hexToNumber(storageWithBlockNumber))).toBe(10);
+		expect(transactionCountWithBlockNumber).toBe(BigInt(1));
+		expect(Number(balanceWithBlockNumber)).toBeGreaterThan(0);
+		expect(codeWithBlockNumber.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
 
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					transactionBlockTimeout: 120,
-				},
-			});
-			expect(eth2.transactionBlockTimeout).toBe(120);
+		// set new default block to config
+		eth2.setConfig({
+			defaultBlock: 'latest',
 		});
-		it('transactionConfirmationBlocks default change should work', async () => {
-			// default
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(web3Eth.transactionConfirmationBlocks).toBe(24);
+		const balanceLatest = await eth2.getBalance(acc.address);
+		const codeLatest = await eth2.getCode(contractDeployed?.options?.address as string);
+		const storageLatest = await eth2.getStorageAt(
+			contractDeployed?.options?.address as string,
+			0,
+		);
+		const transactionCountLatest = await eth2.getTransactionCount(acc.address);
+		expect(codeLatest.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
+		expect(Number(hexToNumber(storageLatest))).toBe(10);
+		expect(transactionCountLatest).toBe(BigInt(1));
+		expect(Number(balanceLatest)).toBeGreaterThan(0);
+		await closeOpenConnection(eth2);
+		await closeOpenConnection(contractDeployed);
+	});
+	it('transactionSendTimeout', async () => {
+		// default
+		expect(web3Eth.transactionSendTimeout).toBe(750 * 1000);
 
-			// after set
-			web3Eth.setConfig({
-				transactionConfirmationBlocks: 3,
-			});
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(web3Eth.transactionConfirmationBlocks).toBe(3);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					transactionConfirmationBlocks: 4,
-				},
-			});
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(eth2.transactionConfirmationBlocks).toBe(4);
-
+		// after set
+		web3Eth.setConfig({
+			transactionSendTimeout: 1,
 		});
+		expect(web3Eth.transactionSendTimeout).toBe(1);
 
-		it('transactionConfirmationBlocks implementation', async () => {
-			const tempAcc2 = await createTempAccount();
-			const waitConfirmations = 1;
-			const eth = new Web3Eth(getSystemTestProvider());
-			eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
-		
-			const from = tempAcc.address;
-			const to = tempAcc2.address;
-			const value = `0x1`;
-			
-			let confirmationCount = 0;
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			provider: web3Eth.provider,
+			config: {
+				transactionSendTimeout: 120,
+			},
+		});
+		expect(eth2.transactionSendTimeout).toBe(120);
+		await closeOpenConnection(eth2);
+	});
+	it('transactionBlockTimeout', () => {
+		// default
+		expect(web3Eth.transactionBlockTimeout).toBe(50);
 
-			const sentTx: Web3PromiEvent<
-				TransactionReceipt,
-				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> = eth.sendTransaction({
+		// after set
+		web3Eth.setConfig({
+			transactionBlockTimeout: 1,
+		});
+		expect(web3Eth.transactionBlockTimeout).toBe(1);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
+				transactionBlockTimeout: 120,
+			},
+		});
+		expect(eth2.transactionBlockTimeout).toBe(120);
+	});
+	it('transactionConfirmationBlocks default change should work', async () => {
+		// default
+		// eslint-disable-next-line jest/no-standalone-expect
+		expect(web3Eth.transactionConfirmationBlocks).toBe(24);
+
+		// after set
+		web3Eth.setConfig({
+			transactionConfirmationBlocks: 3,
+		});
+		// eslint-disable-next-line jest/no-standalone-expect
+		expect(web3Eth.transactionConfirmationBlocks).toBe(3);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
+				transactionConfirmationBlocks: 4,
+			},
+		});
+		// eslint-disable-next-line jest/no-standalone-expect
+		expect(eth2.transactionConfirmationBlocks).toBe(4);
+	});
+
+	it('transactionConfirmationBlocks implementation', async () => {
+		const tempAcc2 = await createTempAccount();
+		const waitConfirmations = 1;
+		const eth = new Web3Eth(getSystemTestProvider());
+		eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
+
+		const from = tempAcc.address;
+		const to = tempAcc2.address;
+		const value = `0x1`;
+
+		let confirmationCount = 0;
+
+		const sentTx: Web3PromiEvent<
+			TransactionReceipt,
+			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+		> = eth
+			.sendTransaction({
 				to,
 				value,
 				from,
-			}).on('confirmation', (_data) => {
+			})
+			.on('confirmation', _data => {
 				confirmationCount += 1;
 				if (confirmationCount >= waitConfirmations) {
-					sentTx.removeAllListeners();  // Clean up listeners
+					sentTx.removeAllListeners(); // Clean up listeners
 				}
 			});
 
-			const receipt = await sentTx;
-			expect(Number(receipt.status)).toBe(1);
+		const receipt = await sentTx;
+		expect(Number(receipt.status)).toBe(1);
 
-			// Optionally send a few sample transactions
-			await sendFewSampleTxs(isIpc ? 5 * waitConfirmations : 2 * waitConfirmations);
-		
-			expect(confirmationCount).toBe(waitConfirmations);
+		// Optionally send a few sample transactions
+		await sendFewSampleTxs(isIpc ? 5 * waitConfirmations : 2 * waitConfirmations);
 
-			await waitForCondition( 
-				() => confirmationCount >= waitConfirmations, 
-				async () => { await closeOpenConnection(eth)},
-				10,
-				5000);
+		expect(confirmationCount).toBe(waitConfirmations);
+
+		await waitForCondition(
+			() => confirmationCount >= waitConfirmations,
+			async () => {
+				await closeOpenConnection(eth);
+			},
+			10,
+			5000,
+		);
+	});
+
+	it('transactionPollingInterval and transactionPollingTimeout', async () => {
+		// default
+		expect(web3Eth.transactionPollingInterval).toBe(1000);
+		expect(web3Eth.transactionPollingTimeout).toBe(750 * 1000);
+
+		// after set
+		web3Eth.setConfig({
+			transactionPollingInterval: 3,
+			transactionPollingTimeout: 10,
 		});
+		expect(web3Eth.transactionPollingInterval).toBe(3);
+		expect(web3Eth.transactionPollingTimeout).toBe(10);
 
-		it('transactionPollingInterval and transactionPollingTimeout', async () => {
-			// default
-			expect(web3Eth.transactionPollingInterval).toBe(1000);
-			expect(web3Eth.transactionPollingTimeout).toBe(750 * 1000);
-
-			// after set
-			web3Eth.setConfig({
-				transactionPollingInterval: 3,
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
+				transactionPollingInterval: 400,
 				transactionPollingTimeout: 10,
-			});
-			expect(web3Eth.transactionPollingInterval).toBe(3);
-			expect(web3Eth.transactionPollingTimeout).toBe(10);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					transactionPollingInterval: 400,
-					transactionPollingTimeout: 10,
-				},
-			});
-			expect(eth2.transactionPollingInterval).toBe(400);
-			expect(eth2.transactionPollingTimeout).toBe(10);
+			},
 		});
-		// todo will work with not instance mining
-		// itIf(isHttp)('transactionReceiptPollingInterval and transactionConfirmationPollingInterval implementation', async () => {
-		//     eth2 = new Web3Eth({
-		//         provider: web3Eth.provider,
-		//         config: {
-		//             transactionPollingInterval: 400,
-		//             transactionPollingTimeout: 10,
-		//         },
-		//     });
-		//
-		//     const sentTx: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
-		//         to: tempAcc2.address,
-		//         value: '0x1',
-		//         from: tempAcc.address,
-		//     });
-		//
-		//     const res = await Promise.race([
-		//         new Promise((resolve) => setTimeout(resolve, 410)),
-		//         new Promise((resolve: Resolve) => {
-		//             sentTx.on('receipt', (params: TransactionReceipt) => {
-		//                 expect(params.status).toBe(BigInt(1));
-		//                 resolve(params);
-		//             });
-		//         }),
-		//     ]);
-		//     expect((res as TransactionReceipt).status).toBe(BigInt(1));
-		//
-		//     const sentTx2: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
-		//         to: tempAcc2.address,
-		//         value: '0x1',
-		//         from: tempAcc.address,
-		//     });
-		//     const res2 = await Promise.race([
-		//         new Promise((resolve) => setTimeout(()=>resolve(false), 300)),
-		//         new Promise((resolve: Resolve) => {
-		//             sentTx2.on('receipt', (params: TransactionReceipt) => {
-		//                 expect(params.status).toBe(BigInt(1));
-		//                 resolve(params);
-		//             });
-		//         }),
-		//     ]);
-		//     expect((res2 as boolean)).toBe(false);
-		//
-		//
-		// });
-		it('transactionReceiptPollingInterval and transactionConfirmationPollingInterval', () => {
-			// default
-			expect(web3Eth.transactionReceiptPollingInterval).toBeUndefined();
-			expect(web3Eth.transactionConfirmationPollingInterval).toBeUndefined();
+		expect(eth2.transactionPollingInterval).toBe(400);
+		expect(eth2.transactionPollingTimeout).toBe(10);
+	});
+	// todo will work with not instance mining
+	// itIf(isHttp)('transactionReceiptPollingInterval and transactionConfirmationPollingInterval implementation', async () => {
+	//     eth2 = new Web3Eth({
+	//         provider: web3Eth.provider,
+	//         config: {
+	//             transactionPollingInterval: 400,
+	//             transactionPollingTimeout: 10,
+	//         },
+	//     });
+	//
+	//     const sentTx: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
+	//         to: tempAcc2.address,
+	//         value: '0x1',
+	//         from: tempAcc.address,
+	//     });
+	//
+	//     const res = await Promise.race([
+	//         new Promise((resolve) => setTimeout(resolve, 410)),
+	//         new Promise((resolve: Resolve) => {
+	//             sentTx.on('receipt', (params: TransactionReceipt) => {
+	//                 expect(params.status).toBe(BigInt(1));
+	//                 resolve(params);
+	//             });
+	//         }),
+	//     ]);
+	//     expect((res as TransactionReceipt).status).toBe(BigInt(1));
+	//
+	//     const sentTx2: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
+	//         to: tempAcc2.address,
+	//         value: '0x1',
+	//         from: tempAcc.address,
+	//     });
+	//     const res2 = await Promise.race([
+	//         new Promise((resolve) => setTimeout(()=>resolve(false), 300)),
+	//         new Promise((resolve: Resolve) => {
+	//             sentTx2.on('receipt', (params: TransactionReceipt) => {
+	//                 expect(params.status).toBe(BigInt(1));
+	//                 resolve(params);
+	//             });
+	//         }),
+	//     ]);
+	//     expect((res2 as boolean)).toBe(false);
+	//
+	//
+	// });
+	it('transactionReceiptPollingInterval and transactionConfirmationPollingInterval', () => {
+		// default
+		expect(web3Eth.transactionReceiptPollingInterval).toBeUndefined();
+		expect(web3Eth.transactionConfirmationPollingInterval).toBeUndefined();
 
-			// after set
-			web3Eth.setConfig({
-				transactionReceiptPollingInterval: 3,
+		// after set
+		web3Eth.setConfig({
+			transactionReceiptPollingInterval: 3,
+			transactionConfirmationPollingInterval: 10,
+		});
+		expect(web3Eth.transactionReceiptPollingInterval).toBe(3);
+		expect(web3Eth.transactionConfirmationPollingInterval).toBe(10);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
+				transactionReceiptPollingInterval: 400,
 				transactionConfirmationPollingInterval: 10,
-			});
-			expect(web3Eth.transactionReceiptPollingInterval).toBe(3);
-			expect(web3Eth.transactionConfirmationPollingInterval).toBe(10);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					transactionReceiptPollingInterval: 400,
-					transactionConfirmationPollingInterval: 10,
-				},
-			});
-			expect(eth2.transactionReceiptPollingInterval).toBe(400);
-			expect(eth2.transactionConfirmationPollingInterval).toBe(10);
+			},
 		});
-		it('blockHeaderTimeout', () => {
-			// default
-			expect(web3Eth.blockHeaderTimeout).toBe(10);
+		expect(eth2.transactionReceiptPollingInterval).toBe(400);
+		expect(eth2.transactionConfirmationPollingInterval).toBe(10);
+	});
+	it('blockHeaderTimeout', () => {
+		// default
+		expect(web3Eth.blockHeaderTimeout).toBe(10);
 
-			// after set
-			web3Eth.setConfig({
-				blockHeaderTimeout: 3,
-			});
-			expect(web3Eth.blockHeaderTimeout).toBe(3);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					blockHeaderTimeout: 4,
-				},
-			});
-			expect(eth2.blockHeaderTimeout).toBe(4);
+		// after set
+		web3Eth.setConfig({
+			blockHeaderTimeout: 3,
 		});
+		expect(web3Eth.blockHeaderTimeout).toBe(3);
 
-		it('enableExperimentalFeatures useSubscriptionWhenCheckingBlockTimeout', () => {
-			// default
-			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
-				false,
-			);
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
+				blockHeaderTimeout: 4,
+			},
+		});
+		expect(eth2.blockHeaderTimeout).toBe(4);
+	});
 
-			// after set
-			web3Eth.setConfig({
+	it('enableExperimentalFeatures useSubscriptionWhenCheckingBlockTimeout', () => {
+		// default
+		expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
+			false,
+		);
+
+		// after set
+		web3Eth.setConfig({
+			enableExperimentalFeatures: {
+				useSubscriptionWhenCheckingBlockTimeout: true,
+				useRpcCallSpecification: false,
+			},
+		});
+		expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
+			true,
+		);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
 				enableExperimentalFeatures: {
 					useSubscriptionWhenCheckingBlockTimeout: true,
 					useRpcCallSpecification: false,
 				},
-			});
-			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
-				true,
-			);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					enableExperimentalFeatures: {
-						useSubscriptionWhenCheckingBlockTimeout: true,
-						useRpcCallSpecification: false,
-					},
-				},
-			});
-			expect(eth2.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
-				true,
-			);
+			},
 		});
+		expect(eth2.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(true);
+	});
 
-		it('enableExperimentalFeatures useRpcCallSpecification', () => {
-			// default
-			expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(false);
+	it('enableExperimentalFeatures useRpcCallSpecification', () => {
+		// default
+		expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(false);
 
-			// after set
-			web3Eth.setConfig({
+		// after set
+		web3Eth.setConfig({
+			enableExperimentalFeatures: {
+				useSubscriptionWhenCheckingBlockTimeout: false,
+				useRpcCallSpecification: true,
+			},
+		});
+		expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
 				enableExperimentalFeatures: {
 					useSubscriptionWhenCheckingBlockTimeout: false,
 					useRpcCallSpecification: true,
 				},
-			});
-			expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
+			},
+		});
+		expect(eth2.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
+	});
 
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					enableExperimentalFeatures: {
-						useSubscriptionWhenCheckingBlockTimeout: false,
-						useRpcCallSpecification: true,
-					},
-				},
-			});
-			expect(eth2.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
+	it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
+		const tempAcc2 = await createTempAccount();
 
+		const tempEth: Web3Eth = new Web3Eth(clientUrl);
+		// Ensure the provider supports subscriptions to simulate the test scenario
+		// It will cause providers that does not support subscriptions (like http) to throw exception when subscribing.
+		// This case is tested to ensure that even if an error happen at subscription,
+		//	polling will still get the data from next blocks.
+		(tempEth.provider as Web3BaseProvider).supportsSubscriptions = () => true;
+
+		// Cause the events to take a long time (more than blockHeaderTimeout),
+		//	to ensure that polling of new blocks works in such cases.
+		// This will cause the providers that supports subscription (like WebSocket)
+		// 	to never return data through listening to new events
+
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
+		(tempEth.provider as Web3BaseProvider).on = async () => {
+			await new Promise(res => {
+				setTimeout(res, 1000000);
+			});
+		};
+
+		// Make the test run faster by casing the polling to start after 1 second
+		tempEth.blockHeaderTimeout = 1;
+		const from = tempAcc2.address;
+		const to = tempAcc.address;
+		const value = `0x1`;
+
+		const sentTx: Web3PromiEvent<
+			TransactionReceipt,
+			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+		> = tempEth.sendTransaction({
+			from,
+			to,
+			value,
 		});
 
-		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
-			const tempAcc2 = await createTempAccount();
-
-			const tempEth: Web3Eth = new Web3Eth(clientUrl);
-			// Ensure the provider supports subscriptions to simulate the test scenario
-			// It will cause providers that does not support subscriptions (like http) to throw exception when subscribing.
-			// This case is tested to ensure that even if an error happen at subscription,
-			//	polling will still get the data from next blocks.
-			(tempEth.provider as Web3BaseProvider).supportsSubscriptions = () => true;
-
-			// Cause the events to take a long time (more than blockHeaderTimeout),
-			//	to ensure that polling of new blocks works in such cases.
-			// This will cause the providers that supports subscription (like WebSocket)
-			// 	to never return data through listening to new events
-
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			(tempEth.provider as Web3BaseProvider).on = async () => {
-				await new Promise(res => {
-					setTimeout(res, 1000000);
-				});
-			};
-
-			// Make the test run faster by casing the polling to start after 1 second
-			tempEth.blockHeaderTimeout = 1;
-			const from = tempAcc2.address;
-			const to = tempAcc.address;
-			const value = `0x1`;
-
-			const sentTx: Web3PromiEvent<
-				TransactionReceipt,
-				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> = tempEth.sendTransaction({
-				from,
-				to,
-				value,
-			});
-
-			let confirmationCount = 0;
-			const confirmationPromise = new Promise((resolve: (status: bigint) => void) => {
-				// Tx promise is handled separately
-				// eslint-disable-next-line no-void
-				void sentTx.on(
-					'confirmation',
-					async ({
-						confirmations,
-						receipt: { status },
-					}: {
-						confirmations: bigint;
-						receipt: { status: bigint };
-					}) => {
-						confirmationCount = Number(confirmations);
-						// Being able to get 2 confirmations means the polling for new blocks works
-						if (confirmations >= 2) {
-							sentTx.removeAllListeners();
-							resolve(status);
-						} else {
-							// Send few transaction to cause dev providers creating new blocks to fire the 'confirmation' event again.
-							await sendFewSampleTxs(5);
-						}
-					},
-				);
-			});
-			const receipt = await sentTx;
-			expect(Number(receipt.status)).toBe(1);
-
-			// Ensure the promise the get the confirmations resolves with no error
-			const status = await confirmationPromise;
-			expect(status).toBe(BigInt(1));
-
-			await waitForCondition( 
-				() => confirmationCount >= 2, 
-				async () => { await closeOpenConnection(tempEth)});
-		});
-
-		it('maxListenersWarningThreshold test default config', () => {
-			// default
-			expect(web3Eth.maxListenersWarningThreshold).toBe(100);
-		});
-		it('maxListenersWarningThreshold set maxListeners through variable', () => {
-			const eth2 = new Web3Eth({});
-			eth2.maxListenersWarningThreshold = 3;
-			expect(eth2.maxListenersWarningThreshold).toBe(3);
-			expect(eth2.getMaxListeners()).toBe(3);
-		});
-		it('maxListenersWarningThreshold set config', () => {
-			const eth3 = new Web3Eth({});
-			eth3.setConfig({
-				maxListenersWarningThreshold: 3,
-			});
-			expect(eth3.maxListenersWarningThreshold).toBe(3);
-			expect(eth3.getMaxListeners()).toBe(3);
-		});
-		it('defaultNetworkId', async () => {
-			// default
-			expect(web3Eth.defaultNetworkId).toBeUndefined();
-
-			// after set
-			web3Eth.setConfig({
-				defaultNetworkId: 3,
-			});
-			expect(web3Eth.defaultNetworkId).toBe(3);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				provider: web3Eth.provider,
-				config: {
-					defaultNetworkId: 4,
+		let confirmationCount = 0;
+		const confirmationPromise = new Promise((resolve: (status: bigint) => void) => {
+			// Tx promise is handled separately
+			// eslint-disable-next-line no-void
+			void sentTx.on(
+				'confirmation',
+				async ({
+					confirmations,
+					receipt: { status },
+				}: {
+					confirmations: bigint;
+					receipt: { status: bigint };
+				}) => {
+					confirmationCount = Number(confirmations);
+					// Being able to get 2 confirmations means the polling for new blocks works
+					if (confirmations >= 2) {
+						sentTx.removeAllListeners();
+						resolve(status);
+					} else {
+						// Send few transaction to cause dev providers creating new blocks to fire the 'confirmation' event again.
+						await sendFewSampleTxs(5);
+					}
 				},
-			});
-			expect(eth2.defaultNetworkId).toBe(4);
-			const res = await defaultTransactionBuilder({
-				transaction: {
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-				},
-				web3Context: eth2 as Web3Context,
-			});
-			expect(res.networkId).toBe(4);
-
-			// pass network id
-			const resWithPassNetworkId = await defaultTransactionBuilder({
-				transaction: {
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					networkId: 5,
-				},
-				web3Context: eth2 as Web3Context,
-			});
-
-			expect(resWithPassNetworkId.networkId).toBe(BigInt(5));
-
-			await closeOpenConnection(eth2);
-		});
-		it('defaultChain', async () => {
-			// default
-			expect(web3Eth.defaultChain).toBe('mainnet');
-
-			// after set
-			web3Eth.setConfig({
-				defaultChain: 'ropsten',
-			});
-			expect(web3Eth.defaultChain).toBe('ropsten');
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				provider: web3Eth.provider,
-				config: {
-					defaultChain: 'rinkeby',
-				},
-			});
-			expect(eth2.defaultChain).toBe('rinkeby');
-			const res = await defaultTransactionBuilder({
-				transaction: {
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-				},
-				web3Context: eth2 as Web3Context,
-			});
-			expect(res.chain).toBe('rinkeby');
-			await closeOpenConnection(eth2);
-		});
-		it('defaultHardfork', async () => {
-			// default
-			expect(web3Eth.defaultHardfork).toBe('london');
-
-			// after set
-			web3Eth.setConfig({
-				defaultHardfork: 'dao',
-			});
-			expect(web3Eth.defaultHardfork).toBe('dao');
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				provider: web3Eth.provider,
-				config: {
-					defaultHardfork: 'istanbul',
-					defaultTransactionType: '0x0',
-				},
-			});
-			expect(eth2.defaultHardfork).toBe('istanbul');
-			expect(eth2.defaultTransactionType).toBe('0x0');
-
-			const res = await prepareTransactionForSigning(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					gasPrice: '0x4a817c800',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-				},
-				eth2,
 			);
-			expect(res.common.hardfork()).toBe('istanbul');
-			await closeOpenConnection(eth2);
 		});
-		it('defaultCommon', () => {
-			// default
-			expect(web3Eth.defaultCommon).toBeUndefined();
-			const baseChain: ValidChains = 'mainnet';
-			const hardfork: Hardfork = 'dao';
-			const common = {
-				customChain: {
-					name: 'test',
-					networkId: 123,
-					chainId: 1234,
-				},
-				baseChain,
-				hardfork,
-			};
-			// after set
-			web3Eth.setConfig({
+		const receipt = await sentTx;
+		expect(Number(receipt.status)).toBe(1);
+
+		// Ensure the promise the get the confirmations resolves with no error
+		const status = await confirmationPromise;
+		expect(status).toBe(BigInt(1));
+
+		await waitForCondition(
+			() => confirmationCount >= 2,
+			async () => {
+				await closeOpenConnection(tempEth);
+			},
+		);
+	});
+
+	it('maxListenersWarningThreshold test default config', () => {
+		// default
+		expect(web3Eth.maxListenersWarningThreshold).toBe(100);
+	});
+	it('maxListenersWarningThreshold set maxListeners through variable', () => {
+		const eth2 = new Web3Eth({});
+		eth2.maxListenersWarningThreshold = 3;
+		expect(eth2.maxListenersWarningThreshold).toBe(3);
+		expect(eth2.getMaxListeners()).toBe(3);
+	});
+	it('maxListenersWarningThreshold set config', () => {
+		const eth3 = new Web3Eth({});
+		eth3.setConfig({
+			maxListenersWarningThreshold: 3,
+		});
+		expect(eth3.maxListenersWarningThreshold).toBe(3);
+		expect(eth3.getMaxListeners()).toBe(3);
+	});
+	it('defaultNetworkId', async () => {
+		// default
+		expect(web3Eth.defaultNetworkId).toBeUndefined();
+
+		// after set
+		web3Eth.setConfig({
+			defaultNetworkId: 3,
+		});
+		expect(web3Eth.defaultNetworkId).toBe(3);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			provider: web3Eth.provider,
+			config: {
+				defaultNetworkId: 4,
+			},
+		});
+		expect(eth2.defaultNetworkId).toBe(4);
+		const res = await defaultTransactionBuilder({
+			transaction: {
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+			},
+			web3Context: eth2 as Web3Context,
+		});
+		expect(res.networkId).toBe(4);
+
+		// pass network id
+		const resWithPassNetworkId = await defaultTransactionBuilder({
+			transaction: {
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				networkId: 5,
+			},
+			web3Context: eth2 as Web3Context,
+		});
+
+		expect(resWithPassNetworkId.networkId).toBe(BigInt(5));
+
+		await closeOpenConnection(eth2);
+	});
+	it('defaultChain', async () => {
+		// default
+		expect(web3Eth.defaultChain).toBe('mainnet');
+
+		// after set
+		web3Eth.setConfig({
+			defaultChain: 'ropsten',
+		});
+		expect(web3Eth.defaultChain).toBe('ropsten');
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			provider: web3Eth.provider,
+			config: {
+				defaultChain: 'rinkeby',
+			},
+		});
+		expect(eth2.defaultChain).toBe('rinkeby');
+		const res = await defaultTransactionBuilder({
+			transaction: {
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+			},
+			web3Context: eth2 as Web3Context,
+		});
+		expect(res.chain).toBe('rinkeby');
+		await closeOpenConnection(eth2);
+	});
+	it('defaultHardfork', async () => {
+		// default
+		expect(web3Eth.defaultHardfork).toBe('london');
+
+		// after set
+		web3Eth.setConfig({
+			defaultHardfork: 'dao',
+		});
+		expect(web3Eth.defaultHardfork).toBe('dao');
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			provider: web3Eth.provider,
+			config: {
+				defaultHardfork: 'istanbul',
+				defaultTransactionType: '0x0',
+			},
+		});
+		expect(eth2.defaultHardfork).toBe('istanbul');
+		expect(eth2.defaultTransactionType).toBe('0x0');
+
+		const res = await prepareTransactionForSigning(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				gasPrice: '0x4a817c800',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+			},
+			eth2,
+		);
+		expect(res.common.hardfork()).toBe('istanbul');
+		await closeOpenConnection(eth2);
+	});
+	it('defaultCommon', () => {
+		// default
+		expect(web3Eth.defaultCommon).toBeUndefined();
+		const baseChain: ValidChains = 'mainnet';
+		const hardfork: Hardfork = 'dao';
+		const common = {
+			customChain: {
+				name: 'test',
+				networkId: 123,
+				chainId: 1234,
+			},
+			baseChain,
+			hardfork,
+		};
+		// after set
+		web3Eth.setConfig({
+			defaultCommon: common,
+		});
+		expect(web3Eth.defaultCommon).toBe(common);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
 				defaultCommon: common,
-			});
-			expect(web3Eth.defaultCommon).toBe(common);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					defaultCommon: common,
-				},
-			});
-			expect(eth2.defaultCommon).toBe(common);
+			},
 		});
-		
-		it('defaultTransactionType', async () => {
-			// default
-			expect(web3Eth.defaultTransactionType).toBe('0x2');
-			// after set
-			web3Eth.setConfig({
-				defaultTransactionType: '0x3',
-			});
-			expect(web3Eth.defaultTransactionType).toBe('0x3');
+		expect(eth2.defaultCommon).toBe(common);
+	});
 
-			// revert back to default
-			web3Eth.setConfig({
-				defaultTransactionType: '0x2',
-			});
+	it('defaultTransactionType', async () => {
+		// default
+		expect(web3Eth.defaultTransactionType).toBe('0x2');
+		// after set
+		web3Eth.setConfig({
+			defaultTransactionType: '0x3',
+		});
+		expect(web3Eth.defaultTransactionType).toBe('0x3');
 
-			// set by create new instance
-			const eth = new Web3Eth({
-				provider:  web3Eth.provider,
-				config: {
-					defaultTransactionType: '0x4444',
-				},
-			});
-			
-			expect(eth.defaultTransactionType).toBe('0x4444');
+		// revert back to default
+		web3Eth.setConfig({
+			defaultTransactionType: '0x2',
+		});
 
-			const res = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-				},
-				eth,
-			);
-			expect(res).toBe('0x4444');
+		// set by create new instance
+		const eth = new Web3Eth({
+			provider: web3Eth.provider,
+			config: {
+				defaultTransactionType: '0x4444',
+			},
+		});
 
-			// test override to 0x2 if:
-			// tx.maxFeePerGas !== undefined ||
-			// tx.maxPriorityFeePerGas !== undefined ||
-			// tx.hardfork === 'london' ||
-			// tx.common?.hardfork === 'london'
-			const maxFeePerGasOverride = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-					maxFeePerGas: '0x32',
-				},
-				eth,
-			);
-			expect(maxFeePerGasOverride).toBe('0x2');
-			const maxPriorityFeePerGasOverride = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-					maxPriorityFeePerGas: '0x32',
-				},
-				eth,
-			);
-			expect(maxPriorityFeePerGasOverride).toBe('0x2');
-			const hardforkOverride = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
+		expect(eth.defaultTransactionType).toBe('0x4444');
+
+		const res = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+			},
+			eth,
+		);
+		expect(res).toBe('0x4444');
+
+		// test override to 0x2 if:
+		// tx.maxFeePerGas !== undefined ||
+		// tx.maxPriorityFeePerGas !== undefined ||
+		// tx.hardfork === 'london' ||
+		// tx.common?.hardfork === 'london'
+		const maxFeePerGasOverride = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				maxFeePerGas: '0x32',
+			},
+			eth,
+		);
+		expect(maxFeePerGasOverride).toBe('0x2');
+		const maxPriorityFeePerGasOverride = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				maxPriorityFeePerGas: '0x32',
+			},
+			eth,
+		);
+		expect(maxPriorityFeePerGasOverride).toBe('0x2');
+		const hardforkOverride = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				hardfork: 'london',
+			},
+			eth,
+		);
+		expect(hardforkOverride).toBe('0x2');
+		const commonOverride = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				common: {
+					customChain: { name: 'ropsten', networkId: '2', chainId: '0x1' },
 					hardfork: 'london',
 				},
-				eth,
-			);
-			expect(hardforkOverride).toBe('0x2');
-			const commonOverride = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-					common: {
-						customChain: { name: 'ropsten', networkId: '2', chainId: '0x1' },
-						hardfork: 'london',
+			},
+			eth,
+		);
+		expect(commonOverride).toBe('0x2');
+
+		// override to 0x1 if:
+		// tx.accessList !== undefined || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin'
+
+		const accessListOverride = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				accessList: [
+					{
+						address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+						storageKeys: ['0x3535353535353535353535353535353535353535'],
 					},
-				},
-				eth,
-			);
-			expect(commonOverride).toBe('0x2');
+				],
+			},
+			eth,
+		);
+		expect(accessListOverride).toBe('0x1');
 
-			// override to 0x1 if:
-			// tx.accessList !== undefined || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin'
+		const hardforkBerlinOverride = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				hardfork: 'berlin',
+			},
+			eth,
+		);
+		expect(hardforkBerlinOverride).toBe('0x0');
 
-			const accessListOverride = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-					accessList: [
-						{
-							address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-							storageKeys: ['0x3535353535353535353535353535353535353535'],
-						},
-					],
-				},
-				eth,
-			);
-			expect(accessListOverride).toBe('0x1');
-
-			const hardforkBerlinOverride = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
+		const commonBerlinOverride = getTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				common: {
+					customChain: { name: 'ropsten', networkId: '2', chainId: '0x1' },
 					hardfork: 'berlin',
 				},
-				eth,
-			);
-			expect(hardforkBerlinOverride).toBe('0x0');
-
-			const commonBerlinOverride = getTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-					common: {
-						customChain: { name: 'ropsten', networkId: '2', chainId: '0x1' },
-						hardfork: 'berlin',
-					},
-				},
-				eth,
-			);
-			expect(commonBerlinOverride).toBe('0x0');
-			await closeOpenConnection(eth);
+			},
+			eth,
+		);
+		expect(commonBerlinOverride).toBe('0x0');
+		await closeOpenConnection(eth);
+	});
+	it('defaultMaxPriorityFeePerGas', async () => {
+		// default
+		expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(2500000000));
+		// after set
+		web3Eth.setConfig({
+			defaultMaxPriorityFeePerGas: numberToHex(2100000000),
 		});
-		it('defaultMaxPriorityFeePerGas', async () => {
-			// default
-			expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(2500000000));
-			// after set
-			web3Eth.setConfig({
-				defaultMaxPriorityFeePerGas: numberToHex(2100000000),
-			});
-			expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(2100000000));
+		expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(2100000000));
 
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				provider: web3Eth.provider,
-				config: {
-					defaultMaxPriorityFeePerGas: numberToHex(1200000000),
-				},
-			});
-			expect(eth2.defaultMaxPriorityFeePerGas).toBe(numberToHex(1200000000));
-
-			const res = await getTransactionGasPricing(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					type: '0x2',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-				},
-				eth2,
-				DEFAULT_RETURN_FORMAT,
-			);
-			expect(res?.maxPriorityFeePerGas).toBe(BigInt(1200000000));
-
-			// override test
-			const resOverride = await getTransactionGasPricing(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					type: '0x2',
-					gas: '0x5208',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-					maxPriorityFeePerGas: '0x123123123',
-				},
-				eth2,
-				DEFAULT_RETURN_FORMAT,
-			);
-			expect(resOverride?.maxPriorityFeePerGas).toBe(BigInt('4883362083'));
-			await closeOpenConnection(eth2);
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			provider: web3Eth.provider,
+			config: {
+				defaultMaxPriorityFeePerGas: numberToHex(1200000000),
+			},
 		});
-		it('transactionBuilder', async () => {
-			// default
-			expect(web3Eth.transactionBuilder).toBeUndefined();
+		expect(eth2.defaultMaxPriorityFeePerGas).toBe(numberToHex(1200000000));
 
-			// default
-			expect(web3Eth.transactionBuilder).toBeUndefined();
+		const res = await getTransactionGasPricing(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				type: '0x2',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+			},
+			eth2,
+			DEFAULT_RETURN_FORMAT,
+		);
+		expect(res?.maxPriorityFeePerGas).toBe(BigInt(1200000000));
 
-			const newBuilderMock = jest.fn() as unknown as TransactionBuilder;
+		// override test
+		const resOverride = await getTransactionGasPricing(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				type: '0x2',
+				gas: '0x5208',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+				maxPriorityFeePerGas: '0x123123123',
+			},
+			eth2,
+			DEFAULT_RETURN_FORMAT,
+		);
+		expect(resOverride?.maxPriorityFeePerGas).toBe(BigInt('4883362083'));
+		await closeOpenConnection(eth2);
+	});
+	it('transactionBuilder', async () => {
+		// default
+		expect(web3Eth.transactionBuilder).toBeUndefined();
 
-			web3Eth.setConfig({
+		// default
+		expect(web3Eth.transactionBuilder).toBeUndefined();
+
+		const newBuilderMock = jest.fn() as unknown as TransactionBuilder;
+
+		web3Eth.setConfig({
+			transactionBuilder: newBuilderMock,
+		});
+		expect(web3Eth.transactionBuilder).toBe(newBuilderMock);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
 				transactionBuilder: newBuilderMock,
-			});
-			expect(web3Eth.transactionBuilder).toBe(newBuilderMock);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					transactionBuilder: newBuilderMock,
-				},
-			});
-			expect(eth2.transactionBuilder).toBe(newBuilderMock);
-
-			await transactionBuilder({
-				transaction: {
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					gasPrice: '0x4a817c800',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-				},
-				web3Context: eth2,
-			});
-			expect(newBuilderMock).toHaveBeenCalled();
+			},
 		});
-		it('transactionTypeParser', () => {
-			// default
-			expect(web3Eth.transactionTypeParser).toBeUndefined();
+		expect(eth2.transactionBuilder).toBe(newBuilderMock);
 
-			const newParserMock = jest.fn() as unknown as TransactionTypeParser;
+		await transactionBuilder({
+			transaction: {
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				gasPrice: '0x4a817c800',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+			},
+			web3Context: eth2,
+		});
+		expect(newBuilderMock).toHaveBeenCalled();
+	});
+	it('transactionTypeParser', () => {
+		// default
+		expect(web3Eth.transactionTypeParser).toBeUndefined();
 
-			web3Eth.setConfig({
+		const newParserMock = jest.fn() as unknown as TransactionTypeParser;
+
+		web3Eth.setConfig({
+			transactionTypeParser: newParserMock,
+		});
+		expect(web3Eth.transactionTypeParser).toBe(newParserMock);
+
+		// set by create new instance
+		const eth2 = new Web3Eth({
+			config: {
 				transactionTypeParser: newParserMock,
-			});
-			expect(web3Eth.transactionTypeParser).toBe(newParserMock);
-
-			// set by create new instance
-			const eth2 = new Web3Eth({
-				config: {
-					transactionTypeParser: newParserMock,
-				},
-			});
-			expect(eth2.transactionTypeParser).toBe(newParserMock);
-			detectTransactionType(
-				{
-					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-					to: '0x3535353535353535353535353535353535353535',
-					value: '0x174876e800',
-					gas: '0x5208',
-					gasPrice: '0x4a817c800',
-					data: '0x0',
-					nonce: '0x4',
-					chainId: '0x1',
-					gasLimit: '0x5208',
-				},
-				eth2,
-			);
-			expect(newParserMock).toHaveBeenCalled();
+			},
 		});
+		expect(eth2.transactionTypeParser).toBe(newParserMock);
+		detectTransactionType(
+			{
+				from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+				to: '0x3535353535353535353535353535353535353535',
+				value: '0x174876e800',
+				gas: '0x5208',
+				gasPrice: '0x4a817c800',
+				data: '0x0',
+				nonce: '0x4',
+				chainId: '0x1',
+				gasLimit: '0x5208',
+			},
+			eth2,
+		);
+		expect(newParserMock).toHaveBeenCalled();
+	});
 });

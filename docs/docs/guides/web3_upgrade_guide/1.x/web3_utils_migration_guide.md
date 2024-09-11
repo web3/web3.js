@@ -17,6 +17,18 @@ import web3Utils from 'web3-utils';
 import * as web3Utils from 'web3-utils';
 ```
 
+## No `BN` property
+
+The `web3-utils` package no longer includes a `BN` property for using the [the `bn.js` package](https://github.com/indutny/bn.js/) for working with (big) numbers. In 4.x, [the native JavaScript `BigInt` type](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) is used.
+
+```ts
+// 1.x
+new Web3.utils.BN(1);
+
+// 4.x
+BigInt(4);
+```
+
 ## Unit conversion functions
 
 The `toWei` does not have an optional second parameter. You have to pass the source unit explicitly.
@@ -31,20 +43,20 @@ web3.utils.toWei('0.1', 'ether');
 
 ## Conversion to Hex
 
-The `toHex` behave exactly the same in both v1.x and 4.x, except for a string that contains only numbers. In 1.x if a number was provided inside a string like `123` it used to be treated as a number. While in 4.x it will be treated as a string, except if it was prefixed with `0x`. For more clarity, check below: 
+The `toHex` behave exactly the same in both v1.x and 4.x, except for a string that contains only numbers. In 1.x if a number was provided inside a string like `123` it used to be treated as a number. While in 4.x it will be treated as a string, except if it was prefixed with `0x`. For more clarity, check below:
 
 ```ts
 // 1.x
-new Web3().utils.toHex(0x1) // returns  0x1
-new Web3().utils.toHex('0x1') // returns  0x1
-new Web3().utils.toHex(1) // returns  0x1
-new Web3().utils.toHex('1') // returns  0x1
+new Web3().utils.toHex(0x1); // returns  0x1
+new Web3().utils.toHex('0x1'); // returns  0x1
+new Web3().utils.toHex(1); // returns  0x1
+new Web3().utils.toHex('1'); // returns  0x1
 
 // 4.x
-new Web3().utils.toHex(0x1) // returns  0x1
-new Web3().utils.toHex('0x1') // returns  0x1
-new Web3().utils.toHex(1) // returns  0x1
-new Web3().utils.toHex('1') // returns  0x31
+new Web3().utils.toHex(0x1); // returns  0x1
+new Web3().utils.toHex('0x1'); // returns  0x1
+new Web3().utils.toHex(1); // returns  0x1
+new Web3().utils.toHex('1'); // returns  0x31
 ```
 
 ## Validation functions
@@ -80,6 +92,7 @@ isHex('-0x'); // in 1.x used to return `true`. But changed in 4.x to return `fal
 isHexStrict('-0x'); // in 1.x used to return `true`. But changed in 4.x to return `false`
 // `false`
 ```
+
 ## stripHexPrefix method
 
 In 1.x `stripHexPrefix` method is located in the `web3-utils` package, in 4.x this has been moved to `web3-eth-accounts`
@@ -88,7 +101,6 @@ In 1.x `stripHexPrefix` method is located in the `web3-utils` package, in 4.x th
 import { stripHexPrefix } from 'web3-eth-accounts';
 
 console.log(stripHexPrefix('0x123')); // "123"
-
 ```
 
 ## Other functions

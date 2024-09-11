@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
+/*
  * this variable contains the precalculated limits for all the numbers for uint and int types
-*/
+ */
 export const numberLimits = new Map<string, { min: bigint; max: bigint }>();
 
 let base = BigInt(256); // 2 ^ 8 = 256

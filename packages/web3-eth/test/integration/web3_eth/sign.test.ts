@@ -23,7 +23,7 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
-	BACKEND
+	BACKEND,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sign', () => {

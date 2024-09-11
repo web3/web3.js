@@ -15,14 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	Web3ContractError,
-} from 'web3-errors';
-import {
-	sendTransaction,
-	SendTransactionEvents,
-	SendTransactionOptions,
-} from 'web3-eth';
+import { Web3ContractError } from 'web3-errors';
+import { sendTransaction, SendTransactionEvents, SendTransactionOptions } from 'web3-eth';
 import {
 	AbiConstructorFragment,
 	AbiFunctionFragment,
@@ -37,24 +31,12 @@ import {
 	TransactionReceipt,
 	TransactionCall,
 } from 'web3-types';
-import {
-	format,
-} from 'web3-utils';
-import {
-	isNullish,
-} from 'web3-validator';
+import { format } from 'web3-utils';
+import { isNullish } from 'web3-validator';
 import { Web3PromiEvent } from 'web3-core';
-import {
-	decodeMethodParams,
-	encodeMethodABI,
-} from './encoding.js';
-import {
-	NonPayableTxOptions,
-	PayableTxOptions,
-} from './types.js';
-import {
-	getSendTxParams,
-} from './utils.js';
+import { decodeMethodParams, encodeMethodABI } from './encoding.js';
+import { NonPayableTxOptions, PayableTxOptions } from './types.js';
+import { getSendTxParams } from './utils.js';
 // eslint-disable-next-line import/no-cycle
 import { Contract } from './contract.js';
 
@@ -68,15 +50,12 @@ export type ContractDeploySend<Abi extends ContractAbi> = Web3PromiEvent<
  * This class is only supposed to be used for the return of `new Contract(...).deploy(...)` method.
  */
 export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
-
 	protected readonly args: never[] | ContractConstructorArgs<FullContractAbi>;
 	protected readonly constructorAbi: AbiConstructorFragment;
 	protected readonly contractOptions: ContractOptions;
 	protected readonly deployData?: string;
 
-	protected _contractMethodDeploySend(
-		tx: TransactionCall,
-	) {
+	protected _contractMethodDeploySend(tx: TransactionCall) {
 		// eslint-disable-next-line no-use-before-define
 		const returnTxOptions: SendTransactionOptions<Contract<FullContractAbi>> = {
 			transactionResolver: (receipt: TransactionReceipt) => {
@@ -90,7 +69,7 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 				newContract.options.address = receipt.contractAddress;
 				return newContract;
 			},
-			
+
 			contractAbi: this.parent.options.jsonInterface,
 			// TODO Should make this configurable by the user
 			checkRevertBeforeSending: false,
@@ -124,8 +103,7 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 			  }
 			| undefined,
 	) {
-		
-		const { args, abi, contractOptions, deployData} = this.calculateDeployParams();
+		const { args, abi, contractOptions, deployData } = this.calculateDeployParams();
 
 		this.args = args;
 		this.constructorAbi = abi;
@@ -141,9 +119,7 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 		return this._contractMethodDeploySend(tx);
 	}
 
-	public populateTransaction(
-		txOptions?: PayableTxOptions | NonPayableTxOptions,
-	) {
+	public populateTransaction(txOptions?: PayableTxOptions | NonPayableTxOptions) {
 		const modifiedContractOptions = {
 			...this.contractOptions,
 			from: this.contractOptions.from ?? this.parent.defaultAccount ?? undefined,
@@ -202,7 +178,7 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 		};
 		const deployData = _input ?? _data;
 
-		return { args, abi, contractOptions, deployData}
+		return { args, abi, contractOptions, deployData };
 	}
 
 	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -233,8 +209,12 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 
 	public decodeData(data: HexString) {
 		return {
-			...decodeMethodParams(this.constructorAbi, data.replace(this.deployData as string, ''), false),
+			...decodeMethodParams(
+				this.constructorAbi,
+				data.replace(this.deployData as string, ''),
+				false,
+			),
 			__method__: this.constructorAbi.type,
 		};
 	}
-};
+}

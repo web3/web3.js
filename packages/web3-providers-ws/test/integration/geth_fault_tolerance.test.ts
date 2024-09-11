@@ -15,11 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  HttpProvider
-} from 'web3-providers-http';
+import { HttpProvider } from 'web3-providers-http';
 import { ConnectionNotOpenError } from 'web3-errors';
-import { EthExecutionAPI, Web3APIPayload, SocketRequestItem, JsonRpcResponse, ProviderRpcError } from 'web3-types';
+import {
+	EthExecutionAPI,
+	Web3APIPayload,
+	SocketRequestItem,
+	JsonRpcResponse,
+	ProviderRpcError,
+} from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
 import {
 	waitForSocketConnect,
@@ -38,14 +42,14 @@ describeIf(getSystemTestBackend() === 'geth' && isWs)('geth tests', () => {
 		await httpProvider.request({
 			method: 'admin_startWS',
 			id: '1',
-			jsonrpc: '2.0'
-		})
-    }
+			jsonrpc: '2.0',
+		});
+	};
 	const closeServer = async () => {
 		await httpProvider.request({
 			method: 'admin_stopWS',
 			id: '2',
-			jsonrpc: '2.0'
+			jsonrpc: '2.0',
 		});
 	};
 	const jsonRpcPayload = {
@@ -56,30 +60,29 @@ describeIf(getSystemTestBackend() === 'geth' && isWs)('geth tests', () => {
 
 	// simulate abrupt disconnection, ganache server always closes with code 1000 so we need to simulate closing with different error code
 	const changeCloseCode = async (webSocketProvider: WebSocketProvider) =>
-	new Promise<void>(resolve => {
-		// @ts-expect-error replace close handler
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-param-reassign
-		webSocketProvider._onCloseHandler = (_: CloseEvent) => {
-			// @ts-expect-error replace close event
-			webSocketProvider._onCloseEvent({ code: 1003 });
-		};
-		// @ts-expect-error run protected method
-		webSocketProvider._removeSocketListeners();
-		// @ts-expect-error run protected method
-		webSocketProvider._addSocketListeners();
-		resolve();
-	});
+		new Promise<void>(resolve => {
+			// @ts-expect-error replace close handler
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-param-reassign
+			webSocketProvider._onCloseHandler = (_: CloseEvent) => {
+				// @ts-expect-error replace close event
+				webSocketProvider._onCloseEvent({ code: 1003 });
+			};
+			// @ts-expect-error run protected method
+			webSocketProvider._removeSocketListeners();
+			// @ts-expect-error run protected method
+			webSocketProvider._addSocketListeners();
+			resolve();
+		});
 
 	beforeAll(() => {
 		httpProvider = new HttpProvider(httpProviderUrl);
-	})
+	});
 	beforeEach(async () => {
 		await openServer();
-	})
-	afterAll(async() => {
+	});
+	afterAll(async () => {
 		await closeServer();
-	})
-    
+	});
 
 	describe('WebSocketProvider fault tests - geth', () => {
 		it('"error" when there is no connection', async () => {
@@ -104,11 +107,15 @@ describeIf(getSystemTestBackend() === 'geth' && isWs)('geth tests', () => {
 		it('"discconect" handler fires if the server closes', async () => {
 			await openServer();
 			const err = jest.fn();
-			const webSocketProvider = new WebSocketProvider(wsProviderUrl, {}, {
-				delay: 100,
-				autoReconnect: false,
-				maxAttempts: 1,
-			});
+			const webSocketProvider = new WebSocketProvider(
+				wsProviderUrl,
+				{},
+				{
+					delay: 100,
+					autoReconnect: false,
+					maxAttempts: 1,
+				},
+			);
 
 			await waitForSocketConnect(webSocketProvider);
 
@@ -137,7 +144,7 @@ describeIf(getSystemTestBackend() === 'geth' && isWs)('geth tests', () => {
 			});
 			webSocketProvider.once('disconnect', () => {
 				mockDisconnect();
-			})
+			});
 			webSocketProvider.disconnect();
 			expect(mockReject).toHaveBeenCalledTimes(0);
 			expect(mockDisconnect).toHaveBeenCalledTimes(1);
@@ -287,10 +294,13 @@ describeIf(getSystemTestBackend() === 'geth' && isWs)('geth tests', () => {
 
 			// when server is not listening send request, and expect that lib will try to reconnect and at end will throw con not open error
 			await expect(
-				webSocketProvider.request(
-				{"method":"eth_getBlockByNumber","params":["0xc5043f",false],"id":1,"jsonrpc":"2.0"}
-				))
-				.rejects.toThrow(ConnectionNotOpenError);
+				webSocketProvider.request({
+					method: 'eth_getBlockByNumber',
+					params: ['0xc5043f', false],
+					id: 1,
+					jsonrpc: '2.0',
+				}),
+			).rejects.toThrow(ConnectionNotOpenError);
 
 			expect(mockCallBack).toHaveBeenCalled();
 			webSocketProvider.disconnect();

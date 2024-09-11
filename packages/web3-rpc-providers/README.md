@@ -11,7 +11,6 @@
 
 This is a sub-package of [web3.js][repo].
 
-
 ## Installation
 
 You can install the package either using [NPM](https://www.npmjs.com/package/web3-rpc-providers) or using [Yarn](https://yarnpkg.com/package/web3-rpc-providers)
