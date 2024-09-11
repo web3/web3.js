@@ -23,7 +23,7 @@ import { TransactionDataAndInputError } from 'web3-errors';
 import { transactionInfoSchema, transactionSchema } from '../schemas.js';
 
 type TransactionSchema = {
-	type: 'object';
+	type: string;
 	properties: typeof transactionSchema['properties'] & Record<string, Schema>;
 };
 

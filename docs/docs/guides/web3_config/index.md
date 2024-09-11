@@ -28,6 +28,7 @@ There is list of configuration params that can be set for modifying behavior of 
 - [defaultCommon](/guides/web3_config/#defaultcommon)  
 - [defaultTransactionType](/guides/web3_config/#defaulttransactiontype)
 - [defaultMaxPriorityFeePerGas](/guides/web3_config/#defaultmaxpriorityfeepergas)
+- [customTransactionSchema](/guides/web3_config/#customTransactionSchema)
 - [defaultReturnFormat](/guides/web3_config/#defaultreturnformat)  
 
 ## Global level Config
@@ -410,6 +411,9 @@ The default value of `defaultTransactionType` is `0x02`.
 The `defaultMaxPriorityFeePerGas` option is used to set the [`defaultMaxPriorityFeePerGas`](/api/web3-eth-contract/class/Contract#defaultMaxPriorityFeePerGas) value for [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) smart contract transactions ([transaction type](#defaulttransactiontype) 0x2).
 
 The default value of `defaultMaxPriorityFeePerGas` is 2500000000 (2.5gwei) in hexstring format.
+
+### [customTransactionSchema](/api/web3-core/class/Web3Config#customTransactionSchema)
+The `customTransactionSchema` option is used to allow [`formatTransaction`](/api/web3-eth/function/formatTransaction) to accept a custom schema to validate transactions. A use-case could be: your chain has an extra field in its transactions and you want to write a plugin that makes sending these transactions easier.
 
 ### [defaultReturnFormat](/api/web3-core/class/Web3Config#defaultReturnFormat)
 The `defaultReturnFormat` option allows users to specify the format in which certain types of data should be returned by default. It is a configuration parameter that can be set at the global level and affects how data is returned across the entire library.
