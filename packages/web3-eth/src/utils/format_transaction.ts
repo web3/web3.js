@@ -16,11 +16,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Transaction, DataFormat, DEFAULT_RETURN_FORMAT, FormatType } from 'web3-types';
-import { isNullish, ValidationSchemaInput } from 'web3-validator';
+import { isNullish, ValidationSchemaInput, Schema } from 'web3-validator';
 import { mergeDeep, format, bytesToHex, toHex } from 'web3-utils';
 import { TransactionDataAndInputError } from 'web3-errors';
 
 import { transactionInfoSchema, transactionSchema } from '../schemas.js';
+
+type TransactionSchema = {
+	type: 'object';
+	properties: typeof transactionSchema['properties'] & Record<string, Schema>;
+};
 
 export function formatTransaction<
 	ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
@@ -29,7 +34,7 @@ export function formatTransaction<
 	transaction: TransactionType,
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	options: {
-		transactionSchema?: ValidationSchemaInput | typeof transactionSchema | undefined;
+		transactionSchema?: ValidationSchemaInput | TransactionSchema | undefined;
 		fillInputAndData?: boolean;
 	} = {
 		transactionSchema: transactionInfoSchema,
