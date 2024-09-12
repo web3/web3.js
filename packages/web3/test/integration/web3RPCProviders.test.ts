@@ -78,4 +78,15 @@ describe('Web3 RPC Provider Integration tests', () => {
 		expect(typeof result).toBe('bigint');
 		expect(result > 0).toBe(true);
 	});
+
+	it.skip(`Web3 default provider should always be connected with Eth mainnet`, async () => {
+		const web3 = new Web3();
+		const chainID = await web3.eth.getChainId();
+		expect(typeof chainID).toBe('bigint');
+		expect(chainID).toBe(BigInt(1));
+
+		const NWID = await web3.eth.net.getId();
+		expect(typeof NWID).toBe('bigint');
+		expect(NWID).toBe(BigInt(1));
+	});
 });
