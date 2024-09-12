@@ -44,6 +44,9 @@ export enum Network {
 
 	BNB_MAINNET = 'bnb_mainnet',
 	BNB_TESTNET = 'bnb_testnet',
+
+	ZKERA_MAINNET = 'zkera_mainnet',
+	ZKERA_SEPOLIA = 'zkera_sepolia',
 }
 
 // Combining the ws types
