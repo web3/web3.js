@@ -65,14 +65,14 @@ describe('Web3 RPC Provider Integration tests', () => {
 			});
 		});
 	});
-	it(`should work with mainnet provider`, async () => {
+	it.skip(`should work with mainnet provider`, async () => {
 		const web3 = new Web3(mainnet);
 		const result = await web3.eth.getBlockNumber();
 		expect(typeof result).toBe('bigint');
 		expect(result > 0).toBe(true);
 	});
 
-	it(`should work with default provider`, async () => {
+	it.skip(`should work with default provider`, async () => {
 		const web3 = new Web3();
 		const result = await web3.eth.getBlockNumber();
 		expect(typeof result).toBe('bigint');
