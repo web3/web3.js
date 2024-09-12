@@ -22,7 +22,7 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestBackend,
-	BACKEND
+	BACKEND,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {

@@ -38,7 +38,7 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	describeIf,
-	BACKEND
+	BACKEND,
 } from '../../fixtures/system_test_utils';
 import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
 import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simple_revert';

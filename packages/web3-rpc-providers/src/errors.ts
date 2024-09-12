@@ -24,7 +24,10 @@ export class QuickNodeRateLimitError extends BaseWeb3Error {
 	public code = ERR_QUICK_NODE_RATE_LIMIT;
 
 	public constructor(error?: Error) {
-		super(`You've reach the rate limit of free RPC calls from our Partner Quick Nodes. There are two options you can either create a paid Quick Nodes account and get 20% off for 2 months using WEB3JS referral code, or use Free public RPC endpoint.`, error);
+		super(
+			`You've reach the rate limit of free RPC calls from our Partner Quick Nodes. There are two options you can either create a paid Quick Nodes account and get 20% off for 2 months using WEB3JS referral code, or use Free public RPC endpoint.`,
+			error,
+		);
 	}
 }
 

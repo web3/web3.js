@@ -22,7 +22,7 @@ import {
 	describeIf,
 	getSystemTestBackend,
 	getSystemTestProvider,
-	BACKEND
+	BACKEND,
 } from '../../fixtures/system_test_utils';
 
 describeIf(getSystemTestBackend() === BACKEND.GETH)('Web3Eth.createAccessList', () => {

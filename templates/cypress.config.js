@@ -25,7 +25,7 @@ const config = {
 		},
 		specPattern: 'test/integration/**/**/*.test.ts',
 		excludeSpecPattern: ['**/contract_defaults_extra.test.ts'],
-		defaultCommandTimeout: 120000
+		defaultCommandTimeout: 120000,
 	},
 };
 

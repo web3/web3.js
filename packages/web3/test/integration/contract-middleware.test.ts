@@ -15,13 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CTransactionMiddleware } from 
-// eslint-disable-next-line import/no-relative-packages
-"../fixtures/transaction_middleware";
+import {
+	CTransactionMiddleware,
+	// eslint-disable-next-line import/no-relative-packages
+} from '../fixtures/transaction_middleware';
 
-import { blockMockResult, receiptMockResult } from 
-// eslint-disable-next-line import/no-relative-packages
-"../../../../tools/web3-plugin-example/test/unit/fixtures/transactions_data";
+import {
+	blockMockResult,
+	receiptMockResult,
+	// eslint-disable-next-line import/no-relative-packages
+} from '../../../../tools/web3-plugin-example/test/unit/fixtures/transactions_data';
 
 import { Web3 } from '../../src/index';
 import {
@@ -51,7 +54,6 @@ describe('Contract Middleware', () => {
 		expect(web3.eth.getTransactionMiddleware()).toBeDefined();
 		expect(contractB.getTransactionMiddleware()).toBeDefined();
 		expect(web3.eth.getTransactionMiddleware()).toEqual(contractB.getTransactionMiddleware());
-
 	});
 
 	it('should send transaction middleware in contract new instance if its set at eth package', async () => {
@@ -69,32 +71,30 @@ describe('Contract Middleware', () => {
 		const account = web3.eth.accounts.create();
 
 		let blockNum = 1000;
-		web3.requestManager.send = jest.fn(async (request) => {
+		web3.requestManager.send = jest.fn(async request => {
 			blockNum += 1;
 
 			if (request.method === 'eth_getBlockByNumber') {
-
 				return Promise.resolve(blockMockResult.result);
 			}
 			if (request.method === 'eth_call') {
-
-				return Promise.resolve("0x");
+				return Promise.resolve('0x');
 			}
 			if (request.method === 'eth_blockNumber') {
-
 				return Promise.resolve(blockNum.toString(16));
 			}
 			if (request.method === 'eth_sendTransaction') {
-
 				sendTransactionSpy(request.params);
 
-				return Promise.resolve("0xdf7756865c2056ce34c4eabe4eff42ad251a9f920a1c620c00b4ea0988731d3f");
+				return Promise.resolve(
+					'0xdf7756865c2056ce34c4eabe4eff42ad251a9f920a1c620c00b4ea0988731d3f',
+				);
 			}
 			if (request.method === 'eth_getTransactionReceipt') {
 				return Promise.resolve(receiptMockResult.result);
 			}
 
-			return Promise.resolve("Unknown Request" as any);
+			return Promise.resolve('Unknown Request' as any);
 		});
 
 		await contract.methods.transfer(account.address, 100).send({ from: account?.address });
@@ -106,11 +106,10 @@ describe('Contract Middleware', () => {
 		expect(sendTransactionSpy).toHaveBeenCalledWith(
 			expect.arrayContaining([
 				expect.objectContaining({
-					data: "0x123",
+					data: '0x123',
 					from: account.address,
-				})
-			])
+				}),
+			]),
 		);
 	});
 });
-

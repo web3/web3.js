@@ -28,5 +28,4 @@ export class SchemaFormatError extends BaseWeb3Error {
 	public toJSON() {
 		return { ...super.toJSON(), type: this.type };
 	}
-
 }

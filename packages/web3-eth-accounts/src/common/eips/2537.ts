@@ -1,46 +1,46 @@
 export default {
-	"name": "EIP-2537",
-	"number": 2537,
-	"comment": "BLS12-381 precompiles",
-	"url": "https://eips.ethereum.org/EIPS/eip-2537",
-	"status": "Draft",
-	"minimumHardfork": "chainstart",
-	"gasConfig": {},
-	"gasPrices": {
-		"Bls12381G1AddGas": {
-			"v": 600,
-			"d": "Gas cost of a single BLS12-381 G1 addition precompile-call"
+	name: 'EIP-2537',
+	number: 2537,
+	comment: 'BLS12-381 precompiles',
+	url: 'https://eips.ethereum.org/EIPS/eip-2537',
+	status: 'Draft',
+	minimumHardfork: 'chainstart',
+	gasConfig: {},
+	gasPrices: {
+		Bls12381G1AddGas: {
+			v: 600,
+			d: 'Gas cost of a single BLS12-381 G1 addition precompile-call',
 		},
-		"Bls12381G1MulGas": {
-			"v": 12000,
-			"d": "Gas cost of a single BLS12-381 G1 multiplication precompile-call"
+		Bls12381G1MulGas: {
+			v: 12000,
+			d: 'Gas cost of a single BLS12-381 G1 multiplication precompile-call',
 		},
-		"Bls12381G2AddGas": {
-			"v": 4500,
-			"d": "Gas cost of a single BLS12-381 G2 addition precompile-call"
+		Bls12381G2AddGas: {
+			v: 4500,
+			d: 'Gas cost of a single BLS12-381 G2 addition precompile-call',
 		},
-		"Bls12381G2MulGas": {
-			"v": 55000,
-			"d": "Gas cost of a single BLS12-381 G2 multiplication precompile-call"
+		Bls12381G2MulGas: {
+			v: 55000,
+			d: 'Gas cost of a single BLS12-381 G2 multiplication precompile-call',
 		},
-		"Bls12381PairingBaseGas": {
-			"v": 115000,
-			"d": "Base gas cost of BLS12-381 pairing check"
+		Bls12381PairingBaseGas: {
+			v: 115000,
+			d: 'Base gas cost of BLS12-381 pairing check',
 		},
-		"Bls12381PairingPerPairGas": {
-			"v": 23000,
-			"d": "Per-pair gas cost of BLS12-381 pairing check"
+		Bls12381PairingPerPairGas: {
+			v: 23000,
+			d: 'Per-pair gas cost of BLS12-381 pairing check',
 		},
-		"Bls12381MapG1Gas": {
-			"v": 5500,
-			"d": "Gas cost of BLS12-381 map field element to G1"
+		Bls12381MapG1Gas: {
+			v: 5500,
+			d: 'Gas cost of BLS12-381 map field element to G1',
 		},
-		"Bls12381MapG2Gas": {
-			"v": 110000,
-			"d": "Gas cost of BLS12-381 map field element to G2"
+		Bls12381MapG2Gas: {
+			v: 110000,
+			d: 'Gas cost of BLS12-381 map field element to G2',
 		},
-		"Bls12381MultiExpGasDiscount": {
-			"v": [
+		Bls12381MultiExpGasDiscount: {
+			v: [
 				[1, 1200],
 				[2, 888],
 				[3, 764],
@@ -168,12 +168,11 @@ export default {
 				[125, 176],
 				[126, 176],
 				[127, 175],
-				[128, 174]
+				[128, 174],
 			],
-			"d": "Discount gas costs of calls to the MultiExp precompiles with `k` (point, scalar) pair"
-		}
+			d: 'Discount gas costs of calls to the MultiExp precompiles with `k` (point, scalar) pair',
+		},
 	},
-	"vm": {},
-	"pow": {}
-}
- ;
+	vm: {},
+	pow: {},
+};

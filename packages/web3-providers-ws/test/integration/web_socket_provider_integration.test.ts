@@ -139,15 +139,18 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 		});
 
 		it('should error when no connection is established', async () => {
-			const wsProvider = new WebSocketProvider("ws://localhost:999",{}, { autoReconnect: false });
+			const wsProvider = new WebSocketProvider(
+				'ws://localhost:999',
+				{},
+				{ autoReconnect: false },
+			);
 			let errored = false;
-			try{
+			try {
 				await wsProvider.request(jsonRpcPayload);
 				// should not be able to reach here
-				
-			}catch(e){
+			} catch (e) {
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect((e as any).message).toBe('Connection not open')
+				expect((e as any).message).toBe('Connection not open');
 				errored = true;
 			}
 			expect(errored).toBe(true);

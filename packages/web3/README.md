@@ -9,24 +9,24 @@
 [![NPM Package][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 
-This is the main package of [web3.js](repo), it contains a collection of comprehensive [TypeScript](https://www.typescriptlang.org/) libraries for Interaction with the [Ethereum JSON RPC API](https://ethereum.org/developers/docs/apis/json-rpc) and utility functions. 
+This is the main package of [web3.js](repo), it contains a collection of comprehensive [TypeScript](https://www.typescriptlang.org/) libraries for Interaction with the [Ethereum JSON RPC API](https://ethereum.org/developers/docs/apis/json-rpc) and utility functions.
 
 ## Features
 
-- **[Web3.js Plugins🧩](https://docs.web3js.org/guides/web3_plugin_guide/)**: Enhance or add any functionality by creating scalable web3 plugins for any project.
-- **Abstractions over the [JSON-RPC API](https://ethereum.org/en/developers/docs/apis/json-rpc)**: Simplifying interaction for your Developer Experience.
-- **Language aligned to the official [Ethereum terminology](https://ethereum.org/en/glossary)**
-- **Tree-shaking focus**: Include only what you need during bundling for optimized performance.
-- **Dynamic contract types and full API in TypeScript**: Enforced with strict types for enhanced security and safety.
-- **Complete utilities and functionalities for all your Ethereum needs**
-- **More efficient ABI Encoder & Decoder**
-- **Extensive [documentation](https://docs.web3js.org/) with guides and APIs**
-- **Large collection of test cases**
-- **First-class APIs for interacting with [Smart Contracts](https://ethereum.org/en/glossary#smart-contract)**
-- **ESM and CJS module builds**: Support for both ECMAScript module and CommonJS module builds for flexible integration with various project setups.
-- **[Contracts dynamic types](https://docs.web3js.org/guides/smart_contracts/infer_contract_types/) & full API in TypeScript**
-- **Using native BigInt instead of large BigNumber libraries**: Use native BigInt for improved efficiency compared to using large external BigNumber libraries.
-- **Custom Output formatters**: Format any returned value to be a string, number, BigInt, etc., providing flexibility in handling output data.
+-   **[Web3.js Plugins🧩](https://docs.web3js.org/guides/web3_plugin_guide/)**: Enhance or add any functionality by creating scalable web3 plugins for any project.
+-   **Abstractions over the [JSON-RPC API](https://ethereum.org/en/developers/docs/apis/json-rpc)**: Simplifying interaction for your Developer Experience.
+-   **Language aligned to the official [Ethereum terminology](https://ethereum.org/en/glossary)**
+-   **Tree-shaking focus**: Include only what you need during bundling for optimized performance.
+-   **Dynamic contract types and full API in TypeScript**: Enforced with strict types for enhanced security and safety.
+-   **Complete utilities and functionalities for all your Ethereum needs**
+-   **More efficient ABI Encoder & Decoder**
+-   **Extensive [documentation](https://docs.web3js.org/) with guides and APIs**
+-   **Large collection of test cases**
+-   **First-class APIs for interacting with [Smart Contracts](https://ethereum.org/en/glossary#smart-contract)**
+-   **ESM and CJS module builds**: Support for both ECMAScript module and CommonJS module builds for flexible integration with various project setups.
+-   **[Contracts dynamic types](https://docs.web3js.org/guides/smart_contracts/infer_contract_types/) & full API in TypeScript**
+-   **Using native BigInt instead of large BigNumber libraries**: Use native BigInt for improved efficiency compared to using large external BigNumber libraries.
+-   **Custom Output formatters**: Format any returned value to be a string, number, BigInt, etc., providing flexibility in handling output data.
 
 ## Installation
 

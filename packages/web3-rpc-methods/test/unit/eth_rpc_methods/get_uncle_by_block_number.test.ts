@@ -31,12 +31,10 @@ describe('getUncleByBlockNumberAndIndex', () => {
 	});
 
 	it('should call requestManager.send with eth_getUncleByBlockNumberAndIndex method', async () => {
-			await ethRpcMethods.getUncleByBlockNumberAndIndex(requestManager, 0, '1' );
-			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-				method: 'eth_getUncleByBlockNumberAndIndex',
-				params: [0,'1'],
-			});
-		},
-	);
-
+		await ethRpcMethods.getUncleByBlockNumberAndIndex(requestManager, 0, '1');
+		expect(requestManagerSendSpy).toHaveBeenCalledWith({
+			method: 'eth_getUncleByBlockNumberAndIndex',
+			params: [0, '1'],
+		});
+	});
 });
