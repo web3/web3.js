@@ -240,3 +240,70 @@ console.log(web3.utils.compareBlockNumbers(2, 2));
 // 0
 ```
 
+### Formatting
+
+The [`format` function](/api/web3-utils/function/format) in the `web3-utils` package is used to convert data between equivalent formats. For example, bytes that are represented as a [`Uint8Array` type](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) can be formatted as a hexademical string (e.g. `"0xdd"`) or primitive JavaScript [`Number` types](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number) can be formatted as [`BigInt` types](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt). The `format` function expects two required parameters, `schema` and `data`, and accepts a third optional parameter, `returnFormat`. The `schema` parameter is used to describe how the data should be interpreted. The `data` parameter represents the data that is to be formatted. The [`returnFormat` parameter](#return-formats) specifies how the data should be formatted.
+
+Here are some example that demonstrate the use of the `format` function:
+
+```js
+import { format } from "web3-utils";
+import { FMT_BYTES, FMT_NUMBER } from "web3-types";
+
+// format a primitive number as a hexidecimal string
+console.log(format({ format: "uint" }, 221, { number: FMT_NUMBER.HEX }));
+// ↳ 0xdd
+
+// format a primitive number as a BigInt
+console.log(format({ format: "uint" }, 221, { number: FMT_NUMBER.BIGINT }));
+// ↳ 221n
+
+// format a stringified number as a hexidecimal string
+console.log(format({ format: "uint" }, "221", { number: FMT_NUMBER.HEX }));
+// ↳ 0xdd
+
+// format a Uint8Array of bytes as a hexidecimal string
+console.log(
+  format({ format: "bytes" }, new Uint8Array([2, 33]), {
+    bytes: FMT_BYTES.HEX,
+  }),
+);
+// ↳ 0x0221
+
+// format an array of values
+console.log(
+  format({ type: "array", items: { format: "uint" } }, ["221", 1983], {
+    number: FMT_NUMBER.HEX,
+  }),
+);
+// ↳ [ '0xdd', '0x7bf' ]
+
+// format an object with multiple properties
+console.log(
+  format(
+    {
+      type: "object",
+      properties: {
+        aNumber: { format: "uint" },
+        someBytes: { format: "bytes" },
+      },
+    },
+    { aNumber: "221", someBytes: new Uint8Array([2, 33]) },
+    { bytes: FMT_BYTES.UINT8ARRAY, number: FMT_NUMBER.HEX },
+  ),
+);
+// ↳ { aNumber: '0xdd', someBytes: Uint8Array(2) [ 2, 33 ] }
+```
+
+#### Return Formats
+
+The following return formats are supported:
+
+- Bytes
+  - [`FMT_BYTES.HEX`](/api/web3-types/enum/FMT_BYTES#HEX): hexadecimal [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) (e.g. `"0xdd"`)
+  - [`FMT_BYTES.UINT8ARRAY`](/api/web3-types/enum/FMT_BYTES#UINT8ARRAY): [`Uint8Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) (e.g. `[ 2, 33 ]`)
+- Numbers
+  - [`FMT_NUMBER.BIGINT`](/api/web3-types/enum/FMT_NUMBER#BIGINT): [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) (e.g. `221n`)
+  - [`FMT_NUMBER.HEX`](/api/web3-types/enum/FMT_NUMBER#HEX): hexadecimal [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) (e.g. `"0xdd"`)
+  - [`FMT_NUMBER.NUMBER`](/api/web3-types/enum/FMT_NUMBER#NUMBER): [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number) (e.g. `221`)
+  - [`FMT_NUMBER.STR`](/api/web3-types/enum/FMT_NUMBER#STR): [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) (e.g. `"221"`)
