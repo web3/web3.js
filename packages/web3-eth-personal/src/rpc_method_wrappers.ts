@@ -75,7 +75,7 @@ export const sendTransaction = async (
 	config?: Web3ConfigOptions,
 ) => {
 	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT, {
-		transactionSchema: config?.customTransactionSchema as CustomTransactionSchema,
+		transactionSchema: config?.customTransactionSchema as unknown as CustomTransactionSchema,
 	});
 
 	return personalRpcMethods.sendTransaction(requestManager, formattedTx, passphrase);
@@ -88,7 +88,7 @@ export const signTransaction = async (
 	config?: Web3ConfigOptions,
 ) => {
 	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT, {
-		transactionSchema: config?.customTransactionSchema as CustomTransactionSchema,
+		transactionSchema: config?.customTransactionSchema as unknown as CustomTransactionSchema,
 	});
 
 	return personalRpcMethods.signTransaction(requestManager, formattedTx, passphrase);
