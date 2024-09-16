@@ -74,7 +74,6 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
       "clientUrl": "http://test/abc",
       "httpProviderOptions": undefined,
     },
-    "config": {},
     "useRpcCallSpecification": undefined,
   },
   "subscriptionManager": Web3SubscriptionManager {
@@ -110,7 +109,6 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
         "clientUrl": "http://test/abc",
         "httpProviderOptions": undefined,
       },
-      "config": {},
       "useRpcCallSpecification": undefined,
     },
     "tolerateUnlinkedSubscription": false,

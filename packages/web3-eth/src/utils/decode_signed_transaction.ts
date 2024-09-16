@@ -22,9 +22,9 @@ import {
 } from 'web3-types';
 import { bytesToHex, format, hexToBytes, keccak256 } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
-import { ValidationSchemaInput } from 'web3-validator';
 import { detectRawTransactionType } from './detect_transaction_type.js';
 import { formatTransaction } from './format_transaction.js';
+import { type CustomTransactionSchema } from '../types.js';
 
 /**
  * Decodes an [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded transaction.
@@ -36,7 +36,7 @@ import { formatTransaction } from './format_transaction.js';
 export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 	encodedSignedTransaction: HexStringBytes,
 	returnFormat: ReturnFormat,
-	options: { fillInputAndData?: boolean; transactionSchema?: ValidationSchemaInput } = {
+	options: { fillInputAndData?: boolean; transactionSchema?: CustomTransactionSchema } = {
 		fillInputAndData: false,
 	},
 ): SignedTransactionInfoAPI {

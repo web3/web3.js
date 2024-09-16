@@ -66,6 +66,7 @@ import {
 	SignatureObjectSchema,
 } from './schemas.js';
 import {
+	type CustomTransactionSchema,
 	SendSignedTransactionEvents,
 	SendSignedTransactionOptions,
 	SendTransactionEvents,
@@ -429,7 +430,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 	return isNullish(response)
 		? response
 		: formatTransaction(response, returnFormat, {
-				transactionSchema: web3Context.config.customTransactionSchema,
+				transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
 				fillInputAndData: true,
 		  });
 }
@@ -449,7 +450,7 @@ export async function getPendingTransactions<ReturnFormat extends DataFormat>(
 			transaction as unknown as Transaction,
 			returnFormat ?? web3Context.defaultReturnFormat,
 			{
-				transactionSchema: web3Context.config.customTransactionSchema,
+				transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
 				fillInputAndData: true,
 			},
 		),
@@ -490,7 +491,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	return isNullish(response)
 		? response
 		: formatTransaction(response, returnFormat ?? web3Context.defaultReturnFormat, {
-				transactionSchema: web3Context.config.customTransactionSchema,
+				transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
 				fillInputAndData: true,
 		  });
 }
@@ -610,7 +611,7 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 						{
-							transactionSchema: web3Context.config.customTransactionSchema,
+							transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
 						},
 					);
 
@@ -854,7 +855,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 	const response = await ethRpcMethods.signTransaction(
 		web3Context.requestManager,
 		formatTransaction(transaction, ETH_DATA_FORMAT, {
-			transactionSchema: web3Context.config.customTransactionSchema,
+			transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
 		}),
 	);
 	// Some clients only return the encoded signed transaction (e.g. Ganache)
@@ -870,7 +871,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 					returnFormat,
 				),
 				tx: formatTransaction((response as SignedTransactionInfoAPI).tx, returnFormat, {
-					transactionSchema: web3Context.config.customTransactionSchema,
+					transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
 					fillInputAndData: true,
 				}),
 		  };

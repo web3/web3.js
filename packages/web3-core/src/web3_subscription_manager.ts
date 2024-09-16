@@ -29,7 +29,6 @@ import {
 import { ProviderError, SubscriptionError } from 'web3-errors';
 import { isNullish } from 'web3-utils';
 import { isSupportSubscriptions } from './utils.js';
-// eslint-disable-next-line import/no-cycle
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager.js';
 // eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionConstructor } from './web3_subscriptions.js';

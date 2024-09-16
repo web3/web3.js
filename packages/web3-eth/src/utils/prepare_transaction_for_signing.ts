@@ -33,6 +33,7 @@ import { isNullish } from 'web3-validator';
 import { validateTransactionForSigning } from '../validation.js';
 import { formatTransaction } from './format_transaction.js';
 import { transactionBuilder } from './transaction_builder.js';
+import { type CustomTransactionSchema } from '../types.js';
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
@@ -135,14 +136,15 @@ export const prepareTransactionForSigning = async (
 		fillGasLimit,
 	})) as unknown as PopulatedUnsignedTransaction;
 	const formattedTransaction = formatTransaction(populatedTransaction, ETH_DATA_FORMAT, {
-		transactionSchema: web3Context.config.customTransactionSchema,
+		transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
 	}) as unknown as FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>;
 
 	validateTransactionForSigning(
 		formattedTransaction as unknown as FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 		undefined,
 		{
-			transactionSchema: web3Context.config.customTransactionSchema,
+			transactionSchema: web3Context.config
+				.customTransactionSchema as CustomTransactionSchema,
 		},
 	);
 

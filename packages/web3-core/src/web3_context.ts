@@ -36,7 +36,6 @@ import { ExtensionObject, RequestManagerMiddleware } from './types.js';
 import { Web3BatchRequest } from './web3_batch_request.js';
 // eslint-disable-next-line import/no-cycle
 import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config.js';
-// eslint-disable-next-line import/no-cycle
 import { Web3RequestManager } from './web3_request_manager.js';
 import { Web3SubscriptionConstructor } from './web3_subscriptions.js';
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
@@ -149,7 +148,6 @@ export class Web3Context<
 				provider,
 				config?.enableExperimentalFeatures?.useSubscriptionWhenCheckingBlockTimeout,
 				requestManagerMiddleware,
-				config,
 			);
 
 		if (subscriptionManager) {
@@ -226,8 +224,6 @@ export class Web3Context<
 		this.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			newContextChild.setConfig({ [event.name]: event.newValue });
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			this._requestManager.setConfig({ [event.name]: event.newValue });
 		});
 
 		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
@@ -251,8 +247,6 @@ export class Web3Context<
 		parentContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			this.setConfig({ [event.name]: event.newValue });
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			this._requestManager.setConfig({ [event.name]: event.newValue });
 		});
 	}
 

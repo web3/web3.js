@@ -34,7 +34,6 @@ import { jsonRpc } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { Web3SubscriptionManager } from './web3_subscription_manager.js';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter.js';
-// eslint-disable-next-line import/no-cycle
 import { Web3RequestManager } from './web3_request_manager.js';
 
 type CommonSubscriptionEvents = {

@@ -55,7 +55,7 @@ import {
 	UnsupportedFeeMarketError,
 } from 'web3-errors';
 import { formatTransaction } from './utils/format_transaction.js';
-import { InternalTransaction } from './types.js';
+import { CustomTransactionSchema, InternalTransaction } from './types.js';
 
 export function isBaseTransaction(value: BaseTransactionAPI): boolean {
 	if (!isNullish(value.to) && !isAddress(value.to)) return false;
@@ -290,7 +290,7 @@ export const validateTransactionForSigning = (
 	transaction: InternalTransaction,
 	overrideMethod?: (transaction: InternalTransaction) => void,
 	options: {
-		transactionSchema?: ValidationSchemaInput;
+		transactionSchema?: CustomTransactionSchema;
 	} = { transactionSchema: undefined },
 ) => {
 	if (!isNullish(overrideMethod)) {
