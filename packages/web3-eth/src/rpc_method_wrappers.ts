@@ -430,7 +430,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 	return isNullish(response)
 		? response
 		: formatTransaction(response, returnFormat, {
-				transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
+				transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 				fillInputAndData: true,
 		  });
 }
@@ -450,7 +450,7 @@ export async function getPendingTransactions<ReturnFormat extends DataFormat>(
 			transaction as unknown as Transaction,
 			returnFormat ?? web3Context.defaultReturnFormat,
 			{
-				transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
+				transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 				fillInputAndData: true,
 			},
 		),
@@ -491,7 +491,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	return isNullish(response)
 		? response
 		: formatTransaction(response, returnFormat ?? web3Context.defaultReturnFormat, {
-				transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
+				transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 				fillInputAndData: true,
 		  });
 }
@@ -611,7 +611,7 @@ export function sendTransaction<
 						},
 						ETH_DATA_FORMAT,
 						{
-							transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
+							transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 						},
 					);
 
@@ -855,7 +855,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 	const response = await ethRpcMethods.signTransaction(
 		web3Context.requestManager,
 		formatTransaction(transaction, ETH_DATA_FORMAT, {
-			transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
+			transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 		}),
 	);
 	// Some clients only return the encoded signed transaction (e.g. Ganache)
@@ -871,7 +871,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 					returnFormat,
 				),
 				tx: formatTransaction((response as SignedTransactionInfoAPI).tx, returnFormat, {
-					transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
+					transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 					fillInputAndData: true,
 				}),
 		  };
@@ -896,7 +896,7 @@ export async function call<ReturnFormat extends DataFormat>(
 	const response = await ethRpcMethods.call(
 		web3Context.requestManager,
 		formatTransaction(transaction, ETH_DATA_FORMAT, {
-			transactionSchema: web3Context.config.customTransactionSchema,
+			transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 		}),
 		blockNumberFormatted,
 	);
@@ -916,7 +916,7 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT, {
-		transactionSchema: web3Context.config.customTransactionSchema,
+		transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 	});
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
@@ -1089,7 +1089,7 @@ export async function createAccessList<ReturnFormat extends DataFormat>(
 	const response = (await ethRpcMethods.createAccessList(
 		web3Context.requestManager,
 		formatTransaction(transaction, ETH_DATA_FORMAT, {
-			transactionSchema: web3Context.config.customTransactionSchema,
+			transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 		}),
 		blockNumberFormatted,
 	)) as unknown as AccessListResult;

@@ -28,7 +28,6 @@ import {
 	ETH_DATA_FORMAT,
 } from 'web3-types';
 import {
-	ValidationSchemaInput,
 	isAddress,
 	isHexStrict,
 	isHexString32Bytes,

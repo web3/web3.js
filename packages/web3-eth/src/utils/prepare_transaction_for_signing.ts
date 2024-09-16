@@ -136,7 +136,7 @@ export const prepareTransactionForSigning = async (
 		fillGasLimit,
 	})) as unknown as PopulatedUnsignedTransaction;
 	const formattedTransaction = formatTransaction(populatedTransaction, ETH_DATA_FORMAT, {
-		transactionSchema: web3Context.config.customTransactionSchema as CustomTransactionSchema,
+		transactionSchema: web3Context.config.customTransactionSchema as unknown as CustomTransactionSchema,
 	}) as unknown as FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>;
 
 	validateTransactionForSigning(
@@ -144,7 +144,7 @@ export const prepareTransactionForSigning = async (
 		undefined,
 		{
 			transactionSchema: web3Context.config
-				.customTransactionSchema as CustomTransactionSchema,
+				.customTransactionSchema as unknown as CustomTransactionSchema,
 		},
 	);
 
