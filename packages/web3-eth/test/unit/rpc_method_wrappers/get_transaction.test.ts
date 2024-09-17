@@ -21,7 +21,11 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { getTransaction } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction';
-import { formatTransaction, transactionInfoSchema } from '../../../src';
+import {
+	type CustomTransactionSchema,
+	formatTransaction,
+	transactionInfoSchema,
+} from '../../../src';
 
 jest.mock('web3-rpc-methods');
 
@@ -57,7 +61,7 @@ describe('getTransaction', () => {
 			const expectedFormattedResult = formatTransaction(
 				mockRpcResponse,
 				expectedReturnFormat,
-				{ transactionSchema: transactionInfoSchema },
+				{ transactionSchema: transactionInfoSchema as CustomTransactionSchema },
 			);
 			(ethRpcMethods.getTransactionByHash as jest.Mock).mockResolvedValueOnce(
 				mockRpcResponse,

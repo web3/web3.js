@@ -2702,3 +2702,24 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-core
+
+-   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions`
+-   Adds a new property (`config`) to `Web3RequestManager`
+
+#### web3-eth
+
+-   Adds the same `{transactionSchema?: ValidationSchemaInput}` that exists in `formatTransaction` to `validateTransactionForSigning`
+
+### Changed
+
+#### web3-eth
+
+-   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`
+
+#### web3-eth-personal
+
+-   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`

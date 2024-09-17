@@ -159,7 +159,7 @@ export class Personal extends Web3Context<EthPersonalAPI> {
 	 * ```
 	 */
 	public async sendTransaction(tx: Transaction, passphrase: string) {
-		return rpcWrappers.sendTransaction(this.requestManager, tx, passphrase);
+		return rpcWrappers.sendTransaction(this.requestManager, tx, passphrase, this.config);
 	}
 	/**
 	 * Signs a transaction. This account needs to be unlocked.
@@ -204,7 +204,7 @@ export class Personal extends Web3Context<EthPersonalAPI> {
 	 * ```
 	 */
 	public async signTransaction(tx: Transaction, passphrase: string) {
-		return rpcWrappers.signTransaction(this.requestManager, tx, passphrase);
+		return rpcWrappers.signTransaction(this.requestManager, tx, passphrase, this.config);
 	}
 	/**
 	 * Calculates an Ethereum specific signature with:

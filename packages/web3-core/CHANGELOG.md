@@ -234,3 +234,8 @@ Documentation:
 -   `setConfig()` fix for `setMaxListenerWarningThreshold` fix (#5079)
 
 ## [Unreleased]
+
+### Added
+
+-   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions`
+-   Adds a new property (`config`) to `Web3RequestManager`

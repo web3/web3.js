@@ -6,6 +6,7 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
   "config": {
     "blockHeaderTimeout": 10,
     "contractDataInputFill": "data",
+    "customTransactionSchema": undefined,
     "defaultAccount": undefined,
     "defaultBlock": "latest",
     "defaultChain": "mainnet",

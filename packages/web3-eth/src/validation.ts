@@ -27,7 +27,13 @@ import {
 	TransactionWithSenderAPI,
 	ETH_DATA_FORMAT,
 } from 'web3-types';
-import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
+import {
+	isAddress,
+	isHexStrict,
+	isHexString32Bytes,
+	isNullish,
+	isUInt,
+} from 'web3-validator';
 import {
 	ChainMismatchError,
 	HardforkMismatchError,
@@ -48,7 +54,7 @@ import {
 	UnsupportedFeeMarketError,
 } from 'web3-errors';
 import { formatTransaction } from './utils/format_transaction.js';
-import { InternalTransaction } from './types.js';
+import { CustomTransactionSchema, InternalTransaction } from './types.js';
 
 export function isBaseTransaction(value: BaseTransactionAPI): boolean {
 	if (!isNullish(value.to) && !isAddress(value.to)) return false;
@@ -282,6 +288,9 @@ export const validateGas = (transaction: InternalTransaction) => {
 export const validateTransactionForSigning = (
 	transaction: InternalTransaction,
 	overrideMethod?: (transaction: InternalTransaction) => void,
+	options: {
+		transactionSchema?: CustomTransactionSchema;
+	} = { transactionSchema: undefined },
 ) => {
 	if (!isNullish(overrideMethod)) {
 		overrideMethod(transaction);
@@ -296,7 +305,9 @@ export const validateTransactionForSigning = (
 	validateBaseChain(transaction);
 	validateHardfork(transaction);
 
-	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT);
+	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT, {
+		transactionSchema: options.transactionSchema,
+	});
 	validateGas(formattedTransaction);
 
 	if (

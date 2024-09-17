@@ -210,6 +210,40 @@ export const numbersAsBigIntTransaction: FormatType<
 	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 };
 
+export type CustomFieldTransaction = Transaction & { feeCurrency: `0x${string}` };
+export const customFieldTransaction: FormatType<
+	CustomFieldTransaction,
+	{ number: FMT_NUMBER.BIGINT; bytes: typeof DEFAULT_RETURN_FORMAT.bytes }
+> = {
+	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+	to: '0x3535353535353535353535353535353535353535',
+	value: BigInt(100000000000),
+	gas: BigInt(21000),
+	gasPrice: BigInt(20000000000),
+	type: BigInt(0),
+	maxFeePerGas: BigInt(78000000000),
+	maxPriorityFeePerGas: BigInt(1230000000),
+	data: '0x',
+	nonce: BigInt(4),
+	chain: 'mainnet',
+	hardfork: 'berlin',
+	chainId: BigInt(1),
+	common: {
+		customChain: {
+			name: 'foo',
+			networkId: BigInt(4),
+			chainId: BigInt(66),
+		},
+		baseChain: 'mainnet',
+		hardfork: 'berlin',
+	},
+	gasLimit: BigInt(21000),
+	v: BigInt(37),
+	r: '0x4f4c17305743700648bc4f6cd3038ec6f6af0df73e31757007b7f59df7bee88d',
+	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
+	feeCurrency: '0x4242424242424242424242424242424242424242',
+};
+
 const dummyTransaction: Transaction = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',
