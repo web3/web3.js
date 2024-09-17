@@ -852,12 +852,10 @@ describe('formatter', () => {
 					},
 				};
 
-				const data ={
+				const data = {
 					from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401',
 					to: 123,
-				}
-				;
-
+				};
 				const result = { from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401', to: '123' };
 
 				expect(
@@ -878,11 +876,11 @@ describe('formatter', () => {
 					},
 				};
 
-				const data ={
-					from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401'
+				const data = {
+					from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401',
 				};
 
-				const result = { from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401'};
+				const result = { from: '0x7ed0e85b8e1e925600b4373e6d108f34ab38a401' };
 
 				expect(
 					format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }),

@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hardhat from 'hardhat';
 
-import { performBasicRpcCalls, failErrorCalls} from './helper';
+import { performBasicRpcCalls, failErrorCalls } from './helper';
 
 describe('compatibility with `hardhat` provider', () => {
 	it('should initialize Web3, get accounts & block number and send a transaction', async () => {
@@ -28,6 +28,5 @@ describe('compatibility with `hardhat` provider', () => {
 	it('should throw on error calls', async () => {
 		const result = failErrorCalls(hardhat.network.provider);
 		await expect(result).rejects.toThrow();
-
-	})
+	});
 });

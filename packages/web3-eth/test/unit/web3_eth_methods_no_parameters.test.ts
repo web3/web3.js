@@ -79,7 +79,9 @@ describe('web3_eth_methods_no_parameters', () => {
 
 		it('getMaxPriorityFeePerGas', async () => {
 			await web3Eth.getMaxPriorityFeePerGas();
-			expect(ethRpcMethods.getMaxPriorityFeePerGas).toHaveBeenCalledWith(web3Eth.requestManager);
+			expect(ethRpcMethods.getMaxPriorityFeePerGas).toHaveBeenCalledWith(
+				web3Eth.requestManager,
+			);
 		});
 	});
 });

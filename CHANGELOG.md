@@ -2458,7 +2458,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-errors
 
-- Added `InvalidIntegerError` error for fromWei and toWei (#7052)
+-   Added `InvalidIntegerError` error for fromWei and toWei (#7052)
 
 #### web3-eth
 
@@ -2484,8 +2484,8 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
-- `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
-- `toWei` and `fromWei` now supports integers as a unit. (#7053)  
+-   `toWei` add warning when using large numbers or large decimals that may cause precision loss (#6908)
+-   `toWei` and `fromWei` now supports integers as a unit. (#7053)
 
 ### Fixed
 
@@ -2495,13 +2495,13 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-utils
 
-- `toWei` support numbers in scientific notation (#6908)
-- `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
+-   `toWei` support numbers in scientific notation (#6908)
+-   `toWei` and `fromWei` trims according to ether unit successfuly (#7044)
 
 #### web3-validator
 
-- The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
--  `browser` entry point that was pointing to an non-existing bundle file was removed from `package.json` (#7015)
+-   The JSON schema conversion process now correctly assigns an id when the `abi.name` is not available, for example, in the case of public mappings. (#6981)
+-   `browser` entry point that was pointing to an non-existing bundle file was removed from `package.json` (#7015)
 
 #### web3-core
 
@@ -2600,7 +2600,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-accounts
 
-- baseTransaction method updated (#7095)
+-   baseTransaction method updated (#7095)
 
 #### web3-providers-ws
 
@@ -2612,7 +2612,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-rpc-providers
 
- - Change request return type `Promise<ResultType>` to `Promise<JsonRpcResponseWithResult<ResultType>>` (#7102)
+-   Change request return type `Promise<ResultType>` to `Promise<JsonRpcResponseWithResult<ResultType>>` (#7102)
 
 ### Added
 
@@ -2623,7 +2623,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-rpc-providers
 
- - When error is returned with code 429, throw rate limit error (#7102)
+-   When error is returned with code 429, throw rate limit error (#7102)
 
 #### web3
 
@@ -2635,7 +2635,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-errors
 
-- Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
+-   Fixed the undefined data in `Eip838ExecutionError` constructor (#6905)
 
 #### web3-eth
 
@@ -2645,7 +2645,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3
 
 -   Remove redundant constructor of contractBuilder (#7150)
-
 
 ## [4.12.0]
 
@@ -2657,7 +2656,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-accounts
 
--   Fix `TransactionFactory.registerTransactionType` not working, if there is a version mistatch between `web3-eth` and `web3-eth-accounts` by saving `extraTxTypes` at `globals`.  (#7197)
+-   Fix `TransactionFactory.registerTransactionType` not working, if there is a version mistatch between `web3-eth` and `web3-eth-accounts` by saving `extraTxTypes` at `globals`. (#7197)
 
 ### Added
 
@@ -2667,11 +2666,11 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-contract
 
--	Added `populateTransaction` to the `contract.deploy(...)` properties. (#7197)
+-   Added `populateTransaction` to the `contract.deploy(...)` properties. (#7197)
 
 #### web3-providers-http
 
-- Added `statusCode` of response in ResponseError, `statusCode` is optional property in ResponseError.
+-   Added `statusCode` of response in ResponseError, `statusCode` is optional property in ResponseError.
 
 #### web3-rpc-providers
 
@@ -2680,14 +2679,14 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-errors
 
-- Added optional `statusCode` property of response in ResponseError.
+-   Added optional `statusCode` property of response in ResponseError.
 
 ### Changed
 
 #### web3-eth-contract
 
 -   The returnred properties of `contract.deploy(...)` are structured with a newly created class named `DeployerMethodClass`. (#7197)
--	Add a missed accepted type for the `abi` parameter, at `dataInputEncodeMethodHelper` and `getSendTxParams`. (#7197)
+-   Add a missed accepted type for the `abi` parameter, at `dataInputEncodeMethodHelper` and `getSendTxParams`. (#7197)
 
 ## [4.12.1]
 
@@ -2695,6 +2694,11 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth-accounts
 
--   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem.  (#7216)
+-   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem. (#7216)
+
+#### web3
+
+-   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` is now `Promise<EIP6963ProviderResponse>`. (#7239)
+-   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
 
 ## [Unreleased]

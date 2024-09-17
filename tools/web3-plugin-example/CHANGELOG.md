@@ -94,7 +94,7 @@ Transaction middleware (#7088)
 
 ## [1.1.1]
 
-### Changed 
+### Changed
 
 -   Dependencies updated
 

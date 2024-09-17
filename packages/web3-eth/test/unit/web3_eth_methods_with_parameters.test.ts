@@ -65,17 +65,17 @@ describe('web3_eth_methods_with_parameters', () => {
 
 	it('should set and unset the transactionMiddleware correctly', () => {
 		const mockTransactionMiddleware: TransactionMiddleware = {
-		  processTransaction: jest.fn(),
+			processTransaction: jest.fn(),
 		};
-	
+
 		web3Eth.setTransactionMiddleware(mockTransactionMiddleware);
-	
+
 		expect(web3Eth.getTransactionMiddleware()).toBe(mockTransactionMiddleware);
 
 		web3Eth.setTransactionMiddleware(undefined as any);
 
 		expect(web3Eth.getTransactionMiddleware()).toBeUndefined();
-	  });
+	});
 
 	describe('should call RPC method with expected parameters', () => {
 		describe('only has returnFormat parameter', () => {

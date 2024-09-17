@@ -133,9 +133,8 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 		}
 
 		if (baseType === 'string') {
-            return String(value);
-        }
-
+			return String(value);
+		}
 	} catch (error) {
 		// If someone didn't use `eth` keyword we can return original value
 		// as the scope of this code is formatting not validation
@@ -328,18 +327,18 @@ export const convert = (
 			}
 
 			// The following code is basically saying:
-            // if the schema specifies oneOf, then we are to loop
-            // over each possible schema and check if they type of the schema specifies format
-            // and if so we use the oneOfSchemaProp as the schema for formatting
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            if ((schemaProp?.format === undefined) && (schemaProp?.oneOf !== undefined)) {
-                for (const [_index, oneOfSchemaProp] of schemaProp.oneOf.entries()) {
-                    if ((oneOfSchemaProp?.format !== undefined)) {
-                        schemaProp = oneOfSchemaProp;
-                        break;
-                    }
-                };
-            }
+			// if the schema specifies oneOf, then we are to loop
+			// over each possible schema and check if they type of the schema specifies format
+			// and if so we use the oneOfSchemaProp as the schema for formatting
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+			if (schemaProp?.format === undefined && schemaProp?.oneOf !== undefined) {
+				for (const [_index, oneOfSchemaProp] of schemaProp.oneOf.entries()) {
+					if (oneOfSchemaProp?.format !== undefined) {
+						schemaProp = oneOfSchemaProp;
+						break;
+					}
+				}
+			}
 
 			object[key] = convertScalarValue(value, schemaProp.format as string, format);
 
@@ -350,6 +349,27 @@ export const convert = (
 	return object;
 };
 
+/**
+ * Given data that can be interpreted according to the provided schema, returns equivalent data that has been formatted
+ * according to the provided return format.
+ *
+ * @param schema - how to interpret the data
+ * @param data - data to be formatted
+ * @param returnFormat - how to format the data
+ * @returns - formatted data
+ *
+ * @example
+ *
+ * ```js
+ * import { FMT_NUMBER, utils } from "web3";
+ *
+ * console.log(
+ *   utils.format({ format: "uint" }, "221", { number: FMT_NUMBER.HEX }),
+ * );
+ * // 0xdd
+ * ```
+ *
+ */
 export const format = <
 	DataType extends Record<string, unknown> | unknown[] | unknown,
 	ReturnType extends DataFormat,

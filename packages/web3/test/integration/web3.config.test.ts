@@ -30,7 +30,7 @@ describe('Web3 instance', () => {
 	let web3: Web3;
 	let currentAttempt = 0;
 
-    beforeEach(() => {
+	beforeEach(() => {
 		currentAttempt = 0;
 	});
 
@@ -45,11 +45,11 @@ describe('Web3 instance', () => {
 		try {
 			await closeOpenConnection(web3);
 		} catch (e) {
-			console.warn("Failed to close open con", e)
+			console.warn('Failed to close open con', e);
 		}
 	});
 
-    afterEach(async () => {
+	afterEach(async () => {
 		if (isWs) {
 			// make sure we try to close the connection after it is established
 			if (
@@ -65,19 +65,19 @@ describe('Web3 instance', () => {
 		}
 	});
 
-    it('should be send transaction, change for defaultTransactionType and successfully send transaction with different type', async () => {
+	it('should be send transaction, change for defaultTransactionType and successfully send transaction with different type', async () => {
 		const transaction = {
-            from: accounts[0],
-            to: accounts[0],
-            value: 100000,
-          }
-        
-          const receipt = await web3.eth.sendTransaction(transaction);
-          expect(receipt.type).toEqual(BigInt(2))
+			from: accounts[0],
+			to: accounts[0],
+			value: 100000,
+		};
 
-        web3.setConfig({defaultTransactionType: "0x0"});
-        
-        const receipt2 = await web3.eth.sendTransaction(transaction);
-        expect(receipt2.type).toEqual(BigInt(0))
-	})
-})
+		const receipt = await web3.eth.sendTransaction(transaction);
+		expect(receipt.type).toEqual(BigInt(2));
+
+		web3.setConfig({ defaultTransactionType: '0x0' });
+
+		const receipt2 = await web3.eth.sendTransaction(transaction);
+		expect(receipt2.type).toEqual(BigInt(0));
+	});
+});

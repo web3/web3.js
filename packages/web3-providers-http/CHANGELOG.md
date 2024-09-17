@@ -133,6 +133,6 @@ Documentation:
 
 ### Added
 
-- Added `statusCode` of response in ResponseError, `statusCode` is optional property in ResponseError.
+-   Added `statusCode` of response in ResponseError, `statusCode` is optional property in ResponseError.
 
 ## [Unreleased]

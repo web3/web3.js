@@ -33,7 +33,7 @@ import {
 	describeIf,
 	createNewAccount,
 	refillAccount,
-	BACKEND
+	BACKEND,
 } from '../../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';

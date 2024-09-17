@@ -73,7 +73,7 @@ export const mockRpcResponseHydrated: Block = {
 export const noTransactionBlock: Block = {
 	...mockRpcResponse,
 	transactions: [],
-}
+};
 
 /**
  * Array consists of:

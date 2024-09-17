@@ -151,7 +151,7 @@ Documentation:
 
 ### Add
 
-- Added function getText and getName in ENS and resolver classes (#6914)
+-   Added function getText and getName in ENS and resolver classes (#6914)
 
 ## [4.3.0]
 

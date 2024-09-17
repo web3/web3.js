@@ -648,7 +648,6 @@ export const validBytesData: any[] = [
 	new Uint8Array(hexToBytes('abce')),
 	new Uint8Array([0x91, 0x92]),
 	Buffer.from([0x91, 0x92]),
-
 ];
 
 export const validBytesDataWithSize: [any, number][] = [
