@@ -15,24 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionMiddleware, TransactionMiddlewareData } from "web3-eth";
+import { TransactionMiddleware, TransactionMiddlewareData } from 'web3-eth';
 
-// Sample Transaction Middleware 
+// Sample Transaction Middleware
 export class Web3TransactionMiddleware implements TransactionMiddleware {
-
 	// eslint-disable-next-line class-methods-use-this
-	public async processTransaction(transaction: TransactionMiddlewareData, 
-		_options?: { [key: string]: unknown } | undefined): 
-		
-		Promise<TransactionMiddlewareData> {
-		
+	public async processTransaction(
+		transaction: TransactionMiddlewareData,
+		_options?: { [key: string]: unknown } | undefined,
+	): Promise<TransactionMiddlewareData> {
 		// eslint-disable-next-line prefer-const
 		let txObj = { ...transaction };
 
-		// Add your logic here for transaction modification 
+		// Add your logic here for transaction modification
 		txObj.data = '0x123';
 
 		return Promise.resolve(txObj);
 	}
-
 }

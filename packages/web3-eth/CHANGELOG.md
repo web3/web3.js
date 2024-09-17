@@ -254,7 +254,7 @@ Documentation:
 
 -   `sendTransaction` in `rpc_method_wrappers` accepts optional param of `TransactionMiddleware` (#7088)
 -   WebEth has `setTransactionMiddleware` and `getTransactionMiddleware` for automatically passing to `sentTransaction` (#7088)
-- `TransactionMiddleware` and `TransactionMiddleware` data types are exported (#7088)
+-   `TransactionMiddleware` and `TransactionMiddleware` data types are exported (#7088)
 
 ## [4.8.1]
 

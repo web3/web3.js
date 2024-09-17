@@ -32,7 +32,13 @@ describe('decodeContractErrorData', () => {
 				expect(err.errorName).toEqual(output.errorName);
 				expect(err.errorSignature).toEqual(output.errorSignature);
 				expect(err.errorArgs?.message).toEqual(output.errorArgs?.message);
-				expect(Number(err.errorArgs?.code)).toEqual(output.errorArgs?.code);
+
+				// This ensures they are equal if one was provided
+				// It also skips if both are not provided
+				if (err.errorArgs?.code || output.errorArgs?.code) {
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(Number(err.errorArgs?.code)).toEqual(output.errorArgs?.code);
+				}
 				expect(err.cause?.code).toEqual(output.cause?.code);
 			},
 		);

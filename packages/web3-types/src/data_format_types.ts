@@ -41,6 +41,11 @@ export type ByteTypes = {
 	[FMT_BYTES.UINT8ARRAY]: Uint8Array;
 };
 
+/**
+ * Used to specify how data should be formatted. Bytes can be formatted as hexadecimal strings or
+ * Uint8Arrays. Numbers can be formatted as BigInts, hexadecimal strings, primitive numbers, or
+ * strings.
+ */
 export type DataFormat = {
 	readonly number: FMT_NUMBER;
 	readonly bytes: FMT_BYTES;

@@ -15,77 +15,79 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3APISpec, EIP1193Provider } from "web3-types";
-
+import { Web3APISpec, EIP1193Provider } from 'web3-types';
 
 export enum Eip6963EventName {
-  eip6963announceProvider = 'eip6963:announceProvider',
-  eip6963requestProvider = 'eip6963:requestProvider',
-};
+	eip6963announceProvider = 'eip6963:announceProvider',
+	eip6963requestProvider = 'eip6963:requestProvider',
+}
 
 export interface EIP6963ProviderInfo {
-  uuid: string;
-  name: string;
-  icon: string;
-  rdns: string;
+	uuid: string;
+	name: string;
+	icon: string;
+	rdns: string;
 }
 
 export interface EIP6963ProviderDetail<API = Web3APISpec> {
-  info: EIP6963ProviderInfo;
-  provider: EIP1193Provider<API>;
+	info: EIP6963ProviderInfo;
+	provider: EIP1193Provider<API>;
 }
 
+export type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>;
+
 export interface EIP6963AnnounceProviderEvent<API = Web3APISpec> extends CustomEvent {
-  type: Eip6963EventName.eip6963announceProvider;
-  detail: EIP6963ProviderDetail<API>;
+	type: Eip6963EventName.eip6963announceProvider;
+	detail: EIP6963ProviderDetail<API>;
 }
 
 export interface EIP6963RequestProviderEvent extends Event {
-  type: Eip6963EventName.eip6963requestProvider;
+	type: Eip6963EventName.eip6963requestProvider;
 }
 
-export const eip6963ProvidersMap: Map<string, EIP6963ProviderDetail> = new Map();
+export const eip6963ProvidersMap: EIP6963ProviderResponse = new Map();
 
-export const web3ProvidersMapUpdated = "web3:providersMapUpdated";
+export const web3ProvidersMapUpdated = 'web3:providersMapUpdated';
 export interface EIP6963ProvidersMapUpdateEvent extends CustomEvent {
-  type: string;
-  detail: Map<string, EIP6963ProviderDetail>;
+	type: string;
+	detail: EIP6963ProviderResponse;
 }
 
-export const requestEIP6963Providers = async () => 
-   new Promise((resolve, reject) => {
-    if (typeof window === 'undefined') {
-      reject(new Error("window object not available, EIP-6963 is intended to be used within a browser"));
-    }
+export const requestEIP6963Providers = async (): Promise<EIP6963ProviderResponse> =>
+	new Promise((resolve, reject) => {
+		if (typeof window === 'undefined') {
+			reject(
+				new Error(
+					'window object not available, EIP-6963 is intended to be used within a browser',
+				),
+			);
+		}
 
-  window.addEventListener(
-    Eip6963EventName.eip6963announceProvider as any,
-    (event: EIP6963AnnounceProviderEvent) => {
+		window.addEventListener(
+			Eip6963EventName.eip6963announceProvider as any,
+			(event: EIP6963AnnounceProviderEvent) => {
+				eip6963ProvidersMap.set(event.detail.info.uuid, event.detail);
 
-      eip6963ProvidersMap.set(
-        event.detail.info.uuid,
-        event.detail);
+				const newEvent: EIP6963ProvidersMapUpdateEvent = new CustomEvent(
+					web3ProvidersMapUpdated,
+					{ detail: eip6963ProvidersMap },
+				);
 
-      const newEvent: EIP6963ProvidersMapUpdateEvent = new CustomEvent(
-        web3ProvidersMapUpdated,
-        { detail: eip6963ProvidersMap }
-        );
+				window.dispatchEvent(newEvent);
+				resolve(eip6963ProvidersMap);
+			},
+		);
 
-      window.dispatchEvent(newEvent);
-      resolve(eip6963ProvidersMap);
+		window.dispatchEvent(new Event(Eip6963EventName.eip6963requestProvider));
+	});
 
-    }
-  );
-
-  window.dispatchEvent(new Event(Eip6963EventName.eip6963requestProvider));
-
-  });
-
-
-export const onNewProviderDiscovered = (callback: (providerEvent: EIP6963AnnounceProviderEvent) => void) => {
-  if (typeof window === 'undefined') {
-    throw new Error("window object not available, EIP-6963 is intended to be used within a browser");
-  }
-  window.addEventListener(web3ProvidersMapUpdated as any, callback );
-}
-
+export const onNewProviderDiscovered = (
+	callback: (providerEvent: EIP6963ProvidersMapUpdateEvent) => void,
+) => {
+	if (typeof window === 'undefined') {
+		throw new Error(
+			'window object not available, EIP-6963 is intended to be used within a browser',
+		);
+	}
+	window.addEventListener(web3ProvidersMapUpdated as any, callback);
+};

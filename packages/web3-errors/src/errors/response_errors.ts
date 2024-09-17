@@ -51,7 +51,7 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 		response: JsonRpcResponse<unknown, ErrorType>,
 		message?: string,
 		request?: JsonRpcPayload<RequestType>,
-		statusCode?: number
+		statusCode?: number,
 	) {
 		super(
 			message ??
@@ -85,7 +85,12 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 	}
 
 	public toJSON() {
-		return { ...super.toJSON(), data: this.data, request: this.request, statusCode: this.statusCode };
+		return {
+			...super.toJSON(),
+			data: this.data,
+			request: this.request,
+			statusCode: this.statusCode,
+		};
 	}
 }
 

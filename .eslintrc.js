@@ -16,4 +16,19 @@ module.exports = {
 			typescript: {}, // this loads tsconfig.json to eslint
 		},
 	},
+	overrides: [
+		{
+			files: ['*.test.ts'],
+			rules: {
+				'@typescript-eslint/no-unsafe-call': 'off',
+				'import/no-unresolved': 'off',
+			},
+		},
+		{
+			files: ['*.ts'],
+			rules: {
+				'default-param-last': 'off',
+			},
+		},
+	],
 };

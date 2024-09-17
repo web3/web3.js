@@ -112,7 +112,6 @@ export type ProviderChainId = string;
 
 export type ProviderAccounts = string[];
 
-
 export type Eip1193EventName =
 	| 'connect'
 	| 'disconnect'
@@ -148,7 +147,6 @@ export interface MetaMaskProvider<API extends Web3APISpec> extends SimpleProvide
 	removeListener(event: 'accountsChanged', listener: (accounts: ProviderAccounts) => void): void;
 	isMetaMask: boolean;
 }
-
 
 export type Eip1193Compatible<API extends Web3APISpec = EthExecutionAPI> = Omit<
 	// eslint-disable-next-line no-use-before-define

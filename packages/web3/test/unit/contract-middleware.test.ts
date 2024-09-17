@@ -15,9 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CTransactionMiddleware } from 
-// eslint-disable-next-line import/no-relative-packages
-"../fixtures/transaction_middleware";
+import {
+	CTransactionMiddleware,
+	// eslint-disable-next-line import/no-relative-packages
+} from '../fixtures/transaction_middleware';
 
 import { Web3 } from '../../src/index';
 import {
@@ -47,8 +48,5 @@ describe('Contract Middleware', () => {
 		expect(web3.eth.getTransactionMiddleware()).toBeDefined();
 		expect(contractB.getTransactionMiddleware()).toBeDefined();
 		expect(web3.eth.getTransactionMiddleware()).toEqual(contractB.getTransactionMiddleware());
-
 	});
-
 });
-

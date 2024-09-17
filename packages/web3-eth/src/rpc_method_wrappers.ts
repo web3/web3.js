@@ -296,10 +296,10 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 		const result = {
 			...res,
 			transactions: res.transactions ?? [],
-		}
+		};
 		return result;
 	}
-	
+
 	return res;
 }
 
@@ -508,26 +508,30 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 	);
 	let response;
 	try {
-		 response = await ethRpcMethods.getTransactionReceipt(
+		response = await ethRpcMethods.getTransactionReceipt(
 			web3Context.requestManager,
 			transactionHashFormatted,
 		);
 	} catch (error) {
 		// geth indexing error, we poll until transactions stopped indexing
-		if (typeof error === 'object' && !isNullish(error) && 'message' in error && (error as { message: string }).message === 'transaction indexing is in progress') { 
-			console.warn('Transaction indexing is in progress.')
+		if (
+			typeof error === 'object' &&
+			!isNullish(error) &&
+			'message' in error &&
+			(error as { message: string }).message === 'transaction indexing is in progress'
+		) {
+			console.warn('Transaction indexing is in progress.');
 		} else {
 			throw error;
 		}
-		
 	}
 	return isNullish(response)
 		? response
-		: (format(
+		: format(
 				transactionReceiptSchema,
 				response as unknown as TransactionReceipt,
 				returnFormat ?? web3Context.defaultReturnFormat,
-		  ));
+		  );
 }
 
 /**
@@ -572,7 +576,7 @@ export function sendTransaction<
 		| TransactionWithFromAndToLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
-	transactionMiddleware?: TransactionMiddleware
+	transactionMiddleware?: TransactionMiddleware,
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
@@ -585,9 +589,9 @@ export function sendTransaction<
 						returnFormat,
 					});
 
-					let transaction = {...transactionObj};
-					
-					if(!isNullish(transactionMiddleware)){
+					let transaction = { ...transactionObj };
+
+					if (!isNullish(transactionMiddleware)) {
 						transaction = await transactionMiddleware.processTransaction(transaction);
 					}
 

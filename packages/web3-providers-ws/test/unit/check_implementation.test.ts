@@ -92,7 +92,7 @@ describe('WebSocketProvider', () => {
 			const _onDisconnect = jest.fn();
 			// @ts-expect-error mock method
 			ws._socketConnection.close = jest.fn();
-			
+
 			// @ts-expect-error mock method
 			ws._clearQueues = _clearQueues;
 			// @ts-expect-error mock method
@@ -126,7 +126,7 @@ describe('WebSocketProvider', () => {
 			const ws = new WebSocketProvider('ws://localhost:8545');
 			// @ts-expect-error mock method
 			ws._socketConnection.listeners = () => {
-					throw new Error('error');
+				throw new Error('error');
 			};
 			const addEventListener = jest.fn();
 			// @ts-expect-error mock method
@@ -147,6 +147,6 @@ describe('WebSocketProvider', () => {
 			expect(removeEventListener).toHaveBeenCalledWith('open', ws._onOpenHandler);
 			// @ts-expect-error mock method
 			expect(removeEventListener).toHaveBeenCalledWith('close', ws._onCloseHandler);
-	});
+		});
 	});
 });

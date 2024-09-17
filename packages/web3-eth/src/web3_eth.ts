@@ -99,7 +99,6 @@ export const registeredSubscriptions = {
  * ```
  */
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
-	
 	private transactionMiddleware?: TransactionMiddleware;
 
 	public constructor(
@@ -129,11 +128,11 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		});
 	}
 
-	public setTransactionMiddleware(transactionMiddleware: TransactionMiddleware){
+	public setTransactionMiddleware(transactionMiddleware: TransactionMiddleware) {
 		this.transactionMiddleware = transactionMiddleware;
 	}
 
-	public getTransactionMiddleware (){
+	public getTransactionMiddleware() {
 		return this.transactionMiddleware;
 	}
 
@@ -1092,7 +1091,13 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		returnFormat: ReturnFormat = this.defaultReturnFormat as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {
-		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options, this.transactionMiddleware);
+		return rpcMethodsWrappers.sendTransaction(
+			this,
+			transaction,
+			returnFormat,
+			options,
+			this.transactionMiddleware,
+		);
 	}
 
 	/**
