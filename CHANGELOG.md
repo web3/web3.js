@@ -2701,14 +2701,14 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` is now `Promise<EIP6963ProviderResponse>`. (#7239)
 -   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
 
-## [Unreleased]
+## [4.13.0]
 
 ### Added
 
 #### web3-core
 
--   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions`
--   Adds a new property (`config`) to `Web3RequestManager`
+-   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions` (#7227)
+-   Adds a new property (`config`) to `Web3RequestManager` (#7227)
 
 #### web3-eth
 
@@ -2723,3 +2723,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth-personal
 
 -   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`
+
+#### web3
+
+-   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` is now `Promise<EIP6963ProviderResponse>`. (#7239)
+-   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
+
+## [Unreleased]

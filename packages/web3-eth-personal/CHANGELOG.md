@@ -147,8 +147,10 @@ Documentation:
 
 -   Dependencies updated
 
-## [Unreleased]
+## [4.0.9]
 
 ### Changed
 
 -   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`
+
+## [Unreleased]

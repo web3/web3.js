@@ -269,7 +269,7 @@ Documentation:
 -   Adds transaction property to be an empty list rather than undefined when no transactions are included in the block (#7151)
 -   Change method `getTransactionReceipt` to not be casted as `TransactionReceipt` to give proper return type (#7159)
 
-## [Unreleased]
+## [4.9.0]
 
 ### Changed
 
@@ -278,3 +278,5 @@ Documentation:
 ### Added
 
 -   Adds the same `{transactionSchema?: ValidationSchemaInput}` that exists in `formatTransaction` to `validateTransactionForSigning`
+
+## [Unreleased]
