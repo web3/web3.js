@@ -132,7 +132,7 @@ describe('formatTransaction', () => {
 				undefined,
 				{
 					transactionSchema: {
-						...transactionSchema,
+						type: 'object',
 						properties: {
 							...transactionSchema.properties,
 							feeCurrency: { format: 'address' },

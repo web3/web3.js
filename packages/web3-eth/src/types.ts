@@ -38,7 +38,6 @@ import {
 	TransactionWithToLocalWalletIndex,
 } from 'web3-types';
 import { Schema } from 'web3-validator';
-import { transactionSchema } from './schemas.js';
 
 export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
 
@@ -110,5 +109,5 @@ export interface TransactionMiddleware {
 
 export type CustomTransactionSchema = {
 	type: string;
-	properties: typeof transactionSchema['properties'] & Record<string, Schema>;
+	properties: Record<string, Schema>;
 };

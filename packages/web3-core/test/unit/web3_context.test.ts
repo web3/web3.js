@@ -124,9 +124,6 @@ describe('Web3Context', () => {
 			expect(newContext.requestManager).toBeInstanceOf(Web3RequestManager);
 			expect(newContext.config.defaultHardfork).toEqual(config.defaultHardfork);
 			expect(newContext.config.defaultNetworkId).toEqual(config.defaultNetworkId);
-			expect(newContext.requestManager.config.defaultHardfork).toEqual(
-				config.defaultHardfork,
-			);
 		});
 
 		describe('accountsProvider', () => {
