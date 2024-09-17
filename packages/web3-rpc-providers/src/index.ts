@@ -21,6 +21,7 @@ export * from './types.js';
 export * from './web3_provider_quicknode.js';
 export * from './web3_provider.js';
 export * from './errors.js';
+export * from './web3_provider_ankr.js';
 
 // default providers
 export const mainnet = new QuickNodeProvider();
