@@ -24,63 +24,39 @@ export class DRPCProvider extends Web3ExternalProvider {
 	public constructor(
 		network: Network = Network.ETH_MAINNET,
 		transport: Transport = Transport.HTTPS,
-		token = 'TEST_TOKEN',
+		token = 'TOKEN_HOLDER',
 		host = 'lb.drpc.org',
 		providerConfigOptions?: HttpProviderOptions | SocketOptions,
 	) {
 		super(network, transport, token, host, providerConfigOptions);
 	}
 
+	public static readonly networkStringMap: { [key: string]: string } = {
+		[Network.ETH_MAINNET]: 'ethereum',
+		[Network.ETH_SEPOLIA]: 'sepolia',
+		[Network.ETH_HOLESKY]: 'holesky',
+
+		[Network.ARBITRUM_MAINNET]: 'arbitrum',
+		[Network.ARBITRUM_SEPOLIA]: 'arbitrum-sepolia',
+
+		[Network.BNB_MAINNET]: 'bsc',
+		[Network.BNB_TESTNET]: 'bsc-testnet',
+
+		[Network.POLYGON_MAINNET]: 'polygon',
+		[Network.POLYGON_AMONY]: 'polygon-amoy',
+
+		[Network.ZKERA_MAINNET]: 'zksync',
+		[Network.ZKERA_SEPOLIA]: 'zksync-sepolia',
+	};
+
 	// eslint-disable-next-line class-methods-use-this
 	public getRPCURL(network: Network, transport: Transport, key: string, host: string) {
-		let networkString = '';
-
-		switch (network) {
-			case Network.ETH_MAINNET:
-				networkString = 'ethereum';
-				break;
-			case Network.ETH_SEPOLIA:
-				networkString = 'sepolia';
-				break;
-			case Network.ETH_HOLESKY:
-				networkString = 'holesky';
-				break;
-
-			case Network.ARBITRUM_MAINNET:
-				networkString = 'arbitrum';
-				break;
-			case Network.ARBITRUM_SEPOLIA:
-				networkString = 'arbitrum-sepolia';
-				break;
-
-			case Network.BNB_MAINNET:
-				networkString = 'bsc';
-				break;
-			case Network.BNB_TESTNET:
-				networkString = 'bsc-testnet';
-				break;
-
-			case Network.POLYGON_MAINNET:
-				networkString = 'polygon';
-				break;
-			case Network.POLYGON_AMONY:
-				networkString = 'polygon-amoy';
-				break;
-
-			case Network.ZKERA_MAINNET:
-				networkString = 'zksync';
-				break;
-
-			case Network.ZKERA_SEPOLIA:
-				networkString = 'zksync-sepolia';
-				break;
-
-			default:
-				throw new Error('Network info not available.');
+		const networkString = DRPCProvider.networkStringMap[network] || '';
+		if (!networkString) {
+			throw new Error('Network info not available.');
 		}
 
 		let protocol = '';
-
 		if (transport === Transport.HTTPS) {
 			protocol = 'rpc';
 		} else if (transport === Transport.WebSocket) {
