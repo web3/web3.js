@@ -107,7 +107,7 @@ export class QuickNodeProvider<
 				host = isValid(_host) ? _host : 'small-chaotic-moon.matic.quiknode.pro';
 				token = isValid(_token) ? _token : '847569f8a017e84d985e10d0f44365d965a951f1';
 				break;
-			case Network.POLYGON_AMONY:
+			case Network.POLYGON_AMOY:
 				host = isValid(_host) ? _host : 'prettiest-side-shape.matic-amoy.quiknode.pro';
 				token = isValid(_token) ? _token : '79a9476eea661d4f82de614db1d8a895b14b881c';
 				break;
