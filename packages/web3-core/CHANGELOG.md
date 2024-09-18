@@ -238,6 +238,5 @@ Documentation:
 ### Added
 
 -   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions`(#7227)
--   Adds a new property (`config`) to `Web3RequestManager` (#7227)
 
 ## [Unreleased]

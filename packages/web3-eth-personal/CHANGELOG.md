@@ -147,7 +147,7 @@ Documentation:
 
 -   Dependencies updated
 
-## [4.0.9]
+## [4.1.0]
 
 ### Changed
 

@@ -2708,7 +2708,6 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-core
 
 -   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions` (#7227)
--   Adds a new property (`config`) to `Web3RequestManager` (#7227)
 
 #### web3-eth
 

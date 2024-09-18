@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-personal",
-	"version": "4.0.9",
+	"version": "4.1.0",
 	"description": "Web3 module to interact with the Ethereum blockchain accounts stored in the node.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",

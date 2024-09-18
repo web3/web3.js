@@ -94,7 +94,7 @@
 		"web3-eth-contract": "^4.7.0",
 		"web3-eth-ens": "^4.4.0",
 		"web3-eth-iban": "^4.0.7",
-		"web3-eth-personal": "^4.0.9",
+		"web3-eth-personal": "^4.1.0",
 		"web3-net": "^4.1.0",
 		"web3-providers-http": "^4.2.0",
 		"web3-providers-ws": "^4.0.8",
