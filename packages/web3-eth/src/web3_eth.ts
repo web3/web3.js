@@ -1846,8 +1846,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			subscription instanceof LogsSubscription &&
 			name === 'logs' &&
 			typeof args === 'object' &&
-			!isNullish(args.fromBlock) &&
-			Number.isFinite(Number(args.fromBlock))
+			!isNullish((args as { fromBlock?: BlockNumberOrTag }).fromBlock) &&
+			Number.isFinite(Number((args as { fromBlock?: BlockNumberOrTag }).fromBlock))
 		) {
 			setImmediate(() => {
 				this.getPastLogs(args)

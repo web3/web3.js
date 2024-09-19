@@ -598,11 +598,13 @@ export function sendTransaction<
 						transaction = await transactionMiddleware.processTransaction(transaction);
 					}
 
-					let transactionFormatted:
+					let transactionFormatted: FormatType<
 						| Transaction
 						| TransactionWithFromLocalWalletIndex
 						| TransactionWithToLocalWalletIndex
-						| TransactionWithFromAndToLocalWalletIndex = formatTransaction(
+						| TransactionWithFromAndToLocalWalletIndex,
+						ReturnFormat
+					> = formatTransaction(
 						{
 							...transaction,
 							from: getTransactionFromOrToAttr('from', web3Context, transaction),
@@ -612,13 +614,13 @@ export function sendTransaction<
 						{
 							transactionSchema: web3Context.config.customTransactionSchema,
 						},
-					);
+					) as FormatType<Transaction, ReturnFormat>;
 
 					try {
-						transactionFormatted = await sendTxHelper.populateGasPrice({
+						transactionFormatted = (await sendTxHelper.populateGasPrice({
 							transaction,
 							transactionFormatted,
-						});
+						})) as FormatType<Transaction, ReturnFormat>;
 
 						await sendTxHelper.checkRevertBeforeSending(
 							transactionFormatted as TransactionCall,
