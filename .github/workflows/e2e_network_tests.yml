@@ -5,6 +5,10 @@ on:
         - release/**
       tags:
         - v4.*
+    pull_request:
+        branches:
+            - '4.x'
+        types: [ opened, reopened, synchronize ]
 jobs:
   build:
     name: Build Packages
@@ -16,11 +20,11 @@ jobs:
           node-version: 18
           cache: yarn
       - run: yarn
-      - run: tar -czf /tmp/web3-16.js.tar.gz --exclude="./.git" ./
+      - run: tar -czf /tmp/web3-18.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
-          name: web3-16.js.tar.gz
-          path: /tmp/web3-16.js.tar.gz
+          name: web3-18.js.tar.gz
+          path: /tmp/web3-18.js.tar.gz
   e2e:
       name: E2E Network Tests
       needs: build
@@ -43,9 +47,9 @@ jobs:
             node-version: 18
         - uses: actions/download-artifact@v3
           with:
-            name: web3-16.js.tar.gz
+            name: web3-18.js.tar.gz
             path: /tmp
-        - run: tar -xf /tmp/web3-16.js.tar.gz -C ./
+        - run: tar -xf /tmp/web3-18.js.tar.gz -C ./
         - run: |
             yarn test:e2e:${{ matrix.network }}:${{ matrix.mode }}
           shell: bash
