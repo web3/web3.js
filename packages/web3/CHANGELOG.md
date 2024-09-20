@@ -486,7 +486,7 @@ Documentation:
 
 ### Changed
 
--   Return type for the static `Web3.requestEIP6963Providers` function is now `Promise<EIP6963ProviderResponse>`. (#7239)
+-   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` function is now `Promise<EIP6963ProviderResponse>`. (#7239)
 -   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
 
 ## [Unreleased]
