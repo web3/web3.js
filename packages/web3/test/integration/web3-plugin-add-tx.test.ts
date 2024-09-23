@@ -58,16 +58,20 @@ describe('Add New Tx as a Plugin', () => {
 			type: TRANSACTION_TYPE,
 			maxPriorityFeePerGas: BigInt(5000000),
 			maxFeePerGas: BigInt(5000000),
+			customField: BigInt(42),
 		};
 		const sub = web3.eth.sendTransaction(tx);
 
-		const waitForEvent: Promise<Transaction> = new Promise(resolve => {
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises
-			sub.on('sending', txData => {
-				resolve(txData as unknown as Transaction);
-			});
-		});
+		const waitForEvent: Promise<Transaction & { customField: bigint }> = new Promise(
+			resolve => {
+				// eslint-disable-next-line @typescript-eslint/no-floating-promises
+				sub.on('sending', txData => {
+					resolve(txData as unknown as Transaction & { customField: bigint });
+				});
+			},
+		);
 		expect(Number((await waitForEvent).type)).toBe(TRANSACTION_TYPE);
+		expect(BigInt((await waitForEvent).customField)).toBe(BigInt(42));
 		await expect(sub).rejects.toThrow();
 	});
 });

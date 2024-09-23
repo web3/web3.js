@@ -18,8 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	EthExecutionAPI,
 	HexString,
-	PopulatedUnsignedEip1559Transaction,
-	PopulatedUnsignedEip2930Transaction,
 	PopulatedUnsignedTransaction,
 	Transaction,
 	ValidChains,
@@ -36,25 +34,24 @@ import { transactionBuilder } from './transaction_builder.js';
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
-) => ({
-	nonce: transaction.nonce,
-	gasPrice: transaction.gasPrice,
-	gasLimit: transaction.gasLimit ?? transaction.gas,
-	to: transaction.to,
-	value: transaction.value,
-	data: transaction.data ?? transaction.input,
-	type: transaction.type,
-	chainId: transaction.chainId,
-	accessList: (
-		transaction as FormatType<PopulatedUnsignedEip2930Transaction, typeof ETH_DATA_FORMAT>
-	).accessList,
-	maxPriorityFeePerGas: (
-		transaction as FormatType<PopulatedUnsignedEip1559Transaction, typeof ETH_DATA_FORMAT>
-	).maxPriorityFeePerGas,
-	maxFeePerGas: (
-		transaction as FormatType<PopulatedUnsignedEip1559Transaction, typeof ETH_DATA_FORMAT>
-	).maxFeePerGas,
-});
+) => {
+	const txData = { ...transaction };
+
+	const aliases = [
+		['input', 'data'],
+		['gas', 'gasLimit'],
+	] as const;
+
+	for (const [oldField, newField] of aliases) {
+		if (typeof txData[oldField] !== 'undefined') {
+			// @ts-expect-error
+			txData[newField] = txData[oldField];
+			delete txData[oldField];
+		}
+	}
+
+	return txData;
+};
 
 const getEthereumjsTransactionOptions = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,

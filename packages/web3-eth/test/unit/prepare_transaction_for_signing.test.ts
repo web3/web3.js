@@ -28,9 +28,13 @@ import {
 	FeeMarketEIP1559Transaction,
 	Transaction,
 	Hardfork,
+	TypedTransaction,
+	TransactionFactory,
 } from 'web3-eth-accounts';
 import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
 import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
+import { transactionSchema } from '../../src/schemas';
+import { CustomFieldTransaction } from '../fixtures/format_transaction';
 
 describe('prepareTransactionForSigning', () => {
 	const web3Context = new Web3Context<EthExecutionAPI>({
@@ -315,6 +319,56 @@ describe('prepareTransactionForSigning', () => {
 				expect(r).toBe(expectedR);
 				expect(s).toBe(expectedS);
 			},
+		);
+	});
+
+	it('should not remove extra fields when using a custom schema', async () => {
+		const context = new Web3Context<EthExecutionAPI>({
+			provider: new HttpProvider('http://127.0.0.1'),
+			config: {
+				defaultNetworkId: '0x1',
+				customTransactionSchema: {
+					type: 'object',
+					properties: {
+						...transactionSchema.properties,
+						feeCurrency: { format: 'address' },
+					},
+				},
+			},
+		});
+
+		async function transactionBuilder<ReturnType = TransactionType>(options: {
+			transaction: TransactionType;
+			web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
+			privateKey?: HexString | Uint8Array;
+			fillGasPrice?: boolean;
+			fillGasLimit?: boolean;
+		}): Promise<ReturnType> {
+			const tx = { ...options.transaction };
+			return tx as unknown as ReturnType;
+		}
+
+		context.transactionBuilder = transactionBuilder;
+
+		const spy = jest.spyOn(TransactionFactory, 'fromTxData');
+		(await prepareTransactionForSigning(
+			{
+				chainId: 1458,
+				nonce: 1,
+				gasPrice: BigInt(20000000000),
+				gasLimit: BigInt(21000),
+				to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+				from: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+				value: '1000000000',
+				input: '',
+				feeCurrency: '0x1234567890123456789012345678901234567890',
+			} as CustomFieldTransaction,
+			context,
+		)) as TypedTransaction & { feeCurrency: string };
+
+		// @ts-expect-error
+		expect(spy.mock.lastCall[0].feeCurrency).toEqual(
+			'0x1234567890123456789012345678901234567890',
 		);
 	});
 });
