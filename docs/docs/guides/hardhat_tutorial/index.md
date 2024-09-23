@@ -10,6 +10,10 @@ Following the recent compatibility update of Hardhat plugin [hardhat-web3-v4](ht
 
 This tutorial will guide you through using Web3js as a plugin to interact with the Blockchain.
 
+:::info
+This tutorial explains how to create a Web3.js + Hardhat project from scratch. The [`create-hardhat-web3`](https://github.com/web3/hardhat-web3) command line utility was created to automate many of the steps in this tutorial and make it easier to quickly bootstrap a new Web3.js + Hardhat project.
+:::
+
 ## Pre-requisite
 This tutorial assumes you have previous knowledge of writing Smart contracts, and are convenient working with JavaScript/TypeScript. You should have [NodeJS](https://nodejs.org/en) version greater than v16 installed.
 
