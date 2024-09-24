@@ -366,9 +366,7 @@ describe('prepareTransactionForSigning', () => {
 			context,
 		)) as TypedTransaction & { feeCurrency: string };
 
-		// @ts-expect-error
-		expect(spy.mock.lastCall[0].feeCurrency).toEqual(
-			'0x1234567890123456789012345678901234567890',
-		);
+		// @ts-expect-error feeCurrency is a custom field for testing here
+		expect(spy.mock.lastCall[0].feeCurrency).toBe('0x1234567890123456789012345678901234567890');
 	});
 });

@@ -44,8 +44,7 @@ const getEthereumjsTxDataFromTransaction = (
 
 	for (const [oldField, newField] of aliases) {
 		if (typeof txData[oldField] !== 'undefined') {
-			// @ts-expect-error
-			txData[newField] = txData[oldField];
+			txData[newField] = txData[oldField]!;
 			delete txData[oldField];
 		}
 	}
