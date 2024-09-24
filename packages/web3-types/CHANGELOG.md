@@ -202,4 +202,10 @@ Documentation:
 -   Added `result` as optional `never` and `error` as optional `never in type `JsonRpcNotification` (#7091)
 -   Added `JsonRpcNotfication` as a union type in `JsonRpcResponse` (#7091)
 
+## [1.8.0]
+
+### Added
+
+-   Add COMMITTED to BlockTags (#7124)
+
 ## [Unreleased]
