@@ -75,11 +75,11 @@ export const padRight = (value: Numbers, characterAmount: number, sign = '0'): s
 		return value.padEnd(characterAmount, sign);
 	}
 
-	validator.validate(['int'], [value]);
-
 	const hexString = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
-
 	const prefixLength = hexString.startsWith('-') ? 3 : 2;
+
+	validator.validate([hexString.startsWith('-') ? 'int' : 'uint'], [value]);
+
 	return hexString.padEnd(characterAmount + prefixLength, sign);
 };
 
