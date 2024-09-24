@@ -20,11 +20,10 @@ jobs:
           node-version: 18
           cache: yarn
       - run: yarn
-      - run: tar -czf /tmp/web3-18.js.tar.gz --exclude="./.git" ./
       - uses: actions/cache/save@v4
         with:
           path: ./
-          key: web3-18-${{github.sha}}
+          key: web3-e2e-18-${{github.sha}}
   e2e:
       name: E2E Network Tests
       needs: build
@@ -48,7 +47,7 @@ jobs:
         - uses: actions/cache/restore@v4
           with:
             path: ./
-            key: web3-18-${{github.sha}}
+            key: web3-e2e-18-${{github.sha}}
         - run: |
             yarn test:e2e:${{ matrix.network }}:${{ matrix.mode }}
           shell: bash
