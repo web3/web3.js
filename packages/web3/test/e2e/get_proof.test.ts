@@ -55,9 +55,9 @@ describe(`${getSystemTestBackend()} tests - getProof`, () => {
 				| 'blockNumber';
 		}>({
 			block: [
-				'earliest',
+				// 'earliest', block is earlier than 128 blocks ago "Returned error: missing trie node"
 				'latest',
-				'pending',
+				// 'pending', block is not available "Returned error: missing trie node"
 				'safe',
 				'finalized',
 				'blockHash',
