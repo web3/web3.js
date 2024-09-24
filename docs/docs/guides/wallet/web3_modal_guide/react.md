@@ -78,7 +78,7 @@ const web3Config = defaultConfig({
 
 // 5. Create a Web3Modal instance
 createWeb3Modal({
-  ethersConfig,
+  web3Config,
   chains: [mainnet],
   projectId,
   enableAnalytics: true // Optional - defaults to your Cloud configuration
