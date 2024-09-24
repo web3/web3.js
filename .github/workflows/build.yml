@@ -5,10 +5,11 @@ on:
             - '4.x'
         tags:
             - v4*
-    pull_request:
-        branches:
-            - '4.x'
-        types: [opened, reopened, synchronize]
+#    for test purpose only
+#    pull_request:
+#        branches:
+#            - '4.x'
+#        types: [opened, reopened, synchronize]
 
 jobs:
     build:
