@@ -235,3 +235,7 @@ Documentation:
 -   `_sendPendingRequests` will catch unhandled errors from `_sendToSocket` (#6968)
 
 ## [Unreleased]
+
+### Fixed
+
+-   fix `padRight` validation failure on large `uint` (#7265)

@@ -56,6 +56,14 @@ export const padRightData: [[Numbers, number, string], HexString][] = [
 	[[BigInt(10000), 8, '0'], '0x27100000'],
 	[[BigInt(-14), 8, '0'], '-0xe0000000'],
 	[['15.5', 8, '0'], '15.50000'],
+	[
+		['0x05e2e7de3cd95eb48fa9ff77e7860cf249fe05f726abea45a0a44e62b4bf52b2', 64, '0'],
+		'0x05e2e7de3cd95eb48fa9ff77e7860cf249fe05f726abea45a0a44e62b4bf52b2',
+	],
+	[
+		['0xb5e2e7de3cd95eb48fa9ff77e7860cf249fe05f726abea45a0a44e62b4bf52b2', 64, '0'],
+		'0xb5e2e7de3cd95eb48fa9ff77e7860cf249fe05f726abea45a0a44e62b4bf52b2',
+	],
 ];
 
 export const toTwosComplementData: [[Numbers, number | undefined], HexString][] = [
