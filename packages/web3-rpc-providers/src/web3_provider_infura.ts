@@ -63,96 +63,107 @@ export class InfuraProvider<
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	public getRPCURL(network: Network, transport: Transport, _token: string, _host: string) {
+	public getRPCURL(network: Network, transport: Transport, token: string, _host: string) {
 		let host = '';
-		let token = '';
 
 		switch (network) {
+			case Network.PALM_MAINNET:
+				host = isValid(_host) ? _host : 'palm-mainnet.infura.io';
+				break;
+			case Network.PALM_TESTNET:
+				host = isValid(_host) ? _host : 'palm-testnet.infura.io';
+				break;
+			case Network.BLAST_MAINNET:
+				host = isValid(_host) ? _host : 'blast-mainnet.infura.io';
+				break;
+			case Network.BLAST_SEPOLIA:
+				host = isValid(_host) ? _host : 'blast-sepolia.infura.io';
+				break;
+			case Network.AVALANCHE_MAINNET:
+				host = isValid(_host) ? _host : 'avalanche-mainnet.infura.io';
+				break;
+			case Network.AVALANCHE_FUJI:
+				host = isValid(_host) ? _host : 'avalanche-fuji.infura.io';
+				break;
+			case Network.STARKNET_MAINNET:
+				host = isValid(_host) ? _host : 'starknet-mainnet.infura.io';
+				break;
+			case Network.STARKNET_SEPOLIA:
+				host = isValid(_host) ? _host : 'starknet-sepolia.infura.io';
+				break;
+			case Network.ZKSYNC_MAINNET:
+				host = isValid(_host) ? _host : 'zksync-mainnet.infura.io';
+				break;
+			case Network.ZKSYNC_SEPOLIA:
+				host = isValid(_host) ? _host : 'zksync-sepolia.infura.io';
+				break;
+			case Network.CELO_MAINNET:
+				host = isValid(_host) ? _host : 'celo-mainnet.infura.io';
+				break;
+			case Network.CELO_ALFAJORES:
+				host = isValid(_host) ? _host : 'celo-alfajores.infura.io';
+				break;
+			case Network.BSC_MAINNET:
+				host = isValid(_host) ? _host : 'bsc-mainnet.infura.io';
+				break;
+			case Network.BSC_TESTNET:
+				host = isValid(_host) ? _host : 'bsc-testnet.infura.io';
+				break;
+			case Network.MANTLE_MAINNET:
+				host = isValid(_host) ? _host : 'mantle-mainnet.infura.io';
+				break;
+			case Network.MANTLE_SEPOLIA:
+				host = isValid(_host) ? _host : 'mantle-sepolia.infura.io';
+				break;
 			case Network.ETH_MAINNET:
 				host = isValid(_host) ? _host : 'mainnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
-			case Network.ETH_GOERLI:
-				host = isValid(_host) ? _host : 'goerli.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
+			case Network.ETH_HOLESKY:
+				host = isValid(_host) ? _host : 'holesky.infura.io';
 				break;
 			case Network.ETH_SEPOLIA:
 				host = isValid(_host) ? _host : 'sepolia.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
-
 			case Network.ARBITRUM_MAINNET:
 				host = isValid(_host) ? _host : 'arbitrum-mainnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
-				break;
-			case Network.ARBITRUM_GOERLI:
-				host = isValid(_host) ? _host : 'arbitrum-goerli.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.ARBITRUM_SEPOLIA:
 				host = isValid(_host) ? _host : 'arbitrum-sepolia.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.BASE_MAINNET:
 				host = isValid(_host) ? _host : 'base-mainnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
-				break;
-			case Network.BASE_GOERLI:
-				host = isValid(_host) ? _host : 'base-goerli.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.BASE_SEPOLIA:
 				host = isValid(_host) ? _host : 'base-sepolia.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.BNB_MAINNET:
-				host = isValid(_host) ? _host : 'bnbsmartchain-mainnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
+				host = isValid(_host) ? _host : 'opbnb-mainnet.infura.io';
 				break;
 			case Network.BNB_TESTNET:
-				host = isValid(_host) ? _host : 'bnbsmartchain-testnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
+				host = isValid(_host) ? _host : 'opbnb-testnet.infura.io';
 				break;
 			case Network.LINEA_MAINNET:
 				host = isValid(_host) ? _host : 'linea-mainnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
-				break;
-			case Network.LINEA_GOERLI:
-				host = isValid(_host) ? _host : 'linea-goerli.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.LINEA_SEPOLIA:
 				host = isValid(_host) ? _host : 'linea-sepolia.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.POLYGON_MAINNET:
 				host = isValid(_host) ? _host : 'polygon-mainnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.POLYGON_AMONY:
 				host = isValid(_host) ? _host : 'polygon-amoy.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
-				break;
-			case Network.POLYGON_MUMBAI:
-				host = isValid(_host) ? _host : 'polygon-mumbai.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.OPTIMISM_MAINNET:
 				host = isValid(_host) ? _host : 'optimism-mainnet.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
-				break;
-			case Network.OPTIMISM_GOERLI:
-				host = isValid(_host) ? _host : 'optimism-goerli.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			case Network.OPTIMISM_SEPOLIA:
 				host = isValid(_host) ? _host : 'optimism-sepolia.infura.io';
-				token = isValid(_token) ? _token : '3240624a343867035925ff7561eb60dfdba2a668';
 				break;
 			default:
 				throw new Error('Network info not avalible.');
 		}
 
-		return `${transport}://${host}/${token}`;
+		return `${transport}://${host}/v3/${token}`;
 	}
 }

@@ -25,9 +25,27 @@ export enum Transport {
 
 export enum Network {
 	ETH_MAINNET = 'eth_mainnet',
-	ETH_GOERLI = 'eth_goerli',
 	ETH_SEPOLIA = 'eth_sepolia',
+	ETH_GOERLI = 'eth_goerli',
 	ETH_HOLESKY = 'eth_holesky',
+
+	PALM_MAINNET = 'palm_mainnet',
+	PALM_TESTNET = 'palm_testnet',
+
+	BLAST_MAINNET = 'blast_mainnet',
+	BLAST_SEPOLIA = 'blast_sepolia',
+
+	STARKNET_MAINNET = 'starknet_mainnet',
+	STARKNET_SEPOLIA = 'starknet_sepolia',
+
+	ZKSYNC_MAINNET = 'zksync_mainnet',
+	ZKSYNC_SEPOLIA = 'zksync_sepolia',
+
+	CELO_MAINNET = 'celo_mainnet',
+	CELO_ALFAJORES = 'celo_alfajores',
+
+	AVALANCHE_MAINNET = 'avalanche_mainnet',
+	AVALANCHE_FUJI = 'avalanche_fuji',
 
 	POLYGON_MAINNET = 'polygon_mainnet',
 	POLYGON_MUMBAI = 'polygon_mumbai',
@@ -47,6 +65,12 @@ export enum Network {
 
 	BNB_MAINNET = 'bnb_mainnet',
 	BNB_TESTNET = 'bnb_testnet',
+
+	BSC_MAINNET = 'bsc_mainnet',
+	BSC_TESTNET = 'bsc_testnet',
+
+	MANTLE_MAINNET = 'mantle_mainnet',
+	MANTLE_SEPOLIA = 'mantle_sepolia',
 
 	LINEA_MAINNET = 'linea_mainnet',
 	LINEA_SEPOLIA = 'linea_sepolia',

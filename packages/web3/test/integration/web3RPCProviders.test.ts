@@ -50,31 +50,46 @@ describe('Web3 RPC Provider Integration tests', () => {
 	});
 
 	const infuraNetworks = [
+		Network.PALM_MAINNET,
+		Network.PALM_TESTNET,
+		Network.BLAST_MAINNET,
+		Network.BLAST_SEPOLIA,
+		Network.AVALANCHE_MAINNET,
+		Network.AVALANCHE_FUJI,
+		Network.STARKNET_MAINNET,
+		Network.STARKNET_SEPOLIA,
+		Network.ZKSYNC_MAINNET,
+		Network.ZKSYNC_SEPOLIA,
+		Network.CELO_MAINNET,
+		Network.CELO_ALFAJORES,
+		Network.BSC_MAINNET,
+		Network.BSC_TESTNET,
+		Network.MANTLE_MAINNET,
+		Network.MANTLE_SEPOLIA,
 		Network.ETH_MAINNET,
-		Network.ETH_GOERLI,
+		Network.ETH_HOLESKY,
 		Network.ETH_SEPOLIA,
 		Network.ARBITRUM_MAINNET,
-		Network.ARBITRUM_GOERLI,
 		Network.ARBITRUM_SEPOLIA,
 		Network.BASE_MAINNET,
-		Network.BASE_GOERLI,
 		Network.BASE_SEPOLIA,
 		Network.BNB_MAINNET,
 		Network.BNB_TESTNET,
 		Network.LINEA_MAINNET,
-		Network.LINEA_GOERLI,
 		Network.LINEA_SEPOLIA,
 		Network.POLYGON_MAINNET,
 		Network.POLYGON_AMONY,
-		Network.POLYGON_MUMBAI,
 		Network.OPTIMISM_MAINNET,
-		Network.OPTIMISM_GOERLI,
 		Network.OPTIMISM_SEPOLIA,
 	];
 	transports.forEach(transport => {
 		infuraNetworks.forEach(network => {
 			it(`InfuraProvider should work with ${transport} transport and ${network} network`, async () => {
-				const provider = new InfuraProvider(network, transport);
+				const provider = new InfuraProvider(
+					network,
+					transport,
+					process.env.INFURA_PROVIDER_KEY,
+				);
 				const web3 = new Web3(provider);
 				const result = await web3.eth.getBlockNumber();
 
