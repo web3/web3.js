@@ -20,7 +20,8 @@ import { isNullish, ValidationSchemaInput } from 'web3-validator';
 import { mergeDeep, format, bytesToHex, toHex } from 'web3-utils';
 import { TransactionDataAndInputError } from 'web3-errors';
 
-import { transactionInfoSchema, transactionSchema } from '../schemas.js';
+import { transactionInfoSchema } from '../schemas.js';
+import { type CustomTransactionSchema } from '../types.js';
 
 export function formatTransaction<
 	ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
@@ -29,7 +30,7 @@ export function formatTransaction<
 	transaction: TransactionType,
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	options: {
-		transactionSchema?: ValidationSchemaInput | typeof transactionSchema;
+		transactionSchema?: ValidationSchemaInput | CustomTransactionSchema | undefined;
 		fillInputAndData?: boolean;
 	} = {
 		transactionSchema: transactionInfoSchema,

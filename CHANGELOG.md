@@ -2696,9 +2696,35 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   Revert `TransactionFactory.registerTransactionType` if there is a version mistatch between `web3-eth` and `web3-eth-accounts` and fix nextjs problem. (#7216)
 
+## [4.13.0]
+
+### Added
+
+#### web3-core
+
+-   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions` (#7227)
+
+#### web3-eth
+
+-   Adds the same `{transactionSchema?: ValidationSchemaInput}` that exists in `formatTransaction` to `validateTransactionForSigning`
+
+#### web3-types
+
+-   Add COMMITTED to BlockTags (#7124)
+
+### Changed
+
+#### web3-eth
+
+-   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`
+
+#### web3-eth-personal
+
+-   Forwards the new `web3Context.config.customTransactionSchema` to `formatTransaction`
+
 #### web3
 
--   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` is now `Promise<EIP6963ProviderResponse>`. (#7239)
+-   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` function is now `Promise<EIP6963ProviderResponse>`. (#7239)
 -   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
 
 ## [Unreleased]

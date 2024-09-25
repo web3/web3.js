@@ -24,6 +24,7 @@ import { bytesToHex, format, hexToBytes, keccak256 } from 'web3-utils';
 import { TransactionFactory } from 'web3-eth-accounts';
 import { detectRawTransactionType } from './detect_transaction_type.js';
 import { formatTransaction } from './format_transaction.js';
+import { type CustomTransactionSchema } from '../types.js';
 
 /**
  * Decodes an [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded transaction.
@@ -35,7 +36,9 @@ import { formatTransaction } from './format_transaction.js';
 export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 	encodedSignedTransaction: HexStringBytes,
 	returnFormat: ReturnFormat,
-	options: { fillInputAndData?: boolean } = { fillInputAndData: false },
+	options: { fillInputAndData?: boolean; transactionSchema?: CustomTransactionSchema } = {
+		fillInputAndData: false,
+	},
 ): SignedTransactionInfoAPI {
 	return {
 		raw: format({ format: 'bytes' }, encodedSignedTransaction, returnFormat),
@@ -48,7 +51,10 @@ export function decodeSignedTransaction<ReturnFormat extends DataFormat>(
 				type: detectRawTransactionType(hexToBytes(encodedSignedTransaction)),
 			} as TransactionSignedAPI,
 			returnFormat,
-			{ fillInputAndData: options.fillInputAndData },
+			{
+				fillInputAndData: options.fillInputAndData,
+				transactionSchema: options.transactionSchema,
+			},
 		),
 	};
 }

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Web3RequestManager } from 'web3-core';
+import { Web3RequestManager, Web3ConfigOptions } from 'web3-core';
 import { toChecksumAddress, utf8ToHex } from 'web3-utils';
 import { formatTransaction } from 'web3-eth';
 import { Address, EthPersonalAPI, ETH_DATA_FORMAT, HexString, Transaction } from 'web3-types';
@@ -72,8 +72,11 @@ export const sendTransaction = async (
 	requestManager: Web3RequestManager<EthPersonalAPI>,
 	tx: Transaction,
 	passphrase: string,
+	config?: Web3ConfigOptions,
 ) => {
-	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT);
+	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT, {
+		transactionSchema: config?.customTransactionSchema,
+	});
 
 	return personalRpcMethods.sendTransaction(requestManager, formattedTx, passphrase);
 };
@@ -82,8 +85,11 @@ export const signTransaction = async (
 	requestManager: Web3RequestManager<EthPersonalAPI>,
 	tx: Transaction,
 	passphrase: string,
+	config?: Web3ConfigOptions,
 ) => {
-	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT);
+	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT, {
+		transactionSchema: config?.customTransactionSchema,
+	});
 
 	return personalRpcMethods.signTransaction(requestManager, formattedTx, passphrase);
 };

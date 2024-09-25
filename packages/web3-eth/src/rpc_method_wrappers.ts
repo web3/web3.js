@@ -429,6 +429,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 	return isNullish(response)
 		? response
 		: formatTransaction(response, returnFormat, {
+				transactionSchema: web3Context.config.customTransactionSchema,
 				fillInputAndData: true,
 		  });
 }
@@ -448,6 +449,7 @@ export async function getPendingTransactions<ReturnFormat extends DataFormat>(
 			transaction as unknown as Transaction,
 			returnFormat ?? web3Context.defaultReturnFormat,
 			{
+				transactionSchema: web3Context.config.customTransactionSchema,
 				fillInputAndData: true,
 			},
 		),
@@ -488,6 +490,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	return isNullish(response)
 		? response
 		: formatTransaction(response, returnFormat ?? web3Context.defaultReturnFormat, {
+				transactionSchema: web3Context.config.customTransactionSchema,
 				fillInputAndData: true,
 		  });
 }
@@ -606,6 +609,9 @@ export function sendTransaction<
 							to: getTransactionFromOrToAttr('to', web3Context, transaction),
 						},
 						ETH_DATA_FORMAT,
+						{
+							transactionSchema: web3Context.config.customTransactionSchema,
+						},
 					);
 
 					try {
@@ -847,7 +853,9 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 ) {
 	const response = await ethRpcMethods.signTransaction(
 		web3Context.requestManager,
-		formatTransaction(transaction, ETH_DATA_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT, {
+			transactionSchema: web3Context.config.customTransactionSchema,
+		}),
 	);
 	// Some clients only return the encoded signed transaction (e.g. Ganache)
 	// while clients such as Geth return the desired SignedTransactionInfoAPI object
@@ -862,6 +870,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 					returnFormat,
 				),
 				tx: formatTransaction((response as SignedTransactionInfoAPI).tx, returnFormat, {
+					transactionSchema: web3Context.config.customTransactionSchema,
 					fillInputAndData: true,
 				}),
 		  };
@@ -885,7 +894,9 @@ export async function call<ReturnFormat extends DataFormat>(
 
 	const response = await ethRpcMethods.call(
 		web3Context.requestManager,
-		formatTransaction(transaction, ETH_DATA_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT, {
+			transactionSchema: web3Context.config.customTransactionSchema,
+		}),
 		blockNumberFormatted,
 	);
 
@@ -903,7 +914,9 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT);
+	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT, {
+		transactionSchema: web3Context.config.customTransactionSchema,
+	});
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ format: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
@@ -1074,7 +1087,9 @@ export async function createAccessList<ReturnFormat extends DataFormat>(
 
 	const response = (await ethRpcMethods.createAccessList(
 		web3Context.requestManager,
-		formatTransaction(transaction, ETH_DATA_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT, {
+			transactionSchema: web3Context.config.customTransactionSchema,
+		}),
 		blockNumberFormatted,
 	)) as unknown as AccessListResult;
 

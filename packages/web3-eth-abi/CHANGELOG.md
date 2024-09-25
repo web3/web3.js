@@ -182,8 +182,10 @@ Documentation:
 
 -   fix encodedata in EIP-712 (#7095)
 
-## [Unreleased]
+## [4.2.4]
 
 ### Added
 
 -   Handle common cases for smart contract errors according to EIP 838: `0x4e487b71` which is the ‘selector’ for `Panic(uint256)` and `0x08c379a0` is the ‘selector’ of `Error(string)`. (7155)
+
+## [Unreleased]

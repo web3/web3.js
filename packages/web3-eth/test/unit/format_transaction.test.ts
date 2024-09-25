@@ -25,8 +25,11 @@ import {
 	numbersAsStringTransaction,
 	numbersAsNumberTransaction,
 	bytesAsUint8ArrayTransaction,
+	customFieldTransaction,
+	CustomFieldTransaction,
 } from '../fixtures/format_transaction';
 import { objectBigintToString } from '../fixtures/system_test_utils';
+import { transactionSchema } from '../../src';
 
 const transactionsDataForNumberTypes: Record<FMT_NUMBER, Record<string, unknown>> = {
 	[FMT_NUMBER.BIGINT]: numbersAsBigIntTransaction,
@@ -115,5 +118,28 @@ describe('formatTransaction', () => {
 				input: transaction.input as string,
 			}),
 		);
+	});
+
+	it('Accepts a custom schema', () => {
+		expect(
+			formatTransaction<typeof DEFAULT_RETURN_FORMAT, CustomFieldTransaction>(
+				customFieldTransaction,
+			).feeCurrency,
+		).toBeUndefined();
+		expect(
+			formatTransaction<typeof DEFAULT_RETURN_FORMAT, CustomFieldTransaction>(
+				customFieldTransaction,
+				undefined,
+				{
+					transactionSchema: {
+						type: 'object',
+						properties: {
+							...transactionSchema.properties,
+							feeCurrency: { format: 'address' },
+						},
+					},
+				},
+			).feeCurrency,
+		).toBeDefined();
 	});
 });

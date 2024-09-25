@@ -185,7 +185,11 @@ describe('Personal', () => {
 			await personal.sendTransaction(tx, 'password');
 
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
+			expect(eth.formatTransaction).toHaveBeenCalledWith(
+				tx,
+				ETH_DATA_FORMAT,
+				expect.anything(),
+			);
 		});
 	});
 
@@ -215,7 +219,11 @@ describe('Personal', () => {
 			await personal.signTransaction(tx, 'password');
 
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
+			expect(eth.formatTransaction).toHaveBeenCalledWith(
+				tx,
+				ETH_DATA_FORMAT,
+				expect.anything(),
+			);
 		});
 	});
 

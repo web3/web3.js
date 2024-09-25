@@ -49,6 +49,7 @@ const defaultConfig = {
 	defaultReturnFormat: DEFAULT_RETURN_FORMAT,
 	transactionBuilder: undefined,
 	transactionTypeParser: undefined,
+	customTransactionSchema: undefined,
 };
 const setValue = {
 	string: 'newValue',

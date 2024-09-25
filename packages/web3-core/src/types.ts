@@ -23,6 +23,7 @@ import {
 	Web3APIMethod,
 	Web3APIReturnType,
 } from 'web3-types';
+import { Schema } from 'web3-validator';
 
 export type TransactionTypeParser = (transaction: Transaction) => HexString | undefined;
 
@@ -50,3 +51,8 @@ export interface RequestManagerMiddleware<API> {
 		options?: { [key: string]: unknown },
 	): Promise<JsonRpcResponse<ResponseType>>;
 }
+
+export type CustomTransactionSchema = {
+	type: string;
+	properties: Record<string, Schema>;
+};
