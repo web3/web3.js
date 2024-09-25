@@ -20,6 +20,7 @@ import { Network, Transport } from '../../src/types';
 import { Web3ExternalProvider } from '../../src/web3_provider';
 import { QuickNodeRateLimitError } from '../../src/errors';
 import { QuickNodeProvider } from '../../src/web3_provider_quicknode';
+import { InfuraProvider } from '../../src/web3_provider_infura';
 
 jest.mock('web3-providers-ws', () => {
 	return {
@@ -82,7 +83,7 @@ describe('Web3ExternalProvider', () => {
 		expect(result).toEqual({ result: 'mock-result' });
 	});
 
-	it('should throw a rate limiting error when status code is 429', async () => {
+	it('QuickNodeProvider: should throw a rate limiting error when status code is 429', async () => {
 		const network: Network = Network.ETH_MAINNET;
 		const transport: Transport = Transport.HTTPS;
 		const token = 'your-token';
@@ -114,6 +115,46 @@ describe('Web3ExternalProvider', () => {
 		mockHttpProvider.request.mockRejectedValue(mockError);
 
 		const provider = new QuickNodeProvider(network, transport, token);
+		(provider as any).provider = mockHttpProvider;
+
+		const payload: Web3APIPayload<EthExecutionAPI, Web3APIMethod<EthExecutionAPI>> = {
+			method: 'eth_getBalance',
+			params: ['0x0123456789012345678901234567890123456789', 'latest'],
+		};
+		await expect(provider.request(payload)).rejects.toThrow(QuickNodeRateLimitError);
+	});
+	it('InfuraProvider: should throw a rate limiting error when status code is 429', async () => {
+		const network: Network = Network.ETH_MAINNET;
+		const transport: Transport = Transport.HTTPS;
+		const token = 'your-token';
+
+		const mockHttpProvider = {
+			request: jest.fn(),
+		};
+
+		// Create a mock ResponseError with status code 429
+		// Create a mock JsonRpcResponse to pass to ResponseError
+		const mockJsonRpcResponse: JsonRpcResponse = {
+			jsonrpc: '2.0',
+			id: '458408f4-7e2c-43f1-b61d-1fe09a9ee25a',
+			error: {
+				code: 429,
+				message: 'Rate limit exceeded',
+			},
+		};
+
+		// Create a mock ResponseError with status code 429
+		const mockError = new ResponseError(
+			mockJsonRpcResponse,
+			undefined,
+			undefined, // request can be undefined
+			429, // statusCode
+		);
+
+		// Mock the request method to throw the ResponseError
+		mockHttpProvider.request.mockRejectedValue(mockError);
+
+		const provider = new InfuraProvider(network, transport, token);
 		(provider as any).provider = mockHttpProvider;
 
 		const payload: Web3APIPayload<EthExecutionAPI, Web3APIMethod<EthExecutionAPI>> = {

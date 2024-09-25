@@ -35,15 +35,22 @@ export enum Network {
 
 	ARBITRUM_MAINNET = 'arbitrum_mainnet',
 	ARBITRUM_SEPOLIA = 'arbitrum_sepolia',
+	ARBITRUM_GOERLI = 'arbitrum_goerli',
 
 	BASE_MAINNET = 'base_mainnet',
 	BASE_SEPOLIA = 'base_sepolia',
+	BASE_GOERLI = 'base_foerli',
 
 	OPTIMISM_MAINNET = 'optimism_mainnet',
 	OPTIMISM_SEPOLIA = 'optimism_sepolia',
+	OPTIMISM_GOERLI = 'optimism_goerli',
 
 	BNB_MAINNET = 'bnb_mainnet',
 	BNB_TESTNET = 'bnb_testnet',
+
+	LINEA_MAINNET = 'linea_mainnet',
+	LINEA_SEPOLIA = 'linea_sepolia',
+	LINEA_GOERLI = 'linea_goerli',
 }
 
 // Combining the ws types
