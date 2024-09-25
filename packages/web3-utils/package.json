@@ -60,7 +60,7 @@
 		"js-sha3": "^0.8.0",
 		"prettier": "^2.7.1",
 		"ts-jest": "^29.1.1",
-		"typescript": "^5.6.2"
+		"typescript": "^5.5.4"
 	},
 	"dependencies": {
 		"ethereum-cryptography": "^2.0.0",
