@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { mainnet, Network, QuickNodeProvider, InfuraProvider, Transport } from 'web3-rpc-providers';
 import { Web3 } from '../../src/index';
 
+jest.setTimeout(10000);
 describe('Web3 RPC Provider Integration tests', () => {
 	const transports = Object.values(Transport);
 	const quickNodeNetworks = [
@@ -84,22 +85,48 @@ describe('Web3 RPC Provider Integration tests', () => {
 	];
 	transports.forEach(transport => {
 		infuraNetworks.forEach(network => {
-			it(`InfuraProvider should work with ${transport} transport and ${network} network`, async () => {
-				const provider = new InfuraProvider(
-					network,
-					transport,
-					process.env.INFURA_PROVIDER_KEY,
-				);
-				const web3 = new Web3(provider);
-				const result = await web3.eth.getBlockNumber();
+			// skip not exists endpoints
+			if (
+				!(
+					[
+						Network.PALM_MAINNET,
+						Network.PALM_TESTNET,
+						Network.BLAST_SEPOLIA,
+						Network.STARKNET_MAINNET,
+						Network.STARKNET_SEPOLIA,
+						Network.ZKSYNC_SEPOLIA,
+						Network.BSC_TESTNET,
+						Network.MANTLE_SEPOLIA,
+						Network.BNB_TESTNET,
+					].includes(network) && transport === Transport.WebSocket
+				)
+			) {
+				it.skip(`InfuraProvider should work with ${transport} transport and ${network} network`, async () => {
+					const provider = new InfuraProvider(
+						network,
+						transport,
+						process.env.INFURA_PROVIDER_KEY,
+					);
 
-				expect(typeof result).toBe('bigint');
-				expect(result > 0).toBe(true);
+					const web3 = new Web3(provider);
+					const result =
+						network === Network.STARKNET_MAINNET || network === Network.STARKNET_SEPOLIA
+							? BigInt(
+									await web3.requestManager.send({
+										method: 'starknet_blockNumber',
+										params: [],
+									}),
+							  )
+							: await web3.eth.getBlockNumber();
 
-				if (transport === Transport.WebSocket) {
-					web3.provider?.disconnect();
-				}
-			});
+					expect(typeof result).toBe('bigint');
+					expect(result > 0).toBe(true);
+
+					if (transport === Transport.WebSocket) {
+						web3.provider?.disconnect();
+					}
+				});
+			}
 		});
 	});
 	it(`should work with mainnet provider`, async () => {

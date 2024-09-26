@@ -25,7 +25,7 @@ import {
 } from 'web3-types';
 import { ResponseError } from 'web3-errors';
 import { HttpProviderOptions } from 'web3-providers-http';
-import { Transport, Network, SocketOptions } from './types.js';
+import { Network, SocketOptions, Transport } from './types.js';
 import { Web3ExternalProvider } from './web3_provider.js';
 import { QuickNodeRateLimitError } from './errors.js';
 
@@ -163,7 +163,8 @@ export class InfuraProvider<
 			default:
 				throw new Error('Network info not avalible.');
 		}
-
-		return `${transport}://${host}/v3/${token}`;
+		return `${transport}://${host}/${
+			transport === Transport.WebSocket ? 'ws/' : ''
+		}v3/${token}`;
 	}
 }
