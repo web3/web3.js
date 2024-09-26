@@ -280,3 +280,7 @@ Documentation:
 -   Adds the same `{transactionSchema?: ValidationSchemaInput}` that exists in `formatTransaction` to `validateTransactionForSigning`
 
 ## [Unreleased]
+
+### Changed
+
+-   Allow `getEthereumjsTxDataFrom` to return additional fields that may be passed if using a `customTransactionSchema`.

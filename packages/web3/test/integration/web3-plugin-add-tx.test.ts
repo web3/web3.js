@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import { Transaction, Web3Account } from 'web3-eth-accounts';
+import { transactionSchema } from 'web3-eth';
 import { SupportedProviders, Web3, Web3PluginBase } from '../../src';
 import {
 	createAccount,
@@ -51,6 +52,14 @@ describe('Add New Tx as a Plugin', () => {
 	});
 	it('should receive correct type of tx', async () => {
 		web3.registerPlugin(new Eip4844Plugin());
+		web3.config.customTransactionSchema = {
+			type: 'object',
+			properties: {
+				...transactionSchema.properties,
+				customField: { format: 'string' },
+			},
+		};
+		web3.eth.config.customTransactionSchema = web3.config.customTransactionSchema;
 		const tx = {
 			from: account1.address,
 			to: account2.address,
@@ -58,16 +67,21 @@ describe('Add New Tx as a Plugin', () => {
 			type: TRANSACTION_TYPE,
 			maxPriorityFeePerGas: BigInt(5000000),
 			maxFeePerGas: BigInt(5000000),
+			customField: BigInt(42),
 		};
 		const sub = web3.eth.sendTransaction(tx);
 
-		const waitForEvent: Promise<Transaction> = new Promise(resolve => {
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises
-			sub.on('sending', txData => {
-				resolve(txData as unknown as Transaction);
-			});
-		});
-		expect(Number((await waitForEvent).type)).toBe(TRANSACTION_TYPE);
+		const waitForEvent: Promise<Transaction & { customField: bigint }> = new Promise(
+			resolve => {
+				// eslint-disable-next-line @typescript-eslint/no-floating-promises
+				sub.on('sending', txData => {
+					resolve(txData as unknown as Transaction & { customField: bigint });
+				});
+			},
+		);
+		const { type, customField } = await waitForEvent;
+		expect(Number(type)).toBe(TRANSACTION_TYPE);
+		expect(BigInt(customField)).toBe(BigInt(42));
 		await expect(sub).rejects.toThrow();
 	});
 });

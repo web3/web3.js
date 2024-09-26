@@ -32,9 +32,9 @@ import {
 	AccessList,
 	AccessListUint8Array,
 	FeeMarketEIP1559TxData,
-	FeeMarketEIP1559ValuesArray,
 	JsonTx,
 	TxOptions,
+	TxValuesArray,
 } from 'web3-eth-accounts';
 
 const { getAccessListData, getAccessListJSON, getDataFeeEIP2930, verifyAccessList } = txUtils;
@@ -43,6 +43,26 @@ const MAX_INTEGER = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffff
 export const TRANSACTION_TYPE = 15;
 const TRANSACTION_TYPE_UINT8ARRAY = hexToBytes(TRANSACTION_TYPE.toString(16).padStart(2, '0'));
 
+type CustomFieldTxValuesArray = [
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	Uint8Array,
+	AccessListUint8Array,
+	Uint8Array,
+	Uint8Array?,
+	Uint8Array?,
+	Uint8Array?,
+];
+
+type SomeNewTxTypeTxData = FeeMarketEIP1559TxData & {
+	customTestField: bigint;
+};
+
 /**
  * Typed transaction with a new gas fee market mechanism
  *
@@ -50,12 +70,13 @@ const TRANSACTION_TYPE_UINT8ARRAY = hexToBytes(TRANSACTION_TYPE.toString(16).pad
  * - EIP: [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)
  */
 // eslint-disable-next-line no-use-before-define
-export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Transaction> {
+export class SomeNewTxTypeTransaction extends BaseTransaction<SomeNewTxTypeTransaction> {
 	public readonly chainId: bigint;
 	public readonly accessList: AccessListUint8Array;
 	public readonly AccessListJSON: AccessList;
 	public readonly maxPriorityFeePerGas: bigint;
 	public readonly maxFeePerGas: bigint;
+	public readonly customTestField: bigint;
 
 	public readonly common: Common;
 
@@ -77,7 +98,7 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 	 * - `chainId` will be set automatically if not provided
 	 * - All parameters are optional and have some basic default values
 	 */
-	public static fromTxData(txData: FeeMarketEIP1559TxData, opts: TxOptions = {}) {
+	public static fromTxData(txData: SomeNewTxTypeTxData, opts: TxOptions = {}) {
 		return new SomeNewTxTypeTransaction(txData, opts);
 	}
 
@@ -110,10 +131,10 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 	 * Format: `[chainId, nonce, maxPriorityFeePerGas, maxFeePerGas, gasLimit, to, value, data,
 	 * accessList, signatureYParity, signatureR, signatureS]`
 	 */
-	public static fromValuesArray(values: FeeMarketEIP1559ValuesArray, opts: TxOptions = {}) {
-		if (values.length !== 9 && values.length !== 12) {
+	public static fromValuesArray(values: CustomFieldTxValuesArray, opts: TxOptions = {}) {
+		if (values.length !== 10 && values.length !== 13) {
 			throw new Error(
-				'Invalid EIP-1559 transaction. Only expecting 9 values (for unsigned tx) or 12 values (for signed tx).',
+				'Invalid CUSTOM TEST transaction. Only expecting 10 values (for unsigned tx) or 13 values (for signed tx).',
 			);
 		}
 
@@ -127,6 +148,7 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 			value,
 			data,
 			accessList,
+			customTestField,
 			v,
 			r,
 			s,
@@ -144,7 +166,7 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 			s,
 		});
 
-		return new FeeMarketEIP1559Transaction(
+		return new SomeNewTxTypeTransaction(
 			{
 				chainId: uint8ArrayToBigInt(chainId),
 				nonce,
@@ -155,6 +177,7 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 				value,
 				data,
 				accessList: accessList ?? [],
+				customTestField: uint8ArrayToBigInt(customTestField),
 				v: v !== undefined ? uint8ArrayToBigInt(v) : undefined, // EIP2930 supports v's with value 0 (empty Uint8Array)
 				r,
 				s,
@@ -170,12 +193,13 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 	 * the static factory methods to assist in creating a Transaction object from
 	 * varying data types.
 	 */
-	public constructor(txData: FeeMarketEIP1559TxData, opts: TxOptions = {}) {
+	public constructor(txData: SomeNewTxTypeTxData, opts: TxOptions = {}) {
 		super({ ...txData, type: TRANSACTION_TYPE }, opts);
-		const { chainId, accessList, maxFeePerGas, maxPriorityFeePerGas } = txData;
+		const { chainId, accessList, maxFeePerGas, maxPriorityFeePerGas, customTestField } = txData;
 
 		this.common = this._getCommon(opts.common, chainId);
 		this.chainId = this.common.chainId();
+		this.customTestField = customTestField;
 
 		if (!this.common.isActivatedEIP(1559)) {
 			throw new Error('EIP-1559 not enabled on Common');
@@ -272,7 +296,7 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 	 * signature parameters `v`, `r` and `s` for encoding. For an EIP-155 compliant
 	 * representation for external signing use {@link FeeMarketEIP1559Transaction.getMessageToSign}.
 	 */
-	public raw(): FeeMarketEIP1559ValuesArray {
+	public raw(): TxValuesArray {
 		return [
 			bigIntToUnpaddedUint8Array(this.chainId),
 			bigIntToUnpaddedUint8Array(this.nonce),
@@ -283,10 +307,11 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 			bigIntToUnpaddedUint8Array(this.value),
 			this.data,
 			this.accessList,
+			bigIntToUnpaddedUint8Array(this.customTestField),
 			this.v !== undefined ? bigIntToUnpaddedUint8Array(this.v) : Uint8Array.from([]),
 			this.r !== undefined ? bigIntToUnpaddedUint8Array(this.r) : Uint8Array.from([]),
 			this.s !== undefined ? bigIntToUnpaddedUint8Array(this.s) : Uint8Array.from([]),
-		];
+		] as TxValuesArray;
 	}
 
 	/**
@@ -384,7 +409,7 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 	public _processSignature(v: bigint, r: Uint8Array, s: Uint8Array) {
 		const opts = { ...this.txOptions, common: this.common };
 
-		return FeeMarketEIP1559Transaction.fromTxData(
+		return SomeNewTxTypeTransaction.fromTxData(
 			{
 				chainId: this.chainId,
 				nonce: this.nonce,
@@ -395,6 +420,7 @@ export class SomeNewTxTypeTransaction extends BaseTransaction<FeeMarketEIP1559Tr
 				value: this.value,
 				data: this.data,
 				accessList: this.accessList,
+				customTestField: this.customTestField,
 				v: v - BigInt(27), // This looks extremely hacky: /util actually adds 27 to the value, the recovery bit is either 0 or 1.
 				r: uint8ArrayToBigInt(r),
 				s: uint8ArrayToBigInt(s),
