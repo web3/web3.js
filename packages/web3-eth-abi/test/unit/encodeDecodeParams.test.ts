@@ -47,4 +47,23 @@ describe('encodeParameters decodeParameters tests should pass', () => {
 
 		expect(deepEqualTolerateBigInt(decodedResult[0], decoderTestObj.value)).toBeTruthy();
 	});
+
+	it('unit test of decodeParameters with first immutable param', () => {
+		const bytes =
+			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000015a828c295b2bea094b70a05e96ae19c876417adf3a9083500000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000040729a97ba5090000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000634d6f6f20c3a9f09f9a80c3a96f4d6f206f20c3a9204d4dc3a9f09f9a802020c3a96f4df09f9a806ff09f9a804df09f9a806fc3a920f09f9a80c3a94df09f9a80f09f9a8020c3a920f09f9a8020c3a9c3a96f4d6fc3a96fc3a94dc3a94dc3a96f6f4d6f0000000000000000000000000000000000000000000000000000000000';
+
+		const result = [
+			'531024955072740163537488200975830992725163050550575040565',
+			[
+				'Moo é🚀éoMo o é MMé🚀  éoM🚀o🚀M🚀oé 🚀éM🚀🚀 é 🚀 ééoMoéoéMéMéooMo',
+				'0x729a97ba5090',
+			],
+		];
+		const readonlyArray = ['(uint192,(string,bytes6))'] as const; // should allow immutable array as first param
+
+		const decodedResult = decodeParameters(readonlyArray, bytes);
+
+		removeKey(decodedResult[0], '__length__');
+		expect(deepEqualTolerateBigInt(decodedResult[0], result)).toBeTruthy();
+	});
 });
