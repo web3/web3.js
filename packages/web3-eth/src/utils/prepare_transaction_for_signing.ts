@@ -37,6 +37,7 @@ import { transactionBuilder } from './transaction_builder.js';
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
 ) => ({
+	...transaction,
 	nonce: transaction.nonce,
 	gasPrice: transaction.gasPrice,
 	gasLimit: transaction.gasLimit ?? transaction.gas,
