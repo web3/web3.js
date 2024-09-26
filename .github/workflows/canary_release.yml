@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - '4.x'
-      - '7144-fix-typescript-version-issue'
 
 jobs:
   release:
