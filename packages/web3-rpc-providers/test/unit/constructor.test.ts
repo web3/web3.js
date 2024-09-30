@@ -23,7 +23,7 @@ import { Web3ExternalProvider } from '../../src/web3_provider';
 import { Network, SocketOptions, Transport } from '../../src/types';
 import { ProviderConfigOptionsError } from '../../src/errors';
 
-// Mock implementation so ws doesnt have openhandle after test exits as it attempts to connects at start
+// Mock implementation so ws doesnt have openhandle after test exits as it attempts to connect at start
 jest.mock('isomorphic-ws', () => {
 	return {
 		__esModule: true,
