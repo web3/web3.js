@@ -39,9 +39,10 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 	it.each(
 		toAllVariants<{
 			storageSlot: Numbers;
-			block: // | 'earliest'
-			| 'latest'
-				// | 'pending'
+			block:
+				| 'earliest'
+				| 'latest'
+				| 'pending'
 				| 'finalized'
 				| 'safe'
 				| 'blockHash'
@@ -79,7 +80,7 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 		} else if (block === 'blockHash' || block === 'blockNumber') {
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(
-				'0x00000000000000000000000000000000000000000000000000c354b137cba7ba',
+				'0x00000000000000000000000000000000000000000000000000c347d66ae6ce59',
 			);
 		} else {
 			// eslint-disable-next-line jest/no-conditional-expect

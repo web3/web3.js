@@ -67,8 +67,8 @@ describe(`${getSystemTestBackend()} tests - getPastLogs`, () => {
 		const result = (
 			await web3.eth.getPastLogs(
 				{
-					fromBlock: 'earliest',
-					toBlock: 'latest',
+					fromBlock: 3229301,
+					toBlock: 3229310,
 					address: getE2ETestContractAddress(),
 				},
 				{

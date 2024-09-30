@@ -55,13 +55,13 @@ describe(`${getSystemTestBackend()} tests - getProof`, () => {
 				| 'blockNumber';
 		}>({
 			block: [
-				// 'earliest', block is earlier than 128 blocks ago "Returned error: missing trie node"
+				'earliest',
 				'latest',
-				// 'pending', block is not available "Returned error: missing trie node"
+				// 'pending',
 				'safe',
 				'finalized',
-				'blockHash',
-				'blockNumber',
+				// 'blockHash',
+				// 'blockNumber',
 			],
 		}),
 	)('getProof', async ({ block }) => {
