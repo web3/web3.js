@@ -71,6 +71,11 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 	)('getBalance', async ({ block, format }) => {
 		let blockOrTag = blockData[block];
 		if (block === 'blockHash' || block === 'blockNumber') {
+			/**
+			 * @NOTE Getting a block too far back in history
+			 * results in a missing trie node error, so
+			 * we get latest block for this test
+			 */
 			const b = await web3.eth.getBlock('finalized');
 			blockOrTag = block === 'blockHash' ? String(b.hash) : Number(b.number);
 		}
