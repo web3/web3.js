@@ -212,4 +212,4 @@ Documentation:
 
 ### Fixed
 
--   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number.
+-   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
