@@ -149,8 +149,6 @@ web3.eth.getHashRate // -> correct usage
 
 4.x returns a `BigInt` for `oldestBlock` instead of the hex string that's returned in 1.x. And 4.x returns `number[]`, instead of `strings[]` for `baseFeePerGas`.
 
-bigint | number
-
 ```typescript
 // in 1.x
 await web3.eth.getFeeHistory('0x1', 'latest', []);
