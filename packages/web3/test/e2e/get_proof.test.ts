@@ -55,13 +55,13 @@ describe(`${getSystemTestBackend()} tests - getProof`, () => {
 				| 'blockNumber';
 		}>({
 			block: [
-				'earliest',
+				// 'earliest', // error "distance to target block exceeds maximum proof window"
 				'latest',
-				// 'pending',
+				// 'pending', // error "unknown block number"
 				'safe',
 				'finalized',
-				// 'blockHash',
-				// 'blockNumber',
+				// 'blockHash', // error "distance to target block exceeds maximum proof window"
+				// 'blockNumber', // error "distance to target block exceeds maximum proof window"
 			],
 		}),
 	)('getProof', async ({ block }) => {

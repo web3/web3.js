@@ -77,29 +77,35 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 			_blockData =
 				block === 'blockHash' ? (latestBlock.hash as string) : Number(latestBlock.number);
 		}
+
 		const result = await web3.eth.getBlockTransactionCount(_blockData, {
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});
-		switch (format) {
-			case 'NUMBER_NUMBER':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isNumber(result)).toBeTruthy();
-				break;
-			case 'NUMBER_HEX':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isHexStrict(result)).toBeTruthy();
-				break;
-			case 'NUMBER_STR':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isString(result)).toBeTruthy();
-				break;
-			case 'NUMBER_BIGINT':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isBigInt(result)).toBeTruthy();
-				break;
-			default:
-				throw new Error('Unhandled format');
+		if (block === 'pending') {
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(result).toBeNull();
+		} else {
+			switch (format) {
+				case 'NUMBER_NUMBER':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isNumber(result)).toBeTruthy();
+					break;
+				case 'NUMBER_HEX':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isHexStrict(result)).toBeTruthy();
+					break;
+				case 'NUMBER_STR':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isString(result)).toBeTruthy();
+					break;
+				case 'NUMBER_BIGINT':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isBigInt(result)).toBeTruthy();
+					break;
+				default:
+					throw new Error('Unhandled format');
+			}
 		}
 	});
 });

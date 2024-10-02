@@ -33,8 +33,7 @@ describe(`${getSystemTestBackend()} tests - getProtocolVersion`, () => {
 		await closeOpenConnection(web3);
 	});
 
-	// doesn't exists with lodestar provider
-	it.skip('should get the protocol version for the connected node', async () => {
+	it('should get the protocol version for the connected node', async () => {
 		const result = await web3.eth.getProtocolVersion();
 		expect(isHexStrict(result)).toBeTruthy();
 	});
