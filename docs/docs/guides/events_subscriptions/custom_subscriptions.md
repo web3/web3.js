@@ -14,7 +14,7 @@ This guide is most likely for advanced users who are connecting to a node that p
 :::important
 If you are the developer who provides custom subscriptions to users. We encourage you to develop a web3.js Plugin after you follow the guide below. However, you can find how to develop a plugin at [web3.js Plugin Developer Guide](/guides/web3_plugin_guide/plugin_authors).
 
-And even if you are not the developer who provides this custom subscription, we encourage you to write a web3.js plugin for the custom subscription, and publish it to the npm package registry. This way you can help the community. And they might contribute to your repository helping for things like: feature addition, maintenance, and bug detection.
+And even if you are not the developer who provides this custom subscription, we encourage you to write a web3.js plugin for the custom subscription, and publish it to the npm package registry. This way you can help the community. And they might contribute to your repository by helping for things like: feature addition, maintenance, and bug detection.
 :::
 
 ## Implementing the Subscription
@@ -114,7 +114,7 @@ To subscribe, you need to pass the custom subscriptions to the `Web3`. And then 
 
 ```ts
 const CustomSubscriptions = {
-  // the key (`custom`) is what you chose to use when you call `web3.subscriptionManager.subscribe`.
+  // the key (`custom`) is what you choose to use when you call `web3.subscriptionManager.subscribe`.
   // the value (`CustomSubscription`) is your class name.
   custom: MyCustomSubscription,
   // you can have as many custom subscriptions as you like...
