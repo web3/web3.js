@@ -16,11 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { QuickNodeProvider } from './web3_provider_quicknode.js';
+import { AlchemyProvider } from './web3_provider_alchemy.js';
 
 export * from './types.js';
 export * from './web3_provider_quicknode.js';
 export * from './web3_provider.js';
 export * from './errors.js';
+export * from './web3_provider_alchemy.js';
 
 // default providers
 export const mainnet = new QuickNodeProvider();
+export const alchemy = new AlchemyProvider();
