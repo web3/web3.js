@@ -30,6 +30,7 @@ export enum Network {
 	ETH_HOLESKY = 'eth_holesky',
 
 	POLYGON_MAINNET = 'polygon_mainnet',
+	POLYGON_MUMBAI = 'polygon_mumbai',
 	POLYGON_AMONY = 'polygon_amony',
 	POLYGON_AMOY = 'polygon_amoy',
 
