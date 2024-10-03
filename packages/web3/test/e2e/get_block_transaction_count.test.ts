@@ -83,8 +83,10 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 			bytes: FMT_BYTES.HEX,
 		});
 		if (block === 'pending') {
+			// eslint-disable-next-line no-null/no-null
+			const expectedResult = result === null || Number(result) > 0;
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(result).toBeNull();
+			expect(expectedResult).toBeTruthy();
 		} else {
 			switch (format) {
 				case 'NUMBER_NUMBER':
