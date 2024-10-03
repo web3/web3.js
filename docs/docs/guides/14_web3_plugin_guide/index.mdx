@@ -1,0 +1,293 @@
+---
+sidebar_position: 1
+sidebar_label: 'Getting started'
+---
+
+# Getting Started
+
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-uxkc1b?embed=1&file=main.ts&showSidebar=1"></iframe>
+
+Welcome to the Web3 Plugins🧩 Guide, a new feature introduced in web3.js v4. In addition to the core web3.js libraries, plugins bring specialized functionalities tailored for end-users (functionalities, that you, as a developer, can create). These enhancements may involve creating wrappers for specific contracts, adding extra features to RPC methods, adding any external libraries, logic, extending the capabilities of web3.js methods, etc...
+
+In this guide, you will learn the basics to get started building web3 plugins, setting up providers, importing, and using different web3.js packages.
+
+- [Plugin Developer Guide (For Creators)](/guides/web3_plugin_guide/plugin_authors)
+- [Plugin User Guide (Usage)](/guides/web3_plugin_guide/plugin_users)
+
+- You can find all the web3 plugins🧩 [here](https://web3js.org/plugins)
+
+- To list your web3 plugin🧩 into the web3js.org/plugins page, you can submit a PR [here](https://github.com/web3/web3js-landing/blob/main/src/pluginList.ts)
+
+## Create a plugin
+
+```javascript
+//1. import the `Web3PluginBase` module
+import { Web3PluginBase } from "web3";
+
+//2. Create a Class extending the `Web3Pluginbase`
+class MyPlugin extends Web3PluginBase {
+
+    //3. Add a name to the plugin
+    pluginNamespace = "pluginExample";
+
+    //4. Create any methods with your desired functionality
+    async doSomething(){
+        console.log("Hello web3!");
+        //send transactions
+        //initialize contracts
+        //deploy or interact with contracts
+        //add your own library, logic or functionality
+        //much more...
+    }
+}
+
+module.exports = MyPlugin;
+```
+
+## Use a plugin
+
+```javascript
+//1. import the plugin and web3 module
+import { Web3 } from "web3";
+import MyPlugin from "./plugin";
+
+//2. Initialize the web3 instance
+const web3 = new Web3("https://eth.llamarpc.com");
+
+//3. Register plugin to add the current Web3Context
+web3.registerPlugin(new MyPlugin());
+
+//4. Use the plugin methods
+web3.pluginExample.doSomething();
+//--> Hello web3!
+```
+
+## Using web3 packages on the plugin
+
+### Use Eth module
+
+```js
+import { FMT_NUMBER, Web3PluginBase, eth } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async getChainId() {
+    //`this` is the web3context used when you register the plugin in the usage
+    return await eth.getChainId(this, { number: FMT_NUMBER.NUMBER });
+  }
+
+  async getBlockNumber() {
+    return await eth.getBlockNumber(this, { number: FMT_NUMBER.NUMBER });
+  }
+
+  //more web3.eth. methods...
+}
+
+export default MyPlugin;
+```
+
+### Use Utils
+
+```js
+import { Web3PluginBase, utils } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  weiToEth(value) {
+    //`this` is the web3context used when you register the plugin in the usage
+    return utils.fromWei(value, 'ether');
+  }
+
+  //more web3.eth. methods...
+}
+
+export default MyPlugin;
+
+```
+
+
+### Use Accounts
+
+
+```js
+import { Web3PluginBase, eth } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async createAccount() {
+    const account = eth.accounts.create();
+    console.log("account:", account);
+    /*
+    account: {
+        address: '0x59E797F2F66AffA9A419a6BC2ED4742b7cBc2570',
+        privateKey: '0x52a81fc3a7fd6ce9644147c9fb5bfbe1f708f37b4611b3c3310eb9a6dc85ccf4',
+        signTransaction: [Function: signTransaction],
+        sign: [Function: sign],
+        encrypt: [Function: encrypt]
+    }
+    */
+  }
+}
+
+export default MyPlugin;
+```
+
+### Use Wallet
+
+
+```js
+import { Web3PluginBase, eth } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async createWallet() {
+    //1. Create a random account
+    const accounts = eth.accounts.create();
+    //2. Add the account to the wallet
+    const wallet = this.wallet.add(accounts);
+    //by creating the wallet, web3.js will use this account to sign TXs under the hood
+    console.log(wallet);
+    /*
+    Wallet(1) [
+    {
+      address: '0x233725561B1430bE2C24Ce9EEabe63E4B46EC9E3',
+      privateKey: '0x6856adf06dd803e0354450ccf251f829a2c9ef1177ce371f8835bbfb56cd0898',
+      signTransaction: [Function: signTransaction],
+      sign: [Function: sign],
+      encrypt: [Function: encrypt]
+    },
+    _accountProvider: {
+      create: [Function: createWithContext],
+      privateKeyToAccount: [Function: privateKeyToAccountWithContext],
+      decrypt: [Function: decryptWithContext]
+    },
+    _addressMap: Map(1) { '0x233725561b1430be2c24ce9eeabe63e4b46ec9e3' => 0 },
+    _defaultKeyName: 'web3js_wallet'
+  ]
+    */
+  }
+}
+
+export default MyPlugin;
+```
+
+
+### Use Contract
+
+
+```js
+import { Web3PluginBase, Contract } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async interactWithContract() {
+    //1. Initialize contract
+    const myContract = new Contract(ABI, ADDRESS);
+
+    //2. Interact with reading functions
+    const response = myContract.methods.doSomething().call();
+
+    //3. Interact with writing functions
+    //You must initialize a wallet to be able to send the TX from wallet[0].address
+    const txReceipt = myContract.methods.doSomething().send({from: wallet[0].address})
+  }
+}
+
+export default MyPlugin;
+```
+
+### Use ENS
+
+```js
+import { Web3PluginBase } from "web3";
+import { ENS } from "web3-eth-ens";
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = "pluginExample";
+
+  async getAddressENS() {
+    const ens = new ENS(undefined, this); //link to current web3Context
+    return ens.getAddress("ethereum.eth");
+  }
+
+}
+
+```
+:::info
+More ENS methods [here](https://docs.web3js.org/libdocs/ENS#methods)
+:::
+
+
+## Web3 requestManager (custom RPC)
+
+```js
+import { Web3PluginBase } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async customRPC() {
+    return await this.requestManager.send({
+      method: "custom_RPC_call",
+      params: [],
+    });
+  }
+
+  async getNonce() {
+    return await this.requestManager.send({
+      jsonrpc: "2.0",
+      method: "eth_getTransactionCount",
+      params: ["0xEA9eEca67682Cd9c6Ce3DdD1681049D7A897289F", "latest"],
+    });
+  }
+
+  async getBlockNumber() {
+    return await this.requestManager.send({
+      jsonrpc: "2.0",
+      method: "eth_blockNumber",
+      params: [],
+    });
+  }
+
+}
+```
+
+:::info
+All the Ethereum JSON-RPC API [here](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_gettransactioncount)
+:::
+
+## Web3 Config Params
+
+```js
+import { Web3PluginBase } from 'web3';
+
+class MyPlugin extends Web3PluginBase {
+  pluginNamespace = 'pluginExample';
+
+  async configParams() {
+    this.config.handleRevert = true;
+    this.config.defaultTransactionType = 0x1;
+    //more params...
+  }
+}
+```
+:::info
+All web3 config params [here](https://docs.web3js.org/guides/web3_config/index)
+:::
+
+
+## Videos
+
+### Create your first plugin in 20 minutes!
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fW1PDApXCtM?si=isocyW7NvWkEuDqG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+### Chainlink plugin: web3.js, viem, ethers vs web3 plugin🧩
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/iF_O7ggQaQw?si=8KHqYDWx3JfmbAGZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

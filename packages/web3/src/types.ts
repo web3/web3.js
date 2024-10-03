@@ -52,7 +52,7 @@ export interface Web3EthInterface extends Eth {
 	 * Extended [Contract](/api/web3-eth-contract/class/Contract) constructor for main `web3` object. See [Contract](/api/web3-eth-contract/class/Contract) for further details.
 	 *
 	 * You can use `.setProvider` on this constructor to set provider for **all the instances** of the contracts which were created by `web3.eth.Contract`.
-	 * Please check the {@doclink guides/web3_upgrade_guide/x/providers_migration_guide | following guide} to understand more about setting provider.
+	 * Please check the {@doclink guides/web3_upgrade_guide/providers_migration_guide | following guide} to understand more about setting provider.
 	 *
 	 * ```ts
 	 * web3.eth.Contract.setProvider(myProvider)

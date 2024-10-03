@@ -43,7 +43,7 @@ yarn add web3
 
 ## Migration Guide
 
--   [Migration Guide from Web3.js 1.x to 4.x](https://docs.web3js.org/guides/web3_upgrade_guide/x/)
+-   [Migration Guide from Web3.js 1.x to 4.x](https://docs.web3js.org/guides/web3_upgrade_guide/index)
     Breaking changes are listed in migration guide and its first step for migrating from Web3.js 1.x to 4.x. If there is any question or discussion feel free to ask in [Discord](https://discord.gg/yjyvFRP), and in case of any bug or new feature request [open issue](https://github.com/web3/web3.js/issues/new) or create a pull request for [contributions](https://github.com/web3/web3.js/blob/4.x/.github/CONTRIBUTING.md).
 
 ## Useful links
@@ -76,18 +76,18 @@ yarn add web3
 
 ## Package.json Scripts
 
-| Script           | Description                                                        |
-| ---------------- |--------------------------------------------------------------------|
-| clean            | Uses `rimraf` to remove `dist/`                                    |
-| build            | Uses `tsc` to build all packages                                   |
-| lint             | Uses `eslint` to lint all packages                                 |
-| lint:fix         | Uses `eslint` to check and fix any warnings                        |
-| format           | Uses `prettier` to format the code                                 |
-| test             | Uses `jest` to run unit tests in each package                      |
-| test:integration | Uses `jest` to run tests under `/test/integration` in each package |
-| test:unit        | Uses `jest` to run tests under `/test/unit` in each package        |
-| test:manual:long-connection-ws      | Runs manual tests for keeping a long WebSocket connection        |
-| test:manual      | Runs manual tests under `test/manual` in the web3 package          |
+| Script                         | Description                                                        |
+| ------------------------------ | ------------------------------------------------------------------ |
+| clean                          | Uses `rimraf` to remove `dist/`                                    |
+| build                          | Uses `tsc` to build all packages                                   |
+| lint                           | Uses `eslint` to lint all packages                                 |
+| lint:fix                       | Uses `eslint` to check and fix any warnings                        |
+| format                         | Uses `prettier` to format the code                                 |
+| test                           | Uses `jest` to run unit tests in each package                      |
+| test:integration               | Uses `jest` to run tests under `/test/integration` in each package |
+| test:unit                      | Uses `jest` to run tests under `/test/unit` in each package        |
+| test:manual:long-connection-ws | Runs manual tests for keeping a long WebSocket connection          |
+| test:manual                    | Runs manual tests under `test/manual` in the web3 package          |
 
 [npm-url]: https://npmjs.org/package/web3
 [downloads-image]: https://img.shields.io/npm/dm/web3?label=npm%20downloads
