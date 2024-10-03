@@ -7,10 +7,10 @@ on:
         - v4.*
 
 #    For test purpose only:
-#    pull_request:
-#        branches:
-#            - '4.x'
-#        types: [ opened, reopened, synchronize ]
+    pull_request:
+        branches:
+            - '4.x'
+        types: [ opened, reopened, synchronize ]
 jobs:
   build:
     name: Build Packages
