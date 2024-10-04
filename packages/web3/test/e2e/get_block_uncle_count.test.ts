@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import Web3 from '../../src';
+import { Web3 } from '../../src';
 import { getSystemE2ETestProvider } from './e2e_utils';
 import {
 	closeOpenConnection,
@@ -74,8 +74,8 @@ describeIf(getSystemTestBackend() !== 'hardhat')(
 						: Number(latestBlock.number);
 			}
 			const result = await web3.eth.getBlockUncleCount(_blockData);
-
-			expect(result).toBe(BigInt(0));
+			// eslint-disable-next-line no-null/no-null
+			expect(result).toBe(block === 'pending' || block === 'earliest' ? null : BigInt(0));
 		});
 	},
 );

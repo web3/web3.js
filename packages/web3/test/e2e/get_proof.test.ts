@@ -55,13 +55,13 @@ describe(`${getSystemTestBackend()} tests - getProof`, () => {
 				| 'blockNumber';
 		}>({
 			block: [
-				// 'earliest', block is earlier than 128 blocks ago "Returned error: missing trie node"
+				// 'earliest', // error "distance to target block exceeds maximum proof window"
 				'latest',
-				// 'pending', block is not available "Returned error: missing trie node"
+				// 'pending', // error "unknown block number"
 				'safe',
 				'finalized',
-				'blockHash',
-				'blockNumber',
+				// 'blockHash', // error "distance to target block exceeds maximum proof window"
+				// 'blockNumber', // error "distance to target block exceeds maximum proof window"
 			],
 		}),
 	)('getProof', async ({ block }) => {
