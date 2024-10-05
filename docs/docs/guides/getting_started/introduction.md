@@ -61,7 +61,7 @@ Web3.js is a modular collection of packages, each of which serves a specific nee
 
 - [**Iban:**](/libdocs/Iban) The `web3-eth-iban` package allows you to switch between **Ethereum addresses and special banking-like addresses** (IBAN or BBAN) and simplifies conversion between the types.
 
-### Additional Supporting Packages 
+### Additional Supporting Packages
 
 - [**Web3 Core:**](/api/web3-core) subscriptions, request management, and configuration used by other Web3 packages
 
@@ -72,6 +72,8 @@ Web3.js is a modular collection of packages, each of which serves a specific nee
 - [**Web3 Errors:**](/api/web3-errors) error codes and common error classes that are used by other Web3 packages
 
 - [**Web3 RPC Methods:**](/api/web3/namespace/rpcMethods) functions for making RPC requests to Ethereum using a given provider
+
+- [**Web3 RPC Providers:**](/api/web3-rpc-providers) utilities for working with well-known [remote providers](/guides/web3_providers_guide/#remote-provider)
 
 ### Plugins
 

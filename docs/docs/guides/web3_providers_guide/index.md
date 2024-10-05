@@ -42,7 +42,7 @@ import { Web3, HttpProvider } from 'web3';
 
 // supply an HTTP provider as a URL string
 // highlight-next-line
-const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_ID');
+const web3 = new Web3('https://<PROVIDER_URL>');
 
 await web3.eth.getBlockNumber()
 // ↳ 18849658n
@@ -51,7 +51,7 @@ await web3.eth.getBlockNumber()
 
 // supply an HTTP provider by constructing a new HttpProvider
 // highlight-next-line
-const web3_2 = new Web3(new HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_ID'));
+const web3_2 = new Web3(new HttpProvider('https://<PROVIDER_URL>'));
 
 await web3.eth.getBlockNumber()
 // ↳ 18849658n
@@ -84,7 +84,7 @@ const httpOptions = {
     } as RequestInit,
 };
 
-const web3 = new Web3(new HttpProvider('https://eth.llamarpc.com', httpOptions));
+const web3 = new Web3(new HttpProvider('https://<PROVIDER_URL>', httpOptions));
 ```
 
 ### WebSocket Provider
@@ -96,7 +96,7 @@ import { Web3, WebSocketProvider } from 'web3';
 
 // supply a WebSocket provider as a URL string
 // highlight-next-line
-const web3 = new Web3('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID');
+const web3 = new Web3('wss://<PROVIDER_URL>');
 
 await web3.eth.getBlockNumber();	
 // ↳ 18849658n
@@ -105,7 +105,7 @@ await web3.eth.getBlockNumber();
 
 // supply a WebSocket provider by constructing a new WebSocketProvider
 // highlight-next-line
-const web3_2 = new Web3(new WebSocketProvider('wss://mainnet.infura.io/ws/v3/YOUR_INFURA_ID'));
+const web3_2 = new Web3(new WebSocketProvider('wss://<PROVIDER_URL>'));
 
 await web3.eth.getBlockNumber();
 // ↳ 18849658n
@@ -118,7 +118,7 @@ The [`WebSocketProvider` constructor](/api/web3-providers-ws/class/WebSocketProv
 ```ts title='Configuring a WebSocket Provider'
 // include both optional parameters
 const provider = new WebSocketProvider(
-  `ws://localhost:8545`,
+  `wss://<PROVIDER_URL>`,
   {
     headers: {
       // for node services that require an API key in a header
@@ -134,7 +134,7 @@ const provider = new WebSocketProvider(
 
 // OR include only ReconnectOptions
 const provider = new WebSocketProvider(
-  `ws://localhost:8545`,
+  `wss://<PROVIDER_URL>`,
   {},
   {
     delay: 500,
@@ -230,12 +230,14 @@ web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
 ### Remote Provider
 
-Services like [Alchemy](https://www.alchemy.com/), [Infura](https://www.infura.io/), and [QuickNode](https://www.quicknode.com/) offer Ethereum node services that can be accessed via HTTP or Websocket.
+Services like [QuickNode](https://www.quicknode.com/), [Alchemy](https://www.alchemy.com/), and [Infura](https://www.infura.io/), offer Ethereum node services that can be accessed via HTTP or Websocket.
 
-```ts title='Alchemy, Infura, etc'
+```ts title='QuickNode, Alchemy, Infura, etc'
 import { Web3 } from 'web3';
-const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
+const web3 = new Web3('https://<REMOTE_PROVIDER_URL>');
 ```
+
+Web3.js provides helpful utilities for working with certain well-known remote providers. Read more about these utilities in the [Web3.js External Providers](#web3js-external-providers) section.
 
 ### Injected Provider
 
@@ -271,4 +273,57 @@ The following example should be run in a browser with the MetaMask extension ins
   }
  });
 </script>
+```
+
+## Web3.js External Providers
+
+The `web3-rpc-providers` package provides helpful utilities for working with certain well-known remote providers. The following example demonstrates using this package to create a WebSocket connection for the Ethereum [Sepolia](https://ethereum.org/en/developers/docs/networks/#sepolia) test network with [QuickNode](https://www.quicknode.com/):
+
+```js
+import { Web3 } from "web3";
+import { Network, QuickNodeProvider, Transport } from "web3-rpc-providers";
+
+const web3 = new Web3(new QuickNodeProvider(Network.ETH_SEPOLIA, Transport.WebSocket));
+console.log(await web3.eth.getChainId());
+// ↳ 11155111n
+```
+
+External providers can also be configured to use account tokens and custom hosts, as in the following example:
+
+```js
+import { Web3 } from "web3";
+import { QuickNodeProvider, Transport } from "web3-rpc-providers";
+
+const defaultSepoliaToken = "382a3b5a4b938f2d6e8686c19af4b22921fde2cd";
+const defaultSepoliaHost = "dimensional-fabled-glitter.ethereum-sepolia.quiknode.pro";
+const web3 = new Web3(
+  new QuickNodeProvider(
+    // omit network parameter
+    undefined,
+    Transport.WebSocket,
+    defaultSepoliaToken,
+    defaultSepoliaHost,
+  ),
+);
+
+console.log(await web3.eth.getChainId());
+// ↳ 11155111n
+```
+
+Constructors for external providers accept an optional argument for fine-tuning the configuration of the transport mechanism. See [Configuring HTTP Providers](#configuring-http-providers) and [Configuring WebSocket Providers](#configuring-websocket-providers) for more details. The following example demonstrates using this option to fine-tune the configuration for the default HTTP provider:
+
+```js
+import { Web3 } from "web3";
+import { QuickNodeProvider } from "web3-rpc-providers";
+
+const web3 = new Web3(
+  // use default arguments for network, transport, token, and host
+  new QuickNodeProvider(undefined, undefined, undefined, undefined, {
+    providerOptions: {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  }),
+);
 ```

@@ -43,25 +43,27 @@ import { Web3 } from 'web3';
 
 ## Initialize `Web3` with a Provider
 
-[Providers](/guides/web3_providers_guide/) are services that are responsible for enabling connectivity with the Ethereum network. The `Web3` object must be initialized with a valid provider to function as intended. Web3.js supports [HTTP](/guides/web3_providers_guide/#http-provider), [WebSocket](/guides/web3_providers_guide/#websocket-provider), and [IPC](/guides/web3_providers_guide/#ipc-provider) providers, and exposes packages for working with each type of provider.
+[Providers](/guides/web3_providers_guide/) are services that are responsible for enabling connectivity with the Ethereum network. Web3.js supports [HTTP](/guides/web3_providers_guide/#http-provider), [WebSocket](/guides/web3_providers_guide/#websocket-provider), and [IPC](/guides/web3_providers_guide/#ipc-provider) providers, and exposes packages for working with each type of provider.
+
+The default constructor for the `Web3` class uses preferred RPC partner [QuickNode](https://www.quicknode.com/) as an HTTP provider to connect to [Ethereum Mainnet](https://ethereum.org/en/developers/docs/networks/#ethereum-mainnet). The default provider is subject to usage limits and is only suitable for initial testing purposes. To support Web3.js development and remove usage limits, use the referral code `WEB3JS` to sign up for a QuickNode account and get 20% off for 2 months. Refer to the section on [Web3.js External Providers](/guides/web3_providers_guide/#web3js-external-providers) to learn how to configure the QuickNode provider to use an account token.
 
 Web3.js is in compliance with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193), the Ethereum Provider JavaScript API, so any EIP-1193 provider can be used to initialize the `Web3` object.
 
 ``` ts
 import { Web3 } from 'web3';
 
-// private RPC endpoint 
-const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_ID'); 
+// default QuickNode Ethereum Mainnet HTTP provider 
+const web3 = new Web3(); 
 
-// or public RPC endpoint
+// or specify a custom provider
 // const web3 = new Web3('https://eth.llamarpc.com'); 
 
-web3.eth.getBlockNumber().then(console.log);
-// ↳ 18849658n
+console.log(await web3.eth.getChainId());
+// ↳ 1n
 ```
 ## Querying the Blockchain
 
-After instantiating the `Web3` instance with a provider, the [`web3-eth`](/libdocs/Web3Eth) package can be used to fetch data from the Ethereum network:
+After instantiating the `Web3` instance, the [`web3-eth`](/libdocs/Web3Eth) package can be used to fetch data from the Ethereum network:
 
 ```ts
 // get the balance of an address
