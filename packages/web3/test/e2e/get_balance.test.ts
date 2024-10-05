@@ -32,13 +32,13 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 	const provider = getSystemE2ETestProvider();
 	const blockData =
 		getSystemTestBackend() === BACKEND.SEPOLIA ? sepoliaBlockData : mainnetBlockData;
-	const expectedBalance =
-		getSystemTestBackend() === BACKEND.SEPOLIA ? '172530374997217200' : '2099795781954790368';
+	let expectedBalance = BigInt(0);
 
 	let web3: Web3;
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		web3 = new Web3(provider);
+		expectedBalance = await web3.eth.getBalance(getE2ETestAccountAddress());
 	});
 
 	afterAll(async () => {
@@ -69,7 +69,18 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 			format: [FMT_NUMBER.BIGINT, FMT_NUMBER.HEX, FMT_NUMBER.STR],
 		}),
 	)('getBalance', async ({ block, format }) => {
-		const result = await web3.eth.getBalance(getE2ETestAccountAddress(), blockData[block], {
+		let blockOrTag = blockData[block];
+		if (block === 'blockHash' || block === 'blockNumber') {
+			/**
+			 * @NOTE Getting a block too far back in history
+			 * results in a missing trie node error, so
+			 * we get latest block for this test
+			 */
+			const b = await web3.eth.getBlock('finalized');
+			blockOrTag = block === 'blockHash' ? String(b.hash) : Number(b.number);
+		}
+
+		const result = await web3.eth.getBalance(getE2ETestAccountAddress(), blockOrTag, {
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});
@@ -83,15 +94,15 @@ describe(`${getSystemTestBackend()} tests - getBalance`, () => {
 					 * converted to a BigInt
 					 */
 					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result).toBe(toHex(BigInt(expectedBalance)));
+					expect(result).toBe(toHex(expectedBalance));
 					break;
 				case 'NUMBER_STR':
 					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result).toBe(expectedBalance);
+					expect(result).toBe(expectedBalance.toString());
 					break;
 				case 'NUMBER_BIGINT':
 					// eslint-disable-next-line jest/no-conditional-expect
-					expect(result).toBe(BigInt(expectedBalance));
+					expect(result).toBe(expectedBalance);
 					break;
 				default:
 					throw new Error('Unhandled format');

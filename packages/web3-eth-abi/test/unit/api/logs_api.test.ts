@@ -29,5 +29,45 @@ describe('logs_api', () => {
 				},
 			);
 		});
+
+		it('decodeLog with first immutable param', () => {
+			const abi = [
+				{
+					type: 'string',
+					name: 'myString',
+				},
+				{
+					type: 'uint256',
+					name: 'myNumber',
+					indexed: true,
+				},
+				{
+					type: 'uint8',
+					name: 'mySmallNumber',
+					indexed: true,
+				},
+			] as const;
+
+			const data =
+				'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000748656c6c6f252100000000000000000000000000000000000000000000000000';
+
+			const topics = [
+				'0x000000000000000000000000000000000000000000000000000000000000f310',
+				'0x0000000000000000000000000000000000000000000000000000000000000010',
+			];
+
+			const result = {
+				'0': 'Hello%!',
+				'1': '62224',
+				'2': '16',
+				__length__: 3,
+				myString: 'Hello%!',
+				myNumber: '62224',
+				mySmallNumber: '16',
+			};
+
+			const expected = decodeLog(abi, data, topics);
+			expect(JSON.parse(JSON.stringify(expected))).toEqual(result);
+		});
 	});
 });

@@ -31,8 +31,8 @@ jobs:
       needs: build
       runs-on: ubuntu-latest
       env:
-        INFURA_SEPOLIA_HTTP: ${{ secrets.INFURA_SEPOLIA_HTTP }}
-        INFURA_MAINNET_HTTP: ${{ secrets.INFURA_MAINNET_HTTP }}
+        INFURA_SEPOLIA_HTTP: ${{ secrets.CS_ETH_SEPOLIA }}
+        INFURA_MAINNET_HTTP: ${{ secrets.CS_ETH_MAINNET }}
         MODE: ${{ matrix.mode }}
         TEST_ACCOUNT_ADDRESS: ${{ fromJSON('{"sepolia":"0xa127C5E6a7E3600Ac34A9a9928E52521677e7211","mainnet":"0x98AF911164f9d4E0f5983ed114949c3Bfe3ADc9d"}')[matrix.network] }}
         ALLOWED_SEND_TRANSACTION: ${{ secrets.E2E_TESTS_ALLOWED_SEND_TRANSACTION }}

@@ -66,10 +66,15 @@ describe(`${getSystemTestBackend()} tests - getStorageAt`, () => {
 	)('getStorageAt', async ({ storageSlot, block }) => {
 		let blockData = sepoliaBlockData[block];
 		if (block === 'blockHash' || block === 'blockNumber') {
-			const blockNumber = await web3.eth.getBlockNumber();
-			blockData = Number(blockNumber);
+			/**
+			 * @NOTE Getting a block too far back in history
+			 * results in a missing trie node error, so
+			 * we get latest block for this test
+			 */
+			const b = await web3.eth.getBlock('finalized');
+			blockData = Number(b.number);
 			if (block === 'blockHash') {
-				blockData = (await web3.eth.getBlock(blockNumber)).hash as string;
+				blockData = b.hash as string;
 			}
 		}
 

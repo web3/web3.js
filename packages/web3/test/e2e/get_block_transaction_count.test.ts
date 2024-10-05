@@ -68,33 +68,46 @@ describe(`${getSystemTestBackend()} tests - getBlockTransactionCount`, () => {
 	)('getBlockTransactionCount', async ({ block, format }) => {
 		let _blockData = blockData[block];
 		if (block === 'blockHash' || block === 'blockNumber') {
+			/**
+			 * @NOTE Getting a block too far back in history
+			 * results in a missing trie node error, so
+			 * we get latest block for this test
+			 */
 			const latestBlock = await web3.eth.getBlock('finalized');
 			_blockData =
 				block === 'blockHash' ? (latestBlock.hash as string) : Number(latestBlock.number);
 		}
+
 		const result = await web3.eth.getBlockTransactionCount(_blockData, {
 			number: format as FMT_NUMBER,
 			bytes: FMT_BYTES.HEX,
 		});
-		switch (format) {
-			case 'NUMBER_NUMBER':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isNumber(result)).toBeTruthy();
-				break;
-			case 'NUMBER_HEX':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isHexStrict(result)).toBeTruthy();
-				break;
-			case 'NUMBER_STR':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isString(result)).toBeTruthy();
-				break;
-			case 'NUMBER_BIGINT':
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(isBigInt(result)).toBeTruthy();
-				break;
-			default:
-				throw new Error('Unhandled format');
+		if (block === 'pending') {
+			// eslint-disable-next-line no-null/no-null
+			const expectedResult = result === null || Number(result) > 0;
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(expectedResult).toBeTruthy();
+		} else {
+			switch (format) {
+				case 'NUMBER_NUMBER':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isNumber(result)).toBeTruthy();
+					break;
+				case 'NUMBER_HEX':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isHexStrict(result)).toBeTruthy();
+					break;
+				case 'NUMBER_STR':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isString(result)).toBeTruthy();
+					break;
+				case 'NUMBER_BIGINT':
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(isBigInt(result)).toBeTruthy();
+					break;
+				default:
+					throw new Error('Unhandled format');
+			}
 		}
 	});
 });

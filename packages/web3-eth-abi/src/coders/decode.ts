@@ -21,7 +21,7 @@ import { decodeTuple } from './base/tuple.js';
 import { toAbiParams } from './utils.js';
 
 export function decodeParameters(
-	abis: AbiInput[],
+	abis: AbiInput[] | ReadonlyArray<AbiInput>,
 	bytes: HexString,
 	_loose: boolean,
 ): { [key: string]: unknown; __length__: number } {

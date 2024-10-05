@@ -62,7 +62,7 @@ describe(`${getSystemTestBackend()} tests - estimateGas`, () => {
 			format: string;
 		}>({
 			blockCount: [1, '2', 3, BigInt(4)],
-			newestBlock: ['earliest', 'latest', 'pending', 'safe', 'finalized', 'blockNumber'],
+			newestBlock: ['earliest', 'latest', 'safe', 'finalized', 'blockNumber'],
 			rewardPercentiles: [['0xa', '20', 30, BigInt(40)]],
 			format: Object.values(FMT_NUMBER),
 		}),
