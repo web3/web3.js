@@ -210,6 +210,6 @@ Documentation:
 
 ## [Unreleased]
 
-### Fixed
+### Changed
 
 -   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
