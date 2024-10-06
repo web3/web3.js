@@ -85,6 +85,7 @@ describe('Web3Eth.sendTransaction', () => {
 			to: '0x0000000000000000000000000000000000000000',
 			gas: 21000,
 			value: BigInt(1),
+			type: '0x1', // TODO should be fixed in https://github.com/web3/web3.js/issues/6065 and removed here
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
@@ -118,6 +119,7 @@ describe('Web3Eth.sendTransaction', () => {
 			to: 0,
 			gas: 21000,
 			value: BigInt(1),
+			type: '0x2', // TODO should be fixed in https://github.com/web3/web3.js/issues/6065 and removed here
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
@@ -155,6 +157,7 @@ describe('Web3Eth.sendTransaction', () => {
 			to: 1,
 			gas: 21000,
 			value: BigInt(1),
+			type: '0x1', // TODO should be fixed in https://github.com/web3/web3.js/issues/6065 and removed here
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));

@@ -130,6 +130,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Fixed `ignoreGasPricing` bug with wallet in context (#6071)
 
+### Fixed
+
+-   Fixed `ignoreGasPricing` bug with wallet in context (#6071)
 ### Changed
 
 -   `formatTransaction` no longer throws a `TransactionDataAndInputError` if it's passed a transaction object with both `data` and `input` properties set (as long as they are the same value) (#6064)

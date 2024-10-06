@@ -29,6 +29,7 @@ import {
 	Web3NetAPI,
 	Numbers,
 	DataFormat,
+	DEFAULT_RETURN_FORMAT,
 	FormatType,
 	ETH_DATA_FORMAT,
 } from 'web3-types';
@@ -43,15 +44,15 @@ import {
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
 } from 'web3-errors';
-import { bytesToHex, format } from 'web3-utils';
-import { NUMBER_DATA_FORMAT } from '../constants.js';
+import { format } from 'web3-utils';
+import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
-import { getChainId, getTransactionCount, estimateGas } from '../rpc_method_wrappers.js';
-import { detectTransactionType } from './detect_transaction_type.js';
-import { transactionSchema } from '../schemas.js';
-import { InternalTransaction } from '../types.js';
+import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
+import { detectTransactionType } from './detect_transaction_type';
+import { transactionSchema } from '../schemas';
+import { InternalTransaction } from '../types';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionGasPricing } from './get_transaction_gas_pricing.js';
+import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 
 export const getTransactionFromOrToAttr = (
 	attr: 'from' | 'to',
@@ -98,7 +99,7 @@ export const getTransactionFromOrToAttr = (
 export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	address?: Address,
-	returnFormat: ReturnFormat = web3Context.defaultReturnFormat as ReturnFormat,
+	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 ) => {
 	if (isNullish(address)) {
 		// TODO if (web3.eth.accounts.wallet) use address from local wallet
@@ -113,6 +114,7 @@ export const getTransactionType = (
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
 	const inferredType = detectTransactionType(transaction, web3Context);
+
 	if (!isNullish(inferredType)) return inferredType;
 	if (!isNullish(web3Context.defaultTransactionType))
 		return format({ format: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
@@ -122,17 +124,19 @@ export const getTransactionType = (
 
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
-export async function defaultTransactionBuilder<ReturnType = Transaction>(options: {
-	transaction: Transaction;
-	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
-	privateKey?: HexString | Uint8Array;
-	fillGasPrice?: boolean;
-	fillGasLimit?: boolean;
-}): Promise<ReturnType> {
+export async function defaultTransactionBuilder<ReturnType = Transaction>(
+	options: {
+		transaction: Transaction;
+		web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
+		privateKey?: HexString | Uint8Array;
+	},
+	fillGasPrice = false,
+): Promise<ReturnType> {
+	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 	let populatedTransaction = format(
 		transactionSchema,
 		options.transaction,
-		options.web3Context.defaultReturnFormat,
+		DEFAULT_RETURN_FORMAT,
 	) as InternalTransaction;
 
 	if (isNullish(populatedTransaction.from)) {
@@ -154,26 +158,23 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	}
 
 	if (isNullish(populatedTransaction.value)) {
-		populatedTransaction.value = '0x0';
+		populatedTransaction.value = '0x';
 	}
 
-	if (!isNullish(populatedTransaction.data)) {
-		if (
-			!isNullish(populatedTransaction.input) &&
-			populatedTransaction.data !== populatedTransaction.input
-		)
-			throw new TransactionDataAndInputError({
-				data: bytesToHex(populatedTransaction.data),
-				input: bytesToHex(populatedTransaction.input),
-			});
+	if (!isNullish(populatedTransaction.data) && !isNullish(populatedTransaction.input)) {
+		throw new TransactionDataAndInputError({
+			data: populatedTransaction.data,
+			input: populatedTransaction.input,
+		});
+	} else if (!isNullish(populatedTransaction.data)) {
+		populatedTransaction.input = populatedTransaction.data;
+		delete populatedTransaction.data;
+	}
 
-		if (!populatedTransaction.data.startsWith('0x'))
-			populatedTransaction.data = `0x${populatedTransaction.data}`;
-	} else if (!isNullish(populatedTransaction.input)) {
-		if (!populatedTransaction.input.startsWith('0x'))
-			populatedTransaction.input = `0x${populatedTransaction.input}`;
-	} else {
+	if (isNullish(populatedTransaction.input) || populatedTransaction.input === '') {
 		populatedTransaction.input = '0x';
+	} else if (!populatedTransaction.input.startsWith('0x')) {
+		populatedTransaction.input = `0x${populatedTransaction.input}`;
 	}
 
 	if (isNullish(populatedTransaction.common)) {
@@ -214,13 +215,15 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 	}
 
 	populatedTransaction.type = getTransactionType(populatedTransaction, options.web3Context);
+
 	if (
 		isNullish(populatedTransaction.accessList) &&
 		(populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2')
 	) {
 		populatedTransaction.accessList = [];
 	}
-	if (options.fillGasPrice)
+
+	if (fillGasPrice)
 		populatedTransaction = {
 			...populatedTransaction,
 			...(await getTransactionGasPricing(
@@ -229,22 +232,7 @@ export async function defaultTransactionBuilder<ReturnType = Transaction>(option
 				ETH_DATA_FORMAT,
 			)),
 		};
-	if (
-		isNullish(populatedTransaction.gas) &&
-		isNullish(populatedTransaction.gasLimit) &&
-		options.fillGasLimit
-	) {
-		const fillGasLimit = await estimateGas(
-			options.web3Context,
-			populatedTransaction,
-			'latest',
-			ETH_DATA_FORMAT,
-		);
-		populatedTransaction = {
-			...populatedTransaction,
-			gas: format({ format: 'uint' }, fillGasLimit as Numbers, ETH_DATA_FORMAT),
-		};
-	}
+
 	return populatedTransaction as ReturnType;
 }
 
@@ -253,12 +241,14 @@ export const transactionBuilder = async <ReturnType = Transaction>(
 		transaction: Transaction;
 		web3Context: Web3Context<EthExecutionAPI>;
 		privateKey?: HexString | Uint8Array;
-		fillGasPrice?: boolean;
-		fillGasLimit?: boolean;
 	},
+	fillGasPrice = false,
 	// eslint-disable-next-line @typescript-eslint/require-await
 ) =>
-	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
-		...options,
-		transaction: options.transaction,
-	}) as unknown as ReturnType;
+	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)(
+		{
+			...options,
+			transaction: options.transaction,
+		},
+		fillGasPrice,
+	) as unknown as ReturnType;

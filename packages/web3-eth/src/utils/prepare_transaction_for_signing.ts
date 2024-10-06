@@ -30,20 +30,19 @@ import { Web3Context } from 'web3-core';
 import { toNumber } from 'web3-utils';
 import { TransactionFactory, TxOptions, Common } from 'web3-eth-accounts';
 import { isNullish } from 'web3-validator';
-import { validateTransactionForSigning } from '../validation.js';
-import { formatTransaction } from './format_transaction.js';
-import { transactionBuilder } from './transaction_builder.js';
+import { validateTransactionForSigning } from '../validation';
+import { formatTransaction } from './format_transaction';
+import { transactionBuilder } from './transaction_builder';
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
 ) => ({
-	...transaction,
 	nonce: transaction.nonce,
 	gasPrice: transaction.gasPrice,
 	gasLimit: transaction.gasLimit ?? transaction.gas,
 	to: transaction.to,
 	value: transaction.value,
-	data: transaction.data ?? transaction.input,
+	data: transaction.input,
 	type: transaction.type,
 	chainId: transaction.chainId,
 	accessList: (
@@ -69,7 +68,7 @@ const getEthereumjsTransactionOptions = (
 	if (!hasTransactionSigningOptions) {
 		// if defaultcommon is specified, use that.
 		if (web3Context.defaultCommon) {
-			common = { ...web3Context.defaultCommon };
+			common = web3Context.defaultCommon;
 
 			if (isNullish(common.hardfork))
 				common.hardfork = transaction.hardfork ?? web3Context.defaultHardfork;
@@ -126,25 +125,23 @@ export const prepareTransactionForSigning = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Uint8Array,
 	fillGasPrice = false,
-	fillGasLimit = true,
 ) => {
-	const populatedTransaction = (await transactionBuilder({
-		transaction,
-		web3Context,
-		privateKey,
+	const populatedTransaction = (await transactionBuilder(
+		{
+			transaction,
+			web3Context,
+			privateKey,
+		},
 		fillGasPrice,
-		fillGasLimit,
-	})) as unknown as PopulatedUnsignedTransaction;
-	const formattedTransaction = formatTransaction(populatedTransaction, ETH_DATA_FORMAT, {
-		transactionSchema: web3Context.config.customTransactionSchema,
-	}) as unknown as FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>;
+	)) as unknown as PopulatedUnsignedTransaction;
+
+	const formattedTransaction = formatTransaction(
+		populatedTransaction,
+		ETH_DATA_FORMAT,
+	) as unknown as FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>;
 
 	validateTransactionForSigning(
 		formattedTransaction as unknown as FormatType<Transaction, typeof ETH_DATA_FORMAT>,
-		undefined,
-		{
-			transactionSchema: web3Context.config.customTransactionSchema,
-		},
 	);
 
 	return TransactionFactory.fromTxData(
