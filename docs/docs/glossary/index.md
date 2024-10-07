@@ -4,7 +4,6 @@ sidebar_label: '📖 Glossary'
 title: Glossary
 ---
 
-
 ## Provider
 
 In web3.js, a `provider` is an object responsible for enabling connectivity with the Ethereum network in various ways. Providers facilitate the connection of your web application to an Ethereum node, different provider types are available in web3.js(HTTP, WebSocket and IPC), each with its own features and use cases. **It's important to note that a provider itself only provides read-only access to the blockchain.** It does not use any private keys or accounts for interaction. This read-only functionality is particularly useful for querying data and making calls to the blockchain without the need for private key authorization.
@@ -13,11 +12,9 @@ In web3.js, a `provider` is an object responsible for enabling connectivity with
 
 In web3.js, an `account` allows you to perform operations on the blockchain, such as sending transactions, signing data, and interacting with contracts. It serves as the key component for **using a private key** directly to execute various blockchain operations. In other libraries, this concept is often referred to as a `signer`. This versatility in terminology doesn't change its fundamental purpose, providing a secure and straightforward means to manage Ethereum-related operations.
 
-
 ## Wallet
 
 A `wallet` in web3.js can store multiple `accounts`. This feature allows you to manage various private keys for different operations. When using methods such as `web3.eth.sendTransaction()` or `web3.eth.contract.methods.doSomething().send({})`, the web3.js library handles these transactions using the wallet accounts under the hood. Essentially, the wallet makes it easier to coordinate multiple accounts for smoother Ethereum operations.
-
 
 ## Contract
 
@@ -82,30 +79,39 @@ contract Test {
 
 ```json title='Resulting JSON ABI'
 [
-    {
-        "type": "constructor",
-        "stateMutability": "nonpayable",
-        "inputs": [{"internalType":"uint256","name":"testInt","type":"uint256"}],
-    },
-    {
-        "type": "event",
-        "name": "Event",
-        "inputs": [{"indexed":true,"internalType":"uint256","name":"b","type":"uint256"},{"indexed":false,"internalType":"bytes32","name":"c","type":"bytes32"}],
-        "anonymous": false,
-    },
-    {
-        "type": "event",
-        "name": "Event2",
-        "inputs": [{"indexed":true,"internalType":"uint256","name":"b","type":"uint256"},{"indexed":false,"internalType":"bytes32","name":"c","type":"bytes32"}],
-        "anonymous": false,
-    },
-    {
-        "type": "function",
-        "name": "foo",
-        "stateMutability": "nonpayable",
-        "inputs": [{"internalType":"uint256","name":"b","type":"uint256"},{"internalType":"bytes32","name":"c","type":"bytes32"}],
-        "outputs": [{"internalType":"address","name":"","type":"address"}],
-    }
+	{
+		"type": "constructor",
+		"stateMutability": "nonpayable",
+		"inputs": [{ "internalType": "uint256", "name": "testInt", "type": "uint256" }]
+	},
+	{
+		"type": "event",
+		"name": "Event",
+		"inputs": [
+			{ "indexed": true, "internalType": "uint256", "name": "b", "type": "uint256" },
+			{ "indexed": false, "internalType": "bytes32", "name": "c", "type": "bytes32" }
+		],
+		"anonymous": false
+	},
+	{
+		"type": "event",
+		"name": "Event2",
+		"inputs": [
+			{ "indexed": true, "internalType": "uint256", "name": "b", "type": "uint256" },
+			{ "indexed": false, "internalType": "bytes32", "name": "c", "type": "bytes32" }
+		],
+		"anonymous": false
+	},
+	{
+		"type": "function",
+		"name": "foo",
+		"stateMutability": "nonpayable",
+		"inputs": [
+			{ "internalType": "uint256", "name": "b", "type": "uint256" },
+			{ "internalType": "bytes32", "name": "c", "type": "bytes32" }
+		],
+		"outputs": [{ "internalType": "address", "name": "", "type": "address" }]
+	}
 ]
 ```
 
@@ -123,6 +129,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 ```
 
 ## WebSocketProvider
+
 [WebSocketProvider](https://docs.web3js.org/guides/web3_providers_guide/#websocket-provider) in Web3.js connects your application to an Ethereum node via WebSocket, enabling real-time and asynchronous communication. This provider is ideal for applications needing real-time updates, such as new blocks or smart contract events. It offers better performance for high-throughput applications compared to `HttpProvider`. Ensure secure connections with `wss://` for exposed endpoints. Handle reconnections gracefully for reliable operation.
 
 ```javascript title='WebSocketProvider example'
@@ -138,13 +145,14 @@ The `Events` class in Web3.js is a crucial part of the library that enables deve
 
 ```solidity title='Event in solidity'
 contract MyContract {
-  event Transfer(address indexed from, address indexed to, uint value);
+	event Transfer(address indexed from, address indexed to, uint256 value);
 
-  function transfer(address recipient, uint amount) public {
-    // ... transfer logic ...
-    emit Transfer(msg.sender, recipient, amount);
-  }
+	function transfer(address recipient, uint256 amount) public {
+		// ... transfer logic ...
+		emit Transfer(msg.sender, recipient, amount);
+	}
 }
+
 ```
 
 ```javascript title='Event in web3.js'
@@ -158,9 +166,9 @@ const myContract = new web3.eth.Contract(MyContract.abi, contractAddress);
 
 const transferEvent = myContract.events.Transfer(); // Access the Transfer event
 
-transferEvent.on('data', (event) => {
-  console.log('Transfer Event:', event);
-  // Process the event data (from, to, value)
+transferEvent.on('data', event => {
+	console.log('Transfer Event:', event);
+	// Process the event data (from, to, value)
 });
 ```
 
@@ -191,3 +199,4 @@ web3.eth.getPastLogs(options)
     console.error('Error retrieving logs:', error);
   });
 `
+```

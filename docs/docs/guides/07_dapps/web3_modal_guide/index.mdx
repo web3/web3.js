@@ -1,0 +1,130 @@
+---
+sidebar_position: 1
+sidebar_label: 'Getting started'
+---
+
+# Getting Started
+
+Welcome to the Web3modal📱 Guide.
+
+The Web3Modal SDK allows you to easily connect your Web3 app with wallets. It provides a simple and intuitive interface for requesting actions such as signing transactions and interacting with smart contracts on the blockchain.
+
+In this guide, you will learn how to set up Walletconnect with web3js.
+
+
+
+## Preview
+:::info
+Switch your browsers if the preview doesn't load.
+:::
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-cg7ctd?embed=1&file=src%2FApp.tsx"></iframe>
+
+
+
+## Installation
+
+```bash
+npm install web3modal-web3js web3js
+```
+
+## Implementation
+
+```typescript
+
+import { createWeb3Modal, defaultConfig } from 'web3modal-web3/react'
+
+// 1. Get projectId, Your Project ID can be obtained from walletconnect.com
+const projectId = 'YOUR_PROJECT_ID'
+
+// 2. Set chains
+const mainnet = {
+  chainId: 1,
+  name: 'Ethereum',
+  currency: 'ETH',
+  explorerUrl: 'https://etherscan.io',
+  rpcUrl: 'https://cloudflare-eth.com'
+}
+
+// 3. Create a metadata object
+const metadata = {
+  name: 'My Website',
+  description: 'My Website description',
+  url: 'https://mywebsite.com', // origin must match your domain & subdomain
+  icons: ['https://avatars.mywebsite.com/']
+}
+
+// 4. Create web3 config
+const web3Config = defaultConfig({
+  /*Required*/
+  metadata,
+
+  /*Optional*/
+  enableEIP6963: true, // true by default
+  enableInjected: true, // true by default
+  enableCoinbase: true, // true by default
+  rpcUrl: '...', // used for the Coinbase SDK
+  defaultChainId: 1, // used for the Coinbase SDK
+})
+
+// 5. Create a Web3Modal instance
+createWeb3Modal({
+  web3Config,
+  chains: [mainnet],
+  projectId,
+  enableAnalytics: true // Optional - defaults to your Cloud configuration
+})
+
+export default function App() {
+  return <YourApp />
+}
+```
+
+## Triggering the modal
+
+```Typescript
+
+export default function ConnectButton() {
+  return <w3m-button/>
+}
+
+```
+
+## Smart Contract Interaction
+
+<iframe width="100%" height="700px"  src="https://stackblitz.com/edit/vitejs-vite-itfrzf?embed=1&file=src%2FApp.tsx"></iframe>
+
+Web3js can help us interact with wallets and smart contracts:
+
+```Typescript
+import Web3 from 'web3';
+import { ERC20ABI } from './contracts/ERC20';
+
+const USDTAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7';
+
+function Components() {
+  const { isConnected } = useWeb3ModalAccount()
+  const { walletProvider } = useWeb3ModalProvider()
+  const [USDTBalance, setUSDTBalance] = useState(0);
+  const [smartContractName, setSmartContractName] = useState('');
+
+  async function getContractInfo() {
+    if (!isConnected) throw Error('not connected');
+    const web3 = new Web3({
+      provider: walletProvider,
+      config: { defaultNetworkId: chainId },
+    });
+    const contract = new web3.eth.Contract(ERC20ABI, USDTAddress);
+    const balance = await contract.methods.balanceOf(address).call();
+    const name = (await contract.methods.name().call()) as string;
+    setUSDTBalance(Number(balance));
+    setSmartContractName(name);
+  }
+
+  return <> <button onClick={getContractInfo}>Get User Balance and Contract name</button> <p> Balance: {USDTBalance} smartContractName: {smartContractName}</p></>
+}
+
+```
+
+:::info
+- To learn how to set up Web3modal with React, click [here](/guides/dapps/web3_modal_guide/react).
+:::
