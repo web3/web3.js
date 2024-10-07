@@ -14,16 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import {
-	EthExecutionAPI,
-	Web3APIMethod,
-	Web3APIPayload,
-	Web3APIReturnType,
-	JsonRpcResponseWithResult,
-	Web3APISpec,
-} from 'web3-types';
 import { HttpProviderOptions } from 'web3-providers-http';
-import { ResponseError } from 'web3-errors';
 import { Web3ExternalProvider } from './web3_provider.js';
 import { Network, Transport, SocketOptions } from './types.js';
 
@@ -31,9 +22,7 @@ function isValid(value: string): boolean {
 	return !!(value && value.trim().length > 0);
 }
 
-export class AlchemyProvider<
-	API extends Web3APISpec = EthExecutionAPI,
-> extends Web3ExternalProvider {
+export class AlchemyProvider extends Web3ExternalProvider {
 	public constructor(
 		network: Network = Network.ETH_MAINNET,
 		transport: Transport = Transport.HTTPS,
@@ -44,63 +33,27 @@ export class AlchemyProvider<
 		super(network, transport, token, host, providerConfigOptions);
 	}
 
+	public static readonly networkStringMap: { [key: string]: string } = {
+		[Network.ETH_MAINNET]: 'eth-mainnet.g.alchemy.com',
+		[Network.ETH_SEPOLIA]: 'eth-sepolia.g.alchemy.com',
+		[Network.ETH_GOERLI]: 'eth-goerli.g.alchemy.com',
+		[Network.ARBITRUM_MAINNET]: 'arb-mainnet.g.alchemy.com',
+		[Network.ARBITRUM_SEPOLIA]: 'arb-sepolia.g.alchemy.com',
+		[Network.BASE_MAINNET]: 'base-mainnet.g.alchemy.com',
+		[Network.BASE_SEPOLIA]: 'base-sepolia.g.alchemy.com',
+		[Network.POLYGON_MAINNET]: 'polygon-mainnet.g.alchemy.com',
+		[Network.POLYGON_AMOY]: 'polygon-amoy.g.alchemy.com',
+		[Network.OPTIMISM_MAINNET]: 'opt-mainnet.g.alchemy.com',
+		[Network.OPTIMISM_SEPOLIA]: 'opt-sepolia.g.alchemy.com',
+	};
 
 	// eslint-disable-next-line class-methods-use-this
 	public getRPCURL(network: Network, transport: Transport, _token: string, _host: string) {
-		let host = '';
-		let token = '';
+		const host = AlchemyProvider.networkStringMap[network] || '';
+		const token = isValid(_token) ? _token : `alchemy-${network.toLowerCase()}-token`;
 
-		switch (network) {
-			case Network.ETH_MAINNET:
-				host = isValid(_host) ? _host : 'eth-mainnet.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-mainnet-token';
-				break;
-			case Network.ETH_SEPOLIA:
-				host = isValid(_host) ? _host : 'eth-sepolia.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-sepolia-token';
-				break;
-			case Network.ETH_GOERLI:
-				host = isValid(_host) ? _host : 'eth-goerli.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-goerli-token';
-				break;
-
-			case Network.ARBITRUM_MAINNET:
-				host = isValid(_host) ? _host : 'arb-mainnet.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-arbitrum-mainnet-token';
-				break;
-			case Network.ARBITRUM_SEPOLIA:
-				host = isValid(_host) ? _host : 'arb-sepolia.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-arbitrum-sepolia-token';
-				break;
-
-			case Network.BASE_MAINNET:
-				host = isValid(_host) ? _host : 'base-mainnet.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-base-mainnet-token';
-				break;
-			case Network.BASE_SEPOLIA:
-				host = isValid(_host) ? _host : 'base-sepolia.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-base-sepolia-token';
-				break;
-
-			case Network.POLYGON_MAINNET:
-				host = isValid(_host) ? _host : 'polygon-mainnet.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-polygon-mainnet-token';
-				break;
-			case Network.POLYGON_AMOY:
-				host = isValid(_host) ? _host : 'polygon-amoy.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-polygon-amoy-token';
-				break;
-
-			case Network.OPTIMISM_MAINNET:
-				host = isValid(_host) ? _host : 'opt-mainnet.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-optimism-mainnet-token';
-				break;
-			case Network.OPTIMISM_SEPOLIA:
-				host = isValid(_host) ? _host : 'opt-sepolia.g.alchemy.com';
-				token = isValid(_token) ? _token : 'alchemy-optimism-sepolia-token';
-				break;
-			default:
-				throw new Error('Network info not available.');
+		if (!host) {
+			throw new Error('Network info not available.');
 		}
 
 		return `${transport}://${host}/v2/${token}`;
