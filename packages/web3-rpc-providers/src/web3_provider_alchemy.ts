@@ -44,22 +44,6 @@ export class AlchemyProvider<
 		super(network, transport, token, host, providerConfigOptions);
 	}
 
-	public async request<
-		Method extends Web3APIMethod<API>,
-		ResultType = Web3APIReturnType<API, Method>,
-	>(
-		payload: Web3APIPayload<EthExecutionAPI, Method>,
-		requestOptions?: RequestInit,
-	): Promise<JsonRpcResponseWithResult<ResultType>> {
-		try {
-			return await super.request(payload, requestOptions);
-		} catch (error) {
-			if (error instanceof ResponseError && error.statusCode === 429) {
-				throw new Error('Alchemy rate limit exceeded');
-			}
-			throw error;
-		}
-	}
 
 	// eslint-disable-next-line class-methods-use-this
 	public getRPCURL(network: Network, transport: Transport, _token: string, _host: string) {
