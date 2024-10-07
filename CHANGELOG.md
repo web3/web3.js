@@ -2729,6 +2729,12 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ## [Unreleased]
 
+### Added
+
+#### web3-eth
+
+-   `syncing` subscription now supports Besu and Nethermind payload format
+
 ### Changed
 
 #### web3-eth
