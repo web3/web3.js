@@ -1,7 +1,7 @@
 {
-	"name": "web3-accounts-abstraction",
-	"version": "0.1.0-RC.0",
-	"description": "Web3 accounts abstraction package",
+	"name": "web3-account-abstraction",
+	"version": "0.1.0-rc.0",
+	"description": "Web3 account abstraction package",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",

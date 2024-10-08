@@ -2,7 +2,7 @@
   <img src="assets/logo/web3js.jpg" width="500" alt="web3.js" />
 </p>
 
-# web3.js - Package Template
+# web3.js - Account Abstraction
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -11,22 +11,22 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-packagetemplate` contains the ideal setup for a Web3.js package.
+`web3-account-abstraction` contains the ideal setup for a Web3.js package.
 
 ## Installation
 
-You can install the package either using [NPM](https://www.npmjs.com/package/web3-packagetemplate) or using [Yarn](https://yarnpkg.com/package/web3-packagetemplate)
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-account-abstraction) or using [Yarn](https://yarnpkg.com/package/web3-account-abstraction)
 
 ### Using NPM
 
 ```bash
-npm install web3-packagetemplate
+npm install web3-account-abstraction
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add web3-packagetemplate
+yarn add web3-account-abstraction
 ```
 
 ## Getting Started
@@ -53,7 +53,7 @@ yarn add web3-packagetemplate
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: https://docs.web3js.org/
-[repo]: https://github.com/web3/web3.js/tree/4.x/tools/web3-packagetemplate
-[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=tools%2Fweb3-packagetemplate%2Fpackage.json
-[npm-url]: https://npmjs.org/package/web3-packagetemplate
-[downloads-image]: https://img.shields.io/npm/dm/web3-packagetemplate?label=npm%20downloads
+[repo]: https://github.com/web3/web3.js/tree/4.x/tools/web3-account-abstraction
+[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/4.x?filename=tools%2Fweb3-account-abstraction%2Fpackage.json
+[npm-url]: https://npmjs.org/package/web3-account-abstraction
+[downloads-image]: https://img.shields.io/npm/dm/web3-account-abstraction?label=npm%20downloads
