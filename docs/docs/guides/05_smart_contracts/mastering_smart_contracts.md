@@ -19,7 +19,7 @@ In the code editor you'll find:
     -   `getNumber()`: this function will return the current value of the `number` variable.
 -   `counterABI.json`: the ABI of the ContractCounter.sol
 -   `counterBytecode.json`: the compiled Bytecode of the ContractCounter.sol
--   `main.js`: here you will find 3 funtions:
+-   `main.js`: here you will find 3 functions:
 
     -   `deploy()`: sample script to deploy the smart contract using the ABI and Bytecode
     -   `getNumber()`: sample script to call the reading function getNumber() of the smart contract
