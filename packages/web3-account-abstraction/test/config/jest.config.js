@@ -1,0 +1,1 @@
+../../../../templates/jest.config.js.tmpl
