@@ -6,11 +6,13 @@ sidebar_label: web3.providers
 
 For full description about the providers, their priorities and their types, you can check [web3.js Providers Guide](/guides/web3_providers_guide/).
 
-### Provider Options Changes
+## Provider Options Changes
 
-There are differences in the objects that could be passed in the Provider constructors between version 1.x and 4.x. Below, you will find the difference for every Provider object type.
+There are differences in the objects that could be passed in the Provider constructors between version 1.x and v4. Below, you will find the difference for every Provider object type.
 
-#### HttpProvider
+### HttpProvider
+
+#### HttpProviderOptions
 
 In 1.x, options passed in the constructor should be of type [`HttpProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L173). The `HttpProviderOptions` interface consists of:
 
@@ -35,7 +37,7 @@ interface HttpHeader {
 }
 ```
 
-In 4.x, the options is of type `HttpProviderOptions`, which is an object with a `providerOptions` key and value a `RequestInit` object.
+In v4, the options is of type `HttpProviderOptions`, which is an object with a `providerOptions` key and value a `RequestInit` object.
 Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html).
 
 For example:
@@ -58,7 +60,7 @@ let httpOptions = {
     }
 };
 
-// in 4.x
+// in v4
 let httpOptions = {
 	providerOptions: {
 		body: undefined,
@@ -80,7 +82,9 @@ let httpOptions = {
 };
 ```
 
-#### WebSocketProvider
+### WebSocketProvider
+
+#### WebsocketProviderOptions
 
 In 1.x, options passed in the constructor should be of type [`WebsocketProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L192). The `WebsocketProviderOptions` interface consists of:
 
@@ -105,9 +109,9 @@ interface ReconnectOptions {
 }
 ```
 
-In 4.x, the `socketOptions` parameter is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
+In v4, the `socketOptions` parameter is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
 
-In 4.x the `reconnectOptions` parameter can be given to control: auto-reconnecting, delay and max tries attempts. And here is its type:
+In v4 the `reconnectOptions` parameter can be given to control: auto-reconnecting, delay and max tries attempts. And here is its type:
 
 ```ts
 // this is the same options interface used for both WebSocketProvider and IpcProvider
@@ -118,7 +122,36 @@ type ReconnectOptions = {
 };
 ```
 
-##### Options examples
+#### Program Behavior with WebSocket Provider
+
+In 1.x, a program connected to a WebSocket provider would automatically terminate after executing all code, even if the WebSocket connection was still active:
+
+```ts
+const web3 = new Web3(wsUrl);
+// The program will terminate after connecting since there are no more lines of code to run.
+```
+
+In version 4.x, this behavior has changed. When connected to a WebSocket provider, the program will not automatically terminate after the code finishes running. This is to ensure the WebSocket connection remains open, allowing the program to continue listening for events.
+
+The program will remain active until you explicitly disconnect from the WebSocket provider:
+
+```ts
+const web3 = new Web3(wsUrl);
+// The program will keep running to listen for events.
+```
+
+#### Terminating the Program
+
+When you're ready to stop the program, you can manually disconnect from the WebSocket provider by calling the disconnect method. This will properly close the connection and terminate the program:
+
+```ts
+const web3 = new Web3(wsUrl);
+// When you are ready to terminate your program
+web3.currentProvider?.disconnect();
+// The program will now terminate
+```
+
+### Options examples
 
 Below is an example for the passed options for each version:
 
@@ -150,7 +183,7 @@ var options = {
 		onTimeout: false,
 	},
 };
-// in 4.x
+// in v4
 let clientOptions: ClientOptions = {
 	// Useful for credentialed urls, e.g: ws://username:password@localhost:8546
 	headers: {
@@ -199,7 +232,9 @@ const provider = new WebSocketProvider(
 );
 ```
 
-#### Legacy Event `close` has been deprecated
+### Legacy Event `close` has been deprecated
+
+#### Disconnect and close event
 
 Following EIP-1193, the `close` event has been deprecated and is superceded by `disconnect`.
 In 1.x, we listen for a `close` event:
@@ -215,7 +250,7 @@ provider.disconnect(1012);
 // would eventually log closed
 ```
 
-In 4.x, we listen for a `disconnect` event:
+In v4, we listen for a `disconnect` event:
 
 ```ts
 const provider = new WebSocketProvider(host + port);
@@ -228,7 +263,9 @@ provider.disconnect(1012);
 // would eventually log 'closed'
 ```
 
-#### IpcProvider
+### IpcProvider
+
+#### Using IpcProvider
 
 The IPC provider is used in node.js dapps when running a local node. And it provide the most secure connection.
 
@@ -240,7 +277,7 @@ import * as net from 'net';
 const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
 ```
 
-In 4.x, it's no longer installed by default as its nodejs modules are impacting web3.js browser usage.
+In v4, it's no longer installed by default as its nodejs modules are impacting web3.js browser usage.
 You can use it by installing `web3-providers-ipc` and creating a new instance. Since it's compatible with Eip1193Provider,
 you can pass it on to the Web3 instance.
 
@@ -262,7 +299,7 @@ interface SocketConstructorOpts {
 }
 ```
 
-In 4.x the third parameter is called `reconnectOptions` that is of the type `ReconnectOptions`. It can be given to control: auto-reconnecting, delay and max tries attempts. And here its type:
+In v4 the third parameter is called `reconnectOptions` that is of the type `ReconnectOptions`. It can be given to control: auto-reconnecting, delay and max tries attempts. And here its type:
 
 ```ts
 // this is the same options interface used for both WebSocketProvider and IpcProvider
@@ -285,7 +322,7 @@ new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net); 
 // on windows the path is: "\\\\.\\pipe\\geth.ipc"
 // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
 
-// in 4.x
+// in v4
 let clientOptions: SocketConstructorOpts = {
 	allowHalfOpen: false;
 	readable: true;
@@ -333,7 +370,7 @@ const provider = new IpcProvider(
 );
 ```
 
-#### Error message for reconnect attempts
+### Error message for reconnect attempts
 
 :::note
 This section applies for both `IpcProvider` and `WebSocketProvider`.
@@ -342,11 +379,11 @@ This section applies for both `IpcProvider` and `WebSocketProvider`.
 The error in, version 1.x, was an Error object that contains the message:
 `'Maximum number of reconnect attempts reached!'`
 
-And, the error in version 4.x, is the same, but will also contain the value of the variable `maxAttempts` as follows:
+And, the error in version v4, is the same, but will also contain the value of the variable `maxAttempts` as follows:
 
 `` `Maximum number of reconnect attempts reached! (${maxAttempts})` ``
 
-And here is how to catch the error, in version 4.x, if max attempts reached when there is auto reconnecting:
+And here is how to catch the error, in version v4, if max attempts reached when there is auto reconnecting:
 
 ```ts
 provider.on('error', error => {
@@ -357,7 +394,7 @@ provider.on('error', error => {
 });
 ```
 
-#### Legacy Event `close` has been deprecated
+### Legacy Event `close` has been deprecated
 
 Following EIP-1193, the `close` event has been deprecated and is superseded by `disconnect`.
 In 1.x, we listen for a `close` event:
@@ -373,7 +410,7 @@ provider.disconnect(1012);
 // would eventually log closed
 ```
 
-In 4.x, we listen for a `disconnect` event:
+In v4, we listen for a `disconnect` event:
 
 ```ts
 const provider = new IpcProvider(host + port);
