@@ -276,8 +276,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * If the node supports EIP-1559, then the `maxFeePerGas` and `maxPriorityFeePerGas` will be calculated.
 	 * If the node does not support EIP-1559, then the `gasPrice` will be returned and the rest are `null`s.
 	 *
-	 * @param baseFeePerGasFactor The factor to multiply the baseFeePerGas with, if the node supports EIP-1559.
-	 * @param alternativeMaxPriorityFeePerGas The alternative maxPriorityFeePerGas to use, if the node supports EIP-1559, but does not support the method `eth_maxPriorityFeePerGas`.
+	 * @param baseFeePerGasFactor (optional) The factor to multiply the baseFeePerGas with, if the node supports EIP-1559. The default value is 2.
+	 * @param alternativeMaxPriorityFeePerGas (optional) The alternative maxPriorityFeePerGas to use, if the node supports EIP-1559, but does not support the method `eth_maxPriorityFeePerGas`. The default is 1 gwei.
 	 * @returns The current fee data.
 	 *
 	 * ```ts
