@@ -13,7 +13,7 @@ With the above in mind, the total cost of fees associated with a transaction are
 
 ## Estimating Gas
 
-The Ethereum JSON-RPC specifies the [eth_estimateGas](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_estimategas) method, which accepts a transaction and returns an estimate of the amount of gas required to execute that transaction. The transaction will not be executed and added to the blockchain. The estimate may be different (typically more) than the amount of gas actually used by the transaction for a variety of reasons, including EVM mechanics, node performance, and changes to the state of a smart contract. To invoke the `eth_estimateGas` RPC method, use the [`Web3Eth.estimateGas` method](/api/web3-eth/class/Web3Eth#estimateGas) and provide the [`Transaction`](/api/web3-types/interface/Transaction) for which to estimate gas.
+The Ethereum JSON-RPC specifies the [`eth_estimateGas` method](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_estimategas), which accepts a transaction and returns an estimate of the amount of gas required to execute that transaction. The transaction will not be executed and added to the blockchain. The estimate may be different (typically more) than the amount of gas actually used by the transaction for a variety of reasons, including EVM mechanics, node performance, and changes to the state of a smart contract. To invoke the `eth_estimateGas` RPC method, use the [`Web3Eth.estimateGas` method](/api/web3-eth/class/Web3Eth#estimateGas) and provide the [`Transaction`](/api/web3-types/interface/Transaction) for which to estimate gas.
 
 Web3.js transactions may specifying a gas limit (the maximum amount of gas they are able to consume) by providing the [`Transaction.gas` property](/api/web3/namespace/types#gas). If the specified gas limit is less than the actual amount of gas required to execute the transaction, the transaction will consume an amount of gas equal to the gas limit, which is not refunded, before failing and reverting any state changes made by the transaction.
 
@@ -49,4 +49,35 @@ const transaction: Transaction = {
 const feeData: FeeData = await web3.eth.calculateFeeData();
 transaction.maxFeePerGas = feeData.maxFeePerGas;
 transaction.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+```
+
+## Generating Access Lists
+
+An access list specifies the addresses and storage keys that a transaction plans to access. Specifying these elements in advance makes a transaction's gas costs more predictable.
+
+The Ethereum JSON-RPC specifies the [`eth_createAccessList` method](https://github.com/ethereum/execution-apis/blob/4140e528360fea53c34a766d86a000c6c039100e/src/eth/execute.yaml#L54-L97), which accepts a transaction and returns an object that lists the addresses and storage keys that the transaction will access, as well as the approximate gas cost for the transaction if the access list is included. The transaction will not be executed and added to the blockchain. To invoke the `eth_createAccessList` RPC method, use the [`Web3Eth.createAccessList` method](/api/web3-eth/function/createAccessList) and provide the [`TransactionForAccessList`](/api/web3-types/interface/TransactionForAccessList) for which to generate the access list.
+
+Web3.js transactions may specify an access list by providing the [`Transaction.accessList` property](/api/web3/namespace/types#accessList).
+
+```ts
+const transaction: TransactionForAccessList = {
+	from: '<SENDER ADDRESS>',
+	to: '<RECEIVER ADDRESS>',
+	value: web3.utils.ethUnitMap.ether,
+};
+
+const accessListResult: AccessListResult = await web3.eth.createAccessList(transaction);
+transaction.accessList = accessListResult.accessList;
+transaction.gas = accessListResult.gasUsed;
+```
+
+The following example demonstrates creating an access list for a transaction that invokes a smart contract function:
+
+```ts
+const transfer: NonPayableMethodObject = erc20.methods.transfer('<RECEIVER ADDRESS>', 1);
+const transferOpts: NonPayableCallOptions = { from: '<SENDER ADDRESS>' };
+const transferTxn: Transaction = transfer.populateTransaction(transferOpts);
+const accessListResult: AccessListResult = await transfer.createAccessList(transferOpts);
+transferTxn.gas = accessListResult.gasUsed;
+transferTxn.accessList = accessListResult.accessList;
 ```
