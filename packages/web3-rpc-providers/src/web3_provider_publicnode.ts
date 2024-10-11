@@ -38,11 +38,10 @@ export class PublicNodeProvider<
 	public constructor(
 		network: Network = Network.ETH_MAINNET,
 		transport: Transport = Transport.HTTPS,
-		token = '',
 		host = '',
 		providerConfigOptions?: HttpProviderOptions | SocketOptions,
 	) {
-		super(network, transport, token, host, providerConfigOptions);
+		super(network, transport, '', host, providerConfigOptions);
 	}
 	public static readonly networkHostMap: { [key: string]: string } = {
 		[Network.POLYGON_AMOY]: 'polygon-amoy-bor-rpc.publicnode.com',
