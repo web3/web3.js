@@ -15,7 +15,7 @@ With the above in mind, the total cost of fees associated with a transaction are
 
 The Ethereum JSON-RPC specifies the [`eth_estimateGas` method](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_estimategas), which accepts a transaction and returns an estimate of the amount of gas required to execute that transaction. The transaction will not be executed and added to the blockchain. The estimate may be different (typically more) than the amount of gas actually used by the transaction for a variety of reasons, including EVM mechanics, node performance, and changes to the state of a smart contract. To invoke the `eth_estimateGas` RPC method, use the [`Web3Eth.estimateGas` method](/api/web3-eth/class/Web3Eth#estimateGas) and provide the [`Transaction`](/api/web3-types/interface/Transaction) for which to estimate gas.
 
-Web3.js transactions may specifying a gas limit (the maximum amount of gas they are able to consume) by providing the [`Transaction.gas` property](/api/web3/namespace/types#gas). If the specified gas limit is less than the actual amount of gas required to execute the transaction, the transaction will consume an amount of gas equal to the gas limit, which is not refunded, before failing and reverting any state changes made by the transaction.
+Web3.js transactions may specify a gas limit (the maximum amount of gas they are able to consume) by providing the [`Transaction.gas` property](/api/web3/namespace/types#gas). If the specified gas limit is less than the actual amount of gas required to execute the transaction, the transaction will consume an amount of gas equal to the gas limit, which is not refunded, before failing and reverting any state changes made by the transaction.
 
 ```ts
 const transaction: Transaction = {
