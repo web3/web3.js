@@ -362,6 +362,10 @@ interact();
 
 This code uses the previously generated ABI and contract address to instantiate a [`Contract`](/api/web3-eth-contract/class/Contract) object for interacting with the `MyContract` smart contract. It gets the current value of `myNumber` from `MyContract`, logs it, updates it, and gets its updated value. It logs the updated `myNumber` value and the [transaction hash](https://help.coinbase.com/en-au/coinbase/getting-started/crypto-education/what-is-a-transaction-hash-hash-id) to the console.
 
+:::info
+For the purposes of this tutorial, the above script uses relatively arbitrary values for `gas` and `gasPrice` when demonstrating how to interact with a smart contract. Refer to the [Gas and Priority Fees guide](/guides/transactions/gas-and-fees#smart-contract-fees) to learn how to properly set these values.
+:::
+
 Run the following command to interact with the smart contract:
 
 ```bash

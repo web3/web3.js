@@ -85,7 +85,9 @@ const transaction: Transaction = {
 };
 ```
 
-The following example demonstrates creating an access list for a transaction that invokes a smart contract function:
+## Smart Contract Fees
+
+The following example demonstrates specifying fee data and creating an access list for a transaction that invokes a [smart contract](/guides/smart_contracts/smart_contracts_guide) function:
 
 ```ts
 const transfer: NonPayableMethodObject = erc20.methods.transfer(receiver.address, 1);
@@ -94,9 +96,15 @@ const transferOpts: NonPayableCallOptions = { from: sender.address };
 const accessListResult: AccessListResult = await transfer.createAccessList(transferOpts);
 const transactionDraft: Transaction = transfer.populateTransaction(transferOpts);
 
+const feeData: FeeData = await web3.eth.calculateFeeData();
+
 const transferTxn: Transaction = {
 	...transactionDraft,
+	maxFeePerGas: feeData.maxFeePerGas,
+	maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
 	accessList: accessListResult.accessList,
 	gas: accessListResult.gasUsed,
 };
+
+const receipt: TransactionReceipt = await web3.eth.sendTransaction(transferTxn);
 ```
