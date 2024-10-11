@@ -34,8 +34,6 @@ import { getTransactionError } from '../../src/utils/get_transaction_error';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { getRevertReason } from '../../src/utils/get_revert_reason';
 import { trySendTransaction } from '../../src/utils/try_send_transaction';
-
-// import * as GetTransactionGasPricing from '../../src/utils/get_transaction_gas_pricing';
 import { ERC20TokenAbi } from '../fixtures/erc20';
 import { SendSignedTransactionEvents, SendTransactionEvents } from '../../src';
 
@@ -49,9 +47,6 @@ jest.mock('../../src/utils/get_transaction_gas_pricing');
 jest.mock('../../src/utils/try_send_transaction');
 jest.mock('../../src/utils/get_transaction_error');
 jest.mock('../../src/utils/get_revert_reason');
-jest.mock('../../src/utils/get_transaction_gas_pricing', () => ({
-	getTransactionGasPricing: jest.fn(), // Mock the function without a return value
-}));
 
 type PromiEvent = Web3PromiEvent<
 	TransactionReceipt,

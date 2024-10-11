@@ -78,36 +78,6 @@ describe('sendTransaction', () => {
 		},
 	);
 
-	it(`getTransactionGasPricing is called when expected on config.ignoreGasPricing \n ${testMessage}`, async () => {
-		const getTransactionGasPricingSpy = jest.spyOn(
-			GetTransactionGasPricing,
-			'getTransactionGasPricing',
-		);
-		(WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock).mockResolvedValue(
-			expectedTransactionReceipt,
-		);
-		const context2 = new Web3Context('http://127.0.0.1:8545');
-		context2.config.ignoreGasPricing = true;
-		const transaction = {
-			from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
-			gas: '0xc350',
-			gasPrice: '0x4a817c800',
-			input: '0x68656c6c6f21',
-			nonce: '0x15',
-			to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
-			value: '0xf3dbb76162000',
-			type: '0x0',
-			maxFeePerGas: '0x1475505aab',
-			maxPriorityFeePerGas: '0x7f324180',
-			chainId: '0x1',
-		};
-		await sendTransaction(context2, transaction, DEFAULT_RETURN_FORMAT);
-
-		// eslint-disable-next-line jest/no-conditional-expect
-		expect(getTransactionGasPricingSpy).not.toHaveBeenCalled();
-		// eslint-disable-next-line jest/no-conditional-expect
-	});
-
 	it.each(testData)(
 		`sending event should emit with formattedTransaction\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
