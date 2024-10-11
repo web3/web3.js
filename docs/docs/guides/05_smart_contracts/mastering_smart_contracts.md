@@ -200,6 +200,10 @@ contract.methods.METHOD_NAME(METHOD_PARAMETERS).send({ from: '0x...' });
 contract.methods.METHOD_NAME(METHOD_PARAMETERS).call();
 ```
 
+:::tip
+Refer to the [Gas and Priority Fees guide](/guides/transactions/gas-and-fees#smart-contract-fees) to learn how to control and optimize fees when using Web3.js to interact with smart contracts.
+:::
+
 -   **events**: An object mapping your contract's events, allowing you to subscribe to them.
 
     And here is an example on how to use it:

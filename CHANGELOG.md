@@ -2740,3 +2740,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth
 
 -   Allow `getEthereumjsTxDataFrom` to return additional fields that may be passed if using a `customTransactionSchema`.
+
+#### web3
+
+-   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
