@@ -231,6 +231,10 @@ Final receiver balance: 100n
 
 Note that the sender's balance has decreased by more than the amount that was transferred to the receiver. This is because the sender's balance is also used to pay for the transaction's [gas fees](https://ethereum.org/en/developers/docs/gas/). The transaction receipt specifies the amount of gas that was used (`cumulativeGasUsed`) and the gas price in wei (`effectiveGasPrice`). The total amount deducted from the sender's balance is equal to the amount transferred plus the cost of the gas fees (`cumulativeGasUsed` multiplied by `effectiveGasPrice`).
 
+:::info
+Gas and other fees are important topics for Ethereum developers to understand. Refer to the [Gas and Priority Fees guide](/guides/transactions/gas-and-fees) to learn more.
+:::
+
 ## Step 5: Send a Transaction and Subscribe to Its Events
 
 In the previous example, the `transaction-receipt.js` script demonstrates sending a transaction to the network and reviewing the results after it has been successfully received. However, there are more stages to the [transaction lifecycle](https://ethereum.org/en/developers/docs/transactions/#transaction-lifecycle) and Web3.js makes it easy to subscribe to these lifecycle stages and create custom handlers for each one. Web3.js supports subscriptions for the following transaction lifecycle events:
