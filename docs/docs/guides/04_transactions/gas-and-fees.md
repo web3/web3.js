@@ -62,16 +62,19 @@ The Ethereum JSON-RPC specifies the [`eth_createAccessList` method](https://gith
 Web3.js transactions may specify an access list by providing the [`Transaction.accessList` property](/api/web3/namespace/types#accessList).
 
 ```ts
-const transaction: TransactionForAccessList = {
+const transactionDraft: TransactionForAccessList = {
 	from: '<SENDER ADDRESS>',
 	to: '<RECEIVER ADDRESS>',
 	value: web3.utils.ethUnitMap.ether,
 };
 
-const accessListResult: AccessListResult = await web3.eth.createAccessList(transaction);
-transaction.accessList = accessListResult.accessList;
-transaction.gas = accessListResult.gasUsed;
-```
+const accessListResult: AccessListResult = await web3.eth.createAccessList(transactionDraft);
+
+const transaction: TransactionForAccessList = {
+	...transactionDraft,
+	accessList: accessListResult.accessList,
+	gas: accessListResult.gasUsed,
+};
 
 The following example demonstrates creating an access list for a transaction that invokes a smart contract function:
 
