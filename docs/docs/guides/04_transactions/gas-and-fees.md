@@ -9,7 +9,9 @@ To prevent spam and reward node operators, Ethereum uses a mechanism called ["ga
 
 In addition to the calculated gas cost, an Ethereum transaction can specify an optional priority fee, which is an additional fee that is paid directly to the operator of the node that executes the transaction. Priority fees are intended to incentive node operators to execute transactions. A priority fee is specified as a value in addition to the base fee, which means that the total cost of the priority fee is always a factor of the amount of gas required to execute a transaction.
 
-With the above in mind, the total cost of fees associated with a transaction are calculated as: _units of gas used \* (base fee + priority fee)_.
+With the above in mind, the total cost of fees associated with a transaction is calculated as follows:
+
+Total cost of fees = _units of gas used \* (base fee + priority fee)_
 
 ## Estimating Gas
 
