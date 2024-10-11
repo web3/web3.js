@@ -20,14 +20,18 @@ The Ethereum JSON-RPC specifies the [`eth_estimateGas` method](https://ethereum.
 Web3.js transactions may specify a gas limit (the maximum amount of gas they are able to consume) by providing the [`Transaction.gas` property](/api/web3/namespace/types#gas). If the specified gas limit is less than the actual amount of gas required to execute the transaction, the transaction will consume an amount of gas equal to the gas limit, which is not refunded, before failing and reverting any state changes made by the transaction.
 
 ```ts
-const transaction: Transaction = {
+const transactionDraft: Transaction = {
 	from: '<SENDER ADDRESS>',
 	to: '<RECEIVER ADDRESS>',
 	value: web3.utils.ethUnitMap.ether,
 };
 
-const gas: bigint = await web3.eth.estimateGas(transaction);
-transaction.gas = gas;
+const gas: bigint = await web3.eth.estimateGas(transactionDraft);
+
+const transaction: Transaction = {
+	...transactionDraft,
+	gas,
+};
 ```
 
 ## Calculating Fees
@@ -42,15 +46,19 @@ Web3.js exposes a helper, the [`Web3Eth.calculateFeeData` method](/api/web3-eth/
 Web3.js transactions may specify `maxFeePerGas` and `maxPriorityFeePerGas` values. If both values are specified, `maxFeePerGas` must be greater than or equal to `maxPriorityFeePerGas`. If `maxFeePerGas` is less than the current base fee, the transaction will not execute until the base fee drops to a value that is less than or equal to the `maxFeePerGas`.
 
 ```ts
-const transaction: Transaction = {
+const transactionDraft: Transaction = {
 	from: '<SENDER ADDRESS>',
 	to: '<RECEIVER ADDRESS>',
 	value: web3.utils.ethUnitMap.ether,
 };
 
 const feeData: FeeData = await web3.eth.calculateFeeData();
-transaction.maxFeePerGas = feeData.maxFeePerGas;
-transaction.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+
+const transaction: Transaction = {
+	...transactionDraft,
+	maxFeePerGas: feeData.maxFeePerGas,
+	maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+};
 ```
 
 ## Generating Access Lists
@@ -70,19 +78,25 @@ const transactionDraft: TransactionForAccessList = {
 
 const accessListResult: AccessListResult = await web3.eth.createAccessList(transactionDraft);
 
-const transaction: TransactionForAccessList = {
+const transaction: Transaction = {
 	...transactionDraft,
 	accessList: accessListResult.accessList,
 	gas: accessListResult.gasUsed,
 };
+```
 
 The following example demonstrates creating an access list for a transaction that invokes a smart contract function:
 
 ```ts
-const transfer: NonPayableMethodObject = erc20.methods.transfer('<RECEIVER ADDRESS>', 1);
-const transferOpts: NonPayableCallOptions = { from: '<SENDER ADDRESS>' };
-const transferTxn: Transaction = transfer.populateTransaction(transferOpts);
+const transfer: NonPayableMethodObject = erc20.methods.transfer(receiver.address, 1);
+
+const transferOpts: NonPayableCallOptions = { from: sender.address };
 const accessListResult: AccessListResult = await transfer.createAccessList(transferOpts);
-transferTxn.gas = accessListResult.gasUsed;
-transferTxn.accessList = accessListResult.accessList;
+const transactionDraft: Transaction = transfer.populateTransaction(transferOpts);
+
+const transferTxn: Transaction = {
+	...transactionDraft,
+	accessList: accessListResult.accessList,
+	gas: accessListResult.gasUsed,
+};
 ```
