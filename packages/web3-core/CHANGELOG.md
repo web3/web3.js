@@ -243,4 +243,4 @@ Documentation:
 
 ### Added
 
--   Added new config. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
+-   Added new property `ignoreGasPricing` to `Web3ConfigOptions`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
