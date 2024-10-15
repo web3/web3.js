@@ -123,6 +123,8 @@ import {
 } from './utils.js';
 // eslint-disable-next-line import/no-cycle
 import { DeployerMethodClass } from './contract-deployer-method-class.js';
+// eslint-disable-next-line import/no-cycle
+import { ContractSubscriptionManager } from './contract-subscription-manager.js';
 
 type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
@@ -208,6 +210,8 @@ const contractSubscriptions = {
 	newHeads: NewHeadsSubscription,
 	newBlockHeaders: NewHeadsSubscription,
 };
+
+type ContractSubscriptions = typeof contractSubscriptions;
 
 /**
  * The `web3.eth.Contract` makes it easy to interact with smart contracts on the ethereum blockchain.
@@ -406,9 +410,15 @@ const contractSubscriptions = {
  *
  */
 export class Contract<Abi extends ContractAbi>
-	extends Web3Context<EthExecutionAPI, typeof contractSubscriptions>
+	extends Web3Context<EthExecutionAPI, ContractSubscriptions>
 	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
+	protected override _subscriptionManager: ContractSubscriptionManager<EthExecutionAPI>;
+
+	public override get subscriptionManager(): ContractSubscriptionManager<EthExecutionAPI> {
+		return this._subscriptionManager;
+	}
+
 	/**
 	 * The options `object` for the contract instance. `from`, `gas` and `gasPrice` are used as fallback values when sending transactions.
 	 *
@@ -563,6 +573,11 @@ export class Contract<Abi extends ContractAbi>
 			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
+
+		this._subscriptionManager = new ContractSubscriptionManager<
+			EthExecutionAPI,
+			ContractSubscriptions
+		>(super.subscriptionManager, this);
 
 		// Init protected properties
 		if ((contractContext as Web3Context)?.wallet) {
