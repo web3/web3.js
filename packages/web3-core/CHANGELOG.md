@@ -240,3 +240,7 @@ Documentation:
 -   Adds a new property (`customTransactionSchema`) to `Web3ConfigOptions`(#7227)
 
 ## [Unreleased]
+
+### Added
+
+-   Added new config. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
