@@ -29,7 +29,7 @@ There is list of configuration params that can be set for modifying behavior of 
 -   [defaultMaxPriorityFeePerGas](/guides/web3_config/#defaultmaxpriorityfeepergas)
 -   [customTransactionSchema](/guides/web3_config/#customTransactionSchema)
 -   [defaultReturnFormat](/guides/web3_config/#defaultreturnformat)
--       [ignoreGasPricing](/guides/web3_config/#ignoreGasPricing)
+-   [ignoreGasPricing](/guides/web3_config/#ignoreGasPricing)
 
 ## Global level Config
 
