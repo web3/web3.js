@@ -19,5 +19,6 @@ import { AccountAbstraction } from './web3_aa.js';
 
 export * from './types.js';
 export * from './utils.js';
+export * from './web3_aa.js';
 
 export default AccountAbstraction;
