@@ -111,6 +111,28 @@ await web3.eth.getBlockNumber();
 // ↳ 18849658n
 ```
 
+#### Websocket Providers will only terminate when closed
+
+When connected to a WebSocket provider, the program will not automatically terminate after the code finishes running. This is to ensure the WebSocket connection remains open, allowing the program to continue listening for events.
+
+The program will remain active until you explicitly disconnect from the WebSocket provider:
+
+```ts
+const web3 = new Web3(wsUrl);
+// The program will keep running to listen for events.
+```
+
+#### Terminating the Program
+
+When you're ready to stop the program, you can manually disconnect from the WebSocket provider by calling the disconnect method. This will properly close the connection and terminate the program:
+
+```ts
+const web3 = new Web3(wsUrl);
+// When you are ready to terminate your program
+web3.currentProvider?.disconnect();
+// The program will now terminate
+```
+
 #### Configuring WebSocket Providers
 
 The [`WebSocketProvider` constructor](/api/web3-providers-ws/class/WebSocketProvider#constructor) accepts two optional parameters that can be used to configure the behavior of the `WebSocketProvider`: the first parameter must be of type [`ClientRequestArgs`](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) or of [`ClientOptions`](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/e5ee5eae6a592198e469ad9f412bab8d223fcbb6/types/ws/index.d.ts#L243) and the second parameter must be of type [`ReconnectOptions`](/api/web3/namespace/utils#ReconnectOptions).
