@@ -2735,12 +2735,30 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   `syncing` subscription now supports Besu and Nethermind payload format
 
+#### web3-rpc-providers
+
+-   PublicNodeProvider was added (#7322)
+
 ### Changed
+
+#### web3
+
+-   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
 
 #### web3-eth
 
 -   Allow `getEthereumjsTxDataFrom` to return additional fields that may be passed if using a `customTransactionSchema`.
 
-#### web3
+#### web3-types
 
--   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
+-   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
+
+### Fixed
+
+#### web3-eth-abi
+
+-   `decodeLog` , `decodeParametersWith` , `decodeParameters` and `decodeParameters` now accepts first immutable param as well (#7288)
+
+#### web3-utils
+
+-   fix `padRight` validation failure on large `uint` (#7265)

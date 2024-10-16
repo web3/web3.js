@@ -62,7 +62,6 @@ export class PublicNodeProvider<
 		[Network.SCROLL_SEPOLIA]: 'scroll-sepolia-rpc.publicnode.com',
 		[Network.SYSCOIN_MAINNET]: 'syscoin-evm-rpc.publicnode.com',
 		[Network.SYSCOIN_TANENBAUM]: 'syscoin-tanenbaum-evm-rpc.publicnode.com',
-
 		[Network.HAQQ_MAINNET]: 'haqq-evm-rpc.publicnode.com',
 		[Network.EVMOS_MAINNET]: 'evmos-evm-rpc.publicnode.com',
 		[Network.EVMOS_TESTNET]: 'evmos-testnet-evm-rpc.publicnode.com',
