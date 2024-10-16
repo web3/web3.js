@@ -2737,6 +2737,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 #### web3-eth
 
+-   `syncing` subscription now supports Besu and Nethermind payload format
 -   `populateGasPrice` function now checks `Web3Context.config.ignoreGasPricing`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
 
 ### Changed

@@ -493,6 +493,10 @@ Documentation:
 
 ### Added
 
+#### web3
+
+-   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
+
 #### web3-core
 
 -   Added new property `ignoreGasPricing` to `Web3ConfigOptions`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
@@ -513,6 +517,7 @@ Documentation:
 
 #### web3-types
 
+-   `syncing` subscription now supports Besu and Nethermind payload format
 -   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
 
 ### Fixed
