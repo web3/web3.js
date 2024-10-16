@@ -24,6 +24,7 @@ exports[`Web3Context getContextObject should return correct context object 1`] =
       "useSubscriptionWhenCheckingBlockTimeout": false,
     },
     "handleRevert": false,
+    "ignoreGasPricing": false,
     "maxListenersWarningThreshold": 100,
     "transactionBlockTimeout": 50,
     "transactionBuilder": undefined,
