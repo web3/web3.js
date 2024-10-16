@@ -168,4 +168,8 @@ export interface ContractOptions {
 	 * The max fee per gas to use for transactions.
 	 */
 	maxFeePerGas?: Uint;
+	/**
+	 * Ignore gas price, turn on for metamask suggestion fee
+	 */
+	ignoreGasPricing?: boolean;
 }

@@ -29,6 +29,7 @@ There is list of configuration params that can be set for modifying behavior of 
 -   [defaultMaxPriorityFeePerGas](/guides/web3_config/#defaultmaxpriorityfeepergas)
 -   [customTransactionSchema](/guides/web3_config/#customTransactionSchema)
 -   [defaultReturnFormat](/guides/web3_config/#defaultreturnformat)
+-   [ignoreGasPricing](/guides/web3_config/#ignoreGasPricing)
 
 ## Global level Config
 
@@ -476,4 +477,31 @@ export enum FMT_BYTES {
 	HEX = 'BYTES_HEX',
 	UINT8ARRAY = 'BYTES_UINT8ARRAY',
 }
+```
+
+### [ignoreGasPricing]
+
+The `ignoreGasPricing` option enables you to send transactions or interact with contracts without having web3.js automatically fill in the gas estimate. This feature is particularly useful when you prefer to let wallets or providers handle gas estimation instead.
+
+#### Send transaction example
+
+```ts
+const web3 = new Web3(PROVIDER);
+web3.config.ignoreGasPricing = true; // when setting configurations for the web3 object, this will also apply to newly created contracts from the web3 object
+const transaction: TransactionWithToLocalWalletIndex = {
+	from: tempAcc.address,
+	to: '0x0000000000000000000000000000000000000000',
+	value: BigInt(1),
+	data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
+};
+const receipt = await web3.eth.sendTransaction(transaction); // web3.js will not estimate gas now.
+```
+
+#### Contract example
+
+```ts
+let contractDeployed: Contract<typeof BasicAbi>;
+// instantiate contract...
+contractDeployed.config.ignoreGasPricing = true;
+const receipt = await contractDeployed.methods.setValues(1, 'string value', true).send(sendOptions);
 ```

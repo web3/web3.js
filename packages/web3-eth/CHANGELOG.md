@@ -284,3 +284,7 @@ Documentation:
 ### Changed
 
 -   Allow `getEthereumjsTxDataFrom` to return additional fields that may be passed if using a `customTransactionSchema`.
+
+### Added
+
+-   `populateGasPrice` function now checks `Web3Context.config.ignoreGasPricing`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
