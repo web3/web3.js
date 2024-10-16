@@ -2729,19 +2729,39 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 ## [Unreleased]
 
+### Added
+
+#### web3-core
+
+-   Added new property `ignoreGasPricing` to `Web3ConfigOptions`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
+
+#### web3-eth
+
+-   `populateGasPrice` function now checks `Web3Context.config.ignoreGasPricing`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
+
+#### web3-rpc-providers
+
+-   InfuraProvider was added (#7286)
+
 ### Changed
 
 #### web3-eth
 
 -   Allow `getEthereumjsTxDataFrom` to return additional fields that may be passed if using a `customTransactionSchema`.
 
-### Added
+#### web3-types
 
-#### web3-rpc-providers
-
--   InfuraProvider was added (#7286)
+-   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
 
 ### Fixed
+
+#### web3
+
+-   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
+
+#### web3-eth-abi
+
+-   `decodeLog` , `decodeParametersWith` , `decodeParameters` and `decodeParameters` now accepts first immutable param as well (#7288)
 
 #### web3-utils
 

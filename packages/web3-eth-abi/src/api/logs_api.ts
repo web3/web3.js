@@ -72,7 +72,7 @@ const _decodeParameter = (inputType: string, clonedTopic: string) =>
  * ```
  */
 export const decodeLog = <ReturnType extends DecodedParams>(
-	inputs: Array<AbiParameter>,
+	inputs: Array<AbiParameter> | ReadonlyArray<AbiParameter>,
 	data: HexString,
 	topics: string | string[],
 ) => {

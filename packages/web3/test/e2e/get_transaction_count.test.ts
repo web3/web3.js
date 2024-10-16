@@ -62,14 +62,22 @@ describe(`${getSystemTestBackend()} tests - getTransactionCount`, () => {
 			],
 		}),
 	)('getTransactionCount', async ({ block }) => {
-		const result = await web3.eth.getTransactionCount(
-			getE2ETestAccountAddress(),
-			blockData[block],
-		);
+		let blockOrTag = blockData[block];
+		if (block === 'blockHash' || block === 'blockNumber') {
+			/**
+			 * @NOTE Getting a block too far back in history
+			 * results in a missing trie node error, so
+			 * we get latest block for this test
+			 */
+			const b = await web3.eth.getBlock('finalized');
+			blockOrTag = block === 'blockHash' ? String(b.hash) : Number(b.number);
+		}
+
+		const result = await web3.eth.getTransactionCount(getE2ETestAccountAddress(), blockOrTag);
 
 		if (block === 'blockHash' || block === 'blockNumber') {
 			const expectedTxCount =
-				getSystemTestBackend() === BACKEND.SEPOLIA ? BigInt(1) : BigInt(11);
+				getSystemTestBackend() === BACKEND.SEPOLIA ? BigInt(47) : BigInt(40);
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(result).toBe(expectedTxCount);
 		} else {

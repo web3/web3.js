@@ -273,28 +273,37 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 
 	/**
 	 * Calculates the current Fee Data.
-	 * If the node supports EIP-1559, then the `maxFeePerGas` and `maxPriorityFeePerGas` will be calculated.
-	 * If the node does not support EIP-1559, then the `gasPrice` will be returned and the rest are `null`s.
+	 * If the node supports EIP-1559, then `baseFeePerGas` and `maxPriorityFeePerGas` will be returned along with the calculated `maxFeePerGas` value.
+	 * `maxFeePerGas` is calculated as `baseFeePerGas` * `baseFeePerGasFactor` + `maxPriorityFeePerGas`.
+	 * If the node does not support EIP-1559, then the `gasPrice` will be returned and the other values will be undefined.
 	 *
-	 * @param baseFeePerGasFactor The factor to multiply the baseFeePerGas with, if the node supports EIP-1559.
-	 * @param alternativeMaxPriorityFeePerGas The alternative maxPriorityFeePerGas to use, if the node supports EIP-1559, but does not support the method `eth_maxPriorityFeePerGas`.
+	 * @param baseFeePerGasFactor (optional) The factor to multiply the `baseFeePerGas` with when calculating `maxFeePerGas`, if the node supports EIP-1559. The default value is 2.
+	 * @param alternativeMaxPriorityFeePerGas (optional) The alternative `maxPriorityFeePerGas` to use when calculating `maxFeePerGas`, if the node supports EIP-1559, but does not support the method `eth_maxPriorityFeePerGas`. The default value is 1 gwei.
 	 * @returns The current fee data.
 	 *
 	 * ```ts
 	 * web3.eth.calculateFeeData().then(console.log);
 	 * > {
 	 *     gasPrice: 20000000000n,
-	 *     maxFeePerGas: 20000000000n,
+	 *     maxFeePerGas: 60000000000n,
 	 *     maxPriorityFeePerGas: 20000000000n,
-	 * 	   baseFeePerGas: 20000000000n
+	 *     baseFeePerGas: 20000000000n
 	 * }
 	 *
-	 * web3.eth.calculateFeeData(ethUnitMap.Gwei, 2n).then(console.log);
+	 * web3.eth.calculateFeeData(1n).then(console.log);
 	 * > {
 	 *     gasPrice: 20000000000n,
 	 *     maxFeePerGas: 40000000000n,
 	 *     maxPriorityFeePerGas: 20000000000n,
-	 * 	   baseFeePerGas: 20000000000n
+	 *     baseFeePerGas: 20000000000n
+	 * }
+	 *
+	 * web3.eth.calculateFeeData(3n).then(console.log);
+	 * > {
+	 *     gasPrice: 20000000000n,
+	 *     maxFeePerGas: 80000000000n,
+	 *     maxPriorityFeePerGas: 20000000000n,
+	 *     baseFeePerGas: 20000000000n
 	 * }
 	 * ```
 	 */

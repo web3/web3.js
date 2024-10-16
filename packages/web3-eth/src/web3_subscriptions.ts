@@ -163,7 +163,7 @@ export class SyncingSubscription extends Web3Subscription<{
 			this.emit('changed', data);
 		} else {
 			const mappedData: SyncOutput = Object.fromEntries(
-				Object.entries(data.status).map(([key, value]) => [
+				Object.entries(data?.status || data).map(([key, value]) => [
 					key.charAt(0).toLowerCase() + key.substring(1),
 					value,
 				]),
