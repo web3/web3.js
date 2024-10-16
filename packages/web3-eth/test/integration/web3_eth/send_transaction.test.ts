@@ -211,6 +211,7 @@ describe('Web3Eth.sendTransaction', () => {
 		localWeb3Eth.config.ignoreGasPricing = true;
 		const response = await localWeb3Eth.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		await closeOpenConnection(localWeb3Eth);
 	});
 	it('should send a transaction with automated gas price successfully', async () => {
 		const transaction: TransactionWithToLocalWalletIndex = {
@@ -224,6 +225,7 @@ describe('Web3Eth.sendTransaction', () => {
 		localWeb3Eth.config.ignoreGasPricing = false;
 		const response = await localWeb3Eth.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
+		await closeOpenConnection(localWeb3Eth);
 	});
 	describe('Deploy and interact with contract', () => {
 		let greeterContractAddress: string;
