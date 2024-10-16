@@ -2734,3 +2734,15 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-eth
 
 -   Allow `getEthereumjsTxDataFrom` to return additional fields that may be passed if using a `customTransactionSchema`.
+
+### Added
+
+#### web3-rpc-providers
+
+-   InfuraProvider was added (#7286)
+
+### Fixed
+
+#### web3-utils
+
+-   fix `padRight` validation failure on large `uint` (#7265)
