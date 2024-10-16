@@ -82,7 +82,7 @@ describe('Web3ExternalProvider', () => {
 		expect(result).toEqual({ result: 'mock-result' });
 	});
 
-	it('should throw a rate limiting error when status code is 429', async () => {
+	it('QuickNodeProvider: should throw a rate limiting error when status code is 429', async () => {
 		const network: Network = Network.ETH_MAINNET;
 		const transport: Transport = Transport.HTTPS;
 		const token = 'your-token';
