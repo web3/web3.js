@@ -23,7 +23,7 @@ import { convertValuesToHex, generateUserOpHash, isUserOperationAllHex } from '.
 
 export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 	// local package level request manager
-	private readonly _bundlerRequestManager!: Web3RequestManager<API>;
+	private readonly bundlerRequestManager!: Web3RequestManager<API>;
 
 	public constructor(provider?: SupportedProviders<API> | string) {
 		super();
@@ -33,7 +33,7 @@ export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 			(typeof provider === 'string' && provider.trim() !== '') ||
 			isSupportedProvider(provider as SupportedProviders<API>)
 		) {
-			this._bundlerRequestManager = new Web3RequestManager<API>(provider);
+			this.bundlerRequestManager = new Web3RequestManager<API>(provider);
 		}
 	}
 	/**
@@ -66,7 +66,7 @@ export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 		if (!validator) {
 			userOp = convertValuesToHex(userOperation) as UserOperation;
 		}
-		return (this._bundlerRequestManager ?? this.requestManager).send({
+		return (this.bundlerRequestManager ?? this.requestManager).send({
 			method: 'eth_sendUserOperation',
 			params: [userOp, entryPoint],
 		});
@@ -109,7 +109,7 @@ export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 		if (userOperation?.maxPriorityFeePerGas === undefined) {
 			userOp.maxPriorityFeePerGas = '0';
 		}
-		return (this._bundlerRequestManager ?? this.requestManager).send({
+		return (this.bundlerRequestManager ?? this.requestManager).send({
 			method: 'eth_estimateUserOperationGas',
 			params: [userOp, entryPoint],
 		});
@@ -145,7 +145,7 @@ export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 	 */
 
 	public async getUserOperationByHash(hash: HexStringBytes) {
-		return (this._bundlerRequestManager ?? this.requestManager).send({
+		return (this.bundlerRequestManager ?? this.requestManager).send({
 			method: 'eth_getUserOperationByHash',
 			params: [hash],
 		});
@@ -277,7 +277,7 @@ export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 	 * ```
 	 */
 	public async getUserOperationReceipt(hash: HexStringBytes) {
-		return (this._bundlerRequestManager ?? this.requestManager).send({
+		return (this.bundlerRequestManager ?? this.requestManager).send({
 			method: 'eth_getUserOperationReceipt',
 			params: [hash],
 		});
@@ -292,7 +292,7 @@ export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 	 * ```
 	 */
 	public async supportedEntryPoints() {
-		return (this._bundlerRequestManager ?? this.requestManager).send({
+		return (this.bundlerRequestManager ?? this.requestManager).send({
 			method: 'eth_supportedEntryPoints',
 			params: [],
 		});
