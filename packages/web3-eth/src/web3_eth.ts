@@ -308,7 +308,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async calculateFeeData(
-		baseFeePerGasFactor: number = 2,
+		baseFeePerGasFactor: bigint | number = BigInt(2),
 		alternativeMaxPriorityFeePerGas = ethUnitMap.Gwei,
 	): Promise<FeeData> {
 		const block = await this.getBlock<{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>(
@@ -348,7 +348,14 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			// and we multiply the `baseFeePerGas` by `baseFeePerGasFactor`, to allow
 			// trying to include the transaction in the next few blocks even if the
 			// baseFeePerGas is increasing fast
-			const baseFeeMultiplier = BigInt(Math.floor(baseFeePerGasFactor * 1000)) / BigInt(1000); 
+			let baseFeeMultiplier: bigint;
+			if (typeof baseFeePerGasFactor === 'number') {
+				// Convert number to bigint with three decimal places
+				baseFeeMultiplier = BigInt(Math.floor(baseFeePerGasFactor * 1000)) / BigInt(1000);
+			} else {
+				// It's already a BigInt, so just use it as-is
+				baseFeeMultiplier = baseFeePerGasFactor;
+			}
 			maxFeePerGas = baseFeePerGas * baseFeeMultiplier + maxPriorityFeePerGas;
 		}
 
