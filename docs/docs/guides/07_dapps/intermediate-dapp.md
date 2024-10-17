@@ -359,26 +359,20 @@ function TransferForm({ address, web3 }: { address: Address; web3: Web3 }) {
 	}
 
 	// form change handler
-	function transferFormChange(e: ChangeEvent<HTMLInputElement>): void {
-		// get current value of "to" field
-		let to: string = transferTo;
-		if (e.target.name === 'to') {
-			// update "to" field
-			to = e.target.value;
-			setTransferTo(to);
-		}
+function transferFormChange(e: ChangeEvent<HTMLInputElement>): void {
+  const { name, value } = e.target;
 
-		// get current value of "amount" field
-		let amount: bigint | undefined = transferAmount;
-		if (e.target.name === 'amount') {
-			// update "amount" field
-			amount = BigInt(e.target.value);
-			setTransferAmount(amount);
-		}
+  if (name === 'to') {
+    setTransferTo(value);
+    setIsFormValid(isValidAddress(value) && transferAmount !== undefined);
+  }
 
-		// validate form
-		setIsFormValid(isValidAddress(to) && amount !== undefined);
-	}
+  if (name === 'amount') {
+    const amount = BigInt(value);
+    setTransferAmount(amount);
+    setIsFormValid(isValidAddress(transferTo) && amount !== undefined);
+  }
+}
 
 	// submit form handler
 	function transfer(e: FormEvent<HTMLFormElement>): void {
