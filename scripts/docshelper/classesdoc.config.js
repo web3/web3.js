@@ -12,7 +12,7 @@ module.exports = {
 		'./packages/web3-eth-iban/src/iban.ts',
 		'./packages/web3-eth-personal/src/personal.ts',
 		'./packages/web3-net/src/net.ts',
-		'./packages/web3-account-abstraction/web3_aa.ts',
+		'./packages/web3-account-abstraction/src/web3_aa.ts',
 	],
 
 	excludeCategories: 'ContractEvent', // for exluding being in module.md file and invalid link in contract.md
