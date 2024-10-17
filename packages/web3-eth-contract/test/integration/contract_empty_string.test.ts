@@ -16,13 +16,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Contract } from '../../src';
-import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	closeOpenConnection,
+} from '../fixtures/system_test_utils';
 import { MyContractAbi, MyContractBytecode } from '../fixtures/MyContract';
 
 describe('request empty string from contract', () => {
 	let contract: Contract<typeof MyContractAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
+
 	beforeAll(async () => {
 		contract = new Contract(MyContractAbi, undefined, {
 			provider: getSystemTestProvider(),
@@ -35,6 +40,10 @@ describe('request empty string from contract', () => {
 		};
 
 		sendOptions = { from: acc.address, gas: '1000000' };
+	});
+
+	afterAll(async () => {
+		await closeOpenConnection(contract);
 	});
 
 	it('should fetch empty string', async () => {

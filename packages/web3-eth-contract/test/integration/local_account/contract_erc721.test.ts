@@ -21,7 +21,11 @@ import Web3 from 'web3';
 import { Web3Account } from 'web3-eth-accounts';
 import { Contract } from '../../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../../shared_fixtures/build/ERC721Token';
-import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createLocalAccount,
+	closeOpenConnection,
+} from '../../fixtures/system_test_utils';
 import { toUpperCaseHex } from '../../shared_fixtures/utils';
 
 describe('contract', () => {
@@ -32,6 +36,7 @@ describe('contract', () => {
 		let localAccount: Web3Account;
 		let web3: Web3;
 		let contractDeployed: Contract<typeof ERC721TokenAbi>;
+
 		beforeAll(async () => {
 			web3 = new Web3(getSystemTestProvider());
 			localAccount = await createLocalAccount(web3);
@@ -51,6 +56,10 @@ describe('contract', () => {
 			contractDeployed = await contract
 				.deploy(deployOptions)
 				.send({ ...sendOptions, gas: '3000000' });
+		});
+
+		afterAll(async () => {
+			await closeOpenConnection(web3);
 		});
 
 		it('should deploy the contract', () => {

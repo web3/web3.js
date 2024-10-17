@@ -23,16 +23,18 @@ import {
 	describeIf,
 	getSystemTestBackend,
 	BACKEND,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describeIf(getSystemTestBackend() === BACKEND.GETH)('createAccessList', () => {
 		let contract: Contract<typeof GreeterAbi>;
+		let deployedContract: Contract<typeof GreeterAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
 
-		beforeEach(async () => {
+		beforeAll(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -46,10 +48,16 @@ describe('contract', () => {
 			sendOptions = { from: acc.address, gas: '1000000' };
 		});
 
-		it('create access list for setter', async () => {
-			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
-			deployedContract.defaultAccount = acc.address;
+		afterAll(async () => {
+			await closeOpenConnection(contract);
+		});
 
+		beforeEach(async () => {
+			deployedContract = await contract.deploy(deployOptions).send(sendOptions);
+			deployedContract.defaultAccount = acc.address;
+		});
+
+		it('create access list for setter', async () => {
 			const receipt = await deployedContract.methods
 				.setGreeting('New Greeting')
 				.send({ gas: '1000000' });
@@ -75,9 +83,6 @@ describe('contract', () => {
 		});
 
 		it('create access list for getter', async () => {
-			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
-			deployedContract.defaultAccount = acc.address;
-
 			const receipt = await deployedContract.methods
 				.setGreeting('New Greeting')
 				.send({ gas: '1000000' });

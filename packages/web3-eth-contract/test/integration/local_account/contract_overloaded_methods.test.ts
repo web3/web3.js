@@ -23,7 +23,11 @@ import { utf8ToHex } from 'web3-utils';
 import { EventLog } from 'web3-types';
 import { Contract } from '../../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../../shared_fixtures/build/ERC721Token';
-import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createLocalAccount,
+	closeOpenConnection,
+} from '../../fixtures/system_test_utils';
 import { toUpperCaseHex } from '../../shared_fixtures/utils';
 
 describe('contract ERC721 overloaded functions', () => {
@@ -53,6 +57,10 @@ describe('contract ERC721 overloaded functions', () => {
 		contractDeployed = await contract
 			.deploy(deployOptions)
 			.send({ ...sendOptions, gas: '3000000' });
+	});
+
+	afterAll(async () => {
+		await closeOpenConnection(web3);
 	});
 
 	it('transferFrom with 4 arguments', async () => {

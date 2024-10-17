@@ -20,7 +20,11 @@ import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Account } from 'web3-eth-accounts';
 import { GreeterBytecode, GreeterAbi } from '../../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createLocalAccount,
+	closeOpenConnection,
+} from '../../fixtures/system_test_utils';
 import { Contract } from '../../../src';
 
 describe('contract', () => {
@@ -31,13 +35,20 @@ describe('contract', () => {
 		let localAccount: Web3Account;
 		let web3: Web3;
 
-		beforeEach(async () => {
+		beforeAll(async () => {
 			web3 = new Web3(getSystemTestProvider());
 			contract = new web3.eth.Contract(GreeterAbi) as unknown as Contract<typeof GreeterAbi>;
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
+		});
+
+		afterAll(async () => {
+			await closeOpenConnection(web3);
+		});
+
+		beforeEach(async () => {
 			localAccount = await createLocalAccount(web3);
 			sendOptions = {
 				from: localAccount.address,

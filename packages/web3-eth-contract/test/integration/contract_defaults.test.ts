@@ -20,7 +20,11 @@ import { Web3Context } from 'web3-core';
 
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	closeOpenConnection,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('defaults', () => {
@@ -43,6 +47,10 @@ describe('contract', () => {
 			sendOptions = { from: acc.address, gas: '1000000' };
 		});
 
+		afterEach(async () => {
+			await closeOpenConnection(contract);
+		});
+
 		it('should use "defaultAccount" on "instance" level instead of "from"', async () => {
 			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
 			// eslint-disable-next-line prefer-destructuring
@@ -63,23 +71,27 @@ describe('contract', () => {
 		});
 
 		it('should set syncWithContext from init options', async () => {
-			contract = new Contract(GreeterAbi, {
+			const testContract = new Contract(GreeterAbi, {
 				provider: getSystemTestProvider(),
 				syncWithContext: true,
 			});
 
-			contract = await contract.deploy(deployOptions).send(sendOptions);
+			const deployedContract = await testContract.deploy(deployOptions).send(sendOptions);
 
-			expect(contract.syncWithContext).toBeTruthy();
+			expect(deployedContract.syncWithContext).toBeTruthy();
+
+			await closeOpenConnection(testContract);
 		});
 
-		it('should subscribe to provided context upon instantiation', () => {
+		it('should subscribe to provided context upon instantiation', async () => {
 			const web3Context = new Web3Context('http://127.0.0.1:8545');
 			const _contract = new Contract([], { syncWithContext: true }, web3Context);
 			expect(_contract.defaultBlock).toBe('latest');
 
 			web3Context.defaultBlock = 'earliest';
 			expect(_contract.defaultBlock).toBe('earliest');
+
+			await closeOpenConnection(_contract);
 		});
 
 		describe('defaultBlock', () => {
