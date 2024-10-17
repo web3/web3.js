@@ -62,7 +62,7 @@ export function watchTransactionForConfirmations<
 			returnFormat,
 		),
 		latestBlockHash: format({ format: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
-	});
+	} as Web3PromiEventEventType['confirmation']);
 
 	// so a subscription for newBlockHeaders can be made instead of polling
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;

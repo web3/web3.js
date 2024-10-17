@@ -14,13 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { AbiFunctionFragment, ContractOptions } from 'web3-types';
+import { AbiConstructorFragment, AbiFunctionFragment, ContractOptions } from 'web3-types';
 // eslint-disable-next-line
 import { getSendTxParams, getEthTxCallParams } from 'web3-eth-contract';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import accounts from '../shared_fixtures/accounts.json';
 
-const abiConstructor = BasicAbi.find(j => j.type === 'constructor') as AbiFunctionFragment;
+const abiConstructor = BasicAbi.find(j => j.type === 'constructor') as AbiConstructorFragment;
 const abiSendMethod = BasicAbi.find(
 	j => j.type === 'function' && j.name === 'firesMultiValueEvent',
 ) as AbiFunctionFragment;

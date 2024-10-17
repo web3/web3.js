@@ -919,7 +919,7 @@ export class Contract<Abi extends ContractAbi>
 		const options =
 			// eslint-disable-next-line no-nested-ternary
 			typeof param1 !== 'string' && !isDataFormat(param1)
-				? param1
+				? (param1 as Omit<Filter, 'address'>)
 				: !isDataFormat(param2)
 				? param2
 				: {};
@@ -939,7 +939,7 @@ export class Contract<Abi extends ContractAbi>
 				  ) as AbiEventFragment & { signature: string });
 
 		if (!abi) {
-			throw new Web3ContractError(`Event ${eventName} not found.`);
+			throw new Web3ContractError(`Event ${String(eventName)} not found.`);
 		}
 
 		const { fromBlock, toBlock, topics, address } = encodeEventABI(
@@ -1043,11 +1043,11 @@ export class Contract<Abi extends ContractAbi>
 
 				// make constant and payable backwards compatible
 				abi.constant =
-					abi.stateMutability === 'view' ??
-					abi.stateMutability === 'pure' ??
+					abi.stateMutability === 'view' ||
+					abi.stateMutability === 'pure' ||
 					abi.constant;
 
-				abi.payable = abi.stateMutability === 'payable' ?? abi.payable;
+				abi.payable = abi.stateMutability === 'payable' || abi.payable;
 				this._overloadedMethodAbis.set(abi.name, [
 					...(this._overloadedMethodAbis.get(abi.name) ?? []),
 					abi,

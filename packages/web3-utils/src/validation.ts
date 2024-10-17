@@ -134,10 +134,10 @@ export const compareBlockNumbers = (blockA: BlockNumberOrTag, blockB: BlockNumbe
 	) {
 		return 0;
 	}
-	if (blockA === 'earliest' && blockB > 0) {
+	if (blockA === 'earliest') {
 		return -1;
 	}
-	if (blockB === 'earliest' && blockA > 0) {
+	if (blockB === 'earliest') {
 		return 1;
 	}
 

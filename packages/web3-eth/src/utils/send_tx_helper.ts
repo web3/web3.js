@@ -45,6 +45,7 @@ import {
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import {
+	InternalTransaction,
 	SendSignedTransactionEvents,
 	SendTransactionEvents,
 	SendTransactionOptions,
@@ -150,7 +151,12 @@ export class SendTxHelper<
 
 	public emitSending(tx: TxType | HexString) {
 		if (this.promiEvent.listenerCount('sending') > 0) {
-			this.promiEvent.emit('sending', tx);
+			this.promiEvent.emit(
+				'sending',
+				tx as
+					| SendSignedTransactionEvents<ReturnFormat>['sending']
+					| SendTransactionEvents<ReturnFormat>['sending'],
+			);
 		}
 	}
 
@@ -174,7 +180,7 @@ export class SendTxHelper<
 				// @TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
 				// should not be included if undefined, but currently are
 				...(await getTransactionGasPricing(
-					transactionFormatted,
+					transactionFormatted as InternalTransaction,
 					this.web3Context,
 					ETH_DATA_FORMAT,
 				)),
@@ -192,7 +198,7 @@ export class SendTxHelper<
 		tx: TxType;
 	}) {
 		if (wallet) {
-			const signedTransaction = await wallet.signTransaction(tx);
+			const signedTransaction = await wallet.signTransaction(tx as Transaction);
 
 			return trySendTransaction(
 				this.web3Context,
@@ -216,7 +222,12 @@ export class SendTxHelper<
 
 	public emitSent(tx: TxType | HexString) {
 		if (this.promiEvent.listenerCount('sent') > 0) {
-			this.promiEvent.emit('sent', tx);
+			this.promiEvent.emit(
+				'sent',
+				tx as
+					| SendSignedTransactionEvents<ReturnFormat>['sent']
+					| SendTransactionEvents<ReturnFormat>['sent'],
+			);
 		}
 	}
 	public emitTransactionHash(hash: string & Uint8Array) {

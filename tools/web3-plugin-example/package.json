@@ -44,7 +44,7 @@
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^29.1.1",
-		"typescript": "^4.7.4",
+		"typescript": "^5.5.4",
 		"web3": "^4.11.0",
 		"web3-core": "^4.5.0",
 		"web3-eth-abi": "^4.2.3",
