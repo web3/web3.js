@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Address, Numbers } from 'web3-types';
-import { LogsSubscription } from '../../src/log_subscription';
+import { ContractLogsSubscription } from '../../src/contract_log_subscription';
 import { ContractEventOptions, NonPayableMethodObject, PayableMethodObject } from '../../src/types';
 
 export interface Erc721Interface {
@@ -55,10 +55,10 @@ export interface Erc721Interface {
 	};
 
 	events: {
-		[key: string]: (options?: ContractEventOptions) => LogsSubscription;
-		Transfer: (options?: ContractEventOptions) => LogsSubscription;
-		Approval: (options?: ContractEventOptions) => LogsSubscription;
-		ApprovalForAll: (options?: ContractEventOptions) => LogsSubscription;
+		[key: string]: (options?: ContractEventOptions) => ContractLogsSubscription;
+		Transfer: (options?: ContractEventOptions) => ContractLogsSubscription;
+		Approval: (options?: ContractEventOptions) => ContractLogsSubscription;
+		ApprovalForAll: (options?: ContractEventOptions) => ContractLogsSubscription;
 	};
 }
 

@@ -32,7 +32,7 @@ import {
 } from 'web3-types';
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
 import type { ContractOptions } from 'web3-types';
-import { LogsSubscription } from './log_subscription.js';
+import { ContractLogsSubscription } from './contract_log_subscription.js';
 
 export type NonPayableTxOptions = NonPayableCallOptions;
 export type PayableTxOptions = PayableCallOptions;
@@ -462,7 +462,7 @@ export type Web3ContractContext = Partial<
 	Web3ContextInitOptions<
 		EthExecutionAPI,
 		{
-			logs: typeof LogsSubscription;
+			logs: typeof ContractLogsSubscription;
 			newHeads: typeof NewHeadsSubscription;
 			newBlockHeaders: typeof NewHeadsSubscription;
 		}
