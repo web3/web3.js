@@ -32,6 +32,7 @@ export enum Network {
 	POLYGON_MAINNET = 'polygon_mainnet',
 	POLYGON_MUMBAI = 'polygon_mumbai',
 	POLYGON_AMONY = 'polygon_amony',
+	POLYGON_AMOY = 'polygon_amoy',
 
 	ARBITRUM_MAINNET = 'arbitrum_mainnet',
 	ARBITRUM_SEPOLIA = 'arbitrum_sepolia',
