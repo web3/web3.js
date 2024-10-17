@@ -26,6 +26,7 @@ import {
 	itIf,
 	isHttp,
 	createTempAccount,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -39,6 +40,12 @@ describe('contract', () => {
 			provider: getSystemTestProvider(),
 		});
 	});
+
+	afterAll(async () => {
+		await closeOpenConnection(contract);
+		await closeOpenConnection(contractDeployed);
+	});
+
 	beforeEach(async () => {
 		const acc = await createTempAccount();
 
