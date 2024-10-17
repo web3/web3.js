@@ -21,6 +21,29 @@ import { Address, HexStringBytes, SupportedProviders } from 'web3-types';
 import { AARpcApi, UserOperation, UserOperationRequire } from './types.js';
 import { convertValuesToHex, generateUserOpHash, isUserOperationAllHex } from './utils.js';
 
+/**
+ * Account Abstraction feature allows enhancing user experience and security by allowing smart contracts to manage user accounts and transactions more flexibly.
+ *
+ * For using AccountAbstraction package, first install Web3 package using: `npm i web3` or `yarn add web3` based on your package manager, after that account abstraction features can be used.
+ * ```ts
+ *
+ *  import { Web3 } from 'web3';
+ *
+ *  // Following endpoint must support bundler and for other web3 functions Eth EL client functions
+ *  const web3 = new Web3('http://provider');
+ *
+ *  web3.accountabstraction.supportedEntryPoints().then(console.log);
+ *
+ * ```
+ * For using individual package install `web3-account-abstraction` packages using: `npm i web3-account-abstraction` or `yarn add web3-account-abstraction`.
+ *
+ * ```ts
+ *  import {AccountAbstraction} from 'web3-account-abstraction';
+ *
+ *  const aa = new AccountAbstraction('https://bundler-provider');
+ *  aa.supportedEntryPoints().then(console.log);
+ * ```
+ */
 export class AccountAbstraction<API extends AARpcApi> extends Web3Context {
 	// local package level request manager
 	private readonly bundlerRequestManager!: Web3RequestManager<API>;
