@@ -2744,3 +2744,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3
 
 -   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
+
+#### web3-eth
+
+- Allow specifying percentage based factor in Web3Eth.calculateFeeData Param baseFeePerGasFactor #7332

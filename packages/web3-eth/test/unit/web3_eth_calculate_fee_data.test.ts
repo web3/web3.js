@@ -81,4 +81,25 @@ describe('Web3Eth.calculateFeeData', () => {
 			baseFeePerGas,
 		});
 	});
+
+	it('should use default baseFeePerGasFactor if none is provided', async () => {
+		const gasPrice = BigInt(20 * 1000);
+		const baseFeePerGas = BigInt(1000);
+		const maxPriorityFeePerGas = BigInt(100); // this will be used directly
+
+		jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockReturnValueOnce({ baseFeePerGas } as any);
+		jest.spyOn(ethRpcMethods, 'getGasPrice').mockReturnValueOnce(gasPrice as any);
+		jest.spyOn(ethRpcMethods, 'getMaxPriorityFeePerGas').mockReturnValueOnce(
+			maxPriorityFeePerGas as any,
+		);
+
+		const feeData = await web3Eth.calculateFeeData(); // no baseFeePerGasFactor passed
+		const defaultBaseFeePerGasFactor = BigInt(2);
+		expect(feeData).toMatchObject({
+			gasPrice,
+			maxFeePerGas: baseFeePerGas * defaultBaseFeePerGasFactor + maxPriorityFeePerGas,
+			maxPriorityFeePerGas,
+			baseFeePerGas,
+		});
+	});
 });
