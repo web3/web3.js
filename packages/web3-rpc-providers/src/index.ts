@@ -15,12 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { QuickNodeProvider } from './web3_provider_quicknode.js';
+import { DRPCProvider } from './web3_provider_drpc.js';
 
 export * from './types.js';
 export * from './web3_provider_quicknode.js';
 export * from './web3_provider.js';
 export * from './errors.js';
+export * from './web3_provider_drpc.js';
 
-// default providers
-export const mainnet = new QuickNodeProvider();
+// default provider
+export const mainnet = new DRPCProvider();
