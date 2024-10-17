@@ -24,7 +24,6 @@ import { convertValuesToHex, generateUserOpHash, isUserOperationAllHex } from '.
 /**
  * Account Abstraction feature allows enhancing user experience and security by allowing smart contracts to manage user accounts and transactions more flexibly.
  *
- * ```
  * For using account abstraction functions, install `web3-account-abstraction` packages using: `npm i web3-account-abstraction` or `yarn add web3-account-abstraction`.
  *
  * ```ts
