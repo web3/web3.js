@@ -2,8 +2,16 @@
 	"name": "web3-account-abstraction",
 	"version": "0.1.0-rc.0",
 	"description": "Web3 account abstraction package",
-	"main": "lib/index.js",
-	"repository": "https://github.com/ChainSafe/web3.js",
+	"main": "./lib/commonjs/index.js",
+	"module": "./lib/esm/index.js",
+	"exports": {
+		".": {
+			"types": "./lib/types/index.d.ts",
+			"import": "./lib/esm/index.js",
+			"require": "./lib/commonjs/index.js"
+		}
+	},
+	"repository": "https://github.com/web3/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
 	"engines": {
@@ -18,8 +26,8 @@
 		"clean": "rimraf dist && rimraf lib",
 		"prebuild": "yarn clean",
 		"build": "concurrently --kill-others-on-fail \"yarn:build:*(!check)\"",
-		"build:cjs": "tsc --build tsconfig.cjs.json",
-		"build:esm": "tsc --build tsconfig.esm.json",
+		"build:cjs": "tsc --build tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > ./lib/commonjs/package.json",
+		"build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./lib/esm/package.json",
 		"build:types": "tsc --build tsconfig.types.json",
 		"build:check": "node -e \"require('./lib')\"",
 		"lint": "eslint --cache --cache-strategy content --ext .ts .",
