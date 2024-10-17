@@ -255,7 +255,7 @@ function App() {
 	// application state
 	const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
 	const [accounts, setAccounts] = useState<string[]>([]);
-	const [balances, setBalances] = useState<Map<string, bigint>>(new Map());
+	const [balances, setBalances] = useState<Map<string, number>>(new Map());
 
 	// click-handler for provider buttons
 	function setProvider(provider: providers.EIP6963ProviderDetail) {
@@ -269,10 +269,10 @@ function App() {
 	// update account balances
 	useEffect(() => {
 		async function updateBalances(web3: Web3) {
-			const balances = new Map();
+			const balances = new Map<string, number>();
 			for (const account of accounts) {
 				const balance = await web3.eth.getBalance(account);
-				balances.set(account, web3.utils.fromWei(balance, 'ether'));
+				balances.set(account, parseFloat(web3.utils.fromWei(balance, 'ether')));
 			}
 
 			setBalances(balances);
@@ -318,11 +318,13 @@ function App() {
 							</div>
 						);
 				  })
-				: accounts.map((address: string) => {
+				: accounts.map((address: string, ndx: number) => {
 						// provider set, list accounts and balances
 						return (
 							<div key={address}>
-								{address}: {`${balances.get(address)}`}
+								<div>Account: {address}</div>
+								<div>Balance: {`${balances.get(address)}`}</div>
+								{ndx !== accounts.length - 1 ? <br /> : null}
 							</div>
 						);
 				  })}
@@ -344,35 +346,36 @@ Once the wallet has been configured with the details of the Hardhat development 
 Create a `src/TransferForm.tsx` file and add the following code:
 
 ```tsx
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { type ChangeEvent, type FormEvent, useEffect, useState } from 'react';
 import { type Address, Web3 } from 'web3';
 
 function TransferForm({ address, web3 }: { address: Address; web3: Web3 }) {
 	// form state
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [transferTo, setTransferTo] = useState<string>('');
-	const [transferAmount, setTransferAmount] = useState<bigint | undefined>(undefined);
+	const [transferAmount, setTransferAmount] = useState<string>('');
 
 	// https://www.geeksforgeeks.org/ethereum-address-validation-using-regular-expressions/
 	function isValidAddress(address: string): boolean {
 		return /^(0x)?[0-9a-fA-F]{40}$/.test(address);
 	}
 
+	// form validator
+	useEffect(() => {
+		const amount = parseFloat(transferAmount);
+		setIsFormValid(isValidAddress(transferTo) && !isNaN(amount) && amount > 0);
+	}, [transferTo, transferAmount]);
+
 	// form change handler
-function transferFormChange(e: ChangeEvent<HTMLInputElement>): void {
-  const { name, value } = e.target;
+	function transferFormChange(e: ChangeEvent<HTMLInputElement>): void {
+		const { name, value } = e.target;
 
-  if (name === 'to') {
-    setTransferTo(value);
-    setIsFormValid(isValidAddress(value) && transferAmount !== undefined);
-  }
-
-  if (name === 'amount') {
-    const amount = BigInt(value);
-    setTransferAmount(amount);
-    setIsFormValid(isValidAddress(transferTo) && amount !== undefined);
-  }
-}
+		if (name === 'to') {
+			setTransferTo(value);
+		} else if (name === 'amount') {
+			setTransferAmount(value);
+		}
+	}
 
 	// submit form handler
 	function transfer(e: FormEvent<HTMLFormElement>): void {
@@ -399,16 +402,14 @@ function transferFormChange(e: ChangeEvent<HTMLInputElement>): void {
 		}
 
 		// validate "amount" field
-		const value: bigint | undefined =
-			(amount as string) !== '' ? BigInt(amount as string) : undefined;
-		if (value === undefined) {
+		const value: number = parseFloat(amount as string);
+		if (isNaN(value) || value <= 0) {
 			return;
 		}
 
 		// reset form
 		setTransferTo('');
-		setTransferAmount(undefined);
-		setIsFormValid(false);
+		setTransferAmount('');
 
 		// send transaction
 		web3.eth.sendTransaction({
@@ -434,7 +435,6 @@ function transferFormChange(e: ChangeEvent<HTMLInputElement>): void {
 					onChange={transferFormChange}
 					name="amount"
 					type="number"
-					step="1"
 				/>
 			</label>
 
@@ -469,7 +469,7 @@ function App() {
 	// application state
 	const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
 	const [accounts, setAccounts] = useState<string[]>([]);
-	const [balances, setBalances] = useState<Map<string, bigint>>(new Map());
+	const [balances, setBalances] = useState<Map<string, number>>(new Map());
 
 	// click-handler for provider buttons
 	function setProvider(provider: providers.EIP6963ProviderDetail) {
@@ -483,10 +483,10 @@ function App() {
 	// update account balances
 	useEffect(() => {
 		async function updateBalances(web3: Web3) {
-			const balances = new Map();
+			const balances = new Map<string, number>();
 			for (const account of accounts) {
 				const balance = await web3.eth.getBalance(account);
-				balances.set(account, web3.utils.fromWei(balance, 'ether'));
+				balances.set(account, parseFloat(web3.utils.fromWei(balance, 'ether')));
 			}
 
 			setBalances(balances);
@@ -527,18 +527,20 @@ function App() {
 										alt={provider.info.name}
 										width="35"
 									/>
-									<span> {provider.info.name}</span>
+									<span>{provider.info.name}</span>
 								</button>
 							</div>
 						);
 				  })
-				: accounts.map((address: string) => {
+				: accounts.map((address: string, ndx: number) => {
 						// provider set, list accounts and balances
 						return (
 							<div key={address}>
-								{address}: {`${balances.get(address)}`}
+								<div>Account: {address}</div>
+								<div>Balance: {`${balances.get(address)}`}</div>
 								// highlight-next-line
 								<TransferForm address={address} web3={web3}></TransferForm>
+								{ndx !== accounts.length - 1 ? <br /> : null}
 							</div>
 						);
 				  })}
