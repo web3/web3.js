@@ -89,7 +89,8 @@ describe('sendTxHelper class', () => {
 	let sendTxHelper: SendTxHelper<DataFormat>;
 	let promiEvent: Web3PromiEvent<TransactionReceipt, Web3EventMap>;
 	let web3Context: Web3Context<EthExecutionAPI>;
-	beforeAll(() => {
+	beforeEach(() => {
+		jest.clearAllMocks();
 		web3Context = new Web3Context<EthExecutionAPI>();
 		promiEvent = new Web3PromiEvent<TransactionReceipt, Web3EventMap>(resolve => {
 			resolve({} as unknown as TransactionReceipt);
@@ -266,5 +267,51 @@ describe('sendTxHelper class', () => {
 		expect(result).toBe('success');
 		expect(utils.trySendTransaction).toHaveBeenCalled();
 		expect(wallet.signTransaction).toHaveBeenCalledWith(receipt);
+	});
+	it('should not call getTransactionGasPricing when ignoreGasPricing is true', async () => {
+		web3Context.config.ignoreGasPricing = true;
+		const transaction = {
+			from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
+			input: '0x68656c6c6f21',
+			nonce: '0x15',
+			to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
+			value: '0xf3dbb76162000',
+			type: '0x0',
+			chainId: '0x1',
+		};
+		const _sendTxHelper = new SendTxHelper({
+			web3Context,
+			promiEvent: promiEvent as PromiEvent,
+			options: {},
+			returnFormat: DEFAULT_RETURN_FORMAT,
+		});
+		await _sendTxHelper.populateGasPrice({
+			transactionFormatted: transaction,
+			transaction,
+		});
+		expect(getTransactionGasPricing).not.toHaveBeenCalled();
+	});
+	it('should call getTransactionGasPricing when ignoreGasPricing is false', async () => {
+		web3Context.config.ignoreGasPricing = false;
+		const transaction = {
+			from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
+			input: '0x68656c6c6f21',
+			nonce: '0x15',
+			to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
+			value: '0xf3dbb76162000',
+			type: '0x0',
+			chainId: '0x1',
+		};
+		const _sendTxHelper = new SendTxHelper({
+			web3Context,
+			promiEvent: promiEvent as PromiEvent,
+			options: {},
+			returnFormat: DEFAULT_RETURN_FORMAT,
+		});
+		await _sendTxHelper.populateGasPrice({
+			transactionFormatted: transaction,
+			transaction,
+		});
+		expect(getTransactionGasPricing).toHaveBeenCalled();
 	});
 });

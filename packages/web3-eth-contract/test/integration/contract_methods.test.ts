@@ -92,7 +92,48 @@ describe('contract', () => {
 		});
 
 		describe('send', () => {
-			it('should returns a receipt', async () => {
+			beforeEach(() => {
+				contractDeployed.config.ignoreGasPricing = false;
+			});
+			it('should return a receipt', async () => {
+				const receipt = await contractDeployed.methods
+					.setValues(1, 'string value', true)
+					.send(sendOptions);
+
+				expect(receipt.events).toBeUndefined();
+				expect(receipt).toEqual(
+					expect.objectContaining({
+						// status: BigInt(1),
+						transactionHash: expect.any(String),
+					}),
+				);
+
+				// To avoid issue with the `objectContaining` and `cypress` had to add
+				// these expectations explicitly on each attribute
+				expect(receipt.status).toEqual(BigInt(1));
+			});
+
+			it('should return a receipt with ignoring gas config true', async () => {
+				contractDeployed.config.ignoreGasPricing = true;
+				const receipt = await contractDeployed.methods
+					.setValues(1, 'string value', true)
+					.send(sendOptions);
+
+				expect(receipt.events).toBeUndefined();
+				expect(receipt).toEqual(
+					expect.objectContaining({
+						// status: BigInt(1),
+						transactionHash: expect.any(String),
+					}),
+				);
+
+				// To avoid issue with the `objectContaining` and `cypress` had to add
+				// these expectations explicitly on each attribute
+				expect(receipt.status).toEqual(BigInt(1));
+			});
+
+			it('should return a receipt with ignoring gas config false', async () => {
+				contractDeployed.config.ignoreGasPricing = false;
 				const receipt = await contractDeployed.methods
 					.setValues(1, 'string value', true)
 					.send(sendOptions);

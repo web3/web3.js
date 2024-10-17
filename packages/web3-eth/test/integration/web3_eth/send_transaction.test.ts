@@ -199,7 +199,34 @@ describe('Web3Eth.sendTransaction', () => {
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
 	});
+	it('should send a transaction while ignoring gas price successfully', async () => {
+		const transaction: TransactionWithToLocalWalletIndex = {
+			from: tempAcc.address,
+			to: '0x0000000000000000000000000000000000000000',
+			value: BigInt(1),
+			data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
+		};
 
+		const localWeb3Eth = new Web3Eth(getSystemTestProvider());
+		localWeb3Eth.config.ignoreGasPricing = true;
+		const response = await localWeb3Eth.sendTransaction(transaction);
+		expect(response.status).toBe(BigInt(1));
+		await closeOpenConnection(localWeb3Eth);
+	});
+	it('should send a transaction with automated gas price successfully', async () => {
+		const transaction: TransactionWithToLocalWalletIndex = {
+			from: tempAcc.address,
+			to: '0x0000000000000000000000000000000000000000',
+			value: BigInt(1),
+			data: '0x64edfbf0e2c706ba4a09595315c45355a341a576cc17f3a19f43ac1c02f814ee',
+		};
+
+		const localWeb3Eth = new Web3Eth(getSystemTestProvider());
+		localWeb3Eth.config.ignoreGasPricing = false;
+		const response = await localWeb3Eth.sendTransaction(transaction);
+		expect(response.status).toBe(BigInt(1));
+		await closeOpenConnection(localWeb3Eth);
+	});
 	describe('Deploy and interact with contract', () => {
 		let greeterContractAddress: string;
 

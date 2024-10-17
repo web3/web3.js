@@ -9,6 +9,19 @@ sidebar_label: 'Tips and Tricks'
 📝 This article offers insights into **Smart Contracts** with helpful tips and tricks. If you have suggestions or questions, feel free to open an issue. We also welcome contributions through PRs.
 :::
 
+## Ignoring Web3.js autofill gas prices
+
+When interacting with methods in contracts, Web3.js will automatically fill the gas. If you are using metamask or a similar provider and would rather have a suggestion elsewhere, the `ignoreGasPricing` option enables you to send transactions or interact with contracts without having web3.js automatically fill in the gas estimate.
+
+#### Contract example
+
+```ts
+let contractDeployed: Contract<typeof BasicAbi>;
+// instantiate contract...
+contractDeployed.config.ignoreGasPricing = true;
+const receipt = await contractDeployed.methods.setValues(1, 'string value', true).send(sendOptions);
+```
+
 ## Calling Smart Contracts Methods with Parameter Overloading
 
 ### Overview of Function Overloading
