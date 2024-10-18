@@ -19,7 +19,7 @@ import { Contract } from '../../src';
 
 describe('Contract method types', () => {
 	it('contract method params types test', () => {
-		const abi = [
+		const abiAsConst = [
 			{
 				inputs: [
 					{ internalType: 'uint256', name: 'testArg1', type: 'uint256' },
@@ -39,7 +39,7 @@ describe('Contract method types', () => {
 			},
 		] as const;
 
-		const abi2 = [
+		const abiAsArray = [
 			{
 				inputs: [
 					{ internalType: 'uint256', name: 'testArg1', type: 'uint256' },
@@ -60,17 +60,14 @@ describe('Contract method types', () => {
 		];
 
 		// abi as const
-		const contract = new Contract<typeof abi>(abi);
+		const contract = new Contract<typeof abiAsConst>(abiAsConst);
 		contract.methods.testWithParams(1, 2); // no ts error - works as expected
-		// @ts-expect-error ts compiler error
 		expect(() => contract.methods.testWithParams()).toThrow(); // ts error - works as expected
-
-		// @ts-expect-error ts compiler error
-		contract.methods.testWithoutParams(1, 2); // ts error -works as expected
+		contract.methods.testWithoutParams(1, 2); // ts error - works as expected
 		contract.methods.testWithoutParams(); // no ts error - works as expected
 
 		// abi as usual array type
-		const contract2 = new Contract<typeof abi2>(abi2);
+		const contract2 = new Contract<typeof abiAsArray>(abiAsArray);
 		// because we do not know exact type without const or provided type
 		contract2.methods.testWithParams(1, 2); // no ts error - works as expected
 		contract2.methods.testWithoutParams(); // no ts error - works as expected

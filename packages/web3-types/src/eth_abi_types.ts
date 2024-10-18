@@ -320,7 +320,7 @@ export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown>
 		: [];
 
 export type ContractMethodInputParameters<Params extends ReadonlyArray<unknown> | undefined> =
-	Params extends unknown
+	Params extends undefined
 		? any[]
 		: Params extends readonly []
 		? []
