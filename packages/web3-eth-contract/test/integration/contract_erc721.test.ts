@@ -27,6 +27,7 @@ import {
 	signAndSendContractMethodEIP2930,
 	createNewAccount,
 	refillAccount,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -49,6 +50,11 @@ describe('contract', () => {
 				arguments: [],
 			};
 			sendOptions = { from: acc.address, gas: '10000000' };
+		});
+
+		afterAll(async () => {
+			await closeOpenConnection(contract);
+			await closeOpenConnection(contractDeployed);
 		});
 
 		it('should deploy the contract', async () => {
