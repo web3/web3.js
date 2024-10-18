@@ -62,7 +62,9 @@ describe('Contract method types', () => {
 		// abi as const
 		const contract = new Contract<typeof abiAsConst>(abiAsConst);
 		contract.methods.testWithParams(1, 2); // no ts error - works as expected
+		// @ts-expect-error ts compiler error
 		expect(() => contract.methods.testWithParams()).toThrow(); // ts error - works as expected
+		// @ts-expect-error ts compiler error
 		contract.methods.testWithoutParams(1, 2); // ts error - works as expected
 		contract.methods.testWithoutParams(); // no ts error - works as expected
 
