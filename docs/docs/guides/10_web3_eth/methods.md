@@ -106,6 +106,10 @@ Please be cautious when sending transactions, especially when dealing with smart
 
 The [sign](/api/web3-eth/function/sign) method is used to sign a message or data using a private key. This is often used to prove ownership or authorship of a specific piece of data or to provide cryptographic proof in various Ethereum-related operations.
 
+## signRaw
+
+The [signRaw](/api/web3-eth/function/signRaw) method is used to sign a message or data using a private key. This is often used to prove ownership or authorship of a specific piece of data or to provide cryptographic proof in various Ethereum-related operations.
+
 ## signTransaction
 
 The [signTransaction](/api/web3-eth/function/signTransaction) method is used to sign an Ethereum transaction, creating a signed transaction object that can be broadcast to the Ethereum network.
