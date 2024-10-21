@@ -2727,20 +2727,41 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   `Web3.providers` namespace exports `type EIP6963ProviderResponse = Map<string, EIP6963ProviderDetail>`. Return type for the static `Web3.requestEIP6963Providers` function is now `Promise<EIP6963ProviderResponse>`. (#7239)
 -   The callback function provided to the static `Web3.onNewProviderDiscovered` function expects a parameter of type `EIP6963ProvidersMapUpdateEvent` as opposed to `EIP6963AnnounceProviderEvent`. (#7242)
 
-## [Unreleased]
+## [4.14.0]
 
 ### Added
+
+#### web3-core
+
+-   Added new property `ignoreGasPricing` to `Web3ConfigOptions`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
 
 #### web3-eth
 
 -   `syncing` subscription now supports Besu and Nethermind payload format
+-   `populateGasPrice` function now checks `Web3Context.config.ignoreGasPricing`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
 
 ### Changed
+
+#### web3
+
+-   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
 
 #### web3-eth
 
 -   Allow `getEthereumjsTxDataFrom` to return additional fields that may be passed if using a `customTransactionSchema`.
 
-#### web3
+#### web3-types
 
--   Exported EIP-6963 types are no longer under the `providers` namespace. (#7270)
+-   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
+
+### Fixed
+
+#### web3-eth-abi
+
+-   `decodeLog` , `decodeParametersWith` , `decodeParameters` and `decodeParameters` now accepts first immutable param as well (#7288)
+
+#### web3-utils
+
+-   fix `padRight` validation failure on large `uint` (#7265)
+
+## [Unreleased]
