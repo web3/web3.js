@@ -19,11 +19,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  *  @module ABI
  */
-import { AbiError } from 'web3-errors';
+import { AbiError, Web3ContractError } from 'web3-errors';
 import { sha3Raw } from 'web3-utils';
-import { AbiFunctionFragment } from 'web3-types';
+import { AbiConstructorFragment, AbiFunctionFragment, DecodedParams, HexString } from 'web3-types';
 import { isAbiFunctionFragment, jsonInterfaceMethodToString } from '../utils.js';
-import { encodeParameters } from './parameters_api.js';
+import { decodeParameters, encodeParameters } from './parameters_api.js';
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
@@ -142,4 +142,56 @@ export const encodeFunctionCall = (
 		jsonInterface.inputs ?? [],
 		params ?? [],
 	).replace('0x', '')}`;
+};
+
+export const decodeMethodParams = (
+	functionsAbis: AbiFunctionFragment | AbiConstructorFragment,
+	data: HexString,
+	methodSignatureProvided = true,
+): DecodedParams & { __method__: string } => {
+	const value =
+		methodSignatureProvided && data && data.length >= 10 && data.startsWith('0x')
+			? data.slice(10)
+			: data;
+	if (!functionsAbis.inputs) {
+		if (value !== '') {
+			throw new Web3ContractError('No inputs found in the ABI');
+		} else {
+			return {
+				__length__: 0,
+				__method__: jsonInterfaceMethodToString(functionsAbis),
+			};
+		}
+	}
+	const result = decodeParameters([...functionsAbis.inputs], value);
+	return {
+		...result,
+		__method__: jsonInterfaceMethodToString(functionsAbis),
+	};
+};
+
+export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {
+	// If it was constructor then we need to return contract address
+	if (abi.type === 'constructor') {
+		return returnValues;
+	}
+
+	if (!returnValues) {
+		// Using "null" value intentionally to match legacy behavior
+		// eslint-disable-next-line no-null/no-null
+		return null;
+	}
+
+	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
+	if (!abi.outputs) {
+		// eslint-disable-next-line no-null/no-null
+		return null;
+	}
+	const result = decodeParameters([...abi.outputs], value);
+
+	if (result.__length__ === 1) {
+		return result[0];
+	}
+
+	return result;
 };

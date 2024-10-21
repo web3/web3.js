@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3ContractError } from 'web3-errors';
 import { sendTransaction, SendTransactionEvents, SendTransactionOptions } from 'web3-eth';
+import { decodeMethodParams } from 'web3-eth-abi';
 import {
 	AbiConstructorFragment,
 	AbiFunctionFragment,
@@ -34,7 +35,7 @@ import {
 import { format } from 'web3-utils';
 import { isNullish } from 'web3-validator';
 import { Web3PromiEvent } from 'web3-core';
-import { decodeMethodParams, encodeMethodABI } from './encoding.js';
+import { encodeMethodABI } from './encoding.js';
 import { NonPayableTxOptions, PayableTxOptions } from './types.js';
 import { getSendTxParams } from './utils.js';
 // eslint-disable-next-line import/no-cycle
