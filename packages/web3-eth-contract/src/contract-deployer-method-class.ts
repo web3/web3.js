@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3ContractError } from 'web3-errors';
 import { sendTransaction, SendTransactionEvents, SendTransactionOptions } from 'web3-eth';
-import { decodeMethodParams } from 'web3-eth-abi';
+import { decodeFunctionCall } from 'web3-eth-abi';
 import {
 	AbiConstructorFragment,
 	AbiFunctionFragment,
@@ -210,7 +210,7 @@ export class DeployerMethodClass<FullContractAbi extends ContractAbi> {
 
 	public decodeData(data: HexString) {
 		return {
-			...decodeMethodParams(
+			...decodeFunctionCall(
 				this.constructorAbi,
 				data.replace(this.deployData as string, ''),
 				false,

@@ -30,8 +30,8 @@ import {
 } from 'web3-types';
 
 import {
-	decodeMethodParams as decodeMethodParamsFromEthAbi,
-	decodeMethodReturn as decodeMethodReturnFromEthAbi,
+	decodeFunctionCall,
+	decodeFunctionReturn,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	encodeParameter,
@@ -154,7 +154,7 @@ export const encodeMethodABI = (
 	return `${encodeFunctionSignature(abi)}${params}`;
 };
 
-/** @deprecated import from ''web3-eth-abi' instead. */
-export const decodeMethodParams = decodeMethodParamsFromEthAbi;
-/** @deprecated import from ''web3-eth-abi' instead. */
-export const decodeMethodReturn = decodeMethodReturnFromEthAbi;
+/** @deprecated import `decodeFunctionCall` from ''web3-eth-abi' instead. */
+export const decodeMethodParams = decodeFunctionCall;
+/** @deprecated import `decodeFunctionReturn` from ''web3-eth-abi' instead. */
+export const decodeMethodReturn = decodeFunctionReturn;

@@ -15,14 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { decodeMethodParams, decodeMethodReturn } from '../../src';
+import { decodeFunctionCall, decodeFunctionReturn } from '../../src';
 
-describe('decodeMethodParams and decodeMethodReturn tests should pass', () => {
-	it('decodeMethodParams should decode single-value data of a method', async () => {
+describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => {
+	it('decodeFunctionCall should decode single-value data of a method', async () => {
 		const result =
 			'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
-		const params = decodeMethodParams(
+		const params = decodeFunctionCall(
 			{
 				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
 				name: 'setGreeting',
@@ -44,11 +44,11 @@ describe('decodeMethodParams and decodeMethodReturn tests should pass', () => {
 		});
 	});
 
-	it('decodeMethodParams should decode multi-value data of a method', async () => {
+	it('decodeFunctionCall should decode multi-value data of a method', async () => {
 		const result =
 			'0xa413686200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000548656c6c6f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010416e6f74686572204772656574696e6700000000000000000000000000000000';
 
-		const params = decodeMethodParams(
+		const params = decodeFunctionCall(
 			{
 				inputs: [
 					{ internalType: 'string', name: '_greeting', type: 'string' },
@@ -75,11 +75,11 @@ describe('decodeMethodParams and decodeMethodReturn tests should pass', () => {
 		});
 	});
 
-	it('decodeMethodReturn should decode single-value data of a method', async () => {
+	it('decodeFunctionReturn should decode single-value data of a method', async () => {
 		const result =
 			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
-		const params = decodeMethodReturn(
+		const params = decodeFunctionReturn(
 			{
 				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
 				name: 'setGreeting',
@@ -93,11 +93,11 @@ describe('decodeMethodParams and decodeMethodReturn tests should pass', () => {
 		expect(params).toBe('Hello');
 	});
 
-	it('decodeMethodReturn should decode multi-value data of a method', async () => {
+	it('decodeFunctionReturn should decode multi-value data of a method', async () => {
 		const result =
 			'0x00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
-		const params = decodeMethodReturn(
+		const params = decodeFunctionReturn(
 			{
 				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
 				name: 'setGreeting',

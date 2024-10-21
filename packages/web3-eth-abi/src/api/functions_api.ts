@@ -144,8 +144,16 @@ export const encodeFunctionCall = (
 	).replace('0x', '')}`;
 };
 
-export const decodeMethodParams = (
-	functionsAbis: AbiFunctionFragment | AbiConstructorFragment,
+/**
+ * Decodes a function call data using its `JSON interface` object.
+ * The JSON interface spec documentation https://docs.soliditylang.org/en/latest/abi-spec.html#json
+ * @param functionsAbi - The `JSON interface` object of the function.
+ * @param data - The data to decode
+ * @param methodSignatureProvided - (Optional) if `false` do not remove the first 4 bytes that would rather contain the function signature.
+ * @returns - The data decoded according to the passed ABI.
+ */
+export const decodeFunctionCall = (
+	functionsAbi: AbiFunctionFragment | AbiConstructorFragment,
 	data: HexString,
 	methodSignatureProvided = true,
 ): DecodedParams & { __method__: string } => {
@@ -153,26 +161,30 @@ export const decodeMethodParams = (
 		methodSignatureProvided && data && data.length >= 10 && data.startsWith('0x')
 			? data.slice(10)
 			: data;
-	if (!functionsAbis.inputs) {
-		if (value !== '') {
-			throw new Web3ContractError('No inputs found in the ABI');
-		} else {
-			return {
-				__length__: 0,
-				__method__: jsonInterfaceMethodToString(functionsAbis),
-			};
-		}
+	if (!functionsAbi.inputs) {
+		throw new Web3ContractError('No inputs found in the ABI');
 	}
-	const result = decodeParameters([...functionsAbis.inputs], value);
+	const result = decodeParameters([...functionsAbi.inputs], value);
 	return {
 		...result,
-		__method__: jsonInterfaceMethodToString(functionsAbis),
+		__method__: jsonInterfaceMethodToString(functionsAbi),
 	};
 };
 
-export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {
+/**
+ * Decodes a function call data using its `JSON interface` object.
+ * The JSON interface spec documentation https://docs.soliditylang.org/en/latest/abi-spec.html#json
+ * @returns - The ABI encoded function call, which, means the function signature and the parameters passed.
+ * @param functionsAbi - The `JSON interface` object of the function.
+ * @param returnValues - The data (the function-returned-values) to decoded
+ * @returns - The function-returned-values decoded according to the passed ABI.
+ */
+export const decodeFunctionReturn = (
+	functionsAbi: AbiFunctionFragment,
+	returnValues?: HexString,
+) => {
 	// If it was constructor then we need to return contract address
-	if (abi.type === 'constructor') {
+	if (functionsAbi.type === 'constructor') {
 		return returnValues;
 	}
 
@@ -183,11 +195,11 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	}
 
 	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-	if (!abi.outputs) {
+	if (!functionsAbi.outputs) {
 		// eslint-disable-next-line no-null/no-null
 		return null;
 	}
-	const result = decodeParameters([...abi.outputs], value);
+	const result = decodeParameters([...functionsAbi.outputs], value);
 
 	if (result.__length__ === 1) {
 		return result[0];
