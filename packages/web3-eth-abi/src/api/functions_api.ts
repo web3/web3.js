@@ -183,7 +183,7 @@ export const decodeFunctionReturn = (
 	functionsAbi: AbiFunctionFragment,
 	returnValues?: HexString,
 ) => {
-	// If it was constructor then we need to return contract address
+	// If it is a constructor there is nothing to decode!
 	if (functionsAbi.type === 'constructor') {
 		return returnValues;
 	}

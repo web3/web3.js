@@ -15,11 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AbiFunctionFragment } from 'web3-types';
 import { decodeFunctionCall, decodeFunctionReturn } from '../../src';
 
 describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => {
 	it('decodeFunctionCall should decode single-value data of a method', async () => {
-		const result =
+		const data =
 			'0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
 		const params = decodeFunctionCall(
@@ -33,7 +34,7 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 				stateMutability: 'nonpayable',
 				type: 'function',
 			},
-			result,
+			data,
 		);
 
 		expect(params).toMatchObject({
@@ -45,7 +46,7 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 	});
 
 	it('decodeFunctionCall should decode data of a method without removing the method signature (if intended)', async () => {
-		const result =
+		const data =
 			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
 		const params = decodeFunctionCall(
@@ -59,7 +60,7 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 				stateMutability: 'nonpayable',
 				type: 'function',
 			},
-			result,
+			data,
 			false,
 		);
 
@@ -72,7 +73,7 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 	});
 
 	it('decodeFunctionCall should throw if no inputs at the ABI', async () => {
-		const result =
+		const data =
 			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
 		expect(() =>
@@ -87,14 +88,14 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 					stateMutability: 'nonpayable',
 					type: 'function',
 				},
-				result,
+				data,
 				false,
 			),
 		).toThrow('No inputs found in the ABI');
 	});
 
 	it('decodeFunctionCall should decode multi-value data of a method', async () => {
-		const result =
+		const data =
 			'0xa413686200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000548656c6c6f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010416e6f74686572204772656574696e6700000000000000000000000000000000';
 
 		const params = decodeFunctionCall(
@@ -111,7 +112,7 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 				stateMutability: 'nonpayable',
 				type: 'function',
 			},
-			result,
+			data,
 		);
 
 		expect(params).toEqual({
@@ -125,7 +126,7 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 	});
 
 	it('decodeFunctionReturn should decode single-value data of a method', async () => {
-		const result =
+		const data =
 			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
 		const params = decodeFunctionReturn(
@@ -136,14 +137,14 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 				stateMutability: 'nonpayable',
 				type: 'function',
 			},
-			result,
+			data,
 		);
 
 		expect(params).toBe('Hello');
 	});
 
 	it('decodeFunctionReturn should decode multi-value data of a method', async () => {
-		const result =
+		const data =
 			'0x00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
 		const params = decodeFunctionReturn(
@@ -157,9 +158,24 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 				stateMutability: 'nonpayable',
 				type: 'function',
 			},
-			result,
+			data,
 		);
 
 		expect(params).toEqual({ '0': 'Hello', '1': true, __length__: 2 });
+	});
+
+	it('decodeFunctionReturn should decode nothing if it is called on a constructor', async () => {
+		const result = 'anything passed should be returned as-is';
+
+		const params = decodeFunctionReturn(
+			{
+				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
+				stateMutability: 'nonpayable',
+				type: 'constructor',
+			} as unknown as AbiFunctionFragment,
+			result,
+		);
+
+		expect(params).toEqual(result);
 	});
 });
