@@ -44,6 +44,55 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 		});
 	});
 
+	it('decodeFunctionCall should decode data of a method without removing the method signature (if intended)', async () => {
+		const result =
+			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
+
+		const params = decodeFunctionCall(
+			{
+				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
+				name: 'setGreeting',
+				outputs: [
+					{ internalType: 'bool', name: '', type: 'bool' },
+					{ internalType: 'string', name: '', type: 'string' },
+				],
+				stateMutability: 'nonpayable',
+				type: 'function',
+			},
+			result,
+			false,
+		);
+
+		expect(params).toMatchObject({
+			__method__: 'setGreeting(string)',
+			__length__: 1,
+			'0': 'Hello',
+			_greeting: 'Hello',
+		});
+	});
+
+	it('decodeFunctionCall should throw if no inputs at the ABI', async () => {
+		const result =
+			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
+
+		expect(() =>
+			decodeFunctionCall(
+				{
+					name: 'setGreeting',
+					// no `inputs` provided!
+					outputs: [
+						{ internalType: 'bool', name: '', type: 'bool' },
+						{ internalType: 'string', name: '', type: 'string' },
+					],
+					stateMutability: 'nonpayable',
+					type: 'function',
+				},
+				result,
+				false,
+			),
+		).toThrow('No inputs found in the ABI');
+	});
+
 	it('decodeFunctionCall should decode multi-value data of a method', async () => {
 		const result =
 			'0xa413686200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000548656c6c6f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010416e6f74686572204772656574696e6700000000000000000000000000000000';
