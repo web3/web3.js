@@ -195,3 +195,7 @@ Documentation:
 -   `decodeLog` , `decodeParametersWith` , `decodeParameters` and `decodeParameters` now accepts first immutable param as well (#7288)
 
 ## [Unreleased]
+
+### Added
+
+-   added `decodeFunctionCall` and `decodeFunctionReturn`. (#7345)
