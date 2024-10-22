@@ -66,7 +66,6 @@ export class PublicNodeProvider<
 		[Network.EVMOS_MAINNET]: 'evmos-evm-rpc.publicnode.com',
 		[Network.EVMOS_TESTNET]: 'evmos-testnet-evm-rpc.publicnode.com',
 		[Network.BERACHAIN_TESTNET]: 'berachain-testnet-evm-rpc.publicnode.com',
-		// deprecated
 		[Network.ETH_MAINNET]: 'ethereum-rpc.publicnode.com',
 		[Network.ETH_SEPOLIA]: 'ethereum-sepolia-rpc.publicnode.com',
 		[Network.ETH_HOLESKY]: 'ethereum-holesky-rpc.publicnode.com',
