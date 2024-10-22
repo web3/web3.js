@@ -155,6 +155,10 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
  * web3.eth.accounts.hashMessage(web3.utils.utf8ToHex("Hello world")) // Will be hex decoded in hashMessage
  *
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
+ *
+ * web3.eth.accounts.hashMessage("Hello world", true)
+ *
+ * > "0xed6c11b0b5b808960df26f5bfc471d04c1995b0ffd2055925ad1be28d6baadfd"
  * ```
  */
 export const hashMessage = (message: string, skipPrefix?: boolean): string => {
@@ -242,11 +246,11 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * web3.eth.accounts.signRaw('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
  * > {
  *   message: 'Some data',
- *   messageHash: '0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655',
- *   v: '0x1c',
- *   r: '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd',
- *   s: '0x6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a029',
- *   signature: '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c'
+ *   messageHash: '0x43a26051362b8040b289abe93334a5e3662751aa691185ae9e9a2e1e0c169350',
+ *   v: '0x1b',
+ *   r: '0x93da7e2ddd6b2ff1f5af0c752f052ed0d7d5bff19257db547a69cd9a879b37d4',
+ *   s: '0x334485e42b33815fd2cf8a245a5393b282214060844a9681495df2257140e75c',
+ *   signature: '0x93da7e2ddd6b2ff1f5af0c752f052ed0d7d5bff19257db547a69cd9a879b37d4334485e42b33815fd2cf8a245a5393b282214060844a9681495df2257140e75c1b'
  * }
  * ```
  */
