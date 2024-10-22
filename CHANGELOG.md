@@ -2765,3 +2765,9 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 -   fix `padRight` validation failure on large `uint` (#7265)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-rpc-providers
+
+-   PublicNodeProvider was added (#7322)
