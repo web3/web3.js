@@ -165,7 +165,7 @@ export const closeOpenConnection = async (web3Context: Web3Context) => {
 		(web3Context.provider as unknown as Web3BaseProvider).disconnect();
 
 		await new Promise(resolve => {
-			setTimeout(resolve, 1000);
+			setTimeout(resolve, 1);
 		});
 	}
 };
@@ -250,8 +250,9 @@ export const createNewAccount = async (config?: {
 			const url = getSystemTestProviderUrl();
 			const web3 = new Web3(url);
 			web3.registerPlugin(new HardhatPlugin());
+			// eslint-disable-next-line
 			await web3.hardhat.impersonateAccount(acc.address);
-			// await impersonateAccount(acc.address);
+			// eslint-disable-next-line
 			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
 			await closeOpenConnection(web3);
 		} else {
@@ -275,6 +276,7 @@ export const createNewAccount = async (config?: {
 			const url = getSystemTestProviderUrl();
 			const web3 = new Web3(url);
 			web3.registerPlugin(new HardhatPlugin());
+			// eslint-disable-next-line
 			await web3.hardhat.setBalance(acc.address, web3.utils.toHex('100000000'));
 			await closeOpenConnection(web3);
 		} else {
@@ -515,8 +517,8 @@ export const waitForCondition = async (
 	logicFunc: () => Promise<void> | void,
 	maxIterations = 10, // 10 times
 	duration = 8000, // check after each 8 seconds
-): Promise<void> => {
-	return new Promise<void>((resolve, reject) => {
+): Promise<void> =>
+	new Promise<void>((resolve, reject) => {
 		let iterations = 0;
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		const interval = setInterval(async () => {
@@ -540,4 +542,3 @@ export const waitForCondition = async (
 			}
 		}, duration);
 	});
-};

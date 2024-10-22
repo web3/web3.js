@@ -22,6 +22,7 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	BACKEND,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -45,6 +46,10 @@ describe('contract', () => {
 		sendOptions = { from: acc.address, gas: '1000000' };
 
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+	});
+
+	afterAll(async () => {
+		await closeOpenConnection(contract);
 	});
 
 	describe('methods', () => {
@@ -72,6 +77,8 @@ describe('contract', () => {
 					.send();
 				const res = await deployedTempContract.methods.getStringValue().call();
 				expect(res).toBe('string init value');
+
+				await closeOpenConnection(tempContract);
 			});
 
 			describe('revert handling', () => {
@@ -191,6 +198,8 @@ describe('contract', () => {
 				await deployedTempContract.methods.setValues(10, 'TEST', true).send();
 
 				expect(await deployedTempContract.methods.getStringValue().call()).toBe('TEST');
+
+				await closeOpenConnection(tempContract);
 			});
 
 			it('should returns errors on reverts', async () => {

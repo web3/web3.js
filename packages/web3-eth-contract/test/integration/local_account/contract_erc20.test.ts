@@ -21,7 +21,11 @@ import Web3 from 'web3';
 import { Web3Account } from 'web3-eth-accounts';
 import { Contract } from '../../../src';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../../shared_fixtures/build/ERC20Token';
-import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createLocalAccount,
+	closeOpenConnection,
+} from '../../fixtures/system_test_utils';
 
 const initialSupply = BigInt('5000000000');
 
@@ -51,6 +55,10 @@ describe('contract', () => {
 				gas: '2000000',
 			};
 			contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+		});
+
+		afterAll(async () => {
+			await closeOpenConnection(web3);
 		});
 
 		it('should deploy the contract', () => {

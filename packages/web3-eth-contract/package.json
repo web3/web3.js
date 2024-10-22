@@ -35,11 +35,11 @@
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
 		"test:coverage:unit": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
-		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit --coverage=true --coverage-reporters=text",
+		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --runInBand --coverage=true --coverage-reporters=text",
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
+		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand",
 		"test:e2e:electron": "npx cypress run --headless --browser electron --env grep='ignore',invert=true",
 		"test:e2e:chrome": "npx cypress run --headless --browser chrome --env grep='ignore',invert=true",
 		"test:e2e:firefox": "npx cypress run --headless --browser firefox --env grep='ignore',invert=true"

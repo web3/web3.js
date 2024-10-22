@@ -27,6 +27,7 @@ import {
 	signAndSendContractMethodEIP2930,
 	createNewAccount,
 	refillAccount,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -51,6 +52,10 @@ describe('contract', () => {
 			sendOptions = { from: acc.address, gas: '10000000' };
 		});
 
+		afterAll(async () => {
+			await closeOpenConnection(contract);
+		});
+
 		it('should deploy the contract', async () => {
 			await expect(contract.deploy(deployOptions).send(sendOptions)).resolves.toBeDefined();
 		});
@@ -59,11 +64,13 @@ describe('contract', () => {
 			let acc: { address: string; privateKey: string };
 			let acc2: { address: string; privateKey: string };
 			let pkAccount: { address: string; privateKey: string };
+
 			beforeAll(async () => {
 				acc = await createTempAccount();
 				pkAccount = await createNewAccount();
 				await refillAccount(acc.address, pkAccount.address, '20000000000000000');
 			});
+
 			beforeEach(async () => {
 				acc2 = await createTempAccount();
 				sendOptions = { from: acc.address, gas: '10000000' };

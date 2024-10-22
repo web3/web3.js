@@ -15,7 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Contract from '../../src';
-import { createTempAccount, getSystemTestProvider } from '../fixtures/system_test_utils';
+import {
+	closeOpenConnection,
+	createTempAccount,
+	getSystemTestProvider,
+} from '../fixtures/system_test_utils';
 import {
 	NegativeNumbersAbi,
 	NegativeNumbersBytecode,
@@ -45,6 +49,10 @@ describe('Contract - NegativeNumbers.sol', () => {
 		};
 
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+	});
+
+	afterAll(async () => {
+		await closeOpenConnection(contract);
 	});
 
 	it('should retrieve storedNegativeNumber', async () => {

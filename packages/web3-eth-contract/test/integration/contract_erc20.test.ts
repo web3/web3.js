@@ -27,6 +27,7 @@ import {
 	refillAccount,
 	signAndSendContractMethodEIP1559,
 	signAndSendContractMethodEIP2930,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -47,6 +48,10 @@ describe('contract', () => {
 				data: ERC20TokenBytecode,
 				arguments: [initialSupply],
 			};
+		});
+
+		afterAll(async () => {
+			await closeOpenConnection(contract);
 		});
 
 		it('should deploy the contract', async () => {
@@ -74,6 +79,7 @@ describe('contract', () => {
 				sendOptions = { from: mainAcc.address, gas: '10000000' };
 				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			});
+
 			describe('methods', () => {
 				it('should return the name', async () => {
 					expect(await contractDeployed.methods.name().call()).toBe('Gold');
