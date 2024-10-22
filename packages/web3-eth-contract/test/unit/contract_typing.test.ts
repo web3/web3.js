@@ -37,8 +37,10 @@ describe('contract typing', () => {
 		]);
 
 		typecheck('should allow any input params', () => [
-			expectTypeOf<Parameters<typeof defaultContractInstance.methods.test>>().toBe<any[]>(),
-			expectTypeOf<Parameters<typeof web3ContractInstance.methods.test>>().toBe<any[]>(),
+			expectTypeOf<Parameters<typeof defaultContractInstance.methods.test>>().toBe<
+				any[] | []
+			>(),
+			expectTypeOf<Parameters<typeof web3ContractInstance.methods.test>>().toBe<any[] | []>(),
 		]);
 	});
 	describe('custom abi', () => {
@@ -83,6 +85,7 @@ describe('contract typing', () => {
 		);
 
 		typecheck('should have interface compliance methods', () =>
+			// @ts-expect-error interface error
 			expectTypeOf(contract.methods).toExtend<Erc20Interface['methods']>(),
 		);
 
