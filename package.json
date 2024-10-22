@@ -63,7 +63,7 @@
 		"test": "lerna run test --stream --parallel",
 		"test:coverage:unit": "lerna run test:coverage:unit --stream --parallel",
 		"test:coverage:integration": "lerna run test:coverage:integration --stream --parallel",
-		"test:unit": "lerna run test:unit --stream && jest --config=./scripts/jest.config.js",
+		"test:unit": "lerna run test:unit --stream --parallel && jest --config=./scripts/jest.config.js",
 		"test:integration": "lerna run test:integration --stream",
 		"test:benchmark": "lerna run test:benchmark",
 		"test:integration:stress": "lerna run test:integration:stress --stream",
