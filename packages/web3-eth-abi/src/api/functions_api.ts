@@ -151,6 +151,37 @@ export const encodeFunctionCall = (
  * @param data - The data to decode
  * @param methodSignatureProvided - (Optional) if `false` do not remove the first 4 bytes that would rather contain the function signature.
  * @returns - The data decoded according to the passed ABI.
+ * @example
+ * ```ts
+ * const data =
+ * 	'0xa413686200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000548656c6c6f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010416e6f74686572204772656574696e6700000000000000000000000000000000';
+ * const params = decodeFunctionCall(
+ * 	{
+ * 		inputs: [
+ * 			{ internalType: 'string', name: '_greeting', type: 'string' },
+ * 			{ internalType: 'string', name: '_second_greeting', type: 'string' },
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [
+ * 			{ internalType: 'bool', name: '', type: 'bool' },
+ * 			{ internalType: 'string', name: '', type: 'string' },
+ * 		],
+ * 		stateMutability: 'nonpayable',
+ * 		type: 'function',
+ * 	},
+ * 	data,
+ * );
+
+ * console.log(params);
+ * > {
+ * > 	'0': 'Hello',
+ * > 	'1': 'Another Greeting',
+ * > 	__length__: 2,
+ * > 	__method__: 'setGreeting(string,string)',
+ * > 	_greeting: 'Hello',
+ * > 	_second_greeting: 'Another Greeting',
+ * > }
+ * ```
  */
 export const decodeFunctionCall = (
 	functionsAbi: AbiFunctionFragment | AbiConstructorFragment,
@@ -177,7 +208,51 @@ export const decodeFunctionCall = (
  * @returns - The ABI encoded function call, which, means the function signature and the parameters passed.
  * @param functionsAbi - The `JSON interface` object of the function.
  * @param returnValues - The data (the function-returned-values) to decoded
- * @returns - The function-returned-values decoded according to the passed ABI.
+ * @returns - The function-returned-values decoded according to the passed ABI. If there are multiple values, it returns them as an object as the example below. But if it is a single value, it returns it only for simplicity.
+ * @example
+ * ```ts
+ * // decode a multi-value data of a method
+ * const data =
+ * 	'0x00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
+ * const decodedResult = decodeFunctionReturn(
+ * 	{
+ * 		inputs: [
+ * 			{ internalType: 'string', name: '_greeting', type: 'string' }
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [
+ * 			{ internalType: 'string', name: '', type: 'string' },
+ * 			{ internalType: 'bool', name: '', type: 'bool' },
+ * 		],
+ * 		stateMutability: 'nonpayable',
+ * 		type: 'function',
+ * 	},
+ * 	data,
+ * );
+
+ * console.log(decodedResult);
+ * > { '0': 'Hello', '1': true, __length__: 2 }
+ * 
+ * 
+ * // decode a single-value data of a method
+ * const data =
+ * 	'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
+ * const decodedResult = decodeFunctionReturn(
+ * 	{
+ * 		inputs: [
+ * 			{ internalType: 'string', name: '_greeting', type: 'string' }
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [{ internalType: 'string', name: '', type: 'string' }],
+ * 		stateMutability: 'nonpayable',
+ * 		type: 'function',
+ * 	},
+ * 	data,
+ * );
+
+ * console.log(decodedResult);
+ * > 'Hello'
+ * ```
  */
 export const decodeFunctionReturn = (
 	functionsAbi: AbiFunctionFragment,
