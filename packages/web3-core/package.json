@@ -1,6 +1,6 @@
 {
 	"name": "web3-core",
-	"version": "4.6.0",
+	"version": "4.7.0",
 	"description": "Web3 core tools for sub-packages. This is an internal package.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -47,8 +47,8 @@
 		"web3-eth-iban": "^4.0.7",
 		"web3-providers-http": "^4.2.0",
 		"web3-providers-ws": "^4.0.8",
-		"web3-types": "^1.8.0",
-		"web3-utils": "^4.3.1",
+		"web3-types": "^1.8.1",
+		"web3-utils": "^4.3.2",
 		"web3-validator": "^2.0.6"
 	},
 	"optionalDependencies": {
