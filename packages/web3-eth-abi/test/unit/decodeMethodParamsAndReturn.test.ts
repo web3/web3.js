@@ -129,7 +129,7 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 		const data =
 			'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
-		const params = decodeFunctionReturn(
+		const decodedResult = decodeFunctionReturn(
 			{
 				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
 				name: 'setGreeting',
@@ -140,14 +140,14 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 			data,
 		);
 
-		expect(params).toBe('Hello');
+		expect(decodedResult).toBe('Hello');
 	});
 
 	it('decodeFunctionReturn should decode multi-value data of a method', async () => {
 		const data =
 			'0x00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
 
-		const params = decodeFunctionReturn(
+		const decodedResult = decodeFunctionReturn(
 			{
 				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
 				name: 'setGreeting',
@@ -161,21 +161,57 @@ describe('decodeFunctionCall and decodeFunctionReturn tests should pass', () => 
 			data,
 		);
 
-		expect(params).toEqual({ '0': 'Hello', '1': true, __length__: 2 });
+		expect(decodedResult).toEqual({ '0': 'Hello', '1': true, __length__: 2 });
 	});
 
 	it('decodeFunctionReturn should decode nothing if it is called on a constructor', async () => {
-		const result = 'anything passed should be returned as-is';
+		const data = 'anything passed should be returned as-is';
 
-		const params = decodeFunctionReturn(
+		const decodedResult = decodeFunctionReturn(
 			{
 				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
 				stateMutability: 'nonpayable',
 				type: 'constructor',
 			} as unknown as AbiFunctionFragment,
-			result,
+			data,
 		);
 
-		expect(params).toEqual(result);
+		expect(decodedResult).toEqual(data);
+	});
+
+	it('decodeFunctionReturn should return `null` if no values passed', async () => {
+		const data = '';
+
+		const decodedResult = decodeFunctionReturn(
+			{
+				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
+				name: 'setGreeting',
+				outputs: [
+					{ internalType: 'string', name: '', type: 'string' },
+					{ internalType: 'bool', name: '', type: 'bool' },
+				],
+				stateMutability: 'nonpayable',
+				type: 'function',
+			},
+			data,
+		);
+
+		expect(decodedResult).toBeNull();
+	});
+
+	it('decodeFunctionReturn should return `null` if no function output provided', async () => {
+		const data = '0x000000';
+
+		const decodedResult = decodeFunctionReturn(
+			{
+				inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
+				name: 'setGreeting',
+				stateMutability: 'nonpayable',
+				type: 'function',
+			},
+			data,
+		);
+
+		expect(decodedResult).toBeNull();
 	});
 });
