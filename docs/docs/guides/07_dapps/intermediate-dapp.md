@@ -158,10 +158,16 @@ Create a `src/useProviders.ts` file and add the following code:
 
 ```ts
 import { useSyncExternalStore } from 'react';
-import { providers, Web3 } from 'web3';
+import {
+	type EIP6963ProviderDetail,
+	type EIP6963ProviderResponse,
+	type EIP6963ProvidersMapUpdateEvent,
+	Web3,
+	web3ProvidersMapUpdated,
+} from 'web3';
 
 // initial empty list of providers
-let providerList: providers.EIP6963ProviderDetail[] = [];
+let providerList: EIP6963ProviderDetail[] = [];
 
 /**
  * External store for subscribing to EIP-6963 providers
@@ -172,9 +178,9 @@ const providerStore = {
 	// subscribe to EIP-6963 provider events
 	subscribe: (callback: () => void) => {
 		// update the list of providers
-		function setProviders(response: providers.EIP6963ProviderResponse) {
+		function setProviders(response: EIP6963ProviderResponse) {
 			providerList = [];
-			response.forEach((provider: providers.EIP6963ProviderDetail) => {
+			response.forEach((provider: EIP6963ProviderDetail) => {
 				providerList.push(provider);
 			});
 
@@ -186,7 +192,7 @@ const providerStore = {
 		Web3.requestEIP6963Providers().then(setProviders);
 
 		// handler for newly discovered providers
-		function updateProviders(providerEvent: providers.EIP6963ProvidersMapUpdateEvent) {
+		function updateProviders(providerEvent: EIP6963ProvidersMapUpdateEvent) {
 			setProviders(providerEvent.detail);
 		}
 
@@ -194,8 +200,7 @@ const providerStore = {
 		Web3.onNewProviderDiscovered(updateProviders);
 
 		// return a function that unsubscribes from the created event listener
-		return () =>
-			window.removeEventListener(providers.web3ProvidersMapUpdated as any, updateProviders);
+		return () => window.removeEventListener(web3ProvidersMapUpdated as any, updateProviders);
 	},
 };
 
@@ -209,7 +214,7 @@ This file exports a single member - a React [`useSyncExternalStore` hook](https:
 Replace the contents of the `src/App.tsx` file with the following:
 
 ```tsx
-import type { providers } from 'web3';
+import type { EIP6963ProviderDetail } from 'web3';
 
 import { useProviders } from './useProviders';
 
@@ -219,7 +224,7 @@ function App() {
 
 	return (
 		<>
-			{providers.map((provider: providers.EIP6963ProviderDetail) => {
+			{providers.map((provider: EIP6963ProviderDetail) => {
 				// list available providers
 				return (
 					<div key={provider.info.uuid}>
@@ -244,7 +249,7 @@ Replace the contents of the `src/App.tsx` file with the following:
 
 ```tsx
 import { useEffect, useState } from 'react';
-import { type providers, Web3 } from 'web3';
+import { type EIP6963ProviderDetail, Web3 } from 'web3';
 
 import { useProviders } from './useProviders';
 
@@ -258,7 +263,7 @@ function App() {
 	const [balances, setBalances] = useState<Map<string, number>>(new Map());
 
 	// click-handler for provider buttons
-	function setProvider(provider: providers.EIP6963ProviderDetail) {
+	function setProvider(provider: EIP6963ProviderDetail) {
 		const web3: Web3 = new Web3(provider.provider);
 		setWeb3(web3);
 		web3.eth.requestAccounts().then(setAccounts);
@@ -300,7 +305,7 @@ function App() {
 		<>
 			{web3 === undefined
 				? // no provider set, display list of available providers
-				  providers.map((provider: providers.EIP6963ProviderDetail) => {
+				  providers.map((provider: EIP6963ProviderDetail) => {
 						// for each provider, display a button to connect to that provider
 						return (
 							<div key={provider.info.uuid}>
@@ -456,7 +461,7 @@ Replace the contents of the `src/App.tsx` file with the following:
 
 ```tsx
 import { useEffect, useState } from 'react';
-import { type providers, Web3 } from 'web3';
+import { type EIP6963ProviderDetail, Web3 } from 'web3';
 
 // highlight-next-line
 import TransferForm from './TransferForm';
@@ -472,7 +477,7 @@ function App() {
 	const [balances, setBalances] = useState<Map<string, number>>(new Map());
 
 	// click-handler for provider buttons
-	function setProvider(provider: providers.EIP6963ProviderDetail) {
+	function setProvider(provider: EIP6963ProviderDetail) {
 		const web3: Web3 = new Web3(provider.provider);
 		setWeb3(web3);
 		web3.eth.requestAccounts().then(setAccounts);
@@ -514,7 +519,7 @@ function App() {
 		<>
 			{web3 === undefined
 				? // no provider set, display list of available providers
-				  providers.map((provider: providers.EIP6963ProviderDetail) => {
+				  providers.map((provider: EIP6963ProviderDetail) => {
 						// for each provider, display a button to connect to that provider
 						return (
 							<div key={provider.info.uuid}>
