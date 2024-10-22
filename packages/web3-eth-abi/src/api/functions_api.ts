@@ -19,11 +19,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  *  @module ABI
  */
-import { AbiError } from 'web3-errors';
+import { AbiError, Web3ContractError } from 'web3-errors';
 import { sha3Raw } from 'web3-utils';
-import { AbiFunctionFragment } from 'web3-types';
+import { AbiConstructorFragment, AbiFunctionFragment, DecodedParams, HexString } from 'web3-types';
 import { isAbiFunctionFragment, jsonInterfaceMethodToString } from '../utils.js';
-import { encodeParameters } from './parameters_api.js';
+import { decodeParameters, encodeParameters } from './parameters_api.js';
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
@@ -142,4 +142,143 @@ export const encodeFunctionCall = (
 		jsonInterface.inputs ?? [],
 		params ?? [],
 	).replace('0x', '')}`;
+};
+
+/**
+ * Decodes a function call data using its `JSON interface` object.
+ * The JSON interface spec documentation https://docs.soliditylang.org/en/latest/abi-spec.html#json
+ * @param functionsAbi - The `JSON interface` object of the function.
+ * @param data - The data to decode
+ * @param methodSignatureProvided - (Optional) if `false` do not remove the first 4 bytes that would rather contain the function signature.
+ * @returns - The data decoded according to the passed ABI.
+ * @example
+ * ```ts
+ * const data =
+ * 	'0xa413686200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000548656c6c6f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010416e6f74686572204772656574696e6700000000000000000000000000000000';
+ * const params = decodeFunctionCall(
+ * 	{
+ * 		inputs: [
+ * 			{ internalType: 'string', name: '_greeting', type: 'string' },
+ * 			{ internalType: 'string', name: '_second_greeting', type: 'string' },
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [
+ * 			{ internalType: 'bool', name: '', type: 'bool' },
+ * 			{ internalType: 'string', name: '', type: 'string' },
+ * 		],
+ * 		stateMutability: 'nonpayable',
+ * 		type: 'function',
+ * 	},
+ * 	data,
+ * );
+
+ * console.log(params);
+ * > {
+ * > 	'0': 'Hello',
+ * > 	'1': 'Another Greeting',
+ * > 	__length__: 2,
+ * > 	__method__: 'setGreeting(string,string)',
+ * > 	_greeting: 'Hello',
+ * > 	_second_greeting: 'Another Greeting',
+ * > }
+ * ```
+ */
+export const decodeFunctionCall = (
+	functionsAbi: AbiFunctionFragment | AbiConstructorFragment,
+	data: HexString,
+	methodSignatureProvided = true,
+): DecodedParams & { __method__: string } => {
+	const value =
+		methodSignatureProvided && data && data.length >= 10 && data.startsWith('0x')
+			? data.slice(10)
+			: data;
+	if (!functionsAbi.inputs) {
+		throw new Web3ContractError('No inputs found in the ABI');
+	}
+	const result = decodeParameters([...functionsAbi.inputs], value);
+	return {
+		...result,
+		__method__: jsonInterfaceMethodToString(functionsAbi),
+	};
+};
+
+/**
+ * Decodes a function call data using its `JSON interface` object.
+ * The JSON interface spec documentation https://docs.soliditylang.org/en/latest/abi-spec.html#json
+ * @returns - The ABI encoded function call, which, means the function signature and the parameters passed.
+ * @param functionsAbi - The `JSON interface` object of the function.
+ * @param returnValues - The data (the function-returned-values) to decoded
+ * @returns - The function-returned-values decoded according to the passed ABI. If there are multiple values, it returns them as an object as the example below. But if it is a single value, it returns it only for simplicity.
+ * @example
+ * ```ts
+ * // decode a multi-value data of a method
+ * const data =
+ * 	'0x00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
+ * const decodedResult = decodeFunctionReturn(
+ * 	{
+ * 		inputs: [
+ * 			{ internalType: 'string', name: '_greeting', type: 'string' }
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [
+ * 			{ internalType: 'string', name: '', type: 'string' },
+ * 			{ internalType: 'bool', name: '', type: 'bool' },
+ * 		],
+ * 		stateMutability: 'nonpayable',
+ * 		type: 'function',
+ * 	},
+ * 	data,
+ * );
+
+ * console.log(decodedResult);
+ * > { '0': 'Hello', '1': true, __length__: 2 }
+ * 
+ * 
+ * // decode a single-value data of a method
+ * const data =
+ * 	'0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000';
+ * const decodedResult = decodeFunctionReturn(
+ * 	{
+ * 		inputs: [
+ * 			{ internalType: 'string', name: '_greeting', type: 'string' }
+ * 		],
+ * 		name: 'setGreeting',
+ * 		outputs: [{ internalType: 'string', name: '', type: 'string' }],
+ * 		stateMutability: 'nonpayable',
+ * 		type: 'function',
+ * 	},
+ * 	data,
+ * );
+
+ * console.log(decodedResult);
+ * > 'Hello'
+ * ```
+ */
+export const decodeFunctionReturn = (
+	functionsAbi: AbiFunctionFragment,
+	returnValues?: HexString,
+) => {
+	// If it is a constructor there is nothing to decode!
+	if (functionsAbi.type === 'constructor') {
+		return returnValues;
+	}
+
+	if (!returnValues) {
+		// Using "null" value intentionally to match legacy behavior
+		// eslint-disable-next-line no-null/no-null
+		return null;
+	}
+
+	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
+	if (!functionsAbi.outputs) {
+		// eslint-disable-next-line no-null/no-null
+		return null;
+	}
+	const result = decodeParameters([...functionsAbi.outputs], value);
+
+	if (result.__length__ === 1) {
+		return result[0];
+	}
+
+	return result;
 };

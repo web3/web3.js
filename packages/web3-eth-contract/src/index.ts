@@ -42,11 +42,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Contract } from './contract.js';
 
+import { ContractLogsSubscription } from './contract_log_subscription.js';
+/** @deprecated Use `ContractLogsSubscription` instead. */
+export type LogsSubscription = ContractLogsSubscription;
+
 export * from './encoding.js';
 
 export * from './contract.js';
 export * from './contract-deployer-method-class.js';
-export * from './log_subscription.js';
+export * from './contract_log_subscription.js';
 export * from './types.js';
 export * from './utils.js';
 

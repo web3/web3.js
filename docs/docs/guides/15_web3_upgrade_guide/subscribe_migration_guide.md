@@ -42,7 +42,7 @@ In summary, the differences you need to be aware of when subscribing to blockcha
     -   It does not accept a callback function.
     -   It returns a subscription object that you can use to listen to `data` and `error` events.
 -   You should now use the `on`, or `once`, method on the newly returned subscription object to listen to `data` and `error` events, instead of passing a callback function directly.
--   You can have multiple event listeners, if you have, for example multiple `on` calls. And you can get the number of listeners in you code by calling `listenerCount(event_name)` or get the listeners with `listeners(event_name)`.
+-   You can have multiple event listeners, if you have, for example multiple `on` calls. And you can get the number of listeners in your code by calling `listenerCount(event_name)` or get the listeners with `listeners(event_name)`.
 
 Keep in mind that these differences apply to all blockchain event subscriptions, not just to the `newBlockHeaders` event.
 

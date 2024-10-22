@@ -208,8 +208,10 @@ Documentation:
 
 -   Add COMMITTED to BlockTags (#7124)
 
-## [Unreleased]
+## [1.8.1]
 
-### Changed
+### Fixed
 
 -   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
+
+## [Unreleased]

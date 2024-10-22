@@ -17,7 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as eth from 'web3-eth';
 import { WebSocketProvider } from 'web3-providers-ws';
-import { Contract } from '../../src';
+import { Web3SubscriptionManager } from 'web3-core';
+import { Contract, ContractLogsSubscription } from '../../src';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 
 jest.mock('web3-eth');
@@ -75,5 +76,40 @@ describe('contract log subscription', () => {
 				{ address: deployedAddr, topics },
 			],
 		});
+	});
+
+	it('should be able to subscribe to logs with contractInstance.subscriptionManager.subscribe', async () => {
+		const address = '0x407D73d8a49eeb85D32Cf465507dd71d507100c1';
+		const contractInstance = new Contract(GreeterAbi, address);
+
+		jest.spyOn(WebSocketProvider.prototype, 'request').mockImplementation(
+			async (payload: any) => {
+				return {
+					jsonrpc: '2.0',
+					id: payload.id,
+					result: {},
+				};
+			},
+		);
+
+		jest.spyOn(Web3SubscriptionManager.prototype, 'subscribe').mockImplementation(
+			async (name: string | number | symbol, args?: any) => {
+				expect(name).toBe('logs');
+				expect(args.address).toBe(address);
+
+				return new ContractLogsSubscription(args, {
+					subscriptionManager: contractInstance.subscriptionManager,
+				});
+			},
+		);
+
+		contract.setProvider(providerString);
+
+		const sub = contractInstance.subscriptionManager.subscribe('logs');
+		expect(await sub).toBeInstanceOf(ContractLogsSubscription);
+
+		contractInstance.subscriptionManager.clear();
+
+		contractInstance.provider?.disconnect();
 	});
 });
