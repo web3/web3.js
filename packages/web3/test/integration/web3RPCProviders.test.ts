@@ -26,7 +26,7 @@ import { Web3 } from '../../src/index';
 
 describe('Web3 RPC Provider Integration tests', () => {
 	const transports = Object.values(Transport);
-	const networks = [
+	const quickNodeNetworks = [
 		Network.ETH_MAINNET,
 		Network.ETH_HOLESKY,
 		Network.ETH_SEPOLIA,
@@ -39,7 +39,7 @@ describe('Web3 RPC Provider Integration tests', () => {
 	];
 
 	transports.forEach(transport => {
-		networks.forEach(network => {
+		quickNodeNetworks.forEach(network => {
 			it(`QuickNodeProvider should work with ${transport} transport and ${network} network`, async () => {
 				const provider = new QuickNodeProvider(network, transport);
 				const web3 = new Web3(provider);
@@ -52,6 +52,70 @@ describe('Web3 RPC Provider Integration tests', () => {
 					web3.provider?.disconnect();
 				}
 			});
+		});
+
+		const alchemyNetworks = [
+			Network.ETH_MAINNET,
+			Network.ETH_SEPOLIA,
+			Network.ETH_GOERLI,
+			Network.ETH_HOLESKY,
+			Network.ARBITRUM_MAINNET,
+			Network.ARBITRUM_SEPOLIA,
+			Network.ARBITRUM_NOVA_MAINNET,
+			Network.BASE_MAINNET,
+			Network.BASE_SEPOLIA,
+			Network.POLYGON_MAINNET,
+			Network.POLYGON_MUMBAI,
+			Network.POLYGON_AMOY,
+			Network.POLYGON_POS_MAINNET,
+			Network.POLYGON_ZKEVM_MAINNET,
+			Network.POLYGON_ZKEVM_CARDONA,
+			Network.OPTIMISM_MAINNET,
+			Network.OPTIMISM_SEPOLIA,
+			Network.ASTAR_MAINNET,
+			Network.WORLD_CHAIN_MAINNET,
+			Network.WORLD_CHAIN_SEPOLIA,
+			Network.SHAPE_MAINNET,
+			Network.SHAPE_SEPOLIA,
+			Network.ZKSYNC_MAINNET,
+			Network.ZKSYNC_SEPOLIA,
+			Network.STARKNET_MAINNET,
+			Network.STARKNET_SEPOLIA,
+			Network.ZETACHAIN_MAINNET,
+			Network.ZETACHAIN_TESTNET,
+			Network.FANTOM_OPERA_MAINNET,
+			Network.FANTOM_OPERA_TESTNET,
+			Network.MANTLE_MAINNET,
+			Network.BERACHAIN_ARTIO,
+			Network.BLAST_MAINNET,
+			Network.BLAST_SEPOLIA,
+			Network.LINEA_MAINNET,
+			Network.LINEA_SEPOLIA,
+			Network.ZORA_MAINNET,
+			Network.ZORA_SEPOLIA,
+			Network.POLYNOMIAL_MAINNET,
+			Network.POLYNOMIAL_SEPOLIA,
+			Network.SCROLL_MAINNET,
+			Network.SCROLL_SEPOLIA,
+			Network.FRAX_MAINNET,
+			Network.FRAX_SEPOLIA,
+			Network.SOLANA_MAINNET,
+			Network.SOLANA_DEVNET,
+			Network.CROSSFI_TESTNET,
+			Network.FLOW_EVM_TESTNET,
+			Network.SONEIUM_MINATO,
+			Network.GEIST_POLTER,
+			Network.ROOTSTOCK_MAINNET,
+			Network.ROOTSTOCK_TESTNET,
+			Network.UNICHAIN_SEPOLIA,
+			Network.GNOSIS_MAINNET,
+			Network.BNB_MAINNET,
+			Network.BNB_TESTNET,
+			Network.OPBNB_MAINNET,
+			Network.OPBNB_TESTNET,
+		];
+
+		alchemyNetworks.forEach(network => {
 			it(`AlchemyProvider should work with ${transport} transport and ${network} network`, async () => {
 				const provider = new AlchemyProvider(network, transport);
 				const web3 = new Web3(provider);
