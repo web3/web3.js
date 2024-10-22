@@ -30,7 +30,8 @@ import {
 } from 'web3-types';
 
 import {
-	decodeParameters,
+	decodeFunctionCall,
+	decodeFunctionReturn,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	encodeParameter,
@@ -153,44 +154,7 @@ export const encodeMethodABI = (
 	return `${encodeFunctionSignature(abi)}${params}`;
 };
 
-export const decodeMethodParams = (
-	abi: AbiFunctionFragment | AbiConstructorFragment,
-	data: HexString,
-	methodSignatureProvided = true,
-) => {
-	const value =
-		methodSignatureProvided && data && data.length >= 10 && data.startsWith('0x')
-			? data.slice(10)
-			: data;
-	if (!abi.inputs) {
-		throw new Web3ContractError('No inputs found in the ABI');
-	}
-	const result = decodeParameters([...abi.inputs], value);
-	return result;
-};
-
-export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {
-	// If it was constructor then we need to return contract address
-	if (abi.type === 'constructor') {
-		return returnValues;
-	}
-
-	if (!returnValues) {
-		// Using "null" value intentionally to match legacy behavior
-		// eslint-disable-next-line no-null/no-null
-		return null;
-	}
-
-	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-	if (!abi.outputs) {
-		// eslint-disable-next-line no-null/no-null
-		return null;
-	}
-	const result = decodeParameters([...abi.outputs], value);
-
-	if (result.__length__ === 1) {
-		return result[0];
-	}
-
-	return result;
-};
+/** @deprecated import `decodeFunctionCall` from ''web3-eth-abi' instead. */
+export const decodeMethodParams = decodeFunctionCall;
+/** @deprecated import `decodeFunctionReturn` from ''web3-eth-abi' instead. */
+export const decodeMethodReturn = decodeFunctionReturn;

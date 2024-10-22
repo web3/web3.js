@@ -42,6 +42,8 @@ import {
 	TransactionMiddleware,
 } from 'web3-eth';
 import {
+	decodeFunctionCall,
+	decodeFunctionReturn,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	decodeContractErrorData,
@@ -99,12 +101,7 @@ import {
 	ValidationSchemaInput,
 	Web3ValidatorError,
 } from 'web3-validator';
-import {
-	decodeMethodReturn,
-	decodeMethodParams,
-	encodeEventABI,
-	encodeMethodABI,
-} from './encoding.js';
+import { encodeEventABI, encodeMethodABI } from './encoding.js';
 import { ContractLogsSubscription } from './contract_log_subscription.js';
 import {
 	ContractEventOptions,
@@ -1026,7 +1023,7 @@ export class Contract<Abi extends ContractAbi>
 				`The ABI for the provided method signature ${methodSignature} was not found.`,
 			);
 		}
-		return { ...decodeMethodParams(abi, data), __method__: jsonInterfaceMethodToString(abi) };
+		return decodeFunctionCall(abi, data);
 	}
 
 	private _parseAndSetJsonInterface(
@@ -1251,7 +1248,7 @@ export class Contract<Abi extends ContractAbi>
 					}),
 
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
-				decodeData: (data: HexString) => decodeMethodParams(methodAbi, data),
+				decodeData: (data: HexString) => decodeFunctionCall(methodAbi, data),
 
 				createAccessList: async (
 					options?: PayableCallOptions | NonPayableCallOptions,
@@ -1305,7 +1302,7 @@ export class Contract<Abi extends ContractAbi>
 				block,
 				this.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
 			);
-			return decodeMethodReturn(abi, result);
+			return decodeFunctionReturn(abi, result);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
