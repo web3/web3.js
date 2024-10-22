@@ -85,7 +85,6 @@ describe('contract typing', () => {
 		);
 
 		typecheck('should have interface compliance methods', () =>
-			// @ts-expect-error interface error
 			expectTypeOf(contract.methods).toExtend<Erc20Interface['methods']>(),
 		);
 
