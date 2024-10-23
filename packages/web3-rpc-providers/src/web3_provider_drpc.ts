@@ -19,12 +19,14 @@ import { HttpProviderOptions } from 'web3-providers-http';
 import { Transport, Network, SocketOptions } from './types.js';
 import { Web3ExternalProvider } from './web3_provider.js';
 
+const isValid = (str: string) => str !== undefined && str.trim().length > 0;
+
 export class DRPCProvider extends Web3ExternalProvider {
 	// eslint-disable-next-line default-param-last
 	public constructor(
 		network: Network = Network.ETH_MAINNET,
 		transport: Transport = Transport.HTTPS,
-		token = 'TOKEN_HOLDER',
+		token = 'Avj1DYpxRUOer0sLDhdUK_YiF4nikX4R77x3TgFkVp5j',
 		host = 'lb.drpc.org',
 		providerConfigOptions?: HttpProviderOptions | SocketOptions,
 	) {
@@ -50,7 +52,7 @@ export class DRPCProvider extends Web3ExternalProvider {
 	};
 
 	// eslint-disable-next-line class-methods-use-this
-	public getRPCURL(network: Network, transport: Transport, key: string, host: string) {
+	public getRPCURL(network: Network, transport: Transport, _key: string, _host: string) {
 		const networkString = DRPCProvider.networkStringMap[network] || '';
 		if (!networkString) {
 			throw new Error('Network info not available.');
@@ -63,6 +65,9 @@ export class DRPCProvider extends Web3ExternalProvider {
 			protocol = 'ws';
 		}
 
-		return `${transport}://${host}/og${protocol}?network=${networkString}&dkey=${key}`;
+		const host = isValid(_host) ? _host : 'lb.drpc.org';
+		const key = isValid(_key) ? _key : 'Avj1DYpxRUOer0sLDhdUK_YiF4nikX4R77x3TgFkVp5j';
+
+		return `${transport}://${host}/og${protocol}?network=${networkString}&dkey=${key}&tag=web3js`;
 	}
 }
