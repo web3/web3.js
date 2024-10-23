@@ -51,7 +51,8 @@ describe('Web3 RPC Provider Integration tests', () => {
 				});
 			}
 
-			it.skip(`dRPC Provider should work with ${transport} transport and ${network} network`, async () => {
+			it(`dRPC Provider should work with ${transport} transport and ${network} network`, async () => {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				const provider = new DRPCProvider(network, transport);
 				const web3 = new Web3(provider);
 				const result = await web3.eth.getBlockNumber();
@@ -65,21 +66,21 @@ describe('Web3 RPC Provider Integration tests', () => {
 			});
 		});
 	});
-	it.skip(`should work with mainnet provider`, async () => {
+	it(`should work with mainnet provider`, async () => {
 		const web3 = new Web3(mainnet);
 		const result = await web3.eth.getBlockNumber();
 		expect(typeof result).toBe('bigint');
 		expect(result > 0).toBe(true);
 	});
 
-	it.skip(`should work with default provider`, async () => {
+	it(`should work with default provider`, async () => {
 		const web3 = new Web3();
 		const result = await web3.eth.getBlockNumber();
 		expect(typeof result).toBe('bigint');
 		expect(result > 0).toBe(true);
 	});
 
-	it.skip(`Web3 default provider should always be connected with Eth mainnet`, async () => {
+	it(`Web3 default provider should always be connected with Eth mainnet`, async () => {
 		const web3 = new Web3();
 		const chainID = await web3.eth.getChainId();
 		expect(typeof chainID).toBe('bigint');
