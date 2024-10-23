@@ -99,10 +99,10 @@ export class PublicNodeProvider<
 	};
 	// eslint-disable-next-line class-methods-use-this
 	public getRPCURL(network: Network, transport: Transport, _: string, _host: string) {
-		const defaultHost = `${PublicNodeProvider.networkHostMap[network]}.publicnode.com`;
-		if (!defaultHost) {
+		if (!PublicNodeProvider.networkHostMap[network]) {
 			throw new Error('Network info not avalible.');
 		}
+		const defaultHost = `${PublicNodeProvider.networkHostMap[network]}.publicnode.com`;
 		const host = isValid(_host) ? _host : defaultHost;
 		if (websocketExclusions.includes(network) && transport === Transport.WebSocket) {
 			return `${transport}://${host}/websocket`;
