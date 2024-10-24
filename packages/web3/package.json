@@ -1,6 +1,6 @@
 {
 	"name": "web3",
-	"version": "4.13.0",
+	"version": "4.14.0",
 	"description": "Ethereum JavaScript API",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",
@@ -86,10 +86,10 @@
 		"web3-providers-ipc": "^4.0.7"
 	},
 	"dependencies": {
-		"web3-core": "^4.6.0",
+		"web3-core": "^4.7.0",
 		"web3-errors": "^1.3.0",
-		"web3-eth": "^4.9.0",
-		"web3-eth-abi": "^4.2.4",
+		"web3-eth": "^4.10.0",
+		"web3-eth-abi": "^4.3.0",
 		"web3-eth-accounts": "^4.2.1",
 		"web3-eth-contract": "^4.7.0",
 		"web3-eth-ens": "^4.4.0",
@@ -100,8 +100,8 @@
 		"web3-providers-ws": "^4.0.8",
 		"web3-rpc-methods": "^1.3.0",
 		"web3-rpc-providers": "^1.0.0-rc.2",
-		"web3-types": "^1.8.0",
-		"web3-utils": "^4.3.1",
+		"web3-types": "^1.8.1",
+		"web3-utils": "^4.3.2",
 		"web3-validator": "^2.0.6"
 	}
 }

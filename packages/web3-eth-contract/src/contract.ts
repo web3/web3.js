@@ -42,6 +42,8 @@ import {
 	TransactionMiddleware,
 } from 'web3-eth';
 import {
+	decodeFunctionCall,
+	decodeFunctionReturn,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	decodeContractErrorData,
@@ -99,13 +101,8 @@ import {
 	ValidationSchemaInput,
 	Web3ValidatorError,
 } from 'web3-validator';
-import {
-	decodeMethodReturn,
-	decodeMethodParams,
-	encodeEventABI,
-	encodeMethodABI,
-} from './encoding.js';
-import { LogsSubscription } from './log_subscription.js';
+import { encodeEventABI, encodeMethodABI } from './encoding.js';
+import { ContractLogsSubscription } from './contract_log_subscription.js';
 import {
 	ContractEventOptions,
 	NonPayableMethodObject,
@@ -123,6 +120,8 @@ import {
 } from './utils.js';
 // eslint-disable-next-line import/no-cycle
 import { DeployerMethodClass } from './contract-deployer-method-class.js';
+// eslint-disable-next-line import/no-cycle
+import { ContractSubscriptionManager } from './contract-subscription-manager.js';
 
 type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
@@ -179,9 +178,9 @@ export type ContractMethodSend = Web3PromiEvent<
  * ```
  *
  * @param options - The options used to subscribe for the event
- * @returns - A Promise resolved with {@link LogsSubscription} object
+ * @returns - A Promise resolved with {@link ContractLogsSubscription} object
  */
-export type ContractBoundEvent = (options?: ContractEventOptions) => LogsSubscription;
+export type ContractBoundEvent = (options?: ContractEventOptions) => ContractLogsSubscription;
 
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractEventsInterface<
@@ -204,10 +203,12 @@ export type ContractEventEmitterInterface<Abi extends ContractAbi> = {
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
 const contractSubscriptions = {
-	logs: LogsSubscription,
+	logs: ContractLogsSubscription,
 	newHeads: NewHeadsSubscription,
 	newBlockHeaders: NewHeadsSubscription,
 };
+
+type ContractSubscriptions = typeof contractSubscriptions;
 
 /**
  * The `web3.eth.Contract` makes it easy to interact with smart contracts on the ethereum blockchain.
@@ -406,9 +407,15 @@ const contractSubscriptions = {
  *
  */
 export class Contract<Abi extends ContractAbi>
-	extends Web3Context<EthExecutionAPI, typeof contractSubscriptions>
+	extends Web3Context<EthExecutionAPI, ContractSubscriptions>
 	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
+	protected override _subscriptionManager: ContractSubscriptionManager<EthExecutionAPI>;
+
+	public override get subscriptionManager(): ContractSubscriptionManager<EthExecutionAPI> {
+		return this._subscriptionManager;
+	}
+
 	/**
 	 * The options `object` for the contract instance. `from`, `gas` and `gasPrice` are used as fallback values when sending transactions.
 	 *
@@ -563,6 +570,11 @@ export class Contract<Abi extends ContractAbi>
 			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
+
+		this._subscriptionManager = new ContractSubscriptionManager<
+			EthExecutionAPI,
+			ContractSubscriptions
+		>(super.subscriptionManager, this);
 
 		// Init protected properties
 		if ((contractContext as Web3Context)?.wallet) {
@@ -1011,7 +1023,7 @@ export class Contract<Abi extends ContractAbi>
 				`The ABI for the provided method signature ${methodSignature} was not found.`,
 			);
 		}
-		return { ...decodeMethodParams(abi, data), __method__: jsonInterfaceMethodToString(abi) };
+		return decodeFunctionCall(abi, data);
 	}
 
 	private _parseAndSetJsonInterface(
@@ -1236,7 +1248,7 @@ export class Contract<Abi extends ContractAbi>
 					}),
 
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
-				decodeData: (data: HexString) => decodeMethodParams(methodAbi, data),
+				decodeData: (data: HexString) => decodeFunctionCall(methodAbi, data),
 
 				createAccessList: async (
 					options?: PayableCallOptions | NonPayableCallOptions,
@@ -1290,7 +1302,7 @@ export class Contract<Abi extends ContractAbi>
 				block,
 				this.defaultReturnFormat as typeof DEFAULT_RETURN_FORMAT,
 			);
-			return decodeMethodReturn(abi, result);
+			return decodeFunctionReturn(abi, result);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
@@ -1414,7 +1426,7 @@ export class Contract<Abi extends ContractAbi>
 				abi,
 				params[0] as EventParameters,
 			);
-			const sub = new LogsSubscription(
+			const sub = new ContractLogsSubscription(
 				{
 					address: this.options.address,
 					topics,

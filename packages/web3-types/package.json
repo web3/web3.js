@@ -1,6 +1,6 @@
 {
 	"name": "web3-types",
-	"version": "1.8.0",
+	"version": "1.8.1",
 	"description": "Provide the common data structures and interfaces for web3 modules.",
 	"main": "./lib/commonjs/index.js",
 	"module": "./lib/esm/index.js",

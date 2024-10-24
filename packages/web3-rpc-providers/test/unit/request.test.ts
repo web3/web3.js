@@ -20,6 +20,7 @@ import { Network, Transport } from '../../src/types';
 import { Web3ExternalProvider } from '../../src/web3_provider';
 import { QuickNodeRateLimitError } from '../../src/errors';
 import { QuickNodeProvider } from '../../src/web3_provider_quicknode';
+import { PublicNodeProvider } from '../../src/web3_provider_publicnode';
 
 jest.mock('web3-providers-ws', () => {
 	return {
@@ -121,5 +122,28 @@ describe('Web3ExternalProvider', () => {
 			params: ['0x0123456789012345678901234567890123456789', 'latest'],
 		};
 		await expect(provider.request(payload)).rejects.toThrow(QuickNodeRateLimitError);
+	});
+
+	it('should make a request using the PublicNodeProvider provider', async () => {
+		const network: Network = Network.ETH_MAINNET;
+		const transport: Transport = Transport.HTTPS;
+
+		const mockHttpProvider = {
+			request: jest.fn(),
+		};
+
+		const mockResponse = { result: 'mock-result' };
+		mockHttpProvider.request.mockResolvedValue(mockResponse);
+
+		const provider = new PublicNodeProvider(network, transport);
+		(provider as any).provider = mockHttpProvider;
+
+		const payload: Web3APIPayload<EthExecutionAPI, Web3APIMethod<EthExecutionAPI>> = {
+			method: 'eth_getBalance',
+			params: ['0x0123456789012345678901234567890123456789', 'latest'],
+		};
+
+		const result = await provider.request(payload);
+		expect(result).toEqual(mockResponse);
 	});
 });

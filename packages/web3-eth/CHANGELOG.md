@@ -279,7 +279,7 @@ Documentation:
 
 -   Adds the same `{transactionSchema?: ValidationSchemaInput}` that exists in `formatTransaction` to `validateTransactionForSigning`
 
-## [Unreleased]
+## [4.10.0]
 
 ### Changed
 
@@ -288,3 +288,5 @@ Documentation:
 ### Added
 
 -   `populateGasPrice` function now checks `Web3Context.config.ignoreGasPricing`. If `ignoreGasPricing` is true, gasPrice will not be estimated (#7320)
+
+## [Unreleased]
