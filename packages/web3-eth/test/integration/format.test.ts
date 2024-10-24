@@ -67,6 +67,13 @@ describe('format', () => {
 	});
 
 	describe('methods', () => {
+		it.each(Object.values(FMT_NUMBER))('createNewPendingTransactionFilter', async format => {
+			web3Eth.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
+			const res = await web3Eth.createNewPendingTransactionFilter();
+			expect(typeof res).toBe(mapFormatToType[format as string]);
+			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
+		});
+
 		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
 			web3Eth.defaultReturnFormat = { number: format as FMT_NUMBER, bytes: FMT_BYTES.HEX };
 			const res = await web3Eth.getBlockNumber();
