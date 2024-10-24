@@ -164,6 +164,79 @@ export const signatureRecoverData: [string, any][] = [
 	],
 ];
 
+export const signatureRecoverWithoutPrefixData: [string, any][] = [
+	[
+		'Some long text with integers 1233 and special characters and unicode \u1234 as well.',
+		{
+			prefixedOrR: true,
+			r: '0x66ff35193d5763bbb86428b87cd10451704fa1d00a8831e75cc0eca16701521d',
+			s: '0x5ec294b63778e854929a53825191222415bf93871d091a137f61d92f2f3d37bb',
+			address: '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
+			privateKey: '0xcb89ec4b01771c6c8272f4c0aafba2f8ee0b101afb22273b786939a8af7c1912',
+			data: 'Some long text with integers 1233 and special characters and unicode \u1234 as well.',
+			// signature done with personal_sign
+			signatureOrV:
+				'0x66ff35193d5763bbb86428b87cd10451704fa1d00a8831e75cc0eca16701521d5ec294b63778e854929a53825191222415bf93871d091a137f61d92f2f3d37bb1b',
+		},
+	],
+	[
+		'Some data',
+		{
+			prefixedOrR: true,
+			r: '0xbbae52f4cd6776e66e01673228474866cead8ccc9530e0ae06b42d0f5917865f',
+			s: '0x170e7a9e792288955e884c9b2da7d2c69b69d3b29e24372d1dec1164a7deaec0',
+			address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
+			data: 'Some data',
+			// signature done with personal_sign
+			signatureOrV:
+				'0xbbae52f4cd6776e66e01673228474866cead8ccc9530e0ae06b42d0f5917865f170e7a9e792288955e884c9b2da7d2c69b69d3b29e24372d1dec1164a7deaec01c',
+		},
+	],
+	[
+		'Some data!%$$%&@*',
+		{
+			prefixedOrR: true,
+			r: '0x91b3ccd107995becaca361e9f282723176181bb9250e8ebb8a5119f5e0b91978',
+			s: '0x5e67773c632e036712befe130577d2954b91f7c5fb4999bc94d80d471dfd468b',
+			address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
+			data: 'Some data!%$$%&@*',
+			// signature done with personal_sign
+			signatureOrV:
+				'0x91b3ccd107995becaca361e9f282723176181bb9250e8ebb8a5119f5e0b919785e67773c632e036712befe130577d2954b91f7c5fb4999bc94d80d471dfd468b1c',
+		},
+	],
+	[
+		'102',
+		{
+			prefixedOrR: true,
+			r: '0xecbd18fc2919bef2a9371536df0fbabdb09fda9823b15c5ce816ab71d7b5e359',
+			s: '0x3860327ffde34fe72ae5d6abdcdc91e984f936ea478cfb8b1547383d6e4d6a98',
+			address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
+			data: '102',
+			// signature done with personal_sign
+			signatureOrV:
+				'0xecbd18fc2919bef2a9371536df0fbabdb09fda9823b15c5ce816ab71d7b5e3593860327ffde34fe72ae5d6abdcdc91e984f936ea478cfb8b1547383d6e4d6a981b',
+		},
+	],
+	[
+		// testcase for recover(data, V, R, S)
+		'some data',
+		{
+			signatureOrV: '0x1b',
+			prefixedOrR: '0x48f828a3ed107ce28551a3264d75b18df806d6960c273396dc022baadd0cf26e',
+			r: '0x48f828a3ed107ce28551a3264d75b18df806d6960c273396dc022baadd0cf26e',
+			s: '0x373e1b6709512c2dab9dff4066c6b40d32bd747bdb84469023952bc82123e8cc',
+			address: '0x54BF9ed7F22b64a5D69Beea57cFCd378763bcdc5',
+			privateKey: '0x03a0021a87dc354855f900fd15c063bcc9c155c33b8f2321ec294e0933ef29d2',
+			signature:
+				'0x48f828a3ed107ce28551a3264d75b18df806d6960c273396dc022baadd0cf26e373e1b6709512c2dab9dff4066c6b40d32bd747bdb84469023952bc82123e8cc1b',
+		},
+	],
+];
+
 export const transactionsTestData: [TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData][] = [
 	[
 		// 'TxLegacy'
@@ -525,4 +598,14 @@ export const validHashMessageData: [string, string][] = [
 	],
 	['non utf8 string', '0x8862c6a425a83c082216090e4f0e03b64106189e93c29b11d0112e77b477cce2'],
 	['', '0x5f35dce98ba4fba25530a026ed80b2cecdaa31091ba4958b99b52ea1d068adad'],
+];
+
+export const validHashMessageWithoutPrefixData: [string, string][] = [
+	['🤗', '0x4bf650e97ac50e9e4b4c51deb9e01455c1a9b2f35143bc0a43f1ea5bc9e51856'],
+	[
+		'Some long text with integers 1233 and special characters and unicode \u1234 as well.',
+		'0x6965440cc2890e0f118738d6300a21afb2de316c578dad144aa55c9ea45c0fa7',
+	],
+	['non utf8 string', '0x52000fc43fe3aa422eecafff3e0d82205a1409850c4bd2871dfde932de1fec13'],
+	['', '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'],
 ];

@@ -144,6 +144,7 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
  * `"\x19Ethereum Signed Message:\n" + message.length + message` and hashed using keccak256.
  *
  * @param message - A message to hash, if its HEX it will be UTF8 decoded.
+ * @param skipPrefix - (default: false) If true, the message will be not prefixed with "\x19Ethereum Signed Message:\n" + message.length
  * @returns The hashed message
  *
  * ```ts
@@ -154,9 +155,13 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
  * web3.eth.accounts.hashMessage(web3.utils.utf8ToHex("Hello world")) // Will be hex decoded in hashMessage
  *
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
+ *
+ * web3.eth.accounts.hashMessage("Hello world", true)
+ *
+ * > "0xed6c11b0b5b808960df26f5bfc471d04c1995b0ffd2055925ad1be28d6baadfd"
  * ```
  */
-export const hashMessage = (message: string): string => {
+export const hashMessage = (message: string, skipPrefix = false): string => {
 	const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
 
 	const messageBytes = hexToBytes(messageHex);
@@ -165,7 +170,7 @@ export const hashMessage = (message: string): string => {
 		fromUtf8(`\x19Ethereum Signed Message:\n${messageBytes.byteLength}`),
 	);
 
-	const ethMessage = uint8ArrayConcat(preamble, messageBytes);
+	const ethMessage = skipPrefix ? messageBytes : uint8ArrayConcat(preamble, messageBytes);
 
 	return sha3Raw(ethMessage); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
@@ -218,6 +223,42 @@ export const signMessageWithPrivateKey = (hash: HexString, privateKey: Bytes): S
 export const sign = (data: string, privateKey: Bytes): SignResult => {
 	const hash = hashMessage(data);
 
+	const { messageHash, v, r, s, signature } = signMessageWithPrivateKey(hash, privateKey);
+
+	return {
+		message: data,
+		messageHash,
+		v,
+		r,
+		s,
+		signature,
+	};
+};
+
+/**
+ * Signs raw data with a given private key without adding the Ethereum-specific prefix.
+ *
+ * @param data - The raw data to sign. If it's a hex string, it will be used as-is. Otherwise, it will be UTF-8 encoded.
+ * @param privateKey - The 32 byte private key to sign with
+ * @returns The signature Object containing the message, messageHash, signature r, s, v
+ *
+ * ```ts
+ * web3.eth.accounts.signRaw('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+ * > {
+ *   message: 'Some data',
+ *   messageHash: '0x43a26051362b8040b289abe93334a5e3662751aa691185ae9e9a2e1e0c169350',
+ *   v: '0x1b',
+ *   r: '0x93da7e2ddd6b2ff1f5af0c752f052ed0d7d5bff19257db547a69cd9a879b37d4',
+ *   s: '0x334485e42b33815fd2cf8a245a5393b282214060844a9681495df2257140e75c',
+ *   signature: '0x93da7e2ddd6b2ff1f5af0c752f052ed0d7d5bff19257db547a69cd9a879b37d4334485e42b33815fd2cf8a245a5393b282214060844a9681495df2257140e75c1b'
+ * }
+ * ```
+ */
+export const signRaw = (data: string, privateKey: Bytes): SignResult => {
+	// Hash the message without the Ethereum-specific prefix
+	const hash = hashMessage(data, true);
+
+	// Sign the hash with the private key
 	const { messageHash, v, r, s, signature } = signMessageWithPrivateKey(hash, privateKey);
 
 	return {
@@ -380,7 +421,7 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  * @param signatureOrV - signature or V
  * @param prefixedOrR - prefixed or R
  * @param s - S value in signature
- * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with `"\\x19Ethereum Signed Message:\\n" + message.length + message`, and assumed to be already prefixed.
+ * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with `"\\x19Ethereum Signed Message:\\n" + message.length + message`, and assumed to be already prefixed and hashed.
  * @returns The Ethereum address used to sign this data
  *
  * ```ts

@@ -90,6 +90,7 @@ The following is a list of [`Accounts`](/libdocs/Accounts) methods in the `web3.
 -   [recover](/libdocs/Accounts#recover)
 -   [recoverTransaction](/libdocs/Accounts#recovertransaction)
 -   [sign](/libdocs/Accounts#sign)
+-   [signRaw](/libdocs/Accounts#signraw)
 -   [signTransaction](/libdocs/Accounts#signtransaction)
 
 ## Wallets
