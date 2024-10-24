@@ -2771,3 +2771,7 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 #### web3-rpc-providers
 
 -   PublicNodeProvider was added (#7322)
+
+#### web3-eth-accounts
+
+-   `hashMessage` now has a default value for `skipPrefix`. A new function `signRaw` was added to sign a message without prefix. (#7346)
