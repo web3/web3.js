@@ -2754,6 +2754,10 @@ If there are any bugs, improvements, optimizations or any new feature proposal f
 
 -   update the type for `baseFeePerGas` at `web3.eth.getFeeHistory` to be a number. (#7291)
 
+#### web3-eth
+
+- Allow specifying percentage based factor in Web3Eth.calculateFeeData Param baseFeePerGasFactor #7332
+
 ### Fixed
 
 #### web3-eth-abi
