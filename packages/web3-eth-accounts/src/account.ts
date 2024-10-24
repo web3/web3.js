@@ -161,7 +161,7 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
  * > "0xed6c11b0b5b808960df26f5bfc471d04c1995b0ffd2055925ad1be28d6baadfd"
  * ```
  */
-export const hashMessage = (message: string, skipPrefix?: boolean): string => {
+export const hashMessage = (message: string, skipPrefix = false): string => {
 	const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
 
 	const messageBytes = hexToBytes(messageHex);
