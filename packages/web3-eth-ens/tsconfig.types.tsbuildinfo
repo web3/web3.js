@@ -1,0 +1,1 @@
+{"root":["./src/config.ts","./src/ens.ts","./src/index.ts","./src/registry.ts","./src/resolver.ts","./src/utils.ts","./src/abi/ens/ENSRegistry.ts","./src/abi/ens/PublicResolver.ts"],"version":"5.6.2"}

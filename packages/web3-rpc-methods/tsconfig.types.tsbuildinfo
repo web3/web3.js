@@ -1,0 +1,1 @@
+{"root":["./src/errors.ts","./src/eth_rpc_methods.ts","./src/index.ts","./src/net_rpc_methods.ts","./src/personal_rpc_methods.ts"],"version":"5.6.2"}
