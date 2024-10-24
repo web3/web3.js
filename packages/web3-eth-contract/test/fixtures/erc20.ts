@@ -22,7 +22,7 @@ import { ContractEventOptions, PayableMethodObject, NonPayableMethodObject } fro
 export interface Erc20Interface {
 	methods: {
 		[key: string]: (
-			...args: ReadonlyArray<any>
+			...args: any[]
 		) =>
 			| PayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>
 			| NonPayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>;

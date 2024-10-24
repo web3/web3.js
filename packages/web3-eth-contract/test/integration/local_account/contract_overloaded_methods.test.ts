@@ -102,11 +102,14 @@ describe('contract ERC721 overloaded functions', () => {
 	});
 
 	it('transferFrom with 3 invalid arguments', () => {
-		expect(() => contractDeployed.methods.safeTransferFrom(1, 2, 3)).toThrow('Web3 validator');
+		expect(() => contractDeployed.methods.safeTransferFrom('1', '2', 3)).toThrow(
+			'Web3 validator',
+		);
 	});
 
 	it('transferFrom with 2 arguments', () => {
 		expect(() =>
+			// @ts-expect-error invalid arguments so ts will throw an error
 			contractDeployed.methods.safeTransferFrom(localAccount.address, localAccount.address),
 		).toThrow('Web3 validator');
 	});
