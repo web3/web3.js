@@ -1894,4 +1894,24 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,
 		);
 	}
+
+	/**
+	 * Creates a filter in the node, to notify when new pending transactions arrive. To check if the state has changed.
+	 *
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
+	 * @returns A filter id.
+	 *
+	 * ```ts
+	 * web3.eth.createNewPendingTransactionFilter().then(console.log);
+	 * > 1n
+	 *
+	 * web3.eth.createNewPendingTransactionFilter({ number: FMT_NUMBER.HEX , bytes: FMT_BYTES.HEX }).then(console.log);
+	 * > "0x1"
+	 * ```
+	 */
+	public async createNewPendingTransactionFilter<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(returnFormat: ReturnFormat = this.defaultReturnFormat as ReturnFormat) {
+		return rpcMethodsWrappers.createNewPendingTransactionFilter(this, returnFormat);
+	}
 }
