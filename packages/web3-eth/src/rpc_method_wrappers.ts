@@ -1120,3 +1120,21 @@ export async function signTypedData<ReturnFormat extends DataFormat>(
 
 	return format({ format: 'bytes' }, response, returnFormat ?? web3Context.defaultReturnFormat);
 }
+
+/**
+ * View additional documentations here: {@link Web3Eth.createNewPendingTransactionFilter}
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ * @param returnFormat ({@link DataFormat}) Return format
+ */
+export async function createNewPendingTransactionFilter<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	returnFormat: ReturnFormat,
+) {
+	const response = await ethRpcMethods.newPendingTransactionFilter(web3Context.requestManager);
+
+	return format(
+		{ format: 'uint' },
+		response as Numbers,
+		returnFormat ?? web3Context.defaultReturnFormat,
+	);
+}
