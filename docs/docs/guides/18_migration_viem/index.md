@@ -32,7 +32,6 @@ To migrate this to Viem, you'll need to replace it with using `createPublicClien
 import { createPublicClient, http } from 'viem';
 
 const client = createPublicClient({ transport: http(providerURL) });
-const blockNumber = await client.getBlockNumber();
 ```
 
 ## Browser-injected Provider
@@ -46,13 +45,13 @@ const web3 = new Web3(window.ethereum);
 To migrate this to Viem, you'll need to use `createWalletClient()` with `custom()` instead of creating a new Web3 instance.
 
 ```javascript
-import { createWalletClient, custom } from 'viem'
-import { mainnet } from 'viem/chains'
+import { createWalletClient, custom } from 'viem';
+import { mainnet } from 'viem/chains';
 
 const client = createWalletClient({
-  chain: mainnet,
-  transport: custom(window.ethereum!)
-})
+	chain: mainnet,
+	transport: custom(window.ethereum),
+});
 ```
 
 ## Wallets and Accounts - Generate Private Key
@@ -143,7 +142,7 @@ const tx = await web3.eth.sendTransaction({
 In Viem there is `sendTransaction()` function avalible with walletClient.
 
 ```javascript
-import { createWalletClient, custom } from 'viem'
+import { createWalletClient, custom, parseEther } from 'viem'
 import { mainnet } from 'viem/chains'
 
 const walletClient = createWalletClient({
@@ -156,7 +155,7 @@ const [account] = await walletClient.getAddresses();
 const hash = await walletClient.sendTransaction({
   account,
   to: '0x92d3267215Ec56542b985473E73C8417403B15ac',
-  value: 100000000000000n
+  value: parseEther('0.001')
 });
 
 ```
@@ -197,8 +196,8 @@ const walletClient = createWalletClient({
 const hash = await walletClient.deployContract({
 	abi,
 	account, //given account
-	args: [69420],
-	bytecode: '0x608060405260405161083e38038061083e833981016040819052610...',
+	args: ['constructor param'],
+	bytecode: bytecode,
 });
 ```
 
@@ -258,7 +257,7 @@ const hash = web3.utils.keccak256('hello world');
 In Viem there is `keccak256()` function for keccak256.
 
 ```
-import { keccak256 } from 'viem'
+import { keccak256 , toHex } from 'viem'
 
 keccak256(toHex('hello world'));
 ```
