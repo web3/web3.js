@@ -4,6 +4,8 @@
 
 # Web3.js
 
+### Web3.js libraries are being sunset on March 4th, 2025. For migration guides and more details please refer to [Chainsafe blog](https://blog.chainsafe.io/web3-js-sunset/)
+
 [![Dependency Status][downloads-image]][npm-url] ![Unit Test Coverage](https://img.shields.io/codecov/c/github/web3/web3.js/4.x?label=unit%20test%20coverage)
 ![Commit Activity](https://img.shields.io/github/commit-activity/m/web3/web3.js/4.x?label=commit%20activity%20on%204.x)
 ![Contributors](https://img.shields.io/github/contributors/web3/web3.js?label=contributors%20on%20all%20branches)
