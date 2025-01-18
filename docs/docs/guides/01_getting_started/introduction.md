@@ -6,6 +6,12 @@ sidebar_label: Introduction
 
 # Introduction
 
+:::warning
+
+Web3.js libraries are being sunset on March 4th, 2025. For migration guides and more details please refer to [Chainsafe blog](https://blog.chainsafe.io/web3-js-sunset/)
+
+:::
+
 Web3.js is a robust and flexible collection of **TypeScript and JavaScript** libraries that allows developers to interact with local or remote [Ethereum](https://ethereum.org/en/) nodes (or **any EVM-compatible blockchain**) over **HTTP, IPC or WebSocket** connections. It is a powerful and efficient toolkit for crafting applications within the Ethereum ecosystem and beyond.
 
 This documentation is the entrypoint to Web3.js for developers. It covers [basic](/guides/getting_started/quickstart) and [advanced](/guides/dapps/lightweight-dapp) usage with examples, and includes comprehensive [API documentation](/api) as well as guides for common tasks, like [upgrading](/guides/web3_upgrade_guide) from older versions.
