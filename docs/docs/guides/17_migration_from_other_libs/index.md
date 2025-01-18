@@ -347,7 +347,7 @@ const contract = new ethers.Contract(address, abi, signer);
 // for ambiguous functions (two functions with the same
 // name), the signature must also be specified
 message = await contract['getMessage(string)']('nice');
-// and to call the overloaded method without a parameter:
+// and to call the overladed method without a parameter:
 message = await contract['getMessage()']();
 
 // in v6
@@ -359,7 +359,7 @@ In web3.js:
 ```typescript
 // in web3.js the overloaded method implementation is automatically picked based on the passed datatype
 message = await contract.methods.getMessage('nice').call();
-// To call the overloaded method without a parameter:
+// To call the overladed method without a parameter:
 message = await contract.methods.getMessage().call();
 ```
 
