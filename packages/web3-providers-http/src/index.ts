@@ -40,12 +40,23 @@ export default class HttpProvider<
 	public constructor(clientUrl: string, httpProviderOptions?: HttpProviderOptions) {
 		super();
 		if (!HttpProvider.validateClientUrl(clientUrl)) throw new InvalidClientError(clientUrl);
+
+		if (httpProviderOptions?.timeout !== undefined) {
+			if (!HttpProvider.validateTimeout(httpProviderOptions.timeout)) {
+				throw new Error('Invalid timeout value. Must be a positive integer.');
+			}
+		}
+
 		this.clientUrl = clientUrl;
 		this.httpProviderOptions = httpProviderOptions;
 	}
 
 	private static validateClientUrl(clientUrl: string): boolean {
 		return typeof clientUrl === 'string' ? /^http(s)?:\/\//i.test(clientUrl) : false;
+	}
+
+	private static validateTimeout(timeout: number): boolean {
+		return Number.isInteger(timeout) && timeout > 0;
 	}
 
 	/* eslint-disable class-methods-use-this */
@@ -69,7 +80,8 @@ export default class HttpProvider<
 			...this.httpProviderOptions?.providerOptions,
 			...requestOptions,
 		};
-		const response = await fetch(this.clientUrl, {
+
+		const fetchPromise = fetch(this.clientUrl, {
 			...providerOptionsCombined,
 			method: 'POST',
 			headers: {
@@ -78,6 +90,28 @@ export default class HttpProvider<
 			},
 			body: JSON.stringify(payload),
 		});
+
+		if (this.httpProviderOptions?.timeout) {
+			const timeoutPromise = new Promise<never>((_, reject) => {
+				const { timeout } = this.httpProviderOptions!;
+
+				setTimeout(() => {
+					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+					reject(new Error(`HTTP request timed out after ${timeout}ms)`));
+				}, timeout);
+			});
+
+			const response = await Promise.race([fetchPromise, timeoutPromise]);
+			if (!response.ok) {
+				const errorJson = (await response.json()) as JsonRpcResponseWithResult<unknown>;
+				throw new ResponseError(errorJson, undefined, undefined, response.status);
+			}
+
+			const result = (await response.json()) as JsonRpcResponseWithResult<ResultType>;
+			return result;
+		}
+
+		const response = await fetchPromise;
 		if (!response.ok) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			throw new ResponseError(await response.json(), undefined, undefined, response.status);

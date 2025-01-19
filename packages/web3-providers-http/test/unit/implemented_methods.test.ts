@@ -63,5 +63,39 @@ describe('HttpProvider - implemented methods', () => {
 
 			await expect(httpProvider.request(jsonRpcPayload)).rejects.toThrow(ResponseError);
 		});
+
+		it('should not throw error when request completes before timeout', async () => {
+			const mockResponse = { ...mockGetBalanceResponse };
+			fetchMock.mockResponseOnce(
+				async () =>
+					new Promise(resolve => {
+						setTimeout(() => resolve(JSON.stringify(mockResponse)), 50);
+					}),
+			);
+
+			const providerWithTimeout = new HttpProvider('http://localhost:8545', {
+				timeout: 100,
+			});
+
+			const result = await providerWithTimeout.request(jsonRpcPayload);
+			expect(result).toStrictEqual(mockResponse);
+		});
+
+		it('should throw error when request timeout', async () => {
+			fetchMock.mockResponseOnce(
+				async () =>
+					new Promise(resolve => {
+						setTimeout(resolve, 1000);
+					}),
+			);
+
+			const providerWithTimeout = new HttpProvider('http://localhost:8545', {
+				timeout: 100,
+			});
+
+			await expect(providerWithTimeout.request(jsonRpcPayload)).rejects.toThrow(
+				'HTTP request timed out after 100ms',
+			);
+		});
 	});
 });

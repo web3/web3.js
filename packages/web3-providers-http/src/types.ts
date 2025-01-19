@@ -16,5 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export interface HttpProviderOptions {
-	providerOptions: RequestInit;
+	providerOptions?: RequestInit;
+	/**
+	 * @description The timeout in milliseconds for HTTP requests
+	 */
+	timeout?: number;
 }
