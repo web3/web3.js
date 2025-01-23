@@ -18,7 +18,7 @@
 		"@cookbookdev/docsbot": "^4.24.4",
 		"@docusaurus/core": "^3.5.2",
 		"@docusaurus/preset-classic": "^3.5.2",
-		"@docusaurus/theme-live-codeblock": "^3.5.2",
+		"@docusaurus/theme-live-codeblock": "^3.6.3",
 		"@mdx-js/react": "^3.1.0",
 		"classnames": "^2.3.2",
 		"clsx": "^2.0.0",
