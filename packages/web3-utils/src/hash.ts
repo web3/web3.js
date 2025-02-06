@@ -147,7 +147,7 @@ export const sha3 = (data: Bytes): string | undefined => {
  *
  * @example
  * ```ts
- * conosle.log(web3.utils.sha3Raw('web3.js'));
+ * console.log(web3.utils.sha3Raw('web3.js'));
  * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
  *
  * console.log(web3.utils.sha3Raw(''));
