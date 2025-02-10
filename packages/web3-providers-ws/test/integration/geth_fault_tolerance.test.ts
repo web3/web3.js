@@ -104,7 +104,7 @@ describeIf(getSystemTestBackend() === 'geth' && isWs)('geth tests', () => {
 			);
 		});
 
-		it('"discconect" handler fires if the server closes', async () => {
+		it('"disconnect" handler fires if the server closes', async () => {
 			await openServer();
 			const err = jest.fn();
 			const webSocketProvider = new WebSocketProvider(
