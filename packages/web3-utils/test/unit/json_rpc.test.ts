@@ -102,7 +102,7 @@ describe('json rpc tests', () => {
 	});
 	describe('isBatchRequest', () => {
 		describe('valid cases', () => {
-			it.each(isBatchRequestValidData)('isBatchRqeuest valid data', (input, output) => {
+			it.each(isBatchRequestValidData)('isBatchRequest valid data', (input, output) => {
 				expect(isBatchRequest(input)).toBe(output);
 			});
 		});
