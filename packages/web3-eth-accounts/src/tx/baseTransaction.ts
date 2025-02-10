@@ -389,29 +389,21 @@ export abstract class BaseTransaction<TransactionObject> {
 	 * @param chainId - Chain ID from tx options (typed txs) or signature (legacy tx)
 	 */
 	protected _getCommon(common?: Common, chainId?: Numbers) {
-		// TODO: this function needs to be reviewed and the code to be more clean
-		// check issue https://github.com/web3/web3.js/issues/6666
 		// Chain ID provided
 		if (chainId !== undefined) {
 			const chainIdBigInt = uint8ArrayToBigInt(toUint8Array(chainId));
+			
 			if (common) {
 				if (common.chainId() !== chainIdBigInt) {
-					const msg = this._errorMsg(
-						'The chain ID does not match the chain ID of Common',
-					);
-					throw new Error(msg);
+					throw new Error(this._errorMsg('The chain ID does not match the chain ID of Common'));
 				}
-				// Common provided, chain ID does match
-				// -> Return provided Common
 				return common.copy();
 			}
+			
 			if (Common.isSupportedChainId(chainIdBigInt)) {
-				// No Common, chain ID supported by Common
-				// -> Instantiate Common with chain ID
 				return new Common({ chain: chainIdBigInt, hardfork: this.DEFAULT_HARDFORK });
 			}
-			// No Common, chain ID not supported by Common
-			// -> Instantiate custom Common derived from DEFAULT_CHAIN
+			
 			return Common.custom(
 				{
 					name: 'custom-chain',
@@ -421,33 +413,31 @@ export abstract class BaseTransaction<TransactionObject> {
 				{ baseChain: this.DEFAULT_CHAIN, hardfork: this.DEFAULT_HARDFORK },
 			);
 		}
-		// No chain ID provided
-		// -> return Common provided or create new default Common
 
-		if (common?.copy && typeof common?.copy === 'function') {
-			return common.copy();
-		}
-		// TODO: Recheck this next block when working on https://github.com/web3/web3.js/issues/6666
-		// This block is to handle when `chainId` was not passed and the `common` object does not have `copy()`
-		// If it was meant to be unsupported to process `common` in this case, an exception should be thrown instead of the following block
+		// No chain ID provided
 		if (common) {
-			const hardfork =
-				typeof common.hardfork === 'function'
-					? common.hardfork()
-					: // eslint-disable-next-line @typescript-eslint/unbound-method
-					  (common.hardfork as unknown as string);
+			if (typeof common.copy === 'function') {
+				return common.copy();
+			}
+
+			// Handle custom Common object without copy method
+			const networkId = typeof common.networkId === 'function' 
+				? common.networkId() 
+				: (common as unknown as CommonType).customChain?.networkId;
+
+			const customChainId = typeof common.chainId === 'function'
+				? common.chainId()
+				: (common as unknown as CommonType).customChain?.chainId;
+
+			const hardfork = typeof common.hardfork === 'function'
+				? common.hardfork()
+				: (common.hardfork as unknown as string);
 
 			return Common.custom(
 				{
 					name: 'custom-chain',
-					networkId: common.networkId
-						? common.networkId()
-						: BigInt((common as unknown as CommonType).customChain?.networkId) ??
-						  undefined,
-					chainId: common.chainId
-						? common.chainId()
-						: BigInt((common as unknown as CommonType).customChain?.chainId) ??
-						  undefined,
+					networkId: networkId !== undefined ? BigInt(networkId) : undefined,
+					chainId: customChainId !== undefined ? BigInt(customChainId) : undefined,
 				},
 				{
 					baseChain: this.DEFAULT_CHAIN,
