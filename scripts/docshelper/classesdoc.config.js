@@ -15,6 +15,6 @@ module.exports = {
 		'./packages/web3-account-abstraction/src/web3_aa.ts',
 	],
 
-	excludeCategories: 'ContractEvent', // for exluding being in module.md file and invalid link in contract.md
+	excludeCategories: 'ContractEvent', // for excluding being in module.md file and invalid link in contract.md
 	mergeModulesMergeMode: 'project', // NEW option of TypeDoc added by typedoc-plugin-merge-modules plugin
 };
