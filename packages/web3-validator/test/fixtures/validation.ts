@@ -717,7 +717,7 @@ export const invalidEthTypeData: string[] = [
 	'int512',
 	'int1024',
 	'byte',
-	'my-addresss',
+	'my-address',
 	'boolean',
 ];
 
