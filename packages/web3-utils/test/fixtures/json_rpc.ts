@@ -20,7 +20,7 @@ const responseWithResult = { jsonrpc: '2.0', id: 1, result: '' };
 const responseWithError = { jsonrpc: '2.0', id: 1, error: { code: 1, message: 'string' } };
 const responseWithRpcError = { jsonrpc: '2.0', id: 1, error: { code: -32000, message: 'string' } };
 const responseWithSubscription = { id: 1, jsonrpc: '2.0', result: '' };
-const responseWithNotfication = {
+const responseWithNotification = {
 	jsonrpc: '2.0',
 	method: 'subscribe',
 	params: { subscription: '', result: '' } as SubscriptionParams,
@@ -38,7 +38,7 @@ export const isResponseWithErrorValidTest: [any, boolean][] = [
 ];
 
 export const isResponseWithNotificationValidTest: [JsonRpcNotification, boolean][] = [
-	[responseWithNotfication, true],
+	[responseWithNotification, true],
 ];
 
 export const isSubscriptionResultValidTest: [any, boolean][] = [[responseWithSubscription, true]];
@@ -50,7 +50,7 @@ export const isValidResponseValidTest: [any, boolean][] = [
 
 export const isBatchResponseValidTest: [any, boolean][] = [
 	[[responseWithResult, responseWithError], true],
-	[[responseWithNotfication], false],
+	[[responseWithNotification], false],
 ];
 
 export const toPayloadValidTest: [any, any][] = [
