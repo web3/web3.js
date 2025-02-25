@@ -112,7 +112,7 @@ export class QuickNodeProvider<
 				token = isValid(_token) ? _token : '79a9476eea661d4f82de614db1d8a895b14b881c';
 				break;
 			default:
-				throw new Error('Network info not avalible.');
+				throw new Error('Network info not available.');
 		}
 
 		return `${transport}://${host}/${token}`;
