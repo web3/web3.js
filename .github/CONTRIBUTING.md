@@ -85,7 +85,7 @@ The end goal of the review is to suggest useful improvements to the author. Revi
 1.  Avoidable risk (i.e. it's difficult to test or hard to anticipate the implications of, without
     being strictly necessary to fix something broken).
 
-Read more in [Review Guidelines](./REVIEW.md).
+Read more in [Review Guidelines](https://github.com/web3/web3.js/blob/4.x/REVIEW.md).
 
 ### Releases
 
@@ -97,7 +97,7 @@ Read more in [Review Guidelines](./REVIEW.md).
     minified bundle in a browser context. An external reviewer should verify they've done the same.
 1.  A release PR must be approved at least by two known contributors to the web3.js project.
 
-Read more in the [Release Guidelines](./RELEASE.md).
+Read more in the [Release Guidelines](https://github.com/web3/web3.js/blob/4.x/RELEASE.md).
 
 ### Emergencies
 
